@@ -5,7 +5,7 @@
             <field name="name">mail.mail.form</field>
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
-                <form string="Email message" version="7.0">
+                <form string="Email message">
                     <header>
                         <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
                         <button name="mark_outgoing" string="Retry" type="object" states='exception,cancel'/>
@@ -108,7 +108,7 @@
                         <field name="model"/>
                         <field name="res_id"/>
                     </group>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Author" name="author" context="{'group_by':'author_id'}"/>
                         <filter string="Thread" name="thread" domain="[]" context="{'group_by':'message_id'}"/>

@@ -7,7 +7,7 @@
             <field name="name">Create Menu</field>
             <field name="model">wizard.ir.model.menu.create</field>
             <field name="arch" type="xml">
-                <form string="Create Menu" version="7.0">
+                <form string="Create Menu">
                     <group>
                         <field name="name"/>
                         <field name="menu_id" domain="[('parent_id','&lt;&gt;',False)]"/>
@@ -26,7 +26,7 @@
         <record id="view_model_form" model="ir.ui.view">
             <field name="model">ir.model</field>
             <field name="arch" type="xml">
-                <form string="Model Description" version="7.0">
+                <form string="Model Description">
                   <sheet>
                     <group>
                         <group>
@@ -51,7 +51,7 @@
                                     <field name="select_level"/>
                                     <field name="state"/>
                                 </tree>
-                                <form string="Fields Description" version="7.0">
+                                <form string="Fields Description">
                                     <group col="4">
                                         <field name="name"/>
                                         <field name="state"/>
@@ -152,7 +152,7 @@
         <record id="view_model_fields_form" model="ir.ui.view">
             <field name="model">ir.model.fields</field>
             <field name="arch" type="xml">
-                <form string="Fields" version="7.0">
+                <form string="Fields">
                   <sheet>
                     <group>
                         <group>
@@ -228,7 +228,7 @@
                     <field name="ttype"/>
                     <field name="required"/>
                     <field name="readonly"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                 </search>
@@ -247,7 +247,7 @@
         <record model="ir.ui.view" id="view_model_data_form">
             <field name="model">ir.model.data</field>
             <field name="arch" type="xml">
-                <form string="External Identifiers" version="7.0">
+                <form string="External Identifiers">
                   <group>
                     <group>
                         <field name="complete_name"/>
@@ -290,7 +290,7 @@
                     <field name="model"/>
                     <field name="res_id"/>
                     <field name="noupdate"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Module" icon="terp-folder-blue" domain="[]" context="{'group_by':'module'}"/>
                         <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
                     </group>
@@ -312,13 +312,15 @@
             <field name="model">ir.model.constraint</field>
             <field name="arch" type="xml">
                 <form string="Model Constraints">
-                    <field name="type"/>
-                    <field name="name"/>
-                    <field name="module"/>
-                    <field name="model"/>
-                    <newline/>
-                    <field name="date_update" />
-                    <field name="date_init" />
+                    <group col="4">
+                        <field name="type"/>
+                        <field name="name"/>
+                        <field name="module"/>
+                        <field name="model"/>
+                        <newline/>
+                        <field name="date_update" />
+                        <field name="date_init" />
+                    </group>
                 </form>
             </field>
         </record>
@@ -347,12 +349,14 @@
             <field name="model">ir.model.relation</field>
             <field name="arch" type="xml">
                 <form string="ManyToMany Relations">
-                    <field name="name"/>
-                    <field name="module"/>
-                    <field name="model"/>
-                    <newline/>
-                    <field name="date_update" />
-                    <field name="date_init" />
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="module"/>
+                        <field name="model"/>
+                        <newline/>
+                        <field name="date_update" />
+                        <field name="date_init" />
+                    </group>
                 </form>
             </field>
         </record>
@@ -393,7 +397,7 @@
         <record id="ir_access_view_form" model="ir.ui.view">
             <field name="model">ir.model.access</field>
             <field name="arch" type="xml">
-                <form string="Access Controls" version="7.0">
+                <form string="Access Controls">
                    <sheet>
                     <group col="4">
                         <field name="name"/>
@@ -423,7 +427,7 @@
                     <filter string="Write Access" icon="terp-tools" domain="[('perm_write','=',True)]"/>
                     <field name="model_id"/>
                     <field name="group_id"/>
-                    <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_no_one">
+                    <group expand="0" string="Group By" colspan="11" col="11" groups="base.group_no_one">
                         <filter string="Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
                         <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>

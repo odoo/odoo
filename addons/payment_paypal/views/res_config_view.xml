@@ -7,7 +7,7 @@
             <field name="model">account.config.settings</field>
             <field name="inherit_id" ref="account.view_account_config_settings"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='payment_acquirer']" version="7.0" position="inside">
+                <xpath expr="//div[@name='payment_acquirer']" position="inside">
                     <button name='%(payment.action_payment_acquirer)d' type="action"
                         string="Configure payment acquiring methods" class="oe_link"/>
                 </xpath>

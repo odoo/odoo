@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -994,19 +994,22 @@
   background: #f0eeee;
   border-right: 1px solid #afafb6;
   text-shadow: none;
-  padding-bottom: 16px;
 }
-.openerp a.oe_logo {
-  position: relative;
+.openerp .oe_leftbar > div {
+  height: 100%;
+  display: table;
   width: 220px;
-  display: block;
+  position: relative;
+}
+.openerp .oe_leftbar > div a.oe_logo {
+  display: table-row;
   text-align: center;
 }
-.openerp a.oe_logo img {
+.openerp .oe_leftbar > div a.oe_logo img {
   margin: 14px 0;
   border: 0;
 }
-.openerp a.oe_logo .oe_logo_edit {
+.openerp .oe_leftbar > div a.oe_logo .oe_logo_edit {
   margin: 14px 0;
   position: absolute;
   top: 1px;
@@ -1021,22 +1024,36 @@
   -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
-.openerp a.oe_logo:hover .oe_logo_edit_admin {
+.openerp .oe_leftbar > div a.oe_logo:hover .oe_logo_edit_admin {
   display: block;
 }
-.openerp .oe_footer {
-  position: fixed;
+.openerp .oe_leftbar > div > div {
+  display: table-row;
+  height: 100%;
+}
+.openerp .oe_leftbar > div > div > div {
+  position: relative;
+  height: 100%;
+}
+.openerp .oe_leftbar > div > div > div > div.oe_secondary_menus_container {
+  position: absolute;
+  position: static\9;
+  top: 0;
   bottom: 0;
-  padding: 4px 0;
+  left: 0;
+  right: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.openerp .oe_leftbar > div .oe_footer {
   background: #f0eeee;
-  width: 220px;
   text-align: center;
 }
-.openerp .oe_footer a {
+.openerp .oe_leftbar > div .oe_footer a {
   font-weight: bold;
   color: black;
 }
-.openerp .oe_footer a span {
+.openerp .oe_leftbar > div .oe_footer a span {
   color: #a24689;
 }
 .openerp .oe_secondary_menu_section {
@@ -1140,7 +1157,25 @@
   color: #7c7bad;
 }
 .openerp .oe_application > div {
+  position: relative;
   height: 100%;
+}
+.openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper {
+  display: table-row;
+  height: 100%;
+}
+.openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div {
+  position: relative;
+  height: 100%;
+}
+.openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body {
+  position: absolute;
+  position: static\9;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
 }
 .openerp .oe_application .oe_breadcrumb_item:not(:last-child) {
   max-width: 7em;
@@ -1157,11 +1192,8 @@
   height: inherit;
   width: 100%;
 }
-.openerp .oe_view_manager .oe_view_manager_body {
-  height: inherit;
-}
 .openerp .oe_view_manager .oe_view_manager_view_kanban:not(:empty) {
-  height: inherit;
+  height: 100%;
 }
 .openerp .oe_view_manager[data-view-type=kanban] .oe_view_manager_body {
   display: table-row;
@@ -1381,7 +1413,7 @@
   float: right;
   padding: 1px 0;
   line-height: 18px;
-  width: 400px;
+  min-width: 400px;
   border: 1px solid #ababab;
   background: white;
   -moz-border-radius: 13px;
@@ -1556,59 +1588,64 @@
   -webkit-border-radius: 2px;
   border-radius: 2px;
 }
-.openerp .oe_searchview.oe_searchview_open_drawer .oe_searchview_drawer {
-  display: block;
+.openerp .oe_searchview_drawer_container {
+  overflow: auto;
 }
-.openerp .oe_searchview .oe_searchview_drawer {
-  cursor: default;
-  position: absolute;
-  z-index: 2;
-  margin-top: 4px;
-  top: 100%;
-  right: -1px;
-  background-color: white;
-  min-width: 100%;
+.openerp .oe_searchview_drawer {
   display: none;
-  border: 1px solid #afafb6;
+  width: 100%;
+  cursor: default;
+  display: none;
+  overflow: hidden;
+  border-bottom: 1px solid #afafb6;
   text-align: left;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  padding: 8px 0;
 }
-.openerp .oe_searchview .oe_searchview_drawer > div {
-  border-top: 1px solid #cccccc;
-  margin: 0;
-  padding: 8px;
+.openerp .oe_searchview_drawer .badge {
+  font-size: 12px;
+  line-height: 12px;
 }
-.openerp .oe_searchview .oe_searchview_drawer > div:first-child {
-  border-top: none;
-  margin: 0;
+.openerp .oe_searchview_drawer > div:first-child {
+  border: none;
+  padding-left: 0;
 }
-.openerp .oe_searchview .oe_searchview_drawer h3 {
-  margin: 8px 4px 4px 0px;
+.openerp .oe_searchview_drawer > div:first-child li:hover:not(.badge) {
+  background-color: #f0f0fa;
+}
+.openerp .oe_searchview_drawer .col-md-5 {
+  padding-left: 0;
+}
+.openerp .oe_searchview_drawer dl {
+  margin-bottom: 0;
+}
+.openerp .oe_searchview_drawer dt {
   color: #7c7bad;
   font-size: 13px;
+  line-height: 24px;
 }
-.openerp .oe_searchview .oe_searchview_drawer h4, .openerp .oe_searchview .oe_searchview_drawer h4 * {
+.openerp .oe_searchview_drawer dd {
+  line-height: 24px;
+  font-size: 13px;
+  padding-top: 3px;
+}
+.openerp .oe_searchview_drawer h4, .openerp .oe_searchview_drawer h4 * {
   margin: 0 0 0 2px;
+  padding-left: 20px;
   cursor: pointer;
   font-weight: normal;
   display: inline-block;
 }
-.openerp .oe_searchview .oe_searchview_drawer h4:hover, .openerp .oe_searchview .oe_searchview_drawer h4 *:hover {
+.openerp .oe_searchview_drawer h4:hover, .openerp .oe_searchview_drawer h4 *:hover {
   background-color: #f0f0fa;
 }
-.openerp .oe_searchview .oe_searchview_drawer h4:before {
+.openerp .oe_searchview_drawer h4:before {
   content: "▸ ";
   color: #a3a3a3;
 }
-.openerp .oe_searchview .oe_searchview_drawer button {
+.openerp .oe_searchview_drawer button {
   margin: 4px 0;
 }
-.openerp .oe_searchview .oe_searchview_drawer .button {
+.openerp .oe_searchview_drawer .button {
   border: none;
   background: transparent;
   padding: 0 2px;
@@ -1619,126 +1656,112 @@
   -webkit-border-radius: 0;
   border-radius: 0;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_section {
-  display: table;
-  width: 100%;
-}
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_section > div {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  box-sizing: border-box;
-  display: table-cell;
-  width: 50%;
-  padding-left: 2px;
-}
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_section ul {
-  margin: 0 8px 8px;
+.openerp .oe_searchview_drawer .oe_searchview_section ul {
+  margin: 0 8px;
   padding: 0;
   list-style: none;
+  display: inline;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_section li {
-  list-style: none;
-  padding: 2px 4px 2px 20px;
-  line-height: 14px;
-  color: inherit;
+.openerp .oe_searchview_drawer .oe_searchview_section li {
+  display: inline-block;
   cursor: pointer;
   position: relative;
+  margin-right: 8px;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_section li.oe_selected:before {
-  content: "W";
-  font-family: "entypoRegular" !important;
-  font-size: 24px;
-  font-weight: 300 !important;
-  color: #a3a3a3;
-  position: absolute;
-  left: 4px;
-  top: -2px;
+.openerp .oe_searchview_drawer .oe_searchview_section li > span {
+  display: inline-block;
+  max-width: 250px;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  overflow: hidden;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_section li:hover {
-  background-color: #f0f0fa;
-}
-.openerp .oe_searchview .oe_searchview_drawer form {
+.openerp .oe_searchview_drawer form {
   margin-left: 12px;
 }
-.openerp .oe_searchview .oe_searchview_drawer form p {
+.openerp .oe_searchview_drawer form p {
   margin: 4px 0;
   line-height: 18px;
 }
-.openerp .oe_searchview .oe_searchview_drawer form button {
+.openerp .oe_searchview_drawer form button {
   margin: 0 0 8px -3px;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom {
-  padding: 0 8px 8px 8px;
-}
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom div {
-  padding: 0;
-}
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom div h4 {
-  margin: 0;
-}
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom form {
+.openerp .oe_searchview_drawer .oe_searchview_savefilter form {
   display: none;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom li {
+.openerp .oe_searchview_drawer .oe_searchview_custom {
+  display: none;
+}
+.openerp .oe_searchview_drawer .oe_searchview_custom li {
   cursor: pointer;
   position: relative;
   line-height: 14px;
-  padding: 2px 4px 2px 20px;
+  margin-right: 0;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom li:hover {
-  background-color: #f0f0fa;
-}
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom li button {
+.openerp .oe_searchview_drawer .oe_searchview_custom li button {
   position: absolute;
   top: 0;
   right: 5px;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom label {
+.openerp .oe_searchview_drawer .oe_searchview_custom li a {
+  margin-left: 10px;
+  position: inherit;
+  visibility: hidden;
+  display: inline-block;
+}
+.openerp .oe_searchview_drawer .oe_searchview_custom li span:hover:not(.badge) {
+  background-color: #f0f0fa;
+}
+.openerp .oe_searchview_drawer .oe_searchview_custom li:hover a {
+  visibility: visible;
+}
+.openerp .oe_searchview_drawer .oe_searchview_custom label {
   font-weight: normal;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_dashboard form {
+.openerp .oe_searchview_drawer .oe_searchview_dashboard form {
   display: none;
   margin-top: 2px;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced form {
+.openerp .oe_searchview_drawer .oe_searchview_advanced {
+  overflow: auto;
+}
+.openerp .oe_searchview_drawer .oe_searchview_advanced form {
   display: none;
   margin-top: 8px;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced button.oe_add_condition:before {
+.openerp .oe_searchview_drawer .oe_searchview_advanced button.oe_add_condition:before {
   content: "Z";
   font-family: "entypoRegular" !important;
   font-size: 24px;
   font-weight: 300 !important;
   margin-right: 4px;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced ul {
+.openerp .oe_searchview_drawer .oe_searchview_advanced ul {
   list-style: none;
   padding: 0;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced li {
+.openerp .oe_searchview_drawer .oe_searchview_advanced li {
   position: relative;
   list-style: none;
   margin: 0;
   white-space: nowrap;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced li:first-child .searchview_extended_prop_or {
+.openerp .oe_searchview_drawer .oe_searchview_advanced li:first-child .searchview_extended_prop_or {
   visibility: hidden;
   margin-left: -14px;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced .searchview_extended_prop_or {
+.openerp .oe_searchview_drawer .oe_searchview_advanced .searchview_extended_prop_or {
   opacity: 0.5;
   margin-left: -14px;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_opened h4:before {
+.openerp .oe_searchview_drawer .oe_opened h4:before {
   content: "▾ ";
   position: relative;
   top: -1px;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_opened form {
+.openerp .oe_searchview_drawer .oe_opened form {
   display: block;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_delete, .openerp .oe_searchview .oe_searchview_drawer .searchview_extended_delete_prop {
+.openerp .oe_searchview_drawer .oe_searchview_custom_delete, .openerp .oe_searchview_drawer .searchview_extended_delete_prop {
   display: inline-block;
   width: 12px;
   height: 12px;
@@ -1750,7 +1773,7 @@
   font-weight: bold;
   text-shadow: 0 1px 1px white;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_delete:hover, .openerp .oe_searchview .oe_searchview_drawer .searchview_extended_delete_prop:hover {
+.openerp .oe_searchview_drawer .oe_searchview_custom_delete:hover, .openerp .oe_searchview_drawer .searchview_extended_delete_prop:hover {
   text-decoration: none;
   color: white;
   background: #8786b7;
@@ -1759,16 +1782,16 @@
   -webkit-border-radius: 2px;
   border-radius: 2px;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_delete {
+.openerp .oe_searchview_drawer .oe_searchview_custom_delete {
   display: none;
   position: absolute;
   bottom: 1px;
   right: 4px;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_private:hover .oe_searchview_custom_delete, .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_public:hover .oe_searchview_custom_delete {
+.openerp .oe_searchview_drawer .oe_searchview_custom_private:hover .oe_searchview_custom_delete, .openerp .oe_searchview_drawer .oe_searchview_custom_public:hover .oe_searchview_custom_delete {
   display: inline-block;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_public:after {
+.openerp .oe_searchview_drawer .oe_searchview_custom_public:after {
   content: ",";
   font-family: "entypoRegular" !important;
   font-size: 22px;
@@ -3422,4 +3445,8 @@ input[type="radio"], input[type="checkbox"] {
 .blockUI.blockOverlay {
   background-color: black;
   opacity: 0.6;
+}
+
+body {
+  overflow: auto;
 }

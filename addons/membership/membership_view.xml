@@ -44,7 +44,7 @@
             <field name="model">product.template</field>
             <field name="priority">50</field>
             <field name="arch" type="xml">
-                <form string="Membership products" version="7.0">
+                <form string="Membership products">
                     <sheet>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -166,7 +166,7 @@
                     <separator/>
                     <filter icon="terp-personal" name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
                     <filter icon="terp-personal" name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
-                    <group expand="0" string="Group By..." colspan="10" col="8">
+                    <group expand="0" string="Group By" colspan="10" col="8">
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}"/>
                         <filter string="Associate Member" name = "associate" icon="terp-partner" domain="[]" context="{'group_by':'associate_member'}"/>
                         <filter string=" Membership State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>

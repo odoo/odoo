@@ -27,7 +27,7 @@
             <field name="name">res.partner.title.form</field>
             <field name="model">res.partner.title</field>
             <field name="arch" type="xml">
-                <form string="Partner Titles" version="7.0">
+                <form string="Partner Titles">
                     <group col="4">
                         <field name="name"/>
                         <field name="shortcut"/>
@@ -93,7 +93,7 @@
             <field name="name">res.partner.simplified.form</field>
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
-                <form string="Contact" version="7.0">
+                <form string="Contact">
                     <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
                         <div class="oe_edit_only">
@@ -125,7 +125,7 @@
             <field name="model">res.partner</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Partners" version="7.0">
+                <form string="Partners">
                 <sheet>
                     <field name="image" widget='image' class="oe_left oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
                     <div class="oe_title oe_left">
@@ -254,7 +254,7 @@
                                         </t>
                                     </templates>
                                 </kanban>
-                                <form string="Contact" version="7.0">
+                                <form string="Contact">
                                     <sheet>
                                         <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                                         <div class="oe_title">
@@ -342,7 +342,7 @@
                    <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
                    <field name="user_id"/>
                    <field name="parent_id" domain="[('is_company','=',1)]" operator="child_of"/>
-                   <group expand="0" string="Group By...">
+                   <group expand="0" string="Group By">
                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
                        <filter string="Company" context="{'group_by': 'parent_id'}"/>
                        <filter string="Country" context="{'group_by': 'country_id'}"/>
@@ -514,7 +514,7 @@
             <field name="name">Partner Tags</field>
             <field name="model">res.partner.category</field>
             <field name="arch" type="xml">
-                <form string="Partner Tag" version="7.0">
+                <form string="Partner Tag">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>

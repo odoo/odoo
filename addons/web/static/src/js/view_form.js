@@ -1197,7 +1197,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         this.fvg = fvg;
         this.version = parseFloat(this.fvg.arch.attrs.version);
         if (isNaN(this.version)) {
-            this.version = 6.1;
+            this.version = 7.0;
         }
     },
     set_tags_registry: function(tags_registry) {
@@ -1209,7 +1209,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     set_widgets_registry: function(widgets_registry) {
         this.widgets_registry = widgets_registry;
     },
-    // Backward compatibility tools, current default version: v6.1
+    // Backward compatibility tools, current default version: v7
     process_version: function() {
         if (this.version < 7.0) {
             this.$form.find('form:first').wrapInner('<group col="4"/>');
@@ -5306,8 +5306,12 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         if (this.searchview) {
             this.searchview.destroy();
         }
+        if (this.searchview_drawer) {
+            this.searchview_drawer.destroy();
+        }
         this.searchview = new instance.web.SearchView(this,
                 this.dataset, false,  search_defaults);
+        this.searchview_drawer = new instance.web.SearchViewDrawer(this, this.searchview);
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
@@ -5353,7 +5357,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
             });
         });
-        this.searchview.appendTo($(".oe_popup_search", self.$el));
+        this.searchview.appendTo(this.$(".oe_popup_search"));
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;

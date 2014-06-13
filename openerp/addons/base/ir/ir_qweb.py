@@ -16,7 +16,6 @@ from urlparse import urlparse
 
 import babel
 import babel.dates
-import werkzeug
 from PIL import Image
 
 import openerp.http
@@ -26,6 +25,7 @@ import openerp.tools.lru
 from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
+from openerp.tools import html_escape as escape
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
@@ -269,14 +269,14 @@ class QWeb(orm.AbstractModel):
                     for attribute in self._render_att:
                         if attribute_name[2:].startswith(attribute):
                             att, val = self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
-                            generated_attributes += val and ' %s="%s"' % (att, werkzeug.utils.escape(val)) or " "
+                            generated_attributes += val and ' %s="%s"' % (att, escape(val)) or " "
                             break
                     else:
                         if attribute_name[2:] in self._render_tag:
                             t_render = attribute_name[2:]
                         template_attributes[attribute_name[2:]] = attribute_value
                 else:
-                    generated_attributes += ' %s="%s"' % (attribute_name, werkzeug.utils.escape(attribute_value))
+                    generated_attributes += ' %s="%s"' % (attribute_name, escape(attribute_value))
 
             if 'debug' in template_attributes:
                 debugger = template_attributes.get('debug', 'pdb')
@@ -489,7 +489,7 @@ class FieldConverter(osv.AbstractModel):
         """
         Generates the metadata attributes (prefixed by ``data-oe-`` for the
         root node of the field conversion. Attribute values are escaped by the
-        parent using ``werkzeug.utils.escape``.
+        parent.
 
         The default attributes are:
 
@@ -542,7 +542,7 @@ class FieldConverter(osv.AbstractModel):
                 record._model._all_columns[field_name].column,
                 options, context=context)
             if options.get('html-escape', True):
-                content = werkzeug.utils.escape(content)
+                content = escape(content)
             elif hasattr(content, '__html__'):
                 content = content.__html__()
         except Exception:
@@ -553,7 +553,7 @@ class FieldConverter(osv.AbstractModel):
         if context and context.get('inherit_branding'):
             # add branding attributes
             g_att += ''.join(
-                ' %s="%s"' % (name, werkzeug.utils.escape(value))
+                ' %s="%s"' % (name, escape(value))
                 for name, value in self.attributes(
                     cr, uid, field_name, record, options,
                     source_element, g_att, t_att, qweb_context)
@@ -875,7 +875,7 @@ class Contact(orm.AbstractModel):
 
         val = {
             'name': value.split("\n")[0],
-            'address': werkzeug.utils.escape("\n".join(value.split("\n")[1:])),
+            'address': escape("\n".join(value.split("\n")[1:])),
             'phone': field_browse.phone,
             'mobile': field_browse.mobile,
             'fax': field_browse.fax,
@@ -919,7 +919,7 @@ class QwebWidget(osv.AbstractModel):
         return self.pool['ir.qweb'].eval_str(inner, qwebcontext)
 
     def format(self, inner, options, qwebcontext):
-        return werkzeug.utils.escape(self._format(inner, options, qwebcontext))
+        return escape(self._format(inner, options, qwebcontext))
 
 class QwebWidgetMonetary(osv.AbstractModel):
     _name = 'ir.qweb.widget.monetary'
@@ -979,7 +979,7 @@ def nl2br(string, options=None):
     if options is None: options = {}
 
     if options.get('html-escape', True):
-        string = werkzeug.utils.escape(string)
+        string = escape(string)
     return HTMLSafe(string.replace('\n', '<br>\n'))
 
 def get_field_type(column, options):

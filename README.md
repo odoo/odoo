@@ -1,4 +1,4 @@
-<a href="http://runbot.odoo.com/runbot"><img src="http://runbot.odoo.com/runbot/badge/1/master.svg"/></a>
+[![Build Status](http://runbot.odoo.com/runbot/badge/default/1/master.svg)](http://runbot.odoo.com/runbot)
 
 Odoo
 ----

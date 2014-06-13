@@ -118,7 +118,7 @@
                         <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
                     </group>
                 </group>
-                <field name="product_manager" position="attributes" version="7.0">
+                <field name="product_manager" position="attributes">
                     <attribute name="context">{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}</attribute>
                 </field>
                 <xpath expr="//div[@name='buttons']" position="inside">
@@ -192,7 +192,7 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <group name="status" position="before" version="7.0">
+                <group name="status" position="before">
                     <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
                         <field name="track_all" groups="stock.group_production_lot"/>
                         <field name="track_incoming" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>

@@ -31,6 +31,20 @@
         </t>
     </template>
 
+    <!-- Message when a login is required  -->
+    <template id="auth_required" name="Login required for this survey">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Login required</h1>
+                        <p>This survey is open only to registered people. Please <a t-attf-href="/web/login?redirect=%2Fsurvey%2Fstart%2F#{ slug(survey) }">log in</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <!-- Message when the survey has no pages  -->
     <template id="nopages" name="Survey has no pages">
         <t t-call="website.layout">

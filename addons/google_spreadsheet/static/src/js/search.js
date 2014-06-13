@@ -42,7 +42,7 @@ openerp.google_spreadsheet = function(instance) {
 	        });
 	    },
 	});
-	instance.web.SearchView.include({
+	instance.web.SearchViewDrawer.include({
 	    add_common_inputs: function() {
 	        this._super();
 	        var vm = this.getParent().getParent();

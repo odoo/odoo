@@ -60,7 +60,7 @@
             <field name="name">support_channel.form</field>
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
-                <form string="Support Channels" version="7.0">
+                <form string="Support Channels">
                 <sheet>
                     <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
@@ -150,7 +150,7 @@
                     <filter name="session_id" string="My Sessions" domain="[('session_id.user_ids','in', uid)]"/>
                     <field name="from_id"/>
                     <field name="to_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="group_by_session_id" string="Session" domain="[]" context="{'group_by':'session_id'}"/>
                         <filter name="group_by_date" string="Date" domain="[]" context="{'group_by':'date'}"/>
                     </group>

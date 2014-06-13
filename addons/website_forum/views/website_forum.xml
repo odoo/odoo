@@ -156,14 +156,14 @@
 <!-- Display a post -->
 <template id="display_post">
     <div class="question clearfix">
-        <div class="pull-left text-center">
+        <div class="col-md-2 hidden-xs text-center">
             <div t-attf-class="box #{question.is_correct and 'oe_green' or 'oe_grey'} #{(question.child_count == 0) and 'text-muted' or ''}">
                 <span t-esc="question.child_count"/>
                 <div t-if="question.child_count&gt;1" class="subtitle">Answers</div>
                 <div t-if="question.child_count&lt;=1" class="subtitle">Answer</div>
             </div>
         </div>
-        <div style="margin-left: 95px; margin-top:-8px;">
+        <div class="col-md-10">
             <div class="question-name">
                 <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
                     <span t-if="not question.active"><b> [Deleted]</b></span>
@@ -180,6 +180,11 @@
                     t-field="question.create_uid" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                     style="display: inline-block;"/>
                 on <span t-field="question.write_date" t-field-options='{"format":"short"}'/>
+                <span class="visible-xs">
+                    <b t-esc="question.child_count or 0"/>
+                    <t t-if="question.child_count&gt;1">answers</t>
+                    <t t-if="question.child_count==1">answers</t>
+                </span>
                 with <b t-field="question.views"/> views
                 <span t-if="question.vote_count&gt;0"> and
                     <b t-esc="question.vote_count or 0"/>
@@ -432,7 +437,7 @@
 <template id="post_description_full" name="Question Navigation">
     <t t-call="website_forum.header">
         <div t-attf-class="question #{not question.active and 'alert alert-danger' or ''}">
-            <div class="text-center pull-left">
+            <div class="col-md-2 hidden-xs text-center">
                 <t t-call="website_forum.vote">
                     <t t-set="post" t-value="question"/>
                 </t>
@@ -444,7 +449,7 @@
                         t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
                 </div>
             </div>
-            <div style="margin-left: 95px;">
+            <div style="col-md-10">
                 <h1 class="mt0">
                     <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
                     <span t-if="not question.active"><b> [Deleted]</b></span>
@@ -470,7 +475,6 @@
                     </div>
                 </div>
                 <t t-raw="question.content"/>
-
                 <div class="mt16 clearfix">
                     <div class="pull-right">
                         <div class="text-right">
@@ -533,6 +537,18 @@
                             <span class="text-muted">Asked on <span t-field="question.create_date" t-field-options='{"format":"short"}'/></span>
                         </div>
                     </div>
+                    <div class="visible-xs text-center">
+                        <t t-call="website_forum.vote">
+                            <t t-set="post" t-value="question"/>
+                        </t>
+                        <div class="text-muted text-center">
+                            <span t-field="question.views"/> Views
+                        </div>
+                        <div class="mt4">
+                            <a t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
+                                t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
+                        </div>
+                    </div>
                 </div>
                 <t t-call="website_forum.post_comment">
                     <t t-set="object" t-value="question"/>
@@ -544,7 +560,7 @@
         <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32">
             <a t-attf-id="answer-#{str(answer.id)}"/>
             <div t-attf-class="forum_answer" t-attf-id="answer_#{answer.id}" >
-                <div class="text-center pull-left">
+                <div class="col-md-2 hidden-xs text-center">
                     <t t-call="website_forum.vote">
                         <t t-set="post" t-value="answer"/>
                     </t>
@@ -553,7 +569,7 @@
                             t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
                     </div>
                 </div>
-                <div style="margin-left: 95px;" class="clearfix">
+                <div class="col-md-10 clearfix">
                     <t t-raw="answer.content"/>
                     <div class="mt16">
                         <ul class="list-inline pull-right">
@@ -588,6 +604,15 @@
                                 style="display: inline-block;"/>
                             <div t-field="answer.create_uid" t-field-options='{"widget": "contact", "badges": true, "fields": ["karma"]}'/>
                             <span class="text-muted">Answered on <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></span>
+                        </div>
+                        <div class="visible-xs text-center">
+                            <t t-call="website_forum.vote">
+                                <t t-set="post" t-value="answer"/>
+                            </t>
+                            <div class="text-muted mt8">
+                                <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'}"
+                                    t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
+                            </div>
                         </div>
                     </div>
                     <t t-call="website_forum.post_comment">
@@ -754,49 +779,63 @@
     </t>
 </template>
 
+<!--Private profile-->
+<template id="private_profile">
+    <t t-call="website_forum.header">
+        <h1 class="mt32">This profile is private!</h1>
+        <p>
+            <a t-attf-href="/forum/#{slug(forum)}">Return to the question list.</a>
+        </p>
+    </t>
+</template>
+
 <template id="edit_profile">
     <t t-call="website_forum.header">
-        <h3>Edit Profile </h3>
-            <div class="col-md-2">
-                <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
+        <h3>Edit Profile
+            <t t-call="website.publish_management">
+              <t t-set="object" t-value="user"/>
+            </t>
+        </h3>
+        <div class="col-md-2">
+            <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
+        </div>
+        <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal">
+            <input name="user_id" t-att-value="user.id" type="hidden"/>
+            <label class="col-md-2 control-label mb16" for="user.name">Real name</label>
+            <div class="col-md-7 mb16">
+                <input type="text" class="col-md-7 mb16 form-control" name="name" required="True" t-attf-value="#{user.name}"/>
+            </div> 
+            <label class="col-md-2 control-label mb16" for="user.partner_id.website">Website</label>
+            <div class="col-md-7 mb16">
+                <input type="text" class="form-control" name="website" t-attf-value="#{user.partner_id.website or ''}"/>
             </div>
-            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal">
-                <input name="user_id" t-att-value="user.id" type="hidden"/>
-                <label class="col-md-2 control-label mb16" for="user.name">Real name</label>
-                <div class="col-md-7 mb16">
-                    <input type="text" class="col-md-7 mb16 form-control" name="name" required="True" t-attf-value="#{user.name}"/>
-                </div>
-                <label class="col-md-2 control-label mb16" for="user.partner_id.website">Website</label>
-                <div class="col-md-7 mb16">
-                    <input type="text" class="form-control" name="website" t-attf-value="#{user.partner_id.website or ''}"/>
-                </div>
-                <label class="col-md-4 control-label mb16" for="user.partner_id.email">Email</label>
-                <div class="col-md-7 mb16">
-                    <input type="text" class="form-control" name="email" required="True" t-attf-value="#{user.partner_id.email}"/>
-                </div>
-                <label class="col-md-4 control-label mb16" for="user.partner_id.city">City</label>
-                <div class="col-md-7  mb16">
-                    <input type="text" class="form-control" name="city" t-attf-value="#{user.partner_id.city or ''}"/>
-                </div>
-                <label class="col-md-4 control-label mb16" for="contact_name">Country</label>
-                <div class="col-md-7 mb16">
-                    <select class="form-control" name="country">
-                        <option value="">Country...</option>
-                        <t t-foreach="countries or []" t-as="country">
-                            <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
-                        </t>
-                     </select>
-                </div>
-                <!--Note: using website_description fiels instead of using commnt firld of partner-->
-                <label class="col-md-4 control-label mb16" for="user.partner_id.website_description">Biography</label>
-                <div class="col-md-7 mb16">
-                    <textarea name="description" style="min-height: 120px" required="True"
-                        class="form-control"><t t-esc="user.partner_id.website_description"/></textarea>
-                </div>
-                <div class="col-sm-offset-4 col-md-4 mb16">
-                    <button class="btn btn-primary btn-lg">Update</button>
-                </div>
-            </form>
+            <label class="col-md-4 control-label mb16" for="user.partner_id.email">Email</label>
+            <div class="col-md-7 mb16">
+                <input type="text" class="form-control" name="email" required="True" t-attf-value="#{user.partner_id.email}"/>
+            </div>
+            <label class="col-md-4 control-label mb16" for="user.partner_id.city">City</label>
+            <div class="col-md-7  mb16">
+                <input type="text" class="form-control" name="city" t-attf-value="#{user.partner_id.city or ''}"/>
+            </div>
+            <label class="col-md-4 control-label mb16" for="contact_name">Country</label>
+            <div class="col-md-7 mb16">
+                <select class="form-control" name="country">
+                    <option value="">Country...</option>
+                    <t t-foreach="countries or []" t-as="country">
+                        <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
+                    </t>
+                 </select>
+            </div>
+            <!--Note: using website_description fiels instead of using commnt firld of partner-->
+            <label class="col-md-4 control-label mb16" for="user.partner_id.website_description">Biography</label>
+            <div class="col-md-7 mb16">
+                <textarea name="description" style="min-height: 120px" required="True" 
+                    class="form-control"><t t-esc="user.partner_id.website_description"/></textarea>
+            </div>
+            <div class="col-sm-offset-4 col-md-4 mb16">
+                <button class="btn btn-primary btn-lg">Update</button>
+            </div>
+        </form>
     </t>
 </template>
 
@@ -805,6 +844,9 @@
         <h1 class="mt0 page-header">
             <span t-field="user.name"/>
             <small>profile</small>
+            <t t-call="website.publish_management" groups="base.group_website_publisher">
+                <t t-set="object" t-value="user"/>
+            </t>
         </h1>
         <div class="row">
             <div class="col-sm-2">
