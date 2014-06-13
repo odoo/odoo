@@ -354,10 +354,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.$el.hide();
         }
         //Sort
-        var default_order = this.fields_view.arch.attrs.order,
+        var default_order = this.fields_view.arch.attrs.default_order,
             unsorted = !this.dataset._sort.length;
         if (unsorted && default_order) {
-            this.dataset.sort(default_order);
+            _.each(default_order.split(',').reverse(), function (order) {
+                var split = _.without(order.split(' '), '');
+                self.dataset.sort(split[0], split[1] === 'desc');
+            });
         }
 
         if(this.dataset._sort.length){
