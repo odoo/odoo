@@ -27,9 +27,9 @@
                 waitFor:   'form.js_attributes label:contains(16 Go) input:checked',
             },
             {
-                title:     "select ipod",
+                title:     "select iPad",
                 waitNot:   '.oe_website_sale .oe_product_cart:eq(2)',
-                element:   '.oe_product_cart a:contains("iPod")',
+                element:   '.oe_product_cart a:contains("iPad")',
             },
             {
                 title:     "open customize menu 2",
@@ -50,8 +50,22 @@
                 element:   '.modal a:contains("Proceed to checkout")',
             },
             {
-                title:     "finish",
+                title:     "return to the ipad product",
                 waitFor:   '#cart_products',
+                element:   "a:contains(iPad)",
+            },
+            {
+                title:     "open customize menu 3",
+                waitFor:   'form[action^="/shop/cart/update"] label:contains(32 Go) input',
+                element:   '#customize-menu-button',
+            },
+            {
+                title:     "click on 'Confirm: Add To Cart'",
+                element:   "#customize-menu a:contains(Confirm: Add To Cart)",
+            },
+            {
+                title:     "finish",
+                waitFor:   "a.a-submit:contains(Add to Cart)",
             },
         ]
     });

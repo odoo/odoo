@@ -90,7 +90,6 @@ class QueryURL(object):
         for k,v in kw.items():
             if v:
                 if isinstance(v, list) or isinstance(v, set):
-                    print k, v
                     l.append(werkzeug.url_encode([(k,i) for i in v]))
                 else:
                     l.append(werkzeug.url_encode([(k,v)]))
