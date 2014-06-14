@@ -6,8 +6,8 @@
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.ace.xml');
 
-    website.Menu.include({
-        events: _.extend({}, website.Menu.prototype.events, {
+    website.EditorBarCustomize.include({
+        events: _.extend({}, website.EditorBarCustomize.prototype.events, {
             'click a[data-action=ace]': 'launchAce',
         }),
         start: function () {

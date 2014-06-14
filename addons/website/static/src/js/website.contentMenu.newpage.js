@@ -5,7 +5,7 @@
     var _t = openerp._t;
     website.is_editable_button = true;
 
-    website.EditorBar.include({
+    website.EditorBarContent.include({
         start: function() {
             var res = this._super();
             this.$("a[data-action=new_page]").parents("li").removeClass("hidden");
@@ -25,7 +25,7 @@
             });
             return this._super();
         },
-        events: _.extend({}, website.EditorBar.prototype.events, {
+        events: _.extend({}, website.EditorBarContent.prototype.events, {
             'click a[data-action=new_page]': function (ev) {
                 ev.preventDefault();
                 website.prompt({

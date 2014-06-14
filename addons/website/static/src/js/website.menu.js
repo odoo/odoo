@@ -5,10 +5,6 @@
     var _t = openerp._t;
 
     website.Menu =  openerp.Widget.extend({
-        events: {
-            'click a[data-action=show-mobile-preview]': 'mobilePreview',
-            'click a[data-action=promote-current-page]': 'launchSeo',
-        },
         mobilePreview: function () {
             (new website.MobilePreview()).appendTo($(document.body));
         },
@@ -92,9 +88,15 @@
             $oe_systray.show();
             var $topview = $oe_systray.find('#website-top-view');
             
-            if (website.MobilePreview) $topview.append(openerp.qweb.render('website.editorbar.menu.mobile_preview'));
+            if (website.MobilePreview) {
+                $topview.append(openerp.qweb.render('website.editorbar.menu.mobile_preview'));
+                $('a[data-action=show-mobile-preview]', $topview).on('click', this, this.mobilePreview);
+            }
             if (website.EditorBarContent) new website.EditorBarContent(this).appendTo($topview);
-            if (website.seo) this.$('ul.oe_content_menu').prepend(openerp.qweb.render('website.editorbar.menu.promote'));
+            if (website.seo) {
+                this.$('ul.oe_content_menu').prepend(openerp.qweb.render('website.editorbar.menu.promote'));
+                $('a[data-action=promote-current-page]', $topview).on('click', this, this.launchSeo);
+            }
             if (website.EditorBarCustomize) new website.EditorBarCustomize(this).appendTo($topview);
             if (website.EditorBarHelp) new website.EditorBarHelp(this).appendTo($topview);
 
@@ -126,7 +128,6 @@
             'click button[data-action=save]': 'save',
             'click a[data-action=cancel]': 'cancel',
         },
-
         start: function() {
             var self = this;
             this.saving_mutex = new openerp.Mutex();
