@@ -37,6 +37,7 @@ from openerp import report
 import tempfile
 import time
 import logging
+from functools import partial
 
 from report_helper import WebKitHelper
 import openerp
@@ -119,7 +120,6 @@ class WebKitParser(report_sxw):
     """
     def __init__(self, name, table, rml=False, parser=rml_parse,
         header=True, store=False, register=True):
-        self.parser_instance = False
         self.localcontext = {}
         report_sxw.__init__(self, name, table, rml, parser,
             header, store, register=register)
@@ -230,16 +230,16 @@ class WebKitParser(report_sxw):
                     _logger.error('cannot remove file %s: %s', f_to_del, exc)
         return pdf
 
-    def translate_call(self, src):
+    def translate_call(self, parser_instance, src):
         """Translate String."""
         ir_translation = self.pool['ir.translation']
         name = self.tmpl and 'addons/' + self.tmpl or None
-        res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
-                                         name, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
+        res = ir_translation._get_source(parser_instance.cr, parser_instance.uid,
+                                         name, 'report', parser_instance.localcontext.get('lang', 'en_US'), src)
         if res == src:
             # no translation defined, fallback on None (backward compatibility)
-            res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
-                                             None, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
+            res = ir_translation._get_source(parser_instance.cr, parser_instance.uid,
+                                             None, 'report', parser_instance.localcontext.get('lang', 'en_US'), src)
         if not res :
             return src
         return res
@@ -264,14 +264,14 @@ class WebKitParser(report_sxw):
         if report_xml.report_type != 'webkit':
             return super(WebKitParser,self).create_single_pdf(cursor, uid, ids, data, report_xml, context=context)
 
-        self.parser_instance = self.parser(cursor,
-                                           uid,
-                                           self.name2,
-                                           context=context)
+        parser_instance = self.parser(cursor,
+                                      uid,
+                                      self.name2,
+                                      context=context)
 
         self.pool = pool
         objs = self.getObjects(cursor, uid, ids, context)
-        self.parser_instance.set_context(objs, data, ids, report_xml.report_type)
+        parser_instance.set_context(objs, data, ids, report_xml.report_type)
 
         template =  False
 
@@ -299,21 +299,22 @@ class WebKitParser(report_sxw):
         if not css :
             css = ''
 
+        translate_call = partial(self.translate_call, parser_instance)
         body_mako_tpl = mako_template(template)
         helper = WebKitHelper(cursor, uid, report_xml.id, context)
-        self.parser_instance.localcontext['helper'] = helper
-        self.parser_instance.localcontext['css'] = css
-        self.parser_instance.localcontext['_'] = self.translate_call
+        parser_instance.localcontext['helper'] = helper
+        parser_instance.localcontext['css'] = css
+        parser_instance.localcontext['_'] = translate_call
 
         # apply extender functions
         additional = {}
         if xml_id in _extender_functions:
             for fct in _extender_functions[xml_id]:
-                fct(pool, cr, uid, self.parser_instance.localcontext, context)
+                fct(pool, cr, uid, parser_instance.localcontext, context)
 
         if report_xml.precise_mode:
-            ctx = dict(self.parser_instance.localcontext)
-            for obj in self.parser_instance.localcontext['objects']:
+            ctx = dict(parser_instance.localcontext)
+            for obj in parser_instance.localcontext['objects']:
                 ctx['objects'] = [obj]
                 try :
                     html = body_mako_tpl.render(dict(ctx))
@@ -324,7 +325,7 @@ class WebKitParser(report_sxw):
                     raise except_osv(_('Webkit render!'), msg)
         else:
             try :
-                html = body_mako_tpl.render(dict(self.parser_instance.localcontext))
+                html = body_mako_tpl.render(dict(parser_instance.localcontext))
                 htmls.append(html)
             except Exception, e:
                 msg = u"%s" % e
@@ -332,22 +333,21 @@ class WebKitParser(report_sxw):
                 raise except_osv(_('Webkit render!'), msg)
         head_mako_tpl = mako_template(header)
         try :
-            head = head_mako_tpl.render(dict(self.parser_instance.localcontext, _debug=False))
+            head = head_mako_tpl.render(dict(parser_instance.localcontext, _debug=False))
         except Exception, e:
             raise except_osv(_('Webkit render!'), u"%s" % e)
         foot = False
         if footer :
             foot_mako_tpl = mako_template(footer)
             try :
-                foot = foot_mako_tpl.render(dict({},
-                                            **self.parser_instance.localcontext))
+                foot = foot_mako_tpl.render(dict(parser_instance.localcontext))
             except Exception, e:
                 msg = u"%s" % e
                 _logger.error(msg)
                 raise except_osv(_('Webkit render!'), msg)
         if report_xml.webkit_debug :
             try :
-                deb = head_mako_tpl.render(dict(self.parser_instance.localcontext, _debug=tools.ustr("\n".join(htmls))))
+                deb = head_mako_tpl.render(dict(parser_instance.localcontext, _debug=tools.ustr("\n".join(htmls))))
             except Exception, e:
                 msg = u"%s" % e
                 _logger.error(msg)

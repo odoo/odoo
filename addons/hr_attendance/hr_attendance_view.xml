@@ -6,7 +6,7 @@
             <field name="name">hr.attendance.form</field>
             <field name="model">hr.attendance</field>
             <field name="arch" type="xml">
-                <form string="Employee attendances" version="7.0">
+                <form string="Employee attendances">
                     <sheet>
                     <group>
                         <field name="employee_id"/>
@@ -56,7 +56,7 @@
                     <separator/>
                     <filter icon="terp-stock_align_left_24" string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
                     <field name="employee_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter name="name" string="Date" icon="terp-personal" domain="[]" context="{'group_by':'name'}"/>
                     </group>
@@ -111,7 +111,7 @@
             <field name="name">hr.action.reason.form</field>
             <field name="model">hr.action.reason</field>
             <field name="arch" type="xml">
-                <form string="Define attendance reason" version="7.0">
+                <form string="Define attendance reason">
                     <group col="4">
                         <field name="name"/>
                         <field name="action_type"/>

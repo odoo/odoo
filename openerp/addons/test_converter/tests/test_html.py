@@ -4,9 +4,8 @@ import os
 import xml.dom.minidom
 import datetime
 
-from werkzeug.utils import escape as e
-
 from openerp.tests import common
+from openerp.tools import html_escape as e
 from openerp.addons.base.ir import ir_qweb
 
 directory = os.path.dirname(__file__)

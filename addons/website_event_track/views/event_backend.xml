@@ -24,7 +24,7 @@
             <field name="name">Event Locations</field>
             <field name="model">event.track.location</field>
             <field name="arch" type="xml">
-                <form string="Event Location" version="7.0">
+                <form string="Event Location">
                     <field name="name"/>
                 </form>
             </field>
@@ -51,7 +51,7 @@
             <field name="name">Event Stages</field>
             <field name="model">event.track.stage</field>
             <field name="arch" type="xml">
-                <form string="Event Stage" version="7.0">
+                <form string="Event Stage">
                     <field name="name"/>
                 </form>
             </field>
@@ -79,7 +79,7 @@
             <field name="name">Sponsor Types</field>
             <field name="model">event.sponsor.type</field>
             <field name="arch" type="xml">
-                <form string="Event Sponsor Types" version="7.0">
+                <form string="Event Sponsor Types">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                 </form>
@@ -106,7 +106,7 @@
             <field name="name">Track Tags</field>
             <field name="model">event.track.tag</field>
             <field name="arch" type="xml">
-                <form string="Event Track Tag" version="7.0">
+                <form string="Event Track Tag">
                     <field name="name"/>
                 </form>
             </field>
@@ -132,7 +132,7 @@
             <field name="name">Event Tags</field>
             <field name="model">event.tag</field>
             <field name="arch" type="xml">
-                <form string="Event Tag" version="7.0">
+                <form string="Event Tag">
                     <field name="name"/>
                 </form>
             </field>
@@ -281,7 +281,7 @@
                     <field name="event_id"/>
                     <field name="stage_id"/>
                     <field name="speaker_ids"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
                         <filter string="Stage" context="{'group_by':'stage_id'}"/>
                         <filter string="Date" context="{'group_by':'date'}"/>
@@ -295,7 +295,7 @@
             <field name="name">event.track.form</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
-                <form string="Event Track" version="7.0">
+                <form string="Event Track">
                     <header>
                         <field name="stage_id" widget="statusbar"/>
                     </header>

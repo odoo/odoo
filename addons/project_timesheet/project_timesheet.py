@@ -198,7 +198,8 @@ class project_work(osv.osv):
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
                     vals_line['amount'] = amount_unit['value']['amount']
 
-            self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
+            if vals_line:
+                self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
 
         return super(project_work,self).write(cr, uid, ids, vals, context)
 

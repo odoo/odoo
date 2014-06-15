@@ -2449,7 +2449,7 @@ class BaseModel(object):
         fetched_data = cr.dictfetchall()
 
         if not groupby_fields:
-            return {r.pop('id'): r for r in fetched_data}
+            return fetched_data
 
         many2onefields = [gb['field'] for gb in annotated_groupbys if gb['type'] == 'many2one']
         if many2onefields:
@@ -2806,7 +2806,7 @@ class BaseModel(object):
                                 ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                             ]
-                            if f_pg_type == 'varchar' and f._type == 'char' and ((f.size is None and f_pg_size) or f_pg_size < f.size):
+                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size and (f.size is None or f_pg_size < f.size):
                                 try:
                                     with cr.savepoint():
                                         cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" TYPE %s' % (self._table, k, pg_varchar(f.size)))

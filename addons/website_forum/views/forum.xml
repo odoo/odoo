@@ -20,7 +20,7 @@
             <field name="name">forum.forum.form</field>
             <field name="model">forum.forum</field>
             <field name="arch" type="xml">
-                <form string="Forum" version="7.0">
+                <form string="Forum">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -59,7 +59,7 @@
             <field name="name">forum.post.form</field>
             <field name="model">forum.post</field>
             <field name="arch" type="xml">
-                <form string="Forum Post" version="7.0">
+                <form string="Forum Post">
                     <sheet>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -105,7 +105,7 @@
                     <field name="name" string="Content" filter_domain="['|', ('name', 'ilike', self), ('content', 'ilike', self)]"/>
                     <field name="create_uid"/>
                     <field name="forum_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Forum" domain="[]" context="{'group_by': 'forum_id'}"/>
                         <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
                     </group>

@@ -6,7 +6,7 @@
             <field name="name">Stock Valuation</field>
             <field name="model">wizard.valuation.history</field>
             <field name="arch" type="xml">
-                <form string="Choose your date" version="7.0">
+                <form string="Choose your date">
                     <p class="oe_gray" attrs="{'invisible': [('choose_date', '=', False)]}">
                         Choose the date for which you want to get the stock valuation of your products.
 
@@ -74,7 +74,7 @@
                 <field name="product_id"/>
                 <field name="location_id" filter_domain="[('name', 'child_of', self)]"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <group expand="1" string="Group By...">
+                <group expand="1" string="Group By">
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}" name='group_by_product'/>
                     <filter string="Product Category" icon="terp-accessories-archiver" context="{'group_by':'product_categ_id'}"/>
                     <filter string="Location" icon="terp-accessories-archiver" context="{'group_by':'location_id'}" name='group_by_location'/>

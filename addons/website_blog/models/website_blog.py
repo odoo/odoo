@@ -74,7 +74,6 @@ class BlogPost(osv.Model):
         'history_ids': fields.one2many(
             'blog.post.history', 'post_id',
             'History', help='Last post modifications',
-            deprecated='This field will be removed for OpenERP v9.'
         ),
         # creation / update stuff
         'create_date': fields.datetime(

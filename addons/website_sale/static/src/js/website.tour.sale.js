@@ -32,7 +32,7 @@
             },
             {
                 title:     "finish",
-                waitFor:   'label:contains(32 Go) input',
+                waitFor:   'form[action="/shop/cart/update"] label:contains(32 Go) input',
             }
         ]
     });

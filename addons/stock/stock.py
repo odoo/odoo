@@ -2276,6 +2276,9 @@ class stock_move(osv.osv):
 
             #Check moves that were pushed
             if move.move_dest_id.state in ('waiting', 'confirmed'):
+                # FIXME is opw 607970 still present with new WMS?
+                # (see commits 1ef2c181033bd200906fb1e5ce35e234bf566ac6
+                # and 41c5ceb8ebb95c1b4e98d8dd1f12b8e547a24b1d)
                 other_upstream_move_ids = self.search(cr, uid, [('id', '!=', move.id), ('state', 'not in', ['done', 'cancel']),
                                             ('move_dest_id', '=', move.move_dest_id.id)], context=context)
                 #If no other moves for the move that got pushed:

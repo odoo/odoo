@@ -191,7 +191,7 @@ class crm_lead(osv.osv):
                         ('partner_weight','>', 0),
                         ('partner_latitude','>', latitude - 8), ('partner_latitude','<', latitude + 8),
                         ('partner_longitude','>', longitude - 8), ('partner_longitude','<', longitude + 8),
-                        ('country', '=', lead.country_id.id),
+                        ('country_id', '=', lead.country_id.id),
                     ], context=context)
 
                 # 5. fifth way: anywhere in same country

@@ -1,3 +1,5 @@
+[![Build Status](http://runbot.odoo.com/runbot/badge/default/1/master.svg)](http://runbot.odoo.com/runbot)
+
 Odoo
 ----
 
@@ -6,7 +8,7 @@ Odoo is a suite of web based open source business apps.  More info at http://www
 The easiest way to play with it is the <a href="https://www.odoo.com/page/start">Odoo free trial</a>, email registration is NOT required, use the "skip this step" link on the registration page to skip it.
 
 
-Getting started with Odoo developement
+Getting started with Odoo development
 --------------------------------------
 
 If you are a developer type the following command at your terminal [1]:
