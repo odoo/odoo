@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2012 (<http://www.erpsystems.ro>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify

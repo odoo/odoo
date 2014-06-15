@@ -44,9 +44,9 @@ class asset_asset_report(osv.osv):
     }
     
     def init(self, cr):
-    	tools.drop_view_if_exists(cr, 'asset_asset_report')
-     	cr.execute("""
-    	    create or replace view asset_asset_report as (
+        tools.drop_view_if_exists(cr, 'asset_asset_report')
+         cr.execute("""
+            create or replace view asset_asset_report as (
                 select 
                     min(dl.id) as id,
                     dl.name as name,
@@ -81,6 +81,6 @@ class asset_asset_report(osv.osv):
                     a.purchase_date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
                     a.purchase_value, a.id, a.salvage_value
         )""")
-	
+    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -73,7 +73,7 @@ class ResourceCalendar(object):
         is free since january 15th
     """
 
-    #@	@+others
+    #@    @+others
     #@+node:__init__
     def __init__(self, src=None):
         if src:
@@ -262,7 +262,7 @@ class _MetaResource(type):
     the first working date.
     """
 
-    #@	@+others
+    #@    @+others
     #@+node:__init__
     def __init__(self, name, bases, dict_):
         super(_MetaResource, self).__init__(name, bases, dict_)
@@ -369,7 +369,7 @@ class Booking(object):
     """
     A booking unit for a task.
     """
-    #@	<< declarations >>
+    #@    << declarations >>
     #@+node:<< declarations >>
     book_start = datetime.datetime.min
     book_end = datetime.datetime.max
@@ -378,7 +378,7 @@ class Booking(object):
 
     #@-node:<< declarations >>
     #@nl
-    #@	@+others
+    #@    @+others
     #@+node:__init__
     def __init__(self, task=None):
         self.__task = task
@@ -410,7 +410,7 @@ class Booking(object):
 #@-node:class Booking
 #@+node:class ResourceList
 class ResourceList(list):
-    #@	@+others
+    #@    @+others
     #@+node:__init__
     def __init__(self, *args):
         if args: self.extend(args)
@@ -419,7 +419,7 @@ class ResourceList(list):
 #@-node:class ResourceList
 #@+node:class Resource
 class Resource(_ResourceBase):
-    #@	<< declarations >>
+    #@    << declarations >>
     #@+node:<< declarations >>
     __metaclass__ = _MetaResource
     __attrib_completions__ = {\
@@ -437,7 +437,7 @@ class Resource(_ResourceBase):
 
     #@-node:<< declarations >>
     #@nl
-    #@	@+others
+    #@    @+others
     #@+node:__init__
     def __init__(self, **kwargs):
         for k, v in kwargs.iteritems():
@@ -728,7 +728,7 @@ class Resource(_ResourceBase):
 
 
 class _ResourceGroup(object):
-    #@	@+others
+    #@    @+others
     #@+node:__init__
     def __init__(self, *args):
         self.resources = []
@@ -786,7 +786,7 @@ class _ResourceGroup(object):
 
 
 class _OrResourceGroup(_ResourceGroup):
-    #@	@+others
+    #@    @+others
     #@+node:_get_resources
     def _get_resources(self, state):
         for r in self.resources:
@@ -808,7 +808,7 @@ class _OrResourceGroup(_ResourceGroup):
 
 
 class _AndResourceGroup(_ResourceGroup):
-    #@	@+others
+    #@    @+others
     #@+node:__init__
     def __init__(self, *args):
         self.factors = [ 1 ]

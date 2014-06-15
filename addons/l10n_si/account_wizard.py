@@ -22,9 +22,9 @@
 from openerp.osv import osv
 
 class AccountWizard_cd(osv.osv_memory):
-	_inherit='wizard.multi.charts.accounts'
-		
-	_defaults = {
+    _inherit='wizard.multi.charts.accounts'
+        
+    _defaults = {
         'code_digits' : 6,
-	}
+    }
 

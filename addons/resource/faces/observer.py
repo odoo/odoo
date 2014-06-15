@@ -47,7 +47,7 @@ class Observer(object):
     @var link_view: syncronizes the marked objects in all views.
 
     """
-    #@	<< declarations >>
+    #@    << declarations >>
     #@+node:<< declarations >>
     __type_name__ = None
     __type_image__ = None

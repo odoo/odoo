@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #    Copyright (C) 2010-2011 OpenERP S.A. (<http://www.openerp.com>).
 #    $Id$

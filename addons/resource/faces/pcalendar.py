@@ -499,7 +499,7 @@ def union(*calendars):
 #@-node:union
 #@+node:class _CalendarItem
 class _CalendarItem(int):
-    #@	<< class _CalendarItem declarations >>
+    #@    << class _CalendarItem declarations >>
     #@+node:<< class _CalendarItem declarations >>
     __slots__ = ()
     calender = None
@@ -507,7 +507,7 @@ class _CalendarItem(int):
 
     #@-node:<< class _CalendarItem declarations >>
     #@nl
-    #@	@+others
+    #@    @+others
     #@+node:__new__
     def __new__(cls, val):
         try:
@@ -531,7 +531,7 @@ class _CalendarItem(int):
 #@-node:class _CalendarItem
 #@+node:class _Minutes
 class _Minutes(_CalendarItem):
-    #@	<< class _Minutes declarations >>
+    #@    << class _Minutes declarations >>
     #@+node:<< class _Minutes declarations >>
     __slots__ = ()
     STR_FORMAT = "{%dd}{ %HH}{ %MM}"
@@ -539,7 +539,7 @@ class _Minutes(_CalendarItem):
 
     #@-node:<< class _Minutes declarations >>
     #@nl
-    #@	@+others
+    #@    @+others
     #@+node:__new__
     def __new__(cls, src=0, is_duration=False):
         """
@@ -600,7 +600,7 @@ class _WorkingDateBase(_CalendarItem):
     A daytetime which has only valid values within the
     workingtimes of a specific calendar
     """
-    #@	<< class _WorkingDateBase declarations >>
+    #@    << class _WorkingDateBase declarations >>
     #@+node:<< class _WorkingDateBase declarations >>
     timetuple = True
     STR_FORMAT = "%x %H:%M"
@@ -610,7 +610,7 @@ class _WorkingDateBase(_CalendarItem):
 
     #@-node:<< class _WorkingDateBase declarations >>
     #@nl
-    #@	@+others
+    #@    @+others
     #@+node:__new__
     def __new__(cls, src):
         #cls.__bases__[0] is the base of
@@ -680,7 +680,7 @@ class Calendar(object):
     A calendar to specify working times and vacations.
     The calendars epoch start at 1.1.1979
     """
-    #@	<< declarations >>
+    #@    << declarations >>
     #@+node:<< declarations >>
     # january the first must be a monday
     EPOCH = datetime.datetime(1979, 1, 1)
@@ -694,7 +694,7 @@ class Calendar(object):
 
     #@-node:<< declarations >>
     #@nl
-    #@	@+others
+    #@    @+others
     #@+node:__init__
     def __init__(self):
 
