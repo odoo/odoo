@@ -14,32 +14,6 @@
         unflow: function() {
             self.reflow('all_inside');
         },
-        // reflow: function() {
-        //     var self = this;
-        //     var $more_container = this.$('#menu_more_container').hide();
-        //     var $more = this.$('#menu_more');
-        //     var $websitetopview = this.$el.find('#website-top-view li');
-        //     $more.children('li').insertBefore($more_container);
-        //     var $toplevel_items = this.$el.find('li').not($websitetopview).not($more_container).hide();
-        //     $toplevel_items.each(function() {
-        //         var remaining_space = self.$el.parent().width() - $more_container.outerWidth() - 50;
-        //         self.$el.children(':visible').each(function() {
-        //             remaining_space -= $(this).outerWidth();
-        //         });
-
-        //         if ($(this).width() > remaining_space) {
-        //             return false;
-        //         }
-        //         $(this).show();
-        //     });
-        //     $more.append($toplevel_items.filter(':hidden').show());
-        //     $more_container.toggle(!!$more.children().length);
-        //     // Hide toplevel item if there is only one
-        //     var $toplevel = this.$el.children("li:visible");
-        //     if ($toplevel.length === 1) {
-        //         $toplevel.hide();
-        //     }
-        // },
         reflow: function(behavior) {
             var self = this;
             var $more_container = this.$('#menu_more_container').hide();
@@ -56,21 +30,22 @@
             }
 
             var $toplevel_items = this.$el.find('li').not($more_container).not($systray.find('li')).hide();
-            $toplevel_items.each(function() {
-                // In all inside mode, we do not compute to know if we must hide the items, we hide them all
-                if (behavior === 'all_inside') {
-                    return false;
-                }
-                var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
-                self.$el.parent().children(':visible').each(function() {
-                    remaining_space -= $(this).outerWidth();
-                });
 
-                if ($(this).width() > remaining_space) {
-                    return false;
-                }
-                $(this).show();
-            });
+            // In all inside mode, we do not compute to know if we must hide
+            // the items, we let them hidden
+            if (behavior !== 'all_inside') {
+                $toplevel_items.each(function() {
+                    var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
+                    self.$el.parent().children(':visible').each(function() {
+                        remaining_space -= $(this).outerWidth();
+                    });
+
+                    if ($(this).width() > remaining_space) {
+                        return false;
+                    }
+                    $(this).show();
+                });
+            }
             $more.append($toplevel_items.filter(':hidden').show());
             $more_container.toggle(!!$more.children().length || behavior === 'all_inside');
             // Hide toplevel item if there is only one
@@ -82,24 +57,32 @@
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            var $oe_systray = this.$el.parents().find('.oe_systray');
 
-            $oe_systray.append(openerp.qweb.render('website.editorbar.edit.not_edit_mode'));
+            // Fetch the zone where we will add the editor bar content
+            var $oe_user_menu = this.$el.parents('#oe_main_menu_placeholder').find('.oe_user_menu_placeholder');
+            $oe_user_menu.show();
+            var $oe_systray = this.$el.parents().find('.oe_systray');
+            $oe_systray.removeClass('navbar-right').addClass('navbar-left')
             $oe_systray.show();
+
+            // Show the editor in the systray
+            $oe_systray.append(openerp.qweb.render('website.editorbar.edit.not_edit_mode'));
             var $topview = $oe_systray.find('#website-top-view');
-            
+            if (website.EditorBarContent) new website.EditorBarContent(this).appendTo($topview);
             if (website.MobilePreview) {
                 $topview.append(openerp.qweb.render('website.editorbar.menu.mobile_preview'));
                 $('a[data-action=show-mobile-preview]', $topview).on('click', this, this.mobilePreview);
             }
-            if (website.EditorBarContent) new website.EditorBarContent(this).appendTo($topview);
             if (website.seo) {
                 this.$('ul.oe_content_menu').prepend(openerp.qweb.render('website.editorbar.menu.promote'));
                 $('a[data-action=promote-current-page]', $topview).on('click', this, this.launchSeo);
             }
-            if (website.EditorBarCustomize) new website.EditorBarCustomize(this).appendTo($topview);
-            if (website.EditorBarHelp) new website.EditorBarHelp(this).appendTo($topview);
 
+            // Show settings and help in the user menu
+            if (website.EditorBarCustomize) new website.EditorBarCustomize(this).appendTo($oe_user_menu);
+            if (website.EditorBarHelp) new website.EditorBarHelp(this).appendTo($oe_user_menu);
+
+            // Handle page resizing
             var lazyreflow = _.debounce(this.reflow.bind(this), 200);
             $(window).on('resize', this, function() {
                 if (parseInt(self.$el.parent().css('width')) < 768 ) {
