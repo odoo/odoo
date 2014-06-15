@@ -19,7 +19,7 @@
 		<field name="code">E - 55</field>
 		<field name="info">Kwota do przeniesienia na następny okres rozliczeniowy</field>	
 		<field name="parent_id" ref="tax_code"/>
-		<field name="notnegative" eval="True" />
+<!--		<field name="notnegative" eval="True" />  -->
 <!--		<field name="sign" eval="-1" />    -->
 	</record>
 
@@ -28,7 +28,7 @@
 		<field name="code">E - 50</field>
 		<field name="info">Nadwyżka podatku naliczonego nad należnym</field>	
 		<field name="parent_id" ref="v_do_przen"/>
-		<field name="notnegative" eval="True" />
+<!--		<field name="notnegative" eval="True" />   -->
 <!--		<field name="sign" eval="-1" />    -->
 	</record>
 
@@ -37,7 +37,7 @@
 		<field name="code">E - 48</field>
 		<field name="info">Kwota podatku podlegająca wpłacie do urzędu skarbowego</field>	
 		<field name="parent_id" ref="v_nadwyzka"/>
-		<field name="notnegative" eval="True" />
+<!--		<field name="notnegative" eval="True" />  -->
 		<field name="sign" eval="-1" />
 	</record>
 
@@ -134,7 +134,7 @@
 		<field name="info">Dostawa towarów oraz świadczenie usług poza terytorium kraju</field>	
 		<field name="parent_id" ref="p_razem_c"/>
 		<field name="sign" eval="1" />
-		<field name="nonprintable" eval="1" />
+		<field name="notprintable" eval="1" />
 
 	</record>
 
@@ -144,7 +144,7 @@
 		<field name="info">W tym świadczenie usług, o których mowa w art 100 ust. 1 pkt 4 ustawy. Do Dostawa towarów oraz świadczenie usług poza terytorium kraju</field>	
 		<field name="parent_id" ref="p_dost_poza_kraj"/>
 		<field name="sign" eval="1" />
-		<field name="nonprintable" eval="1" />
+		<field name="notprintable" eval="1" />
 	</record>
 
 	<record model="account.tax.code.template" id="p_dost_kraj_0">
@@ -217,7 +217,7 @@
 		<field name="info">Wewnątrzwspólnotowa dostawa towarów</field>	
 		<field name="parent_id" ref="p_razem_c"/>
 		<field name="sign" eval="1" />
-		<field name="nonprintable" eval="1" />
+		<field name="notprintable" eval="1" />
 	</record>
 
 	<record model="account.tax.code.template" id="p_eksport">
@@ -226,7 +226,7 @@
 		<field name="info">Eksport towarów</field>	
 		<field name="parent_id" ref="p_razem_c"/>
 		<field name="sign" eval="1" />
-		<field name="nonprintable" eval="1" />
+		<field name="notprintable" eval="1" />
 	</record>
 
 	<record model="account.tax.code.template" id="p_wew_wspol_nab_tow">
