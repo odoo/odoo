@@ -25,12 +25,11 @@ if (typeof QWeb2 !== "undefined") {
     website.add_template_file('/website/static/src/xml/website.tour.xml');
 }
 
-if (website.EditorBar) {
-    website.EditorBar.include({
+if (website.EditorBarHelp) {
+    website.EditorBarHelp.include({
         tours: [],
-        start: function () {
+        load_menu: function () {
             var self = this;
-            var menu = $('#help-menu');
             _.each(T.tours, function (tour) {
                 if (tour.mode === "test") {
                     return;
@@ -40,7 +39,7 @@ if (website.EditorBar) {
                     T.reset();
                     T.run(tour.id);
                 });
-                menu.append($menuItem);
+                self.$('ul').append($menuItem);
             });
             return this._super();
         }

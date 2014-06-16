@@ -428,6 +428,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     do_render: function() {
         var self = this;
         instance.webclient.toggle_bars(true);
+        self.$el = $('.oe_application');
         self.$el.html(QWeb.render("DatabaseManager", { widget : self }));
         $('.oe_user_menu_placeholder').append(QWeb.render("DatabaseManager.user_menu",{ widget : self }));
         $('.oe_secondary_menus_container').append(QWeb.render("DatabaseManager.menu",{ widget : self }));
@@ -734,51 +735,57 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
 instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
 
 instance.web.Menu =  instance.web.Widget.extend({
-    template: 'Menu',
     init: function() {
         var self = this;
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
-        this.on("menu_loaded", this, function (menu_data) {
-            self.reflow();
+        this.on("menu_loaded", this, function() {
             // launch the fetch of needaction counters, asynchronous
-            if (!_.isEmpty(menu_data.all_menu_ids)) {
-                this.do_load_needaction(menu_data.all_menu_ids);
+            $all_menus = self.$el.parents('.oe_webclient').find('[data-menu]');
+            all_menu_ids = $.map($all_menus, function (menu) {return parseInt($(menu).attr('data-menu'));});
+            if (!_.isEmpty(all_menu_ids)) {
+                this.do_load_needaction(all_menu_ids);
             }
-        });
-        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
-        instance.web.bus.on('resize', this, function() {
-            self.$el.height(0);
-            lazyreflow();
         });
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$secondary_menus = this.getParent().$el.find('.oe_secondary_menus_container');
-        this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
         return this.do_reload();
     },
     do_reload: function() {
         var self = this;
-        return this.rpc("/web/menu/load", {}).done(function(r) {
-            self.menu_loaded(r);
-        });
+        self.menu_loaded();
     },
-    menu_loaded: function(data) {
+    menu_loaded: function() {
         var self = this;
-        this.data = {data: data};
-        this.renderElement();
-        this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
+        this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container')
+
+        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
+        instance.web.bus.on('resize', this, function() {
+            if (parseInt(self.$el.parent().css('width')) < 768 ) {
+                lazyreflow('all_outside');
+            } else {
+                lazyreflow();
+            }
+        });
+
         this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
         if (self.current_menu) {
             self.open_menu(self.current_menu);
         }
-        this.trigger('menu_loaded', data);
+        this.trigger('menu_loaded');
         this.has_been_loaded.resolve();
+
+        // FIXME: duplicate
+        if (parseInt(self.$el.parent().css('width')) < 768 ) {
+            lazyreflow('all_outside');
+        } else {
+            lazyreflow();
+        }
     },
     do_load_needaction: function (menu_ids) {
         var self = this;
@@ -805,28 +812,42 @@ instance.web.Menu =  instance.web.Widget.extend({
      * Reflow the menu items and dock overflowing items into a "More" menu item.
      * Automatically called when 'menu_loaded' event is triggered and on window resizing.
      */
-    reflow: function() {
+    reflow: function(behavior) {
         var self = this;
-        this.$el.height('auto').show();
         var $more_container = this.$('#menu_more_container').hide();
         var $more = this.$('#menu_more');
-        $more.children('li').insertBefore($more_container);
-        var $toplevel_items = this.$el.children('li').not($more_container).hide();
+        var $systray = this.$el.parents().find('.oe_systray');
+
+        $more.children('li').insertBefore($more_container);  // Pull all the items out the more menu
+        
+        // All outside more displau all the items, hide the more menu and exit
+        if (behavior === 'all_outside') {
+            this.$el.find('li').show();
+            $more_container.hide();
+            return;
+        }
+
+        var $toplevel_items = this.$el.find('li').not($more_container).not($systray.find('li')).hide();
         $toplevel_items.each(function() {
+            // In all inside mode, we do not compute to know if we must hide the items, we hide them all
+            if (behavior === 'all_inside') {
+                return false;
+            }
             var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
             self.$el.parent().children(':visible').each(function() {
                 remaining_space -= $(this).outerWidth();
             });
+
             if ($(this).width() > remaining_space) {
                 return false;
             }
             $(this).show();
         });
         $more.append($toplevel_items.filter(':hidden').show());
-        $more_container.toggle(!!$more.children().length);
+        $more_container.toggle(!!$more.children().length || behavior === 'all_inside');
         // Hide toplevel item if there is only one
         var $toplevel = this.$el.children("li:visible");
-        if ($toplevel.length === 1) {
+        if ($toplevel.length === 1 && behavior != 'all_inside') {
             $toplevel.hide();
         }
     },
@@ -853,7 +874,7 @@ instance.web.Menu =  instance.web.Widget.extend({
 
         // Activate current main menu
         this.$el.find('.active').removeClass('active');
-        $main_menu.addClass('active');
+        $main_menu.parent().addClass('active');
 
         // Show current sub menu
         this.$secondary_menus.find('.oe_secondary_menu').hide();
@@ -941,20 +962,16 @@ instance.web.Menu =  instance.web.Widget.extend({
     on_top_menu_click: function(ev) {
         var self = this;
         var id = $(ev.currentTarget).data('menu');
-        var menu_ids = [id];
-        var menu = _.filter(this.data.data.children, function (menu) {return menu.id == id;})[0];
-        function add_menu_ids (menu) {
-            if (menu.children) {
-                _.each(menu.children, function (menu) {
-                    menu_ids.push(menu.id);
-                    add_menu_ids(menu);
-                });
-            }
-        }
-        add_menu_ids(menu);
+
+        // Fetch the menu leaves ids in order to check if they need a 'needaction'
+        $secondary_menu = this.$el.parents().find('.oe_secondary_menu[data-menu-parent=' + id + ']')
+        $menu_leaves = $secondary_menu.children().find('.oe_menu_leaf')
+        menu_ids = $.map($menu_leaves, function (leave) {return parseInt($(leave).attr('data-menu'));});
+
         self.do_load_needaction(menu_ids).then(function () {
             self.trigger("need_action_reloaded");
         });
+
         this.on_menu_click(ev);
     },
     on_menu_click: function(ev) {
@@ -980,6 +997,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 f($(this));
             }
         });
+        this.$el.parent().show()
     },
     do_update: function () {
         var self = this;
@@ -1001,6 +1019,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 }
                 var avatar_src = self.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: self.session.uid});
                 $avatar.attr('src', avatar_src);
+
+                self.getParent().menu.reflow();
             });
         };
         this.update_promise = this.update_promise.then(fct, fct);
@@ -1086,15 +1106,13 @@ instance.web.Client = instance.web.Widget.extend({
     start: function() {
         var self = this;
         return instance.session.session_bind(this.origin).then(function() {
-            var $e = $(QWeb.render(self._template, {widget: self}));
-            self.replaceElement($e);
-            $e.openerpClass();
             self.bind_events();
             return self.show_common();
         });
     },
     bind_events: function() {
         var self = this;
+        $('.oe_systray').show();
         this.$el.on('mouseenter', '.oe_systray > div:not([data-toggle=tooltip])', function() {
             $(this).attr('data-toggle', 'tooltip').tooltip().trigger('mouseenter');
         });
@@ -1146,10 +1164,6 @@ instance.web.Client = instance.web.Widget.extend({
 });
 
 instance.web.WebClient = instance.web.Client.extend({
-    _template: 'WebClient',
-    events: {
-        'click .oe_logo_edit_admin': 'logo_edit'
-    },
     init: function(parent, client_options) {
         this._super(parent);
         if (client_options) {
@@ -1164,6 +1178,9 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
+
+        this.$el = this.$el.parents('body').find('.oe_webclient');
+
         return $.when(this._super()).then(function() {
             if (jQuery.deparam !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 self.to_kitten();
@@ -1227,12 +1244,19 @@ instance.web.WebClient = instance.web.Client.extend({
     show_application: function() {
         var self = this;
         self.toggle_bars(true);
+
         self.update_logo();
+        this.$el.find('.oe_logo_edit_admin').click(function(ev) {
+            self.logo_edit(ev);
+        });
+
+        // Menu is rendered server-side thus we don't want the widget to create any dom
         self.menu = new instance.web.Menu(self);
-        self.menu.replace(this.$el.find('.oe_menu_placeholder'));
+        self.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
+        self.menu.start();
         self.menu.on('menu_click', this, this.on_menu_action);
         self.user_menu = new instance.web.UserMenu(self);
-        self.user_menu.replace(this.$el.find('.oe_user_menu_placeholder'));
+        self.user_menu.appendTo(this.$el.parents().find('.oe_user_menu_placeholder'));
         self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
         self.bind_hashchange();
@@ -1250,6 +1274,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     logo_edit: function(ev) {
         var self = this;
+        ev.preventDefault();
         self.alive(new instance.web.Model("res.users").get_func("read")(this.session.uid, ["company_id"])).then(function(res) {
             self.rpc("/web/action/load", { action_id: "base.action_res_company_form" }).done(function(result) {
                 result.res_id = res['company_id'][0];
@@ -1294,7 +1319,7 @@ instance.web.WebClient = instance.web.Client.extend({
                         return false;
                     });
                 });
-                $icon.appendTo(self.$('.oe_systray'));
+                $icon.prependTo(window.$('.oe_systray'));
             }
         });
     },
@@ -1309,7 +1334,6 @@ instance.web.WebClient = instance.web.Client.extend({
         return this.session.session_reload().then(function () {
             instance.session.load_modules(true).then(
                 self.menu.proxy('do_reload')); });
-
     },
     do_notify: function() {
         var n = this.notification;
@@ -1354,9 +1378,8 @@ instance.web.WebClient = instance.web.Client.extend({
             var state = event.getState(true);
             if(!state.action && state.menu_id) {
                 self.menu.has_been_loaded.done(function() {
-                    self.menu.do_reload().done(function() {
-                        self.menu.menu_click(state.menu_id);
-                    });
+                    self.menu.do_reload();
+                    self.menu.menu_click(state.menu_id);
                 });
             } else {
                 state._push_me = false;  // no need to push state back...

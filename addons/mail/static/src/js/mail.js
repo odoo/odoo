@@ -1996,7 +1996,7 @@ openerp.mail = function (session) {
         template:'mail.ComposeMessageTopButton',
 
         start: function () {
-            this.$('button').on('click', this.on_compose_message );
+            this.$el.on('click', this.on_compose_message );
             this._super();
         },
 
@@ -2021,7 +2021,8 @@ openerp.mail = function (session) {
             this._super.apply(this, arguments);
             this.update_promise.then(function() {
                 var mail_button = new session.web.ComposeMessageTopButton();
-                mail_button.appendTo(session.webclient.$el.find('.oe_systray'));
+                mail_button.appendTo(session.webclient.$el.parents().find('.oe_systray'));
+                session.client.menu.reflow();  // FIXME: we should create an oe_systray widget (instead of using use_menu) and make a correct logic to trigger the reflow
             });
         },
     });

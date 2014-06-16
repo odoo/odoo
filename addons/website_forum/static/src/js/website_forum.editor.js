@@ -5,14 +5,14 @@
     var _t = openerp._t;
     website.add_template_file('/website_forum/static/src/xml/website_forum.xml');
 
-    website.EditorBar.include({
+    website.EditorBarContent.include({
         start: function() {
             website.is_editable_button = website.is_editable_button || !!$("#wrap").size();
             var res = this._super();
             this.$(".dropdown:has(.oe_content_menu)").removeClass("hidden");
             return res;
         },
-        events: _.extend({}, website.EditorBar.prototype.events, {
+        events: _.extend({}, website.EditorBarContent.prototype.events, {
             'click a[data-action=new_forum]': function (ev) {
                 ev.preventDefault();
                 website.prompt({
