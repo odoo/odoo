@@ -3823,7 +3823,7 @@ class stock_pack_operation(osv.osv):
             if pack_op.qty_done < pack_op.product_qty:
                 # we split the operation in two
                 op = self.copy(cr, uid, pack_op.id, {'product_qty': pack_op.qty_done, 'qty_done': pack_op.qty_done}, context=context)
-                self.write(cr, uid, ids, {'product_qty': pack_op.product_qty - pack_op.qty_done, 'qty_done': 0, 'lot_id': False}, context=context)
+                self.write(cr, uid, pack_op.id, {'product_qty': pack_op.product_qty - pack_op.qty_done, 'qty_done': 0, 'lot_id': False}, context=context)
             processed_ids.append(op)
         self.write(cr, uid, processed_ids, {'processed': 'true'}, context=context)
 
