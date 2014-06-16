@@ -81,7 +81,7 @@ class account_tax_code_template(osv.osv):
                 #recording the new tax code to do the mapping
                 tax_code_template_ref[tax_code_template.id] = new_tax_code
         return tax_code_template_ref
-    
+
 
 
 class account_tax_code(osv.osv):
@@ -100,7 +100,7 @@ def get_precision_tax():
 class account_tax_template(osv.osv):
     """ Add fields used to define some brazilian taxes """
     _inherit = 'account.tax.template'
-    
+
     _columns = {
                'tax_discount': fields.boolean('Discount this Tax in Prince', 
                                               help="Mark it for (ICMS, PIS e etc.)."),
@@ -119,7 +119,7 @@ class account_tax_template(osv.osv):
                                         help="The computation method for the tax amount."),
                }
     _defaults = TAX_DEFAULTS
-    
+
     def _generate_tax(self, cr, uid, tax_templates, tax_code_template_ref, company_id, context=None):
         """
         This method generate taxes from templates.
@@ -145,7 +145,7 @@ class account_tax_template(osv.osv):
                 obj_acc_tax.write(cr, uid, result['tax_template_to_tax'][tax_template.id], {'domain': tax_template.tax_code_id.domain,
                                                                                             'tax_discount': tax_template.tax_code_id.tax_discount})    
         return result
-    
+
     def onchange_tax_code_id(self, cr, uid, ids, tax_code_id, context=None):
 
         result = {'value': {}}
@@ -166,7 +166,7 @@ class account_tax_template(osv.osv):
 class account_tax(osv.osv):
     """ Add fields used to define some brazilian taxes """
     _inherit = 'account.tax'
-    
+
     _columns = {
                'tax_discount': fields.boolean('Discount this Tax in Prince', 
                                               help="Mark it for (ICMS, PIS e etc.)."),
@@ -185,16 +185,16 @@ class account_tax(osv.osv):
                                         help="The computation method for the tax amount."),
                }
     _defaults = TAX_DEFAULTS
-    
+
     def onchange_tax_code_id(self, cr, uid, ids, tax_code_id, context=None):
 
         result = {'value': {}}
 
         if not tax_code_id:
             return result
-        
+
         obj_tax_code = self.pool.get('account.tax.code').browse(cr, uid, tax_code_id)      
-    
+
         if obj_tax_code:
             result['value']['tax_discount'] = obj_tax_code.tax_discount
             result['value']['domain'] = obj_tax_code.domain

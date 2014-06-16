@@ -85,7 +85,7 @@ class Scale(Thread):
     def get_weight_info(self):
         self.lockedstart()
         return self.weight_info
-    
+
     def get_status(self):
         self.lockedstart()
         return self.status
@@ -133,7 +133,7 @@ class Scale(Thread):
                         except ValueError as v:
                             self.set_status('error','No data Received, please power-cycle the scale');
                             self.device = None
-                        
+
                 except Exception as e:
                     self.set_status('error',str(e))
                     self.device = None
@@ -201,5 +201,5 @@ class ScaleDriver(hw_proxy.Proxy):
     def scale_clear_tare(self):
         s.clear_tare()
         return True
-        
-        
+
+

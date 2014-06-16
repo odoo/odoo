@@ -203,7 +203,7 @@ class mrp_bom(osv.osv):
             domain="[('product_tmpl_id','=',product_tmpl_id)]",
             help="If a product variant is defined the BOM is available only for this product."),
         'bom_line_ids': fields.one2many('mrp.bom.line', 'bom_id', 'BoM Lines'),
-        
+
         'product_qty': fields.float('Product Quantity', required=True, digits_compute=dp.get_precision('Product Unit of Measure')),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control"),
         'date_start': fields.date('Valid From', help="Validity of this BoM. Keep empty if it's always valid."),
@@ -313,7 +313,7 @@ class mrp_bom(osv.osv):
             if bom_line_id.product_id.id in all_prod:
                 raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
             all_prod.append(bom_line_id.product_id.id)
-            
+
             if bom_line_id.type != "phantom":
                 result.append({
                     'name': bom_line_id.product_id.name,
@@ -383,7 +383,7 @@ class mrp_bom_line(osv.osv):
         'product_qty': fields.float('Product Quantity', required=True, digits_compute=dp.get_precision('Product Unit of Measure')),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True,
             help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control"),
-        
+
         'date_start': fields.date('Valid From', help="Validity of component. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of component. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying."),
@@ -699,7 +699,7 @@ class mrp_production(osv.osv):
                     bom_point = bom_obj.browse(cr, uid, bom_id)
                     routing_id = bom_point.routing_id.id or False
                     self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
-    
+
             if not bom_id:
                 raise osv.except_osv(_('Error!'), _("Cannot find a bill of material for this product."))
 
@@ -838,7 +838,7 @@ class mrp_production(osv.osv):
             product_id = scheduled.product_id.id
 
             consumed_qty = consumed_data.get(product_id, 0.0)
-            
+
             # qty available for consume and produce
             qty_avail = scheduled.product_qty - consumed_qty
             if qty_avail <= 0.0:
@@ -1027,8 +1027,8 @@ class mrp_production(osv.osv):
             if production.ready_production:
                 res = True
         return res
-    
-    
+
+
     def _make_production_produce_line(self, cr, uid, production, context=None):
         stock_move = self.pool.get('stock.move')
         source_location_id = production.product_id.property_stock_production.id

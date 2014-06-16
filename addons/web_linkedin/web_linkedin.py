@@ -37,19 +37,19 @@ class Binary(openerp.http.Controller):
         url = urlunparse(('http', 'media.linkedin.com', path, params, query, fragment))
         bfile = urllib2.urlopen(url)
         return base64.b64encode(bfile.read())
-    
+
 class web_linkedin_settings(osv.osv_memory):
     _inherit = 'sale.config.settings'
     _columns = {
         'api_key': fields.char(string="API Key", size=50),
         'server_domain': fields.char(size=100),
     }
-    
+
     def get_default_linkedin(self, cr, uid, fields, context=None):
         key = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.linkedin.apikey") or ""
         dom = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         return {'api_key': key, 'server_domain': dom,}
-    
+
     def set_linkedin(self, cr, uid, ids, context=None):
         key = self.browse(cr, uid, ids[0], context)["api_key"] or ""
         self.pool.get("ir.config_parameter").set_param(cr, uid, "web.linkedin.apikey", key)

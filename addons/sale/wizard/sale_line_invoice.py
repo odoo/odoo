@@ -26,7 +26,7 @@ from openerp import workflow
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
     _description = "Sale OrderLine Make_invoice"
-    
+
     def make_invoices(self, cr, uid, ids, context=None):
         """
              To make invoices.

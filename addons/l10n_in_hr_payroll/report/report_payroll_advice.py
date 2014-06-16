@@ -28,7 +28,7 @@ from openerp.report import report_sxw
 from openerp.tools import amount_to_text_en
 
 class payroll_advice_report(report_sxw.rml_parse):
-    
+
     def __init__(self, cr, uid, name, context):
         super(payroll_advice_report, self).__init__(cr, uid, name, context=context)
 
@@ -40,7 +40,7 @@ class payroll_advice_report(report_sxw.rml_parse):
             'get_bysal_total': self.get_bysal_total,
         })
         self.context = context
-        
+
     def get_month(self, input_date):
         payslip_pool = self.pool.get('hr.payslip')
         res = {
@@ -60,7 +60,7 @@ class payroll_advice_report(report_sxw.rml_parse):
 
     def get_bysal_total(self):
         return self.total_bysal
-        
+
     def get_detail(self, line_ids):
         result = []
         self.total_bysal = 0.00

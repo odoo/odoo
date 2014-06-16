@@ -444,7 +444,7 @@ class sale_order(osv.osv):
             view of one of the newly created invoices
         """
         mod_obj = self.pool.get('ir.model.data')
-        
+
         # create invoices through the sales orders' workflow
         inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
         self.signal_manual_invoice(cr, uid, ids)
@@ -774,7 +774,7 @@ class sale_order(osv.osv):
             self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
         if write_cancel_ids:
             self.pool.get('sale.order.line').write(cr, uid, write_cancel_ids, {'state': 'exception'})
-            
+
         if mode == 'finished':
             return finished
         elif mode == 'canceled':
@@ -803,7 +803,7 @@ class sale_order(osv.osv):
         fpos = False
         if fiscal_position:
             fpos = fiscal_obj.browse(cr, uid, fiscal_position, context=context)
-        
+
         for line in order_lines:
             # create    (0, 0,  { fields })
             # update    (1, ID, { fields })

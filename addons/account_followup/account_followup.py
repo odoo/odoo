@@ -483,10 +483,10 @@ class res_partner(osv.osv):
 class account_config_settings(osv.TransientModel):
     _name = 'account.config.settings'
     _inherit = 'account.config.settings'
-    
+
     def open_followup_level_form(self, cr, uid, ids, context=None):
         res_ids = self.pool.get('account_followup.followup').search(cr, uid, [], context=context)
-        
+
         return {
                  'type': 'ir.actions.act_window',
                  'name': 'Payment Follow-ups',

@@ -12,7 +12,7 @@ class website_config_settings(osv.osv_memory):
         'default_lang_id': fields.related('website_id', 'default_lang_id', type='many2one', relation='res.lang', string='Default language'),
         'default_lang_code': fields.related('website_id', 'default_lang_code', type="char", string="Default language code"),
         'google_analytics_key': fields.related('website_id', 'google_analytics_key', type="char", string='Google Analytics Key'),
-        
+
         'social_twitter': fields.related('website_id', 'social_twitter', type="char", string='Twitter Account'),
         'social_facebook': fields.related('website_id', 'social_facebook', type="char", string='Facebook Account'),
         'social_github': fields.related('website_id', 'social_github', type="char", string='GitHub Account'),

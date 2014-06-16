@@ -228,7 +228,7 @@ class product_pricelist(osv.osv):
                 'AND (price_version_id = %s) '
             'ORDER BY sequence, min_quantity desc',
             (prod_tmpl_ids, prod_ids, categ_ids, version.id))
-        
+
         item_ids = [x[0] for x in cr.fetchall()]
         items = self.pool.get('product.pricelist.item').browse(cr, uid, item_ids, context=context)
 

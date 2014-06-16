@@ -47,7 +47,7 @@ def _convert_nn_fr(val):
 
 def _convert_nnn_fr(val):
     """ convert a value < 1000 to french
-    
+
         special cased because it is the level that kicks 
         off the < 100 special case.  The rest are more general.  This also allows you to
         get strings in the form of 'forty-five hundred' if called directly.
@@ -115,7 +115,7 @@ def _convert_nn_nl(val):
 
 def _convert_nnn_nl(val):
     """ convert a value < 1000 to Dutch
-    
+
         special cased because it is the level that kicks 
         off the < 100 special case.  The rest are more general.  This also allows you to
         get strings in the form of 'forty-five hundred' if called directly.
@@ -164,21 +164,21 @@ _translate_funcs = {'fr' : amount_to_text_fr, 'nl' : amount_to_text_nl}
 
 def add_amount_to_text_function(lang, func):
     _translate_funcs[lang] = func
-    
+
 #TODO: we should use the country AND language (ex: septante VS soixante dix)
 #TODO: we should use en by default, but the translation func is yet to be implemented
 def amount_to_text(nbr, lang='fr', currency='euro'):
     """ Converts an integer to its textual representation, using the language set in the context if any.
 
         Example::
-        
+
             1654: mille six cent cinquante-quatre.
     """
 #    if nbr > 1000000:
 ##TODO: use logger   
 #        print "WARNING: number too large '%d', can't translate it!" % (nbr,)
 #        return str(nbr)
-    
+
     if not _translate_funcs.has_key(lang):
 #TODO: use logger   
         print "WARNING: no translation function found for lang: '%s'" % (lang,)
@@ -188,7 +188,7 @@ def amount_to_text(nbr, lang='fr', currency='euro'):
 
 if __name__=='__main__':
     from sys import argv
-    
+
     lang = 'nl'
     if len(argv) < 2:
         for i in range(1,200):

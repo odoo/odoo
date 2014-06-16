@@ -8,7 +8,7 @@ DB = common.DB
 
 class TestORM(common.TransactionCase):
     """ test special behaviors of ORM CRUD functions
-    
+
         TODO: use real Exceptions types instead of Exception """
 
     def setUp(self):

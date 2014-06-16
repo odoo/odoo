@@ -24,7 +24,7 @@ class TestUom(TransactionCase):
         cr, uid = self.cr, self.uid
         unit_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_unit')[1]
         categ_unit_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_categ_unit')[1]
-        
+
         score_id = self.uom.create(cr, uid, {
             'name': 'Score',
             'factor_inv': 20,

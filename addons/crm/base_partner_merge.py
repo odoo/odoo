@@ -316,7 +316,7 @@ class MergePartnerAutomatic(osv.TransientModel):
 
         _logger.info('(uid = %s) merged the partners %r with %s', uid, list(map(operator.attrgetter('id'), src_partners)), dst_partner.id)
         dst_partner.message_post(body='%s %s'%(_("Merged with the following partners:"), ", ".join('%s<%s>(ID %s)' % (p.name, p.email or 'n/a', p.id) for p in src_partners)))
-        
+
         for partner in src_partners:
             partner.unlink()
 

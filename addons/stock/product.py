@@ -26,7 +26,7 @@ import openerp.addons.decimal_precision as dp
 
 class product_product(osv.osv):
     _inherit = "product.product"
-        
+
     def _stock_move_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict([(id, {'reception_count': 0, 'delivery_count': 0}) for id in ids])
         move_pool=self.pool.get('stock.move')
@@ -280,7 +280,7 @@ class product_product(osv.osv):
 class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
-    
+
     def _product_available(self, cr, uid, ids, name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         for product in self.browse(cr, uid, ids, context=context):
@@ -349,7 +349,7 @@ class product_template(osv.osv):
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to specify a Serial Number for all moves containing this product and coming from a Supplier Location"),
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Serial Number for all moves containing this product and going to a Customer Location"),
         'track_all': fields.boolean('Full Lots Traceability', help="Forces to specify a Serial Number on each and every operation related to this product"),
-        
+
         # sum of product variant qty
         # 'reception_count': fields.function(_product_available, multi='qty_available',
         #     fnct_search=_search_product_quantity, type='float', string='Quantity On Hand'),
@@ -363,7 +363,7 @@ class product_template(osv.osv):
             fnct_search=_search_product_quantity, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_available, multi='qty_available',
             fnct_search=_search_product_quantity, type='float', string='Outgoing'),
-        
+
         'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]",
                                     help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."),
     }

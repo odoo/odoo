@@ -29,7 +29,7 @@
 # TODO: method to stock on the disk
 class render(object):
     """ Represents a report job being rendered.
-    
+
     @param bin_datas a dictionary of name:<binary content> of images etc.
     @param path the path in which binary files can be discovered, useful
             for components (images) of the report. It can be:
@@ -50,7 +50,7 @@ class render(object):
         else:
             self.bin_datas = bin_datas
         self.path = path
-    
+
     def _render(self):
         return None
 
@@ -59,7 +59,7 @@ class render(object):
         self._result = self._render()
         self.done = True
         return True
-    
+
     def is_done(self):
         return self.done
 

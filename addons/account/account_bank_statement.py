@@ -445,7 +445,7 @@ class account_bank_statement_line(osv.osv):
             for mv_line in reconciliation_data['reconciliation_proposition']:
                 mv_line_ids_selected.append(mv_line['id'])
             ret.append(reconciliation_data);
-        
+
         # Check if, now that 'candidate' move lines were selected, there are moves left for statement lines
         for reconciliation_data in ret:
             if not reconciliation_data['st_line']['has_no_partner']:

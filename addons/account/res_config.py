@@ -264,7 +264,7 @@ class account_config_settings(osv.osv_memory):
         if not group_multi_currency:
             res['value'] = {'income_currency_exchange_account_id': False, 'expense_currency_exchange_account_id': False}
         return res
-    
+
     def onchange_start_date(self, cr, uid, id, start_date):
         if start_date:
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")

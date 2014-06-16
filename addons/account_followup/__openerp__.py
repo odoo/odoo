@@ -30,7 +30,7 @@ Module to automate letters for unpaid invoices, with multi-level recalls.
 You can define your multiple levels of recall through the menu:
 ---------------------------------------------------------------
     Configuration / Follow-up / Follow-up Levels
-    
+
 Once it is defined, you can automatically print recalls every day through simply clicking on the menu:
 ------------------------------------------------------------------------------------------------------
     Payment Follow-Up / Send Email and letters

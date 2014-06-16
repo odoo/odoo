@@ -118,7 +118,7 @@ class _column(object):
         self.deprecated = False # Optional deprecation warning
         for a in args:
             setattr(self, a, args[a])
- 
+
     def restart(self):
         pass
 
@@ -597,7 +597,7 @@ class many2one(_column):
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
         return obj.pool[self._obj].search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
 
-    
+
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
         return value[1] if isinstance(value, tuple) else tools.ustr(value) 
@@ -705,7 +705,7 @@ class one2many(_column):
         domain = self._domain(obj) if callable(self._domain) else self._domain
         return obj.pool[self._obj].name_search(cr, uid, value, domain, operator, context=context,limit=limit)
 
-    
+
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
         raise NotImplementedError('One2Many columns should not be used as record name (_rec_name)') 
@@ -1464,7 +1464,7 @@ class sparse(function):
     def __init__(self, serialization_field, **kwargs):
         self.serialization_field = serialization_field
         super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', **kwargs)
-     
+
 
 
 # ---------------------------------------------------------
@@ -1492,16 +1492,16 @@ class dummy(function):
 
 class serialized(_column):
     """ A field able to store an arbitrary python data structure.
-    
+
         Note: only plain components allowed.
     """
-    
+
     def _symbol_set_struct(val):
         return simplejson.dumps(val)
 
     def _symbol_get_struct(self, val):
         return simplejson.loads(val or '{}')
-    
+
     _prefetch = False
     _type = 'serialized'
 

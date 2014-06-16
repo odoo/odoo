@@ -15,7 +15,7 @@ class test_ir_values(common.TransactionCase):
         ir_values.set_default(self.cr, self.uid, 'other_unexisting_model',
             'my_other_test_field', 'conditional value', condition='foo=bar')
 
-        
+
         # Retrieve them.
 
         ir_values = self.registry('ir.values')

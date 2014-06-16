@@ -121,7 +121,7 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
                 salaries[category[0]][category[1]].update({category[3]: category[2]})
             else:
                 salaries[category[0]][category[1]].update({category[3]: category[2]})
-        
+
         category_ids = category_obj.search(self.cr,self.uid, [], context=self.context)
         categories = category_obj.read(self.cr, self.uid, category_ids, ['code'], context=self.context)
         for code in map(lambda x: x['code'], categories):

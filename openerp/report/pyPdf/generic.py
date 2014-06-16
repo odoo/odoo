@@ -687,7 +687,7 @@ class RectangleObject(ArrayObject):
 
     def getUpperLeft_x(self):
         return self.getLowerLeft_x()
-    
+
     def getUpperLeft_y(self):
         return self.getUpperRight_y()
 

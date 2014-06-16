@@ -228,7 +228,7 @@ class account_asset_asset(osv.osv):
             else:
                 val['currency_id'] = company.currency_id.id
         return {'value': val}
-    
+
     def onchange_purchase_salvage_value(self, cr, uid, ids, purchase_value, salvage_value, context=None):
         val = {}
         for asset in self.browse(cr, uid, ids, context=context):
@@ -352,7 +352,7 @@ class account_asset_asset(osv.osv):
         asset_id = super(account_asset_asset, self).create(cr, uid, vals, context=context)
         self.compute_depreciation_board(cr, uid, [asset_id], context=context)
         return asset_id
-    
+
     def open_entries(self, cr, uid, ids, context=None):
         if context is None:
             context = {}

@@ -112,7 +112,7 @@ class TxBuckaroo(osv.Model):
     _columns = {
          'buckaroo_txnid': fields.char('Transaction ID'),
     }
-    
+
 
     # --------------------------------------------------
     # FORM RELATED METHODS

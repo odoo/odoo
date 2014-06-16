@@ -40,7 +40,7 @@ _test_logger = logging.getLogger('openerp.tests')
 
 def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, report_type=None):
     """ Try to render a report <rname> with contents of ids
-    
+
         This function should also check for common pitfalls of reports.
     """
     if data is None:

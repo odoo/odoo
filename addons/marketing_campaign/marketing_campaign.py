@@ -85,7 +85,7 @@ translate_selections = {
 class marketing_campaign(osv.osv):
     _name = "marketing.campaign"
     _description = "Marketing Campaign"
-    
+
     def _count_segments(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         try:

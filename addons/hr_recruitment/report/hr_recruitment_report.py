@@ -53,7 +53,7 @@ class hr_recruitment_report(osv.Model):
                                        help="Number of Days to close the project issue"),
         'last_stage_id': fields.many2one ('hr.recruitment.stage', 'Last Stage'),
     }
-    
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'hr_recruitment_report')
         cr.execute("""

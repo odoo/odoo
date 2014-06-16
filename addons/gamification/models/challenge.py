@@ -103,7 +103,7 @@ class gamification_challenge(osv.Model):
                 res[challenge.id] = False
 
         return res
-    
+
     def _get_categories(self, cr, uid, context=None):
         return [
             ('hr', 'Human Ressources / Engagement'),
@@ -410,7 +410,7 @@ class gamification_challenge(osv.Model):
                 if end_date:
                     date_clause += "AND g.end_date = %s"
                     query_params.append(end_date)
-            
+
                 query = """SELECT u.id AS user_id
                              FROM res_users u
                         LEFT JOIN gamification_goal g

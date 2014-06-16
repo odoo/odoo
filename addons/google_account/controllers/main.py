@@ -9,16 +9,16 @@ from werkzeug.exceptions import BadRequest
 import werkzeug.utils
 
 class google_auth(http.Controller):
-    
+
     @http.route('/google_account/authentication', type='http', auth="none")
     def oauth2callback(self, **kw):
         """ This route/function is called by Google when user Accept/Refuse the consent of Google """
-        
+
         state = simplejson.loads(kw['state'])
         dbname = state.get('d')
         service = state.get('s')
         url_return = state.get('f')
-        
+
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
             if kw.get('code',False):
@@ -29,4 +29,4 @@ class google_auth(http.Controller):
             else:
                 return werkzeug.utils.redirect("%s%s%s" % (url_return ,"?error=Unknown_error"))
 
-        
+

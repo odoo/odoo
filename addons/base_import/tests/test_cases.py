@@ -49,7 +49,7 @@ class test_basic_fields(TransactionCase):
             {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': []},
             {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': []},
         ]))
-    
+
     def test_m2o_required(self):
         """ If an m2o field is required, its three sub-fields are
         required as well (the client has to handle that: requiredness

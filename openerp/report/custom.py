@@ -233,7 +233,7 @@ class report_custom(report_int):
                         row.append(fct[str(fields[col]['operation'])](map(lambda x: x[col], res_dic[key])))
                 new_res.append(row)
             results = new_res
-        
+
         if report['type']=='table':
             if report['field_parent']:
                 res = self._create_tree(uid, ids, report, fields, level, results, context)
@@ -281,7 +281,7 @@ class report_custom(report_int):
             pageSize=[pageSize[1],pageSize[0]]
 
         new_doc = etree.Element('report')
-        
+
         config = etree.SubElement(new_doc, 'config')
 
         def _append_node(name, text):
@@ -343,14 +343,14 @@ class report_custom(report_int):
         pool = openerp.registry(cr.dbname)
         pdf_string = cStringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
-        
+
         can.show(80,380,'/16/H'+report['title'])
-        
+
         ar = area.T(size=(350,350),
         #x_coord = category_coord.T(['2005-09-01','2005-10-22'],0),
         x_axis = axis.X(label = fields[0]['name'], format="/a-30{}%s"),
         y_axis = axis.Y(label = ', '.join(map(lambda x : x['name'], fields[1:]))))
-        
+
         process_date = {
             'D': lambda x: reduce(lambda xx, yy: xx + '-' + yy, x.split('-')[1:3]),
             'M': lambda x: x.split('-')[1],
@@ -364,7 +364,7 @@ class report_custom(report_int):
         }
 
         abscissa = []
-        
+
         idx = 0 
         date_idx = None
         fct = {}
@@ -430,7 +430,7 @@ class report_custom(report_int):
                 ar.add_plot(plot)
                 abscissa.update(fields_bar[idx])
                 idx0 += 1
-        
+
         abscissa = map(lambda x : [x, None], abscissa)
         ar.x_coord = category_coord.T(abscissa,0)
         ar.draw(can)
@@ -447,9 +447,9 @@ class report_custom(report_int):
         pool = openerp.registry(cr.dbname)
         pdf_string = cStringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
-        
+
         can.show(80,380,'/16/H'+report['title'])
-        
+
         process_date = {
             'D': lambda x: reduce(lambda xx, yy: xx + '-' + yy, x.split('-')[1:3]),
             'M': lambda x: x.split('-')[1],
@@ -481,7 +481,7 @@ class report_custom(report_int):
             else:
                 fct[idx] = lambda x : x
             idx+=1
-        
+
         # plot are usually displayed year by year
         # so we do so if the first field is a date
         data_by_year = {}
@@ -499,7 +499,7 @@ class report_custom(report_int):
 
         nb_bar = len(data_by_year)*(len(fields)-1)
         colors = map(lambda x:fill_style.Plain(bgcolor=x), misc.choice_colors(nb_bar))
-        
+
         abscissa = {}
         for line in data_by_year.keys():
             fields_bar = []
@@ -527,7 +527,7 @@ class report_custom(report_int):
                     data_cum.append([k, float(data[k])+float(prev)])
                     if fields[idx+1]['cumulate']:
                         prev += data[k]
-                        
+
                 idx0 = 0
                 plot = bar_plot.T(label=fields[idx+1]['name']+' '+str(line), data = data_cum, cluster=(idx0*(len(fields)-1)+idx,nb_bar), fill_style=colors[idx0*(len(fields)-1)+idx])
                 ar.add_plot(plot)

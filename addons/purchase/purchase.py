@@ -134,7 +134,7 @@ class purchase_order(osv.osv):
         for purchase in self.browse(cursor, user, ids, context=context):
             res[purchase.id] = all(line.invoiced for line in purchase.order_line)
         return res
-    
+
     def _get_journal(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -158,7 +158,7 @@ class purchase_order(osv.osv):
         SELECT picking_id, po.id FROM stock_picking p, stock_move m, purchase_order_line pol, purchase_order po
             WHERE po.id in %s and po.id = pol.order_id and pol.id = m.purchase_line_id and m.picking_id = p.id
             GROUP BY picking_id, po.id
-             
+
         """
         cr.execute(query, (tuple(ids), ))
         picks = cr.fetchall()
@@ -599,7 +599,7 @@ class purchase_order(osv.osv):
         """
         if context is None:
             context = {}
-        
+
         inv_obj = self.pool.get('account.invoice')
         inv_line_obj = self.pool.get('account.invoice.line')
 
@@ -612,7 +612,7 @@ class purchase_order(osv.osv):
                 #then re-do a browse to read the property fields for the good company.
                 context['force_company'] = order.company_id.id
                 order = self.browse(cr, uid, order.id, context=context)
-            
+
             # generate invoice line correspond to PO line and link that to created invoice (inv_id) and PO line
             inv_lines = []
             for po_line in order.order_line:
@@ -1362,7 +1362,7 @@ class mail_mail(osv.Model):
 class product_template(osv.Model):
     _name = 'product.template'
     _inherit = 'product.template'
-    
+
     def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         for template in self.browse(cr, uid, ids, context=context):
@@ -1379,7 +1379,7 @@ class product_template(osv.Model):
 class product_product(osv.Model):
     _name = 'product.product'
     _inherit = 'product.product'
-    
+
     def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
         Purchase = self.pool['purchase.order']
         return {

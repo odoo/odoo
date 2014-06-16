@@ -66,7 +66,7 @@ class mrp_product_produce(osv.osv_memory):
         new_consume_lines = []
         if product_qty > 0.0:
             consume_lines = prod_obj._calculate_qty(cr, uid, production, product_qty=product_qty, context=context)
-        
+
         for consume in consume_lines:
             new_consume_lines.append([0, False, consume])
         return {'value': {'consume_lines': new_consume_lines}}
@@ -100,7 +100,7 @@ class mrp_product_produce(osv.osv_memory):
             prod = self.pool.get('mrp.production').browse(cr, uid,
                                     context['active_id'], context=context)
         return prod and prod.product_id.id or False
-    
+
     def _get_track(self, cr, uid, context=None):
         prod = self._get_product_id(cr, uid, context=context)
         prod_obj = self.pool.get("product.product")

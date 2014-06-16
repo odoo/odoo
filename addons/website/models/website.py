@@ -147,7 +147,7 @@ class website(osv.osv):
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
     }
-    
+
     # cf. Wizard hack in website_views.xml
     def noop(self, *args, **kwargs):
         pass

@@ -60,4 +60,4 @@ class PosboxHomepage(openerp.addons.web.controllers.main.Home):
     def index(self):
         #return request.render('hw_posbox_homepage.index',mimetype='text/html')
         return index_template
-        
+

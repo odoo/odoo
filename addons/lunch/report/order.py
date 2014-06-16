@@ -59,7 +59,7 @@ class order(report_sxw.rml_parse):
         for obj in objects:
             notes.append(obj.note)
         return notes
-        
+
     def __init__(self, cr, uid, name, context):
         super(order, self).__init__(cr, uid, name, context)
         self.net_total=0.0

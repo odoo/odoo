@@ -63,7 +63,7 @@ class test_challenge(common.TransactionCase):
 
     def test_10_reach_challenge(self):
         cr, uid, context = self.cr, self.uid, {}
-        
+
         self.challenge_obj.write(cr, uid, [self.challenge_base_id], {'state': 'inprogress'}, context=context)
         challenge = self.challenge_obj.browse(cr, uid, self.challenge_base_id, context=context)
         challenge_user_ids = [user.id for user in challenge.user_ids]
@@ -77,7 +77,7 @@ class test_challenge(common.TransactionCase):
         # demo user will set a timezone
         self.user_obj.write(cr, uid, self.demo_user_id, {'tz': "Europe/Brussels"}, context=context)
         goal_ids = self.goal_obj.search(cr, uid, [('user_id', '=', self.demo_user_id), ('definition_id', '=', self.definition_timezone_id)], context=context)
-        
+
         self.goal_obj.update(cr, uid, goal_ids, context=context)
         reached_goal_ids = self.goal_obj.search(cr, uid, [('id', 'in', goal_ids), ('state', '=', 'reached')], context=context)
         self.assertEqual(set(goal_ids), set(reached_goal_ids), "Not every goal was reached after changing timezone")

@@ -48,13 +48,13 @@ class base_language_import(osv.osv_memory):
         fileobj = TemporaryFile('w+')
         try:
             fileobj.write(base64.decodestring(this.data))
-    
+
             # now we determine the file format
             fileobj.seek(0)
             first_line = fileobj.readline().strip().replace('"', '').replace(' ', '')
             fileformat = first_line.endswith("type,name,res_id,src,value") and 'csv' or 'po'
             fileobj.seek(0)
-    
+
             tools.trans_load_data(cr, fileobj, fileformat, this.code, lang_name=this.name, context=context)
         finally:
             fileobj.close()

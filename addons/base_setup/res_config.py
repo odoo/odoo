@@ -26,7 +26,7 @@ from openerp.report.render.rml2pdf import customfonts
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
-        
+
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
             help='Work in multi-company environments, with appropriate security access between companies.\n'
@@ -45,11 +45,11 @@ class base_config_settings(osv.osv_memory):
             help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
 
     }
-    
+
     _defaults= {
         'font': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font.id,
     }
-    
+
     def open_company(self, cr, uid, ids, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         return {
@@ -64,10 +64,10 @@ class base_config_settings(osv.osv_memory):
 
     def _change_header(self, header,font):
         """ Replace default fontname use in header and setfont tag """
-        
+
         default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
         return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font,default_para)
-    
+
     def set_base_defaults(self, cr, uid, ids, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         wizard = self.browse(cr, uid, ids, context)[0]

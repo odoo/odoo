@@ -89,7 +89,7 @@ class account_automatic_reconcile(osv.osv_memory):
                     return res
             return False
 
-        
+
         def check4(list1, list2, power):
             """
             for a list of credit and debit and a given power, check if there

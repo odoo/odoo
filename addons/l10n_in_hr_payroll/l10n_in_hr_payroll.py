@@ -174,7 +174,7 @@ class hr_payslip_run(osv.osv):
         res = super(hr_payslip_run, self).draft_payslip_run(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'available_advice': False}, context=context)
         return res
-    
+
     def create_advice(self, cr, uid, ids, context=None):
         payslip_pool = self.pool.get('hr.payslip')
         payslip_line_pool = self.pool.get('hr.payslip.line')

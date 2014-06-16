@@ -241,7 +241,7 @@ class mrp_production(osv.osv):
             if prod.workcenter_lines:
                 workcenter_pool.signal_button_start_working(cr, uid, [prod.workcenter_lines[0].id])
         return super(mrp_production,self).action_in_production(cr, uid, ids)
-    
+
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels work order if production order is canceled.
         @return: Super method

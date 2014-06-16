@@ -872,7 +872,7 @@ class ir_model_data(osv.osv):
         if not res['res_id']:
             raise ValueError('External ID not found in the system: %s' % (xmlid))
         return ids[0], res['model'], res['res_id']
-    
+
     def xmlid_to_res_model_res_id(self, cr, uid, xmlid, raise_if_not_found=False):
         """ Return (res_model, res_id)"""
         try:

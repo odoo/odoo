@@ -25,7 +25,7 @@ class twitter_config_settings(osv.osv_memory):
                 help="Screen Name of the Twitter Account from which you want to load favorites."
                 "It does not have to match the API Key/Secret."),
     }
-    
+
     def _check_twitter_authorization(self, cr, uid, config_id, context=None):
         website_obj = self.pool['website']
         website_config = self.browse(cr, uid, config_id, context=context)

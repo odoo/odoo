@@ -27,7 +27,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import image_resize_image
-  
+
 class multi_company_default(osv.osv):
     """
     Manage multi company default value
@@ -74,7 +74,7 @@ class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
     _order = 'name'
-    
+
     def _get_address_data(self, cr, uid, ids, field_names, arg, context=None):
         """ Read the 'address' functional fields. """
         result = {}
@@ -108,7 +108,7 @@ class res_company(osv.osv):
             size = (180, None)
             result[record.id] = image_resize_image(record.partner_id.image, size)
         return result
-        
+
     def _get_companies_from_partner(self, cr, uid, ids, context=None):
         return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
 
@@ -180,16 +180,16 @@ class res_company(osv.osv):
         if state_id:
             return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
         return {}
-        
+
     def onchange_font_name(self, cr, uid, ids, font, rml_header, rml_header2, rml_header3, context=None):
         """ To change default header style of all <para> and drawstring. """
 
         def _change_header(header,font):
             """ Replace default fontname use in header and setfont tag """
-            
+
             default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font, header)
             return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font, default_para)
-        
+
         if not font:
             return True
         fontname = self.pool.get('res.font').browse(cr, uid, font, context=context).name

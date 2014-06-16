@@ -75,7 +75,7 @@ class product_product(osv.osv):
                 hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 1.0)
                 price += wc.costs_cycle * cycle + wc.costs_hour * hour
                 price = self.pool.get('product.uom')._compute_price(cr,uid,bom.product_uom.id, price, bom.product_id.uom_id.id)
-        
+
         #Convert on product UoM quantities
         if price > 0:
             price = uom_obj._compute_price(cr, uid, bom.product_uom.id, price / bom.product_qty, bom.product_id.uom_id.id)
@@ -96,7 +96,7 @@ product_product()
 
 class product_bom(osv.osv):
     _inherit = 'mrp.bom'
-            
+
     _columns = {
         'standard_price': fields.related('product_tmpl_id','standard_price',type="float",relation="product.product",string="Standard Price",store=False)
     }

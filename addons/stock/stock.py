@@ -3632,8 +3632,8 @@ class stock_package(osv.osv):
         context = context or {}
         context['active_ids'] = ids
         return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_package_barcode', context=context)
-    
-    
+
+
     def unpack(self, cr, uid, ids, context=None):
         quant_obj = self.pool.get('stock.quant')
         for package in self.browse(cr, uid, ids, context=context):
@@ -4110,10 +4110,10 @@ class stock_picking_type(osv.osv):
     def onchange_picking_code(self, cr, uid, ids, picking_code=False):
         if not picking_code:
             return False
-        
+
         obj_data = self.pool.get('ir.model.data')
         stock_loc = obj_data.xmlid_to_res_id(cr, uid, 'stock.stock_location_stock')
-        
+
         result = {
             'default_location_src_id': stock_loc,
             'default_location_dest_id': stock_loc,

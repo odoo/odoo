@@ -74,7 +74,7 @@ class account_followup_stat_by_partner(osv.osv):
 
 
 class account_followup_sending_results(osv.osv_memory):
-    
+
     def do_report(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -103,7 +103,7 @@ class account_followup_sending_results(osv.osv_memory):
         'needprinting':_get_need_printing,
         'description':_get_description,
     }
- 
+
 
 
 class account_followup_print(osv.osv_memory):
@@ -284,7 +284,7 @@ class account_followup_print(osv.osv_memory):
             "FROM account_followup_followup_line "\
             "WHERE followup_id=%s "\
             "ORDER BY delay", (fup_id,))
-        
+
         #Create dictionary of tuples where first element is the date to compare with the due date and second element is the id of the next level
         for result in cr.dictfetchall():
             delay = datetime.timedelta(days=result['delay'])
@@ -293,7 +293,7 @@ class account_followup_print(osv.osv_memory):
 
         partner_list = []
         to_update = {}
-        
+
         #Fill dictionary of accountmovelines to_update with the partners that need to be updated
         for partner_id, followup_line_id, date_maturity,date, id in move_lines:
             if not partner_id:

@@ -51,7 +51,7 @@ class product_template(osv.osv):
             relation='account.account',
             string="Price Difference Account",
             help="This account will be used to value price difference between purchase price and cost price."),
-            
+
         #Redefine fields to change help text for anglo saxon methodology.
         'property_account_income': fields.property(
             type='many2one',

@@ -28,7 +28,7 @@ class res_partner(osv.osv):
             partner_id: Task.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
             for partner_id in ids
         }
-    
+
     """ Inherits partner and adds Tasks information in the partner form """
     _inherit = 'res.partner'
     _columns = {

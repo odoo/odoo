@@ -102,7 +102,7 @@ Thanks,
 class hr_employee(osv.Model):
     _name = "hr.employee"
     _inherit="hr.employee"
-    
+
     def _appraisal_count(self, cr, uid, ids, field_name, arg, context=None):
         Evaluation = self.pool['hr.evaluation.interview']
         return {

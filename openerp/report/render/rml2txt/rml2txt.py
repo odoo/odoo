@@ -43,21 +43,21 @@ class textbox(object):
         self.lines = []
         self.curline = ''
         self.endspace = False
-     
+
     def newline(self):
         if isinstance(self.curline, textbox):
             self.lines.extend(self.curline.renderlines())
         else:
             self.lines.append(self.curline)
         self.curline = ''
-    
+
     def fline(self):
         if isinstance(self.curline, textbox):
             self.lines.extend(self.curline.renderlines())
         elif len(self.curline):
             self.lines.append(self.curline)
         self.curline = ''
-    
+
     def appendtxt(self,txt):
         """Append some text to the current line.
            Mimic the HTML behaviour, where all whitespace evaluates to
@@ -86,7 +86,7 @@ class textbox(object):
         for l in self.lines:
             result+= lineoff+ l +"\n"
         return result
-    
+
     def renderlines(self,pad=0):
         """Returns a list of lines, from the current object
         pad: all lines must be at least pad characters.
@@ -103,20 +103,20 @@ class textbox(object):
                 #elif pad and len(l) > pad ?
                 result.append(lineoff+ l+lpad)
         return result
-            
-            
+
+
     def haplines(self,arr,offset,cc= ''):
         """ Horizontaly append lines 
         """
         while len(self.lines) < len(arr):
             self.lines.append("")
-        
+
         for i in range(len(self.lines)):
             while len(self.lines[i]) < offset:
                 self.lines[i] += " "
         for i in range(len(arr)):
             self.lines[i] += cc +arr[i] 
-        
+
 
 class _flowable(object):
     def __init__(self, template, doc,localcontext):
@@ -141,7 +141,7 @@ class _flowable(object):
         if tag not in self.nitags:
             verbose("Unknown tag \"%s\", please implement it." % tag)
             self.nitags.append(tag)
-    
+
     def _tag_page_break(self, node):
         return "\f"
 
@@ -181,7 +181,7 @@ class _flowable(object):
                         self.tb = None
                 if len(tds):
                     trs.append(tds)
-        
+
         if not sizes:
             verbose("computing table sizes..")
         for tds in trs:
@@ -194,7 +194,7 @@ class _flowable(object):
                 off += sizes[i]/Font_size
             saved_tb.curline = trt
             saved_tb.fline()
-        
+
         self.tb = saved_tb
         return
 
@@ -431,7 +431,7 @@ class _rml_template(object):
 
     def start(self):
         return ''
-    
+
     def end(self):
         return "template end\n"
 

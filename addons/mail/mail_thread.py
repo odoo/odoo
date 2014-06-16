@@ -1888,7 +1888,7 @@ class mail_thread(osv.AbstractModel):
 
         # get the sbtype id of the comment Message
         subtype_res_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'mail.mt_comment', raise_if_not_found=True)
-        
+
         # get the ids of the comment and none-comment of the thread
         message_obj = self.pool.get('mail.message')
         msg_ids_comment = message_obj.search(cr, uid, [
@@ -1899,9 +1899,9 @@ class mail_thread(osv.AbstractModel):
                     ('model', '=', self._name),
                     ('res_id', '=', id),
                     ('subtype_id', '!=', subtype_res_id)], context=context)
-        
+
         # update the messages
         message_obj.write(cr, uid, msg_ids_comment, {"res_id" : new_res_id, "model" : new_model}, context=context)
         message_obj.write(cr, uid, msg_ids_not_comment, {"res_id" : new_res_id, "model" : new_model, "subtype_id" : None}, context=context)
-        
+
         return True

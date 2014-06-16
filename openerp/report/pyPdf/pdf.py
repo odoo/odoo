@@ -297,7 +297,7 @@ class PdfFileWriter(object):
         if hasattr(self, "_encrypt"):
             trailer[NameObject("/Encrypt")] = self._encrypt
         trailer.writeToStream(stream, None)
-        
+
         # eof
         stream.write("\nstartxref\n%s\n%%%%EOF\n" % xref_location)
 
@@ -462,7 +462,7 @@ class PdfFileReader(object):
         if retval is None:
             retval = {}
             catalog = self.trailer["/Root"]
-            
+
             # get the name tree
             if catalog.has_key("/Dests"):
                 tree = catalog["/Dests"]
@@ -470,7 +470,7 @@ class PdfFileReader(object):
                 names = catalog['/Names']
                 if names.has_key("/Dests"):
                     tree = names['/Dests']
-        
+
         if tree is None:
             return retval
 
@@ -508,17 +508,17 @@ class PdfFileReader(object):
         if outlines is None:
             outlines = []
             catalog = self.trailer["/Root"]
-            
+
             # get the outline dictionary and named destinations
             if catalog.has_key("/Outlines"):
                 lines = catalog["/Outlines"]
                 if lines.has_key("/First"):
                     node = lines["/First"]
             self._namedDests = self.getNamedDestinations()
-            
+
         if node is None:
           return outlines
-          
+
         # see if there are any more outlines
         while 1:
             outline = self._buildOutline(node)
@@ -542,10 +542,10 @@ class PdfFileReader(object):
         page, typ = array[0:2]
         array = array[2:]
         return Destination(title, page, typ, *array)
-          
+
     def _buildOutline(self, node):
         dest, title, outline = None, None, None
-        
+
         if node.has_key("/A") and node.has_key("/Title"):
             # Action, section 8.5 (only type GoTo supported)
             title  = node["/Title"]
@@ -1627,7 +1627,7 @@ class Destination(DictionaryObject):
         self[NameObject("/Title")] = title
         self[NameObject("/Page")] = page
         self[NameObject("/Type")] = typ
-        
+
         # from table 8.2 of the PDF 1.6 reference.
         if typ == "/XYZ":
             (self[NameObject("/Left")], self[NameObject("/Top")],
@@ -1643,7 +1643,7 @@ class Destination(DictionaryObject):
             pass
         else:
             raise utils.PdfReadError("Unknown Destination Type: %r" % typ)
-          
+
     ##
     # Read-only property accessing the destination title.
     # @return A string.

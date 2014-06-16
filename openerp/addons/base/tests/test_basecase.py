@@ -41,7 +41,7 @@ class test_single_transaction_case(common.SingleTransactionCase):
         partner = res_partner.browse(cr, uid, p_ref)
         p_browse_ref = self.browse_ref(xid)
         self.assertEqual(partner, p_browse_ref, "browse_ref() should resolve xid to browse records")
-    
+
 
 
 class test_transaction_case(common.TransactionCase):

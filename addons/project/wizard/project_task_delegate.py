@@ -46,7 +46,7 @@ class project_task_delegate(osv.osv_memory):
             return {'value':{'user_id': False}}
         project = project_project.browse(cr, uid, project_id, context=context)
         return {'value': {'user_id': project.user_id and project.user_id.id or False}}
-        
+
 
     def default_get(self, cr, uid, fields, context=None):
         """

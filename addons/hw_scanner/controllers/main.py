@@ -145,7 +145,7 @@ class Scanner(Thread):
                     return barcode
             except Empty:
                 return ''
-    
+
     def get_status(self):
         self.lockedstart()
         return self.status
@@ -155,9 +155,9 @@ class Scanner(Thread):
             sequences and put them on a timestamped queue that can be consumed by
             the point of sale's requests for barcode events 
         """
-        
+
         self.barcodes = Queue()
-        
+
         barcode  = []
         shift    = False
         device   = None
@@ -212,5 +212,5 @@ class ScannerDriver(hw_proxy.Proxy):
     @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
     def scanner(self):
         return s.get_barcode()
-        
-        
+
+

@@ -42,7 +42,7 @@ class asset_asset_report(osv.osv):
         'unposted_value': fields.float('Unposted Amount', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
-    
+
     def init(self, cr):
             tools.drop_view_if_exists(cr, 'asset_asset_report')
             cr.execute("""
@@ -81,6 +81,6 @@ class asset_asset_report(osv.osv):
                     a.purchase_date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
                     a.purchase_value, a.id, a.salvage_value
         )""")
-        
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

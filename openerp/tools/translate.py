@@ -764,7 +764,7 @@ def trans_generate(lang, modules, cr):
             constraints = getattr(cls, '_local_' + cons_type, [])
             for constraint in constraints:
                 push_constraint_msg(module, term_type, model._name, constraint[msg_pos])
-            
+
     for (_, model, module) in cr.fetchall():
         if model not in registry:
             _logger.error("Unable to find object %r", model)

@@ -405,7 +405,7 @@ class JsonRequest(WebRequest):
         self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
+
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             def handler():
@@ -757,7 +757,7 @@ class Model(object):
             if not request.db or not request.uid or self.session.db != request.db \
                 or self.session.uid != request.uid:
                 raise Exception("Trying to use Model with badly configured database or user.")
-                
+
             mod = request.registry.get(self.model)
             if method.startswith('_'):
                 raise Exception("Access denied")

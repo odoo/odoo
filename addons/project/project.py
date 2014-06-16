@@ -707,7 +707,7 @@ class task(osv.osv):
                 new_name = _("%s (copy)") % (default.get('name', ''))
                 default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}
@@ -808,7 +808,7 @@ class task(osv.osv):
         'partner_id': lambda self, cr, uid, ctx=None: self._get_default_partner(cr, uid, context=ctx),
     }
     _order = "priority, sequence, date_start, name, id"
-    
+
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
             visited_branch = set()

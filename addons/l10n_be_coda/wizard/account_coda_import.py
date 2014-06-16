@@ -296,10 +296,10 @@ class account_coda_import(osv.osv_memory):
                     invoice = False
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
                         ids = self.pool.get('account.invoice').search(cr, uid, [('reference', '=', line['communication']), ('reference_type', '=', 'bba')])
-                        
+
 # Gère les communications structurées
 # TODO : à faire primer sur resolution_proposition : si la communication indique une facture, on la sélectionne
-                        
+
 #                        if ids:
 #                            invoice = self.pool.get('account.invoice').browse(cr, uid, ids[0])
 #                            partner = invoice.partner_id

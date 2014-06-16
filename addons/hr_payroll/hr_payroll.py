@@ -71,7 +71,7 @@ class hr_payroll_structure(osv.osv):
     _constraints = [
         (osv.osv._check_recursion, 'Error ! You cannot create a recursive Salary Structure.', ['parent_id']) 
     ]
-        
+
     def copy(self, cr, uid, id, default=None, context=None):
         """
         Create a new record in hr_payroll_structure model from existing one
@@ -258,7 +258,7 @@ class hr_payslip(osv.osv):
         for r in res:
             result[r[0]].append(r[1])
         return result
-    
+
     def _count_detail_payslip(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for details in self.browse(cr, uid, ids, context=context):
@@ -342,7 +342,7 @@ class hr_payslip(osv.osv):
             self.compute_sheet(cr, uid, [id_copy], context=context)
             self.signal_hr_verify_sheet(cr, uid, [id_copy])
             self.signal_process_sheet(cr, uid, [id_copy])
-            
+
         form_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_form')
         form_res = form_id and form_id[1] or False
         tree_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_tree')

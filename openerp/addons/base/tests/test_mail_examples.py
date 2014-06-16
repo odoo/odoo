@@ -369,7 +369,7 @@ ________________________________
 To: sinyih_goh@yahoo.com 
 Sent: Friday, February 8, 2013 12:46 AM
 Subject: Feedback From Your OpenERP Trial
- 
+
 
 Hello Goh Sin Yih, 
 Thank you for having tested OpenERP Online. 
@@ -569,7 +569,7 @@ MSOFFICE_2 = """
     <p class="MsoNormal">
       <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
         </span></p><p>&nbsp;</p>
-      
+
     <p></p>
     <p class="MsoNormal">
       <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Thank You</span></p><p></p>
@@ -580,7 +580,7 @@ MSOFFICE_2 = """
     <p class="MsoNormal">
       <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
         </span></p><p>&nbsp;</p>
-      
+
     <p></p>
     <div>
       <p class="MsoNormal">
@@ -611,7 +611,7 @@ MSOFFICE_2 = """
         </a>
         <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
           </span></p><p></p>
-        
+
       <p></p>
       <p class="MsoNormal">
         <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">www.poilindustries.com</span></p><p></p>
@@ -623,7 +623,7 @@ MSOFFICE_2 = """
     <p class="MsoNormal">
       <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
         </span></p><p>&nbsp;</p>
-      
+
     <p></p>
     <div>
       <div style="border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0in 0in 0in">
@@ -670,7 +670,7 @@ MSOFFICE_3 = """<div>
     <p class="MsoNormal">
       <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
         </span></p><p>&nbsp;</p>
-      
+
     <p></p>
     <p class="MsoNormal">
       <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Yes I’d be glad to hear about your offers as we struggle every year with the planning/approving of LOA. </span></p><p></p>
@@ -703,7 +703,7 @@ MSOFFICE_3 = """<div>
         <b>
           <span lang="EN-GB" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">
             </span></b></p><p><b>&nbsp;</b></p><b>
-          
+
         </b>
       <p></p>
       <p class="MsoNormal">
@@ -741,13 +741,13 @@ MSOFFICE_3 = """<div>
         <span lang="EN-GB" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:navy"> </span>
         <span lang="EN-GB" style="font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:navy">
           </span></p><p></p>
-        
+
       <p></p>
     </div>
     <p class="MsoNormal">
       <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
         </span></p><p>&nbsp;</p>
-      
+
     <p></p>
     <div>
       <div style="border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm 0cm 0cm">
@@ -872,7 +872,7 @@ BUG2 = """
       </table>
       <br>
       <br>
-      
+
       <br>
       <div class="moz-forward-container"><br>
         <br>
@@ -1093,7 +1093,7 @@ Web: <a class="moz-txt-link-freetext" href="http://www.openerp.com">http://www.o
       <br>
     </div>
     <br>
-  
+
 </div>"""
 
 BUG_2_IN = [

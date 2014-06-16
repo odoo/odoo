@@ -559,14 +559,14 @@ class account_analytic_account(osv.osv):
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
 
         template = self.browse(cr, uid, template_id, context=context)
-        
+
         if not ids:
             res['value']['fix_price_invoices'] = template.fix_price_invoices
             res['value']['amount_max'] = template.amount_max
         if not ids:
             res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
             res['value']['hours_qtt_est'] = template.hours_qtt_est
-        
+
         if template.to_invoice.id:
             res['value']['to_invoice'] = template.to_invoice.id
         if template.pricelist_id.id:

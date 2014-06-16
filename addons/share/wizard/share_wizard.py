@@ -434,7 +434,7 @@ class share_wizard(osv.TransientModel):
            ``model`` is the browse_record of a reachable ir.model, and ``field`` is
            the dot-notation reverse relationship path coming from that model to obj0,
            or None if there is no reverse path.
-           
+
            :return: ([obj0], [obj1], [obj2], [obj3])
            """
         # obj0 class and its parents
@@ -684,7 +684,7 @@ class share_wizard(osv.TransientModel):
         model_obj = self.pool.get('ir.model')
         model_id = model_obj.search(cr, uid, [('model','=', wizard_data.action_id.res_model)])[0]
         model = model_obj.browse(cr, uid, model_id, context=context)
-        
+
         # ACCESS RIGHTS
         # We have several classes of objects that should receive different access rights:
         # Let:
@@ -734,7 +734,7 @@ class share_wizard(osv.TransientModel):
 
         # refresh wizard_data
         wizard_data = self.browse(cr, uid, ids[0], context=context)
-        
+
         # EMAILS AND NOTIFICATIONS
         #  A. Not invite: as before
         #     -> send emails to destination users
@@ -744,7 +744,7 @@ class share_wizard(osv.TransientModel):
         #     -> send a notification to all users; users allowing to receive
         #        emails in preferences will receive it
         #        new users by default receive all notifications by email
-        
+
         # A.
         if not wizard_data.invite:
             self.send_emails(cr, uid, wizard_data, context=context)
@@ -761,11 +761,11 @@ class share_wizard(osv.TransientModel):
             self.pool[model.model].message_subscribe(cr, uid, [res_id], new_ids + existing_ids, context=context)
             # self.send_invite_email(cr, uid, wizard_data, context=context)
             # self.send_invite_note(cr, uid, model.model, res_id, wizard_data, context=context)
-        
+
         # CLOSE
         #  A. Not invite: as before
         #  B. Invite: skip summary screen, get back to the record
-        
+
         # A.
         if not wizard_data.invite:
             dummy, step2_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step2_form')
@@ -791,7 +791,7 @@ class share_wizard(osv.TransientModel):
                 'views': [(False, 'form'), (False, 'tree'), (False, 'calendar'), (False, 'graph')],
                 'type': 'ir.actions.act_window',
             }
-            
+
 
     def send_invite_note(self, cr, uid, model_name, res_id, wizard_data, context=None):
         subject = _('Invitation')
@@ -805,7 +805,7 @@ class share_wizard(osv.TransientModel):
                 body += ' and'
         body += '.'
         return self.pool[model_name].message_post(cr, uid, [res_id], body=body, context=context)
-    
+
     def send_invite_email(self, cr, uid, wizard_data, context=None):
         # TDE Note: not updated because will disappear
         message_obj = self.pool.get('mail.message')
@@ -813,7 +813,7 @@ class share_wizard(osv.TransientModel):
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
             raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
-        
+
         # TODO: also send an HTML version of this mail
         for result_line in wizard_data.result_line_ids:
             email_to = result_line.user_id.email
@@ -837,14 +837,14 @@ class share_wizard(osv.TransientModel):
                       "It is open source and can be found on http://www.openerp.com.")
             msg_id = message_obj.schedule_with_attach(cr, uid, user.email, [email_to], subject, body, model='', context=context)
             notification_obj.create(cr, uid, {'user_id': result_line.user_id.id, 'message_id': msg_id}, context=context)
-    
+
     def send_emails(self, cr, uid, wizard_data, context=None):
         _logger.info('Sending share notifications by email...')
         mail_mail = self.pool.get('mail.mail')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
             raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
-        
+
         # TODO: also send an HTML version of this mail
         mail_ids = []
         for result_line in wizard_data.result_line_ids:

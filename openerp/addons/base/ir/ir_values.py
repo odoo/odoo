@@ -81,7 +81,7 @@ class ir_values(osv.osv):
        should be executed.
 
        .. rubric:: Usage: default values
-       
+
        The ``'default'`` entries are usually defined manually by the
        users, and set by their UI clients calling :meth:`~.set_default`.
        These default values are then automatically used by the

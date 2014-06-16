@@ -64,11 +64,11 @@ class crm_phonecall2phonecall(osv.osv_memory):
                     action=this.action, context=context)
 
         return phonecall.redirect_phonecall_view(cr, uid, phocall_ids[phonecall_ids[0]], context=context)
-    
+
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
-        
+
         """
         res = super(crm_phonecall2phonecall, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False

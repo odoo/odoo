@@ -10,7 +10,7 @@ class TestAccountFollowup(TransactionCase):
         """ setUp ***"""
         super(TestAccountFollowup, self).setUp()
         cr, uid = self.cr, self.uid
-        
+
         self.user = self.registry('res.users')
         self.user_id = self.user.browse(cr, uid, uid)
         self.partner = self.registry('res.partner')
@@ -18,7 +18,7 @@ class TestAccountFollowup(TransactionCase):
         self.invoice_line = self.registry('account.invoice.line')
         self.wizard = self.registry('account_followup.print')
         self.followup_id = self.registry('account_followup.followup')
-        
+
         self.partner_id = self.partner.create(cr, uid, {'name':'Test Company', 
                                                     'email':'test@localhost',
                                                     'is_company': True,
@@ -29,7 +29,7 @@ class TestAccountFollowup(TransactionCase):
         self.journal_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "bank_journal")[1]
         self.pay_account_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "cash")[1]
         self.period_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "period_10")[1]
-        
+
         self.first_followup_line_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account_followup", "demo_followup_line1")[1]
         self.last_followup_line_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account_followup", "demo_followup_line3")[1]
         self.product_id = self.registry("ir.model.data").get_object_reference(cr, uid, "product", "product_product_6")[1]
@@ -43,10 +43,10 @@ class TestAccountFollowup(TransactionCase):
                                                                             'price_unit':200
                                                                                  })]})
         self.registry('account.invoice').signal_invoice_open(cr, uid, [self.invoice_id])
-        
+
         self.voucher = self.registry("account.voucher")
-        
-        
+
+
     def test_00_send_followup_after_3_days(self):
         """ Send follow up after 3 days and check nothing is done (as first follow-up level is only after 15 days)"""
         cr, uid = self.cr, self.uid
@@ -58,7 +58,7 @@ class TestAccountFollowup(TransactionCase):
                                                       }, context={"followup_id": self.followup_id})
         self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
         self.assertFalse(self.partner.browse(cr, uid, self.partner_id).latest_followup_level_id)
-        
+
     def run_wizard_three_times(self):
         cr, uid = self.cr, self.uid
         current_date = datetime.datetime.utcnow()
@@ -76,7 +76,7 @@ class TestAccountFollowup(TransactionCase):
                                                       'followup_id': self.followup_id, 
                                                       }, context={"followup_id": self.followup_id})
         self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id, 'tz':'UTC'})
-        
+
     def test_01_send_followup_later_for_upgrade(self):
         """ Send one follow-up after 15 days to check it upgrades to level 1"""
         cr, uid = self.cr, self.uid
@@ -90,7 +90,7 @@ class TestAccountFollowup(TransactionCase):
         self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id, 'tz':'UTC'})
         self.assertEqual(self.partner.browse(cr, uid, self.partner_id).latest_followup_level_id.id, self.first_followup_line_id, 
                                             "Not updated to the correct follow-up level")
-        
+
     def test_02_check_manual_action(self):
         """ Check that when running the wizard three times that the manual action is set"""
         cr, uid = self.cr, self.uid
@@ -105,7 +105,7 @@ class TestAccountFollowup(TransactionCase):
         cr, uid = self.cr, self.uid
         ids = self.partner.search(cr, uid, [('payment_amount_due', '>', 0.0)])
         self.assertIn(self.partner_id, ids)
-        
+
     def test_04_action_done(self):
         """ Run the wizard 3 times, mark it as done, check the action fields are empty"""
         cr, uid = self.cr, self.uid
@@ -116,7 +116,7 @@ class TestAccountFollowup(TransactionCase):
                          "", "Manual action not emptied")
         self.assertFalse(partner_rec.payment_responsible_id)
         self.assertFalse(partner_rec.payment_next_action_date)
-        
+
     def test_05_litigation(self):
         """ Set the account move line as litigation, run the wizard 3 times and check nothing happened. 
         Turn litigation off.  Run the wizard 3 times and check it is in the right follow-up level. 
@@ -149,4 +149,4 @@ class TestAccountFollowup(TransactionCase):
         self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
         self.assertEqual(0, self.partner.browse(cr, uid, self.partner_id).payment_amount_due, "Amount Due != 0")
         self.assertFalse(self.partner.browse(cr, uid, self.partner_id).payment_next_action_date, "Next action date not cleared")
-        
+

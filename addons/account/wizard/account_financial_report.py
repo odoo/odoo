@@ -55,7 +55,7 @@ class accounting_report(osv.osv_memory):
             'target_move': 'posted',
             'account_report_id': _get_account_report,
     }
-    
+
     def _build_comparison_context(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}

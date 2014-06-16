@@ -59,7 +59,7 @@ class report_webkit_actions(osv.osv_memory):
 
         if not record_id or (active_model and active_model != 'ir.actions.report.xml'):
             return res
-        
+
         report = self.pool['ir.actions.report.xml'].browse(
                                                     cr, 
                                                     uid, 
@@ -78,7 +78,7 @@ class report_webkit_actions(osv.osv_memory):
                                  <label string="Report Action already exist for this report."/>
                              </form> 
                             '''
-        
+
         return res
 
     def do_action(self, cr, uid, ids, context=None):
@@ -127,7 +127,7 @@ class report_webkit_actions(osv.osv_memory):
             if res[0]:
                 if not current.open_action:
                     return {'type': 'ir.actions.act_window_close'}
-                
+
                 return {
                     'name': _('Client Actions Connections'),
                     'view_type': 'form',

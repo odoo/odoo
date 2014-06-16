@@ -38,7 +38,7 @@ class crm_phonecall_report(osv.osv):
     _name = "crm.phonecall.report"
     _description = "Phone calls by user and section"
     _auto = False
-    
+
     _columns = {
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),

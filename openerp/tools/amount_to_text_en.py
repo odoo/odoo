@@ -97,21 +97,21 @@ def amount_to_text(number, currency):
 #-------------------------------------------------------------
 
 _translate_funcs = {'en' : amount_to_text}
-    
+
 #TODO: we should use the country AND language (ex: septante VS soixante dix)
 #TODO: we should use en by default, but the translation func is yet to be implemented
 def amount_to_text(nbr, lang='en', currency='euro'):
     """ Converts an integer to its textual representation, using the language set in the context if any.
-    
+
         Example::
-        
+
             1654: thousands six cent cinquante-quatre.
     """
     import openerp.loglevels as loglevels
 #    if nbr > 10000000:
 #        _logger.warning(_("Number too large '%d', can not translate it"))
 #        return str(nbr)
-    
+
     if not _translate_funcs.has_key(lang):
         _logger.warning(_("no translation function found for lang: '%s'"), lang)
         #TODO: (default should be en) same as above
@@ -120,7 +120,7 @@ def amount_to_text(nbr, lang='en', currency='euro'):
 
 if __name__=='__main__':
     from sys import argv
-    
+
     lang = 'nl'
     if len(argv) < 2:
         for i in range(1,200):

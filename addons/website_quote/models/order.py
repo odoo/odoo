@@ -137,7 +137,7 @@ class sale_order(osv.osv):
         if context is None:
             context = {}
         context = dict(context, lang=self.pool.get('res.partner').browse(cr, uid, partner, context).lang)
-        
+
         lines = [(5,)]
         quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:
@@ -183,7 +183,7 @@ class sale_order(osv.osv):
         for line in order_line:
             products += line.product_id.product_tmpl_id.recommended_products(context=context)
         return products
-        
+
 
 
 class sale_quote_option(osv.osv):

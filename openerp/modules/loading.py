@@ -228,7 +228,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     # The query won't be valid for models created later (i.e. custom model
     # created after the registry has been loaded), so empty its result.
     registry.fields_by_model = None
-    
+
     cr.commit()
 
     return loaded_modules, processed_modules

@@ -158,7 +158,7 @@ class TestPropertyField(common.TransactionCase):
             'country_id':country_fr,
             'groups_id': [(6, 0, [group_partner_manager, group_multi_company])]
         })
-        
+
         self.partner._columns = dict(self.partner._columns)
         self.partner._columns.update({
             'property_country': fields.property(type='many2one', relation="res.country", string="Country by company"),

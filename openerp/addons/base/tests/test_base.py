@@ -430,7 +430,7 @@ class test_translation(common.TransactionCase):
 
     def test_101_create_translated_record(self):
         cr, uid = self.cr, self.uid
-        
+
         no_context_cat = self.res_category.browse(cr, uid, self.cat_id)
         self.assertEqual(no_context_cat.name, 'Customers', "Error in basic name_get")
 

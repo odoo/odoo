@@ -22,7 +22,7 @@ class Assert(YamlTag):
         self.severity = severity
         self.string = string
         super(Assert, self).__init__(**kwargs)
-    
+
 class Record(YamlTag):
     def __init__(self, model, id, use='id', view=True, **kwargs):
         self.model = model
@@ -91,14 +91,14 @@ class Eval(YamlTag):
         super(Eval, self).__init__()
     def __str__(self):
         return '!eval %s' % str(self.expression)
-    
+
 class Ref(YamlTag):
     def __init__(self, expr="False", *args, **kwargs):
         self.expr = expr
         super(Ref, self).__init__(*args, **kwargs)
     def __str__(self):
         return 'ref(%s)' % repr(self.expr)
-    
+
 class IrSet(YamlTag):
     def __init__(self):
         super(IrSet, self).__init__()
@@ -152,18 +152,18 @@ def url_constructor(loader, node):
 def eval_constructor(loader, node):
     expression = loader.construct_scalar(node)
     return Eval(expression)
-    
+
 def ref_constructor(loader, tag_suffix, node):
     if tag_suffix == "id":
         kwargs = {"id": loader.construct_scalar(node)}
     else:
         kwargs = loader.construct_mapping(node)
     return Ref(**kwargs)
-    
+
 def ir_set_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return IrSet(**kwargs)
-    
+
 # Registers constructors for custom tags.
 # Constructors are actually defined globally: do not redefined them in another
 # class/file/package.  This means that module recorder need import this file.

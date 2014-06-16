@@ -88,7 +88,7 @@ class asset_modify(osv.osv_memory):
         if 'method_end' in fields and asset.method_time == 'end':
             res.update({'method_end': asset.method_end})
         return res
-    
+
     def modify(self, cr, uid, ids, context=None):
         """ Modifies the duration of asset for calculating depreciation
         and maintains the history of old values.

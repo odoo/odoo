@@ -423,10 +423,10 @@ class PsycoConnection(psycopg2.extensions.connection):
 
 class ConnectionPool(object):
     """ The pool of connections to database(s)
-    
+
         Keep a set of connections to pg databases open, and reuse them
         to open cursors for all transactions.
-        
+
         The connections are *not* automatically closed. Only a close_db()
         can trigger that.
     """

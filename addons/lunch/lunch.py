@@ -44,7 +44,7 @@ class lunch_order(osv.Model):
             name = name + ' ' + str(elmt.id)
             res.append((elmt.id, name))
         return res
-        
+
     def _price_get(self, cr, uid, ids, name, arg, context=None):
         """ 
         get and sum the order lines' price
@@ -389,7 +389,7 @@ class lunch_order_line(osv.Model):
             cash_ids = [cash.id for cash in order_line.cashmove]
             cashmove_ref.unlink(cr, uid, cash_ids, context=context)
         return self._update_order_lines(cr, uid, ids, context=context)
-    
+
     def _get_line_order_ids(self, cr, uid, ids, context=None):
         """
         return the list of lunch.order.lines ids to which belong the  lunch.order 'ids'

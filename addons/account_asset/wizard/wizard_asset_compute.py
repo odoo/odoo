@@ -28,13 +28,13 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
     _columns = {
        'period_id': fields.many2one('account.period', 'Period', required=True, help="Choose the period for which you want to automatically post the depreciation lines of running assets"),
     }
-   
+
     def _get_period(self, cr, uid, context=None):
         periods = self.pool.get('account.period').find(cr, uid, context=context)
         if periods:
             return periods[0]
         return False
- 
+
     _defaults = {
         'period_id': _get_period,
     }

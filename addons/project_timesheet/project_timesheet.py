@@ -275,9 +275,9 @@ class account_analytic_line(osv.osv):
             employee = emp_obj.browse(cr, uid, emp_ids, context=context)[0]
             if employee.product_id:return employee.product_id.id
         return False
-   
+
    _defaults = {'product_id': get_product,}
-   
+
    def on_change_account_id(self, cr, uid, ids, account_id):
        res = {}
        if not account_id:

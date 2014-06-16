@@ -555,7 +555,7 @@ class res_partner(osv.osv):
             partner_id: Issue.search_count(cr,uid, [('partner_id', '=', partner_id)])
             for partner_id in ids
         }
-    
+
     """ Inherits partner and adds Issue information in the partner form """
     _inherit = 'res.partner'
     _columns = {

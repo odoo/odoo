@@ -37,7 +37,7 @@ class base_language_export(osv.osv_memory):
         ids = lang_obj.search(cr, uid, [('translatable', '=', True)])
         langs = lang_obj.browse(cr, uid, ids)
         return [(NEW_LANG_KEY, _('New Language (Empty translation template)'))] + [(lang.code, lang.name) for lang in langs]
-   
+
     _columns = {
             'name': fields.char('File Name', readonly=True),
             'lang': fields.selection(_get_languages, 'Language', required=True), 

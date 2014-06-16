@@ -152,7 +152,7 @@ class im_message(osv.osv):
         'date': lambda *args: datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
         'technical': False,
     }
-    
+
     def get_messages(self, cr, uid, last=None, users_watch=None, uuid=None, context=None):
         assert_uuid(uuid)
         users_watch = users_watch or []

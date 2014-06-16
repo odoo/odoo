@@ -131,12 +131,12 @@ class base_report_rml_save(osv.osv_memory):
              @return: A dictionary which of fields with values.
 
         """
-        
+
         res = super(base_report_rml_save, self).default_get(cr, uid, fields, context=context)
         report_id = self.pool['base.report.sxw'].search(cr,uid,[])
         data = self.pool['base.report.file.sxw'].read(cr, uid, report_id, context=context)[0]
         report = self.pool['ir.actions.report.xml'].browse(cr, uid, data['report_id'], context=context)
-        
+
         if 'file_rml' in fields:
             res['file_rml'] =  base64.encodestring(report.report_rml_content)
         return res

@@ -75,7 +75,7 @@ class res_partner(osv.osv):
     _defaults = {
         'partner_weight': lambda *args: 0
     }
-    
+
     def onchange_grade_id(self, cr, uid, ids, grade_id, context=None):
         res = {'value' :{'partner_weight':0}}
         if grade_id:

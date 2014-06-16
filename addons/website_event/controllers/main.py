@@ -217,12 +217,12 @@ class website_event(http.Controller):
     def get_visitors_country(self):
         GI = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', 0)
         return {'country_code': GI.country_code_by_addr(request.httprequest.remote_addr), 'country_name': GI.country_name_by_addr(request.httprequest.remote_addr)}
-    
+
     def get_formated_date(self, event):
         start_date = datetime.strptime(event.date_begin, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
         end_date = datetime.strptime(event.date_end, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
         return ('%s %s%s') % (start_date.strftime("%b"), start_date.strftime("%e"), (end_date != start_date and ("-"+end_date.strftime("%e")) or ""))
-    
+
     @http.route('/event/get_country_event_list', type='http', auth='public', website=True)
     def get_country_events(self ,**post):
         if not GeoIP:

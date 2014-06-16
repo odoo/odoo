@@ -29,4 +29,4 @@ class res_company_vat (osv.osv):
                                               "rather than via a simple format validation (checksum)."),
     }
 
-    
+

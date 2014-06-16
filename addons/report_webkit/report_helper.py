@@ -40,7 +40,7 @@ class WebKitHelper(object):
         self.pool = openerp.registry(self.cursor.dbname)
         self.report_id = report_id
         self.context = context
-        
+
     def embed_image(self, type, img, width=0, height=0) :
         "Transform a DB image into an embedded HTML image"
 
@@ -58,8 +58,8 @@ class WebKitHelper(object):
             type, 
             str(img))
         return toreturn
-            
-            
+
+
     def get_logo_by_name(self, name):
         """Return logo by name"""
         header_obj = self.pool.get('ir.header_img')
@@ -75,7 +75,7 @@ class WebKitHelper(object):
 
         head = header_obj.browse(self.cursor, self.uid, header_img_id)
         return (head.img, head.type)
-            
+
     def embed_logo_by_name(self, name, width=0, height=0):
         """Return HTML embedded logo by name"""
         img, type = self.get_logo_by_name(name)
@@ -87,6 +87,6 @@ class WebKitHelper(object):
         logo = my_user.company_id.logo_web
         return self.embed_image("png", logo, width, height)
 
-        
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -69,7 +69,7 @@ class StyleStack:
             'value-decimals-separator':  '.',
             'value-thousands-separator': ',',
             'value-width':               0,
-            
+
         }
 
         self.types = { # attribute types, default is string and can be ommitted
@@ -297,7 +297,7 @@ class XmlLineSerializer:
 
     def get_line(self):
         return ' ' * self.indent * self.tabwidth + self.lbuffer + ' ' * (self.width - self.clwidth - self.crwidth) + self.rbuffer
-    
+
 
 class Escpos:
     """ ESC/POS Printer object """
@@ -322,7 +322,7 @@ class Escpos:
         cont = 0
         buffer = ""
 
-       
+
         self._raw(S_RASTER_N)
         buffer = "%02X%02X%02X%02X" % (((size[0]/size[1])/8), 0, size[1], 0)
         self._raw(buffer.decode('hex'))
@@ -350,7 +350,7 @@ class Escpos:
                 output(string)
             else:
                 self._raw(string)
-       
+
         raw += S_RASTER_N
         buffer = "%02X%02X%02X%02X" % (((size[0]/size[1])/8), 0, size[1], 0)
         raw += buffer.decode('hex')
@@ -441,7 +441,7 @@ class Escpos:
             img.paste(img_rgba, mask=img_rgba.split()[3]) 
 
             print 'convert image'
-        
+
             pix_line, img_size = self._convert_image(img)
 
             print 'print image'
@@ -714,7 +714,7 @@ class Escpos:
                 pass
 
         self.extra_chars = 0
-        
+
         def encode_char(char):  
             """ 
             Encodes a single utf-8 character into a sequence of 
@@ -764,7 +764,7 @@ class Escpos:
                                 return encode_str(kata.decode('utf-8')) 
                         else:
                              kata = char_utf8
-                        
+
                         if kata in TXT_ENC_KATAKANA_MAP:
                             encoded = TXT_ENC_KATAKANA_MAP[kata]
                             break
@@ -791,7 +791,7 @@ class Escpos:
                 encoded = encodings[encoding] + encoded
 
             return encoded
-        
+
         def encode_str(txt):
             buffer = ''
             for c in txt:
@@ -812,7 +812,7 @@ class Escpos:
                 break
 
         self._raw(txt)
-        
+
     def set(self, align='left', font='a', type='normal', width=1, height=1):
         """ Set text properties """
         # Align

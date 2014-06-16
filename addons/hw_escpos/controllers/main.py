@@ -72,7 +72,7 @@ class EscposDriver(Thread):
             else:
                 name = name[0]
             _logger.info('ESC/POS: adding support for device: '+match[0]+':'+match[1]+' '+name)
-            
+
             device_list = supported_devices.device_list[:]
             if os.path.isfile('escpos_devices.pickle'):
                 try:
@@ -97,7 +97,7 @@ class EscposDriver(Thread):
 
     def connected_usb_devices(self):
         connected = []
-        
+
         for device in self.supported_devices():
             if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
                 connected.append(device)
@@ -108,7 +108,7 @@ class EscposDriver(Thread):
             if not self.isAlive():
                 self.daemon = True
                 self.start()
-    
+
     def get_escpos_printer(self):
         try:
             printers = self.connected_usb_devices()
@@ -217,10 +217,10 @@ class EscposDriver(Thread):
 
         def check(string):
             return string != True and bool(string) and string.strip()
-        
+
         def price(amount):
             return ("{0:."+str(receipt['precision']['price'])+"f}").format(amount)
-        
+
         def money(amount):
             return ("{0:."+str(receipt['precision']['money'])+"f}").format(amount)
 
@@ -234,7 +234,7 @@ class EscposDriver(Thread):
             lwidth = int(width * ratio) 
             rwidth = width - lwidth 
             lwidth = lwidth - indent
-            
+
             left = left[:lwidth]
             if len(left) != lwidth:
                 left = left + ' ' * (lwidth - len(left))
@@ -244,7 +244,7 @@ class EscposDriver(Thread):
                 right = ' ' * (rwidth - len(right)) + right
 
             return ' ' * indent + left + right + '\n'
-        
+
         def print_taxes():
             taxes = receipt['tax_details']
             for tax in taxes:
@@ -307,7 +307,7 @@ class EscposDriver(Thread):
         eprint.set(align='center',height=2)
         eprint.text(printline(_('         TOTAL'),money(receipt['total_with_tax']),width=40, ratio=0.6))
         eprint.text('\n\n');
-        
+
         # Paymentlines
         eprint.set(align='center')
         for line in receipt['paymentlines']:
@@ -344,12 +344,12 @@ driver.push_task('printstatus')
 hw_proxy.drivers['escpos'] = driver
 
 class EscposProxy(hw_proxy.Proxy):
-    
+
     @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')
     def open_cashbox(self):
         _logger.info('ESC/POS: OPEN CASHBOX') 
         driver.push_task('cashbox')
-        
+
     @http.route('/hw_proxy/print_receipt', type='json', auth='none', cors='*')
     def print_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT RECEIPT') 
@@ -374,4 +374,4 @@ class EscposProxy(hw_proxy.Proxy):
             pass
         return 'The list of supported devices has been reset to factory defaults.<br/><a href="/hw_proxy/status">Ok</a>'
 
-    
+

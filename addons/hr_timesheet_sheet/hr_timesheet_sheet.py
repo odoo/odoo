@@ -134,7 +134,7 @@ class hr_timesheet_sheet(osv.osv):
         for sheet in self.browse(cr, uid, ids, context=context):
             if sheet.employee_id.id not in employee_ids: employee_ids.append(sheet.employee_id.id)
         return hr_employee.attendance_action_change(cr, uid, employee_ids, context=context)
-    
+
     def _count_all(self, cr, uid, ids, field_name, arg, context=None):
         Timesheet = self.pool['hr.analytic.timesheet']
         Attendance = self.pool['hr.attendance']
@@ -296,7 +296,7 @@ class account_analytic_line(osv.osv):
 
 class account_analytic_account(osv.osv):
     _inherit = "account.analytic.account"
-    
+
     def name_create(self, cr, uid, name, context=None):
         if context is None:
             context = {}
@@ -305,7 +305,7 @@ class account_analytic_account(osv.osv):
             return super(account_analytic_account, self).name_create(cr, uid, name, context=context)
         rec_id = self.create(cr, uid, {self._rec_name: name}, context)
         return self.name_get(cr, uid, [rec_id], context)[0]
-    
+
 class hr_timesheet_line(osv.osv):
     _inherit = "hr.analytic.timesheet"
 

@@ -45,7 +45,7 @@ def toxml(value):
 class report_int(object):
 
     _reports = {}
-    
+
     def __init__(self, name, register=True):
         if register:
             assert openerp.conf.deprecation.allow_report_int_registration

@@ -54,7 +54,7 @@ class ir_sequence(openerp.osv.osv.osv):
     """
     _name = 'ir.sequence'
     _order = 'name'
-    
+
     def _get_number_next_actual(self, cr, user, ids, field_name, arg, context=None):
         '''Return number from ir_sequence row when no_gap implementation,
         and number from postgres sequence when standard implementation.'''

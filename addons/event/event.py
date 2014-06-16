@@ -150,7 +150,7 @@ class event_event(osv.osv):
                         res[event.id]= True
                         continue
         return res
-    
+
     def _count_registrations(self, cr, uid, ids, field_name, arg, context=None):
         return {
             event.id: len(event.registration_ids)

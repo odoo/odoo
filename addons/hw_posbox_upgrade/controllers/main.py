@@ -98,7 +98,7 @@ class PosboxUpgrader(hw_proxy.Proxy):
     @http.route('/hw_proxy/upgrade', type='http', auth='none', )
     def upgrade(self):
         return upgrade_template 
-    
+
     @http.route('/hw_proxy/perform_upgrade', type='http', auth='none')
     def perform_upgrade(self):
         self.upgrading.acquire()
@@ -123,4 +123,4 @@ class PosboxUpgrader(hw_proxy.Proxy):
             self.upgrading.release()
             return 'SUCCESS'
 
-        
+

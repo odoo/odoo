@@ -40,9 +40,9 @@ class res_company(osv.osv):
             ],"Check Layout",
             help="Check on top is compatible with Quicken, QuickBooks and Microsoft Money. Check in middle is compatible with Peachtree, ACCPAC and DacEasy. Check on bottom is compatible with Peachtree, ACCPAC and DacEasy only"  ),
         }
-        
+
     _defaults = {
         'check_layout' : lambda *a: 'top',
     }
-    
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

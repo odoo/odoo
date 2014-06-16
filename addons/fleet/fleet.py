@@ -313,7 +313,7 @@ class fleet_vehicle(osv.Model):
         except ValueError:
             model_id = False
         return model_id
-    
+
     def _count_all(self, cr, uid, ids, field_name, arg, context=None):
         Odometer = self.pool['fleet.vehicle.odometer']
         LogFuel = self.pool['fleet.vehicle.log.fuel']

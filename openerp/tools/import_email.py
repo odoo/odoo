@@ -39,7 +39,7 @@ class EmailParser(object):
     def __init__(self, headers, dispatcher):
         self.headers = headers
         self.dispatcher = dispatcher
-    
+
     def parse(self, msg):
         dispatcher((self.headers, msg))
 
@@ -47,7 +47,7 @@ class CommandDispatcher(object):
 
     def __init__(self, receiver):
         self.receiver = receiver
-    
+
     def __call__(self, request):
         return self.receiver(request)
 
@@ -57,7 +57,7 @@ class RPCProxy(object):
         self.rpc = xmlrpclib.ServerProxy('http://%s:%s/%s' % (host, port, path))
         self.user_id = uid
         self.passwd = passwd
-    
+
     def __call__(self, request):
         return self.rpc.execute(self.user_id, self.passwd, *request)
 
@@ -77,7 +77,7 @@ class ReceiverEmail2Event(object):
 
     def __init__(self, rpc):
         self.rpc = rpc
-    
+
     def get_addresses(self, headers, msg):
         hcontent = ''
         for header in [h for h in headers if msg.has_key(h)]:
@@ -114,7 +114,7 @@ class ReceiverEmail2Event(object):
         if msg.is_multipart():
             for message in [m for m in msg.get_payload() if m.get_content_type() == 'message/rfc822']:
                 self((headers, message.get_payload()[0]))
-    
+
     def save_mail(self, msg, subject, partners):
         counter, description = 1, u''
         if msg.is_multipart():

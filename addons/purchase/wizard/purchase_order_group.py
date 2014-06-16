@@ -66,7 +66,7 @@ class purchase_order_group(osv.osv_memory):
         id = mod_obj.read(cr, uid, result, ['res_id'])
 
         allorders = order_obj.do_merge(cr, uid, context.get('active_ids',[]), context)
-    
+
         return {
             'domain': "[('id','in', [" + ','.join(map(str, allorders.keys())) + "])]",
             'name': _('Purchase Orders'),

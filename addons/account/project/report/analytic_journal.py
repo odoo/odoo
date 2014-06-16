@@ -48,7 +48,7 @@ class account_analytic_journal(report_sxw.rml_parse):
         if not ids:
             return []
         return self.pool.get('account.analytic.line').browse(self.cr, self.uid, ids)
-        
+
     def _sum_general(self, journal_id, date1, date2):
         self.cr.execute('SELECT SUM(debit-credit) FROM account_move_line WHERE id IN (SELECT move_id FROM account_analytic_line WHERE (date>=%s) AND (date<=%s) AND (journal_id=%s) AND (move_id is not null))', (date1, date2, journal_id,))
         return self.cr.fetchall()[0][0] or 0

@@ -78,10 +78,10 @@ class ir_config_parameter(osv.osv):
         param = self.browse(cr, uid, ids[0], context=context)
         value = param.value
         return value
-    
+
     def set_param(self, cr, uid, key, value, context=None):
         """Sets the value of a parameter.
-        
+
         :param string key: The key of the parameter value to set.
         :param string value: The value to set.
         :return: the previous value of the parameter or False if it did

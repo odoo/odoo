@@ -97,7 +97,7 @@ class res_bank(osv.osv):
         # Merge the results
         results = list(set(results + self.name_get(cr, user, ids, context)))
         return results
-        
+
     _columns = {
         'rib_code': fields.char('RIB Bank Code', size=64),
     }

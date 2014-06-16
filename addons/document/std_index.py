@@ -47,12 +47,12 @@ def textToString(element):
         elif node.nodeType == xml.dom.Node.ELEMENT_NODE :
             buffer += textToString(node)
     return buffer
-        
+
 class TxtIndex(indexer):
     def _getMimeTypes(self):
         return ['text/plain','text/html','text/diff','text/xml', 'text/*', 
             'application/xml']
-    
+
     def _getExtensions(self):
         return ['.txt', '.py']
 
@@ -64,7 +64,7 @@ cntIndex.register(TxtIndex())
 class PptxIndex(indexer):
     def _getMimeTypes(self):
         return [ 'application/vnd.openxmlformats-officedocument.presentationml.presentation']
-    
+
     def _getExtensions(self):
         return ['.pptx']
 
@@ -92,7 +92,7 @@ cntIndex.register(PptxIndex())
 class DocIndex(indexer):
     def _getMimeTypes(self):
         return [ 'application/ms-word']
-    
+
     def _getExtensions(self):
         return ['.doc']
 
@@ -102,11 +102,11 @@ class DocIndex(indexer):
             (data, _) = pop.communicate()
             return _to_unicode(data)
         except OSError:
-            
+
             _logger.warning("Failed attempt to execute antiword (MS Word reader). Antiword is necessary to index the file %s of MIME type %s. Detailed error available at DEBUG level.", fname, self._getMimeTypes()[0])
             _logger.debug("Trace of the failed file indexing attempt.", exc_info=True)
             return u''
-    
+
 cntIndex.register(DocIndex())
 
 class DocxIndex(indexer):
@@ -161,7 +161,7 @@ cntIndex.register(XlsxIndex())
 class PdfIndex(indexer):
     def _getMimeTypes(self):
         return [ 'application/pdf']
-    
+
     def _getExtensions(self):
         return ['.pdf']
 
@@ -180,7 +180,7 @@ cntIndex.register(PdfIndex())
 class ImageNoIndex(indexer):
     def _getMimeTypes(self):
         return [ 'image/*']
-    
+
     def _getExtensions(self):
         #better return no extension, and let 'file' do its magic
         return []
@@ -200,14 +200,14 @@ cntIndex.register(ImageNoIndex())
 
 class OpenDoc(indexer):
     """ Index OpenDocument files.
-    
+
         Q: is it really worth it to index spreadsheets, or do we only get a
         meaningless list of numbers (cell contents) ?
         """
     def _getMimeTypes(self):
         otypes = [ 'text', 'text-web', 'text-template', 'text-master' ]
         return map(lambda a: 'application/vnd.oasis.opendocument.'+a, otypes)
-    
+
     def _getExtensions(self):
         return ['.odt', '.ott', ] # '.ods'
 
