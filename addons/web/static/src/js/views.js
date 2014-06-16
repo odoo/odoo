@@ -885,7 +885,20 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         this._super(parent, null, action.views, flags);
         this.session = parent.session;
         this.action = action;
-        var dataset = new instance.web.DataSetSearch(this, action.res_model, action.context, action.domain);
+        var context = action.context;
+        if (action.target === 'current'){
+            var active_context = {
+                active_model: action.res_model,
+            };
+            context = new instance.web.CompoundContext(context, active_context).eval();
+            delete context['active_id'];
+            delete context['active_ids'];
+            if (action.res_id){
+                context['active_id'] = action.res_id;
+                context['active_ids'] = [action.res_id];
+            }
+        }
+        var dataset = new instance.web.DataSetSearch(this, action.res_model, context, action.domain);
         if (action.res_id) {
             dataset.ids.push(action.res_id);
             dataset.index = 0;

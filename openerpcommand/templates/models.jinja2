@@ -1,9 +1,0 @@
-# -*- coding: utf-8 -*-
-from openerp.osv import orm, fields
-
-class {{ config.model }}(orm.Model):
-    _name = "{{ config.module|snake }}.{{ config.model|snake }}"
-
-    _columns = {
-        'name': fields.char(),
-    }

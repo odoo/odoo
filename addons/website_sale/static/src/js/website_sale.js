@@ -46,59 +46,79 @@ $(document).ready(function () {
     $('.a-submit').on('click', function () {
         $(this).closest('form').submit();
     });
+    $('form.js_attributes input, form.js_attributes select').on('change', function () {
+        $(this).closest("form").submit();
+    });
 
     // change price when they are variants
+    var $price = $(".oe_price .oe_currency_value");
     $('form.js_add_cart_json label').on('mouseup', function (ev) {
         ev.preventDefault();
         var $label = $(ev.currentTarget);
-        var $price = $label.parent("form").find(".oe_price .oe_currency_value");
         if (!$price.data("price")) {
             $price.data("price", parseFloat($price.text()));
         }
-        $price.html($price.data("price")+parseFloat($label.find(".badge span").text() || 0));
+        var value = $price.data("price") + parseFloat($label.find(".badge span").text() || 0);
+        var dec = value % 1;
+        $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
+    });
+    // hightlight selected color
+    $('.css_attribute_color input').on('change', function (ev) {
+        $('.css_attribute_color').removeClass("active");
+        $('.css_attribute_color:has(input:checked)').addClass("active");
     });
 
-    // attributes
+    var $form_var = $('form.js_add_cart_variants');
+    var variant_ids = $form_var.data("attribute_value_ids");
+    $form_var.on('change', 'input, select', function (ev) {
+        var values = [];
+        $form_var.find("label").removeClass("text-muted css_not_available");
+        $form_var.find(".a-submit").removeAttr("disabled");
 
-    var js_slider_time = null;
-    var $form = $("form.attributes");
-    $form.on("change", "label input", function () {
-        $form.submit();
-    });
-    $(".js_slider", $form).each(function() {
-        var $slide = $(this);
-        var $slider = $('<div>'+
-                '<input type="hidden" name="att-'+$slide.data("id")+'-minmem" value="'+$slide.data("min")+'"/>'+
-                '<input type="hidden" name="att-'+$slide.data("id")+'-maxmem" value="'+$slide.data("max")+'"/>'+
-            '</div>');
-        var $min = $("<input readonly name='att-"+$slide.data("id")+"-min'/>")
-            .css("border", "0").css("width", "50%")
-            .val($slide.data("min"));
-        var $max = $("<input readonly name='att-"+$slide.data("id")+"-max'/>")
-            .css("border", "0").css("width", "50%").css("text-align", "right")
-            .val($slide.data("max"));
-        $slide.append($min);
-        $slide.append($max);
-        $slide.append($slider);
-        $slider.slider({
-            range: true,
-            min: +$slide.data("min"),
-            max: +$slide.data("max"),
-            values: [
-                $slide.data("value-min") ? +$slide.data("value-min") : +$slide.data("min"),
-                $slide.data("value-max") ? +$slide.data("value-max") : +$slide.data("max")
-            ],
-            change: function( event, ui ) {
-                $min.val( ui.values[ 0 ] );
-                $max.val( ui.values[ 1 ] );
-                $form.submit();
-            },
-            slide: function( event, ui ) {
-                $min.val( ui.values[ 0 ] );
-                $max.val( ui.values[ 1 ] );
-            }
+        $form_var.find('input:checked, select').each(function () {
+            values.push(+$(this).val());
         });
-        $min.val( $slider.slider( "values", 0 ) );
-        $max.val( $slider.slider( "values", 1 ) );
+        var product_id = false;
+        for (var k in variant_ids) {
+            if (_.isEqual(variant_ids[k][1], values)) {
+                var dec = variant_ids[k][2] % 1;
+                product_id = variant_ids[k][0];
+                $('input[name="product_id"]').val(product_id);
+                $price.html(variant_ids[k][2] + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
+                break;
+            }
+        }
+
+        if (product_id) {
+            $("#product_detail .product_detail_img").attr("src", "/website/image?field=image&model=product.product&id="+product_id);
+        }
+
+        $form_var.find("input:radio, select").each(function () {
+            var id = +$(this).val();
+            var values = [id];
+            $form_var.find(">ul>li:not(:has(input[value='" + id + "'])) input:checked, select").each(function () {
+                values.push(+$(this).val());
+            });
+            for (var k in variant_ids) {
+                if (!_.difference(values, variant_ids[k][1]).length) {
+                    return;
+                }
+            }
+            $(this).parents("label:not(.css_attribute_color):first").addClass("text-muted");
+            $(this).parents("label.css_attribute_color:first").addClass("css_not_available");
+            $(this).find("option[value='" + id + "']").addClass("css_not_available");
+        });
+
+        if (product_id) {
+            $(".oe_price_h4").removeClass("hidden");
+            $(".oe_not_available").addClass("hidden");
+        } else {
+            $(".oe_price_h4").addClass("hidden");
+            $(".oe_not_available").removeClass("hidden");
+            $form_var.find('input[name="product_id"]').val(0);
+            $form_var.find(".a-submit").attr("disabled", "disabled");
+        }
     });
+    $form_var.find("input:first").trigger('change');
+
 });

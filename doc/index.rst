@@ -30,16 +30,6 @@ OpenERP Server
    form-view-guidelines
    ir_actions
 
-OpenERP Command
-'''''''''''''''
-
-.. toctree::
-   :maxdepth: 1
-
-   openerp-command.rst
-   commands.rst
-   adding-command.rst
-
 OpenERP Server API
 ''''''''''''''''''
 

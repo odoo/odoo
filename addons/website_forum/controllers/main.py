@@ -330,13 +330,12 @@ class WebsiteForum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         if kwargs.get('comment') and post.forum_id.id == forum.id:
             # TDE FIXME: check that post_id is the question or one of its answers
-            if request.registry['res.users'].has_group(cr, uid, 'website_mail.group_comment'):
-                request.registry['forum.post'].message_post(
-                    cr, uid, post.id,
-                    body=kwargs.get('comment'),
-                    type='comment',
-                    subtype='mt_comment',
-                    context=dict(context, mail_create_nosubcribe=True))
+            request.registry['forum.post'].message_post(
+                cr, uid, post.id,
+                body=kwargs.get('comment'),
+                type='comment',
+                subtype='mt_comment',
+                context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
@@ -449,7 +448,10 @@ class WebsiteForum(http.Controller):
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
 
         obj_ids = User.search(cr, SUPERUSER_ID, [('karma', '>', 1)], limit=step, offset=pager['offset'], order='karma DESC', context=context)
-        users = User.browse(cr, SUPERUSER_ID, obj_ids, context=context)
+        # put the users in block of 3 to display them as a table
+        users = [[] for i in range(len(obj_ids)/3+1)]
+        for index, user in enumerate(User.browse(cr, SUPERUSER_ID, obj_ids, context=context)):
+            users[index/3].append(user)
         searches['users'] = 'True'
 
         values = self._prepare_forum_values(forum=forum, searches=searches)

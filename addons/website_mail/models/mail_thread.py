@@ -22,7 +22,7 @@
 from openerp.osv import osv, fields
 
 # TODO for trunk, remove me
-class MailThread(osv.Model):
+class MailThread(osv.AbstractModel):
     _inherit = 'mail.thread'
 
     _columns = {

@@ -333,7 +333,8 @@ class gamification_goal(osv.Model):
 
                         if definition.computation_mode == 'sum':
                             field_name = definition.field_id.name
-                            res = obj.read_group(cr, uid, domain, [field_name], [field_name], context=context)
+                            # TODO for master: group on user field in batch mode
+                            res = obj.read_group(cr, uid, domain, [field_name], [], context=context)
                             new_value = res and res[0][field_name] or 0.0
 
                         else:  # computation mode = count
