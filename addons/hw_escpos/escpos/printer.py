@@ -31,7 +31,7 @@ class Usb(Escpos):
         self.interface = interface
         self.in_ep     = in_ep
         self.out_ep    = out_ep
-	self.open()
+        self.open()
 
 
     def open(self):
