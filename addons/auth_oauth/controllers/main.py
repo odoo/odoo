@@ -116,7 +116,7 @@ class OAuthController(http.Controller):
                 cr.commit()
                 action = state.get('a')
                 menu = state.get('m')
-                redirect = state.get('r')
+                redirect = werkzeug.url_unquote_plus(state.get('r'))
                 url = '/web'
                 if redirect and not redirect.startswith('/auth_oauth/signin') and \
                 (not redirect.startswith('/web/login') or 'redirect' in urlparse.urlsplit(redirect).query):
