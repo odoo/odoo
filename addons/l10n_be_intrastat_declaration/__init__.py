@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import models
+import l10n_be_intrastat_declaration
 import wizard

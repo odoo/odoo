@@ -54,10 +54,10 @@ class xml_decl(osv.TransientModel):
         return td.year, td.month
 
     def _get_def_month(self, cr, uid, context=None):
-        return self._get_def_monthyear(cr, uid, context)[1]
+        return self._get_def_monthyear(cr, uid, context=context)[1]
 
     def _get_def_year(self, cr, uid, context=None):
-        return self._get_def_monthyear(cr, uid, context)[0]
+        return self._get_def_monthyear(cr, uid, context=context)[0]
 
     _columns = {
         'name': fields.char('File Name', size=32),
@@ -123,13 +123,13 @@ class xml_decl(osv.TransientModel):
         ET.SubElement(admin, 'To').text = "NBB"
         ET.SubElement(admin, 'Domain').text = "SXX"
         if decl_datas.arrivals == 'be-standard':
-            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, False, False, context))
+            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, dispatchmode=False, extendedmode=False, context=context))
         elif decl_datas.arrivals == 'be-extended':
-            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, False, True, context))
+            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, dispatchmode=False, extendedmode=True, context=context))
         if decl_datas.dispatches == 'be-standard':
-            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, True, False, context))
+            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, dispatchmode=True, extendedmode=False, context=context))
         elif decl_datas.dispatches == 'be-extended':
-            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, True, True, context))
+            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, dispatchmode=True, extendedmode=True, context=context))
 
         #Get xml string with declaration
         data_file = ET.tostring(decl, encoding='UTF-8', method='xml')
@@ -209,7 +209,7 @@ class xml_decl(osv.TransientModel):
         cr.execute(sqlreq, (company.partner_id.country_id.code, company.partner_id.country_id.code, mode1, mode2, decl_datas.year, decl_datas.month, company.id))
         lines = cr.fetchall()
         invoicelines_ids = [rec[0] for rec in lines]
-        invoicelines = invoiceline_mod.browse(cr, uid, invoicelines_ids)
+        invoicelines = invoiceline_mod.browse(cr, uid, invoicelines_ids, context=context)
         for invoiceline in invoicelines:
 
             #Check type of transaction
@@ -232,20 +232,20 @@ class xml_decl(osv.TransientModel):
             if invoiceline.invoice_id.type in ('in_invoice', 'in_refund'):
                 #comes from purchase
                 if invoiceline.invoice_id.origin:
-                    po_ids = purchaseorder_mod.search(cr, uid, ([('company_id', '=', company.id), ('name', '=', invoiceline.invoice_id.origin)]))
+                    po_ids = purchaseorder_mod.search(cr, uid, ([('company_id', '=', company.id), ('name', '=', invoiceline.invoice_id.origin)]), context=context)
                     if po_ids and po_ids[0]:
                         purchaseorder = purchaseorder_mod.browse(cr, uid, po_ids[0])
-                        region_id = warehouse_mod.get_regionid_from_locationid(cr, uid, purchaseorder.location_id.id, context)
+                        region_id = warehouse_mod.get_regionid_from_locationid(cr, uid, purchaseorder.location_id.id, context=context)
                         if region_id:
                             exreg = region_mod.browse(cr, uid, region_id).code
             elif invoiceline.invoice_id.type in ('out_invoice', 'out_refund'):
                 #comes from sales
                 if invoiceline.invoice_id.origin:
-                    so_ids = saleorder_mod.search(cr, uid, ([('company_id', '=', company.id), ('name', '=', invoiceline.invoice_id.origin)]))
+                    so_ids = saleorder_mod.search(cr, uid, ([('company_id', '=', company.id), ('name', '=', invoiceline.invoice_id.origin)]), context=context)
                     if so_ids and so_ids[0]:
-                        saleorder = saleorder_mod.browse(cr, uid, so_ids[0])
+                        saleorder = saleorder_mod.browse(cr, uid, so_ids[0], context=context)
                         if saleorder and saleorder.warehouse_id and saleorder.warehouse_id.region_id:
-                            exreg = region_mod.browse(cr, uid, saleorder.warehouse_id.region_id.id).code
+                            exreg = region_mod.browse(cr, uid, saleorder.warehouse_id.region_id.id, context=context).code
             if not exreg:
                 if company.region_id:
                     exreg = company.region_id.code
@@ -253,9 +253,9 @@ class xml_decl(osv.TransientModel):
                     raise osv.except_osv(_('Incorrect Data!'), _('Define at least region of company'))
 
             #Check commodity codes
-            intrastat_id = product_mod.get_intrastat_recursively(cr, uid, invoiceline.product_id.id)
+            intrastat_id = product_mod.get_intrastat_recursively(cr, uid, invoiceline.product_id.id, context=context)
             if intrastat_id:
-                exgo = intrastatcode_mod.browse(cr, uid, intrastat_id).name
+                exgo = intrastatcode_mod.browse(cr, uid, intrastat_id, context=context).name
             else:
                 raise osv.except_osv(_('Incorrect Data!'), _('Product %s has not intrastat code') % (invoiceline.product_id.name))
 
