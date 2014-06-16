@@ -98,7 +98,7 @@ class im_livechat_channel(osv.Model):
                     break
         return res
 
-    def _script(self, cr, uid, ids, name, arg, context=None):
+    def _script_external(self, cr, uid, ids, name, arg, context=None):
         values = {
             "url": self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'),
             "dbname":cr.dbname
@@ -106,7 +106,18 @@ class im_livechat_channel(osv.Model):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             values["channel"] = record.id
-            res[record.id] = self.pool['ir.ui.view'].render(cr, uid, 'im_livechat.support_loader', values, context=context)
+            res[record.id] = self.pool['ir.ui.view'].render(cr, uid, 'im_livechat.external_loader', values, context=context)
+        return res
+
+    def _script_internal(self, cr, uid, ids, name, arg, context=None):
+        values = {
+            "url": self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'),
+            "dbname":cr.dbname
+        }
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            values["channel"] = record.id
+            res[record.id] = self.pool['ir.ui.view'].render(cr, uid, 'im_livechat.internal_loader', values, context=context)
         return res
 
     def _web_page(self, cr, uid, ids, name, arg, context=None):
@@ -120,7 +131,8 @@ class im_livechat_channel(osv.Model):
         'name': fields.char(string="Channel Name", size=200, required=True),
         'user_ids': fields.many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string="Users"),
         'are_you_inside': fields.function(_are_you_inside, type='boolean', string='Are you inside the matrix?', store=False),
-        'script': fields.function(_script, type='text', string='Script', store=False),
+        'script_internal': fields.function(_script_internal, type='text', string='Script (internal)', store=False),
+        'script_external': fields.function(_script_external, type='text', string='Script (external)', store=False),
         'web_page': fields.function(_web_page, type='url', string='Web Page', store=False, size="200"),
         'button_text': fields.char(string="Text of the Button", size=200),
         'input_placeholder': fields.char(string="Chat Input Placeholder", size=200),
