@@ -831,14 +831,14 @@ openerp.web_calendar = function(instance) {
         },
         open_event: function(id, title) {
             var self = this;
+            var index = this.dataset.get_id_index(id);
             if (! this.open_popup_action) {
-                var index = this.dataset.get_id_index(id);
                 this.dataset.index = index;
                 this.do_switch_view('form', null, { mode: "edit" });
             }
             else {
                 var pop = new instance.web.form.FormOpenPopup(this);
-                pop.show_element(this.dataset.model, id, this.dataset.get_context(), {
+                pop.show_element(this.dataset.model, this.dataset.ids[index], this.dataset.get_context(), {
                     title: _.str.sprintf(_t("View: %s"),title),
                     view_id: +this.open_popup_action,
                     res_id: id,
