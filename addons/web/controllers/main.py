@@ -746,7 +746,7 @@ class Database(http.Controller):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
-
+        
         try:
             if request.session.proxy("db").drop(password, db):
                 return True
@@ -1721,7 +1721,7 @@ class Apps(http.Controller):
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
         return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
-
+        
 
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

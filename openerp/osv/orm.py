@@ -5130,7 +5130,7 @@ class BaseModel(object):
         # TODO: Move this to read() directly?                                                                                                
         read_ctx = dict(context or {})                                                                                                       
         read_ctx.pop('active_test', None)                                                                                                    
-
+                                                                                                                                             
         result = self.read(cr, uid, record_ids, fields, context=read_ctx) 
         if len(result) <= 1:
             return result
