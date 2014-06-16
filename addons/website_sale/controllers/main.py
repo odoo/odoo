@@ -473,7 +473,7 @@ class website_sale(http.Controller):
 
     @http.route(['/shop/checkout'], type='http', auth="public", website=True)
     def checkout(self, **post):
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        cr, uid, context = request.cr, request.uid, request.context
 
         order = request.website.sale_get_order(force_create=1, context=context)
 

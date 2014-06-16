@@ -865,8 +865,6 @@ class product_product(osv.osv):
     def _get_price_extra(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for product in self.browse(cr, uid, ids, context=context):
-            ctx = context.copy()
-            ctx.update(active_id=product.product_tmpl_id.id)
             price_extra = 0.0
             for variant_id in product.attribute_value_ids:
                 for price_id in variant_id.price_ids:
