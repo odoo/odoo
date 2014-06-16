@@ -33,7 +33,7 @@
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
-                <group expand="1" string="Group By...">
+                <group expand="1" string="Group By">
                     <filter string="Asset" name="asset" context="{'group_by':'asset_id'}"/>
                     <filter string="Asset Category" name="asset_category" icon="terp-stock_symbol-selection" context="{'group_by':'asset_category_id'}"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>

@@ -41,7 +41,7 @@
             <field name="name">Goal Form</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
-                <form string="Goal" version="7.0">
+                <form string="Goal">
                     <header>
                         <button string="Start goal" type="object" name="action_start" states="draft" class="oe_highlight"/>
                         
@@ -110,7 +110,7 @@
                     <field name="user_id"/>
                     <field name="definition_id"/>
                     <field name="challenge_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="group_by_user" string="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter name="group_by_definition" string="Goal Definition" domain="[]" context="{'group_by':'definition_id'}"/>
                         <filter string="State" domain="[]" context="{'group_by':'state'}"/>
@@ -124,7 +124,7 @@
             <field name="name">Goal Kanban View</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_background_grey">
+                <kanban class="oe_background_grey">
                     <field name="definition_id"/>
                     <field name="user_id"/>
                     <field name="current"/>
@@ -220,7 +220,7 @@
             <field name="name">Goal Definitions Form</field>
             <field name="model">gamification.goal.definition</field>
             <field name="arch" type="xml">
-                <form string="Goal definitions" version="7.0">
+                <form string="Goal definitions">
                     <sheet>
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -274,7 +274,7 @@
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="field_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
                         <filter string="Computation Mode" domain="[]" context="{'group_by':'computation_mode'}"/>
                     </group>

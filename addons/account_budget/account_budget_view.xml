@@ -46,7 +46,7 @@
             <field name="name">account.budget.post.form.inherit</field>
             <field name="model">account.budget.post</field>
             <field name="arch" type="xml">
-                <form string="Budgetary Position" version="7.0">
+                <form string="Budgetary Position">
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
@@ -69,7 +69,7 @@
                                     <field name="theoritical_amount" sum="Theoretical Amount"/>
                                     <field name="percentage"/>
                                 </tree>
-                                <form string="Budget Lines" version="7.0">
+                                <form string="Budget Lines">
                                     <group col="4">
                                         <field name="crossovered_budget_id"/>
                                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
@@ -93,7 +93,7 @@
             <field name="name">crossovered.budget.view.form</field>
             <field name="model">crossovered.budget</field>
             <field name="arch" type="xml">
-                <form string="Budget" version="7.0">
+                <form string="Budget">
                     <header>
                         <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
                         <button string="Approve" name="validate" states="confirm" type="workflow" class="oe_highlight"/>
@@ -138,7 +138,7 @@
                                         <field name="theoritical_amount" sum="Theoretical Amount"/>
                                         <field name="percentage"/>
                                     </tree>
-                                    <form string="Budget Lines" version="7.0">
+                                    <form string="Budget Lines">
                                         <group>
                                             <group>
                                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
@@ -255,7 +255,7 @@
             <field name="name">crossovered.budget.line.form</field>
             <field name="model">crossovered.budget.lines</field>
             <field name="arch" type="xml">
-                <form string="Budget Lines" version="7.0">
+                <form string="Budget Lines">
                     <sheet>
                         <group col="4">
                             <field name="crossovered_budget_id"/>

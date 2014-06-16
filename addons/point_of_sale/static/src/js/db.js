@@ -29,7 +29,7 @@ function openerp_pos_db(instance, module){
             this.category_parent    = {};
             this.category_search_string = {};
             this.packagings_by_id = {};
-            this.packagings_by_product_id = {};
+            this.packagings_by_product_tmpl_id = {};
             this.packagings_by_ean13 = {};
         },
         /* returns the category object from its id. If you pass a list of id as parameters, you get
@@ -130,7 +130,7 @@ function openerp_pos_db(instance, module){
             if(product.default_code){
                 str += '|' + product.default_code;
             }
-            var packagings = this.packagings_by_product_id[product.id] || [];
+            var packagings = this.packagings_by_product_tmpl_id[product.product_tmpl_id] || [];
             for(var i = 0; i < packagings.length; i++){
                 str += '|' + packagings[i].ean;
             }
@@ -145,10 +145,11 @@ function openerp_pos_db(instance, module){
             for(var i = 0, len = products.length; i < len; i++){
                 var product = products[i];
                 var search_string = this._product_search_string(product);
-                var categ_id = product.public_categ_id ? product.public_categ_id[0] : this.root_category_id;
+                var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
                 if (product.variants){
                     product.name = product.name+" ("+product.variants+")";
                 }
+                product.product_tmpl_id = product.product_tmpl_id[0];
                 if(!stored_categories[categ_id]){
                     stored_categories[categ_id] = [];
                 }
@@ -186,10 +187,10 @@ function openerp_pos_db(instance, module){
             for(var i = 0, len = packagings.length; i < len; i++){
                 var pack = packagings[i];
                 this.packagings_by_id[pack.id] = pack;
-                if(!this.packagings_by_product_id[pack.product_id[0]]){
-                    this.packagings_by_product_id[pack.product_id[0]] = [];
+                if(!this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]]){
+                    this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]] = [];
                 }
-                this.packagings_by_product_id[pack.product_id[0]].push(pack);
+                this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]].push(pack);
                 if(pack.ean){
                     this.packagings_by_ean13[pack.ean] = pack;
                 }

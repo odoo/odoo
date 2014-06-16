@@ -3,8 +3,8 @@
 <data>
 
 <!-- Layout add nav and footer -->
-<template id="footer_custom" inherit_id="website.layout" name="Footer Customer References Link">
-    <xpath expr="//footer//div[@name='info']/ul" position="inside">
+<template id="footer_custom" inherit_id="website.footer_default" name="Footer Customer References Link">
+    <xpath expr="//div[@id='info']/ul" position="inside">
         <li><a href="/customers">Our References</a></li>
     </xpath>
 </template>
@@ -66,15 +66,31 @@
 </template>
 
 <!-- Option: left column: World Map -->
-<template id="opt_country" inherit_option_id="website_customer.index" name="Show Map">
+<template id="opt_country" inherit_id="website_customer.index" optional="enabled" name="Show Map">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
-
-        <iframe t-attf-src="/google_map/?partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/&amp;output=embed"
-            style="width:100%; border:0; padding:0; margin:0;"></iframe>
+        <!-- modal for large map -->
+        <div class="modal fade customer_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">World Map</h4>
+                </div>
+                <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
+                style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
+            </div>
+          </div>
+        </div>
+        <!-- modal end -->
+        <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".customer_map_modal"><span class="fa fa-external-link" /></button></h3>
+        <ul class="nav">
+            <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
+                style="width:260px; height:240px; border:0; padding:0; margin:0;"></iframe>
+        </ul>
     </xpath>
 </template>
 
-<template id="opt_country_list" inherit_id="website_customer.index" inherit_option_id="website_customer.index" name="Filter on Countries">
+<template id="opt_country_list" inherit_id="website_customer.index" optional="enabled" name="Filter on Countries">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <h3>References by Country</h3>
         <ul class="nav nav-pills nav-stacked mt16 mb32">

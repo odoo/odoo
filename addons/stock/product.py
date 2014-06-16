@@ -168,9 +168,16 @@ class product_product(osv.osv):
             res.append(('id', 'in', ids))
         return res
 
+    def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = str(product.qty_available) +  _(" In Stock")
+        return res
+
     _columns = {
         'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
+        'qty_in_stock': fields.function(_product_available_text, type='char'),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
@@ -222,14 +229,9 @@ class product_product(osv.osv):
                  "any of its children.\n"
                  "Otherwise, this includes goods leaving any Stock "
                  "Location with 'internal' type."),
-        'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to specify a Serial Number for all moves containing this product and coming from a Supplier Location"),
-        'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Serial Number for all moves containing this product and going to a Customer Location"),
-        'track_all': fields.boolean('Full Lots Traceability', help="Forces to specify a Serial Number on each and every operation related to this product"),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
-        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]",
-                                    help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -275,25 +277,52 @@ class product_product(osv.osv):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
 
-    def action_view_routes(self, cr, uid, ids, context=None):
-        route_obj = self.pool.get("stock.location.route")
-        act_obj = self.pool.get('ir.actions.act_window')
-        mod_obj = self.pool.get('ir.model.data')
-        product_route_ids = set()
-        for product in self.browse(cr, uid, ids, context=context):
-            product_route_ids |= set([r.id for r in product.route_ids])
-            product_route_ids |= set([r.id for r in product.categ_id.total_route_ids])
-        route_ids = route_obj.search(cr, uid, ['|', ('id', 'in', list(product_route_ids)), ('warehouse_selectable', '=', True)], context=context)
-        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_routes_form')
-        id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
-        result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
-        return result
-
 class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
+    
+    def _product_available(self, cr, uid, ids, name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = {
+                # "reception_count": sum([p.reception_count for p in product.product_variant_ids]),
+                # "delivery_count": sum([p.delivery_count for p in product.product_variant_ids]),
+                "qty_available": sum([p.qty_available for p in product.product_variant_ids]),
+                "virtual_available": sum([p.virtual_available for p in product.product_variant_ids]),
+                "incoming_qty": sum([p.incoming_qty for p in product.product_variant_ids]),
+                "outgoing_qty": sum([p.outgoing_qty for p in product.product_variant_ids]),
+            }
+        return res
+
+    def _search_product_quantity(self, cr, uid, obj, name, domain, context):
+        prod = self.pool.get("product.product")
+        res = []
+        for field, operator, value in domain:
+            #to prevent sql injections
+            assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
+            assert operator in ('<', '>', '=', '<=', '>='), 'Invalid domain operator'
+            assert isinstance(value, (float, int)), 'Invalid domain right operand'
+
+            if operator == '=':
+                operator = '=='
+
+            product_ids = prod.search(cr, uid, [], context=context)
+            ids = []
+            if product_ids:
+                #TODO: use a query instead of this browse record which is probably making the too much requests, but don't forget
+                #the context that can be set with a location, an owner...
+                for element in prod.browse(cr, uid, product_ids, context=context):
+                    if eval(str(element[field]) + operator + str(value)):
+                        ids.append(element.id)
+            res.append(('product_variant_ids', 'in', ids))
+        return res
+
     _columns = {
+        'valuation':fields.selection([('manual_periodic', 'Periodical (manual)'),
+            ('real_time','Real Time (automated)'),], 'Inventory Valuation',
+            help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
+                 "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
+            , required=True),
         'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
         'property_stock_procurement': fields.property(
             type='many2one',
@@ -317,12 +346,47 @@ class product_template(osv.osv):
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
         'loc_case': fields.char('Case', size=16),
+        'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to specify a Serial Number for all moves containing this product and coming from a Supplier Location"),
+        'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Serial Number for all moves containing this product and going to a Customer Location"),
+        'track_all': fields.boolean('Full Lots Traceability', help="Forces to specify a Serial Number on each and every operation related to this product"),
+        
+        # sum of product variant qty
+        # 'reception_count': fields.function(_product_available, multi='qty_available',
+        #     fnct_search=_search_product_quantity, type='float', string='Quantity On Hand'),
+        # 'delivery_count': fields.function(_product_available, multi='qty_available',
+        #     fnct_search=_search_product_quantity, type='float', string='Quantity On Hand'),
+        'qty_available': fields.function(_product_available, multi='qty_available',
+            fnct_search=_search_product_quantity, type='float', string='Quantity On Hand'),
+        'virtual_available': fields.function(_product_available, multi='qty_available',
+            fnct_search=_search_product_quantity, type='float', string='Quantity Available'),
+        'incoming_qty': fields.function(_product_available, multi='qty_available',
+            fnct_search=_search_product_quantity, type='float', string='Incoming'),
+        'outgoing_qty': fields.function(_product_available, multi='qty_available',
+            fnct_search=_search_product_quantity, type='float', string='Outgoing'),
+        
+        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]",
+                                    help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."),
     }
 
     _defaults = {
         'sale_delay': 7,
+        'valuation': 'manual_periodic',
     }
 
+    def action_view_routes(self, cr, uid, ids, context=None):
+        route_obj = self.pool.get("stock.location.route")
+        act_obj = self.pool.get('ir.actions.act_window')
+        mod_obj = self.pool.get('ir.model.data')
+        product_route_ids = set()
+        for product in self.browse(cr, uid, ids, context=context):
+            product_route_ids |= set([r.id for r in product.route_ids])
+            product_route_ids |= set([r.id for r in product.categ_id.total_route_ids])
+        route_ids = route_obj.search(cr, uid, ['|', ('id', 'in', list(product_route_ids)), ('warehouse_selectable', '=', True)], context=context)
+        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_routes_form')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
+        return result
 
 class product_removal_strategy(osv.osv):
     _name = 'product.removal'

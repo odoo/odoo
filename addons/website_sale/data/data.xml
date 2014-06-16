@@ -2,11 +2,6 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="product.group_product_attributes" model="res.groups">
-            <field name="name">Product Attributes</field>
-            <field name="category_id" ref="base.module_category_hidden"/>
-        </record>
-
         <record id="menu_shop" model="website.menu">
             <field name="name">Shop</field>
             <field name="url">/shop</field>
@@ -39,5 +34,9 @@
             <field name="use_quotations" eval="False"/>
         </record>
 
+        <!-- Product Public Categories -->
+        <record id="categ_others" model="product.public.category">
+            <field name="name">Others</field>
+        </record>
     </data>
 </openerp>

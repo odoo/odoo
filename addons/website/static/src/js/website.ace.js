@@ -6,18 +6,16 @@
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.ace.xml');
 
-    website.EditorBar.include({
-        events: _.extend({}, website.EditorBar.prototype.events, {
+    website.EditorBarCustomize.include({
+        events: _.extend({}, website.EditorBarCustomize.prototype.events, {
             'click a[data-action=ace]': 'launchAce',
         }),
         start: function () {
-            var self = this;
+            this._super();
             this.globalEditor = null;
-            return this._super.apply(this, arguments).then(function () {
-                if (window.location.hash.indexOf(hash) >= 0) {
-                    self.launchAce();
-                }
-            });
+            if (window.location.hash.indexOf(hash) >= 0) {
+                this.launchAce();
+            }
         },
         launchAce: function (e) {
             if (e) {
@@ -28,6 +26,7 @@
             } else {
                 this.globalEditor = new website.ace.ViewEditor(this);
                 this.globalEditor.appendTo($(document.body));
+                this.globalEditor.open();
             }
         },
     });
@@ -97,7 +96,7 @@
             var viewId = $(document.documentElement).data('view-xmlid');
             openerp.jsonRpc('/website/customize_template_get', 'call', {
                 'xml_id': viewId,
-                'optional': false,
+                'full': true,
             }).then(function (views) {
                 self.loadViews.call(self, views);
                 self.open.call(self);
@@ -156,10 +155,10 @@
                self.close();
             });
             this.getParent().on('change:height', this, function (editor) {
-                resizeEditorHeight(editor.get('height'));
+                resizeEditorHeight(this.getParent().$el.outerHeight()+2);
             });
             resizeEditor(readEditorWidth());
-            resizeEditorHeight(this.getParent().get('height'));
+            resizeEditorHeight(this.getParent().$el.outerHeight()+2);
         },
         loadViews: function (views) {
             var self = this;

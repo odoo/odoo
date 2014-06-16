@@ -20,7 +20,7 @@
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="group_name" string="Description" domain="[]" context="{'group_by':'name'}"/>
                         <filter name="group_date_from" string="Start Month" icon="terp-personal" domain="[]" context="{'group_by':'date_from'}"/>
                         <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
@@ -54,7 +54,7 @@
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <form string="Leave Request" version="7.0">
+                <form string="Leave Request">
                 <field name="can_reset" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <header>
@@ -125,7 +125,7 @@
             <field name="name">Leaves Management</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <form string="Leaves Management" version="7.0">
+                <form string="Leaves Management">
                     <header>
                         <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                         <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
@@ -341,7 +341,7 @@
             <field name="name">hr.holidays.status.form</field>
             <field name="model">hr.holidays.status</field>
             <field name="arch" type="xml">
-                <form string="Leave Type" version="7.0">
+                <form string="Leave Type">
                 <sheet string="Leave Type">
                     <group col="4">
                         <field name="name"/>

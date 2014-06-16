@@ -95,9 +95,12 @@ class AcquirerPaypal(osv.Model):
             return 0.0
         country = self.pool['res.country'].browse(cr, uid, country_id, context=context)
         if country and acquirer.company_id.country_id.id == country.id:
-            fees = amount * (1 + acquirer.fees_dom_var / 100.0) + acquirer.fees_dom_fixed - amount
+            percentage = acquirer.fees_dom_var
+            fixed = acquirer.fees_dom_fixed
         else:
-            fees = amount * (1 + acquirer.fees_int_var / 100.0) + acquirer.fees_int_fixed - amount
+            percentage = acquirer.fees_int_var
+            fixed = acquirer.fees_int_fixed
+        fees = (percentage / 100.0 * amount + fixed ) / (1 - percentage / 100.0)
         return fees
 
     def paypal_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):

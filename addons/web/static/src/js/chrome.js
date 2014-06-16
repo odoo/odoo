@@ -428,7 +428,8 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     do_render: function() {
         var self = this;
         instance.webclient.toggle_bars(true);
-        $('.oe_application').append(QWeb.render("DatabaseManager", { widget : self }));
+        self.$el = $('.oe_application');
+        self.$el.html(QWeb.render("DatabaseManager", { widget : self }));
         $('.oe_user_menu_placeholder').append(QWeb.render("DatabaseManager.user_menu",{ widget : self }));
         $('.oe_secondary_menus_container').append(QWeb.render("DatabaseManager.menu",{ widget : self }));
         $('ul.oe_secondary_submenu > li:first').addClass('active');
@@ -440,15 +441,15 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
             event.preventDefault();
         });
         $('#back-to-login').click(self.do_exit);
-        $('.oe_application').find("td").addClass("oe_form_group_cell");
-        $('.oe_application').find("tr td:first-child").addClass("oe_form_group_cell_label");
-        $('.oe_application').find("label").addClass("oe_form_label");
-        $('.oe_application').find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
-        $('.oe_application').find("form[name=duplicate_db_form]").validate({ submitHandler: self.do_duplicate });
-        $('.oe_application').find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
-        $('.oe_application').find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
-        $('.oe_application').find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
-        $('.oe_application').find("form[name=change_pwd_form]").validate({
+        self.$el.find("td").addClass("oe_form_group_cell");
+        self.$el.find("tr td:first-child").addClass("oe_form_group_cell_label");
+        self.$el.find("label").addClass("oe_form_label");
+        self.$el.find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
+        self.$el.find("form[name=duplicate_db_form]").validate({ submitHandler: self.do_duplicate });
+        self.$el.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
+        self.$el.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
+        self.$el.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
+        self.$el.find("form[name=change_pwd_form]").validate({
             messages: {
                 old_pwd: _t("Please enter your previous password"),
                 new_pwd: _t("Please enter your new password"),
@@ -734,15 +735,13 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
 instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
 
 instance.web.Menu =  instance.web.Widget.extend({
-    template: 'EmptyTemplate',
     init: function() {
         var self = this;
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
-        this.on("menu_loaded", this, function (menu_data) {
-            self.reflow();
+        this.on("menu_loaded", this, function() {
             // launch the fetch of needaction counters, asynchronous
             $all_menus = self.$el.parents('.oe_webclient').find('[data-menu]');
             all_menu_ids = $.map($all_menus, function (menu) {return parseInt($(menu).attr('data-menu'));});
@@ -757,22 +756,19 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     do_reload: function() {
         var self = this;
-        // return this.rpc("/web/menu/load", {}).done(function(r) {
-        //     self.menu_loaded(r);
-        // });
-        return $.when().done(function(r) {
-            self.menu_loaded(null);
-        });
+        self.menu_loaded();
     },
-    menu_loaded: function(data) {
+    menu_loaded: function() {
         var self = this;
         this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container')
-        this.$el = this.$el.parents().find('.nav.navbar-nav.navbar-left')
 
         var lazyreflow = _.debounce(this.reflow.bind(this), 200);
         instance.web.bus.on('resize', this, function() {
-            self.$el.height(0);
-            lazyreflow();
+            if (parseInt(self.$el.parent().css('width')) < 768 ) {
+                lazyreflow('all_outside');
+            } else {
+                lazyreflow();
+            }
         });
 
         this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
@@ -781,8 +777,15 @@ instance.web.Menu =  instance.web.Widget.extend({
         if (self.current_menu) {
             self.open_menu(self.current_menu);
         }
-        this.trigger('menu_loaded', data);
+        this.trigger('menu_loaded');
         this.has_been_loaded.resolve();
+
+        // FIXME: duplicate
+        if (parseInt(self.$el.parent().css('width')) < 768 ) {
+            lazyreflow('all_outside');
+        } else {
+            lazyreflow();
+        }
     },
     do_load_needaction: function (menu_ids) {
         var self = this;
@@ -809,28 +812,42 @@ instance.web.Menu =  instance.web.Widget.extend({
      * Reflow the menu items and dock overflowing items into a "More" menu item.
      * Automatically called when 'menu_loaded' event is triggered and on window resizing.
      */
-    reflow: function() {
+    reflow: function(behavior) {
         var self = this;
-        this.$el.height('auto').show();
         var $more_container = this.$('#menu_more_container').hide();
         var $more = this.$('#menu_more');
-        $more.children('li').insertBefore($more_container);
-        var $toplevel_items = this.$el.children('li').not($more_container).hide();
+        var $systray = this.$el.parents().find('.oe_systray');
+
+        $more.children('li').insertBefore($more_container);  // Pull all the items out the more menu
+        
+        // All outside more displau all the items, hide the more menu and exit
+        if (behavior === 'all_outside') {
+            this.$el.find('li').show();
+            $more_container.hide();
+            return;
+        }
+
+        var $toplevel_items = this.$el.find('li').not($more_container).not($systray.find('li')).hide();
         $toplevel_items.each(function() {
+            // In all inside mode, we do not compute to know if we must hide the items, we hide them all
+            if (behavior === 'all_inside') {
+                return false;
+            }
             var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
             self.$el.parent().children(':visible').each(function() {
                 remaining_space -= $(this).outerWidth();
             });
+
             if ($(this).width() > remaining_space) {
                 return false;
             }
             $(this).show();
         });
         $more.append($toplevel_items.filter(':hidden').show());
-        $more_container.toggle(!!$more.children().length);
+        $more_container.toggle(!!$more.children().length || behavior === 'all_inside');
         // Hide toplevel item if there is only one
         var $toplevel = this.$el.children("li:visible");
-        if ($toplevel.length === 1) {
+        if ($toplevel.length === 1 && behavior != 'all_inside') {
             $toplevel.hide();
         }
     },
@@ -857,7 +874,7 @@ instance.web.Menu =  instance.web.Widget.extend({
 
         // Activate current main menu
         this.$el.find('.active').removeClass('active');
-        $main_menu.addClass('active');
+        $main_menu.parent().addClass('active');
 
         // Show current sub menu
         this.$secondary_menus.find('.oe_secondary_menu').hide();
@@ -980,6 +997,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 f($(this));
             }
         });
+        this.$el.parent().show()
     },
     do_update: function () {
         var self = this;
@@ -1001,6 +1019,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 }
                 var avatar_src = self.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: self.session.uid});
                 $avatar.attr('src', avatar_src);
+
+                self.getParent().menu.reflow();
             });
         };
         this.update_promise = this.update_promise.then(fct, fct);
@@ -1086,15 +1106,13 @@ instance.web.Client = instance.web.Widget.extend({
     start: function() {
         var self = this;
         return instance.session.session_bind(this.origin).then(function() {
-            // var $e = $(QWeb.render(self._template, {widget: self}));
-            // self.replaceElement($e);
-            // $e.openerpClass();
             self.bind_events();
             return self.show_common();
         });
     },
     bind_events: function() {
         var self = this;
+        $('.oe_systray').show();
         this.$el.on('mouseenter', '.oe_systray > div:not([data-toggle=tooltip])', function() {
             $(this).attr('data-toggle', 'tooltip').tooltip().trigger('mouseenter');
         });
@@ -1130,7 +1148,12 @@ instance.web.Client = instance.web.Widget.extend({
         var self = this;
         this.crashmanager =  new instance.web.CrashManager();
         instance.session.on('error', this.crashmanager, this.crashmanager.rpc_error);
+        self.notification = new instance.web.Notification(this);
+        self.notification.appendTo(self.$el);
+        self.loading = new instance.web.Loading(self);
+        self.loading.appendTo(self.$el);
         self.action_manager = new instance.web.ActionManager(self);
+        self.action_manager.appendTo(self.$('.oe_application'));
     },
     toggle_bars: function(value) {
         this.$('tr:has(td.navbar),.oe_leftbar').toggle(value);
@@ -1155,10 +1178,6 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
-
-        this.$el.parents('body').find('.oe_webclient .oe_logo_edit').click(function(ev) {
-            self.logo_edit(ev);
-        });
 
         this.$el = this.$el.parents('body').find('.oe_webclient');
 
@@ -1225,31 +1244,33 @@ instance.web.WebClient = instance.web.Client.extend({
     show_application: function() {
         var self = this;
         self.toggle_bars(true);
+
         self.update_logo();
+        this.$el.find('.oe_logo_edit_admin').click(function(ev) {
+            self.logo_edit(ev);
+        });
+
+        // Menu is rendered server-side thus we don't want the widget to create any dom
         self.menu = new instance.web.Menu(self);
-        self.menu.replace(this.$el.parents('body').find('.oe_menu_placeholder'));
+        self.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
+        self.menu.start();
         self.menu.on('menu_click', this, this.on_menu_action);
         self.user_menu = new instance.web.UserMenu(self);
-        self.user_menu.replace(this.$el.parents('body').find('.oe_user_menu_placeholder'));
+        self.user_menu.appendTo(this.$el.parents().find('.oe_user_menu_placeholder'));
         self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
         self.bind_hashchange();
         self.set_title();
         self.check_timezone();
-        self.action_manager.appendTo(this.$el.parents('body').find('.oe_application'));
         if (self.client_options.action_post_login) {
             self.action_manager.do_action(self.client_options.action_post_login);
             delete(self.client_options.action_post_login);
         }
-        self.notification = new instance.web.Notification(this);
-        self.notification.appendTo(self.$el);
-        self.loading = new instance.web.Loading(self);
-        self.loading.appendTo(self.$el);
     },
     update_logo: function() {
         var img = this.session.url('/web/binary/company_logo');
-        this.$el.parents('body').find('.oe_logo img').attr('src', '').attr('src', img);
-        this.$el.parents('body').find('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
+        this.$('.oe_logo img').attr('src', '').attr('src', img);
+        this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
     },
     logo_edit: function(ev) {
         var self = this;
@@ -1298,7 +1319,7 @@ instance.web.WebClient = instance.web.Client.extend({
                         return false;
                     });
                 });
-                $icon.appendTo(self.$('.oe_systray'));
+                $icon.prependTo(window.$('.oe_systray'));
             }
         });
     },
@@ -1357,9 +1378,8 @@ instance.web.WebClient = instance.web.Client.extend({
             var state = event.getState(true);
             if(!state.action && state.menu_id) {
                 self.menu.has_been_loaded.done(function() {
-                    self.menu.do_reload().done(function() {
-                        self.menu.menu_click(state.menu_id);
-                    });
+                    self.menu.do_reload();
+                    self.menu.menu_click(state.menu_id);
                 });
             } else {
                 state._push_me = false;  // no need to push state back...

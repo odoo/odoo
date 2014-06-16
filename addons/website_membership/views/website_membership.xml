@@ -3,8 +3,8 @@
 <data>
 
 <!-- Layout add nav and footer -->
-<template id="footer_custom" inherit_id="website.layout" name="Footer Associations Link">
-    <xpath expr="//footer//div[@name='info']/ul" position="inside">
+<template id="footer_custom" inherit_id="website.footer_default" name="Footer Associations Link">
+    <xpath expr="//div[@id='info']/ul" position="inside">
         <li><a href="/members">Members</a></li>
     </xpath>
 </template>
@@ -28,7 +28,7 @@
             <div class="container">
                 <div class="row">
 
-            <div class="col-md-4 mb32" id="left_column">
+            <div class="col-md-3 mb32" id="left_column">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <li class="nav-header"><h3>Associations</h3></li>
                     <li t-att-class="'' if membership else 'active'"><a href="/members">All</a></li>
@@ -84,8 +84,8 @@
 </template>
 
 <template id="opt_index_country" name="Location"
-        inherit_option_id="website_membership.index" inherit_id="website_membership.index">
-    <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
+        optional="enabled" inherit_id="website_membership.index">
+    <xpath expr="//div[@id='left_column']/ul[1]" position="after">
         <ul class="nav nav-pills nav-stacked mt16">
             <li class="nav-header"><h3>Location</h3></li>
             <t t-foreach="countries">
@@ -101,14 +101,26 @@
 
 <!-- Option: index: Left Google Map -->
 <template id="opt_index_google_map" name="Left World Map"
-        inherit_option_id="website_membership.index" inherit_id="website_membership.index">
-    <xpath expr="//div[@id='left_column']/ul[1]" position="before">
-        <ul class="nav nav-pills nav-stacked mt16">
-            <li class="nav-header"><h3>World Map</h3></li>
-            <ul class="nav">
-                <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members"
-                    style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
-            </ul>
+        optional="enabled" inherit_id="website_membership.index">
+    <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
+        <!-- modal for large map -->
+        <div class="modal fade partner_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">World Map</h4>
+                </div>
+                <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
+                style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
+            </div>
+          </div>
+        </div>
+        <!-- modal end -->
+        <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" /></button></h3>
+        <ul class="nav">
+            <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
+                style="width:260px; height:240px; border:0; padding:0; margin:0;"></iframe>
         </ul>
     </xpath>
 </template>

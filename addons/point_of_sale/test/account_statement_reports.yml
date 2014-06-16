@@ -1,5 +1,5 @@
 -
-  In order to test Bank Statement feature of account I create a bank statement line and confirm it and check it's move created
+  In order to test the reports on Bank Statement defined in point_of_sale module, I create a bank statement line, confirm it and print the reports
 -
   I select the period and journal for the bank statement
 -
@@ -19,30 +19,31 @@
 -
   I create bank statement line
 -
-  !python {model: account.bank.statement.line}: |
-    partner = self.onchange_partner_id(cr, uid, [], ref('base.res_partner_4'), context=None)
-    vals = {
-        'account_id': partner['value']['account_id'],
-        'amount': 1000.0,
-        'partner_id': ref('base.res_partner_4'),
-        'statement_id': ref('account_bank_statement_0'),
-        'name': 'EXT001'
-    }
-    vals.update(partner.get('value',{}))
-    line_id = self.create(cr, uid, vals)
-    assert line_id, "Account bank statement line has not been created"
+  !record {model: account.bank.statement.line, id: account_bank_statement_line_0}:
+    amount: 1000.0
+    partner_id: base.res_partner_4
+    statement_id: account_bank_statement_0
+    name: 'EXT001'
 -
   I compute bank statement using Compute button
 -
   !python {model: account.bank.statement}: |
     self.button_dummy(cr, uid, [ref("account_bank_statement_0")])
-
 -
   I modify the bank statement and set the Closing Balance.
 -
   !record {model: account.bank.statement, id: account_bank_statement_0}:
     balance_end_real: 1000.0
-
+-
+  I reconcile the bank statement.
+-
+  !python {model: account.bank.statement.line}: |
+    counterpart_line_dict = {
+        'account_id': self.pool.get('res.partner').browse(cr, uid, ref('base.res_partner_4')).property_account_receivable.id,
+        'name': "EXT001",
+        'credit': 1000.0
+    }
+    self.process_reconciliation(cr, uid, ref("account_bank_statement_line_0"), [counterpart_line_dict])
 -
   I confirm the bank statement using Confirm button
 -

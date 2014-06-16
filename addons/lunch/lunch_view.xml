@@ -21,7 +21,7 @@
                     <separator/>
                     <filter name="today" string="Today" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="group_by_supplier" string="By Supplier" context="{'group_by':'supplier'}"/>
                         <filter name="group_by_date" string="Order Month" context="{'group_by':'date'}" help="Supplier Order by Month"/>
                     </group>
@@ -52,7 +52,7 @@
                 <search string="lunch cashmove">
                     <field name="description"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name='group_by_user' string="By Employee" context="{'group_by':'user_id'}"/>
                     </group>
                 </search>
@@ -103,7 +103,7 @@
             <field name="name">cashmove form</field>
             <field name="model">lunch.cashmove</field>
             <field name="arch" type="xml">
-                <form string="cashmove form" version="7.0">
+                <form string="cashmove form">
                     <sheet>
                         <group>
                             <field name="user_id"
@@ -150,7 +150,7 @@
             <field name="name">cashmove tree</field>
             <field name="model">lunch.cashmove</field>
             <field name="arch" type="xml">
-                <tree string="cashmove tree" version="7.0" create='false'>
+                <tree string="cashmove tree" create='false'>
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="description"/>
@@ -292,7 +292,7 @@
             <field name="name">Product category Form</field>
             <field name="model">lunch.product.category</field>
             <field name="arch" type="xml">
-                <form string="Products Form" version="7.0">
+                <form string="Products Form">
                     <sheet>
                     <group>
                         <field name='name' string="Product Category: "/>
@@ -367,7 +367,7 @@
             <field name="name">Lunch Order</field>
             <field name="model">lunch.order</field>
             <field name="arch" type="xml">
-                <form string='Orders Form' version='7.0' class="oe_lunch">
+                <form string='Orders Form' class="oe_lunch">
                     <header>
                         <field name='state' widget='statusbar' statusbar_visible='new,confirmed'/>
                     </header>
@@ -422,7 +422,7 @@
             <field name="name">Products Form</field>
             <field name="model">lunch.product</field>
             <field name="arch" type="xml">
-                <form string="Products Form" version="7.0">
+                <form string="Products Form">
                     <header>
                     </header>
                     <sheet>
@@ -461,7 +461,7 @@
             <field name="name">alert form</field>
             <field name="model">lunch.alert</field>
             <field name="arch" type="xml">
-                <form string="alert tree" version="7.0">
+                <form string="alert tree">
                     <sheet>
                         <group string="Schedule Date">
                             <group>

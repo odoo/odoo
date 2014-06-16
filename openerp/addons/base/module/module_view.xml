@@ -6,7 +6,7 @@
             <field name="name">ir.module.category.form</field>
             <field name="model">ir.module.category</field>
             <field name="arch" type="xml">
-                <form string="Module Category" version="7.0">
+                <form string="Module Category">
                     <group col="4">
                         <field name="name"/>
                         <field name="parent_id"/>
@@ -43,7 +43,7 @@
                     <filter name="installed" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
                     <filter string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
                     <field name="category_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Author" domain="[]" context="{'group_by':'author'}"/>
                         <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
                     </group>
@@ -70,7 +70,7 @@
             <field name="name">ir.module.module.form</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <form create="0" edit="0" string="Module" version="7.0">
+                <form create="0" edit="0" string="Module">
                     <link rel="stylesheet" href="/base/static/src/css/description.css"></link>
                     <sheet>
                     <field name="icon_image" widget="image" class="oe_avatar oe_left"/>

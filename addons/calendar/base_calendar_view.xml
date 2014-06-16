@@ -11,7 +11,7 @@
             <field name="name">res.alarm.form</field>
             <field name="model">res.alarm</field>
             <field name="arch" type="xml">
-                <form string="Reminder details" version="7.0">
+                <form string="Reminder details">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -66,7 +66,7 @@
             <field name="name">Event Form</field>
             <field name="model">calendar.event</field>
             <field name="arch" type="xml">
-                <form string="Events" version="7.0">
+                <form string="Events">
                 <header>
                     <button name="do_confirm" string="Confirm" states="tentative,cancelled" type="object" class="oe_highlight"/>
                     <button name="do_tentative" states="confirmed,cancelled" string="Uncertain" type="object" class="oe_highlight"/>
@@ -126,7 +126,7 @@
                                     states="needs-action,tentative,accepted"
                                     type="object" icon="gtk-cancel"/>
                             </tree>
-                            <form string="Invitation details" version="7.0">
+                            <form string="Invitation details">
                                 <notebook colspan="4">
                                     <page string="Details">
                                         <group col="4">
@@ -260,7 +260,7 @@
                     <separator/>
                     <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Events"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'show_as'}"/>
                         <filter string="Privacy" icon="terp-locked" domain="[]" context="{'group_by':'class'}"/>

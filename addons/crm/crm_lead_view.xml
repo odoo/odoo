@@ -90,7 +90,7 @@
         <field name="name">CRM - Leads Form</field>
         <field name="model">crm.lead</field>
         <field name="arch" type="xml">
-            <form string="Leads Form" version="7.0">
+            <form string="Leads Form">
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
@@ -349,7 +349,7 @@
                             name='not_opt_out' domain="[('opt_out', '=', False)]"
                             help="Leads that did not ask not to be included in mass mailing campaigns"/>
                     <separator />
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
@@ -380,7 +380,7 @@
             <field name="model">crm.lead</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <form string="Opportunities" version="7.0">
+                <form string="Opportunities">
                     <header>
                         <button name="case_mark_won" string="Mark Won" type="object" class="oe_highlight"/>
                         <button name="case_mark_lost" string="Mark Lost" type="object" class="oe_highlight"/>
@@ -571,7 +571,7 @@
                             help="Opportunities that are assigned to any sales teams I am member of" groups="base.group_multi_salesteams"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
-                    <group expand="0" string="Group By..." colspan="16">
+                    <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>

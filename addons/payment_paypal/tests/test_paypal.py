@@ -148,7 +148,7 @@ class PaypalForm(PaypalCommon):
         for form_input in tree.input:
             if form_input.get('name') in ['handling']:
                 handling_found = True
-                self.assertEqual(form_input.get('value'), '1.56', 'paypal: wrong computed fees')
+                self.assertEqual(form_input.get('value'), '1.57', 'paypal: wrong computed fees')
         self.assertTrue(handling_found, 'paypal: fees_active did not add handling input in rendered form')
 
     @mute_logger('openerp.addons.payment_paypal.models.paypal', 'ValidationError')
