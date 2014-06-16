@@ -45,7 +45,7 @@ class asset_asset_report(osv.osv):
     
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'asset_asset_report')
-         cr.execute("""
+        cr.execute("""
             create or replace view asset_asset_report as (
                 select 
                     min(dl.id) as id,
