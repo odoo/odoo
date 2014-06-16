@@ -493,7 +493,7 @@ class account_bank_statement_line(osv.osv):
     def search_structured_com(self, cr, uid, st_line, context=None):
         if not st_line.ref:
             return
-        domain = [('name', '=', st_line.ref)]
+        domain = [('ref', '=', st_line.ref)]
         if st_line.partner_id:
             domain += [('partner_id', '=', st_line.partner_id.id)]
         ids = self.pool.get('account.move.line').search(cr, uid, domain, limit=1, context=context)
