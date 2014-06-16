@@ -36,14 +36,25 @@ class hr_holidays_status(osv.osv):
     _name = "hr.holidays.status"
     _description = "Leave Type"
 
-    def get_days(self, cr, uid, ids, employee_id, context=None):
-        result = dict((id, dict(max_leaves=0, leaves_taken=0, remaining_leaves=0,
-                                virtual_remaining_leaves=0)) for id in ids)
-        holiday_ids = self.pool['hr.holidays'].search(cr, uid, [('employee_id', '=', employee_id),
-                                                                ('state', 'in', ['confirm', 'validate1', 'validate']),
-                                                                ('holiday_status_id', 'in', ids)
-                                                                ], context=context)
-        for holiday in self.pool['hr.holidays'].browse(cr, uid, holiday_ids, context=context):
+    def get_stats(self, cr, uid, ids, employee_id=None, context=None):
+        if context is None:
+            context = {}
+        if employee_id is None:
+            employee_id = context.get('employee_id')
+        if not employee_id:
+            employee_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
+            if employee_ids:
+                employee_id = employee_ids[0]
+
+        domain = [('holiday_status_id', 'in', ids), ('state', 'in', ['confirm', 'validate1', 'validate'])]
+        if employee_id:
+            domain += [('employee_id', '=', employee_id)]
+        holiday_pool = self.pool.get('hr.holidays')
+        status_types = self.browse(cr, uid, ids, context=context)
+        result = dict((type.id, dict(max_leaves=0, leaves_taken=0, remaining_leaves=0,
+                                virtual_remaining_leaves=0, leaves_tag=type.name)) for type in status_types)
+        holiday_ids = holiday_pool.search(cr, uid, domain, context=context)
+        for holiday in holiday_pool.browse(cr, uid, holiday_ids, context=context):
             status_dict = result[holiday.holiday_status_id.id]
             if holiday.type == 'add':
                 status_dict['virtual_remaining_leaves'] += holiday.number_of_days
@@ -55,21 +66,15 @@ class hr_holidays_status(osv.osv):
                 if holiday.state == 'validate':
                     status_dict['leaves_taken'] -= holiday.number_of_days
                     status_dict['remaining_leaves'] += holiday.number_of_days
+            if not holiday.holiday_status_id.limit:
+                status_dict['leaves_tag'] = '%s (%d/%d)' % (holiday.holiday_status_id.name, status_dict.get('leaves_taken'), status_dict.get('max_leaves',0.0))
         return result
 
+    #backward compatibility for v7
+    get_days = get_stats
+
     def _user_left_days(self, cr, uid, ids, name, args, context=None):
-        employee_id = False
-        if context and 'employee_id' in context:
-            employee_id = context['employee_id']
-        else:
-            employee_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
-            if employee_ids:
-                employee_id = employee_ids[0]
-        if employee_id:
-            res = self.get_days(cr, uid, ids, employee_id, context=context)
-        else:
-            res = dict.fromkeys(ids, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0})
-        return res
+        return self.get_stats(cr, uid, ids, context=context)
 
     _columns = {
         'name': fields.char('Leave Type', size=64, required=True, translate=True),
@@ -82,6 +87,7 @@ class hr_holidays_status(osv.osv):
         'leaves_taken': fields.function(_user_left_days, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
         'remaining_leaves': fields.function(_user_left_days, string='Remaining Leaves', help='Maximum Leaves Allowed - Leaves Already Taken', multi='user_left_days'),
         'virtual_remaining_leaves': fields.function(_user_left_days, string='Virtual Remaining Leaves', help='Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval', multi='user_left_days'),
+        'leaves_tag': fields.function(_user_left_days, string='Leaves Tag', multi='user_left_days'),
         'double_validation': fields.boolean('Apply Double Validation', help="When selected, the Allocation/Leave Requests for this type require a second validation to be approved."),
     }
     _defaults = {
@@ -99,7 +105,7 @@ class hr_holidays_status(osv.osv):
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name
             if not record.limit:
-                name = name + ('  (%d/%d)' % (record.leaves_taken or 0.0, record.max_leaves or 0.0))
+                name = record.leaves_tag
             res.append((record.id, name))
         return res
 
@@ -207,7 +213,34 @@ class hr_holidays(osv.osv):
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be anterior to the end date."),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
-    
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        if context is None:
+            context = {}
+        employee_flag = False
+        if fields and 'employee_id' not in fields:
+            fields.append('employee_id')
+            employee_flag = True
+        results = super(hr_holidays, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+
+        holiday_status_pool = self.pool.get('hr.holidays.status')
+        if isinstance(results, (int, str)):
+            results = results[0]
+        for holiday in results:
+            status_id = holiday.get('holiday_status_id')
+            employee_id = holiday.get('employee_id')
+            if isinstance(employee_id, (list, tuple)):
+                employee_id = employee_id[0]
+            if isinstance(status_id, (list, tuple)):
+                status_id = holiday.get('holiday_status_id')[0]
+                status = holiday_status_pool.get_stats(cr, uid, [status_id], employee_id=employee_id, context=context)[status_id]
+                holiday['holiday_status_id'] = (status_id, status['leaves_tag'])
+            if employee_flag:
+                del holiday['employee_id']
+        if isinstance(ids, (int, str)):
+            results = results[0]
+        return results
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -444,7 +477,7 @@ class hr_holidays(osv.osv):
         for record in self.browse(cr, uid, ids, context=context):
             if record.holiday_type != 'employee' or record.type != 'remove' or not record.employee_id or record.holiday_status_id.limit:
                 continue
-            leave_days = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, context=context)[record.holiday_status_id.id]
+            leave_days = self.pool.get('hr.holidays.status').get_stats(cr, uid, [record.holiday_status_id.id], record.employee_id.id, context=context)[record.holiday_status_id.id]
             if leave_days['remaining_leaves'] < 0 or leave_days['virtual_remaining_leaves'] < 0:
                 # Raising a warning gives a more user-friendly feedback than the default constraint error
                 raise Warning(_('The number of remaining leaves is not sufficient for this leave type.\n'
