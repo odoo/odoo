@@ -73,6 +73,7 @@ class account_analytic_invoice_line(osv.osv):
 
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=local_context)
+        price = False
         if price_unit is not False:
             price = price_unit
         elif pricelist_id:
