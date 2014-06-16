@@ -202,7 +202,7 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, ids, context=context):
             key = group and picking.id or True
             for move in picking.move_lines:
-                if move.procurement_id and (move.procurement_id.invoice_state == '2binvoiced') or move.invoice_state == '2binvoiced':
+                if move.invoice_state == '2binvoiced':
                     if (move.state != 'cancel') and not move.scrapped:
                         todo.setdefault(key, [])
                         todo[key].append(move)
@@ -257,12 +257,7 @@ class stock_picking(osv.osv):
             invoice_line_vals['origin'] = origin
 
             move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
-
             move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
-            if move.procurement_id:
-                self.pool.get('procurement.order').write(cr, uid, [move.procurement_id.id], {
-                    'invoice_state': 'invoiced',
-                }, context=context)
 
         invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoices.values()
