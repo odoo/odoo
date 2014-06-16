@@ -233,7 +233,8 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                 value = value.replace(instance.web._t.database.parameters.thousands_sep, "");
             } while(tmp !== value);
             tmp = Number(value);
-            if (isNaN(tmp))
+            // do not accept not numbers or float values
+            if (isNaN(tmp) || tmp % 1)
                 throw new Error(_.str.sprintf(_t("'%s' is not a correct integer"), value));
             return tmp;
         case 'float':

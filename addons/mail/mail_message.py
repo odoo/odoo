@@ -975,9 +975,11 @@ class mail_message(osv.Model):
                 cr, SUPERUSER_ID, [
                     ('res_model', '=', message.model),
                     ('res_id', '=', message.res_id),
-                    ('subtype_ids', 'in', message.subtype_id.id)
                 ], context=context)
-            partners_to_notify |= set(fo.partner_id.id for fo in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context))
+            partners_to_notify |= set(
+                fo.partner_id for fo in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context)
+                if message.subtype_id.id in [st.id for st in fo.subtype_ids]
+            )
         # remove me from notified partners, unless the message is written on my own wall
         if message.subtype_id and message.author_id and message.model == "res.partner" and message.res_id == message.author_id.id:
             partners_to_notify |= set([message.author_id.id])
