@@ -61,17 +61,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         $('html').off('click.kanban');
     },
     load_kanban: function(data) {
-        var self = this;
         this.fields_view = data;
 
         // use default order if defined in xml description
         var default_order = this.fields_view.arch.attrs.default_order,
             unsorted = !this.dataset._sort.length;
         if (unsorted && default_order) {
-            _.each(default_order.split(',').reverse(), function (order) {
-                var split = _.without(order.split(' '), '');
-                self.dataset.sort(split[0], split[1] === 'desc');
-            });
+            this.dataset.set_sort(default_order.split(','));
         }
 
         this.$el.addClass(this.fields_view.arch.attrs['class']);
