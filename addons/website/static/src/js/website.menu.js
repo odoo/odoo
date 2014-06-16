@@ -5,6 +5,11 @@
     var _t = openerp._t;
 
     website.Menu =  openerp.Widget.extend({
+        init: function() {
+            var self = this;
+            this._super.apply(this, arguments);
+            this.has_been_loaded = $.Deferred();
+        },
         mobilePreview: function () {
             (new website.MobilePreview()).appendTo($(document.body));
         },
@@ -91,6 +96,7 @@
                     lazyreflow('all_inside');
                 }
             });
+            this.has_been_loaded.resolve();
         },
     });
 
