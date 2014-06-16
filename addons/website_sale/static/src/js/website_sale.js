@@ -63,6 +63,7 @@ $(document).ready(function () {
         }
         var value = $price.data("price") + parseFloat($label.find(".badge span").text() || 0);
         var dec = value % 1;
+        console.log(dec);
         $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
     });
     // hightlight selected color
@@ -87,7 +88,7 @@ $(document).ready(function () {
         var product_id = false;
         for (var k in variant_ids) {
             if (_.isEqual(variant_ids[k][1], values)) {
-                var dec = ((variant_ids[k][2] % 1) * 100) | 0;
+                var dec = Math.round((variant_ids[k][2] % 1) * 100);
                 $price.html(variant_ids[k][2] + (dec ? '' : '.0') + (dec%10 ? '' : '0'));
                 product_id = variant_ids[k][0];
                 break;
@@ -133,8 +134,13 @@ $(document).ready(function () {
         $('.js_add_cart_variants:first ul:first > li').each(function () {
             var $li = $(this);
             var $span = $("<div><span></span>: <span></span></div>");
-            $span.children().first().text($li.children().first().text());
-            $span.children().last().text($li.find("label:has(input:checked) span:first").text());
+            var attr = $li.children().first().text();
+            var value = $li.find("label:has(input:checked) span:first").text();
+            if (!/\S/.test(value)) {
+                value = $li.find("label:has(input:checked) input").attr("title");
+            }
+            $span.children().first().text( attr );
+            $span.children().last().text( value );
             $confirm.append($span);
         });
     });
@@ -144,7 +150,20 @@ $(document).ready(function () {
         var $parent = $(this).parents('.js_product:first');
         $parent.find("a.js_add, span.js_remove").toggleClass("hidden");
         $parent.find("input.js_optional_same_quantity").val( $(this).hasClass("js_add") ? 1 : 0 );
+        var $remove = $parent.find(".js_remove");
     });
+
+    $("input.js_quantity").change(function (event) {
+        var qty = parseFloat($(this).val());
+        if (qty === 1) {
+            $(".js_remove .js_items").addClass("hidden");
+            $(".js_remove .js_item").removeClass("hidden");
+        } else {
+            $(".js_remove .js_items").removeClass("hidden").text($(".js_remove .js_items").text().replace(/[0-9.,]+/, qty));
+            $(".js_remove .js_item").addClass("hidden");
+        }
+    });
+    
 
     $('#product_detail form[action^="/shop/cart/update"] .a-submit').off("click").click(function (event) {
         event.preventDefault();

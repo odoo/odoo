@@ -448,63 +448,13 @@
                                     <input type="hidden" class="js_quantity" t-attf-name="optional-quantity-#{option_inc}" value="0"/>
                                     <a href="#" class="js_add"><strong>Add to Cart</strong></a>
                                     <span class="js_remove hidden">
-                                      Will be add to your cart<br/>
+                                      <span class="js_item">1 Item</span><span class="js_items hidden">5 Items</span><br/>
                                       <a href="#" class="js_remove"><small>Cancel</small></a>
                                     </span>
                                   </td>
                                 </tr>
                             </tbody>
                           </table>
-                        <!-- 
-                          <div class="js_product" t-foreach="optional_product_ids" t-as="product">
-                            <strong class="media-heading" t-field="product.name"/>
-                            <div class="row">
-                              <div class="col-xs-2">
-                                <span t-field="product.image_small" t-field-options='{"widget": "image"}'/>
-                              </div>
-                              <div class="col-xs-6">
-                                <input type="hidden" class="optional_product_id" t-attf-name="optional-product-#{option_inc}" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
-                                <t t-call="website_sale.variants"/>
-                              </div>
-                              <div class="col-xs-2">
-                                <strong>Price</strong><br/>
-                                <t t-if="product.lst_price != product.price">
-                                <span class="text-danger" style="text-decoration: line-through;"
-                                  t-field="product.lst_price"
-                                  t-field-options='{
-                                     "widget": "monetary",
-                                     "display_currency": "website.pricelist_id.currency_id"
-                                 }'/><br/>
-                                </t>
-                                <span class="oe_price"
-                                  t-field="product.price"
-                                  t-field-options='{
-                                     "widget": "monetary",
-                                     "display_currency": "website.pricelist_id.currency_id"
-                                 }'/>
-                              </div>
-                              <div class="col-xs-2">
-                                <strong>Number</strong><br/>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <a t-attf-href="#" class="mb8 js_add_cart_json">
-                                            <i class="fa fa-minus"></i>
-                                        </a>
-                                    </span>
-                                    <input type="text" class="js_quantity form-control" t-attf-name="optional-quantity-#{option_inc}" value="0"/>
-                                    <span class="input-group-addon">
-                                        <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                    </span>
-                                </div>
-                              </div>
-                              <div class="col-xs-4">
-                                <p class="css_not_available_msg bg-danger" style="padding: 15px;">Product not available</p>
-                              </div>
-                            </div>
-                          </div> -->
-
                         </div>
                         <div class="modal-footer">
                           <a class="btn btn-default a-submit js_goto_shop"><i class="fa fa-chevron-left"></i> Continue shopping</a>
@@ -586,6 +536,7 @@
         </div>
       </td>
     </tr>
+    <tr><td colspan="4"><h4>Select Your Options</h4></td></tr>
   </xpath>
 </template>
 
