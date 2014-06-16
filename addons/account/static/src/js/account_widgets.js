@@ -1229,7 +1229,6 @@ openerp.account = function (instance) {
     
             $.when(deferred_tax).then(function(){
                 // Format amounts
-                debugger;
                 if (line_created_being_edited[0].amount)
                     line_created_being_edited[0].amount_str = self.formatCurrency(Math.abs(line_created_being_edited[0].amount), line_created_being_edited[0].currency_id);
                 if (line_created_being_edited[1] && line_created_being_edited[1].amount)
@@ -1362,7 +1361,7 @@ openerp.account = function (instance) {
             if (limit > 0) {
                 // Load move lines
                 deferred_move_lines = self.model_bank_statement_line
-                    .call("get_move_lines_counterparts", [self.st_line.id, excluded_ids, self.filter, offset, limit])
+                    .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids, self.filter, offset, limit])
                     .then(function (lines) {
                         _(lines).each(self.decorateMoveLine.bind(self));
                         move_lines = lines;
@@ -1371,7 +1370,7 @@ openerp.account = function (instance) {
     
             // Fetch the number of move lines corresponding to this statement line and this filter
             var deferred_total_move_lines_num = self.model_bank_statement_line
-                .call("get_move_lines_counterparts", [self.st_line.id, excluded_ids, self.filter, offset, limit, true])
+                .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids, self.filter, offset, limit, true])
                 .then(function(num){
                     move_lines_num = num;
                 });
