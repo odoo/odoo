@@ -20,19 +20,10 @@
   font-style: normal;
 }
 
-
-/*******************************************************************/
 #oe_main_menu_navbar {
   min-height: 34px;
   z-index: 1001;
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
-  -o-border-radius: 0px;
-  border-radius: 0px;
-}
-#oe_main_menu_navbar.navbar {
-    margin-bottom: 0px;
+  border-radius: 0;
 }
 #oe_main_menu_navbar li a, #oe_main_menu_navbar li button {
   padding: 4px 8px 4px 8px;
@@ -43,8 +34,10 @@
   max-height: 18px;
   width: auto;
 }
-/*******************************************************************/
 
+#oe_main_menu_navbar.navbar {
+  margin-bottom: 0px;
+}
 
 .openerp {
   padding: 0;
@@ -58,7 +51,12 @@
    */
 }
 .openerp.openerp_webclient_container {
-  height: 100%;
+  height: calc(100% - 34px);
+}
+@media (max-width: 768px) {
+  .openerp.openerp_webclient_container {
+    height: calc(100% - 52px);
+  }
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
