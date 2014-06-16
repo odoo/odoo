@@ -362,10 +362,6 @@
         },
         clean_for_save: function () {
             var self = this;
-            $("*[contentEditable], *[attributeEditable]")
-                .removeAttr('contentEditable')
-                .removeAttr('attributeEditable');
-
             var options = website.snippet.options;
             var template = website.snippet.templateOptions;
             for (var k in options) {
@@ -376,6 +372,9 @@
                     });
                 }
             }
+            $("*[contentEditable], *[attributeEditable]")
+                .removeAttr('contentEditable')
+                .removeAttr('attributeEditable');
         },
         make_active: function ($snippet) {
             if ($snippet && this.$active_snipped_id && this.$active_snipped_id.get(0) === $snippet.get(0)) {
