@@ -1718,13 +1718,14 @@ class BaseModel(object):
         :rtype: etree._Element
         """
         view = etree.Element('form', string=self._description)
+        group = etree.SubElement(view, 'group', col="4")
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         for field, descriptor in self.fields_get(cr, user, context=context).iteritems():
             if descriptor['type'] in ('one2many', 'many2many'):
                 continue
-            etree.SubElement(view, 'field', name=field)
+            etree.SubElement(group, 'field', name=field)
             if descriptor['type'] == 'text':
-                etree.SubElement(view, 'newline')
+                etree.SubElement(group, 'newline')
         return view
 
     def _get_default_search_view(self, cr, user, context=None):
