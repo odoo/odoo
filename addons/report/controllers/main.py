@@ -66,7 +66,7 @@ class ReportController(Controller):
     # Misc. route utils
     #------------------------------------------------------
     @route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="user")
-    def report_barcode(self, type, value, width=300, height=50):
+    def report_barcode(self, type, value, width=600, height=100):
         """Contoller able to render barcode images thanks to reportlab.
         Samples: 
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>

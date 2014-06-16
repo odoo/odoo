@@ -30,9 +30,9 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 try:
-    from mygengo import MyGengo
+    from gengo import Gengo
 except ImportError:
-    _logger.warning('Gengo library not found, Gengo features disabled. If you plan to use it, please install the mygengo library from http://pypi.python.org/pypi/mygengo')
+    _logger.warning('Gengo library not found, Gengo features disabled. If you plan to use it, please install the gengo library from http://pypi.python.org/pypi/gengo')
 
 GENGO_DEFAULT_LIMIT = 20
 
@@ -50,21 +50,21 @@ class base_gengo_translations(osv.osv_memory):
                  'sync_limit' : 20
          }
     def gengo_authentication(self, cr, uid, context=None):
-        ''' 
+        '''
         This method tries to open a connection with Gengo. For that, it uses the Public and Private
         keys that are linked to the company (given by Gengo on subscription). It returns a tuple with
          * as first element: a boolean depicting if the authentication was a success or not
-         * as second element: the connection, if it was a success, or the error message returned by 
+         * as second element: the connection, if it was a success, or the error message returned by
             Gengo when the connection failed.
-            This error message can either be displayed in the server logs (if the authentication was called 
-            by the cron) or in a dialog box (if requested by the user), thus it's important to return it 
+            This error message can either be displayed in the server logs (if the authentication was called
+            by the cron) or in a dialog box (if requested by the user), thus it's important to return it
             translated.
         '''
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
             return (False, _("Gengo `Public Key` or `Private Key` are missing. Enter your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`."))
         try:
-            gengo = MyGengo(
+            gengo = Gengo(
                 public_key=user.company_id.gengo_public_key.encode('ascii'),
                 private_key=user.company_id.gengo_private_key.encode('ascii'),
                 sandbox=user.company_id.gengo_sandbox,
@@ -208,10 +208,10 @@ class base_gengo_translations(osv.osv_memory):
     def _sync_request(self, cr, uid, limit=GENGO_DEFAULT_LIMIT, context=None):
         """
         This scheduler will send a job request to the gengo , which terms are
-        waiing to be translated and for which gengo_translation is enabled. 
+        waiing to be translated and for which gengo_translation is enabled.
 
-        A special key 'gengo_language' can be passed in the context in order to 
-        request only translations of that language only. Its value is the language 
+        A special key 'gengo_language' can be passed in the context in order to
+        request only translations of that language only. Its value is the language
         ID in openerp.
         """
         if context is None:

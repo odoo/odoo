@@ -31,11 +31,6 @@ class hr_applicant_settings(osv.TransientModel):
         'module_document': fields.boolean('Allow the automatic indexation of resumes',
             help='Manage your CV\'s and motivation letter related to all applicants.\n'
                  '-This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)'),
-        'fetchmail_applicants': fields.boolean('Create applicants from an incoming email account',
-            fetchmail_model='hr.applicant', fetchmail_name='Incoming HR Applications',   
-            help='Allow applicants to send their job application to an email address (jobs@mycompany.com), '
-                 'and create automatically application documents in the system.',
-            deprecated='Will be removed with OpenERP v8, not applicable anymore. Use aliases instead.'),
         'alias_prefix': fields.char('Default Alias Name for Jobs'),
         'alias_domain': fields.char('Alias Domain'),
     }

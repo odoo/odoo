@@ -6,7 +6,7 @@
             <field name="name">account.move.line.reconcile.full.form</field>
             <field name="model">account.move.line.reconcile</field>
             <field name="arch" type="xml">
-                <form string="Reconciliation" version="7.0">
+                <form string="Reconciliation">
                     <group col="4" string="Reconciliation Transactions">
                         <field name="trans_nbr"/>
                         <newline/>
@@ -48,7 +48,7 @@
             <field name="name">account.move.line.reconcile.writeoff.form</field>
             <field name="model">account.move.line.reconcile.writeoff</field>
             <field name="arch" type="xml">
-                <form string="Information addendum" version="7.0">
+                <form string="Information addendum">
                     <header>
                         <button string="Reconcile" name="trans_rec_reconcile" type="object" default_focus="1" class="oe_highlight"/>
                         or

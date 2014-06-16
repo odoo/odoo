@@ -31,6 +31,20 @@
         </t>
     </template>
 
+    <!-- Message when a login is required  -->
+    <template id="auth_required" name="Login required for this survey">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Login required</h1>
+                        <p>This survey is open only to registered people. Please <a t-attf-href="/web/login?redirect=%2Fsurvey%2Fstart%2F#{ slug(survey) }">log in</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <!-- Message when the survey has no pages  -->
     <template id="nopages" name="Survey has no pages">
         <t t-call="website.layout">
@@ -56,7 +70,7 @@
                     </div>
                     <div class='jumbotron mt32'>
                         <h1 t-field='survey.title' />
-                        <div t-field='survey.description' />
+                        <div t-field='survey.description' class="oe_no_empty"/>
                         <a class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (slug(survey), token)">
                             Start Survey
                         </a>
@@ -91,7 +105,7 @@
         <div class="page-header">
             <p class="pull-right">Page <span t-raw='page_nr + 1'/> on <span t-raw="len(survey.page_ids)"/></p>
             <h1 t-field='page.title' />
-            <div t-field='page.description'/>
+            <div t-field='page.description' class="oe_no_empty"/>
         </div>
 
         <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)" t-att-action="'/survey/fill/%s/%s' % (slug(survey), token)" t-att-data-prefill="'/survey/prefill/%s/%s/%s' % (slug(survey), token, slug(page))" t-att-data-validate="'/survey/validate/%s' % (slug(survey))" t-att-data-submit="'/survey/submit/%s' % (slug(survey))">
@@ -104,7 +118,7 @@
                         <span t-field='question.question' />
                         <span t-if="question.constr_mandatory" class="text-danger">*</span>
                     </h2>
-                    <div t-field='question.description' class="text-muted"/>
+                    <div t-field='question.description' class="text-muted oe_no_empty"/>
                     <t t-if="question.type == 'free_text'"><t t-call="survey.free_text"/></t>
                     <t t-if="question.type == 'textbox'"><t t-call="survey.textbox"/></t>
                     <t t-if="question.type == 'numerical_box'"><t t-call="survey.numerical_box"/></t>
@@ -254,13 +268,13 @@
                     <div class="row">
                         <div class='jumbotron mt32'>
                             <h1><span t-field='survey.title'/></h1>
-                            <t t-if="survey.description"><div t-field='survey.description'/></t>
+                            <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
                         </div>
                         <form role="form" method="post" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)" t-att-data-scores="'/survey/scores/%s/%s' % (slug(survey), token) if quizz_correction else ''">
                             <t t-foreach="survey.page_ids" t-as="page">
                                 <div class="page-header">
                                     <h1 t-field='page.title' />
-                                    <t t-if="page.description"><div t-field='page.description'/></t>
+                                    <t t-if="page.description"><div t-field='page.description' class="oe_no_empty"/></t>
                                 </div>
                                 <t t-foreach='page.question_ids' t-as='question'>
                                     <t t-set="prefix" t-value="'%s_%s_%s' % (survey.id, page.id, question.id)" />
@@ -270,7 +284,7 @@
                                             <span t-if="question.constr_mandatory" class="text-danger">*</span>
                                             <span t-if="quizz_correction" class="badge" t-att-data-score-question="question.id"></span>
                                         </h2>
-                                        <t t-if="question.description"><div class="text-muted" t-field='question.description' /></t>
+                                        <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
                                         <t t-if="question.type == 'free_text'"><t t-call="survey.free_text"/></t>
                                         <t t-if="question.type == 'textbox'"><t t-call="survey.textbox"/></t>
                                         <t t-if="question.type == 'numerical_box'"><t t-call="survey.numerical_box"/></t>

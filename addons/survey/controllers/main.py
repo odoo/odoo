@@ -46,7 +46,7 @@ class WebsiteSurvey(http.Controller):
 
         # In case of auth required, block public user
         if survey.auth_required and uid == request.website.user_id.id:
-            return request.website.render("website.403")
+            return request.website.render("survey.auth_required", {'survey': survey})
 
         # In case of non open surveys
         if survey.stage_id.closed:

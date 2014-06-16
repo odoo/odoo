@@ -23,7 +23,7 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="40" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="duration"]' position="after" version="7.0">
+                <xpath expr='//div[@name="duration"]' position="after">
                     <label for="quantity_max"/>
                     <div>
                         <field name="quantity_max"/>
@@ -37,9 +37,6 @@
                 </xpath>
                 <field name="partner_id" position="attributes">
                     <attribute name="attrs">{'required': [('type','=','contract'),'|','|',('fix_price_invoices','=',True), ('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', True)]}</attribute>
-                </field>
-                <field name="template_id" position="attributes">
-                    <attribute name="on_change">on_change_template(template_id, date_start, fix_price_invoices, invoice_on_timesheets, recurring_invoices)</attribute>
                 </field>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
                 </xpath>
@@ -142,7 +139,8 @@
                         <group>
                             <field name="pricelist_id"
                                 class="oe_inline"
-                                attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                                attrs="{'required': [('invoice_on_timesheets', '=', True)]}"
+                                domain="[('type', '=', 'sale')]"/>
                             <field name="to_invoice"
                                 class="oe_inline"
                                 widget="selection"
@@ -169,7 +167,7 @@
                     <div attrs="{'invisible': [('recurring_invoices','=',False)]}">
                         <field name="recurring_invoice_line_ids">
                             <tree string="Account Analytic Lines" editable="bottom">
-                                <field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, name, parent.partner_id, price_unit, parent.pricelist_id, parent.company_id)"/>
+                                <field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, False, parent.partner_id, False, parent.pricelist_id, parent.company_id)"/>
                                 <field name="name"/>
                                 <field name="quantity"/>
                                 <field name="uom_id"/>
@@ -238,7 +236,7 @@
                     <filter string="Customer Contracts" help="Contracts assigned to a customer." name="has_partner" domain="[('partner_id', '!=', False)]"/>
                     <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('manager_id', '=', False)]"/>
                     <separator/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Account Manager" domain="[]" context="{'group_by':'manager_id'}"/>
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>

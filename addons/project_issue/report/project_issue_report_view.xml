@@ -28,7 +28,7 @@
                     <filter string="New" name="new" domain="[('stage_id.sequence', '=', 1)]"/>
                     <filter string="Done" name="done" domain="[('stage_id.fold', '=', True)]"
                             help="Tasks beloging to a folded stage"/>
-                    <group  expand="1" string="Group By...">
+                    <group  expand="1" string="Group By">
                         <filter string="Assigned to" name="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Contact" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <filter string="Sale Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>

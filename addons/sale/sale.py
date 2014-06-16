@@ -538,14 +538,18 @@ class sale_order(osv.osv):
             if grouped:
                 res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x, y: x + y, [l for o, l in val], []), context=context)
                 invoice_ref = ''
+                origin_ref = ''
                 for o, l in val:
-                    invoice_ref += o.name + '|'
+                    invoice_ref += (o.client_order_ref or o.name) + '|'
+                    origin_ref += (o.origin or o.name) + '|'
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
                 #remove last '|' in invoice_ref
-                if len(invoice_ref) >= 1: 
+                if len(invoice_ref) >= 1:
                     invoice_ref = invoice_ref[:-1]
-                invoice.write(cr, uid, [res], {'origin': invoice_ref, 'name': invoice_ref})
+                if len(origin_ref) >= 1:
+                    origin_ref = origin_ref[:-1]
+                invoice.write(cr, uid, [res], {'origin': origin_ref, 'name': invoice_ref})
             else:
                 for order, il in val:
                     res = self._make_invoice(cr, uid, order, il, context=context)
@@ -880,7 +884,7 @@ class sale_order_line(osv.osv):
         'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'name': fields.text('Description', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sales order lines."),
-        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True, readonly=True, states={'draft': [('readonly', False)]}, ondelete='restrict'),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.function(_fnct_line_invoiced, string='Invoiced', type='boolean',
             store={

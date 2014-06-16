@@ -26,7 +26,6 @@ $(document).ready(function () {
         var question_id = $(pagination).attr("data-question_id");
         var limit = $(pagination).attr("data-record_limit"); //Number of Record Par Page. If you want to change number of record per page, change record_limit in pagination template.
         $('#table_question_'+ question_id +' tbody tr:lt('+limit+')').removeClass('hidden');
-        $('#pagination_'+question_id+' li:first').addClass('active');
         $('#pagination_'+question_id+' li a').click(function(event){
             event.preventDefault();
             $('#pagination_'+question_id+' li').removeClass('active');
@@ -41,6 +40,7 @@ $(document).ready(function () {
                 $('#table_question_'+question_id+' tbody tr:lt('+ limit * num +'):gt('+min+')').removeClass('hidden');
             }
         });
+        $('#pagination_'+question_id+' li:first').addClass('active').find('a').click();
     });
 
     //initialize MultiBar Chart

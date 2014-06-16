@@ -19,22 +19,21 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.tools.translate import _
-from openerp.addons.website.controllers.main import Website as controllers
-controllers = controllers()
-
 import logging
-_logger = logging.getLogger(__name__)
-
-from datetime import datetime, timedelta
 import time
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from openerp import tools
+
 import werkzeug.urls
+
+from openerp import SUPERUSER_ID
+from openerp import http
+from openerp import tools
+from openerp.http import request
+from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
+
+_logger = logging.getLogger(__name__)
 
 try:
     import GeoIP

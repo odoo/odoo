@@ -7,8 +7,7 @@ Initializing a working copy
 
 Use the easy-setup shell script::
 
-     curl -O https://raw.githubusercontent.com/odoo/odoo/master/checkout.sh
-     sh checkout.sh
+     curl -O https://raw.githubusercontent.com/odoo/odoo/master/odoo.py | python2
 
 it will will ask a few questions and create a local copy.
 
@@ -26,7 +25,7 @@ repository can have any number of remotes. The setup script creates 2 remotes:
     the official repository and main branches, roughly corresponds to the old
     "mainline" branches in bazaar. You should never need to push to it, and by
     default your local copy is configured to forbid it.
-``dev``
+``odoo-dev``
     a grab-bag of development branches, you can push your work to it so other
     coworkers can work with you.
 

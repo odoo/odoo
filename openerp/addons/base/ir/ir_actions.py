@@ -41,6 +41,7 @@ import openerp.workflow
 
 _logger = logging.getLogger(__name__)
 
+
 class actions(osv.osv):
     _name = 'ir.actions.actions'
     _table = 'ir_actions'
@@ -57,6 +58,13 @@ class actions(osv.osv):
         'usage': lambda *a: False,
     }
 
+    def unlink(self, cr, uid, ids, context=None):
+        """unlink ir.action.todo which are related to actions which will be deleted.
+           NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
+        todo_obj = self.pool.get('ir.actions.todo')
+        todo_ids = todo_obj.search(cr, uid, [('action_id', 'in', ids)], context=context)
+        todo_obj.unlink(cr, uid, todo_ids, context=context)
+        return super(actions, self).unlink(cr, uid, ids, context=context)
 
 class ir_actions_report_xml(osv.osv):
 
@@ -129,9 +137,15 @@ class ir_actions_report_xml(osv.osv):
         Look up a report definition and render the report for the provided IDs.
         """
         new_report = self._lookup_report(cr, name)
-        # in order to use current yml test files with qweb reports
-        if isinstance(new_report, (str, unicode)):
-            return self.pool['report'].get_pdf(cr, uid, res_ids, new_report, data=data, context=context), 'pdf'
+
+        if isinstance(new_report, (str, unicode)):  # Qweb report
+            # The only case where a QWeb report is rendered with this method occurs when running
+            # yml tests originally written for RML reports.
+            if openerp.tools.config['test_enable'] and not tools.config['test_report_directory']:
+                # Only generate the pdf when a destination folder has been provided.
+                return self.pool['report'].get_html(cr, uid, res_ids, new_report, data=data, context=context), 'html'
+            else:
+                return self.pool['report'].get_pdf(cr, uid, res_ids, new_report, data=data, context=context), 'pdf'
         else:
             return new_report.create(cr, uid, res_ids, data, context)
 
@@ -1182,7 +1196,4 @@ class ir_actions_act_client(osv.osv):
 
     }
 
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

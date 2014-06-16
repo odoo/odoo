@@ -7,7 +7,7 @@
             <field name="model">account.config.settings</field>
             <field name="inherit_id" ref="account.view_account_config_settings"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='payment_acquirer']" version="7.0" position="inside">
+                <xpath expr="//div[@name='payment_acquirer']" position="inside">
                     <div>
                         <field name="module_payment_paypal" class="oe_inline"/>
                         <label for="module_payment_paypal"/>
@@ -19,6 +19,10 @@
                     <div>
                         <field name="module_payment_adyen" class="oe_inline"/>
                         <label for="module_payment_adyen"/>
+                    </div>
+                    <div>
+                        <field name="module_payment_buckaroo" class="oe_inline"/>
+                        <label for="module_payment_buckaroo"/>
                     </div>
                 </xpath>
             </field>

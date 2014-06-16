@@ -580,7 +580,14 @@ class account_account(osv.osv):
             pass
         if name:
             if operator not in expression.NEGATIVE_TERM_OPERATORS:
-                ids = self.search(cr, user, ['|', ('code', '=like', name+"%"), '|',  ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
+                plus_percent = lambda n: n+'%'
+                code_op, code_conv = {
+                    'ilike': ('=ilike', plus_percent),
+                    'like': ('=like', plus_percent),
+                }.get(operator, (operator, lambda n: n))
+
+                ids = self.search(cr, user, ['|', ('code', code_op, code_conv(name)), '|', ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
+
                 if not ids and len(name.split()) >= 2:
                     #Separating code and name of account for searching
                     operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
@@ -2075,6 +2082,11 @@ class account_tax(osv.osv):
                 cur_price_unit+=amount2
         return res
 
+    def compute_for_bank_reconciliation(self, cr, uid, tax_id, amount, context=None):
+        """ Called by RPC by the bank statement reconciliation widget """
+        tax = self.browse(cr, uid, tax_id, context=context)
+        return self.compute_all(cr, uid, [tax], amount, 1) # TOCHECK may use force_exclude parameter
+
     def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
         """
         :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
@@ -2913,7 +2925,7 @@ class account_fiscal_position_template(osv.osv):
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping'),
-        'note': fields.text('Notes', translate=True),
+        'note': fields.text('Notes'),
     }
 
     def generate_fiscal_position(self, cr, uid, chart_temp_id, tax_template_ref, acc_template_ref, company_id, context=None):

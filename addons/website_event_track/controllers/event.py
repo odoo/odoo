@@ -24,9 +24,9 @@ import datetime
 import re
 
 import pytz
-import werkzeug.utils
 
 import openerp
+import openerp.tools
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 
@@ -88,10 +88,21 @@ class website_event(http.Controller):
             days_tracks_count[day] = len(tracks)
             days[day] = self._prepare_calendar(event, tracks)
 
+        cr, uid, context = request.cr, request.uid, request.context
+        track_obj = request.registry['event.track']
+        tracks_ids = track_obj.search(cr, openerp.SUPERUSER_ID, [('event_id', '=', event.id)], context=context)
+        speakers = dict()
+        for t in track_obj.browse(cr, openerp.SUPERUSER_ID, tracks_ids, context=context):
+            acc = ""
+            for speaker in t.speaker_ids:
+                acc = speaker.name + u" – " + acc if acc else speaker.name
+            speakers[t.id] = acc
+
         return request.website.render("website_event_track.agenda", {
             'event': event,
             'days': days,
             'days_nbr': days_tracks_count,
+            'speakers': speakers,
             'tag': tag
         })
 
@@ -139,7 +150,7 @@ class website_event(http.Controller):
             if post.get('tag_'+str(tag.id)):
                 tags.append(tag.id)
 
-        e = werkzeug.utils.escape
+        e = openerp.tools.escape
         track_description = '''<section data-snippet-id="text-block">
     <div class="container">
         <div class="row">

@@ -348,10 +348,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_groups_started: function() {
         var self = this;
-        if (this.group_by) {
+        if (this.group_by || this.fields_keys.indexOf("sequence") !== -1) {
             // Kanban cards drag'n'drop
-            var prev_widget, is_folded, record;
-            var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards, .oe_kanban_column .oe_kanban_folded_column_cards');
+            var prev_widget, is_folded, record, $columns;
+            if (this.group_by) {
+                $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards, .oe_kanban_column .oe_kanban_folded_column_cards');
+            } else {
+                $columns = this.$el.find('.oe_kanban_column_cards');
+            }
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {
@@ -779,9 +783,9 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         });
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
-        form.on("on_button_cancel", am.dialog, am.dialog.close);
+        form.on("on_button_cancel", am.dialog, function() { return am.dialog.$dialog_box.modal('hide'); });
         form.on('record_saved', self, function() {
-            am.dialog.close();
+            am.dialog.$dialog_box.modal('hide');
             self.view.do_reload();
         });
     },

@@ -204,18 +204,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.accounting_precision = precision;
                     console.log("PRECISION",precision);
 */
-                    return self.fetch('product.packaging',['ean','product_id']);
+                    return self.fetch('product.packaging',['ean','product_tmpl_id']);
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
 
-                    return self.fetch('product.public.category', ['id','name','parent_id','child_id','image'])
+                    return self.fetch('pos.category', ['id','name','parent_id','child_id','image']);
                 }).then(function(categories){
                     self.db.add_categories(categories);
 
                     return self.fetch(
-                        'product.product', 
-                        ['name', 'list_price','price','public_categ_id', 'taxes_id', 'ean13', 'default_code', 'variants',
-                         'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
+                        'product.product',
+                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 'variants',
+                         'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
+                         'product_tmpl_id'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
                         {pricelist: self.pricelist.id} // context for price
                     );
@@ -230,7 +231,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(bankstatements){
                     var journals = [];
                     _.each(bankstatements,function(statement) {
-                        journals.push(statement.journal_id[0])
+                        journals.push(statement.journal_id[0]);
                     });
                     self.bankstatements = bankstatements;
                     return self.fetch('account.journal', undefined, [['id','in', journals]]);
@@ -238,7 +239,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.journals = journals; 
 
                     // associate the bank statements with their journals. 
-                    var bankstatements = self.bankstatements
+                    var bankstatements = self.bankstatements;
                     for(var i = 0, ilen = bankstatements.length; i < ilen; i++){
                         for(var j = 0, jlen = journals.length; j < jlen; j++){
                             if(bankstatements[i].journal_id[0] === journals[j].id){

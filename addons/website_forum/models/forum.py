@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from urlparse import urljoin
-
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
@@ -13,7 +11,7 @@ class Forum(osv.Model):
     """TDE TODO: set karma values for actions dynamic for a given forum"""
     _name = 'forum.forum'
     _description = 'Forums'
-    _inherit = ['website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata']
     # karma values
     _karma_upvote = 5  # done
     _karma_downvote = 50  # done
