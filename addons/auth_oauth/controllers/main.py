@@ -70,7 +70,7 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
         return dict(
             d=request.session.db,
             p=provider['id'],
-            r=request.httprequest.full_path
+            r=werkzeug.url_quote_plus(request.httprequest.full_path)
         )
 
     @http.route()
