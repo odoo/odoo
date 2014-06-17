@@ -8395,10 +8395,10 @@ msgstr "Robinets à tournant sphérique, conique ou cylindrique (à l'excl. de l
 msgid "Carriages for disabled persons, not mechanically propelled"
 msgstr "Fauteuils roulants et autres véhicules pour invalides (sans mécanisme de propulsion)"
 
-#. module: report_intrastat
-#: model:report.intrastat.code,description:0
-msgid "\"Agarbatti\" and other odoriferous preparations which operate by burning"
-msgstr "'Agarbatti' et autres préparations odoriférantes agissant par combustion"
+#. module: l10n_be_intrastat_declaration
+#: model:report.intrastat.code,description:l10n_be_intrastat_declaration.intrastat_category_2014_33074100
+msgid "\"Agarbatti\" and other odoriferous preparations which operate by "
+msgstr "\"Agarbatti\" and other odoriferous preparations which operate by "
 
 #. module: report_intrastat
 #: model:report.intrastat.code,description:0
@@ -32866,16 +32866,286 @@ msgid "Media, recorded, for reproducing sound or image, incl. matrices and maste
 msgstr "Supports, enregistrés, pour la reproduction du son ou de l'image, y.c. les matrices et moules galvaniques pour la fabrication des disques (sauf pour la reproduction de représentations d'instructions, de données, du son et de l'image, enregistrées sous une forme binaire lisible par machine, pouvant être manipulées ou offrant une interactivité à l'utilisateur au moyen d'une machine automatique de traitement de l'information et à l'excl. des supports magnétiques, optiques et à semi-conducteur ainsi que des produits du chapitre 37)"
 
 #. module: l10n_be_intrastat_declaration
-#: model:l10n_be_intrastat_declaration.regions,name:0
+#: model:l10n_be_intrastat_declaration.regions,name:l10n_be_intrastat_declaration.intrastat_region_1
 msgid "Flemish region"
 msgstr "Région flamande"
 
 #. module: l10n_be_intrastat_declaration
-#: model:l10n_be_intrastat_declaration.regions,name:0
+#: model:l10n_be_intrastat_declaration.regions,name:l10n_be_intrastat_declaration.intrastat_region_2
 msgid "Walloon region"
 msgstr "Région wallonne"
 
 #. module: l10n_be_intrastat_declaration
-#: model:l10n_be_intrastat_declaration.regions,name:0
+#: model:l10n_be_intrastat_declaration.regions,name:l10n_be_intrastat_declaration.intrastat_region_3
 msgid "Brussels region"
 msgstr "Région buxelloise"
+
+
+#. module: l10n_be_intrastat_declaration
+#: field:l10n_be_intrastat_declaration_xml.xml_decl,month:0
+msgid "Month"
+msgstr "Mois"
+
+#. module: l10n_be_intrastat_declaration
+#: field:l10n_be_intrastat_declaration.regions,country_id:0
+msgid "Country"
+msgstr "Pays"
+
+#. module: l10n_be_intrastat_declaration
+#: field:l10n_be_intrastat_declaration_xml.xml_decl,arrivals:0
+msgid "Arrivals"
+msgstr "Réceptions"
+
+#. module: l10n_be_intrastat_declaration
+#: view:l10n_be_intrastat_declaration_xml.xml_decl:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: l10n_be_intrastat_declaration
+#: view:l10n_be_intrastat_declaration_xml.xml_decl:0
+msgid "Close"
+msgstr "Fermer"
+
+#. module: l10n_be_intrastat_declaration
+#: sql_constraint:l10n_be_intrastat_declaration.regions:0
+#: sql_constraint:l10n_be_intrastat_declaration.transaction:0
+#: sql_constraint:l10n_be_intrastat_declaration.transport_mode:0
+msgid "Code must be unique."
+msgstr "Code doit être unique."
+
+#. module: l10n_be_intrastat_declaration
+#: field:l10n_be_intrastat_declaration_xml.xml_decl,comments:0
+msgid "Comments"
+msgstr "Commentaires"
+
+#. module: l10n_be_intrastat_declaration
+#: field:l10n_be_intrastat_declaration_xml.xml_decl,tax_code_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: l10n_be_intrastat_declaration
+#: field:res.company,incoterm_id:0
+msgid "Default incoterm for intrastat"
+msgstr "Incoterm par défaut pour l'intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: field:res.company,transport_mode_id:0
+msgid "Default transport mode"
+msgstr "Mode de transport par défaut"
+
+#. module: l10n_be_intrastat_declaration
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:278
+#, python-format
+msgid "Define at least default INCOTERM of company"
+msgstr "Complétez au moins l'INCOTERM de la société"
+
+#. module: l10n_be_intrastat_declaration
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:270
+#, python-format
+msgid "Define at least default transport of company"
+msgstr "Complétez au moins le mode de transport par défaut de la société"
+
+#. module: l10n_be_intrastat_declaration
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:253
+#, python-format
+msgid "Define at least region of company"
+msgstr "Complétez au moins la région de la société"
+
+#. module: l10n_be_intrastat_declaration
+#: field:l10n_be_intrastat_declaration_xml.xml_decl,dispatches:0
+msgid "Dispatches"
+msgstr "Expéditions"
+
+#. module: l10n_be_intrastat_declaration
+#: selection:l10n_be_intrastat_declaration_xml.xml_decl,state:0
+msgid "Download"
+msgstr "Télécharger"
+
+#. module: l10n_be_intrastat_declaration
+#: selection:l10n_be_intrastat_declaration_xml.xml_decl,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: l10n_be_intrastat_declaration
+#: selection:l10n_be_intrastat_declaration_xml.xml_decl,arrivals:0
+#: selection:l10n_be_intrastat_declaration_xml.xml_decl,dispatches:0
+msgid "Extended"
+msgstr "Etendue"
+
+#. module: l10n_be_intrastat_declaration
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:110
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:112
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:253
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:260
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:270
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:278
+#, python-format
+msgid "Incorrect Data!"
+msgstr "Données erronées!"
+
+#. module: l10n_be_intrastat_declaration
+#: field:account.invoice,incoterm_id:0
+msgid "Incoterm"
+msgstr "Incoterm"
+
+#. module: l10n_be_intrastat_declaration
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:101
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:104
+#, python-format
+msgid "Insufficient Data!"
+msgstr "Données manquantes!"
+
+#. module: l10n_be_intrastat_declaration
+#: help:account.invoice,incoterm_id:0
+#: help:res.company,incoterm_id:0
+msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
+msgstr "International Commercial Terms sont une liste de termes commerciaux prédéfinis utilisés dans les échanges internationaux."
+
+#. module: l10n_be_intrastat_declaration
+#: view:product.category:0
+msgid "Intrastat"
+msgstr "Intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: model:ir.actions.act_window,name:l10n_be_intrastat_declaration.action_intrastat_xml_declaration
+#: model:ir.ui.menu,name:l10n_be_intrastat_declaration.l10n_be_intrastat_xml_declaration
+msgid "Intrastat Declaration"
+msgstr "Déclaration intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: model:ir.model,name:l10n_be_intrastat_declaration.model_l10n_be_intrastat_declaration_xml_longclassnamethatcausethesequencetobetruncatedincorrectly
+#: model:ir.model,name:l10n_be_intrastat_declaration.model_l10n_be_intrastat_declaration_xml_xml_decl
+msgid "Intrastat XML Declaration"
+msgstr "Déclaration intrastat XML"
+
+#. module: l10n_be_intrastat_declaration
+#: field:l10n_be_intrastat_declaration_xml.xml_decl,decl_xml:0
+msgid "Intrastat XML file"
+msgstr "Fichier intrastat XML"
+
+#. module: l10n_be_intrastat_declaration
+#: model:ir.model,name:l10n_be_intrastat_declaration.model_report_intrastat_code
+#: field:product.category,intrastat_id:0
+msgid "Intrastat code"
+msgstr "Code Intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: field:account.invoice,intrastat_country_id:0
+msgid "Intrastat country"
+msgstr "Pays intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: help:account.invoice,intrastat_country_id:0
+msgid "Intrastat country, delivery for sales, origin for purchases"
+msgstr "Pays intrastat, destination pour les ventes, origine pour les achats"
+
+#. module: l10n_be_intrastat_declaration
+#: model:res.groups,name:l10n_be_intrastat_declaration.intrastat_extended
+msgid "Intrastat extended"
+msgstr "Intrastat étendue"
+
+#. module: l10n_be_intrastat_declaration
+#: help:account.invoice,intrastat_transaction_id:0
+msgid "Intrastat nature of transaction"
+msgstr "Nature de la transaction intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: field:res.company,region_id:0
+msgid "Intrastat region"
+msgstr "Région intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: view:l10n_be_intrastat_declaration.transaction:0
+msgid "Intrastat transaction form"
+msgstr "Fiche transaction intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: view:l10n_be_intrastat_declaration.transaction:0
+msgid "Intrastat transaction types"
+msgstr "Type de transaction intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: view:l10n_be_intrastat_declaration.transport_mode:0
+msgid "Intrastat transpartation mode form"
+msgstr "Fiche mode de transport intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: field:account.invoice,transport_mode_id:0
+msgid "Intrastat transport mode"
+msgstr "Mode de transport intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: view:l10n_be_intrastat_declaration.transport_mode:0
+msgid "Intrastat transportation modes"
+msgstr "Mode de transport intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: field:account.invoice,intrastat_transaction_id:0
+msgid "Intrastat type of transaction"
+msgstr "Type de transaction intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: field:stock.warehouse,region_id:0
+msgid "Intratstat region"
+msgstr "Région intratstat"
+
+#. module: l10n_be_intrastat_declaration
+#: help:l10n_be_intrastat_declaration_xml.xml_decl,tax_code_id:0
+msgid "Keep empty to use the user's company"
+msgstr "Laissez vide pour utiliser la société de l'utilisateur"
+
+#. module: l10n_be_intrastat_declaration
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:110
+#, python-format
+msgid "Month is a number between 1 and 12."
+msgstr "Mois est un nombre entre 1 et 12."
+
+#. module: l10n_be_intrastat_declaration
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:101
+#, python-format
+msgid "No Country associated with your company."
+msgstr "Votre société n'a pas de pays renseigné."
+
+#. module: l10n_be_intrastat_declaration
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:104
+#, python-format
+msgid "No VAT number associated with your company."
+msgstr "Votre société n'a pas de N° de TVA renseigné."
+
+#. module: l10n_be_intrastat_declaration
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:260
+#, python-format
+msgid "Product %s has not intrastat code"
+msgstr "L'article %s n'a pas de code intrastat"
+
+#. module: l10n_be_intrastat_declaration
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:140
+#, python-format
+msgid "Save"
+msgstr "Sauver"
+
+#. module: l10n_be_intrastat_declaration
+#: field:l10n_be_intrastat_declaration_xml.xml_decl,file_save:0
+msgid "Save File"
+msgstr "Sauver le fichier"
+
+#. module: l10n_be_intrastat_declaration
+#: help:l10n_be_intrastat_declaration_xml.xml_decl,decl_xml:0
+msgid "Sets the XML output"
+msgstr "Definir la sortie XML"
+
+#. module: l10n_be_intrastat_declaration
+#: view:l10n_be_intrastat_declaration_xml.xml_decl:0
+msgid "XML Intratstat Declaration"
+msgstr "Déclaration intrastat XML"
+
+#. module: l10n_be_intrastat_declaration
+#: field:l10n_be_intrastat_declaration_xml.xml_decl,year:0
+msgid "Year"
+msgstr "Année"
+
+#. module: l10n_be_intrastat_declaration
+#: code:addons/l10n_be_intrastat_declaration/wizard/xml_decl.py:112
+#, python-format
+msgid "Year is a number of 4 digits."
+msgstr "L'année est un nombre de 4 chiffres."
