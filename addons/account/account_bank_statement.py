@@ -26,6 +26,9 @@ from openerp.report import report_sxw
 
 class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
+        if vals.get('name', '/') == '/':
+            journal_id = vals.get('journal_id', self._default_journal_id(cr, uid, context=context))
+            vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=context)
         if 'line_ids' in vals:
             for idx, line in enumerate(vals['line_ids']):
                 line[2]['sequence'] = idx + 1
@@ -65,17 +68,14 @@ class account_bank_statement(osv.osv):
             return periods[0]
         return False
 
-    def _compute_default_statement_name(self, cr, uid, context=None):
+    def _compute_default_statement_name(self, cr, uid, journal_id, context=None):
         if context is None:
             context = {}
         obj_seq = self.pool.get('ir.sequence')
-        default_journal_id = self._default_journal_id(cr, uid, context=context)
-        if default_journal_id != False:
-            period = self.pool.get('account.period').browse(cr, uid, self._get_period(cr, uid, context=context), context=context)
-            context['fiscalyear_id'] = period.fiscalyear_id.id
-            journal = self.pool.get('account.journal').browse(cr, uid, default_journal_id, None)
-            return obj_seq.next_by_id(cr, uid, journal.sequence_id.id, context=context)
-        return obj_seq.next_by_code(cr, uid, 'account.bank.statement', context=context)
+        period = self.pool.get('account.period').browse(cr, uid, self._get_period(cr, uid, context=context), context=context)
+        context['fiscalyear_id'] = period.fiscalyear_id.id
+        journal = self.pool.get('account.journal').browse(cr, uid, journal_id, None)
+        return obj_seq.next_by_id(cr, uid, journal.sequence_id.id, context=context)
 
     def _currency(self, cursor, user, ids, name, args, context=None):
         res = {}
@@ -150,7 +150,7 @@ class account_bank_statement(osv.osv):
     }
 
     _defaults = {
-        'name': _compute_default_statement_name,
+        'name': '/', 
         'date': fields.date.context_today,
         'state': 'draft',
         'journal_id': _default_journal_id,
