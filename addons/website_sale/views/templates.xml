@@ -408,6 +408,7 @@
                             <thead>
                                 <tr>
                                     <th colspan="2">Product</th>
+                                    <th style="min-width: 140px;"> </th>
                                     <th width="100">Price</th>
                                     <th width="120">Quantity</th>
                                 </tr>
@@ -417,7 +418,7 @@
                                   <td width="100">
                                     <span t-field="product.image_medium" t-field-options='{"widget": "image" }'/>
                                   </td>
-                                  <td>
+                                  <td colspan="2">
                                     <strong t-field="product.name"/>
                                     <div class="text-muted">
                                       <div t-field="product.description_sale"/>
@@ -464,10 +465,12 @@
                                     <span t-field="product.image_small" t-field-options='{"widget": "image"}'/>
                                   </td>
                                   <td>
-                                    <div class="pull-left" style="max-width: 410px;">
+                                    <div class="pull-left">
                                       <strong class="media-heading" t-field="product.name"/>
                                       <div class="text-muted" t-field="product.description_sale"/>
                                     </div>
+                                  </td>
+                                  <td>
                                     <div class="pull-right">
                                       <t t-call="website_sale.variants"/>
                                     </div>
@@ -602,7 +605,7 @@
 
         <strong t-field="variant_id.attribute_id.name"/>
 
-        <t t-if="variant_id.attribute_id.type == 'select'">
+        <t t-if="variant_id.attribute_id.type in ['select', 'hidden']">
           <select class="form-control js_variant_change" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
             <t t-foreach="variant_id.value_ids" t-as="value_id">
               <option t-att-value="value_id.id">
@@ -618,7 +621,7 @@
           </select>
         </t>
 
-        <t t-if="variant_id.attribute_id.type in ['radio', 'hidden']">
+        <t t-if="variant_id.attribute_id.type == 'radio'">
           <ul class="list-unstyled">
               <t t-set="inc" t-value="0"/>
               <t t-foreach="variant_id.value_ids" t-as="value_id">
