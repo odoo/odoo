@@ -789,6 +789,9 @@ openerp.account = function (instance) {
             line.q_amount = (line.debit !== 0 ? "- "+line.q_debit : "") + (line.credit !== 0 ? line.q_credit : "");
             line.q_popover = QWeb.render("bank_statement_reconciliation_move_line_details", {line: line});
             line.q_label = line.name;
+            if (line.has_no_partner){
+                line.q_label = line.partner_name + ': ' +line.q_label;
+            }
     
             // WARNING : pretty much of a ugly hack
             // The value of account_move.ref is either the move's communication or it's name without the slashes
@@ -1039,7 +1042,7 @@ openerp.account = function (instance) {
             var slice_start = self.get("pager_index") * self.max_move_lines_displayed;
             var slice_end = (self.get("pager_index")+1) * self.max_move_lines_displayed;
             _( _.filter(self.mv_lines_deselected, function(o){
-                    return o.name.indexOf(self.filter) !== -1 || (o.ref && o.ref.indexOf(self.filter) !== -1)
+                    return o.q_label.indexOf(self.filter) !== -1 || (o.ref && o.ref.indexOf(self.filter) !== -1)
                 })
                 .slice(slice_start, slice_end)).each(function(line){
                 var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: false}));
