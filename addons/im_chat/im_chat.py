@@ -33,20 +33,20 @@ class Controller(openerp.addons.im.im.Controller):
             channels.append((request.db,'im_chat.session', request.uid))
         return super(Controller, self)._poll(dbname, channels, last, options)
 
-    @openerp.http.route('/im/init', type="json", auth="none")
+    @openerp.http.route('/im_chat/init', type="json", auth="none")
     def init(self):
         registry, cr, uid, context = request.registry, request.cr, request.session.uid, request.context
         notifications = registry['im_chat.message'].init_messages(cr, uid, context=context)
         return notifications
 
-    @openerp.http.route('/im/post', type="json", auth="none")
+    @openerp.http.route('/im_chat/post', type="json", auth="none")
     def post(self, uuid, message_type, message_content):
         registry, cr, uid, context = request.registry, request.cr, request.session.uid, request.context
         # execute the post method as SUPERUSER_ID
         message_id = registry["im_chat.message"].post(cr, openerp.SUPERUSER_ID, uid, uuid, message_type, message_content, context=context)
         return message_id
 
-    @openerp.http.route('/im/image', type='http', auth="none")
+    @openerp.http.route('/im_chat/image', type='http', auth="none")
     def image(self, uuid, user_id):
         registry, cr, context, uid = request.registry, request.cr, request.context, request.session.uid
         # get the image

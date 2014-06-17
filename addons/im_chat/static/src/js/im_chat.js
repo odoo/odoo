@@ -17,7 +17,6 @@
                 inputPlaceholder: _t("Say something..."),
                 defaultMessage: null,
                 defaultUsername: _t("Visitor"),
-                anonymous_mode: false
             });
             // business
             this.sessions = {};
@@ -181,7 +180,7 @@
             this._super(parent);
             this.c_manager = c_manager;
             this.options = options || {};
-            this.loading_history = !this.options["anonymous_mode"];
+            this.loading_history = true;
             this.set("messages", []);
             this.set("session", session);
             this.set("right_position", 0);
@@ -228,15 +227,12 @@
                 height: this.$(".oe_im_chatview_header").outerHeight()
             });
         },
-        click_header: function(){
-            this.update_fold_state();
-        },
-        update_fold_state: function(state){
-            return new openerp.Model("im_chat.session").call("update_state", [], {"uuid" : this.get("session").uuid, "state" : state});
-        },
         calc_pos: function() {
             this.$().css("right", this.get("right_position"));
             this.$().css("bottom", this.get("bottom_position"));
+        },
+        update_fold_state: function(state){
+            return new openerp.Model("im_chat.session").call("update_state", [], {"uuid" : this.get("session").uuid, "state" : state});
         },
         update_session: function(){
             // built the name
@@ -246,7 +242,7 @@
                     names.push(user.name);
                 }
             });
-            this.$(".oe_im_chatview_header_name").text(names.join(", "));//this.get("session").name);//names.join(", "));
+            this.$(".oe_im_chatview_header_name").text(names.join(", "));
             // update the fold state
             if(this.get("session").state){
                 if(this.get("session").state === 'closed'){
@@ -285,7 +281,7 @@
         send_message: function(message, type) {
             var self = this;
             var send_it = function() {
-                return openerp.session.rpc("/im/post", {uuid: self.get("session").uuid, message_type: type, message_content: message});
+                return openerp.session.rpc("/im_chat/post", {uuid: self.get("session").uuid, message_type: type, message_content: message});
             };
             var tries = 0;
             send_it().fail(function(error, e) {
@@ -316,7 +312,7 @@
             var last_date_day, last_user_id = -1;
             _.each(this.get("messages"), function(current){
                 // add the url of the avatar for all users in the conversation
-                current.from_id[2] = openerp.session.url('/im/image', {uuid: self.get('session').uuid, user_id: current.from_id[0]});
+                current.from_id[2] = openerp.session.url('/im_chat/image', {uuid: self.get('session').uuid, user_id: current.from_id[0]});
                 var date_day = current.create_date.split(" ")[0];
                 if(date_day !== last_date_day){
                     res[date_day] = [];
@@ -374,12 +370,14 @@
         focus: function() {
             this.$(".oe_im_chatview_input").focus();
         },
+        click_header: function(){
+            this.update_fold_state();
+        },
         click_close: function(event) {
             event.stopPropagation();
             this.update_fold_state('closed');
         },
         destroy: function() {
-            //console.log("DESTRIYED");
             this.trigger("destroyed");
             return this._super();
         }
@@ -456,7 +454,7 @@
             this.c_manager.on("im_new_user_status", this, this.update_users_status);
 
             // fetch the unread message and the recent activity (e.i. to re-init in case of refreshing page)
-            openerp.session.rpc("/im/init",{}).then(function(notifications) {
+            openerp.session.rpc("/im_chat/init",{}).then(function(notifications) {
                 _.each(notifications, function(notif){
                     //console.log(JSON.stringify(notif));
                     self.c_manager.on_notification(notif);

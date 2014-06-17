@@ -17,6 +17,7 @@
         init: function(){
             this._super.apply(this, arguments);
             this.shown = true;
+            this.loading_history = false; // unactivate the loading history
         },
         show: function(){
             this._super.apply(this, arguments);
@@ -56,7 +57,6 @@
                 inputPlaceholder: null,
                 defaultMessage: _t("How may I help you?"),
                 defaultUsername: _t("Anonymous"),
-                anonymous_mode: true
             });
             openerp.session = new openerp.Session();
 
@@ -99,7 +99,7 @@
         click: function() {
             if (! this.manager) {
                 this.manager = new openerp.im_chat.ConversationManager(this, this.options);
-                this.manager.set("bottom_offset", 37); // TODO correct the value (no hardcode damned !)
+                this.manager.set("bottom_offset", $('.oe_chat_button').outerHeight()); // TODO correct the value (no hardcode damned !)
                 // override the notification default function
                 this.manager.notification = function(notif){
                     $.achtung({message: notif, timeout: 10, showEffects: false, hideEffects: false});
