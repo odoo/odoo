@@ -225,7 +225,7 @@
               </td>
             </tr>
           </blockTable>
-          <para style="P13">PAIE DU [[ formatLang(o.date_from, date=True) or '']] AU [[ formatLang(o.date_to, date=True) or '' ]]</para>
+          <para style="P13">PAIE DU [[ time.strftime('%d-%m-%Y',time.strptime(o.date_from,'%Y-%m-%d'))]] AU [[ time.strftime('%d-%m-%Y',time.strptime(o.date_to,'%Y-%m-%d')) ]]</para>
           <blockTable colWidths="56.0,178.0" style="Tableau5">
             <tr>
               <td>
@@ -366,7 +366,7 @@
       <tr>
         <td>
           <para style="terp_default_Bold_8">Mode de reglement : [[ o.payment_mode or '' ]]</para>
-          <para style="P20">Paye le : [[ formatLang(o.move_id.date, date=True) or '']]</para>
+          <para style="P20">Paye le : [[ time.strftime('%d-%m-%Y',time.strptime(o.move_id.date,'%Y-%m-%d'))]]</para>
         </td>
         <td>
           <para style="P18">NET A PAYER</para>
