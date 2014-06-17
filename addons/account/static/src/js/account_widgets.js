@@ -1039,7 +1039,8 @@ openerp.account = function (instance) {
             var slice_start = self.get("pager_index") * self.max_move_lines_displayed;
             var slice_end = (self.get("pager_index")+1) * self.max_move_lines_displayed;
             _( _.filter(self.mv_lines_deselected, function(o){
-                    return o.name.indexOf(self.filter) !== -1 || o.ref.indexOf(self.filter) !== -1 })
+                    return o.name.indexOf(self.filter) !== -1 || (o.ref && o.ref.indexOf(self.filter) !== -1)
+                })
                 .slice(slice_start, slice_end)).each(function(line){
                 var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: false}));
                 self.bindPopoverTo($line.find(".line_info_button"));
@@ -1058,7 +1059,6 @@ openerp.account = function (instance) {
     
         updatePagerControls: function() {
             var self = this;
-    
             if (self.get("pager_index") === 0)
                 self.$(".pager_control_left").addClass("disabled");
             else
@@ -1366,10 +1366,9 @@ openerp.account = function (instance) {
                         move_lines = lines;
                     });
             }
-    
             // Fetch the number of move lines corresponding to this statement line and this filter
             var deferred_total_move_lines_num = self.model_bank_statement_line
-                .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids, self.filter, offset, limit, true])
+                .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids, self.filter, 0, undefined, true])
                 .then(function(num){
                     move_lines_num = num;
                 });
