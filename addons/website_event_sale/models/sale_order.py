@@ -9,7 +9,7 @@ class sale_order(osv.Model):
 
     def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, linked_line_id=None, optional_product_ids=None, context=None):
         for so in self.browse(cr, uid, ids, context=context):
-            
+
             domain = [('order_id', '=', so.id), ('product_id', '=', product_id)]
             if line_id:
                 domain += [('id', '=', line_id)]
@@ -29,7 +29,7 @@ class sale_order(osv.Model):
             return order_line_id
 
     def _website_product_id_change(self, cr, uid, ids, order_id, product_id, line_id=None, context=None):
-        values = super(sale_order,self)._website_product_id_change(cr, uid, ids, order_id, product_id, line_id=None, context=None)
+        values = super(sale_order,self)._website_product_id_change(cr, uid, ids, order_id, product_id, line_id=line_id, context=None)
 
         event_ticket_id = None
         if context.get("event_ticket_id"):

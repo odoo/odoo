@@ -273,6 +273,7 @@
           <input type="hidden" name="search" t-att-value="search"/>
           <ul class="nav nav-pills nav-stacked mt16">
               <t t-foreach="attributes" t-as="a">
+                <t t-if="a.type != 'hidden'">
                   <li t-if="a.value_ids and len(a.value_ids) > 1">
                       <div><strong t-field="a.name"/></div>
                       <t t-if="a.type == 'select'">
@@ -308,6 +309,7 @@
                         </t>
                       </t>
                   </li>
+                </t>
               </t>
           </ul>
       </form>
@@ -616,7 +618,7 @@
           </select>
         </t>
 
-        <t t-if="variant_id.attribute_id.type == 'radio'">
+        <t t-if="variant_id.attribute_id.type in ['radio', 'hidden']">
           <ul class="list-unstyled">
               <t t-set="inc" t-value="0"/>
               <t t-foreach="variant_id.value_ids" t-as="value_id">

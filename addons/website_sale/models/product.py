@@ -202,7 +202,7 @@ class product_product(osv.Model):
 class product_attribute(osv.Model):
     _inherit = "product.attribute"
     _columns = {
-        'type': fields.selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color')], string="Type", type="char"),
+        'type': fields.selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color'), ('hidden', 'Hidden')], string="Type", type="char"),
     }
     _defaults = {
         'type': lambda *a: 'radio',
