@@ -459,11 +459,11 @@ class account_bank_statement_line(osv.osv):
             ret.append(reconciliation_data)
 
         # Check if, now that 'candidate' move lines were selected, there are moves left for statement lines
-        for reconciliation_data in ret:
-            if not reconciliation_data['st_line']['has_no_partner']:
-                st_line = self.browse(cr, uid, reconciliation_data['st_line']['id'], context=context)
-                if self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=mv_line_ids_selected, count=True, context=context) == 0:
-                    reconciliation_data['st_line']['no_match'] = True
+        #for reconciliation_data in ret:
+        #    if not reconciliation_data['st_line']['has_no_partner']:
+        #        st_line = self.browse(cr, uid, reconciliation_data['st_line']['id'], context=context)
+        #        if not self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=mv_line_ids_selected, count=True, context=context):
+        #            reconciliation_data['st_line']['no_match'] = True
         return ret
 
     def get_statement_line_for_reconciliation(self, cr, uid, id, context=None):
@@ -489,7 +489,7 @@ class account_bank_statement_line(osv.osv):
             'amount': amount,
             'amount_str': amount_str,
             'currency_id': line.currency_id.id or statement_currency.id,
-            'no_match': self.get_move_lines_counterparts(cr, uid, line, count=True, context=context) == 0 and line.partner_id.id,
+            'no_match': self.get_move_lines_counterparts(cr, uid, line, count=True, context=context) == 0,
             'partner_id': line.partner_id.id,
             'statement_id': line.statement_id.id,
             'account_code': line.journal_id.default_debit_account_id.code,
@@ -533,6 +533,9 @@ class account_bank_statement_line(osv.osv):
         exact_match_id = self.search_structured_com(cr, uid, st_line, context=context)
         if exact_match_id:
             return self.make_counter_part_lines(cr, uid, st_line, [exact_match_id], count=False, context=context)
+        #we don't propose anything if there is no partner detected
+        if not st_line.partner_id.id:
+            return []
         # look for exact match
         exact_match_id = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
         if exact_match_id:
@@ -580,8 +583,7 @@ class account_bank_statement_line(osv.osv):
         if st_line.partner_id.id:
             domain += [('partner_id', '=', st_line.partner_id.id),
                 '|', ('account_id.type', '=', 'receivable'),
-                ('account_id.type', '=', 'payable'),  # Let the front-end warn the user if he tries to mix payable and receivable in the same reconciliation
-                ]
+                ('account_id.type', '=', 'payable')]
         else:
             domain += [('account_id.reconcile', '=', True)]
             #domain += [('account_id.reconcile', '=', True), ('account_id.type', '=', 'other')]
