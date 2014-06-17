@@ -1,6 +1,7 @@
 (function () {
     'use strict';
 
+    var _t = openerp._t;
     var hash = "#advanced-view-editor";
 
     var website = openerp.website;
@@ -69,9 +70,7 @@
             this.view_name = options.name;
 
             var indent = _.str.repeat("- ", options.level);
-            this.view_name = _.str.sprintf(
-                "%s%s (%s)",
-                indent, options.name, options.xml_id);
+            this.view_name = _.str.sprintf("%s%s", indent, options.name);
             this._super(parent);
         },
     });
@@ -89,6 +88,7 @@
         },
         init: function (parent) {
             this.buffers = {};
+            this.views = {};
             this._super(parent);
         },
         start: function () {
@@ -167,6 +167,7 @@
             _(this.buildViewGraph(views)).each(function (view) {
                 if (!view.id) { return; }
 
+                this.views[view.id] = view;
                 new website.ace.ViewOption(this, view).appendTo($viewList);
                 this.loadView(view.id);
             }.bind(this));
@@ -241,6 +242,9 @@
             var editingSession = this.buffers[viewId];
             if (editingSession) {
                 this.aceEditor.setSession(editingSession);
+                this.$('#ace-view-id').text(_.str.sprintf(
+                    _t("Template ID: %s"),
+                    this.views[viewId].xml_id));
             }
         },
         displaySelectedView: function () {
