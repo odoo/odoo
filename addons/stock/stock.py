@@ -607,9 +607,6 @@ class stock_quant(osv.osv):
             raise osv.except_osv(_('Error'), _('You cannot move to a location of type view %s.') % (location.name))
         return True
 
-    def unlink(self, cr, uid, ids, context=None):
-        raise osv.except_osv(_('Error!'), _('Do not delete quants!'))
-
 #----------------------------------------------------------
 # Stock Picking
 #----------------------------------------------------------
