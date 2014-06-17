@@ -245,7 +245,7 @@ openerp.account = function (instance) {
     
         keyboardShortcutsHandler: function(e) {
             var self = this;
-            if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
+            if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
                 $.each(self.getChildren(), function(i, o){
                     if (o.is_valid && o.persistAndDestroy()) {
                         self.lines_reconciled_with_ctrl_enter++;
@@ -981,6 +981,7 @@ openerp.account = function (instance) {
         lineOpenBalanceClickHandler: function() {
             var self = this;
             if (self.get("mode") === "create") {
+                self.addLineBeingEdited();
                 self.set("mode", "match");
             } else {
                 self.set("mode", "create");
@@ -1075,7 +1076,7 @@ openerp.account = function (instance) {
         balanceChanged: function() {
             var self = this;
             var balance = self.get("balance");
-    
+            self.$(".tbody_open_balance").empty();
             // Special case hack : no identified partner
             if (self.st_line.has_no_partner) {
                 if (Math.abs(balance).toFixed(3) === "0.000") {
@@ -1088,11 +1089,15 @@ openerp.account = function (instance) {
                     self.$(".button_ok").attr("disabled", "disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = false;
+                    var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
+                    var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
+                    var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {debit: debit, credit: credit, account_code: self.map_account_id_code[self.st_line.open_balance_account_id]}));
+                    $line.find('.js_open_balance')[0].innerHTML = "Choose counterpart";
+                    self.$(".tbody_open_balance").append($line);
                 }
                 return;
             }
     
-            self.$(".tbody_open_balance").empty();
             if (Math.abs(balance).toFixed(3) === "0.000") {
                 self.$(".button_ok").addClass("oe_highlight");
                 self.$(".button_ok").text("OK");
@@ -1111,21 +1116,15 @@ openerp.account = function (instance) {
     
             self.$(".action_pane.active").removeClass("active");
     
-            // Special case hack : if no_partner, either inactive or create
+            // Special case hack : if no_partner and mode == inactive
             if (self.st_line.has_no_partner) {
                 if (self.get("mode") === "inactive") {
                     self.$(".match").slideUp(self.animation_speed);
                     self.$(".create").slideUp(self.animation_speed);
                     self.$(".toggle_match").removeClass("visible_toggle");
                     self.el.dataset.mode = "inactive";
-                } else {
-                    self.initializeCreateForm();
-                    self.$(".match").slideUp(self.animation_speed);
-                    self.$(".create").slideDown(self.animation_speed);
-                    self.$(".toggle_match").addClass("visible_toggle");
-                    self.el.dataset.mode = "create";
-                }
-                return;
+                    return;
+                } 
             }
     
             if (self.get("mode") === "inactive") {
