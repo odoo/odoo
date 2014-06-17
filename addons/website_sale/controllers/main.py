@@ -265,8 +265,19 @@ class website_sale(http.Controller):
     def cart_update(self, product_id, add_qty=1, set_qty=0, goto_shop=None, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         order = request.website.sale_get_order(force_create=1)
+
+        optional_product_ids = []
+        for k, v in kw.items():
+            if "optional-product-" in k and int(kw.get(k.replace("product", "quantity"))):
+                optional_product_ids.append(int(v))
         if add_qty or set_qty:
-            order._cart_update(product_id=int(product_id), add_qty=int(add_qty), set_qty=int(set_qty))
+            line_id, quantity, option_ids = order._cart_update(product_id=int(product_id),
+                add_qty=int(add_qty), set_qty=int(set_qty),
+                optional_product_ids=optional_product_ids)
+        # options have all time the same quantity
+        for option_id in optional_product_ids:
+            order._cart_update(product_id=option_id, set_qty=quantity, linked_line_id=line_id)
+
         if goto_shop:
             attrib_list = request.httprequest.args.getlist('attrib')
             keep = QueryURL('/shop', category=kw.get('category'), search=kw.get('search'), attrib=attrib_list)
@@ -277,11 +288,12 @@ class website_sale(http.Controller):
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None, display=True):
         order = request.website.sale_get_order(force_create=1)
-        quantity = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
+        line_id, quantity, option_ids = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
         if not display:
             return None
         return {
             'quantity': quantity,
+            'option_ids': option_ids,
             'cart_quantity': order.cart_quantity,
             'website_sale.total': request.website._render("website_sale.total", {
                     'website_sale_order': request.website.sale_get_order()

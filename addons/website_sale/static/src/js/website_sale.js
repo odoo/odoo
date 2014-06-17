@@ -25,6 +25,11 @@ $(document).ready(function () {
                     location.reload();
                     return;
                 }
+                if (data.option_ids.length) {
+                    _.each(data.option_ids, function (line_id) {
+                        $(".js_quantity[data-line-id="+line_id+"]").text(data.quantity);
+                    });
+                }
                 var $q = $(".my_cart_quantity");
                 $q.parent().parent().removeClass("hidden", !data.quantity);
                 $q.html(data.cart_quantity).hide().fadeIn(600);
@@ -171,20 +176,6 @@ $(document).ready(function () {
         var quantity = parseInt($('input[name="add_qty"]:last').val() || 1, 10);
         var defs = [];
         $link.attr('disabled', 'disabled');
-        $('.js_product', $form).each(function () {
-            var product_id = parseInt($('input.optional_product_id', this).val(),10);
-            var qty = parseInt($('input.js_quantity', this).val(),10);
-            if($('input.js_optional_same_quantity', this).val() !== '0') {
-                qty = quantity;
-            }
-            if (product_id && qty) {
-                defs.push(openerp.jsonRpc("/shop/cart/update_json", 'call', {
-                    'line_id': null,
-                    'product_id': product_id,
-                    'add_qty': qty,
-                    'display': false}));
-            }
-        });
         $.when.apply($.when, defs).then(function () {
             if ($link.hasClass("js_goto_shop")) {
                 $form.prepend('<input type="hidden" name="goto_shop" value="1"/>');

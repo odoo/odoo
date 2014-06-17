@@ -488,8 +488,7 @@
                                     <p class="css_not_available_msg bg-danger" style="position:absolute; padding: 15px;">Product not available</p>
                                   </td>
                                   <td>
-                                    <input type="hidden" class="js_optional_same_quantity" value="0"/>
-                                    <input type="hidden" class="js_quantity" t-attf-name="optional-quantity-#{option_inc}" value="0"/>
+                                    <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-quantity-#{option_inc}" value="0"/>
                                     <a href="#" class="js_add"><strong>Add to Cart</strong></a>
                                     <span class="js_remove hidden">
                                       <span class="js_item">1 Item</span><span class="js_items hidden">5 Items</span><br/>
@@ -797,11 +796,14 @@
                               </td>
                               <td t-if="line.product_id.product_tmpl_id">
                                   <div>
-                                      <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+                                      <a t-if="not line.linked_line_id" t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
                                           <strong t-esc="line.product_id.name_get()[0][1]"/>
                                       </a>
+                                      <t t-if="line.linked_line_id">
+                                        <strong t-esc="line.product_id.name_get()[0][1]"/>
+                                      </t>
                                   </div>
-                                  <div class="text-muted" t-field="line.product_id.description_sale"/>
+                                  <div class="text-muted" t-field="line.name"/>
                               </td>
                               <td class="text-center" name="price">
                                 <t t-if="abs(line.product_id.lst_price - line.price_unit) &gt; 0.2">
@@ -816,8 +818,8 @@
                                      "display_currency": "website.pricelist_id.currency_id"
                                  }'/>
                               </td>
-                              <td>
-                                  <div class="input-group">
+                              <td class="text-center">
+                                  <div class="input-group" t-if="not line.linked_line_id">
                                       <span class="input-group-addon">
                                           <a t-attf-href="#" class="mb8 js_add_cart_json">
                                               <i class="fa fa-minus"></i>
@@ -833,6 +835,9 @@
                                           </a>
                                       </span>
                                   </div>
+                                  <t t-if="line.linked_line_id">
+                                    <span class="js_quantity" t-att-data-line-id="line.id" t-esc="int(line.product_uom_qty)"/>
+                                  </t>
 
                               </td>
                           </tr>
@@ -1295,7 +1300,7 @@
     <table class='pull-right mb16' id="cart_total" t-if="website_sale_order">
         <thead>
             <tr width="100" style="border-top: 1px solid #000" id="order_total">
-                <th><h3>Total:&amp; </h3></th>
+                <th><h3>Total: </h3></th>
                 <th class="text-right">
                   <h3><span t-field="website_sale_order.amount_total" t-field-options='{
                       "widget": "monetary",
