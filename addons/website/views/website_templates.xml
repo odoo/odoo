@@ -59,6 +59,7 @@
     <html t-att-lang="lang and lang.replace('_', '-')"
           t-att-data-website-id="website.id if editable else None"
           t-att-data-editable="'1' if editable else None"
+          t-att-data-editable-no-editor="editable_no_editor or None"
           t-att-data-translatable="'1' if translatable else None"
           t-att-data-view-xmlid="xmlid if editable else None"
           t-att-data-main-object="repr(main_object) if editable else None"
@@ -179,8 +180,10 @@
     <xpath expr="//body" position="inside">
         <div id="website-top-navbar-placeholder" class="navbar navbar-inverse navbar-fixed-top hidden-xs">
             <div class="navbar-header">
-                <form class="navbar-form navbar-left">
-                    <button type="button" class="btn btn-primary">Edit</button>
+                <form class="navbar-form navbar-left" title="editable_no_editor or None">
+                    <button type="button" class="btn btn-primary"
+                            disabled="'disabled' if editable_no_editor else None"
+                        >Edit</button>
                 </form>
             </div>
             <div class="collapse navbar-collapse navbar-edit-collapse">
