@@ -194,4 +194,18 @@ $(document).ready(function () {
         return false;
     });
 
+
+    $(".oe_website_sale select[name='country_id']").change(function () {
+        var $select = $("select[name='state_id']");
+        $select.find("option:not(:first)").hide();
+        var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
+        $select.parent().toggle(nb>1);
+    }).change();
+    $(".oe_website_sale select[name='shipping_country_id']").change(function () {
+        var $select = $("select[name='shipping_state_id']");
+        $select.find("option:not(:first)").hide();
+        var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
+        $select.parent().toggle(nb>1);
+    }).change();
+
 });
