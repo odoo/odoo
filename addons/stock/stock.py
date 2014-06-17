@@ -272,27 +272,28 @@ class stock_quant(osv.osv):
 
     _columns = {
         'name': fields.function(_get_quant_name, type='char', string='Identifier'),
-        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete="restrict"),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="restrict"),
-        'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product"),
-        'package_id': fields.many2one('stock.quant.package', string='Package', help="The package containing this quant"),
-        'packaging_type_id': fields.related('package_id', 'packaging_id', type='many2one', relation='product.packaging', string='Type of packaging', store=True),
-        'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="The move the quant is reserved for"),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot'),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete="restrict", readonly=True),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="restrict", readonly=True),
+        'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product", readonly=True),
+        'package_id': fields.many2one('stock.quant.package', string='Package', help="The package containing this quant", readonly=True),
+        'packaging_type_id': fields.related('package_id', 'packaging_id', type='many2one', relation='product.packaging', string='Type of packaging', readonly=True, store=True),
+        'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="The move the quant is reserved for", readonly=True),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True),
         'cost': fields.float('Unit Cost'),
-        'owner_id': fields.many2one('res.partner', 'Owner', help="This is the owner of the quant"),
+        'owner_id': fields.many2one('res.partner', 'Owner', help="This is the owner of the quant", readonly=True),
 
-        'create_date': fields.datetime('Creation Date'),
-        'in_date': fields.datetime('Incoming Date'),
+        'create_date': fields.datetime('Creation Date', readonly=True),
+        'in_date': fields.datetime('Incoming Date', readonly=True),
 
         'history_ids': fields.many2many('stock.move', 'stock_quant_move_rel', 'quant_id', 'move_id', 'Moves', help='Moves that operate(d) on this quant'),
-        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong", required=True),
+        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong", required=True, readonly=True),
         'inventory_value': fields.function(_calc_inventory_value, string="Inventory Value", type='float', readonly=True),
 
         # Used for negative quants to reconcile after compensated by a new positive one
-        'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from'),
-        'negative_move_id': fields.many2one('stock.move', 'Move Negative Quant', help='If this is a negative quant, this will be the move that caused this negative quant.'),
-        'negative_dest_location_id': fields.related('negative_move_id', 'location_dest_id', type='many2one', relation='stock.location', string="Negative Destination Location", help="Technical field used to record the destination location of a move that created a negative quant"),
+        'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from', readonly=True),
+        'negative_move_id': fields.many2one('stock.move', 'Move Negative Quant', help='If this is a negative quant, this will be the move that caused this negative quant.', readonly=True),
+        'negative_dest_location_id': fields.related('negative_move_id', 'location_dest_id', type='many2one', relation='stock.location', string="Negative Destination Location", readonly=True, 
+                                                    help="Technical field used to record the destination location of a move that created a negative quant"),
     }
 
     _defaults = {
@@ -606,6 +607,8 @@ class stock_quant(osv.osv):
             raise osv.except_osv(_('Error'), _('You cannot move to a location of type view %s.') % (location.name))
         return True
 
+    def unlink(self, cr, uid, ids, context=None):
+        raise osv.except_osv(_('Error!'), _('Do not delete quants!'))
 
 #----------------------------------------------------------
 # Stock Picking
@@ -3833,10 +3836,16 @@ class stock_pack_operation(osv.osv):
         obj = self.browse(cr,uid,id,context)
         product_id = obj.product_id.id
         val = {'product_id': product_id}
+        new_lot_id = False
         if name:
+            lots = self.pool.get('stock.production.lot').search(cr, uid, ['&', ('name', '=', name), ('product_id', '=', product_id)], context=context)
+            if lots:
+                new_lot_id = lots[0]
             val.update({'name': name})
+
         if not obj.lot_id:
-            new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, val, context=context)
+            if not new_lot_id:
+                new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, val, context=context)
             self.write(cr, uid, id, {'lot_id': new_lot_id}, context=context)
 
     def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False, visible_op_ids=False, increment=True, context=None):
