@@ -59,8 +59,8 @@ class ImBus(osv.Model):
             }
             cr.commit()
             self.pool['im.bus'].create(cr, uid, values)
-            #if random.random() < 0.01:
-            #    self.gc(cr, uid)
+            if random.random() < 0.01:
+                self.gc(cr, uid)
         if channels:
             with openerp.sql_db.db_connect('postgres').cursor() as cr2:
                 cr2.execute("notify imbus, %s", (json_dump(list(channels)),))
@@ -69,7 +69,6 @@ class ImBus(osv.Model):
         self.sendmany(cr, uid, [[channel, message]])
 
     def poll(self, cr, uid, channels, last=0):
-        # first poll returns the last_id
         # first poll return the notification in the 'buffer'
         if last == 0:
             #cr.execute('SELECT COALESCE(MAX(id),0)+1 FROM ' + self._table)

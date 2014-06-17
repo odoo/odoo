@@ -126,7 +126,7 @@
             <field name="res_model">im_chat.message</field>
             <field name="view_mode">list</field>
             <field name="domain">[('to_id.channel_id', '!=', None)]</field>
-            <field name="context">{'search_default_group_by_to_id': 1, 'search_default_group_by_date': 1, 'search_default_to_id': 1}</field>
+            <field name="context">{'search_default_group_by_to_id': 1}</field>
         </record>
         <menuitem name="History" parent="im_livechat" id="history" action="action_history" groups="group_im_livechat_manager"/>
 

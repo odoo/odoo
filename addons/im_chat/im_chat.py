@@ -148,10 +148,9 @@ class im_chat_session(osv.Model):
                 state = sr.state
                 if sr.state == 'open':
                     state = 'folded'
-                elif sr.state == 'folded':
+                else:
                     state = 'open'
             self.pool['im_chat.session_res_users_rel'].write(cr, uid, ids, {'state': state}, context=context)
-            cr.commit()
             self.pool['im.bus'].sendone(cr, uid, (cr.dbname, 'im_chat.session', uid), sr.session_id.session_info())
 
     def add_user(self, cr, uid, uuid, user_id, context=None):
@@ -165,10 +164,9 @@ class im_chat_session(osv.Model):
                 for channel_user_id in session.user_ids:
                     info = self.session_info(cr, channel_user_id.id, [session.id], context=context)
                     notifications.append([(cr.dbname, 'im_chat.session', channel_user_id.id), info])
-                # TODO make it work !!
-                # Anonymous are not notified when a new user is added : cannot exec session_info as anonymous
-                #info = self.session_info(cr, None, [session.id], context=context)
-                #notifications.append([session.uuid, info])
+                # Anonymous are not notified when a new user is added : cannot exec session_info as uid = None
+                info = self.session_info(cr, openerp.SUPERUSER_ID, [session.id], context=context)
+                notifications.append([session.uuid, info])
                 self.pool['im.bus'].sendmany(cr, uid, notifications)
                 # send a message to the conversation
                 user = self.pool['res.users'].read(cr, uid, user_id, ['name'], context=context)

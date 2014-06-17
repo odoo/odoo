@@ -9,39 +9,44 @@
     var im_livechat = {};
     openerp.im_livechat = im_livechat;
 
-/*
-// TODO : for anonymous conv, they have to keep their own state since they have no im_chat_session_res_users_rel
-// but problem to create a im_livechat.Conversation in the c_manager
-    im_livechat.Conversation = openerp.im_chat.extend({
-        init: function(parent, c_manager, session, options) {
-            this._super(parent, c_manager, session, options);
-            this.shown = false;
-        }
+    /*
+    The state of anonymous session is hold by the client and not the server.
+    Override the method managing the state of normal conversation.
+    */
+    openerp.im_chat.Conversation.include({
+        init: function(){
+            this._super.apply(this, arguments);
+            this.shown = true;
+        },
         show: function(){
-            this.$().animate({
-                height: this.full_height
-            });
-            this.set("pending", 0);
+            this._super.apply(this, arguments);
+            this.shown = true;
         },
         hide: function(){
-            this.$().animate({
-                height: this.$(".oe_im_chatview_header").outerHeight()
-            });
-        },
-        click_header: function(){
-            this.update_fold_state();
+            this._super.apply(this, arguments);
+            this.shown = false;
         },
         update_fold_state: function(state){
-            if(!this.options["anonymous_mode"]){
-                return new openerp.Model("im_chat.session").call("update_state", [], {"uuid" : this.get("session").uuid, "state" : state});
+            if(state === 'closed'){
+                this.destroy();
             }else{
-                if(state === 'closed'){
-                    this.destroy();
+                if(state === 'open'){
+                    this.show();
+                }else{
+                    if(this.shown){
+                        state = 'fold';
+                        this.hide();
+                    }else{
+                        state = 'open';
+                        this.show();
+                    }
                 }
             }
-        }
+            var session = this.get('session');
+            session.state = state;
+            this.set('session', session);
+        },
     });
-*/
 
     im_livechat.LiveSupport = openerp.Widget.extend({
         init: function(server_url, db, channel, options) {
@@ -53,7 +58,6 @@
                 defaultUsername: _t("Anonymous"),
                 anonymous_mode: true
             });
-
             openerp.session = new openerp.Session();
 
             // load the qweb templates
@@ -95,7 +99,7 @@
         click: function() {
             if (! this.manager) {
                 this.manager = new openerp.im_chat.ConversationManager(this, this.options);
-                this.manager.set("bottom_offset", 37);
+                this.manager.set("bottom_offset", 37); // TODO correct the value (no hardcode damned !)
                 // override the notification default function
                 this.manager.notification = function(notif){
                     $.achtung({message: notif, timeout: 10, showEffects: false, hideEffects: false});
@@ -117,7 +121,6 @@
                 // start the polling
                 openerp.im.bus.add_channel(session.uuid);
                 openerp.im.bus.start_polling();
-
                 // add the automatic welcome message
                 if(session.users.length > 0){
                     if (self.options.defaultMessage) {

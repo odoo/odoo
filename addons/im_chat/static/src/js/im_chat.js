@@ -73,6 +73,7 @@
             this.set("window_focus", false);
         },
         window_beep: function() {
+            console.log("beep");
             if (typeof(Audio) === "undefined") {
                 return;
             }
@@ -84,12 +85,12 @@
         },
         window_title_change: function() {
             var title = undefined;
-            if (! openerp.webclient || !openerp.webclient.set_title_part)
-                return;
             if (this.get("waiting_messages") !== 0) {
                 title = _.str.sprintf(_t("%d Messages"), this.get("waiting_messages"))
                 this.window_beep();
             }
+            if (! openerp.webclient || !openerp.webclient.set_title_part)
+                return;
             openerp.webclient.set_title_part("im_messages", title);
         },
 
@@ -185,7 +186,6 @@
             this.set("session", session);
             this.set("right_position", 0);
             this.set("bottom_position", 0);
-            this.shown = true;
             this.set("pending", 0);
             this.inputPlaceholder = this.options.defaultInputPlaceholder;
         },
@@ -222,43 +222,23 @@
                 height: this.full_height
             });
             this.set("pending", 0);
-            this.shown = true;
         },
         hide: function(){
             this.$().animate({
                 height: this.$(".oe_im_chatview_header").outerHeight()
             });
-            this.shown = false;
         },
         click_header: function(){
             this.update_fold_state();
         },
         update_fold_state: function(state){
-            if(!this.options["anonymous_mode"]){
-                return new openerp.Model("im_chat.session").call("update_state", [], {"uuid" : this.get("session").uuid, "state" : state});
-            }else{
-                // TODO make it clear. Hack for opendays :p
-                if(state === 'closed'){
-                    this.destroy();
-                }else{
-                    if(state === 'open'){
-                        this.show();
-                    }else{
-                        if(this.shown){
-                            this.hide();
-                        }else{
-                            this.show();
-                        }
-                    }
-                }
-            }
+            return new openerp.Model("im_chat.session").call("update_state", [], {"uuid" : this.get("session").uuid, "state" : state});
         },
         calc_pos: function() {
             this.$().css("right", this.get("right_position"));
             this.$().css("bottom", this.get("bottom_position"));
         },
         update_session: function(){
-            //console.log("UPDATE SESS : ", JSON.stringify(this.get("session")));
             // built the name
             var names = [];
             _.each(this.get("session").users, function(user){

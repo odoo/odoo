@@ -52,6 +52,7 @@ class LiveChatController(http.Controller):
     @http.route('/im_livechat/get_session', type="json", auth="none")
     def get_session(self, channel_id, anonymous_name):
         cr, uid, context, db = request.cr, request.uid, request.context, request.db
+        uid = uid or openerp.SUPERUSER_ID
         reg = openerp.modules.registry.RegistryManager.get(db)
         # add the location to the anonymous name
         ip = request.httprequest.environ['REMOTE_ADDR']
@@ -63,12 +64,12 @@ class LiveChatController(http.Controller):
                 anonymous_name = anonymous_name + " ("+result["country_name"]+")"
         except Exception:
             pass
-        session = reg.get("im_livechat.channel").get_channel_session(cr, uid, channel_id, anonymous_name, context=context)
-        return session
+        return reg.get("im_livechat.channel").get_channel_session(cr, uid, channel_id, anonymous_name, context=context)
 
     @http.route('/im_livechat/available', type='json', auth="none")
     def available(self, db, channel):
         cr, uid, context, db = request.cr, request.uid, request.context, request.db
+        uid = uid or openerp.SUPERUSER_ID
         reg = openerp.modules.registry.RegistryManager.get(db)
         with reg.cursor() as cr:
             return len(reg.get('im_livechat.channel').get_available_users(cr, uid, channel)) > 0
@@ -171,7 +172,7 @@ class im_livechat_channel(osv.Model):
 
     def get_available_users(self, cr, uid, channel_id, context=None):
         """ get available user of a given channel """
-        channel = self.browse(cr, openerp.SUPERUSER_ID, channel_id, context=context)
+        channel = self.browse(cr, uid, channel_id, context=context)
         users = []
         for user_id in channel.user_ids:
             if (user_id.im_status == 'online'):
@@ -187,8 +188,8 @@ class im_livechat_channel(osv.Model):
         user_id = random.choice(users).id
         # create the session, and add the link with the given channel
         Session = self.pool["im_chat.session"]
-        newid = Session.create(cr, openerp.SUPERUSER_ID, {'user_ids': [(4,user_id)], 'channel_id': channel_id, 'name' : anonymous_name}, context=context)
-        return self.pool['im_chat.session'].session_info(cr, openerp.SUPERUSER_ID, [newid], context=context)
+        newid = Session.create(cr, uid, {'user_ids': [(4, user_id)], 'channel_id': channel_id, 'name' : anonymous_name}, context=context)
+        return Session.session_info(cr, uid, [newid], context=context)
 
     def test_channel(self, cr, uid, channel, context=None):
         if not channel:
@@ -199,7 +200,7 @@ class im_livechat_channel(osv.Model):
         }
 
     def get_info_for_chat_src(self, cr, uid, channel, context=None):
-        url = self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url')
+        url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         chan = self.browse(cr, uid, channel, context=context)
         return {
             "url": url,
