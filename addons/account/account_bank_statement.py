@@ -333,18 +333,25 @@ class account_bank_statement(osv.osv):
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
-        done = []
         account_move_obj = self.pool.get('account.move')
+        reconcile_pool = self.pool.get('account.move.reconcile')
+        move_line_pool = self.pool.get('account.move.line')
+        move_ids = []
         for st in self.browse(cr, uid, ids, context=context):
-            if st.state=='draft':
-                continue
-            move_ids = []
             for line in st.line_ids:
-                move_ids += [x.id for x in line.move_ids]
+                if line.journal_entry_id:
+                    move_ids.append(line.journal_entry_id.id)
+                    for aml in line.journal_entry_id.line_id:
+                        if aml.reconcile_id:
+                            move_lines = [l.id for l in aml.reconcile_id.line_id]
+                            move_lines.remove(aml.id)
+                            reconcile_pool.unlink(cr, uid, [aml.reconcile_id.id], context=context)
+                            if len(move_lines) >= 2:
+                                move_line_pool.reconcile_partial(cr, uid, move_lines, 'auto', context=context)
+        if move_ids:
             account_move_obj.button_cancel(cr, uid, move_ids, context=context)
             account_move_obj.unlink(cr, uid, move_ids, context)
-            done.append(st.id)
-        return self.write(cr, uid, done, {'state':'draft'}, context=context)
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
         res = False
