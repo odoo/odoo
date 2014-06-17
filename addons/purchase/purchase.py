@@ -150,9 +150,9 @@ class purchase_order(osv.osv):
         obj_data = self.pool.get('ir.model.data')
         return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in') and obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1] or False
 
-    def _get_picking_out(self, cr, uid, context=None):
+    def _get_dropship(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
-        return obj_data.get_object_reference(cr, uid, 'stock','picking_type_out') and obj_data.get_object_reference(cr, uid, 'stock','picking_type_out')[1] or False
+        return obj_data.get_object_reference(cr, uid, 'stock_dropshipping','picking_type_dropship') and obj_data.get_object_reference(cr, uid, 'stock_dropshipping','picking_type_dropship')[1] or False
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
         res = {}
@@ -684,7 +684,7 @@ class purchase_order(osv.osv):
         
         picking_type_id = order.picking_type_id.id
         if order.dest_address_id:
-            picking_type_id = self._get_picking_out(cr, uid, context=context)
+            picking_type_id = self._get_dropship(cr, uid, context=context)
 
         res = []
         move_template = {
@@ -800,7 +800,7 @@ class purchase_order(osv.osv):
         for order in self.browse(cr, uid, ids):
             picking_type_id = order.picking_type_id.id
             if order.dest_address_id:
-                picking_type_id = self._get_picking_out(cr, uid, context=context)
+                picking_type_id = self._get_dropship(cr, uid, context=context)
 
             picking_id = self.pool.get('stock.picking').create(cr, uid, {'picking_type_id': picking_type_id, 'partner_id': order.dest_address_id.id or order.partner_id.id}, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
