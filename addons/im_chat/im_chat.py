@@ -177,11 +177,12 @@ class im_chat_session(osv.Model):
         #default image
         image_b64 = 'R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
         # get the session
-        session_id = self.pool["im_chat.session"].search(cr, uid, [('uuid','=',uuid), ('user_ids','in', user_id)])
-        if session_id:
-            # get the image of the user
-            res = self.pool["res.users"].read(cr, uid, [user_id], ["image_small"])[0]
-            image_b64 = res["image_small"]
+        if user_id:
+            session_id = self.pool["im_chat.session"].search(cr, uid, [('uuid','=',uuid), ('user_ids','in', user_id)])
+            if session_id:
+                # get the image of the user
+                res = self.pool["res.users"].read(cr, uid, [user_id], ["image_small"])[0]
+                image_b64 = res["image_small"]
         return image_b64
 
 class im_chat_message(osv.Model):
@@ -206,8 +207,12 @@ class im_chat_message(osv.Model):
         """ get unread messages and old messages received less than AWAY_TIMER
             ago and the session_info for open or folded window
         """
+        # get the message since the AWAY_TIMER
+        threshold = datetime.datetime.now() - datetime.timedelta(seconds=AWAY_TIMER)
+        threshold = threshold.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        domain = [('to_id.user_ids', 'in', [uid]), ('create_date','>',threshold)]
+
         # get the message since the last poll of the user
-        domain = [('to_id.user_ids', 'in', [uid])]
         presence_ids = self.pool['im_chat.presence'].search(cr, uid, [('user_id', '=', uid)], context=context)
         if presence_ids:
             presence = self.pool['im_chat.presence'].browse(cr, uid, presence_ids, context=context)[0]
