@@ -220,7 +220,6 @@ class im_chat_message(osv.Model):
         domain = [('user_id','=',uid), '|', ('state','!=','closed'), ('session_id', 'in', session_ids)]
         session_rels_ids = self.pool['im_chat.session_res_users_rel'].search(cr, uid, domain, context=context)
         # re-open the session where a message have been recieve recently
-        #self.pool['im_chat.session_res_users_rel'].write(cr, uid, session_rels_ids, {'state': 'open'}, context=context)
         session_rels = self.pool['im_chat.session_res_users_rel'].browse(cr, uid, session_rels_ids, context=context)
 
         reopening_session = []

@@ -71,8 +71,6 @@ class ImBus(osv.Model):
     def poll(self, cr, uid, channels, last=0):
         # first poll return the notification in the 'buffer'
         if last == 0:
-            #cr.execute('SELECT COALESCE(MAX(id),0)+1 FROM ' + self._table)
-            #return [{'id': cr.fetchone()[0]}]
             timeout_ago = datetime.datetime.now()-datetime.timedelta(seconds=TIMEOUT)
             domain = [('create_date', '>', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         else:

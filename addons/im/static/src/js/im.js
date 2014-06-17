@@ -20,17 +20,15 @@
             var self = this;
             self.activated = true;
             var data = {'channels': self.channels, 'last': self.last, 'options' : self.options};
-            //console.log("########### POLL : ", JSON.stringify(data));
             openerp.jsonRpc('/longpolling/poll', 'call', data).then(function(result) {
                 _.each(result, _.bind(self.on_notification, self));
                 self.poll();
             }, function(unused, e) {
-                //e.preventDefault();
+                e.preventDefault();
                 setTimeout(_.bind(self.poll, self), im.ERROR_DELAY);
             });
         },
         on_notification: function(notification) {
-            //console.log("################## NOTIF", JSON.stringify(notification));
             if (notification.id > this.last) {
                 this.last = notification.id;
             }
