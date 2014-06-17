@@ -73,7 +73,7 @@
       <h5><strong><a itemprop="name" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))" t-field="product.name"/></strong></h5>
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
           <b>
-              <t t-if="abs(product.lst_price - product.price) &gt; 0.2">
+              <t t-if="(product.lst_price - product.price) &gt; 0.1">
                 <del class="text-danger" t-field="product.lst_price" t-field-options='{ "widget": "monetary", "display_currency": "pricelist.currency_id" }'/>&amp;nbsp;
               </t>
               <span t-field="product.price"  t-field-options='{
@@ -426,7 +426,7 @@
                                     </div>
                                   </td>
                                   <td>
-                                    <t t-if="product.lst_price != product.price">
+                                    <t t-if="(product.lst_price != product.price) &gt; 0.1">
                                     <span class="text-danger" style="text-decoration: line-through;"
                                       t-field="product.lst_price"
                                       t-field-options='{
@@ -476,7 +476,7 @@
                                     </div>
                                   </td>
                                   <td>
-                                    <t t-if="product.lst_price != product.price">
+                                    <t t-if="(product.lst_price - product.price) &gt; 0.1">
                                     <span class="text-danger" style="text-decoration: line-through;"
                                       t-field="product.lst_price"
                                       t-field-options='{
@@ -563,7 +563,7 @@
 <template id="product_price">
   <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
       <h4 class="oe_price_h4">
-          <t t-if="product.lst_price != product.price">
+          <t t-if="(product.lst_price - product.price) &gt; 0.1">
           <span class="text-danger" style="text-decoration: line-through;"
             t-field="product.lst_price"
             t-field-options='{
@@ -811,7 +811,7 @@
                                   <div class="text-muted" t-field="line.name"/>
                               </td>
                               <td class="text-center" name="price">
-                                <t t-if="abs(line.product_id.lst_price - line.price_unit) &gt; 0.2">
+                                <t t-if="(line.product_id.lst_price - line.price_unit) &gt; 0.1">
                                   <del class="text-danger"
                                     t-field="line.product_id.lst_price" t-field-options='{
                                          "widget": "monetary",
@@ -907,7 +907,7 @@
                       <div class="text-muted" t-field="product.description_sale"/>
                   </td>
                   <td>
-                      <t t-if="abs(product.lst_price - product.price) &gt; 0.2">
+                      <t t-if="(product.lst_price - product.price) &gt; 0.1">
                         <del class="text-danger"
                           t-field="product.lst_price" t-field-options='{
                                "widget": "monetary",
