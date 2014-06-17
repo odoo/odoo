@@ -377,19 +377,16 @@ class JsonRequest(WebRequest):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
            be used as response."""
-        try:
-            return super(JsonRequest, self)._handle_exception(exception)
-        except Exception:
-            _logger.exception("Exception during JSON request handling.")
-            error = {
-                    'code': 200,
-                    'message': "OpenERP Server Error",
-                    'data': serialize_exception(exception)
-            }
-            if isinstance(exception, AuthenticationError):
-                error['code'] = 100
-                error['message'] = "OpenERP Session Invalid"
-            return self._json_response(error=error)
+        _logger.exception("Exception during JSON request handling.")
+        error = {
+                'code': 200,
+                'message': "OpenERP Server Error",
+                'data': serialize_exception(exception)
+        }
+        if isinstance(exception, AuthenticationError):
+            error['code'] = 100
+            error['message'] = "OpenERP Session Invalid"
+        return self._json_response(error=error)
 
     def dispatch(self):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
