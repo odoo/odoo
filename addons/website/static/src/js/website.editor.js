@@ -1504,7 +1504,7 @@
                 url: this.link
             });
             this.media.renameNode("img");
-            this.media.$.attributes.src = this.link;
+            $(this.media).attr('src', this.link);
             return this._super();
         },
         clear: function () {
