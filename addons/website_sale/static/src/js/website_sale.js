@@ -63,7 +63,6 @@ $(document).ready(function () {
         }
         var value = $price.data("price") + parseFloat($label.find(".badge span").text() || 0);
         var dec = value % 1;
-        console.log(dec);
         $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
     });
     // hightlight selected color

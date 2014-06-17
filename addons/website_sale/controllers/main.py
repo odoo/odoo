@@ -125,7 +125,8 @@ class website_sale(http.Controller):
         if category:
             domain += [('product_variant_ids.public_categ_ids', 'child_of', int(category))]
 
-        attrib_values = [map(int,v.split(",")) for v in request.httprequest.args.getlist('attrib') if v]
+        attrib_list = request.httprequest.args.getlist('attrib')
+        attrib_values = [map(int,v.split(",")) for v in attrib_list if v]
         attrib_set = set([v[1] for v in attrib_values])
 
         if attrib_values:
@@ -144,8 +145,7 @@ class website_sale(http.Controller):
             if attrib:
                 domain += [('attribute_line_ids.value_ids', 'in', ids)]
 
-        attrib_query = set(["%s,%s" % (v[0],v[1]) for v in attrib_values])
-        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_query)
+        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list)
 
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
@@ -200,11 +200,11 @@ class website_sale(http.Controller):
         if category:
             category = category_obj.browse(request.cr, request.uid, int(category), context=request.context)
 
-        attrib_values = [map(int,v.split(",")) for v in request.httprequest.args.getlist('attrib') if v]
+        attrib_list = request.httprequest.args.getlist('attrib')
+        attrib_values = [map(int,v.split(",")) for v in attrib_list if v]
         attrib_set = set([v[1] for v in attrib_values])
 
-        attrib_query = set(["%s,%s" % (v[0],v[1]) for v in attrib_values])
-        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_query)
+        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_list)
 
         category_ids = category_obj.search(cr, uid, [], context=context)
         category_list = category_obj.name_get(cr, uid, category_ids, context=context)
@@ -216,8 +216,7 @@ class website_sale(http.Controller):
 
         optional_product_ids = []
         for p in product.optional_product_ids:
-            ctx = context.copy()
-            ctx.update(active_id=p.id)
+            ctx = dict(context, active_id=p.id)
             optional_product_ids.append(template_obj.browse(cr, uid, p.id, context=ctx))
 
         values = {
@@ -253,7 +252,7 @@ class website_sale(http.Controller):
 
         values = {
             'order': order,
-            'suggested_products': []
+            'suggested_products': [],
         }
         if order:
             if not context.get('pricelist'):
@@ -269,17 +268,9 @@ class website_sale(http.Controller):
         if add_qty or set_qty:
             order._cart_update(product_id=int(product_id), add_qty=int(add_qty), set_qty=int(set_qty))
         if goto_shop:
-            path = "/shop"
-            l = list()
-            for k,v in kw.items():
-                if v and k in ["category", "search", "attrib"]:
-                    if isinstance(v, list) or isinstance(v, set):
-                        l.append(werkzeug.url_encode([(k,i) for i in v]))
-                    else:
-                        l.append(werkzeug.url_encode([(k,v)]))
-            if l:
-                path += '?' + '&'.join(l)
-            return request.redirect(path)
+            attrib_list = request.httprequest.args.getlist('attrib')
+            keep = QueryURL('/shop', category=kw.get('category'), search=kw.get('search'), attrib=attrib_list)
+            return request.redirect( keep() )
         else:
             return request.redirect("/shop/cart")
 
