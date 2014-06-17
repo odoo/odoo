@@ -411,6 +411,50 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <tr id="product_confirmation">
+                                  <td width="100">
+                                    <span t-field="product.image_medium" t-field-options='{"widget": "image" }'/>
+                                  </td>
+                                  <td>
+                                    <strong t-field="product.name"/>
+                                    <div class="text-muted">
+                                      <div t-field="product.description_sale"/>
+                                      <div class="js_attributes"></div>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <t t-if="product.lst_price != product.price">
+                                    <span class="text-danger" style="text-decoration: line-through;"
+                                      t-field="product.lst_price"
+                                      t-field-options='{
+                                         "widget": "monetary",
+                                         "display_currency": "website.pricelist_id.currency_id"
+                                     }'/><br/>
+                                    </t>
+                                    <span class="oe_price"
+                                      t-field="product.price"
+                                      t-field-options='{
+                                         "widget": "monetary",
+                                         "display_currency": "website.pricelist_id.currency_id"
+                                     }'/>
+                                  </td>
+                                  <td>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <a t-attf-href="#" class="mb8 js_add_cart_json">
+                                                <i class="fa fa-minus"></i>
+                                            </a>
+                                        </span>
+                                        <input type="text" class="js_quantity form-control" data-min="1" name="add_qty" value="1"/>
+                                        <span class="input-group-addon">
+                                            <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        </span>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr t-if="optional_product_ids"><td colspan="4"><h4>Select Your Options:</h4></td></tr>
                                 <t t-set="option_inc" t-value="0"/>
                                 <tr class="js_product" t-foreach="optional_product_ids" t-as="product">
                                   <td width="100">
@@ -449,7 +493,7 @@
                                     <a href="#" class="js_add"><strong>Add to Cart</strong></a>
                                     <span class="js_remove hidden">
                                       <span class="js_item">1 Item</span><span class="js_items hidden">5 Items</span><br/>
-                                      <a href="#" class="js_remove"><small>Cancel</small></a>
+                                      <a href="#" class="js_remove"><small>Remove from cart</small></a>
                                     </span>
                                   </td>
                                 </tr>
@@ -491,52 +535,6 @@
     <t t-placeholder="button">
       <a class="btn btn-primary btn-lg mt8 js_check_product" href="#" data-toggle="modal" data-target="#modal_optional_products">Add to Cart</a>
     </t>
-  </xpath>
-  <xpath expr="//t[@t-set='option_inc'][@t-value='0']" position="before">
-    <tr id="product_confirmation">
-      <td width="100">
-        <span t-field="product.image_medium" t-field-options='{"widget": "image" }'/>
-      </td>
-      <td>
-        <strong t-field="product.name"/>
-        <div class="text-muted">
-          <div t-field="product.description_sale"/>
-          <div class="js_attributes"></div>
-        </div>
-      </td>
-      <td>
-        <t t-if="product.lst_price != product.price">
-        <span class="text-danger" style="text-decoration: line-through;"
-          t-field="product.lst_price"
-          t-field-options='{
-             "widget": "monetary",
-             "display_currency": "website.pricelist_id.currency_id"
-         }'/><br/>
-        </t>
-        <span class="oe_price"
-          t-field="product.price"
-          t-field-options='{
-             "widget": "monetary",
-             "display_currency": "website.pricelist_id.currency_id"
-         }'/>
-      </td>
-      <td>
-        <div class="input-group">
-            <span class="input-group-addon">
-                <a t-attf-href="#" class="mb8 js_add_cart_json">
-                    <i class="fa fa-minus"></i>
-                </a>
-            </span>
-            <input type="text" class="js_quantity form-control" data-min="1" name="add_qty" value="1"/>
-            <span class="input-group-addon">
-                <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
-                    <i class="fa fa-plus"></i>
-                </a>
-            </span>
-        </div>
-      </td>
-    </tr>
-    <tr t-if="optional_product_ids"><td colspan="4"><h4>Select Your Options</h4></td></tr>
   </xpath>
 </template>
 
@@ -878,7 +876,7 @@
           </colgroup>
           <thead>
               <tr>
-                  <th colspan="4">Suggested products</th>
+                  <th colspan="4">Suggested products:</th>
               </tr>
           </thead>
           <tbody>
@@ -1088,17 +1086,17 @@
               <h3 class="page-header mt16">Your Order <small><a href="/shop/cart"><span class="fa fa-arrow-right"/> change</a></small></h3>
               <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
               <div class="row">
-                  <div class="col-sm-6 text-right">Subtotal:</div>
+                  <div class="col-sm-6 text-right">Subtotal: </div>
                   <div class="col-sm-6"><span t-field="website_sale_order.amount_untaxed" t-field-options='{
                       "widget": "monetary",
                       "display_currency": "website.pricelist_id.currency_id"
                   }'/></div>
-                  <div class="col-sm-6 text-right">Taxes:</div>
+                  <div class="col-sm-6 text-right">Taxes: </div>
                   <div class="col-sm-6"><span t-field="website_sale_order.amount_tax" t-field-options='{
                       "widget": "monetary",
                       "display_currency": "website.pricelist_id.currency_id"
                   }'/></div>
-                  <div class="col-sm-6 text-right"><h4>Total To Pay:</h4></div>
+                  <div class="col-sm-6 text-right"><h4>Total To Pay: </h4></div>
                   <div class="col-sm-6"><h4><span t-field="website_sale_order.amount_total" t-field-options='{
                       "widget": "monetary",
                       "display_currency": "website.pricelist_id.currency_id"
@@ -1296,7 +1294,7 @@
     <table class='pull-right mb16' id="cart_total" t-if="website_sale_order">
         <thead>
             <tr width="100" style="border-top: 1px solid #000" id="order_total">
-                <th><h3>Total: </h3></th>
+                <th><h3>Total:&amp; </h3></th>
                 <th class="text-right">
                   <h3><span t-field="website_sale_order.amount_total" t-field-options='{
                       "widget": "monetary",
