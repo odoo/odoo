@@ -678,6 +678,14 @@ class product_template(osv.osv):
         if not context or "create_product_product" not in context:
             self.create_variant_ids(cr, uid, [product_template_id], context=context)
         self._set_standard_price(cr, uid, product_template_id, vals.get('standard_price', 0.0), context=context)
+        # write related to display product product information if is_product_variant
+        related_vals = {}
+        if 'ean13' in vals:
+            related_vals['ean13'] = vals['ean13']
+        if 'default_code' in vals:
+            related_vals['default_code'] = vals['default_code']
+        self.write(cr,uid,product_template_id,related_vals,context=context)
+        
         return product_template_id
 
     def write(self, cr, uid, ids, vals, context=None):
