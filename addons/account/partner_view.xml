@@ -6,7 +6,7 @@
             <field name="name">account.fiscal.position.form</field>
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
-                <form string="Fiscal Position" version="7.0">
+                <form string="Fiscal Position">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -105,7 +105,7 @@
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page name="sales_purchases" position="after" version="7.0">
+                <page name="sales_purchases" position="after">
                 <page string="Accounting" col="4" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice">
                     <group>
                         <group>

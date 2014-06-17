@@ -26,7 +26,7 @@
             <field name="name">mrp.property.group.form</field>
             <field name="model">mrp.property.group</field>
             <field name="arch" type="xml">
-                <form string="Properties categories" version="7.0">
+                <form string="Properties categories">
                     <label for="name"/>
                     <field name="name"/>
                     <label for="description"/>
@@ -78,7 +78,7 @@
             <field name="name">mrp.property.form</field>
             <field name="model">mrp.property</field>
             <field name="arch" type="xml">
-                <form string="Properties" version="7.0">
+                <form string="Properties">
                     <group col="4">
                         <field colspan="4" name="name"/>
                         <field name="group_id"/>
@@ -98,7 +98,7 @@
                     <field name="name" string="Name"/>
                     <field name="composition"/>
                     <field name="group_id" />
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Property Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                </search>
@@ -165,7 +165,7 @@
             <field name="name">mrp.workcenter.form</field>
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
-                <form string="Work Center" version="7.0">
+                <form string="Work Center">
                     <group col="4">
                         <group>
                             <field name="name"/>
@@ -247,7 +247,7 @@
             <field name="name">mrp.routing.workcenter.form</field>
             <field name="model">mrp.routing.workcenter</field>
             <field name="arch" type="xml">
-                <form string="Routing Work Centers" version="7.0">
+                <form string="Routing Work Centers">
                     <group col="4">
                         <field colspan="4" name="name"/>
                         <field name="sequence"/>
@@ -266,7 +266,7 @@
             <field name="name">mrp.routing.form</field>
             <field name="model">mrp.routing</field>
             <field name="arch" type="xml">
-                <form string="Routing" version="7.0">
+                <form string="Routing">
                     <group col="4">
                         <group>
                             <field name="name"/>
@@ -344,7 +344,7 @@
             <field name="name">mrp.bom.form</field>
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
-                <form string="Bill of Material" version="7.0">
+                <form string="Bill of Material">
                     <group>
                         <group>
                             <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
@@ -572,13 +572,12 @@
             </field>
         </record>
         
-        <record id="product_supply_method_produce" model="ir.actions.act_window">
+        <record id="product_template_action" model="ir.actions.act_window">
             <field name="name">Products</field>
-            <field name="res_model">product.product</field>
+            <field name="res_model">product.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{}</field>
-            <field name="search_view_id" ref="product.product_search_form_view"/>
         </record>
         <!-- BOM menus -->
 
@@ -589,7 +588,7 @@
             sequence="10"/>
        <menuitem name="Products" 
             id="menu_mrp_product_form" 
-            action="product_supply_method_produce"
+            action="product_template_action"
             parent="menu_mrp_bom"/>
         <menuitem
             action="mrp_bom_form_action2"
@@ -676,7 +675,7 @@
             <field name="name">mrp.production.form</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <form string="Manufacturing Orders" version="7.0">
+                <form string="Manufacturing Orders">
                 <header>
                     <button name="button_confirm" states="draft" string="Confirm Production" class="oe_highlight"/>
                     <button name="%(act_mrp_product_produce)d" states="ready,in_production" string="Produce" type="action" class="oe_highlight"/>
@@ -793,7 +792,7 @@
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"/>
                             <field name="workcenter_lines">
-                                <form string="Production Work Centers" version="7.0">
+                                <form string="Production Work Centers">
                                     <group col="4">
                                         <field colspan="4" name="name"/>
                                         <field name="workcenter_id"/>
@@ -950,7 +949,7 @@
             <field name="name">mrp.production.product.line.form</field>
             <field name="model">mrp.production.product.line</field>
             <field name="arch" type="xml">
-                <form string="Scheduled Products" version="7.0">
+                <form string="Scheduled Products">
                     <group col="4">
                         <field name="name"/>
                         <field name="product_id"/>

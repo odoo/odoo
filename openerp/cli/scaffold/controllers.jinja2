@@ -3,7 +3,7 @@ from openerp import http
 
 class {{ controller }}(http.Controller):
     @http.route('/{{ module }}/{{ controller }}', auth='public', website=True)
-    def index(self):
+    def index(self, **kw):
         return "Hello, world!"
 {% if has_model %}
     @http.route('/{{ module }}/{{ controller }}/<model("{{ module }}.{{ controller }}"):{{ controller }}>'], type='http', auth='public', website=True)

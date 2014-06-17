@@ -5,7 +5,7 @@
         <record id="ir_cron_view" model="ir.ui.view">
             <field name="model">ir.cron</field>
             <field name="arch" type="xml">
-                <form string="Scheduled Actions" version="7.0">
+                <form string="Scheduled Actions">
                    <sheet>
                     <group col="4">
                         <field name="name"/>
@@ -70,7 +70,7 @@
                     <field name="user_id"/>
                     <field name="nextcall"/>
                     <field name="active"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Execution" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'nextcall'}" />

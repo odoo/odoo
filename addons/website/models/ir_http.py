@@ -93,8 +93,7 @@ class ir_http(orm.AbstractModel):
         return self._dispatch()
 
     def _postprocess_args(self, arguments, rule):
-        if not getattr(request, 'website_enabled', False):
-            return super(ir_http, self)._postprocess_args(arguments, rule)
+        super(ir_http, self)._postprocess_args(arguments, rule)
 
         for arg, val in arguments.items():
             # Replace uid placeholder by the current request.uid
@@ -106,7 +105,7 @@ class ir_http(orm.AbstractModel):
         except Exception:
             return self._handle_exception(werkzeug.exceptions.NotFound())
 
-        if request.httprequest.method in ('GET', 'HEAD'):
+        if getattr(request, 'website_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
             generated_path = werkzeug.url_unquote_plus(path)
             current_path = werkzeug.url_unquote_plus(request.httprequest.path)
             if generated_path != current_path:

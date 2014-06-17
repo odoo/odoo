@@ -134,9 +134,7 @@
                     </h3>
                     <ul class="list-inline mb0">
                         <li t-if="track.speaker_ids" class="text-muted fa fa-user">
-                            <t t-foreach="track.speaker_ids" t-as="speaker">
-                                <t t-esc="speaker.name"/>, 
-                            </t>
+                            <t t-esc="', '.join([speaker.name for speaker in track.speaker_ids])"></t>
                         </li>
                         <li class="text-muted fa fa-calendar"> <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/></li>
                         <li class="text-muted fa fa-map-marker" t-if="track.location_id">

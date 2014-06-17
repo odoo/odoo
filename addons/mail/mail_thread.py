@@ -1318,14 +1318,6 @@ class mail_thread(osv.AbstractModel):
     # Note specific
     #------------------------------------------------------
 
-    def log(self, cr, uid, id, message, secondary=False, context=None):
-        _logger.warning("log() is deprecated. As this module inherit from "\
-                        "mail.thread, the message will be managed by this "\
-                        "module instead of by the res.log mechanism. Please "\
-                        "use mail_thread.message_post() instead of the "\
-                        "now deprecated res.log.")
-        self.message_post(cr, uid, [id], message, context=context)
-
     def _message_add_suggested_recipient(self, cr, uid, result, obj, partner=None, email=None, reason='', context=None):
         """ Called by message_get_suggested_recipients, to add a suggested
             recipient in the result dictionary. The form is :
@@ -1707,7 +1699,7 @@ class mail_thread(osv.AbstractModel):
             ], context=context)
         return fol_obj.unlink(cr, SUPERUSER_ID, fol_ids, context=context)
 
-    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
+    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=None, context=None):
         """ Returns the list of relational fields linking to res.users that should
             trigger an auto subscribe. The default list checks for the fields
             - called 'user_id'
@@ -1718,6 +1710,8 @@ class mail_thread(osv.AbstractModel):
             Override this method if a custom behavior is needed about fields
             that automatically subscribe users.
         """
+        if auto_follow_fields is None:
+            auto_follow_fields = ['user_id']
         user_field_lst = []
         for name, column_info in self._all_columns.items():
             if name in auto_follow_fields and name in updated_fields and getattr(column_info.column, 'track_visibility', False) and column_info.column._obj == 'res.users':

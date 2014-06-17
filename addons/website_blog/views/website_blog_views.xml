@@ -18,7 +18,7 @@
             <field name="name">blog.blog.form</field>
             <field name="model">blog.blog</field>
             <field name="arch" type="xml">
-                <form string="Blog" version="7.0">
+                <form string="Blog">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -52,7 +52,7 @@
             <field name="name">blog.post.form</field>
             <field name="model">blog.post</field>
             <field name="arch" type="xml">
-                <form string="Blog Post" version="7.0">
+                <form string="Blog Post">
                     <sheet>
                         <h1><field name="name" placeholder="Name"/></h1>
                         <field name="tag_ids" widget="many2many_tags"/>
@@ -86,7 +86,7 @@
                     <field name="name" string="Content" filter_domain="['|', ('name','ilike',self), ('content','ilike',self)]"/>
                     <field name="write_uid"/>
                     <field name="blog_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Blog" domain="[]" context="{'group_by': 'blog_id'}"/>
                         <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
                         <filter string="Last Contributor" domain="[]" context="{'group_by': 'write_uid'}"/>
@@ -135,7 +135,7 @@
             <field name="name">blog.post.history.form</field>
             <field name="model">blog.post.history</field>
             <field name="arch" type="xml">
-                <form string="Blog Post History" version="7.0">
+                <form string="Blog Post History">
                     <label for="post_id" class="oe_edit_only"/>
                     <h1><field name="post_id" select="1" /></h1>
                     <label for="create_date" class="oe_edit_only"/>

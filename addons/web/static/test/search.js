@@ -173,7 +173,9 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
     };
 
     var dataset = new instance.web.DataSet(null, 'dummy.model');
-    var view = new instance.web.SearchView(null, dataset, false, defaults);
+    var mock_parent = {getParent: function () {return null;}};
+
+    var view = new instance.web.SearchView(mock_parent, dataset, false, defaults);
     var self = this;
     view.on('invalid_search', self, function () {
         ok(false, JSON.stringify([].slice(arguments)));
@@ -1071,10 +1073,10 @@ openerp.testing.section('search.filters', {
         return view.appendTo($fix)
             .done(function () {
                 var $fs = $fix.find('.oe_searchview_filters ul');
-                // 3 filters, 1 filtergroup, 1 custom filters widget,
-                // 1 advanced and 1 Filters widget
-                equal(view.inputs.length, 7,
-                      'view should have 7 inputs total');
+                // 3 filters, 1 filtergroup, 1 custom report widget,
+                // 1 Filters, 1 SaveFilter widget, and 1 advanced 
+                equal(view.drawer.inputs.length, 8,
+                      'view should have 8 inputs total');
                 equal($fs.children().length, 3,
                       "drawer should have a filter group with 3 filters");
                 equal(_.str.strip($fs.children().eq(0).text()), "Foo1",
@@ -1159,14 +1161,15 @@ openerp.testing.section('search.groupby', {
         return view.appendTo($fix)
         .done(function () {
             // 3 filters, 1 filtergroup group, 1 custom filter, 1 advanced, 1 Filters
-            equal(view.inputs.length, 7,
-                  'should have 7 inputs total');
-            var group = _.find(view.inputs, function (f) {
+            // and 1 SaveFilter widget
+            equal(view.drawer.inputs.length, 8,
+                  'should have 8 inputs total');
+            var group = _.find(view.drawer.inputs, function (f) {
                 return f instanceof instance.web.search.GroupbyGroup;
             });
             ok(group, "should have a GroupbyGroup input");
-            ok(group.getParent() === view,
-                "group's parent should be view");
+            ok(group.getParent() === view.drawer,
+                "group's parent should be the drawer");
 
             group.toggle(group.filters[0]);
             group.toggle(group.filters[2]);
@@ -1208,9 +1211,10 @@ openerp.testing.section('search.groupby', {
         return view.appendTo($fix)
         .done(function () {
             // 3 filters, 3 filtergroups, 1 custom filter, 1 advanced, 1 Filters
-            equal(view.inputs.length, 9, "should have 9 inputs total");
+            // and 1 SaveFilter widget
+            equal(view.drawer.inputs.length, 10, "should have 10 inputs total");
 
-            var groups = _.filter(view.inputs, function (f) {
+            var groups = _.filter(view.drawer.inputs, function (f) {
                 return f instanceof instance.web.search.GroupbyGroup;
             });
             equal(groups.length, 3, "should have 3 GroupbyGroups");
@@ -1242,10 +1246,10 @@ openerp.testing.section('search.filters.saved', {
 
         return view.appendTo($fix)
             .done(function () {
-                var $row = $fix.find('.oe_searchview_custom li:first').click();
+                var $span = $fix.find('.oe_searchview_custom_list span:first').click();
 
-                ok($row.hasClass('oe_selected'), "should check/select the filter's row");
-                ok($row.hasClass("oe_searchview_custom_private"),
+                ok($span.hasClass('badge'), "should check/select the filter's row");
+                ok($span.hasClass("oe_searchview_custom_private"),
                     "should have private filter note/class");
                 equal(view.query.length, 1, "should have only one facet");
                 var values = view.query.at(0).values;
@@ -1268,7 +1272,7 @@ openerp.testing.section('search.filters.saved', {
                 var $row = $fix.find('.oe_searchview_custom li:first').click();
 
                 view.query.remove(view.query.at(0));
-                ok(!$row.hasClass('oe_selected'),
+                ok(!$row.hasClass('badge'),
                     "should not be checked anymore");
             });
     });
@@ -1280,7 +1284,7 @@ openerp.testing.section('search.filters.saved', {
 
         return view.appendTo($fix)
             .done(function () {
-                var $row = $fix.find('.oe_searchview_custom li:first').click();
+                var $row = $fix.find('.oe_searchview_custom_list span:first').click();
                 equal(view.query.length, 1, "should have one facet");
                 $row.click();
                 equal(view.query.length, 0, "should have removed facet");
@@ -1296,13 +1300,13 @@ openerp.testing.section('search.filters.saved', {
         });
         return view.appendTo($fix)
             .done(function () {
-                $fix.find('.oe_searchview_custom li:eq(0)').click();
+                $fix.find('.oe_searchview_custom_list span:eq(0)').click();
                 equal(view.query.length, 1, "should have one facet");
                 deepEqual(
                     view.query.at(0).get('field').get_context(),
                     {'private': 1},
                     "should have selected first filter");
-                $fix.find('.oe_searchview_custom li:eq(1)').click();
+                $fix.find('.oe_searchview_custom_list span:eq(1)').click();
                 equal(view.query.length, 1, "should have one facet");
                 deepEqual(
                     view.query.at(0).get('field').get_context(),
@@ -1325,10 +1329,10 @@ openerp.testing.section('search.filters.saved', {
         });
         return view.appendTo($fix)
         .then(function () {
-            $fix.find('.oe_searchview_custom input#oe_searchview_custom_input')
+            $fix.find('.oe_searchview_savefilter input#oe_searchview_custom_input')
                     .val("filter name")
                 .end()
-                .find('.oe_searchview_custom button').click();
+                .find('.oe_searchview_savefilter button').click();
             return done.promise();
         });
     });
@@ -1529,10 +1533,10 @@ openerp.testing.section('search.invisible', {
         ].join(''));
         return view.appendTo($fix)
         .then(function () {
-            strictEqual($fix.find('.oe_searchview_filters h3').length,
+            strictEqual($fix.find('.oe_searchview_filters dt').length,
                         1,
                         "should only display one group");
-            strictEqual($fix.find('.oe_searchview_filters h3').text(),
+            strictEqual($fix.find('.oe_searchview_filters dt').text(),
                         'w Visibles',
                         "should only display the Visibles group (and its icon char)");
 
@@ -1588,3 +1592,4 @@ openerp.testing.section('search.invisible', {
         });
     });
 });
+

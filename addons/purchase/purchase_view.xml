@@ -121,12 +121,10 @@
     <record id="product_normal_action_puchased" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">product.product</field>
+        <field name="res_model">product.template</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{"search_default_filter_to_purchase":1}</field>
-        <field name="view_id" ref="product.product_kanban_view"/>
-        <field name="search_view_id" ref="product.product_search_form_view"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to define a new product.
@@ -186,7 +184,7 @@
             <field name="name">purchase.order.form</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order" version="7.0">
+                <form string="Purchase Order">
                 <header>
                     <button name="bid_received" states="sent" string="Bid Received" class="oe_highlight"/>
                     <button name="wkf_send_rfq" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
@@ -315,7 +313,7 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -342,7 +340,7 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -422,7 +420,7 @@
             <field name="name">purchase.order.line.form</field>
             <field name="model">purchase.order.line</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order Line" version="7.0">
+                <form string="Purchase Order Line">
                     <sheet>
                         <group>
                             <group>
@@ -479,7 +477,7 @@
             <field name="model">purchase.order.line</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Purchase Order Line" version="7.0" create="false">
+                <form string="Purchase Order Line" create="false">
                     <sheet>
                         <label for="order_id" class="oe_edit_only"/>
                         <h1>
@@ -526,7 +524,7 @@
                     <field name="product_id"/>
                     <field name="partner_id" string="Supplier" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <filter name="hide_cancelled" string="Hide cancelled lines" domain="[('state', '!=', 'cancel')]"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="groupby_supplier" string="Supplier" icon="terp-partner" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter name="groupby_product" string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>

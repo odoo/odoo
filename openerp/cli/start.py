@@ -48,14 +48,15 @@ class Start(Command):
 
         if not args.db_name:
             args.db_name = db_name or project_path.split(os.path.sep)[-1]
-            # TODO: forbid some database names ? eg template1, ...
-            try:
-                _create_empty_database(args.db_name)
-            except DatabaseExists, e:
-                pass
-            except Exception, e:
-                die("Could not create database `%s`. (%s)" % (args.db_name, e))
             cmdargs.extend(('-d', args.db_name))
+
+        # TODO: forbid some database names ? eg template1, ...
+        try:
+            _create_empty_database(args.db_name)
+        except DatabaseExists, e:
+            pass
+        except Exception, e:
+            die("Could not create database `%s`. (%s)" % (args.db_name, e))
 
         if '--db-filter' not in cmdargs:
             cmdargs.append('--db-filter=^%s$' % args.db_name)

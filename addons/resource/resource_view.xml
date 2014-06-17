@@ -14,7 +14,7 @@
                    <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
                    <field name="user_id" string="User"/>
                    <field name="company_id" groups="base.group_multi_company"/>
-                   <group expand="0" string="Group By...">
+                   <group expand="0" string="Group By">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -45,7 +45,7 @@
                     <field name="resource_id" string="Resource"/>
                     <field name="company_id" string="Company" groups="base.group_multi_company"/>
                     <field name="calendar_id" string="Working Period"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Leave Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Leave by Month"/>
@@ -58,7 +58,7 @@
             <field name="name">resource.calendar.form</field>
             <field name="model">resource.calendar</field>
             <field name="arch" type="xml">
-                <form string="Working Time" version="7.0">
+                <form string="Working Time">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -116,7 +116,7 @@
             <field name="name">resource.calendar.attendance.form</field>
             <field name="model">resource.calendar.attendance</field>
             <field name="arch" type="xml">
-                <form string="Working Time" version="7.0">
+                <form string="Working Time">
                     <group>
                         <field name="name"/>
                         <field name="date_from"/>
@@ -162,7 +162,7 @@
             <field name="name">resource.resource.form</field>
             <field name="model">resource.resource</field>
             <field name="arch" type="xml">
-                <form string="Resource" version="7.0">
+                <form string="Resource">
                    <group>
                       <group>
                         <field name="name"/>
@@ -208,7 +208,7 @@
             <field name="name">resource.calendar.leaves.form</field>
             <field name="model">resource.calendar.leaves</field>
             <field name="arch" type="xml">
-                <form string="Leave Detail" version="7.0">
+                <form string="Leave Detail">
                     <group>
                         <group>
                             <field name="resource_id" on_change="onchange_resource(resource_id)"/>

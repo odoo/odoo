@@ -59,7 +59,7 @@
         <field name="name">CRM - Phone Call Form</field>
         <field name="model">crm.phonecall</field>
         <field name="arch" type="xml">
-            <form string="Phone Call" version="7.0">
+            <form string="Phone Call">
                 <header>
                     <field name="state" nolabel="1" widget="statusbar" clickable="True"/>
                 </header>
@@ -186,7 +186,7 @@
                <field name="opportunity_id"/>
                <field name="section_id" string="Sales Team"
                         groups="base.group_multi_salesteams"/>
-               <group expand="0" string="Group By...">
+               <group expand="0" string="Group By">
                    <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                    <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                    <filter string="Creation" icon="terp-go-month" help="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>

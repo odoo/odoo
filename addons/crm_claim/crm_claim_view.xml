@@ -47,10 +47,12 @@
             <field name="model">crm.claim.stage</field>
             <field name="arch" type="xml">
                 <form string="Claim Stage">
-                    <field name="name"/>
-                    <field name="case_default"/>
-                    <field name="sequence"/>
-                    <field name="fold"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="case_default"/>
+                        <field name="sequence"/>
+                        <field name="fold"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -96,7 +98,7 @@
             <field name="name">CRM - Claims Form</field>
             <field name="model">crm.claim</field>
             <field name="arch" type="xml">
-                <form string="Claim" version="7.0">
+                <form string="Claim">
                 <header>
                     <field name="stage_id" widget="statusbar" clickable="True"/>
                 </header>
@@ -151,7 +153,7 @@
                                 <group colspan="2" col="2">
                                     <separator colspan="2" string="Resolution Actions"/>
                                     <field name="type_action"/>
-                                    <field name="resolution" colspan="2" nolabel="1"/>
+                                    <field name="resolution" colspan="2" nolabel="1" placeholder="Action Description..."/>
                                 </group>
                             </page>
                         </notebook>
@@ -191,7 +193,7 @@
                     <filter string="Unassigned Claims" icon="terp-personal-" domain="[('user_id','=', False)]" help="Unassigned Claims" />
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Partner" icon="terp-partner" domain="[]" help="Partner" context="{'group_by':'partner_id'}"/>
                         <filter string="Responsible" icon="terp-personal" domain="[]" help="Responsible User" context="{'group_by':'user_id'}"/>
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>

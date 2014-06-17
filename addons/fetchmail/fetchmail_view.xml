@@ -22,7 +22,7 @@
             <field name="name">fetchmail.server.form</field>
             <field name="model">fetchmail.server</field>
             <field name="arch" type="xml">
-                <form string="Incoming Mail Server" version="7.0">
+                <form string="Incoming Mail Server">
                     <header attrs="{'invisible' : [('type', '=', 'local')]}">
                         <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft"/>
                         <button string="Fetch Now" type="object" name="fetch_mail" states="done"/>

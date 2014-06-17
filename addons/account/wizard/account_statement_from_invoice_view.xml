@@ -5,7 +5,7 @@
             <field name="name">account.statement.from.invoice.lines.form</field>
             <field name="model">account.statement.from.invoice.lines</field>
             <field name="arch" type="xml">
-                <form string="Import Entries" version="7.0">
+                <form string="Import Entries">
                     <separator string="Payable and Receivables"/>
                     <field height="300" width="700" name="line_ids" domain="[('account_id.type','in',['receivable','payable']),('reconcile_id','=',False), ('reconcile_partial_id','=',False), ('state', '=', 'valid')]"/>
                     <footer>

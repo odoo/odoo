@@ -27,7 +27,7 @@
             <field name="name">CRM - Helpdesk Support Form</field>
             <field name="model">crm.helpdesk</field>
             <field name="arch" type="xml">
-                <form string="Helpdesk Support" version="7.0">
+                <form string="Helpdesk Support">
                 <header>
                     <button name="case_escalate" string="Escalate" type="object" 
                             states="open,draft,pending"/>
@@ -143,7 +143,7 @@
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="user_id"/>
                     <field name="section_id" string="Sales Team" groups="base.group_multi_salesteams"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Partner" icon="terp-partner" domain="[]" help="Partner" context="{'group_by':'partner_id'}" />
                         <filter string="Responsible" icon="terp-personal" domain="[]" help="Responsible User" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+" domain="[]" help="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
