@@ -293,13 +293,24 @@ class account_coda_import(osv.osv_memory):
                     line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
                     partner_id = None
                     structured_com = ""
+                    bank_account_id = False
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
                         structured_com = line['communication']
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
                         ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
-                        if ids and len(ids) > 0:
-                            partner = self.pool.get('res.partner.bank').browse(cr, uid, ids[0], context=context).partner_id
-                            partner_id = partner.id
+                        if ids:
+                            bank_account_id = ids[0]
+                            partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
+                        else:
+                            #create the bank account, not linked to any partner. The reconciliation will link the partner manually
+                            #chosen at the bank statement final confirmation time.
+                            try:
+                                type_model, type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'bank_normal')
+                                type_id = self.pool.get('res.partner.bank.type').browse(cr, uid, type_id, context=context)
+                                bank_code = type_id.code
+                            except ValueError:
+                                bank_code = 'bank'
+                            bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, {'acc_number': str(line['counterpartyNumber']), 'state': bank_code}, context=context)
                     if 'communication' in line and line['communication'] != '':
                         note.append(_('Communication') + ': ' + line['communication'])
                     data = {
@@ -311,7 +322,7 @@ class account_coda_import(osv.osv_memory):
                         'statement_id': statement['id'],
                         'ref': structured_com,
                         'sequence': line['sequence'],
-                        'coda_account_number': line['counterpartyNumber'],
+                        'bank_account_id': bank_account_id,
                     }
                     self.pool.get('account.bank.statement.line').create(cr, uid, data, context=context)
             if statement['coda_note'] != '':

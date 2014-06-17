@@ -329,6 +329,7 @@ class account_bank_statement(osv.osv):
                 move_ids.append(st_line.journal_entry_id.id)
             self.pool.get('account.move').post(cr, uid, move_ids, context=context)
             self.message_post(cr, uid, [st.id], body=_('Statement %s confirmed, journal items were created.') % (st.name,), context=context)
+        self.link_bank_to_partner(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -428,6 +429,12 @@ class account_bank_statement(osv.osv):
         bsl_obj = self.pool.get('account.bank.statement.line')
         return bsl_obj.search_count(cr, uid, [('statement_id', '=', id), ('journal_entry_id', '!=', False)], context=context)
 
+    def link_bank_to_partner(self, cr, uid, ids, context=None):
+        for statement in self.browse(cr, uid, ids, context=context):
+            for st_line in statement.line_ids:
+                if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
+                    self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
+
 class account_bank_statement_line(osv.osv):
 
     def get_data_for_reconciliations(self, cr, uid, ids, context=None):
@@ -504,7 +511,6 @@ class account_bank_statement_line(osv.osv):
         st_line = self.browse(cr, uid, id, context=context)
         company_currency = st_line.journal_id.company_id.currency_id.id
         statement_currency = st_line.journal_id.currency.id or company_currency
-
         # either use the unsigned debit/credit fields or the signed amount_currency field
         sign = 1
         if statement_currency == company_currency:
@@ -535,7 +541,7 @@ class account_bank_statement_line(osv.osv):
         # get_move_lines_counterparts inverts debit and credit
         amount_field = 'debit' if amount_field == 'credit' else 'credit'
         for line in mv_lines:
-            if total + line[amount_field] <= st_line.amount:
+            if total + line[amount_field] <= abs(st_line.amount):
                 ret.append(line)
                 total += line[amount_field]
             if total >= st_line.amount:
