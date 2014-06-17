@@ -497,11 +497,11 @@
             this.$('#website-top-edit').hide();
             this.$('#website-top-view').show();
 
+            var $edit_button = this.$('button[data-action=edit]')
+                    .prop('disabled', website.no_editor);
             if (website.no_editor) {
                 var help_text = $(document.documentElement).data('editable-no-editor');
-                this.$('button[data-action=edit]')
-                    .prop('disabled', website.no_editor)
-                    .parent()
+                $edit_button.parent()
                     // help must be set on form above button because it does
                     // not appear on disabled button
                     .attr('title', help_text);
