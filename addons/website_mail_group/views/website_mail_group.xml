@@ -45,7 +45,7 @@
                 </div>
                 <div class="col-md-2">
                     <i class='fa fa-user'/> <t t-esc="len(group.message_follower_ids)"/> participants<br />
-                    <i class='fa fa-envelope-o'/> <t t-esc="len(group.message_ids)"/> messages
+                    <i class='fa fa-envelope-o'/> <t t-raw="group_data[group.id]['monthly_message_nbr']"/> messages / month
                 </div>
                 <div class="col-md-3">
                     <t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>
