@@ -105,7 +105,10 @@ class ir_http(osv.AbstractModel):
         try:
             auth_method = self._authenticate(func.routing["auth"])
         except Exception, e:
-            return self._handle_exception(e)
+            # force a Forbidden exception with the original traceback
+            return self._handle_exception(
+                convert_exception_to(
+                    werkzeug.exceptions.Forbidden))
 
         processing = self._postprocess_args(arguments)
         if processing:
