@@ -49,7 +49,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         # TODO: can't we just put auth=public, ... in web client ?
         return super(Website, self).web_login(*args, **kw)
 
-    @http.route('/page/<path:page>', type='http', auth="public", website=True)
+    @http.route('/page/<page:page>', type='http', auth="public", website=True)
     def page(self, page, **opt):
         values = {
             'path': page,
