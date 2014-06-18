@@ -2,28 +2,6 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
-
-    <t t-name="website.editorbar.menu.mobile_preview">
-        <li><a data-action="show-mobile-preview" href="#"><span title="Mobile preview"><i class="fa fa-mobile"/></span></a></li>
-    </t>
-    <t t-name="website.editorbar.menu.customize">
-        <li class="dropdown js_hide_on_translate">
-            <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-cog"></i></a>
-            <ul class="dropdown-menu" role="menu" id="customize-menu">
-                <!-- filled in JS -->
-            </ul>
-        </li>
-    </t>
-    <t t-name="website.editorbar.menu.help">
-        <li class="dropdown js_hide_on_translate">
-            <a id="help-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-question-circle"></i></a>
-            <ul class="dropdown-menu" role="menu">
-                <li class="dropdown-header">HELP &amp; TUTORIALS</li>
-                <!-- filled in JS -->
-            </ul>
-        </li>
-    </t>
-
     <t t-name="website.mobile_preview">
         <div class="modal fade oe_mobile_preview" tabindex="-1" role="dialog">
             <div class="modal-dialog">
@@ -99,5 +77,4 @@
             </div>
         </div>
     </t>
-
 </templates>

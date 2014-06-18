@@ -25,28 +25,6 @@ if (typeof QWeb2 !== "undefined") {
     website.add_template_file('/website/static/src/xml/website.tour.xml');
 }
 
-if (website.EditorBarHelp) {
-    website.EditorBarHelp.include({
-        tours: [],
-        load_menu: function () {
-            var self = this;
-            _.each(T.tours, function (tour) {
-                if (tour.mode === "test") {
-                    return;
-                }
-                var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
-                $menuItem.click(function () {
-                    T.reset();
-                    T.run(tour.id);
-                });
-                self.$('ul').append($menuItem);
-            });
-            return this._super();
-        }
-    });
-}
-
-
 /////////////////////////////////////////////////
 
 
@@ -527,8 +505,21 @@ var T = website.Tour = {
     }
 };
 
-//$(document).ready(T.running);
 website.ready().then(T.running);
 
+website.ready().done(function() {
+    var self = this;
+    _.each(T.tours, function (tour) {
+        if (tour.mode === "test") {
+            return;
+        }
+        var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
+        $menuItem.click(function () {
+            T.reset();
+            T.run(tour.id);
+        });
+        $('#help-menu').append($menuItem);
+    });
+});
 
-}());
+})();

@@ -4,13 +4,12 @@
     var website = openerp.website;
     website.contentMenu = {};
     website.add_template_file('/website/static/src/xml/website.contentMenu.xml');
+    var _t = openerp._t;
+    website.is_editable_button = true;
+
 
     website.EditorBarContent = openerp.Widget.extend({
-        template: 'website.editorbar.menu.content',
-        events: {
-            'click a[data-action="edit-structure"]': 'editStructure',
-        },
-        editStructure: function () {
+        edit_menu: function () {
             var self = this;
             var context = website.get_context();
             openerp.jsonRpc('/web/dataset/call_kw', 'call', {
@@ -25,6 +24,32 @@
                 return result;
             });
         },
+        new_page: function() {
+            website.prompt({
+                id: "editor_new_page",
+                window_title: _t("New Page"),
+                input: _t("Page Title"),
+                init: function () {
+                    var $group = this.$dialog.find("div.form-group");
+                    $group.removeClass("mb0");
+
+                    var $add = $(
+                        '<div class="form-group mb0">'+
+                            '<label class="col-sm-offset-3 col-sm-9 text-left">'+
+                            '    <input type="checkbox" checked="checked" required="required"/> '+
+                            '</label>'+
+                        '</div>');
+                    $add.find('label').append(_t("Add page in menu"));
+                    $group.after($add);
+                }
+            }).then(function (val, field, $dialog) {
+                if (val) {
+                    var url = '/website/add/' + encodeURIComponent(val);
+                    if ($dialog.find('input[type="checkbox"]').is(':checked')) url +="?add_menu=1";
+                    document.location = url;
+                }
+            });
+        }
     });
 
     website.contentMenu.EditMenuDialog = website.editor.Dialog.extend({
@@ -191,5 +216,32 @@
             this._super.apply(this, arguments);
         },
     });
+
+    website.ready().done(function() {
+        var self = this;
+        var content = new website.EditorBarContent()
+        $('a[data-action="edit-structure').on('click', this, function() {
+            content.edit_menu();
+        });
+        $('a[data-action="new_page').on('click', this, function() {
+            content.new_page();
+        });
+    });
+
+
+// TODO sle: FIXME
+// edit: function () {
+//     this.on('rte:ready', this, function () {
+//         $('a:has(span[data-oe-model="website.menu"])').tooltip({
+//             title: _t('Save this page and use the top "Content" menu to edit the menu.'),
+//             placement: "bottom",
+//             trigger: "hover",
+//             show: 50,
+//             hide: 100,
+//             container: 'body'
+//         });
+//     });
+//     return this._super();
+// },
 
 })();

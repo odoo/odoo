@@ -1,19 +1,10 @@
 <templates id="template" xml:space="preserve">
-    <t t-name="website.editorbar.edit.not_edit_mode">
-        <li class="active" style="padding-right:30px;"><a href="/">Website</a></li>
-        <ul class="nav navbar-nav navbar-right" id="website-top-view">
-            <li>
-                <button type="button" data-action="edit" class="btn btn-primary hidden btn-xs">Edit</button>
-            </li>
-        </ul>
-    </t>
-
     <t t-name="website.editorbar">
         <div id="website-top-navbar" class="navbar navbar-inverse navbar-fixed-top" style="display: none;">
             <div class="navbar-header" id="website-top-edit">
-                <ul class="nav navbar-nav js_editor_placeholder">
+                <ul class="nav navbar-nav js_editor_placeholder pull-right">
                 </ul>
-                <form class="navbar-form text-muted pull-right">
+                <form class="navbar-form text-muted">
                     <button type="button" data-action="save"
                             class="btn btn-primary btn-xs">Save</button>
                     or

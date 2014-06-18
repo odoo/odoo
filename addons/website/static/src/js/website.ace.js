@@ -1,21 +1,15 @@
 (function () {
     'use strict';
 
-    var hash = "#advanced-view-editor";
-
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.ace.xml');
+    var hash = "#advanced-view-editor";
 
-    website.EditorBarCustomize.include({
-        events: _.extend({}, website.EditorBarCustomize.prototype.events, {
-            'click a[data-action=ace]': 'launchAce',
-        }),
+    website.Ace = openerp.Widget.extend({
         start: function () {
             this._super();
             this.globalEditor = null;
-            if (window.location.hash.indexOf(hash) >= 0) {
-                this.launchAce();
-            }
+            this.launchAce();
         },
         launchAce: function (e) {
             if (e) {
@@ -362,6 +356,13 @@
             window.location.hash = "";
             this.$el.removeClass('oe_ace_open').addClass('oe_ace_closed');
         },
+    });
+
+    website.ready().done(function() {
+        var ace = new website.Ace();
+        $('a[data-action=ace]').on('click', this, function() {
+            ace.launchAce();
+        });
     });
 
 })();
