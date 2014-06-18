@@ -590,6 +590,8 @@ class account_bank_statement_line(osv.osv):
         if excluded_ids:
             domain.append(('id', 'not in', excluded_ids))
         if filter_str:
+            if not st_line.partner_id:
+                domain += [ '|', ('partner_id.name', 'ilike', filter_str)]
             domain += ['|', ('move_id.name', 'ilike', filter_str), ('move_id.ref', 'ilike', filter_str)]
         line_ids = mv_line_pool.search(cr, uid, domain, offset=offset, limit=limit, order="date_maturity asc, id asc", context=context)
         return self.make_counter_part_lines(cr, uid, st_line, line_ids, count=count, context=context)
