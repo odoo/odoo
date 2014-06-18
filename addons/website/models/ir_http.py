@@ -63,7 +63,7 @@ class ir_http(orm.AbstractModel):
                 except ImportError:
                     self.geo_ip_resolver = False
             if self.geo_ip_resolver:
-                record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr)
+                record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
 
         if request.website_enabled:
