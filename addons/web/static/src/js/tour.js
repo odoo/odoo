@@ -368,7 +368,7 @@ var Tour = {
                 if (state.wait > 10) {
                     Tour.error(state.step, "Tour '"+state.id+"' undefined");
                 }
-                Tour.saveState(state.id, state.mode, state.step_id, state.number, state.wait+1);
+                Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
                 console.log("Tour '"+state.id+"' wait for running (tour undefined)");
                 setTimeout(Tour.running, state.mode === "test" ? Tour.defaultDelay : Tour.retryRunningDelay);
             }
