@@ -85,7 +85,7 @@ class sale_order(osv.Model):
             values['name'] = line.name
         else:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            values['name'] = product.description_sale
+            values['name'] = product.description_sale or product.name
 
         values['product_id'] = product_id
         values['order_id'] = order_id
