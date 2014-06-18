@@ -11,10 +11,10 @@
     website.EditorBarContent = openerp.Widget.extend({
         start: function() {
             var self = this;
-            $('a[data-action="edit-structure"').on('click', this, function() {
+            $('a[data-action="edit-structure"]').on('click', this, function() {
                 self.edit_menu();
             });
-            $('a[data-action="new_page"').on('click', this, function() {
+            $('a[data-action="new_page"]').on('click', this, function() {
                 self.new_page();
             });
             return this._super();
