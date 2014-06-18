@@ -125,7 +125,7 @@ class product_pricelist(osv.osv):
                        FROM ((
                                 SELECT pr.id, pr.name
                                 FROM product_pricelist pr JOIN
-                                     res_currency cur ON 
+                                     res_currency cur ON
                                          (pr.currency_id = cur.id)
                                 WHERE pr.name || ' (' || cur.name || ')' = %(name)s
                             )
@@ -138,7 +138,7 @@ class product_pricelist(osv.osv):
                                         tr.name = 'product.pricelist,name' AND
                                         tr.lang = %(lang)s
                                      ) JOIN
-                                     res_currency cur ON 
+                                     res_currency cur ON
                                          (pr.currency_id = cur.id)
                                 WHERE tr.value || ' (' || cur.name || ')' = %(name)s
                             )
@@ -154,7 +154,6 @@ class product_pricelist(osv.osv):
                 return self.name_get(cr, uid, ids, context)
         return super(product_pricelist, self).name_search(
             cr, uid, name, args, operator=operator, context=context, limit=limit)
-
 
     def _get_currency(self, cr, uid, ctx):
         comp = self.pool.get('res.users').browse(cr, uid, uid).company_id
@@ -173,9 +172,8 @@ class product_pricelist(osv.osv):
 
     def price_rule_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
         """multi products 'price_get'.
-           @param ids:
-           @param products_by_qty:
-           @param partner:
+           @param ids: list of IDs of product.pricelist objects
+           @param products_by_qty_by_partner: an iterable of iterables like: [ (product, qty, partner_id), ... ]
            @param context: {
              'date': Date of the pricelist (%Y-%m-%d),}
            @return: a dict of dict with product_id as key and a dict 'price by pricelist' as value
@@ -185,34 +183,198 @@ class product_pricelist(osv.osv):
         results = {}
         for pricelist in self.browse(cr, uid, ids, context=context):
             subres = self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context)
-            for product_id,price in subres.items():
+            for product_id, price in subres.items():
                 results.setdefault(product_id, {})
                 results[product_id][pricelist.id] = price
         return results
 
-    def _price_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
-        return dict((key, price[0]) for key, price in self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context).items())
+    def _get_pricelist_version(self, cr, uid, pricelist, date, context=None):
+        """ Returns pricelist version for specified pricelist and date objects
 
-    def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
-        context = context or {}
-        date = context.get('date') or time.strftime('%Y-%m-%d')
-
-        products = map(lambda x: x[0], products_by_qty_by_partner)
-        currency_obj = self.pool.get('res.currency')
-        product_obj = self.pool.get('product.template')
-        product_uom_obj = self.pool.get('product.uom')
-        price_type_obj = self.pool.get('product.price.type')
-
-        if not products:
-            return {}
-
+            @param pricelist: browse_record instance of 'product.pricelist' object
+            @param date: string that represents date (in format '%Y-%m-%d') to get version for
+            @return: browse_record of 'product.pricelist.version'
+        """
         version = False
         for v in pricelist.version_id:
             if ((v.date_start is False) or (v.date_start <= date)) and ((v.date_end is False) or (v.date_end >= date)):
                 version = v
                 break
         if not version:
-            raise osv.except_osv(_('Warning!'), _("At least one pricelist has no active version !\nPlease create or activate one."))
+            raise osv.except_osv(_('Warning!'),
+                                 _("At least one pricelist has no active version !\nPlease create or activate one."))
+
+        return version
+
+    def _get_base_price_pricelist(self, cr, uid, rule, product, qty, partner_id, context=None):
+        """ returns base price for rule based on pricelist.
+
+            @param rule: browse_record of pricelist_item.
+            @param product: browse_record of product to get base price for
+            @param qty: quantity of product to get base price for
+            @param partner_id: ID of partner to calculate price for
+            @param context: optional context dictionary
+            @return: tuple(price, uom_price_already_computed)
+        """
+        currency_obj = self.pool.get('res.currency')
+        if rule.base == -1 and rule.base_pricelist_id:
+            price_tmp = self._price_get_multi(cr, uid,
+                                              rule.base_pricelist_id,
+                                              [(product, qty, False)],
+                                              context=context)[product.id]
+            ptype_src = rule.base_pricelist_id.currency_id.id
+            uom_price_already_computed = True
+            price = currency_obj.compute(cr, uid,
+                                         ptype_src,
+                                         rule.price_version_id.pricelist_id.currency_id.id,
+                                         price_tmp,
+                                         round=False,
+                                         context=context)
+            return price, uom_price_already_computed
+        return False, False
+
+    def _get_base_price_partner(self, cr, uid, rule, product, qty, partner_id, context=None):
+        """ returns base price for rule base on partner's section pricelist.
+
+            @param rule: browse_record of pricelist_item.
+            @param product: browse_record of product to get base price for
+            @param qty: quantity of product to get base price for
+            @param partner_id: ID of partner to calculate price for
+            @param context: optional context dictionary
+            @return: tuple(price, uom_price_already_computed)
+        """
+        product_uom_obj = self.pool.get('product.uom')
+
+        context = {} if context is None else context
+
+        uom_price_already_computed = False
+        price = False
+
+        if rule.base == -2:
+            seller = False
+            for seller_id in product.seller_ids:
+                if (not partner_id) or (seller_id.name.id != partner_id):
+                    continue
+                seller = seller_id
+                # TODO: may be add ``break`` here?
+            if not seller and product.seller_ids:
+                seller = product.seller_ids[0]
+
+            if seller:
+                qty_in_seller_uom = qty
+                from_uom = context.get('uom') or product.uom_id.id
+                seller_uom = seller.product_uom and seller.product_uom.id or False
+                if seller_uom and from_uom and from_uom != seller_uom:
+                    qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty, to_uom_id=seller_uom)
+                else:
+                    uom_price_already_computed = True
+                for line in seller.pricelist_ids:
+                    if line.min_quantity <= qty_in_seller_uom:
+                        # TODO: CHECK: Here may be situation where
+                        # there will be more than one assignment to
+                        # price variable. Is it correct behavior?
+                        price = line.price
+                return price, uom_price_already_computed
+        return price, uom_price_already_computed
+
+    def _get_base_price_field(self, cr, uid, rule, product, qty, partner_id, context=None):
+        """ returns base price for rule based some product field.
+
+            @param rule: browse_record of pricelist_item.
+            @param product: browse_record of product to get base price for
+            @param qty: quantity of product to get base price for
+            @param partner_id: ID of partner to calculate price for
+            @param context: optional context dictionary
+            @return: tuple(price, uom_price_already_computed)
+        """
+        product_obj = self.pool.get('product.template')
+        currency_obj = self.pool.get('res.currency')
+        price_type_obj = self.pool.get('product.price.type')
+
+        #if rule.base not in price_types:
+            #price_types[rule.base] = price_type_obj.browse(cr, uid, int(rule.base))
+        #price_type = price_types[rule.base]
+        price_type = price_type_obj.browse(cr, uid, int(rule.base), context=context)
+        uom_price_already_computed = True
+        product_price = product_obj._price_get(cr, uid,
+                                               [product],
+                                               price_type.field,
+                                               context=context)[product.id]
+        price = currency_obj.compute(cr, uid,
+                                     price_type.currency_id.id,
+                                     rule.price_version_id.pricelist_id.currency_id.id,
+                                     product_price,
+                                     round=False,
+                                     context=context)
+
+        return price, uom_price_already_computed
+
+    def _get_base_price(self, cr, uid, rule, product, qty, partner_id, context=None):
+        """ returns base price for rule. rule could be based on another pricelist,
+            or on partner's section pricelist or on some field in product model.
+
+            @param rule: browse_record of pricelist_item.
+            @param product: browse_record of product to get base price for
+            @param qty: quantity of product to get base price for
+            @param partner_id: ID of partner to calculate price for
+            @param context: optional context dictionary
+            @return: tuple(price, uom_price_already_computed)
+        """
+        if not rule:
+            return False, False
+
+        if rule.base == -1:                     # another price list should be used to calculate base price.
+            return self._get_base_price_pricelist(cr, uid, rule, product, qty, partner_id, context=context)
+        if rule.base == -2:                     # base price is partenr's section pricelist.
+            return self._get_base_price_partner(cr, uid, rule, product, qty, partner_id, context=context)
+        return self._get_base_price_field(cr, uid, rule, product, qty, partner_id, context=context)
+
+    def _apply_rule(self, cr, uid, product, base_price, rule, context=None):
+        """ Applies rule on base price. (calculates new price applying all modificators from rule).
+
+            @param product:      browse_record of product.product to apply rule for
+            @param base_price:   float. Base price to apply rule to.
+            @param rule:         browse_record of pricelist_item.
+            @param context:      optional context dictionary.
+            @return:             calculated price.
+        """
+        context = {} if context is None else context
+        price = base_price
+        price_limit = price
+
+        price = price * (1.0 + (rule.price_discount or 0.0))
+        if rule.price_round:
+            price = tools.float_round(price, precision_rounding=rule.price_round)
+
+        if context.get('uom'):
+            # compute price_surcharge based on reference uom
+            product_uom_obj = self.pool.get('product.uom')
+            factor = product_uom_obj.browse(cr, uid, context.get('uom'), context=context).factor
+        else:
+            factor = 1.0
+        price += (rule.price_surcharge or 0.0) / factor
+
+        if rule.price_min_margin:
+            price = max(price, price_limit + rule.price_min_margin)
+        if rule.price_max_margin:
+            price = min(price, price_limit + rule.price_max_margin)
+        return price
+
+    def _price_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
+        return dict((key, price[0]) for key, price in self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context).items())
+
+    def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
+        context = {} if context is None else context
+        date = context.get('date') or time.strftime('%Y-%m-%d')
+
+        product_uom_obj = self.pool.get('product.uom')
+
+        products = [x[0] for x in products_by_qty_by_partner]
+        if not products:
+            return {}
+
+        version = self._get_pricelist_version(cr, uid, pricelist, date, context=context)
+
         categ_ids = {}
         for p in products:
             categ = p.categ_id
@@ -230,20 +392,20 @@ class product_pricelist(osv.osv):
             prod_tmpl_ids = [product.product_tmpl_id.id for product in products]
 
         # Load all rules
-        cr.execute(
-            'SELECT i.id '
-            'FROM product_pricelist_item AS i '
-            'WHERE (product_tmpl_id IS NULL OR product_tmpl_id = any(%s)) '
-                'AND (product_id IS NULL OR (product_id = any(%s))) '
-                'AND ((categ_id IS NULL) OR (categ_id = any(%s))) '
-                'AND (price_version_id = %s) '
-            'ORDER BY sequence, min_quantity desc',
-            (prod_tmpl_ids, prod_ids, categ_ids, version.id))
-        
-        item_ids = [x[0] for x in cr.fetchall()]
-        items = self.pool.get('product.pricelist.item').browse(cr, uid, item_ids, context=context)
+        cr.execute("""
+            SELECT ARRAY(
+                SELECT i.id
+                FROM product_pricelist_item AS i
+                WHERE (product_tmpl_id IS NULL OR product_tmpl_id = any(%s))
+                    AND (product_id IS NULL OR (product_id = any(%s)))
+                    AND ((categ_id IS NULL) OR (categ_id = any(%s)))
+                    AND (price_version_id = %s)
+                ORDER BY sequence, min_quantity desc
+            )
+        """, (prod_tmpl_ids, prod_ids, categ_ids, version.id))
 
-        price_types = {}
+        item_ids = cr.fetchone()[0]
+        items = self.pool.get('product.pricelist.item').browse(cr, uid, item_ids, context=context)
 
         results = {}
         for product, qty, partner in products_by_qty_by_partner:
@@ -253,13 +415,16 @@ class product_pricelist(osv.osv):
             rule_id = False
             for rule in items:
                 if 'uom' in context and product.uom_id and context['uom'] != product.uom_id.id:
-                    try:
-                        qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, context['uom'], qty, product.uom_id.id, dict(context.items() + [('raise-exception', False)]))
-                    except except_orm:
-                        qty_in_product_uom = qty
+                    # New context instance should be passed to this method to
+                    # avoid outer context modifications
+                    qty_in_product_uom = product_uom_obj._compute_qty(cr, uid,
+                                                                      context['uom'],
+                                                                      qty,
+                                                                      product.uom_id.id,
+                                                                      context=dict(context.items() + [('raise-exception', False)]))
                 else:
                     qty_in_product_uom = qty
-                if rule.min_quantity and qty_in_product_uom<rule.min_quantity:
+                if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
                     continue
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
@@ -281,65 +446,13 @@ class product_pricelist(osv.osv):
                     if not cat:
                         continue
 
-                if rule.base == -1:
-                    if rule.base_pricelist_id:
-                        price_tmp = self._price_get_multi(cr, uid,
-                                rule.base_pricelist_id, [(product,
-                                qty, False)], context=context)[product.id]
-                        ptype_src = rule.base_pricelist_id.currency_id.id
-                        uom_price_already_computed = True
-                        price = currency_obj.compute(cr, uid,
-                                ptype_src, pricelist.currency_id.id,
-                                price_tmp, round=False,
-                                context=context)
-                elif rule.base == -2:
-                    seller = False
-                    for seller_id in product.seller_ids:
-                        if (not partner) or (seller_id.name.id != partner):
-                            continue
-                        seller = seller_id
-                    if not seller and product.seller_ids:
-                        seller = product.seller_ids[0]
-                    if seller:
-                        qty_in_seller_uom = qty
-                        from_uom = context.get('uom') or product.uom_id.id
-                        seller_uom = seller.product_uom and seller.product_uom.id or False
-                        if seller_uom and from_uom and from_uom != seller_uom:
-                            qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty, to_uom_id=seller_uom)
-                        else:
-                            uom_price_already_computed = True
-                        for line in seller.pricelist_ids:
-                            if line.min_quantity <= qty_in_seller_uom:
-                                price = line.price
-
-                else:
-                    if rule.base not in price_types:
-                        price_types[rule.base] = price_type_obj.browse(cr, uid, int(rule.base))
-                    price_type = price_types[rule.base]
-
-                    uom_price_already_computed = True
-                    price = currency_obj.compute(cr, uid,
-                            price_type.currency_id.id, pricelist.currency_id.id,
-                            product_obj._price_get(cr, uid, [product],
-                            price_type.field, context=context)[product.id], round=False, context=context)
+                price, uom_price_already_computed = self._get_base_price(cr, uid, rule, product, qty, partner, context=context)
 
                 if price is not False:
-                    price_limit = price
-                    price = price * (1.0+(rule.price_discount or 0.0))
-                    if rule.price_round:
-                        price = tools.float_round(price, precision_rounding=rule.price_round)
-                    if context.get('uom'):
-                        # compute price_surcharge based on reference uom
-                        factor = product_uom_obj.browse(cr, uid, context.get('uom'), context=context).factor
-                    else:
-                        factor = 1.0
-                    price += (rule.price_surcharge or 0.0) / factor
-                    if rule.price_min_margin:
-                        price = max(price, price_limit+rule.price_min_margin)
-                    if rule.price_max_margin:
-                        price = min(price, price_limit+rule.price_max_margin)
+                    price = self._apply_rule(cr, uid, product, price, rule, context=context)
                     rule_id = rule.id
-                break
+                break  # TODO: May be better would be to continue searching for next rule,
+                       #       if current one cannot get price greater that 0
 
             if price:
                 if 'uom' in context and not uom_price_already_computed:
@@ -473,7 +586,8 @@ class product_pricelist_item(osv.osv):
               "Expressed in the default UoM of the product."
             ),
         'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),
-        'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="Base price for computation."),
+        'base': fields.selection(lambda self, *args, **kwargs: self._price_field_get(*args, **kwargs), 'Based on',
+                                 required=True, size=-1, help="Base price for computation."),
         'base_pricelist_id': fields.many2one('product.pricelist', 'Other Pricelist'),
 
         'price_surcharge': fields.float('Price Surcharge',

@@ -151,7 +151,7 @@ class product_uom(osv.osv):
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
 
-    def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False, round=True, rounding_method='UP'):
+    def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False, round=True, rounding_method='UP', context=None):
         if not from_uom_id or not qty or not to_uom_id:
             return qty
         uoms = self.browse(cr, uid, [from_uom_id, to_uom_id])
@@ -159,7 +159,7 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[0], uoms[-1]
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
-        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit, round=round, rounding_method=rounding_method)
+        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit, round=round, rounding_method=rounding_method, context=context)
 
     def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, round=True, rounding_method='UP', context=None):
         if context is None:
@@ -494,14 +494,14 @@ class product_template(osv.osv):
         'description_sale': fields.text('Sale Description',translate=True,
             help="A description of the Product that you want to communicate to your customers. "
                  "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),
-        'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),        
+        'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'price': fields.function(_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
-        'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'), 
-                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders.", 
+        'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'),
+                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders.",
                                           groups="base.group_user", string="Cost Price"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
@@ -526,7 +526,7 @@ class product_template(osv.osv):
         'image': fields.binary("Image",
             help="This field holds the image used as image for the product, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image", 
+            string="Medium-sized image", type="binary", multi="_get_image",
             store={
                 'product.template': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
@@ -750,7 +750,7 @@ class product_template(osv.osv):
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
         'list_price': 1,
         'standard_price': 0.0,
-        'sale_ok': 1,        
+        'sale_ok': 1,
         'uom_id': _get_uom_id,
         'uom_po_id': _get_uom_id,
         'uos_coeff': 1.0,
@@ -855,7 +855,7 @@ class product_product(osv.osv):
             value = product_uom_obj._compute_price(cr, uid,
                     context['uom'], value, uom.id)
         value =  value - product.price_extra
-        
+
         return product.write({'list_price': value})
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
