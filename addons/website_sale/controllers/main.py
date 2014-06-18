@@ -6,6 +6,14 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
+import logging
+_logger = logging.getLogger(__name__)
+
+try:
+    import GeoIP
+except ImportError:
+    GeoIP = None
+    _logger.warn("Please install GeoIP python module to use Ecommerce checkout localisation.")
 
 PPG = 20 # Products Per Page
 PPR = 4  # Products Per Row
@@ -354,12 +362,22 @@ class website_sale(http.Controller):
                 checkout.update(self.checkout_parse('shipping', data))
                 checkout["shipping_different"] = True
 
+        # Default search by user country
+        if GeoIP and not checkout.get('country_id'):
+            GI = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', 0)
+            country_code = GI.country_code_by_addr(request.httprequest.remote_addr)
+            if country_code:
+                country_ids = request.registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
+                if country_ids:
+                    checkout['country_id'] = country_ids[0]
+
         values = {
             'countries': countries,
             'states': states,
             'checkout': checkout,
             'shipping_different': checkout.get('shipping_different'),
             'error': {},
+            'has_check_vat': hasattr(registry['res.partner'], 'check_vat')
         }
         return values
 

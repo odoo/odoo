@@ -987,12 +987,12 @@
                       <label class="control-label" for="contact_name">Your Name</label>
                       <input type="text" name="name" class="form-control" t-att-value="checkout.get('name')"/>
                   </div>
+                  <div t-if="has_check_vat" class="clearfix"/>
                   <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="street2" style="font-weight: normal">Company Name</label>
                       <input type="text" name="street2" class="form-control" t-att-value="checkout.get('street2')"/>
                   </div>
-                  <div class="col-lg-6"> </div>
-                  <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6">
+                  <div t-if="has_check_vat" t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="vat" style="font-weight: normal">VAT Number</label>
                       <input type="text" name="vat" class="form-control" t-att-value="checkout.get('vat')"/>
                   </div>
@@ -1020,7 +1020,7 @@
                       <input type="text" name="zip" class="form-control" t-att-value="checkout.get('zip')"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name">Country</label>
+                      <label class="control-label" for="country_id">Country</label>
                       <select name="country_id" class="form-control">
                           <option value="">Country...</option>
                           <t t-foreach="countries or []" t-as="country">
@@ -1051,28 +1051,28 @@
                   <h3 class="oe_shipping col-lg-12 mt16">Shipping Information</h3>
 
                   <div t-attf-class="form-group #{error.get('shipping_name') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name">Name (Shipping)</label>
+                      <label class="control-label" for="shipping_name">Name (Shipping)</label>
                       <input type="text" name="shipping_name" class="form-control" t-att-value="checkout.get('shipping_name', '')"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_phone') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name">Phone</label>
+                      <label class="control-label" for="shipping_phone">Phone</label>
                       <input type="tel" name="shipping_phone" class="form-control" t-att-value="checkout.get('shipping_phone', '')"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_street') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name">Street</label>
+                      <label class="control-label" for="shipping_street">Street</label>
                       <input type="text" name="shipping_street" class="form-control" t-att-value="checkout.get('shipping_street', '')"/>
                   </div>
                   <div class="clearfix"/>
                   <div t-attf-class="form-group #{error.get('shipping_city') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name">City</label>
+                      <label class="control-label" for="shipping_city">City</label>
                       <input type="text" name="shipping_city" class="form-control" t-att-value="checkout.get('shipping_city', '')"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_zip') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name">Zip / Postal Code</label>
+                      <label class="control-label" for="shipping_zip">Zip / Postal Code</label>
                       <input type="text" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_country_id') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name">Country</label>
+                      <label class="control-label" for="shipping_country_id">Country</label>
                       <select name="shipping_country_id" class="form-control">
                           <option value="">Country...</option>
                           <t t-foreach="countries or []" t-as="country">
@@ -1081,7 +1081,7 @@
                       </select>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_state_id') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name" style="font-weight: normal">State / Province</label>
+                      <label class="control-label" for="shipping_state_id" style="font-weight: normal">State / Province</label>
                       <select name="shipping_state_id" class="form-control">
                           <option value="">State / Province...</option>
                           <t t-foreach="states or []" t-as="state">
