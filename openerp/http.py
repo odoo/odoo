@@ -460,10 +460,8 @@ class HttpRequest(WebRequest):
            be used as response."""
         try:
             return super(HttpRequest, self)._handle_exception(exception)
-        except Exception, e:
-            if isinstance(e, werkzeug.exceptions.HTTPException):
-                return e
-            raise
+        except werkzeug.exceptions.HTTPException, e:
+            return e
 
     def dispatch(self):
         # TODO: refactor this correctly. This is a quick fix for pos demo.
