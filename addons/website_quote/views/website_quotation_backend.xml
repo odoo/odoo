@@ -28,7 +28,7 @@
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
                     <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position)"/>
-                    <field name="validity_date"/>
+                    <field name="validity_date" attrs="{'invisible': [('template_id','=',False)]}"/>
                     <field name="website_description" invisible="1"/>
                 </xpath>
             </field>
