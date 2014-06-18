@@ -53,7 +53,7 @@ class price_type(osv.osv):
     _name = "product.price.type"
     _description = "Price Type"
     _columns = {
-        "name" : fields.char("Price Name", size=64, required=True, translate=True, help="Name of this kind of price."),
+        "name" : fields.char("Price Name", required=True, translate=True, help="Name of this kind of price."),
         "active" : fields.boolean("Active"),
         "field" : fields.selection(_price_field_get, "Product Field", size=32, required=True, help="Associated field in the product form."),
         "currency_id" : fields.many2one('res.currency', "Currency", required=True, help="The currency the field is expressed in."),
