@@ -253,6 +253,12 @@ class website_sale(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
+    @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
+    def pricelist(self, promo, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        request.website.sale_get_order(code=promo, context=context)
+        return request.redirect("/shop/cart")
+
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
