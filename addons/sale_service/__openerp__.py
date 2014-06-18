@@ -50,8 +50,8 @@ completed.
     'website': 'http://www.openerp.com',
     'images': ['images/product.jpeg', 'images/task_from_SO.jpeg'],
     'depends': ['project', 'procurement', 'sale', 'procurement_jit'],
-    'data': ['project_mrp_view.xml'], #'process/project_mrp_process.xml'
-    'demo': ['project_mrp_demo.xml'],
+    'data': ['views/sale_service_view.xml'],
+    'demo': ['demo/sale_service_demo.xml'],
     'test': ['test/project_task_procurement.yml'],
     'installable': True,
     'auto_install': False,

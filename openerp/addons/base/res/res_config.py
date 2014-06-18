@@ -221,10 +221,10 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
 
         _install_if = {
             ('sale','crm'): ['sale_crm'],
-            ('sale','project'): ['project_mrp'],
+            ('sale','project'): ['sale_service'],
         }
 
-    will install both ``sale_crm`` and ``project_mrp`` if all of
+    will install both ``sale_crm`` and ``sale_service`` if all of
     ``sale``, ``crm`` and ``project`` are selected for installation.
 
     Hook methods

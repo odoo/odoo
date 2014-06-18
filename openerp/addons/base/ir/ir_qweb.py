@@ -257,8 +257,13 @@ class QWeb(orm.AbstractModel):
                     uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
                     can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
                     if not can_see:
+                        if qwebcontext.get('editable') and not qwebcontext.get('editable_no_editor'):
+                            errmsg = _("Editor disabled because some content can not be seen by a user who does not belong to the groups %s")
+                            raise openerp.http.Retry(
+                                _("User does not belong to groups %s") % attribute_value, {
+                                    'editable_no_editor': errmsg % attribute_value
+                                })
                         return ''
-                    continue
 
                 if isinstance(attribute_value, unicode):
                     attribute_value = attribute_value.encode("utf8")
@@ -302,7 +307,7 @@ class QWeb(orm.AbstractModel):
             for current_node in element.childNodes:
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
-                except QWebException:
+                except (QWebException, openerp.http.Retry):
                     raise
                 except Exception:
                     template = qwebcontext.get('__template__')
