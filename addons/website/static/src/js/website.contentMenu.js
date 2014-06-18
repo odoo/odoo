@@ -9,7 +9,17 @@
 
 
     website.EditorBarContent = openerp.Widget.extend({
-        edit_menu: function () {
+        start: function() {
+            var self = this;
+            $('a[data-action="edit-structure').on('click', this, function() {
+                self.edit_menu();
+            });
+            $('a[data-action="new_page').on('click', this, function() {
+                self.new_page();
+            });
+            return this._super();
+        },
+        edit_menu: function() {
             var self = this;
             var context = website.get_context();
             openerp.jsonRpc('/web/dataset/call_kw', 'call', {
@@ -218,14 +228,8 @@
     });
 
     website.ready().done(function() {
-        var self = this;
         var content = new website.EditorBarContent()
-        $('a[data-action="edit-structure').on('click', this, function() {
-            content.edit_menu();
-        });
-        $('a[data-action="new_page').on('click', this, function() {
-            content.new_page();
-        });
+        content.start();
     });
 
 

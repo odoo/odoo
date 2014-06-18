@@ -3,29 +3,26 @@
 
     var website = openerp.website;
     var _t = openerp._t;
-    website.add_template_file('/website_sale/static/src/xml/website_sale.xml');
 
     website.EditorBarContent.include({
         start: function() {
-            website.is_editable_button = website.is_editable_button || !!$("#wrap.js_sale").size();
-            var res = this._super();
-            this.$(".dropdown:has(.oe_content_menu)").removeClass("hidden");
-            return res;
+            var self = this;
+            $('a[data-action="new_product').on('click', this, function() {
+                self.new_product();
+            });
+            return this._super();
         },
-        events: _.extend({}, website.EditorBarContent.prototype.events, {
-            'click a[data-action=new_product]': function (ev) {
-                ev.preventDefault();
-                website.prompt({
-                    id: "editor_new_product",
-                    window_title: _t("New Product"),
-                    input: "Product Name",
-                }).then(function (name) {
-                    website.form('/shop/add_product', 'POST', {
-                        name: name
-                    });
+        new_product: function() {
+            website.prompt({
+                id: "editor_new_product",
+                window_title: _t("New Product"),
+                input: "Product Name",
+            }).then(function (name) {
+                website.form('/shop/add_product', 'POST', {
+                    name: name
                 });
-            }
-        }),
+            });
+        },
     });
 
     function reload_enable_editor() {
