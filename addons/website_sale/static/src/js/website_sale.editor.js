@@ -7,7 +7,7 @@
     website.EditorBarContent.include({
         start: function() {
             var self = this;
-            $('a[data-action="new_product').on('click', this, function() {
+            $('a[data-action="new_product"').on('click', this, function() {
                 self.new_product();
             });
             return this._super();
