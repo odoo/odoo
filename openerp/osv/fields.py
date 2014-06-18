@@ -422,7 +422,7 @@ class datetime(_column):
             tz_name = registry.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
         if tz_name:
             try:
-                utc = pytz.timezone('UTC')
+                utc = pytz.utc
                 context_tz = pytz.timezone(tz_name)
                 utc_timestamp = utc.localize(timestamp, is_dst=False) # UTC = no DST
                 return utc_timestamp.astimezone(context_tz)
