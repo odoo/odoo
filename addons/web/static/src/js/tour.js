@@ -446,12 +446,14 @@ var Tour = {
 
         if (next) {
             setTimeout(function () {
+                if (Tour.getState()) {
                     Tour.waitNextStep();
-                    if (state.mode === "test") {
-                        setTimeout(function(){
-                            Tour.autoNextStep(state.tour, step);
-                        }, Tour.defaultDelay);
-                    }
+                }
+                if (state.mode === "test") {
+                    setTimeout(function(){
+                        Tour.autoNextStep(state.tour, step);
+                    }, Tour.defaultDelay);
+                }
             }, next.wait || 0);
         } else {
             setTimeout(function(){
