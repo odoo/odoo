@@ -823,7 +823,7 @@ class account_move_line(osv.osv):
             'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
         }, context=context)
         move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
-        return True
+        return r_id
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
         account_obj = self.pool.get('account.account')
