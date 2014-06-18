@@ -287,7 +287,6 @@ class im_chat_presence(osv.Model):
 
     def update(self, cr, uid, presence=True, context=None):
         """ register the poll, and change its im status if necessary. It also notify the Bus if the status has changed. """
-        cr.commit()
         presence_ids = self.search(cr, uid, [('user_id', '=', uid)], context=context)
         presences = self.browse(cr, uid, presence_ids, context=context)
         # set the default values
