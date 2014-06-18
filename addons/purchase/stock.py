@@ -79,9 +79,7 @@ class stock_move(osv.osv):
         if move.purchase_line_id:
             purchase_line = move.purchase_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
-            #res['account_analytic_id'] = purc_line.order_id.project_id and sale_line.order_id.project_id.id or False
             res['price_unit'] = purchase_line.price_unit
-            #res['discount'] = sale_line.discount
         return res
 
 class stock_picking(osv.osv):
