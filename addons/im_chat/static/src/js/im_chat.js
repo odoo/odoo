@@ -233,6 +233,7 @@
                 }
             });
             this.$(".oe_im_chatview_header_name").text(names.join(", "));
+            this.$(".oe_im_chatview_header_name").attr('title', names.join(", "));
             // update the fold state
             if(this.get("session").state){
                 if(this.get("session").state === 'closed'){
