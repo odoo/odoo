@@ -208,8 +208,6 @@ class WebRequest(object):
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
         self._failed = exception # prevent tx commit
-        if isinstance(exception, werkzeug.exceptions.HTTPException):
-            return exception
         raise
 
     def _call_function(self, *args, **kwargs):
@@ -455,6 +453,17 @@ class HttpRequest(WebRequest):
         params.update(self.httprequest.files.to_dict())
         params.pop('session_id', None)
         self.params = params
+
+    def _handle_exception(self, exception):
+        """Called within an except block to allow converting exceptions
+           to abitrary responses. Anything returned (except None) will
+           be used as response."""
+        try:
+            return super(HttpRequest, self)._handle_exception(exception)
+        except Exception, e:
+            if isinstance(e, werkzeug.exceptions.HTTPException):
+                return e
+            raise
 
     def dispatch(self):
         # TODO: refactor this correctly. This is a quick fix for pos demo.

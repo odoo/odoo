@@ -71,17 +71,23 @@ class ir_http(osv.AbstractModel):
             request.uid = request.session.uid
 
     def _authenticate(self, auth_method='user'):
-        if request.session.uid:
-            try:
-                request.session.check_security()
-                # what if error in security.check()
-                #   -> res_users.check()
-                #   -> res_users.check_credentials()
-            except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException):
-                # All other exceptions mean undetermined status (e.g. connection pool full),
-                # let them bubble up
-                request.session.logout()
-        getattr(self, "_auth_method_%s" % auth_method)()
+        try:
+            if request.session.uid:
+                try:
+                    request.session.check_security()
+                    # what if error in security.check()
+                    #   -> res_users.check()
+                    #   -> res_users.check_credentials()
+                except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException):
+                    # All other exceptions mean undetermined status (e.g. connection pool full),
+                    # let them bubble up
+                    request.session.logout()
+            getattr(self, "_auth_method_%s" % auth_method)()
+        except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException):
+            raise
+        except Exception:
+            _logger.exception("Exception during request Authentication.")
+            raise openerp.exceptions.AccessDenied()
         return auth_method
 
     def _handle_exception(self, exception):
@@ -99,11 +105,6 @@ class ir_http(osv.AbstractModel):
         try:
             auth_method = self._authenticate(func.routing["auth"])
         except Exception, e:
-            # Json requests have their own exception handler
-            # therefore we should not alter their exception's type
-            if func.routing.get('type') != 'json':
-                # for the rest, convert to a Forbidden exception keeping the original traceback
-                e = convert_exception_to(werkzeug.exceptions.Forbidden)
             return self._handle_exception(e)
 
         processing = self._postprocess_args(arguments)
