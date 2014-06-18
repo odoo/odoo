@@ -360,21 +360,69 @@ class product_pricelist(osv.osv):
             price = min(price, price_limit + rule.price_max_margin)
         return price
 
-    def _price_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
-        return dict((key, price[0]) for key, price in self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context).items())
+    def _check_rule(self, cr, uid, rule, product, qty, is_product_template, context=None):
+        """ Checks if rule is applicable for current product
 
-    def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
+            @param rule: browse_record of 'product.pricelist.item'
+            @param product: browse_record of 'product.product' or 'product.template'
+            @param qty: float quantity to check rule for
+            @param is_product_template: If True then 'product' is browse_record of
+                                        'product.template' model, else - 'product' is
+                                        browse_record of 'product.product' model
+            @return: True if rule can be applied to this product, and False of not
+        """
         context = {} if context is None else context
-        date = context.get('date') or time.strftime('%Y-%m-%d')
+        if 'uom' in context and product.uom_id and context['uom'] != product.uom_id.id:
+            product_uom_obj = self.pool.get('product.uom')
+            # New context instance should be passed to this method to
+            # avoid outer context modifications
+            qty_in_product_uom = product_uom_obj._compute_qty(cr, uid,
+                                                              context['uom'],
+                                                              qty,
+                                                              product.uom_id.id,
+                                                              context=dict(context.items() + [('raise-exception', False)]))
+        else:
+            qty_in_product_uom = qty
 
-        product_uom_obj = self.pool.get('product.uom')
+        if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
+            return False
 
-        products = [x[0] for x in products_by_qty_by_partner]
-        if not products:
-            return {}
+        if is_product_template:
+            if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
+                return False
+            if rule.product_id:
+                return False
+        else:
+            if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:
+                return False
+            if rule.product_id and product.id != rule.product_id.id:
+                return False
 
-        version = self._get_pricelist_version(cr, uid, pricelist, date, context=context)
+        if rule.categ_id:
+            cat = product.categ_id
+            while cat:
+                if cat.id == rule.categ_id.id:
+                    break
+                cat = cat.parent_id
+            if not cat:
+                return False
 
+        return True
+
+    def _get_price_rules(self, cr, uid, version, products, context=None):
+        """ Returns list of pricelist rules could be applied to get price for
+            specified products and flag that shows if specifed products are
+            instances of product.product model or product.template model
+
+            @param version: browse_record of product.pricelist.version
+            @param products: list of browse_recrods of product.product model
+                             list of browse_records of product.template model
+            @return: Tuple like (pricelist_items, is_product_template) where:
+                           pricelist_items is list of browse_records of product.pricelist.item
+                           and is_product_template - boolean that checked to True if
+                           passed list of products are product templates and False if
+                           passed list of products are preduct.product records.
+        """
         categ_ids = {}
         for p in products:
             categ = p.categ_id
@@ -406,6 +454,24 @@ class product_pricelist(osv.osv):
 
         item_ids = cr.fetchone()[0]
         items = self.pool.get('product.pricelist.item').browse(cr, uid, item_ids, context=context)
+        return items, is_product_template
+
+    def _price_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
+        return dict((key, price[0]) for key, price in self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context).items())
+
+    def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
+        context = {} if context is None else context
+        date = context.get('date') or time.strftime('%Y-%m-%d')
+
+        product_uom_obj = self.pool.get('product.uom')
+
+        products = [x[0] for x in products_by_qty_by_partner]
+        if not products:
+            return {}
+
+        version = self._get_pricelist_version(cr, uid, pricelist, date, context=context)
+
+        items, is_product_template = self._get_price_rules(cr, uid, version, products, context=context)
 
         results = {}
         for product, qty, partner in products_by_qty_by_partner:
@@ -414,37 +480,8 @@ class product_pricelist(osv.osv):
             price = False
             rule_id = False
             for rule in items:
-                if 'uom' in context and product.uom_id and context['uom'] != product.uom_id.id:
-                    # New context instance should be passed to this method to
-                    # avoid outer context modifications
-                    qty_in_product_uom = product_uom_obj._compute_qty(cr, uid,
-                                                                      context['uom'],
-                                                                      qty,
-                                                                      product.uom_id.id,
-                                                                      context=dict(context.items() + [('raise-exception', False)]))
-                else:
-                    qty_in_product_uom = qty
-                if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
+                if not self._check_rule(cr, uid, rule, product, qty, is_product_template, context=context):
                     continue
-                if is_product_template:
-                    if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
-                        continue
-                    if rule.product_id:
-                        continue
-                else:
-                    if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:
-                        continue
-                    if rule.product_id and product.id != rule.product_id.id:
-                        continue
-
-                if rule.categ_id:
-                    cat = product.categ_id
-                    while cat:
-                        if cat.id == rule.categ_id.id:
-                            break
-                        cat = cat.parent_id
-                    if not cat:
-                        continue
 
                 price, uom_price_already_computed = self._get_base_price(cr, uid, rule, product, qty, partner, context=context)
 
