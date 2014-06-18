@@ -73,7 +73,7 @@ var Tour = {
     run: function (tour_id, mode) {
         var tour = Tour.tours[tour_id];
         if (!tour) {
-            throw new Error("Can't run '"+tour_id+"' (tour undefined)");
+            Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
         }
         this.time = new Date().getTime();
         if (tour.path && !window.location.href.match(new RegExp("("+Tour.getLang()+")?"+tour.path+"#?$", "i"))) {
@@ -313,12 +313,12 @@ var Tour = {
     error: function (step, message) {
         var state = Tour.getState();
         message += '\n tour: ' + state.id
-            + '\n step: ' + step.id + ": '" + (step._title || step.title) + "'"
+            + (step ? '\n step: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
             + '\n href: ' + window.location.href
             + '\n referrer: ' + document.referrer
-            + '\n element: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
-            + '\n waitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
-            + '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size())
+            + (step ? '\n element: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) : '' )
+            + (step ? '\n waitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size()) : '' )
+            + (step ? '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' )
             + "\n localStorage: " + JSON.stringify(localStorage)
             + '\n\n' + $("body").html();
         Tour.reset();
@@ -343,7 +343,7 @@ var Tour = {
     },
     reset: function () {
         var state = Tour.getState();
-        if (state) {
+        if (state && state.tour) {
             for (var k in state.tour.steps) {
                 state.tour.steps[k].busy = false;
             }
@@ -366,9 +366,9 @@ var Tour = {
                 Tour.nextStep();
             } else {
                 if (state.wait > 10) {
-                    Tour.error(step, "Tour '"+state.id+"' undefined");
+                    Tour.error(state.step, "Tour '"+state.id+"' undefined");
                 }
-                Tour.saveState(state.id, state.mode, step.id, state.number, state.wait+1);
+                Tour.saveState(state.id, state.mode, state.step_id, state.number, state.wait+1);
                 console.log("Tour '"+state.id+"' wait for running (tour undefined)");
                 setTimeout(Tour.running, state.mode === "test" ? Tour.defaultDelay : Tour.retryRunningDelay);
             }
@@ -454,6 +454,9 @@ var Tour = {
                     }
             }, next.wait || 0);
         } else {
+            setTimeout(function(){
+                Tour.autoNextStep(state.tour, step);
+            }, Tour.defaultDelay);
             Tour.endTour();
         }
     },
