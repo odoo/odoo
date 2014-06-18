@@ -1,9 +1,6 @@
 (function () {
     'use strict';
-
-    var website = openerp.website;
-
-    website.Tour.register({
+    openerp.Tour.register({
         id:   'shop_customize',
         name: "Customize the page and search a product",
         path: '/shop',
@@ -37,7 +34,7 @@
         ]
     });
 
-    website.Tour.register({
+    openerp.Tour.register({
         id:   'shop_buy_product',
         name: "Try to buy products",
         path: '/shop',
