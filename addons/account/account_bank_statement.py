@@ -409,6 +409,10 @@ class account_bank_statement(osv.osv):
             'domain':[('statement_id','in',ids)],
             'context':ctx,
         }
+
+    def number_of_lines_reconciled(self, cr, uid, id, context=None):
+        bsl_obj = self.pool.get('account.bank.statement.line')
+        return bsl_obj.search_count(cr, uid, [('statement_id', '=', id), ('journal_entry_id', '!=', False)], context=context)
         
     def get_format_currency_js_function(self, cr, uid, id, context=None):
         """ Returns a string that can be used to instanciate a javascript function.
@@ -431,10 +435,6 @@ class account_bank_statement(osv.osv):
                 function += "if (currency_id === " + str(st_line_currency.id) + "){ " + return_str + " }"
                 done_currencies.append(st_line_currency.id)
         return function
-
-    def number_of_lines_reconciled(self, cr, uid, id, context=None):
-        bsl_obj = self.pool.get('account.bank.statement.line')
-        return bsl_obj.search_count(cr, uid, [('statement_id', '=', id), ('journal_entry_id', '!=', False)], context=context)
 
     def link_bank_to_partner(self, cr, uid, ids, context=None):
         for statement in self.browse(cr, uid, ids, context=context):
@@ -554,7 +554,7 @@ class account_bank_statement_line(osv.osv):
             if total + line[amount_field] <= abs(st_line.amount):
                 ret.append(line)
                 total += line[amount_field]
-            if total >= st_line.amount:
+            if total >= abs(st_line.amount):
                 break
         return ret
 
