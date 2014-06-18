@@ -468,7 +468,7 @@
                     }
                 );
             });
-            menu.on('click', 'a[data-action!=ace]', function (event) {
+            menu.on('click', 'a[data-view-id]', function (event) {
                 var view_id = $(event.currentTarget).data('view-id');
                 return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                     model: 'ir.ui.view',
