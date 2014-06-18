@@ -629,6 +629,16 @@ class stock_picking(osv.osv):
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
         return res
+    
+    def _get_stock_move_changes(self, cr, uid, ids, context=None):
+        '''Return the ids of pickings that should change, due to changes
+        in stock moves.'''
+        move_pool = self.pool['stock.move']
+        picking_ids = set()
+        for move_obj in move_pool.browse(cr, uid, ids, context=context):
+            if move_obj.picking_id:
+                picking_ids.add(move_obj.picking_id.id)
+        return list(picking_ids)
 
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
@@ -664,12 +674,31 @@ class stock_picking(osv.osv):
             * Transferred: has been processed, can't be modified or cancelled anymore\n
             * Cancelled: has been cancelled, can't be confirmed anymore"""
         ),
-        'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 store=True, type='datetime', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
+        'min_date': fields.function(
+            get_min_max_date,
+            fnct_inv=_set_minimum_date, multi='min_max_date',
+            store={
+                'stock.move': (
+                    _get_stock_move_changes,
+                    ['date_expected'], 10,
+                )
+            },
+            type='datetime', string='Scheduled Time', select=True,
+            help="Scheduled time for the shipment to be processed"
+        ),
         'date': fields.datetime('Creation Date', help="Creation date, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
-                 store=True, type='datetime', string='Max. Expected Date', select=2),
+        'max_date': fields.function(
+            get_min_max_date,
+            fnct_inv=_set_maximum_date, multi='min_max_date',
+            store={
+                'stock.move': (
+                    _get_stock_move_changes,
+                    ['date_expected'], 10,
+                )
+            },
+            type='datetime', string='Max. Expected Date', select=True
+        ),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),
         'auto_picking': fields.boolean('Auto-Picking', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
