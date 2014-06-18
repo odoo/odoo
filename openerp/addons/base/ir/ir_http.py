@@ -98,11 +98,13 @@ class ir_http(osv.AbstractModel):
         # check authentication level
         try:
             auth_method = self._authenticate(func.routing["auth"])
-        except Exception:
-            # force a Forbidden exception with the original traceback
-            return self._handle_exception(
-                convert_exception_to(
-                    werkzeug.exceptions.Forbidden))
+        except Exception, e:
+            # Json requests have their own exception handler
+            # therefore we should not alter their exception's type
+            if func.routing.get('type') != 'json':
+                # for the rest, convert to a Forbidden exception keeping the original traceback
+                e = convert_exception_to(werkzeug.exceptions.Forbidden)
+            return self._handle_exception(e)
 
         processing = self._postprocess_args(arguments)
         if processing:
