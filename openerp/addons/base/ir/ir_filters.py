@@ -36,7 +36,7 @@ class ir_filters(osv.osv):
         default.update({'name':_('%s (copy)') % name})
         return super(ir_filters, self).copy(cr, uid, id, default, context)
 
-    def get_filters(self, cr, uid, model):
+    def get_filters(self, cr, uid, model, action_id=None):
         """Obtain the list of filters available for the user on the given model.
 
         :return: list of :meth:`~osv.read`-like dicts containing the
@@ -45,7 +45,7 @@ class ir_filters(osv.osv):
         """
         # available filters: private filters (user_id=uid) and public filters (uid=NULL) 
         filter_ids = self.search(cr, uid,
-            [('model_id','=',model),('user_id','in',[uid, False])])
+            [('model_id','=',model),('user_id','in',[uid, False]),('action_id', '=', action_id)])
         my_filters = self.read(cr, uid, filter_ids,
             ['name', 'is_default', 'domain', 'context', 'user_id'])
         return my_filters
@@ -66,9 +66,11 @@ class ir_filters(osv.osv):
         :raises openerp.exceptions.Warning: if there is an existing default and
                                             we're not updating it
         """
+        action_id = vals.get('action_id', False)
         existing_default = self.search(cr, uid, [
             ('model_id', '=', vals['model_id']),
             ('user_id', '=', False),
+            ('action_id', '=', action_id),
             ('is_default', '=', True)], context=context)
 
         if not existing_default: return
@@ -83,7 +85,8 @@ class ir_filters(osv.osv):
 
     def create_or_replace(self, cr, uid, vals, context=None):
         lower_name = vals['name'].lower()
-        matching_filters = [f for f in self.get_filters(cr, uid, vals['model_id'])
+        action_id = vals.get('action_id', False)
+        matching_filters = [f for f in self.get_filters(cr, uid, vals['model_id'], action_id)
                                 if f['name'].lower() == lower_name
                                 # next line looks for matching user_ids (specific or global), i.e.
                                 # f.user_id is False and vals.user_id is False or missing,
@@ -95,6 +98,7 @@ class ir_filters(osv.osv):
                 act_ids = self.search(cr, uid, [
                         ('model_id', '=', vals['model_id']),
                         ('user_id', '=', vals['user_id']),
+                        ('action_id', '=', action_id),
                         ('is_default', '=', True),
                     ], context=context)
                 self.write(cr, uid, act_ids, {'is_default': False}, context=context)
@@ -133,7 +137,8 @@ class ir_filters(osv.osv):
         'domain': fields.text('Domain', required=True),
         'context': fields.text('Context', required=True),
         'model_id': fields.selection(_list_all_models, 'Model', required=True),
-        'is_default': fields.boolean('Default filter')
+        'is_default': fields.boolean('Default filter'),
+        'action_id': fields.many2one('ir.actions.actions', 'Action', ondelete='cascade', help="Default Action")
     }
     _defaults = {
         'domain': '[]',

@@ -1655,7 +1655,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         this.$el.on('click', 'h4', function () {
             self.$el.toggleClass('oe_opened');
         });
-        return this.model.call('get_filters', [this.view.model])
+        return this.model.call('get_filters', [this.view.model, this.get_action_id()])
             .then(this.proxy('set_filters'))
             .done(function () { self.is_ready.resolve(); })
             .fail(function () { self.is_ready.reject.apply(self.is_ready, arguments); });
@@ -1763,6 +1763,10 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
     set_filters: function (filters) {
         _(filters).map(_.bind(this.append_filter, this));
     },
+    get_action_id: function(){
+        return parseInt(openerp.webclient.menu.$secondary_menus.find('li.active a').attr('data-action-id') ||
+                $.bbq.getState('action'));
+    },
     save_current: function () {
         var self = this;
         var $name = this.$('input:first');
@@ -1794,7 +1798,8 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 model_id: self.view.model,
                 context: results.context,
                 domain: results.domain,
-                is_default: set_as_default
+                is_default: set_as_default,
+                action_id: this.get_action_id() 
             };
             // FIXME: current context?
             return self.model.call('create_or_replace', [filter]).done(function (id) {
