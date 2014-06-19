@@ -62,7 +62,6 @@ The Dashboard for the Sales Manager will include
     'depends': ['sales_team','account_voucher', 'procurement', 'report'],
     'data': [
         'wizard/sale_make_invoice_advance.xml',
-        'wizard/sale_line_invoice.xml',
         'wizard/sale_make_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',

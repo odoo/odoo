@@ -117,7 +117,7 @@
                             <field name="order_line">
                                 <form string="Sales Order Lines">
                                     <header groups="base.group_user">
-                                        <button name="%(action_view_sale_order_line_make_invoice)d" states="confirmed" string="Invoice" type="action" icon="terp-document-new"/>
+                                        <button name="%(action_sale_order_line_make_invoice)d" states="confirmed" string="Invoice" type="action" icon="terp-document-new"/>
                                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                                     </header>
                                     <group>
@@ -381,7 +381,7 @@
             <field name="arch" type="xml">
                 <form string="Sales Order Lines" create="false">
                     <header>
-                        <button name="%(action_view_sale_order_line_make_invoice)d" string="Create Invoice" type="action" attrs="{'invisible': ['|',('invoiced', '=', 1), ('state', 'not in', ('confirmed', 'draft'))]}" class="oe_highlight" groups="base.group_user"/>
+                        <button name="%(action_sale_order_line_make_invoice)d" string="Create Invoice" type="action" attrs="{'invisible': ['|',('invoiced', '=', 1), ('state', 'not in', ('confirmed', 'draft'))]}" class="oe_highlight" groups="base.group_user"/>
                         <button name="button_cancel" string="Cancel Line" type="object" states="confirmed,exception" groups="base.group_user"/>
                         <button name="button_done" string="Done" type="object"  attrs="{'invisible': ['|',('invoiced', '=', 0), ('state', 'not in', ('confirmed', 'exception'))]}" class="oe_highlight" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
@@ -446,9 +446,9 @@
                     <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]" name="sale_order_done" help="Sales order lines done"/>
                     <filter icon="terp-accessories-archiver" string="Shipped" domain="[('state','=','done')]" name="unshipped" help="Sales Order Lines that are in 'done' state"/>
                     <separator/>
-                    <filter icon="terp-dolar_ok!" string="Uninvoiced" name="uninvoiced" domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]" help="Sales Order Lines that are confirmed, done or in exception state and haven't yet been invoiced"/>
+                    <filter icon="terp-dolar_ok!" string="To Invoice" name="uninvoiced"  domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"  help="Sales Order Lines ready to be invoiced"/>
                     <separator/>
-                    <filter string="My Sales Order Lines" icon="terp-personal" domain="[('salesman_id','=',uid)]" help="My Sales Order Lines"/>
+                    <filter string="My Sales Order Lines" icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
                     <field name="order_id"/>
                     <field name="order_partner_id" operator="child_of"/>
                     <field name="product_id"/>
@@ -470,6 +470,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter"/>
             <field name="context">{"search_default_uninvoiced":1}</field>
+            <field name="domain">[('order_policy','=','manual'), ('state','=','confirmed')]</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">
               <p>
