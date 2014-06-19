@@ -761,16 +761,6 @@ instance.web.Menu =  instance.web.Widget.extend({
     menu_loaded: function() {
         var self = this;
         this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container')
-
-        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
-        instance.web.bus.on('resize', this, function() {
-            if (parseInt(self.$el.parent().css('width')) < 768 ) {
-                lazyreflow('all_outside');
-            } else {
-                lazyreflow();
-            }
-        });
-
         this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
@@ -778,14 +768,18 @@ instance.web.Menu =  instance.web.Widget.extend({
             self.open_menu(self.current_menu);
         }
         this.trigger('menu_loaded');
-        this.has_been_loaded.resolve();
 
-        // FIXME: duplicate
-        if (parseInt(self.$el.parent().css('width')) < 768 ) {
-            lazyreflow('all_outside');
-        } else {
-            lazyreflow();
-        }
+        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
+        instance.web.bus.on('resize', this, function() {
+            if (parseInt(self.$el.parent().css('width')) <= 768 ) {
+                lazyreflow('all_outside');
+            } else {
+                lazyreflow();
+            }
+        });
+        instance.web.bus.trigger('resize');
+
+        this.has_been_loaded.resolve();
     },
     do_load_needaction: function (menu_ids) {
         var self = this;
@@ -1362,8 +1356,9 @@ instance.web.WebClient = instance.web.Client.extend({
                         self.menu.open_action(data.action_id[0]);
                     } else {
                         var first_menu_id = self.menu.$el.find("a:first").data("menu");
-                        if(first_menu_id)
+                        if(first_menu_id) {
                             self.menu.menu_click(first_menu_id);
+                        }
                     }
                 });
             });
