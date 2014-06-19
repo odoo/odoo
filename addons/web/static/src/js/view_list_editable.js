@@ -254,7 +254,10 @@
                     }, options).then(function () {
                         $recordRow.addClass('oe_edition');
                         self.resize_fields();
-                        var focus_field = options && options.focus_field ? options.focus_field : (self.visible_columns.length ? self.visible_columns[0].name : undefined);
+                        var focus_field = options && options.focus_field ? options.focus_field : undefined;
+                        if (!focus_field){
+                            focus_field = _.find(self.editor.form.fields_order, function(field){ return fields[field] && fields[field].$el.is(':visible:has(input)'); });
+                        }
                         if (focus_field) fields[focus_field].$el.find('input').select();
                         return record.attributes;
                     });
