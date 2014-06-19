@@ -331,11 +331,11 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         'keydown .oe_searchview_input, .oe_searchview_facet': function (e) {
             switch(e.which) {
             case $.ui.keyCode.LEFT:
-                this.focusPreceding(this);
+                this.focusPreceding(e.target);
                 e.preventDefault();
                 break;
             case $.ui.keyCode.RIGHT:
-                this.focusFollowing(this);
+                this.focusFollowing(e.target);
                 e.preventDefault();
                 break;
             }
