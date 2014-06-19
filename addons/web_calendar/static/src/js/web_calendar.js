@@ -218,7 +218,12 @@ openerp.web_calendar = function(instance) {
                 this.info_fields.push(fv.arch.children[fld].attrs.name);
             }
 
-            return (new instance.web.Model(this.dataset.model))
+            var edit_check = new instance.web.Model(this.dataset.model)
+                .call("check_access_rights", ["write", false])
+                .then(function (write_right) {
+                    self.write_right = write_right;
+                });
+            var init = new instance.web.Model(this.dataset.model)
                 .call("check_access_rights", ["create", false])
                 .then(function (create_right) {
                     self.create_right = create_right;
@@ -228,6 +233,7 @@ openerp.web_calendar = function(instance) {
                         self.ready.resolve();
                     });
                 });
+            return $.when(edit_check, init);
         },
 
         get_fc_init_options: function () {
@@ -841,7 +847,11 @@ openerp.web_calendar = function(instance) {
             if (! this.open_popup_action) {
                 var index = this.dataset.get_id_index(id);
                 this.dataset.index = index;
-                this.do_switch_view('form', null, { mode: "edit" });
+                if (this.write_right) {
+                    this.do_switch_view('form', null, { mode: "edit" });
+                } else {
+                    this.do_switch_view('form', null, { mode: "view" });
+                }
             }
             else {
                 var pop = new instance.web.form.FormOpenPopup(this);

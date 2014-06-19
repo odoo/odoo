@@ -2632,6 +2632,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     type_of_date: "datetime",
     events: {
         'change .oe_datepicker_master': 'change_datetime',
+        'keypress .oe_datepicker_master': 'change_datetime',
     },
     init: function(parent) {
         this._super(parent);
@@ -2750,8 +2751,8 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     format_client: function(v) {
         return instance.web.format_value(v, {"widget": this.type_of_date});
     },
-    change_datetime: function() {
-        if (this.is_valid_()) {
+    change_datetime: function(e) {
+        if ((e.type !== "keypress" || e.which === 13) && this.is_valid_()) {
             this.set_value_from_ui_();
             this.trigger("datetime_changed");
         }
