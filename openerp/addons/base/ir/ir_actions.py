@@ -58,6 +58,13 @@ class actions(osv.osv):
         'usage': lambda *a: False,
     }
 
+    def unlink(self, cr, uid, ids, context=None):
+        """unlink ir.action.todo which are related to actions which will be deleted.
+           NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
+        todo_obj = self.pool.get('ir.actions.todo')
+        todo_ids = todo_obj.search(cr, uid, [('action_id', 'in', ids)], context=context)
+        todo_obj.unlink(cr, uid, todo_ids, context=context)
+        return super(actions, self).unlink(cr, uid, ids, context=context)
 
 class ir_actions_report_xml(osv.osv):
 
@@ -313,22 +320,24 @@ class ir_actions_act_window(osv.osv):
             ids = [ids]
         results = super(ir_actions_act_window, self).read(cr, uid, ids, fields=fields, context=context, load=load)
 
-        if not fields or 'help' in fields:
-            context = dict(context or {})
-            eval_dict = {
-                'active_model': context.get('active_model'),
-                'active_id': context.get('active_id'),
-                'active_ids': context.get('active_ids'),
-                'uid': uid,
-            }
-            for res in results:
-                model = res.get('res_model')
-                if model and self.pool.get(model):
-                    try:
-                        with tools.mute_logger("openerp.tools.safe_eval"):
-                            eval_context = eval(res['context'] or "{}", eval_dict) or {}
-                    except Exception:
-                        continue
+        context = dict(context or {})
+        eval_dict = {
+            'active_model': context.get('active_model'),
+            'active_id': context.get('active_id'),
+            'active_ids': context.get('active_ids'),
+            'uid': uid,
+            'context': context,
+        }
+        for res in results:
+            model = res.get('res_model')
+            if model and self.pool.get(model):
+                try:
+                    with tools.mute_logger("openerp.tools.safe_eval"):
+                        eval_context = eval(res['context'] or "{}", eval_dict) or {}
+                        res['context'] = str(eval_context)
+                except Exception:
+                    continue
+                if not fields or 'help' in fields:
                     custom_context = dict(context, **eval_context)
                     res['help'] = self.pool.get(model).get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
         if ids_int:
