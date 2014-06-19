@@ -77,7 +77,7 @@ var Tour = {
         }
         this.time = new Date().getTime();
         if (tour.path && !window.location.href.match(new RegExp("("+Tour.getLang()+")?"+tour.path+"#?$", "i"))) {
-            var href = "/"+Tour.getLang()+tour.path;
+            var href = Tour.getLang()+tour.path;
             console.log("Tour Begin from run method (redirection to "+href+")");
             Tour.saveState(tour.id, mode || tour.mode, -1, 0);
             window.location.href = href;
@@ -87,7 +87,7 @@ var Tour = {
             Tour.running();
         }
     },
-    registerSteps: function (tour) {
+    registerSteps: function (tour, mode) {
         if (tour.register) {
             return;
         }
@@ -130,7 +130,7 @@ var Tour = {
         }
 
         // rendering bootstrap tour and popover
-        if (tour.mode !== "test") {
+        if (mode !== "test") {
             for (var index=0, len=tour.steps.length; index<len; index++) {
                 var step = tour.steps[index];
                 step._title = step._title || step.title;
@@ -287,7 +287,7 @@ var Tour = {
         return typeof QWeb2 !== "undefined" ? openerp.qweb.render('tour.popover', options) : options.title;
     },
     getLang: function () {
-        return $("html").attr("lang").replace(/-/, '_');
+        return $("html").attr("lang") ? "/" + $("html").attr("lang").replace(/-/, '_') : "";
     },
     getState: function () {
         var state = JSON.parse(localStorage.getItem("tour") || 'false') || {};
@@ -322,7 +322,9 @@ var Tour = {
             + "\n localStorage: " + JSON.stringify(localStorage)
             + '\n\n' + $("body").html();
         Tour.reset();
-        throw new Error(message);
+        if (state.mode === "test") {
+            throw new Error(message);
+        }
     },
     lists: function () {
         var tour_ids = [];
@@ -357,20 +359,21 @@ var Tour = {
         function run () {
             var state = Tour.getState();
             if (!state) return;
-            if (!Tour._load_template) {
-                Tour.load_template().then(Tour.running);
-            }
             else if (state.tour) {
+                if (!Tour._load_template) {
+                    Tour.load_template().then(run);
+                    return;
+                }
                 console.log("Tour '"+state.id+"' is running");
-                Tour.registerSteps(state.tour);
+                Tour.registerSteps(state.tour, state.mode);
                 Tour.nextStep();
             } else {
-                if (state.wait >= 10) {
+                if (state.mode === "test" && state.wait >= 10) {
                     Tour.error(state.step, "Tour '"+state.id+"' undefined");
                 }
                 Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
                 console.log("Tour '"+state.id+"' wait for running (tour undefined)");
-                setTimeout(Tour.running, state.mode === "test" ? Tour.defaultDelay : Tour.retryRunningDelay);
+                setTimeout(run, state.mode === "test" ? Tour.defaultDelay : Tour.retryRunningDelay);
             }
         }
         setTimeout(function () {
