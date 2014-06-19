@@ -171,7 +171,9 @@ class website(orm.Model):
     _columns = {
         'pricelist_id': fields.related('user_id','partner_id','property_product_pricelist',
             type='many2one', relation='product.pricelist', string='Default pricelist'),
-        'company_currency_id': fields.related('company_id','partner_id','property_product_pricelist','currency_id',
+        'company_pricelist_id': fields.related('company_id','partner_id','property_product_pricelist',
+            type='many2one', relation='product.pricelist', string='Default pricelist'),
+        'company_currency_id': fields.related('company_pricelist_id','currency_id',
             type='many2one', relation='res.currency', string='Default pricelist'),
     }
 

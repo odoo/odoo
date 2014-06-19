@@ -76,11 +76,18 @@ $(document).ready(function () {
         $('.css_attribute_color:has(input:checked)').addClass("active");
     });
 
+    function price_to_str(price) {
+        price = Math.round(price * 100) / 100;
+        var dec = Math.round((price % 1) * 100);
+        return price + (dec ? '' : '.0') + (dec%10 ? '' : '0');
+    }
+
     $('input.js_variant_change, select.js_variant_change').change(function (ev) {
         var $ul = $(this).parents('ul.js_add_cart_variants:first');
         var $parent = $ul.parents('.js_product:first');
         var $porduct_id = $parent.find('input.product_id, input.optional_product_id').first();
-        var $price = $parent.find(".oe_price .oe_currency_value:first");
+        var $price = $parent.find(".oe_price:first .oe_currency_value");
+        var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
         var variant_ids = $ul.data("attribute_value_ids");
         var values = [];
         $parent.find('input.js_variant_change:checked, select.js_variant_change').each(function () {
@@ -92,8 +99,9 @@ $(document).ready(function () {
         var product_id = false;
         for (var k in variant_ids) {
             if (_.isEqual(variant_ids[k][1], values)) {
-                var dec = Math.round((variant_ids[k][2] % 1) * 100);
-                $price.html(variant_ids[k][2] + (dec ? '' : '.0') + (dec%10 ? '' : '0'));
+                $price.html(price_to_str(variant_ids[k][2]));
+                $default_price.html(price_to_str(variant_ids[k][3]));
+                $default_price.parent().toggle(variant_ids[k][3]-variant_ids[k][2]>0.2);
                 product_id = variant_ids[k][0];
                 break;
             }

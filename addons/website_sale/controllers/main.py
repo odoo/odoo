@@ -202,11 +202,12 @@ class website_sale(http.Controller):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         category_obj = pool['product.public.category']
         template_obj = pool['product.template']
+        currency_obj = pool['res.currency']
 
         context.update(active_id=product.id)
 
         if category:
-            category = category_obj.browse(request.cr, request.uid, int(category), context=request.context)
+            category = category_obj.browse(cr, uid, int(category), context=context)
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
@@ -220,12 +221,22 @@ class website_sale(http.Controller):
 
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
-            product = template_obj.browse(request.cr, request.uid, int(product), context=context)
+            product = template_obj.browse(cr, uid, int(product), context=context)
 
         optional_product_ids = []
         for p in product.optional_product_ids:
             ctx = dict(context, active_id=p.id)
             optional_product_ids.append(template_obj.browse(cr, uid, p.id, context=ctx))
+
+        attribute_value_ids = []
+        if request.website.company_pricelist_id.id != context['pricelist']:
+            company_currency_id = request.website.company_currency_id.id
+            currency_id = self.get_pricelist().currency_id.id
+            for p in product.product_variant_ids:
+                price = currency_obj.compute(cr, uid, company_currency_id, currency_id, p.lst_price)
+                attribute_value_ids.append([p.id, map(int, p.attribute_value_ids), p.price, price])
+        else:
+            attribute_value_ids = [[p.id, map(int, p.attribute_value_ids), p.price, p.lst_price] for p in product.product_variant_ids]
 
         values = {
             'search': search,
@@ -237,7 +248,8 @@ class website_sale(http.Controller):
             'category_list': category_list,
             'main_object': product,
             'product': product,
-            'optional_product_ids': optional_product_ids
+            'optional_product_ids': optional_product_ids,
+            'attribute_value_ids': attribute_value_ids
         }
         return request.website.render("website_sale.product", values)
 
