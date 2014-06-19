@@ -1988,6 +1988,11 @@
         //       a/@href, ...)
         _(mutations).chain()
             .filter(function (m) {
+                // ignore any SVG target, these blokes are like weird mon
+                if (m.target && m.target instanceof SVGElement) {
+                    return false;
+                }
+
                 // ignore any change related to mundane image-edit-button
                 if (m.target && m.target.className
                         && m.target.className.indexOf('image-edit-button') !== -1) {
