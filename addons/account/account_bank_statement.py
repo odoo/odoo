@@ -532,20 +532,20 @@ class account_bank_statement_line(osv.osv):
         # look for structured communication
         exact_match_id = self.search_structured_com(cr, uid, st_line, context=context)
         if exact_match_id:
-            return self.make_counter_part_lines(cr, uid, st_line, [exact_match_id], count=False, context=context)
+            return self.make_counter_part_lines(cr, uid, st_line, [exact_match_id], context=context)
         #we don't propose anything if there is no partner detected
         if not st_line.partner_id.id:
             return []
         # look for exact match
-        exact_match_id = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
+        exact_match_id = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
         if exact_match_id:
-            return exact_match_id
+            return exact_match_id[0]
 
         # select oldest move lines
         if sign == -1:
-            mv_lines = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, limit=50, additional_domain=[(amount_field, '<', 0)])
+            mv_lines = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[(amount_field, '<', 0)])
         else:
-            mv_lines = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, limit=50, additional_domain=[(amount_field, '>', 0)])
+            mv_lines = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[(amount_field, '>', 0)])
         ret = []
         total = 0
         # get_move_lines_counterparts inverts debit and credit
@@ -558,11 +558,11 @@ class account_bank_statement_line(osv.osv):
                 break
         return ret
 
-    def get_move_lines_counterparts_id(self, cr, uid, st_line_id, excluded_ids=[], filter_str="", offset=0, limit=None, count=False, additional_domain=[], context=None):
+    def get_move_lines_counterparts_id(self, cr, uid, st_line_id, excluded_ids=[], additional_domain=[], count=False, context=None):
         st_line = self.browse(cr, uid, st_line_id, context=context)
-        return self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids, filter_str, offset, limit, count, additional_domain, context=context)
+        return self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids, additional_domain, count, context=context)
 
-    def get_move_lines_counterparts(self, cr, uid, st_line, excluded_ids=[], filter_str="", offset=0, limit=None, count=False, additional_domain=[], context=None):
+    def get_move_lines_counterparts(self, cr, uid, st_line, excluded_ids=[], additional_domain=[], count=False, context=None):
         """ Find the move lines that could be used to reconcile a statement line and returns the counterpart that could be created to reconcile them
             If count is true, only returns the count.
 
@@ -576,10 +576,7 @@ class account_bank_statement_line(osv.osv):
         """
         mv_line_pool = self.pool.get('account.move.line')
 
-        domain = additional_domain + [
-            ('reconcile_id', '=', False),
-            ('state', '=', 'valid'),
-        ]
+        domain = additional_domain + [('reconcile_id', '=', False),('state', '=', 'valid')]
         if st_line.partner_id.id:
             domain += [('partner_id', '=', st_line.partner_id.id),
                 '|', ('account_id.type', '=', 'receivable'),
@@ -589,11 +586,7 @@ class account_bank_statement_line(osv.osv):
             #domain += [('account_id.reconcile', '=', True), ('account_id.type', '=', 'other')]
         if excluded_ids:
             domain.append(('id', 'not in', excluded_ids))
-        if filter_str:
-            if not st_line.partner_id:
-                domain += [ '|', ('partner_id.name', 'ilike', filter_str)]
-            domain += ['|', ('move_id.name', 'ilike', filter_str), ('move_id.ref', 'ilike', filter_str)]
-        line_ids = mv_line_pool.search(cr, uid, domain, offset=offset, limit=limit, order="date_maturity asc, id asc", context=context)
+        line_ids = mv_line_pool.search(cr, uid, domain, order="date_maturity asc, id asc", context=context)
         return self.make_counter_part_lines(cr, uid, st_line, line_ids, count=count, context=context)
 
     def make_counter_part_lines(self, cr, uid, st_line, line_ids, count=False, context=None):
