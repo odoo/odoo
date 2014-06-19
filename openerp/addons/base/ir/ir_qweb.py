@@ -20,7 +20,7 @@ from PIL import Image
 
 import openerp.http
 import openerp.tools
-import openerp.tools.func
+from openerp.tools.func import lazy_property
 import openerp.tools.lru
 from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
@@ -993,6 +993,13 @@ def get_field_type(column, options):
     """
     return options.get('widget', column._type)
 
+class AssetNotFound(Exception):
+    def __init__(self, message=None, url=None):
+        if not message and url:
+            message = "Could not find asset '%s'" % url
+        Exception.__init__(self, message)
+        self.url = url
+
 class AssetsBundle(object):
     cache = openerp.tools.lru.LRU(32)
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
@@ -1016,13 +1023,13 @@ class AssetsBundle(object):
                 src = el.get('src')
                 href = el.get('href')
                 if el.tag == 'style':
-                    self.stylesheets.append(StylesheetAsset(source=el.text))
+                    self.stylesheets.append(StylesheetAsset(self, inline=el.text))
                 elif el.tag == 'link' and el.get('rel') == 'stylesheet' and self.can_aggregate(href):
-                    self.stylesheets.append(StylesheetAsset(url=href))
+                    self.stylesheets.append(StylesheetAsset(self, url=href))
                 elif el.tag == 'script' and not src:
-                    self.javascripts.append(JavascriptAsset(source=el.text))
+                    self.javascripts.append(JavascriptAsset(self, inline=el.text))
                 elif el.tag == 'script' and self.can_aggregate(src):
-                    self.javascripts.append(JavascriptAsset(url=src))
+                    self.javascripts.append(JavascriptAsset(self, url=src))
                 else:
                     self.remains.append(lxml.html.tostring(el))
             else:
@@ -1035,7 +1042,9 @@ class AssetsBundle(object):
     def can_aggregate(self, url):
         return not urlparse(url).netloc and not url.startswith(('/web/css', '/web/js'))
 
-    def to_html(self, sep='\n            ', css=True, js=True, debug=False):
+    def to_html(self, sep=None, css=True, js=True, debug=False):
+        if sep is None:
+            sep = '\n            '
         response = []
         if debug:
             if css:
@@ -1052,7 +1061,7 @@ class AssetsBundle(object):
         response.extend(self.remains)
         return sep + sep.join(response)
 
-    @openerp.tools.func.lazy_property
+    @lazy_property
     def last_modified(self):
         return max(itertools.chain(
             (asset.last_modified for asset in self.javascripts),
@@ -1060,7 +1069,7 @@ class AssetsBundle(object):
             [datetime.datetime(1970, 1, 1)],
         ))
 
-    @openerp.tools.func.lazy_property
+    @lazy_property
     def checksum(self):
         checksum = hashlib.new('sha1')
         for asset in itertools.chain(self.javascripts, self.stylesheets):
@@ -1098,47 +1107,65 @@ class AssetsBundle(object):
         return self.cache[key]
 
 class WebAsset(object):
-    def __init__(self, source=None, url=None):
-        self.source = source
+    def __init__(self, bundle, inline=None, url=None, cr=None, uid=SUPERUSER_ID):
+        self.bundle = bundle
+        self.inline = inline
         self.url = url
-        self._irattach = None
-        self._content = None
-        self.filename = None
-        self.last_modified = None
-        if source:
-            self.last_modified = datetime.datetime(1970, 1, 1)
-        if url:
-            module = filter(None, self.url.split('/'))[0]
+        self.cr = cr if cr is not None else request.cr
+        self.uid = uid
+        self._filename = None
+        self._ir_attach = None
+        if not inline and not url:
+            raise Exception("A bundle should either be inlined or url linked")
+
+    def stat(self):
+        if not (self.inline or self._filename or self._ir_attach):
+            addon = filter(None, self.url.split('/'))[0]
             try:
                 # Test url against modules static assets
-                mpath = openerp.http.addons_manifest[module]['addons_path']
-                self.filename = mpath + self.url.replace('/', os.path.sep)
-                self.last_modified = datetime.datetime.fromtimestamp(os.path.getmtime(self.filename))
+                mpath = openerp.http.addons_manifest[addon]['addons_path']
+                self._filename = mpath + self.url.replace('/', os.path.sep)
             except Exception:
                 try:
                     # Test url against ir.attachments
                     domain = [('type', '=', 'binary'), ('url', '=', self.url)]
-                    attach = request.registry['ir.attachment'].search_read(request.cr, SUPERUSER_ID, domain, ['__last_update', 'datas', 'mimetype'], context=request.context)
-                    self._irattach = attach[0]
-                    server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-                    try:
-                        self.last_modified =  datetime.datetime.strptime(attach[0]['__last_update'], server_format + '.%f')
-                    except ValueError:
-                        self.last_modified =  datetime.datetime.strptime(attach[0]['__last_update'], server_format)
+                    attach = request.registry['ir.attachment'].search_read(self.cr, self.uid, domain, ['__last_update', 'datas', 'mimetype'], context=request.context)
+                    self._ir_attach = attach[0]
                 except Exception:
-                    raise KeyError("Could not find asset '%s' for '%s' addon" % (self.url, module))
+                    raise AssetNotFound(url=self.url)
 
-    @openerp.tools.func.lazy_property
+    @lazy_property
+    def last_modified(self):
+        try:
+            self.stat()
+            if self._filename:
+                return datetime.datetime.fromtimestamp(os.path.getmtime(self._filename))
+            elif self._ir_attach:
+                server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+                last_update = self._ir_attach['__last_update']
+                try:
+                    return datetime.datetime.strptime(last_update, server_format + '.%f')
+                except ValueError:
+                    return datetime.datetime.strptime(last_update, server_format)
+        except Exception:
+            pass
+        return datetime.datetime(1970, 1, 1)
+
+    @lazy_property
     def content(self):
-        if self.source:
-            return self.source
-        if self._irattach:
-            return self._irattach['datas'].decode('base64')
-        return self.get_content()
+        return self.inline or self._fetch_content()
 
-    def get_content(self):
-        with open(self.filename, 'rb') as fp:
-            return fp.read().decode('utf-8')
+    def _fetch_content(self):
+        """ Fetch content from file or database"""
+        self.stat()
+        try:
+            if self._filename:
+                with open(self._filename, 'rb') as fp:
+                    return fp.read().decode('utf-8')
+            else:
+                return self._ir_attach['datas'].decode('base64')
+        except Exception:
+            raise AssetNotFound(url=self.url)
 
     def minify(self):
         return self.content
@@ -1147,33 +1174,29 @@ class JavascriptAsset(WebAsset):
     def minify(self):
         return rjsmin(self.content)
 
+    def _fetch_content(self):
+        try:
+            return super(JavascriptAsset, self)._fetch_content()
+        except AssetNotFound, e:
+            return """
+                console.error("Could not find javascript '%s' defined in bundle '%s'");
+            """ % (e.url, self.bundle.xmlid)
+
     def to_html(self):
         if self.url:
             return '<script type="text/javascript" src="%s"></script>' % self.url
         else:
-            return '<script type="text/javascript" charset="utf-8">%s</script>' % self.source
+            return '<script type="text/javascript" charset="utf-8">%s</script>' % self.inline
 
 class StylesheetAsset(WebAsset):
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
     rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://|data:)""", re.U)
     rx_sourceMap = re.compile(r'(/\*# sourceMappingURL=.*)', re.U)
+    rx_charset = re.compile(r'(@charset "[^"]+";)', re.U)
 
-    def _get_content(self):
-        with open(self.filename, 'rb') as fp:
-            firstline = fp.readline()
-            m = re.match(r'@charset "([^"]+)";', firstline)
-            if m:
-                encoding = m.group(1)
-            else:
-                encoding = "utf-8"
-                # "reinject" first line as it's not @charset
-                fp.seek(0)
-
-            return fp.read().decode(encoding)
-
-    def get_content(self):
-        content = self._get_content()
-        if self.url:
+    def _fetch_content(self):
+        try:
+            content = super(StylesheetAsset, self)._fetch_content()
             web_dir = os.path.dirname(self.url)
 
             content = self.rx_import.sub(
@@ -1185,6 +1208,21 @@ class StylesheetAsset(WebAsset):
                 r"url(\1%s/" % (web_dir,),
                 content,
             )
+
+            # remove charset declarations, we only support utf-8
+            content = self.rx_charset.sub('', content)
+        except AssetNotFound, e:
+            content = """
+                body:before {
+                    background: #ffc;
+                    width: 100%%;
+                    padding: 1em 2%%;
+                    float: left;
+                    clear: both;
+                    font-size: 14px;
+                    content: "Could not find stylesheet '%s' defined in bundle '%s'";
+                }
+            """ % (e.url, self.bundle.xmlid)
         return content
 
     def minify(self):
@@ -1201,7 +1239,7 @@ class StylesheetAsset(WebAsset):
         if self.url:
             return '<link rel="stylesheet" href="%s" type="text/css"/>' % self.url
         else:
-            return '<style type="text/css">%s</style>' % self.source
+            return '<style type="text/css">%s</style>' % self.inline
 
 def rjsmin(script):
     """ Minify js with a clever regex.
