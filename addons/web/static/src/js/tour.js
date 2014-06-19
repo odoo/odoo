@@ -80,6 +80,7 @@ var Tour = {
             var href = Tour.getLang()+tour.path;
             console.log("Tour Begin from run method (redirection to "+href+")");
             Tour.saveState(tour.id, mode || tour.mode, -1, 0);
+            $(document).one("ajaxStop", Tour.running);
             window.location.href = href;
         } else {
             console.log("Tour Begin from run method");
@@ -117,6 +118,9 @@ var Tour = {
                 step.element = "body";
                 step.orphan = true;
                 step.backdrop = true;
+            } else {
+                step.popover = step.popover || {};
+                step.popover.arrow = true;
             }
         }
         if (tour.steps[index-1] &&
@@ -355,45 +359,25 @@ var Tour = {
         clearTimeout(Tour.testtimer);
         Tour.closePopover();
     },
-    _running: false,
     running: function () {
-        Tour._running = false;
-        function run () {
-            //if (Tour._running) return;
-            Tour._running = true;
-            var state = Tour.getState();
-            if (!state) {
-                Tour._running = false;
+        var state = Tour.getState();
+        if (!state) return;
+        else if (state.tour) {
+            if (!Tour._load_template) {
+                Tour.load_template().then(Tour.running);
                 return;
             }
-            else if (state.tour) {
-                if (!Tour._load_template) {
-                    Tour.load_template().then(function () {
-                        Tour._running = false;
-                        run();
-                    });
-                    return;
-                }
-                console.log("Tour '"+state.id+"' is running");
-                Tour.registerSteps(state.tour, state.mode);
-                Tour.nextStep();
-                Tour._running = false;
-            } else {
-                if (state.mode === "test" && state.wait >= 10) {
-                    Tour.error(state.step, "Tour '"+state.id+"' undefined");
-                }
-                Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
-                console.log("Tour '"+state.id+"' wait for running (tour undefined)");
-                setTimeout(run, state.mode === "test" ? Tour.defaultDelay : Tour.retryRunningDelay);
+            console.log("Tour '"+state.id+"' is running");
+            Tour.registerSteps(state.tour, state.mode);
+            Tour.nextStep();
+        } else {
+            if (state.mode === "test" && state.wait >= 10) {
+                Tour.error(state.step, "Tour '"+state.id+"' undefined");
             }
+            Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
+            console.log("Tour '"+state.id+"' wait for running (tour undefined)");
+            setTimeout(Tour.running, state.mode === "test" ? Tour.defaultDelay : Tour.retryRunningDelay);
         }
-        setTimeout(function () {
-            if ($.ajaxBusy) {
-                $(document).ajaxStop(run);
-            } else {
-                run();
-            }
-        },0);
     },
     check: function (step) {
         return (step &&
