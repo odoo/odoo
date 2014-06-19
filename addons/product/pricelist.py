@@ -271,7 +271,7 @@ class product_pricelist(osv.osv):
                             product_obj._price_get(cr, uid, [product],
                             price_type.field, context=context)[product.id], round=False, context=context)
                     for seller in product.seller_ids:
-                        if (not partner) or (seller.name.id<>partner):
+                        if (not partner) or (seller.name.id != partner):
                             continue
                         if seller.name.id == partner:
                             qty_in_seller_uom = qty
