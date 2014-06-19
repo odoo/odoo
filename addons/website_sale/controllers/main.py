@@ -98,7 +98,7 @@ class table_compute(object):
                     self.table[(pos/PPR)+y2][(pos%PPR)+x2] = False
             self.table[pos/PPR][pos%PPR] = {
                 'product': p, 'x':x, 'y': y,
-                'class': " ".join(map(lambda x: x.html_class, p.website_style_ids))
+                'class': " ".join(map(lambda x: x.html_class or '', p.website_style_ids))
             }
             if index<=PPG:
                 maxy=max(maxy,y+(pos/PPR))

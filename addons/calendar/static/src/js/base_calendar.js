@@ -102,7 +102,7 @@ openerp.calendar = function(instance) {
             var self = this;
             var action_url = '';
 
-            action_url = _.str.sprintf('/?db=%s#id=%s&view_type=form&model=calendar.event', db, meeting_id);
+            action_url = _.str.sprintf('/web?db=%s#id=%s&view_type=form&model=calendar.event', db, meeting_id);
             
             var reload_page = function(){
                 return location.replace(action_url);

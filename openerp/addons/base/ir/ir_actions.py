@@ -482,6 +482,8 @@ class ir_actions_server(osv.osv):
                                    "based on the sequence. Low number means high priority."),
         'model_id': fields.many2one('ir.model', 'Base Model', required=True, ondelete='cascade',
                                     help="Base model on which the server action runs."),
+        'model_name': fields.related('model_id', 'model', type='char',
+                                     string='Model Name', readonly=True),
         'menu_ir_values_id': fields.many2one('ir.values', 'More Menu entry', readonly=True,
                                              help='More menu entry.'),
         # Client Action
@@ -641,6 +643,10 @@ class ir_actions_server(osv.osv):
             'wkf_field_id': False,
             'crud_model_id': model_id,
         }
+
+        if model_id:
+            values['model_name'] = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
+
         return {'value': values}
 
     def on_change_wkf_wonfig(self, cr, uid, ids, use_relational_model, wkf_field_id, wkf_model_id, model_id, context=None):
@@ -744,6 +750,7 @@ class ir_actions_server(osv.osv):
         crud_model_name = False
         if crud_model_id:
             crud_model_name = self.pool.get('ir.model').browse(cr, uid, crud_model_id, context).model
+        
         values = {'link_field_id': False, 'crud_model_name': crud_model_name}
         return {'value': values}
 
