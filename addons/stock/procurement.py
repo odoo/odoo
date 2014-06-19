@@ -346,7 +346,7 @@ class procurement_order(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         offset = 0
         ids = [1]
-        dom = company_id and [('company_id', '=', company_id)] or False
+        dom = company_id and [('company_id', '=', company_id)] or []
         while ids:
             ids = orderpoint_obj.search(cr, uid, dom, offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
