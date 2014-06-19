@@ -355,18 +355,29 @@ var Tour = {
         clearTimeout(Tour.testtimer);
         Tour.closePopover();
     },
+    _running: false,
     running: function () {
+        Tour._running = false;
         function run () {
+            //if (Tour._running) return;
+            Tour._running = true;
             var state = Tour.getState();
-            if (!state) return;
+            if (!state) {
+                Tour._running = false;
+                return;
+            }
             else if (state.tour) {
                 if (!Tour._load_template) {
-                    Tour.load_template().then(run);
+                    Tour.load_template().then(function () {
+                        Tour._running = false;
+                        run();
+                    });
                     return;
                 }
                 console.log("Tour '"+state.id+"' is running");
                 Tour.registerSteps(state.tour, state.mode);
                 Tour.nextStep();
+                Tour._running = false;
             } else {
                 if (state.mode === "test" && state.wait >= 10) {
                     Tour.error(state.step, "Tour '"+state.id+"' undefined");
@@ -431,7 +442,7 @@ var Tour = {
         step = step || state.step;
         var next = state.tour.steps[step.id+1];
 
-        if (state.number > 3) {
+        if (state.mode === "test" && state.number > 3) {
             Tour.error(next, "Cycling. Can't reach the next step");
         }
         
