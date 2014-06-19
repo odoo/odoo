@@ -3,8 +3,8 @@
 
     var website = openerp.website;
 
-    website.snippet.animationRegistry.follow_alias = website.snippet.Animation.extend({
-        selector: ".js_follow_alias",
+    website.snippet.animationRegistry.follow = website.snippet.Animation.extend({
+        selector: ".js_follow",
         start: function (editable_mode) {
             var self = this;
             this.is_user = false;
@@ -12,19 +12,17 @@
             openerp.jsonRpc('/website_mail/is_follower', 'call', {
                 model: this.$target.data('object'),
                 id: this.$target.data('id'),
-                get_alias_info: true,
             }).always(function (data) {
                 self.is_user = data.is_user;
                 self.email = data.email;
-                self.$target.find('.js_mg_link').attr('href', '/groups/' + self.$target.data('id'));
                 self.toggle_subscription(data.is_follower, data.email);
                 self.$target.removeClass("hidden");
             });
 
             // not if editable mode to allow designer to edit alert field
             if (!editable_mode) {
-                $('.js_follow_alias > .alert').addClass("hidden");
-                $('.js_follow_alias > .input-group-btn.hidden').removeClass("hidden");
+                $('.js_follow > .alert').addClass("hidden");
+                $('.js_follow > .input-group-btn.hidden').removeClass("hidden");
                 this.$target.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
                     event.preventDefault();
                     self.on_click();
@@ -52,42 +50,19 @@
             });
         },
         toggle_subscription: function(follow, email) {
-            var alias_done = this.get_alias_info();
+            console.log(follow, email);
             if (follow) {
-                this.$target.find(".js_mg_follow_form").addClass("hidden");
-                this.$target.find(".js_mg_details").removeClass("hidden");
+                this.$target.find(".js_follow_btn").addClass("hidden");
+                this.$target.find(".js_unfollow_btn").removeClass("hidden");
             }
             else {
-                this.$target.find(".js_mg_follow_form").removeClass("hidden");
-                this.$target.find(".js_mg_details").addClass("hidden");
+                this.$target.find(".js_follow_btn").removeClass("hidden");
+                this.$target.find(".js_unfollow_btn").addClass("hidden");
             }
             this.$target.find('input.js_follow_email')
                 .val(email ? email : "")
                 .attr("disabled", follow || (email.length && this.is_user) ? "disabled" : false);
             this.$target.attr("data-follow", follow ? 'on' : 'off');
-            return $.when(alias_done);
         },
-        get_alias_info: function() {
-            var self = this;
-            if (! this.$target.data('id')) {
-                return $.Deferred().resolve();
-            }
-            return openerp.jsonRpc('/groups/' + this.$target.data('id') + '/get_alias_info', 'call', {}).then(function (data) {
-                if (data.alias_name) {
-                    self.$target.find('.js_mg_email').attr('href', 'mailto:' + data.alias_name);
-                    self.$target.find('.js_mg_email').removeClass('hidden');
-                }
-                else {
-                    self.$target.find('.js_mg_email').addClass('hidden');
-                }
-            });
-        }
-    });
-
-    $(document).ready(function () {
-        $('.js_follow_btn').on('click', function (ev) {
-            var email = $(ev.currentTarget).parents('.js_mg_follow_form').first().find('.js_follow_email').val();
-            $(document).find('.js_follow_email').val(email);
-        });
     });
 })();

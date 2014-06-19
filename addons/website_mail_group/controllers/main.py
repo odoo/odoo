@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+from dateutil import relativedelta
 
-from openerp import tools
+from openerp import tools, SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.website.models.website import slug
 from openerp.addons.web.http import request
@@ -28,12 +29,23 @@ class MailGroup(http.Controller):
     def view(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
+        mail_message_obj = request.registry.get('mail.message')
         group_ids = group_obj.search(cr, uid, [('alias_id', '!=', False), ('alias_id.alias_name', '!=', False)], context=context)
-        values = {'groups': group_obj.browse(cr, uid, group_ids, context)}
+        groups = group_obj.browse(cr, uid, group_ids, context)
+        # compute statistics
+        month_date = datetime.datetime.today() - relativedelta.relativedelta(months=1)
+        group_data = dict.fromkeys(group_ids, dict())
+        for group in groups:
+            group_data[group.id]['monthly_message_nbr'] = mail_message_obj.search(
+                cr, SUPERUSER_ID,
+                [('model', '=', 'mail.group'), ('res_id', '=', group.id), ('date', '>=', month_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))],
+                count=True, context=context)
+        values = {'groups': groups, 'group_data': group_data}
         return request.website.render('website_mail_group.mail_groups', values)
 
     @http.route(["/groups/subscription/"], type='json', auth="user")
     def subscription(self, group_id=0, action=False, **post):
+        """ TDE FIXME: seems dead code """
         cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
         if action:
