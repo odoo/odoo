@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 from openerp.tools import mute_logger
+from product._common import rounding
 
 class stock_fill_inventory(osv.osv_memory):
     _name = "stock.fill.inventory"
@@ -110,11 +111,11 @@ class stock_fill_inventory(osv.osv_memory):
                 lot_id = move.prodlot_id.id
                 prod_id = move.product_id.id
                 if move.location_dest_id.id != move.location_id.id:
-                    if move.location_dest_id.id == location:
-                        qty = uom_obj._compute_qty_obj(cr, uid, move.product_uom,move.product_qty, move.product_id.uom_id, context=local_context)
-                    else:
-                        qty = -uom_obj._compute_qty_obj(cr, uid, move.product_uom,move.product_qty, move.product_id.uom_id, context=local_context)
-
+                    qty = move.product_qty
+                    if move.product_uom.id != move.product_id.uom_id.id:
+                        qty = uom_obj._compute_qty_obj(cr, uid, move.product_uom, qty, move.product_id.uom_id, context=local_context)
+                    if move.location_dest_id.id != location:
+                        qty = -qty
 
                     if datas.get((prod_id, lot_id)):
                         qty += datas[(prod_id, lot_id)]['product_qty']
@@ -130,6 +131,9 @@ class stock_fill_inventory(osv.osv_memory):
 
         for stock_move in res.values():
             for stock_move_details in stock_move.values():
+                # remove product with qty < to product uom rounding (rouding error computation)
+                if abs(stock_move_details['product_qty']) < uom_obj.browse(cr, uid, stock_move_details['product_uom']).rounding:
+                    continue
                 stock_move_details.update({'inventory_id': context['active_ids'][0]})
                 domain = []
                 for field, value in stock_move_details.items():
@@ -144,6 +148,10 @@ class stock_fill_inventory(osv.osv_memory):
                 line_ids = inventory_line_obj.search(cr, uid, domain, context=context)
 
                 if not line_ids:
+                    # Floating point sum could introduce some tiny rounding errors.
+                    line_uom = uom_obj.browse(cr, uid, [stock_move_details['product_uom']])[0]
+                    stock_move_details['product_qty'] = rounding(
+                        stock_move_details['product_qty'], line_uom.rounding)
                     inventory_line_obj.create(cr, uid, stock_move_details, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
