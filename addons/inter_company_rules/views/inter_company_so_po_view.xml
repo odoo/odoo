@@ -20,16 +20,5 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_purchase_order_form_inherit">
-            <field name="name">purchase.purchase_order_form.inherit</field>
-            <field name="inherit_id" ref="purchase.purchase_order_form"/>
-            <field name="model">purchase.order</field>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='company_id']" position="replace">
-                    <field name="company_id" on_change="onchange_company_id(company_id)" groups="base.group_multi_company" widget="selection"/>
-                </xpath>
-            </field>
-        </record>
-
 	</data>
 </openerp>

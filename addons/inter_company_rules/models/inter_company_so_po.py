@@ -115,7 +115,6 @@ class sale_order(osv.osv):
                 'name': seq_obj.get(cr, SUPERUSER_ID, 'purchase.order'),
                 'origin': sale.name,
                 'partner_id': this_company_partner.id,
-                'warehouse_id': warehouse_id,
                 'location_id': location_id,
                 'pricelist_id': pricelist_id,
                 'date_order': sale.date_order,
@@ -318,11 +317,5 @@ class purchase_order(osv.osv):
             if purchase.amount_total != amount_total:
                 raise osv.except_osv(_('Total Mismatch!'), _('You cannot confirm this PO because its total amount does not match the total amount of the SO is it coming from.'))
         return True
-
-    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
-        warehouse_id = False
-        if company_id:
-            warehouse_id = self.pool.get('res.company').browse(cr, uid, company_id, context=None).warehouse_id.id
-        return {'value': {'warehouse_id': warehouse_id }}
 
 purchase_order()
