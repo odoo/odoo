@@ -204,12 +204,15 @@ class mail_mail(osv.Model):
         """
         body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
         body_alternative = tools.html2plaintext(body)
-        return {
+        res = {
             'body': body,
             'body_alternative': body_alternative,
             'subject': self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context),
             'email_to': self.send_get_mail_to(cr, uid, mail, partner=partner, context=context),
         }
+        if mail.model and mail.res_id and self.pool.get(mail.model) and hasattr(self.pool[mail.model], 'message_get_email_values'):
+            res.update(self.pool[mail.model].message_get_email_values(cr, uid, mail.res_id, mail, context=context))
+        return res
 
     def send(self, cr, uid, ids, auto_commit=False, raise_exception=False, context=None):
         """ Sends the selected emails immediately, ignoring their current
@@ -268,6 +271,9 @@ class mail_mail(osv.Model):
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
                 for email in email_list:
+                    email_headers = dict(headers)
+                    if email.get('headers'):
+                        email_headers.update(email['headers'])
                     msg = ir_mail_server.build_email(
                         email_from=mail.email_from,
                         email_to=email.get('email_to'),
@@ -282,7 +288,7 @@ class mail_mail(osv.Model):
                         object_id=mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
                         subtype='html',
                         subtype_alternative='plain',
-                        headers=headers)
+                        headers=email_headers)
                     res = ir_mail_server.send_email(cr, uid, msg,
                                                     mail_server_id=mail.mail_server_id.id,
                                                     context=context)

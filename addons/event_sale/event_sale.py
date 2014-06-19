@@ -245,7 +245,8 @@ class event_ticket(osv.osv):
     ]
 
     def onchange_product_id(self, cr, uid, ids, product_id=False, context=None):
-        return {'value': {'price': self.pool.get("product.product").browse(cr, uid, product_id).list_price or 0}}
+        price = self.pool.get("product.product").browse(cr, uid, product_id).list_price if product_id else 0
+        return {'value': {'price': price}}
 
 
 class event_registration(osv.osv):
