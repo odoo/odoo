@@ -1064,6 +1064,26 @@ class mrp_production(osv.osv):
             return "make_to_order"
         return "make_to_stock"
 
+    def _create_previous_move(self, cr, uid, production, product, uom_id, qty, uos_id, uos_qty, source_location_id, dest_location_id, context=None):
+        stock_move = self.pool.get('stock.move')
+        move_id = stock_move.create(cr, uid, {
+            'name': production.name,
+            'date': production.date_planned,
+            'product_id': product.id,
+            'product_uom_qty': qty,
+            'product_uom': uom_id,
+            'product_uos_qty': uos_id and uos_qty or False,
+            'product_uos': uos_id or False,
+            'location_id': source_location_id,
+            'location_dest_id': dest_location_id,
+            'company_id': production.company_id.id,
+            'procure_method': self._get_raw_material_procure_method(cr, uid, product, context=context),
+            #this saves us a browse in create()
+            'price_unit': product.standard_price,
+            'origin': production.name,
+        })
+        return move_id
+
     def _make_consume_line_from_data(self, cr, uid, production, product, uom_id, qty, uos_id, uos_qty, context=None):
         stock_move = self.pool.get('stock.move')
         # Internal shipment is created for Stockable and Consumer Products
@@ -1071,9 +1091,11 @@ class mrp_production(osv.osv):
             return False
         # Take routing location as a Source Location.
         source_location_id = production.location_src_id.id
-        if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
+        prev_move= False
+        if production.bom_id.routing_id and production.bom_id.routing_id.location_id.id != source_location_id:
+            source_location2_id = source_location_id
             source_location_id = production.bom_id.routing_id.location_id.id
-
+            prev_move = self._create_previous_move(cr, uid, production, product, uom_id, qty, uos_id, uos_qty, source_location2_id, source_location_id, context=context)
         destination_location_id = production.product_id.property_stock_production.id
         if not source_location_id:
             source_location_id = production.location_src_id.id
@@ -1088,12 +1110,14 @@ class mrp_production(osv.osv):
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'company_id': production.company_id.id,
-            'procure_method': self._get_raw_material_procure_method(cr, uid, product, context=context),
+            'procure_method': prev_move and 'make_to_stock' or self._get_raw_material_procure_method(cr, uid, product, context=context), #Make_to_stock avoids creating procurement
             'raw_material_production_id': production.id,
             #this saves us a browse in create()
             'price_unit': product.standard_price,
             'origin': production.name,
         })
+        if prev_move:
+            stock_move.write(cr, uid, [prev_move], {'move_dest_id': move_id}, context=context)
         return move_id
 
     def _make_production_consume_line(self, cr, uid, line, context=None):
