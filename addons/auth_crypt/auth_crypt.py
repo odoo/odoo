@@ -59,23 +59,23 @@ class res_users(osv.osv):
     def check_credentials(self, cr, uid, password):
         # convert to base_crypt if needed
         cr.execute('SELECT password, password_crypt FROM res_users WHERE id=%s AND active', (uid,))
-        stored_password_crypt = None
+        encrypted = None
         if cr.rowcount:
-            stored_password, stored_password_crypt = cr.fetchone()
-            if stored_password and not stored_password_crypt:
-                stored_password_crypt = self._crypt_context(cr, uid, uid).encrypt(stored_password)
-                self._store_encrypted_password(cr, uid, uid, stored_password_crypt)
+            stored, encrypted = cr.fetchone()
+            if stored and not encrypted:
+                encrypted = self._crypt_context(cr, uid, uid).encrypt(stored)
+                self._store_encrypted_password(cr, uid, uid, encrypted)
         try:
             return super(res_users, self).check_credentials(cr, uid, password)
         except openerp.exceptions.AccessDenied:
-            if stored_password_crypt:
-                valid, replacement = self._crypt_context(cr, uid, uid)\
-                        .verify_and_update(password, stored_password_crypt)
-                if replacement:
+            if encrypted:
+                valid_pass, replacement = self._crypt_context(cr, uid, uid)\
+                        .verify_and_update(password, encrypted)
+                if replacement is not None:
                     self._store_encrypted_password(cr, uid, uid, replacement)
-                if valid:
+                if valid_pass:
                     return
-            # Reraise password incorrect
+
             raise
 
 
