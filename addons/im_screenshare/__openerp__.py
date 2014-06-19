@@ -9,6 +9,7 @@
     'website': 'https://www.openerp.com/',
     'depends': ['base', 'im_chat'],
     'data': [
+        'security/ir.model.access.csv',
         'views/im_screenshare_view.xml',
         'views/im_screenshare.xml'
     ],
