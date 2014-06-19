@@ -38,10 +38,7 @@ class Controller(openerp.addons.im.im.Controller):
 
     @openerp.http.route('/im_screenshare/start', type="json", auth="none")
     def start(self, **kwargs):
-        tmp = '%s' % uuid.uuid4()
-        print "###################"
-        print tmp
-        return tmp
+        return '%s' % uuid.uuid4()
 
     @openerp.http.route('/im_screenshare/share', type="json", auth="none")
     def share(self, uuid, message):
