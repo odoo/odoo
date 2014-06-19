@@ -1071,8 +1071,8 @@ class mrp_production(osv.osv):
             return False
         # Take routing location as a Source Location.
         source_location_id = production.location_src_id.id
-        if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
-            source_location_id = production.bom_id.routing_id.location_id.id
+        if production.routing_id and production.routing_id.location_id:
+            source_location_id = production.routing_id.location_id.id
 
         destination_location_id = production.product_id.property_stock_production.id
         if not source_location_id:
