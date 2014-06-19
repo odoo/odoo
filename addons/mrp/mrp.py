@@ -1037,8 +1037,8 @@ class mrp_production(osv.osv):
 
             # Take routing location as a Source Location.
             source_location_id = production.location_src_id.id
-            if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
-                source_location_id = production.bom_id.routing_id.location_id.id
+            if production.routing_id and production.routing_id.location_id:
+                source_location_id = production.routing_id.location_id.id
 
             for line in production.product_lines:
                 consume_move_id = self._make_production_consume_line(cr, uid, line, produce_move_id, source_location_id=source_location_id, context=context)
