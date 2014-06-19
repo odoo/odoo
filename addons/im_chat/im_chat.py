@@ -309,7 +309,10 @@ class im_chat_presence(osv.Model):
                 if datetime.datetime.strptime(presences[0].last_presence, DEFAULT_SERVER_DATETIME_FORMAT) < threshold:
                     vals['status'] = 'away'
             send_notification = presences[0].status != vals['status']
-            self.write(cr, uid, presence_ids, vals, context=context)
+            # write only if the last_poll is passed TIMEOUT, or if the status has changed
+            delta = datetime.datetime.now() - datetime.datetime.strptime(presences[0].last_poll, DEFAULT_SERVER_DATETIME_FORMAT)
+            if (delta > datetime.timedelta(seconds=TIMEOUT) or send_notification):
+                self.write(cr, uid, presence_ids, vals, context=context)
         # avoid TransactionRollbackError
         cr.commit()
         # notify if the status has changed
@@ -323,12 +326,12 @@ class im_chat_presence(osv.Model):
     def check_users_disconnection(self, cr, uid, context=None):
         """ disconnect the users having a too old last_poll """
         dt = (datetime.datetime.now() - datetime.timedelta(0, DISCONNECTION_TIMER)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        presence_ids = self.search(cr, uid, [('last_poll', '<', dt)], context=context)
+        presence_ids = self.search(cr, uid, [('last_poll', '<', dt), ('status' , '!=', 'offline')], context=context)
         self.write(cr, uid, presence_ids, {'status': 'offline'}, context=context)
         presences = self.browse(cr, uid, presence_ids, context=context)
         notifications = []
         for presence in presences:
-            notifications.append([(cr.dbname,'im_chat.presence'), [{'id': presence.user_id.id, 'im_status': presence.status}]])
+            notifications.append([(cr.dbname,'im_chat.presence'), {'id': presence.user_id.id, 'im_status': presence.status}])
         self.pool['im.bus'].sendmany(cr, uid, notifications)
         return True
 
