@@ -49,13 +49,7 @@ class res_users(osv.osv):
 
     def get_pw( self, cr, uid, ids, name, args, context ):
         cr.execute('select id, password from res_users where id in %s', (tuple(map(int, ids)),))
-        stored_pws = cr.fetchall()
-        res = {}
-
-        for id, stored_pw in stored_pws:
-            res[id] = stored_pw
-
-        return res
+        return dict(cr.fetchall())
 
     _columns = {
         'password': fields.function(get_pw, fnct_inv=set_pw, type='char', string='Password', invisible=True, store=True),
