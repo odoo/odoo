@@ -31,37 +31,31 @@
                     .attr('title', help_text);
             }
 
-
             $('.dropdown-toggle').dropdown();
-            this.customize_setup();
 
             this.$buttons = {
-                edit: this.$('button[data-action=edit]'),
+                edit: this.$el.parents().find('button[data-action=edit]'),
                 save: this.$('button[data-action=save]'),
                 cancel: this.$('button[data-action=cancel]'),
             };
+
+            this.$buttons.edit.click(function(ev) {
+                self.edit();
+            });
 
             this.rte = new website.RTE(this);
             this.rte.on('change', this, this.proxy('rte_changed'));
             this.rte.on('rte:ready', this, function () {
                 self.setup_hover_buttons();
                 self.trigger('rte:ready');
-                self.check_height();
             });
-
-            $(window).on('resize', _.debounce(this.check_height.bind(this), 50));
-            this.check_height();
 
             if (website.is_editable_button) {
-                this.$("button[data-action=edit]").removeClass("hidden");
+                this.$buttons.edit.removeClass("hidden");
             }
-
-            return $.when(
-                this._super.apply(this, arguments),
-                this.rte.appendTo(this.$('#website-top-edit .nav.pull-right'))
-            ).then(function () {
-                self.check_height();
-            });
+            this.rte.appendTo(this.$('#website-top-edit .nav.js_editor_placeholder'));
+            return this._super.apply(this, arguments);
+            
         },
         edit: function () {
             this.$buttons.edit.prop('disabled', true);
