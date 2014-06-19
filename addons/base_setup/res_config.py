@@ -46,6 +46,7 @@ class base_config_settings(osv.osv_memory):
         'module_web_pdf_viewer': fields.boolean('Use embedded PDF viewer for documents',
                                               help="""Enable this option will open your documents in an embedded PDF viewer"""),
 
+        'module_inter_company_rules': fields.boolean('Manage Inter Company', help="""This installs the module inter_company_rules."""),
     }
     
     _defaults= {
