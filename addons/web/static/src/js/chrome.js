@@ -761,6 +761,7 @@ instance.web.Menu =  instance.web.Widget.extend({
     menu_loaded: function() {
         var self = this;
         this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container')
+        this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
         this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
@@ -954,6 +955,7 @@ instance.web.Menu =  instance.web.Widget.extend({
      * @param {Event} ev the jquery event
      */
     on_top_menu_click: function(ev) {
+        ev.preventDefault();
         var self = this;
         var id = $(ev.currentTarget).data('menu');
 
