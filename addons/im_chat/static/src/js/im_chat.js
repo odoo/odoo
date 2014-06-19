@@ -292,6 +292,7 @@
                     m.from_id = [false, self.options["defaultUsername"]];
                 }
                 m.message = self.escape_keep_url(m.message);
+                m.message = self.smiley(m.message);
                 m.create_date = Date.parse(m.create_date).setTimezone("UTC").toString("yyyy-dd-MM HH:mm:ss");
                 return m;
             });
@@ -335,6 +336,37 @@
             }
             this.$("input").val("");
             this.send_message(mes, "message");
+        },
+        smiley: function(str){
+            var kitten = jQuery.deparam !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined;
+            var smileys = {
+                ":)" : "&#128522;",
+                ":D" : "&#128517;",
+                ";)" : "&#128521;",
+                ":p" : "&#128523;",
+                ":(" : "&#9785;",
+                ":|" : "&#128528;",
+                ":/" : "&#128527;",
+                "8)" : "&#128563;",
+                ":s" : "&#128534;",
+                ":'(": "&#128546;",
+                ":O" : "&#128561;",
+                "3:)": "&#128520;",
+            };
+            if(kitten){
+                smileys = {
+                    ":)" : "&#128570;",
+                    ":D" : "&#128569;",
+                    ";)" : "&#128572;",
+                    ":p" : "&#128573;",
+                    ":(" : "&#128576;",
+                    ":|" : "&#128575;",
+                };
+            }
+            for (var key in smileys){
+                str = str.replace(key, '<span class="smiley">'+smileys[key]+'</span>');
+            }
+            return str;
         },
         escape_keep_url: function(str){
             var url_regex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi;
