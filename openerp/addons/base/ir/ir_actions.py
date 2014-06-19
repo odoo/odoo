@@ -336,8 +336,6 @@ class ir_actions_act_window(osv.osv):
                         eval_context = eval(res['context'] or "{}", eval_dict) or {}
                         res['context'] = str(eval_context)
                 except Exception:
-                    _logger.warning("ir_actions: Cannot evaluate context = %s with eval_dict = %s"
-                        % (res['context'] or "{}", eval_dict), exc_info=True)
                     continue
                 if not fields or 'help' in fields:
                     custom_context = dict(context, **eval_context)
