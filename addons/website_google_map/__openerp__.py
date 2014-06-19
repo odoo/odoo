@@ -5,7 +5,7 @@
     'version': '1.0',
     'description': """
 OpenERP Website Google Map
-========================
+==========================
 
         """,
     'author': 'OpenERP SA',

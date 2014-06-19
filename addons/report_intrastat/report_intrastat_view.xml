@@ -32,7 +32,7 @@
             <field name="arch" type="xml">
                 <field name="product_manager" position="after">
                     <field name="intrastat_id"
-                        attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                        attrs="{'readonly': [('is_product_variant', '=', False)]}"/>
                 </field>
             </field>
         </record>
@@ -52,7 +52,7 @@
             <field name="name">report.intrastat.code.form</field>
             <field name="model">report.intrastat.code</field>
             <field name="arch" type="xml">
-                <form string="Intrastat Code" version="7.0">
+                <form string="Intrastat Code">
                     <group>
                         <field name="name"/>
                         <field name="description"/>

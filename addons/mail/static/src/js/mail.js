@@ -919,15 +919,45 @@ openerp.mail = function (session) {
             this.$('.oe_mail_expand').on('click', this.on_expand);
             this.$('.oe_mail_reduce').on('click', this.on_expand);
             this.$('.oe_mail_action_model').on('click', this.on_record_clicked);
+            this.$('.oe_mail_action_author').on('click', this.on_record_author_clicked);
         },
 
         on_record_clicked: function  (event) {
+            event.preventDefault();
+            var self = this;
             var state = {
                 'model': this.model,
                 'id': this.res_id,
                 'title': this.record_name
             };
             session.webclient.action_manager.do_push_state(state);
+            this.context.params = {
+                model: this.model,
+                res_id: this.res_id,
+            };
+            this.thread.ds_thread.call("message_redirect_action", {context: this.context}).then(function(action){
+                self.do_action(action); 
+            });
+        },
+
+        on_record_author_clicked: function  (event) {
+            event.preventDefault();
+            var partner_id = $(event.target).data('partner');
+            var state = {
+                'model': 'res.partner',
+                'id': partner_id,
+                'title': this.record_name
+            };
+            session.webclient.action_manager.do_push_state(state);
+            var action = {
+                type:'ir.actions.act_window',
+                view_type: 'form',
+                view_mode: 'form',
+                res_model: 'res.partner',
+                views: [[false, 'form']],
+                res_id: partner_id,
+            }
+            this.do_action(action);
         },
 
         /* Call the on_compose_message on the thread of this message. */
@@ -1885,11 +1915,11 @@ openerp.mail = function (session) {
          * @param {Object} defaults ??
          */
         load_searchview: function (defaults) {
-            var self = this;
             var ds_msg = new session.web.DataSetSearch(this, 'mail.message');
             this.searchview = new session.web.SearchView(this, ds_msg, false, defaults || {}, false);
-            this.searchview.appendTo(this.$('.oe_view_manager_view_search'))
-                .then(function () { self.searchview.on('search_data', self, self.do_searchview_search); });
+            this.searchview.on('search_data', this, this.do_searchview_search);
+            this.searchview.appendTo(this.$('.oe_view_manager_view_search'), 
+                                   this.$('.oe_searchview_drawer_container'));
             if (this.searchview.has_defaults) {
                 this.searchview.ready.then(this.searchview.do_search);
             }

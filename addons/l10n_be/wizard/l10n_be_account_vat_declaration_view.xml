@@ -6,7 +6,7 @@
             <field name="name">Vat Declaraion</field>
             <field name="model">l1on_be.vat.declaration</field>
             <field name="arch" type="xml">
-                <form string="Periodical VAT Declaration" version="7.0">
+                <form string="Periodical VAT Declaration">
                     <group>
                         <group string="Declare Periodical VAT">
                             <field name="period_id" widget="selection"/>
@@ -33,7 +33,7 @@
             <field name="name">Save XML</field>
             <field name="model">l1on_be.vat.declaration</field>
             <field name="arch" type="xml">
-                <form string="Save xml" version="7.0">
+                <form string="Save xml">
                     <label string="Save the File with '.xml' extension."/>
                     <field name="name"/>
                     <field name="file_save" readonly="True" filename="name"/>

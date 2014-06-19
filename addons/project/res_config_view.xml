@@ -18,7 +18,7 @@
             <field name="model">project.config.settings</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Configure Project" version="7.0" class="oe_form_configuration">
+                <form string="Configure Project" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         or
@@ -33,8 +33,8 @@
                                 <label for="module_project_timesheet"/>
                             </div>
                             <div>
-                                <field name="module_project_mrp" class="oe_inline"/>
-                                <label for="module_project_mrp"/>
+                                <field name="module_sale_service" class="oe_inline"/>
+                                <label for="module_sale_service"/>
                             </div>
                             <div>
                                 <field name="module_pad" class="oe_inline"/>

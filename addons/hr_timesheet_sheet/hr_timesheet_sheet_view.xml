@@ -6,7 +6,7 @@
             <field name="name">hr.timesheet.account.form</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
             <field name="arch" type="xml">
-                <form string="Timesheet by Accounts" version="7.0">
+                <form string="Timesheet by Accounts">
                     <group col="4">
                         <field name="sheet_id"/>
                         <field name="name" groups="analytic.group_analytic_accounting"/>
@@ -61,7 +61,7 @@
             <field name="name">hr.timesheet.sheet.form</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field name="arch" type="xml">
-                <form string="Timesheet" version="7.0">
+                <form string="Timesheet">
                 <header>
                     <button name="button_confirm" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
                     <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
@@ -122,7 +122,7 @@
                                     <field invisible="1" name="general_account_id"/>
                                     <field invisible="1" name="user_id" required="1"/>
                                 </tree>
-                                <form string="Timesheet Activities" version="7.0">
+                                <form string="Timesheet Activities">
                                     <field name="date"/>
                                     <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id, user_id)"/>
                                     <field name="name"/>
@@ -139,7 +139,7 @@
                         </page>
                         <page string="Attendances" groups="base.group_hr_attendance">
                             <group>
-                                <field context="{'employee_id': employee_id, 'user_id':user_id}" name="attendances_ids" nolabel="1">
+                                <field context="{'default_employee_id': employee_id, 'user_id':user_id}" name="attendances_ids" nolabel="1">
                                     <tree string="Attendances" editable="bottom">
                                         <field name="name"/>
                                         <field name="action"/>
@@ -184,7 +184,7 @@
                     <filter name="to_approve" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Employees" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     </group>

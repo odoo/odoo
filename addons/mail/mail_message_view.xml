@@ -23,7 +23,7 @@
             <field name="model">mail.message</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <form string="Message" version="7.0">
+                <form string="Message">
                     <sheet>
                         <group>
                             <group>
@@ -71,7 +71,7 @@
                     <filter string="Has attachments"
                             name="attachments"
                             domain="[('attachment_ids', '!=', False)]"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Type" name="thread" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                 </search>

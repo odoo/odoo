@@ -62,6 +62,7 @@ class WebsiteMail(http.Controller):
 
     @http.route(['/website_mail/is_follower'], type='json', auth="public", website=True)
     def call(self, model, id, **post):
+        id = int(id)
         cr, uid, context = request.cr, request.uid, request.context
 
         partner_obj = request.registry.get('res.partner')
@@ -74,17 +75,26 @@ class WebsiteMail(http.Controller):
             partner_id = users_obj.browse(cr, SUPERUSER_ID, uid, context).partner_id
         elif request.session.get('partner_id'):
             partner_id = partner_obj.browse(cr, SUPERUSER_ID, request.session.get('partner_id'), context)
-        
-        email = ""
-        is_follower = False
-        if partner_id:
-            email = partner_id and partner_id.email
-            is_follower = partner_id.id in [
-                fol.id for fol in obj.browse(cr, SUPERUSER_ID, id, context).message_follower_ids]
+        email = partner_id and partner_id.email or ""
 
-        return {
+        values = {
             'is_user': uid != public_id,
             'email': email,
-            'is_follower': is_follower
+            'is_follower': False,
+            'alias_name': False,
         }
 
+        if not obj:
+            return values
+        obj_ids = obj.exists(cr, SUPERUSER_ID, [id], context=context)
+        if obj_ids:
+            if partner_id:
+                values['is_follower'] = len(
+                    request.registry['mail.followers'].search(
+                        cr, SUPERUSER_ID, [
+                            ('res_model', '=', 'mail.group'),
+                            ('res_id', '=', obj_ids[0]),
+                            ('partner_id', '=', partner_id.id)
+                        ], context=context)) == 1
+
+        return values

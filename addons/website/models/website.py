@@ -27,6 +27,7 @@ except ImportError:
 
 import openerp
 from openerp.osv import orm, osv, fields
+from openerp.tools import html_escape as escape
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request
 
@@ -541,7 +542,10 @@ class website(osv.osv):
         response.mimetype = Image.MIME[image.format]
 
         w, h = image.size
-        max_w, max_h = int(max_width), int(max_height)
+        try:
+            max_w, max_h = int(max_width), int(max_height)
+        except:
+            max_w, max_h = (maxint, maxint)
 
         if w < max_w and h < max_h:
             response.data = data
@@ -707,7 +711,7 @@ class ir_attachment(osv.osv):
         for attachment in self.browse(cr, uid, ids, context=context):
             # in-document URLs are html-escaped, a straight search will not
             # find them
-            url = werkzeug.utils.escape(attachment.website_url)
+            url = escape(attachment.website_url)
             ids = Views.search(cr, uid, ["|", ('arch', 'like', '"%s"' % url), ('arch', 'like', "'%s'" % url)], context=context)
 
             if ids:

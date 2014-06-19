@@ -144,7 +144,7 @@ class report_custom(report_rml):
 
         for product in product_pool.browse(cr, uid, ids, context=context):
             product_uom_name = to_xml(product.uom_id.name)
-            bom_id = bom_pool._bom_find(cr, uid, product.id, product.uom_id.id)
+            bom_id = bom_pool._bom_find(cr, uid, product.uom_id.id, product_id=product.id)
             title = "<title>%s</title>" %(_("Cost Structure"))
             title += "<title>%s</title>" % (to_xml(product.name))
             xml += "<lines style='header'>" + title + prod_header + "</lines>"
@@ -168,7 +168,7 @@ class report_custom(report_rml):
             else:
                 bom = bom_pool.browse(cr, uid, bom_id, context=context)
                 factor = number * product.uom_id.factor / bom.product_uom.factor
-                sub_boms = bom_pool._bom_explode(cr, uid, bom, factor / bom.product_qty)
+                sub_boms = bom_pool._bom_explode(cr, uid, bom, product, factor / bom.product_qty)
                 total = 0
                 total_strd = 0
                 parent_bom = {

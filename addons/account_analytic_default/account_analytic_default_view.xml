@@ -22,7 +22,7 @@
             <field name="name">account.analytic.default.form</field>
             <field name="model">account.analytic.default</field>
             <field name="arch" type="xml">
-                <form string="Analytic Defaults" version="7.0">
+                <form string="Analytic Defaults">
                     <group col="4">
                         <field name="analytic_id" required="1" groups="analytic.group_analytic_accounting"/>
                         <field name="sequence"/>
@@ -49,7 +49,7 @@
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="User" icon="terp-personal" context="{'group_by':'user_id'}" help="User"/>
                         <filter string="Partner" icon="terp-partner"  context="{'group_by':'partner_id'}" help="Partner"/>
                         <filter string="Product" icon="terp-accessories-archiver"  context="{'group_by':'product_id'}" help="Product" />

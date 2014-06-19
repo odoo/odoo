@@ -4,7 +4,7 @@
         <record model="ir.ui.view" id="ir_logging_form_view">
             <field name="model">ir.logging</field>
             <field name="arch" type="xml">
-                <form string="Log" version="7.0">
+                <form string="Log">
                     <group>
                         <field name="create_date" />
                         <field name="dbname" />
@@ -22,7 +22,7 @@
         <record model="ir.ui.view" id="ir_logging_tree_view">
             <field name="model">ir.logging</field>
             <field name="arch" type="xml">
-                <tree string="Logs" version="7.0">
+                <tree string="Logs">
                     <field name="create_date" />
                     <field name="create_uid" />
                     <field name="dbname" />
@@ -44,7 +44,7 @@
                     <field name="name" />
                     <field name="level" />
                     <field name="message" />
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Database" domain="[]" context="{'group_by': 'dbname'}" />
                         <filter string="Level" domain="[]" context="{'group_by': 'level'}" />
                         <filter string="Type" domain="[]" context="{'group_by': 'type'}" />

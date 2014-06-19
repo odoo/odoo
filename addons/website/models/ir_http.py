@@ -93,8 +93,7 @@ class ir_http(orm.AbstractModel):
         return self._dispatch()
 
     def _postprocess_args(self, arguments, rule):
-        if not getattr(request, 'website_enabled', False):
-            return super(ir_http, self)._postprocess_args(arguments, rule)
+        super(ir_http, self)._postprocess_args(arguments, rule)
 
         for arg, val in arguments.items():
             # Replace uid placeholder by the current request.uid
@@ -106,7 +105,7 @@ class ir_http(orm.AbstractModel):
         except Exception:
             return self._handle_exception(werkzeug.exceptions.NotFound())
 
-        if request.httprequest.method in ('GET', 'HEAD'):
+        if getattr(request, 'website_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
             generated_path = werkzeug.url_unquote_plus(path)
             current_path = werkzeug.url_unquote_plus(request.httprequest.path)
             if generated_path != current_path:
@@ -141,49 +140,50 @@ class ir_http(orm.AbstractModel):
             return response
 
     def _handle_exception(self, exception=None, code=500):
-        if isinstance(exception, werkzeug.exceptions.HTTPException) and hasattr(exception, 'response') and exception.response:
-            return exception.response
+        try:
+            return super(ir_http, self)._handle_exception(exception)
+        except Exception:
 
-        attach = self._serve_attachment()
-        if attach:
-            return attach
+            attach = self._serve_attachment()
+            if attach:
+                return attach
 
-        if getattr(request, 'website_enabled', False) and request.website:
-            values = dict(
-                exception=exception,
-                traceback=traceback.format_exc(exception),
-            )
-            if exception:
-                code = getattr(exception, 'code', code)
-                if isinstance(exception, ir_qweb.QWebException):
-                    values.update(qweb_exception=exception)
-                    if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
-                        code = 403
-            if code == 500:
-                logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
-                if 'qweb_exception' in values:
-                    view = request.registry.get("ir.ui.view")
-                    views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
-                    to_reset = [v for v in views if v.model_data_id.noupdate is True]
-                    values['views'] = to_reset
-            elif code == 403:
-                logger.warn("403 Forbidden:\n\n%s", values['traceback'])
+            if getattr(request, 'website_enabled', False) and request.website:
+                values = dict(
+                    exception=exception,
+                    traceback=traceback.format_exc(exception),
+                )
+                if exception:
+                    code = getattr(exception, 'code', code)
+                    if isinstance(exception, ir_qweb.QWebException):
+                        values.update(qweb_exception=exception)
+                        if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
+                            code = 403
+                if code == 500:
+                    logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
+                    if 'qweb_exception' in values:
+                        view = request.registry.get("ir.ui.view")
+                        views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
+                        to_reset = [v for v in views if v.model_data_id.noupdate is True]
+                        values['views'] = to_reset
+                elif code == 403:
+                    logger.warn("403 Forbidden:\n\n%s", values['traceback'])
 
-            values.update(
-                status_message=werkzeug.http.HTTP_STATUS_CODES[code],
-                status_code=code,
-            )
+                values.update(
+                    status_message=werkzeug.http.HTTP_STATUS_CODES[code],
+                    status_code=code,
+                )
 
-            if not request.uid:
-                self._auth_method_public()
+                if not request.uid:
+                    self._auth_method_public()
 
-            try:
-                html = request.website._render('website.%s' % code, values)
-            except Exception:
-                html = request.website._render('website.http_error', values)
-            return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+                try:
+                    html = request.website._render('website.%s' % code, values)
+                except Exception:
+                    html = request.website._render('website.http_error', values)
+                return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
-        return super(ir_http, self)._handle_exception(exception)
+            raise
 
 class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False, domain='[]'):

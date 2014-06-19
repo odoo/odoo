@@ -37,7 +37,7 @@
                     <field name="user_id"/>
                     <filter string="Open" domain="[('state','=','open')]" help="Current Accounts"/>
                     <filter string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Associated Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Template" domain="[]" context="{'group_by':'template_id'}"/>
@@ -127,7 +127,7 @@
             <field name="model">account.analytic.line</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <form string="Analytic Entry" version="7.0">
+                <form string="Analytic Entry">
                     <group>
                         <group>
                             <field name="name"/>
@@ -198,7 +198,7 @@
                     <filter string="My Entries" domain="[('user_id','=',uid)]"/>
                     <field name="account_id"/>
                     <field name="user_id"/>
-                    <group string="Group By..." expand="0">
+                    <group string="Group By" expand="0">
                         <filter string="Analytic Account" context="{'group_by':'account_id'}"/>
                         <filter string="Fin. Account" context="{'group_by':'general_account_id'}"/>
                         <filter string="Journal" context="{'group_by':'journal_id'}" name="group_journal"/>
@@ -243,7 +243,7 @@
             <field name="name">account.analytic.line.extended_form</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <form string="Project line" version="7.0">
+                <form string="Project line">
                     <group>
                        <group>
                           <field name="name"/>
@@ -306,7 +306,7 @@
                 <search string="Analytic Journals">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Journal"/>
                     <field name="type"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                 </search>
@@ -317,7 +317,7 @@
             <field name="name">account.analytic.journal.form</field>
             <field name="model">account.analytic.journal</field>
             <field name="arch" type="xml">
-                <form string="Analytic Journal" version="7.0">
+                <form string="Analytic Journal">
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
