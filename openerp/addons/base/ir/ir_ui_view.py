@@ -49,15 +49,26 @@ _logger = logging.getLogger(__name__)
 
 MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath']
 
-def keep_query(*args, **kw):
-    if not args and not kw:
-        args = ('*',)
-    params = kw.copy()
-    query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
-    for keep_param in args:
-        for param in fnmatch.filter(query_params, keep_param):
-            if param not in params and param in request.params:
-                params[param] = request.params[param]
+def keep_query(*keep_params, **additional_params):
+    """
+    Generate a query string keeping the current request querystring's parameters specified
+    in ``keep_params`` and also adds the parameters specified in ``additional_params``.
+
+    Multiple values query string params will be merged into a single one with comma seperated
+    values.
+
+    The ``keep_params`` arguments can use wildcards too, eg:
+
+        keep_query('search', 'shop_*', page=4)
+    """
+    if not keep_params and not additional_params:
+        keep_params = ('*',)
+    params = additional_params.copy()
+    qs_keys = request.httprequest.args.keys()
+    for keep_param in keep_params:
+        for param in fnmatch.filter(qs_keys, keep_param):
+            if param not in additional_params and param in qs_keys:
+                params[param] = ','.join(request.httprequest.args.getlist(param))
     return werkzeug.urls.url_encode(params)
 
 class view_custom(osv.osv):

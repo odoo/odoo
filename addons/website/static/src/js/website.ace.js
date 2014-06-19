@@ -1,6 +1,9 @@
 (function () {
     'use strict';
 
+    var _t = openerp._t;
+    var hash = "#advanced-view-editor";
+
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.ace.xml');
     var hash = "#advanced-view-editor";
@@ -58,12 +61,11 @@
     website.ace.ViewOption = openerp.Widget.extend({
         template: 'website.ace_view_option',
         init: function (parent, options) {
-            var indent = "- ";
             this.view_id = options.id;
             this.view_name = options.name;
-            for (var i = 0; i<options.level; i++) {
-                this.view_name = indent + this.view_name;
-            }
+
+            var indent = _.str.repeat("- ", options.level);
+            this.view_name = _.str.sprintf("%s%s", indent, options.name);
             this._super(parent);
         },
     });
@@ -81,6 +83,7 @@
         },
         init: function (parent) {
             this.buffers = {};
+            this.views = {};
             this._super(parent);
         },
         start: function () {
@@ -155,15 +158,14 @@
             resizeEditorHeight(this.getParent().$el.outerHeight()+2);
         },
         loadViews: function (views) {
-            var self = this;
-            var $viewList = self.$('#ace-view-list');
-            var views = this.buildViewGraph(views);
-            _.each(views, function (view) {
-                if (view.id) {
-                    new website.ace.ViewOption(self, view).appendTo($viewList);
-                    self.loadView(view.id);
-                }
-            });
+            var $viewList = this.$('#ace-view-list');
+            _(this.buildViewGraph(views)).each(function (view) {
+                if (!view.id) { return; }
+
+                this.views[view.id] = view;
+                new website.ace.ViewOption(this, view).appendTo($viewList);
+                this.loadView(view.id);
+            }.bind(this));
         },
         buildViewGraph: function (views) {
             var activeViews = _.uniq(_.filter(views, function (view) {
@@ -235,6 +237,9 @@
             var editingSession = this.buffers[viewId];
             if (editingSession) {
                 this.aceEditor.setSession(editingSession);
+                this.$('#ace-view-id').text(_.str.sprintf(
+                    _t("Template ID: %s"),
+                    this.views[viewId].xml_id));
             }
         },
         displaySelectedView: function () {

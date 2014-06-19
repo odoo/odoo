@@ -678,6 +678,17 @@ class product_template(osv.osv):
         if not context or "create_product_product" not in context:
             self.create_variant_ids(cr, uid, [product_template_id], context=context)
         self._set_standard_price(cr, uid, product_template_id, vals.get('standard_price', 0.0), context=context)
+
+        # TODO: this is needed to set given values to first variant after creation
+        # these fields should be moved to product as lead to confusion
+        related_vals = {}
+        if vals.get('ean13'):
+            related_vals['ean13'] = vals['ean13']
+        if vals.get('default_code'):
+            related_vals['default_code'] = vals['default_code']
+        if related_vals:
+            self.write(cr, uid, product_template_id, related_vals, context=context)
+
         return product_template_id
 
     def write(self, cr, uid, ids, vals, context=None):

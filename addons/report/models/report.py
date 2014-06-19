@@ -134,14 +134,15 @@ class Report(osv.Model):
         website = None
         if request and hasattr(request, 'website'):
             website = request.website
-        values.update({
-            'time': time,
-            'translate_doc': translate_doc,
-            'editable': True,  # Will active inherit_branding
-            'user': user,
-            'res_company': user.company_id,
-            'website': website,
-        })
+        values.update(
+            time=time,
+            translate_doc=translate_doc,
+            editable=True,  # Will active inherit_branding
+            user=user,
+            res_company=user.company_id,
+            website=website,
+            editable_no_editor=True,
+        )
         return view_obj.render(cr, uid, template, values, context=context)
 
     #--------------------------------------------------------------------------

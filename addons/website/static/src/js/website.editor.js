@@ -3,6 +3,7 @@
 
     var website = openerp.website;
     var _t = openerp._t;
+    website.no_editor = !!$(document.documentElement).data('editable-no-editor');
 
     website.add_template_file('/website/static/src/xml/website.editor.xml');
 
@@ -18,33 +19,49 @@
             this.saving_mutex = new openerp.Mutex();
 
             this.$('#website-top-edit').hide();
-            this.$el.parents().find('#website-top-view').show();
+            this.$('#website-top-view').show();
 
-            // $('.dropdown-toggle').dropdown();
+            var $edit_button = this.$('button[data-action=edit]')
+                    .prop('disabled', website.no_editor);
+            if (website.no_editor) {
+                var help_text = $(document.documentElement).data('editable-no-editor');
+                $edit_button.parent()
+                    // help must be set on form above button because it does
+                    // not appear on disabled button
+                    .attr('title', help_text);
+            }
+
+
+            $('.dropdown-toggle').dropdown();
+            this.customize_setup();
 
             this.$buttons = {
-                edit: this.$el.parents().find('button[data-action=edit]'),
+                edit: this.$('button[data-action=edit]'),
                 save: this.$('button[data-action=save]'),
                 cancel: this.$('button[data-action=cancel]'),
             };
-
-            this.$buttons.edit.click(function(ev) {
-                self.edit();
-            });
 
             this.rte = new website.RTE(this);
             this.rte.on('change', this, this.proxy('rte_changed'));
             this.rte.on('rte:ready', this, function () {
                 self.setup_hover_buttons();
                 self.trigger('rte:ready');
+                self.check_height();
             });
 
+            $(window).on('resize', _.debounce(this.check_height.bind(this), 50));
+            this.check_height();
+
             if (website.is_editable_button) {
-                this.$buttons.edit.removeClass("hidden");
+                this.$("button[data-action=edit]").removeClass("hidden");
             }
 
-            this.rte.appendTo(this.$('#website-top-edit .nav.js_editor_placeholder'));
-            return this._super.apply(this, arguments);
+            return $.when(
+                this._super.apply(this, arguments),
+                this.rte.appendTo(this.$('#website-top-edit .nav.pull-right'))
+            ).then(function () {
+                self.check_height();
+            });
         },
         edit: function () {
             this.$buttons.edit.prop('disabled', true);
@@ -1499,7 +1516,7 @@
                 url: this.link
             });
             this.media.renameNode("img");
-            this.media.$.attributes.src = this.link;
+            $(this.media).attr('src', this.link);
             return this._super();
         },
         clear: function () {
@@ -1983,6 +2000,11 @@
         //       a/@href, ...)
         _(mutations).chain()
             .filter(function (m) {
+                // ignore any SVG target, these blokes are like weird mon
+                if (m.target && m.target instanceof SVGElement) {
+                    return false;
+                }
+
                 // ignore any change related to mundane image-edit-button
                 if (m.target && m.target.className
                         && m.target.className.indexOf('image-edit-button') !== -1) {

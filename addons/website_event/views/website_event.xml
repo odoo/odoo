@@ -162,10 +162,11 @@
 <template id="event_category" inherit_id="website_event.event_left_column" optional="disabled" name="Filter by Category">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
-            <t t-foreach="types">
-                <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
-                    <a t-attf-href="/event?{{ keep_query('country', 'date', type=type[0]) }}"><t t-esc="type[1]"/>
-                        <span class="badge pull-right"><t t-esc="type_count"/></span>
+            <t t-foreach="types" t-as="type">
+                <li t-if="type['type']"
+                    t-att-class="searches.get('type') == str(type['type'] and type['type'][0]) and 'active' or ''">
+                    <a t-attf-href="/event?{{ keep_query('country', 'date', type=type['type'][0]) }}"><t t-esc="type['type'][1]"/>
+                        <span class="badge pull-right"><t t-esc="type['type_count']"/></span>
                     </a>
                 </li>
             </t>
@@ -176,10 +177,10 @@
 <template id="event_location" inherit_id="website_event.event_left_column" optional="disabled" name="Filter by Country">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
-            <t t-foreach="countries">
-                <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
-                    <a t-attf-href="/event?{{ keep_query('type', 'data', country=country_id[0]) }}"><t t-esc="country_id[1]"/>
-                        <span class="badge pull-right"><t t-esc="country_id_count"/></span>
+            <t t-foreach="countries" t-as="country">
+                <li t-if="country['country_id']" t-att-class="searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active' or ''">
+                    <a t-attf-href="/event?{{ keep_query('type', 'data', country=country['country_id'][0]) }}"><t t-esc="country['country_id'][1]"/>
+                        <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
                     </a>
                 </li>
             </t>
