@@ -531,6 +531,9 @@ openerp.account = function (instance) {
             this.set("line_created_being_edited", [{'id': 0}]);
             this.on("change:lines_created", this, this.createdLinesChanged);
             this.on("change:line_created_being_edited", this, this.createdLinesChanged);
+
+            //all lines associated to current reconciliation
+            this.lines = undefined;
         },
     
         start: function() {
@@ -566,6 +569,14 @@ openerp.account = function (instance) {
     
                 // Display the widget
                 return $.when(deferred_fetch_data).then(function(){
+                    //load all lines that can be usefull for counterparts
+                    var deferred_total_move_lines_num = self.model_bank_statement_line
+                        .call("get_move_lines_counterparts_id", [self.st_line.id, []])
+                        .then(function(lines){
+                            self.lines = lines;
+                        });
+                    return deferred_total_move_lines_num;
+                }).then(function(){
                     // Render template
                     var presets_array = [];
                     for (var id in self.presets)
@@ -580,7 +591,7 @@ openerp.account = function (instance) {
                     if (self.context.mode !== "match") self.updateMatches();
                     self.bindPopoverTo(self.$(".line_info_button"));
                     self.createFormWidgets();
-    
+                    debugger;
                     // Special case hack : no identified partner
                     if (self.st_line.has_no_partner) {
                         self.$el.css("opacity", "0");
@@ -1363,7 +1374,7 @@ openerp.account = function (instance) {
             if (limit > 0) {
                 // Load move lines
                 deferred_move_lines = self.model_bank_statement_line
-                    .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids, self.filter, offset, limit])
+                    .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids])
                     .then(function (lines) {
                         _(lines).each(self.decorateMoveLine.bind(self));
                         move_lines = lines;
@@ -1371,7 +1382,7 @@ openerp.account = function (instance) {
             }
             // Fetch the number of move lines corresponding to this statement line and this filter
             var deferred_total_move_lines_num = self.model_bank_statement_line
-                .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids, self.filter, 0, undefined, true])
+                .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids, [], true])
                 .then(function(num){
                     move_lines_num = num;
                 });
