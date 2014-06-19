@@ -151,7 +151,7 @@ class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
 
     def need_procurement(self, cr, uid, ids, context=None):
-        #when sale is installed alone, there is no need to create procurements, but with project_mrp
+        #when sale is installed alone, there is no need to create procurements, but with sale_service
         #we must create a procurement for each service that has the auto_create_task boolean set to True.
         for line in self.browse(cr, uid, ids, context=context):
             if line.product_id and line.product_id.type == 'service' and line.product_id.auto_create_task:

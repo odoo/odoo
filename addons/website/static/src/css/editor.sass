@@ -408,6 +408,7 @@ $highlighted_text_color: #ffffff
 /* ---- ACE EDITOR ---- {{{ */
 
 $editorbar_height: 30px
+$infobar_height: 20px
 // TODO Fix => might break with themes
 
 .oe_ace_view_editor
@@ -416,12 +417,13 @@ $editorbar_height: 30px
     right: 0
     z-index: 1000
     height: 100%
+    background: #2F3129
+    color: white
     .oe_ace_view_editor_title
         width: 100%
         padding-top: 0
         padding-left: 0
         height: $editorbar_height
-        background: #2F3129
         .oe_view_list
             width: 50%
             height: $editorbar_height
@@ -432,12 +434,14 @@ $editorbar_height: 30px
             @include editor-font
     .ace_editor
         position: absolute
-        top: $editorbar_height
+        top: $editorbar_height + $infobar_height
         right: 0
         // bottom property is set programmatically
         left: 0
         .ace_gutter
             cursor: ew-resize
+    #ace-view-id
+        padding: 0 1em
     &.oe_ace_open
         +opacity(0.97)
     &.oe_ace_closed

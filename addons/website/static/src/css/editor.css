@@ -472,13 +472,14 @@ ul.oe_menu_editor .disclose {
   right: 0;
   z-index: 1000;
   height: 100%;
+  background: #2f3129;
+  color: white;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title {
   width: 100%;
   padding-top: 0;
   padding-left: 0;
   height: 30px;
-  background: #2f3129;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title .oe_view_list {
   width: 50%;
@@ -496,12 +497,15 @@ ul.oe_menu_editor .disclose {
 }
 .oe_ace_view_editor .ace_editor {
   position: absolute;
-  top: 30px;
+  top: 50px;
   right: 0;
   left: 0;
 }
 .oe_ace_view_editor .ace_editor .ace_gutter {
   cursor: ew-resize;
+}
+.oe_ace_view_editor #ace-view-id {
+  padding: 0 1em;
 }
 .oe_ace_view_editor.oe_ace_open {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=97);
