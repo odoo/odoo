@@ -247,6 +247,7 @@
                     <t t-call="web.assets_backend"/>
 
                     <script type="text/javascript" id="qunit_config">
+                        localStorage.clear();
                         QUnit.config.testTimeout = 5 * 60 * 1000;
                         QUnit.moduleDone(function(result) {
                             console.log(result.name + " (" + result.passed + "/" + result.total + " passed tests)");

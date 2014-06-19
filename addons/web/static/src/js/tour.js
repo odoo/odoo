@@ -122,7 +122,7 @@ var Tour = {
         if (tour.steps[index-1] &&
             tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
             var step = {
-                _title: "",
+                _title: "close popover and finish",
                 id: index,
                 waitNot: '.popover.tour.fade.in:visible'
             };
@@ -365,7 +365,7 @@ var Tour = {
                 Tour.registerSteps(state.tour);
                 Tour.nextStep();
             } else {
-                if (state.wait > 10) {
+                if (state.wait >= 10) {
                     Tour.error(state.step, "Tour '"+state.id+"' undefined");
                 }
                 Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
