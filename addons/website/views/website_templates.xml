@@ -59,6 +59,7 @@
     <html t-att-lang="lang and lang.replace('_', '-')"
           t-att-data-website-id="website.id if editable else None"
           t-att-data-editable="'1' if editable else None"
+          t-att-data-editable-no-editor="editable_no_editor or None"
           t-att-data-translatable="'1' if translatable else None"
           t-att-data-view-xmlid="xmlid if editable else None"
           t-att-data-main-object="repr(main_object) if editable else None"
@@ -140,8 +141,8 @@
                     </div>
                     <div class="container mt16 mb8">
                         <div class="pull-right" t-ignore="true" t-if="not editable">
-                            Create a <a href="http://openerp.com/apps/website">free website</a> with
-                            <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
+                            Create a <a href="https://www.odoo.com/page/website-builder">free website</a> with
+                            <a class="label label-danger" href="https://www.odoo.com/">Odoo</a>
                         </div>
                         <div class="pull-left text-muted">
                             Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
@@ -179,8 +180,10 @@
     <xpath expr="//body" position="inside">
         <div id="website-top-navbar-placeholder" class="navbar navbar-inverse navbar-fixed-top hidden-xs">
             <div class="navbar-header">
-                <form class="navbar-form navbar-left">
-                    <button type="button" class="btn btn-primary">Edit</button>
+                <form class="navbar-form navbar-left" title="editable_no_editor or None">
+                    <button type="button" class="btn btn-primary"
+                            disabled="'disabled' if editable_no_editor else None"
+                        >Edit</button>
                 </form>
             </div>
             <div class="collapse navbar-collapse navbar-edit-collapse">
@@ -429,29 +432,37 @@
     <table class="table js_kanban">
         <thead>
             <tr>
-                <t t-set="width" t-value="str(round(100.0 / len(objects), 2)) + '%'"/>
-                <t t-foreach="objects">
+                <t t-set="width" t-valuef="{{ round(100.0 / len(objects), 2) }}%"/>
+                <t t-foreach="objects" t-as="obj">
                     <th t-att-width="width">
-                        <div t-field="column_id.name" class="text-center"></div>
+                        <div t-field="obj['column_id'].name" class="text-center"></div>
                     </th>
                 </t>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <t t-foreach="objects">
-                    <td class="js_kanban_col" t-att-data-template="template" t-att-data-domain="domain" t-att-data-page_count="page_count" t-att-data-model="model" t-att-data-step="step" t-att-data-orderby="orderby">
-                        <t t-foreach="object_ids" t-as="object_id">
+                <t t-foreach="objects" t-as="obj">
+                    <td class="js_kanban_col" t-att-data-template="template"
+                            t-att-data-domain="obj['domain']"
+                            t-att-data-page_count="obj['page_count']"
+                            t-att-data-model="obj['model']"
+                            t-att-data-step="obj['step']"
+                            t-att-data-orderby="obj['orderby']">
+                        <t t-foreach="obj['object_ids']" t-as="object_id">
                             <t t-call="#{ template }"></t>
                         </t>
                         <!-- pager -->
-                        <div t-if="1 != page_end" class="pagination pagination-centered">
+                        <div t-if="1 != obj['page_end']" class="pagination pagination-centered">
                             <ul>
-                                <li t-attf-class="prev #{'active' if page == 1 else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &gt; 1 and page-1 or 1)) ">Prev</a></li>
-                                <t t-foreach="range(page_start, page_end+1)" t-as="p">
-                                    <li t-att-class=" 'active' if page == p else '' "> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, p)" t-esc="p"></a></li>
+                                <li t-attf-class="prev #{'active' if obj['page'] == 1 else '' }">
+                                    <a t-att-href=" '%s,%s-%s' % (obj['kanban_url'], obj['column_id'].id, (obj['page'] &gt; 1 and obj['page']-1 or 1)) ">Prev</a></li>
+                                <t t-foreach="range(obj['page_start'], obj['page_end']+1)" t-as="p">
+                                    <li t-att-class=" 'active' if obj['page'] == p else '' ">
+                                        <a t-att-href=" '%s,%s-%s' % (obj['kanban_url'], obj['column_id'].id, p)" t-esc="p"></a></li>
                                 </t>
-                                <li t-attf-class="next #{'active' if page == page_end else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &lt; page_end and page+1 or page_end) )">Next</a></li>
+                                <li t-attf-class="next #{'active' if obj['page'] == obj['page_end'] else '' }">
+                                    <a t-att-href=" '%s,%s-%s' % (obj['kanban_url'], obj['column_id'].id, (obj['page'] &lt; obj['page_end'] and obj['page']+1 or obj['page_end']) )">Next</a></li>
                             </ul>
                         </div>
                     </td>
