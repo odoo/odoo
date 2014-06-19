@@ -23,7 +23,6 @@ from datetime import datetime
 
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.addons.crm import crm
 from openerp.osv import fields, osv, orm
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
@@ -259,7 +258,7 @@ class project_issue(osv.Model):
         'date_closed': fields.datetime('Closed', readonly=True,select=True),
         'date': fields.datetime('Date'),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
-        'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
+        'channel': fields.char('Channel', help="Communication channel."),
         'categ_ids': fields.many2many('project.category', string='Tags'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
