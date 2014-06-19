@@ -2724,6 +2724,14 @@ class stock_inventory_line(osv.osv):
         'product_qty': 1,
     }
 
+    def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
+        product_obj = self.pool.get('product.product')
+        if 'product_id' in values and not 'product_uom_id' in values:
+            values['product_uom_id'] = product_obj.browse(cr, uid, values.get('product_id'), context=context).uom_id.id
+        return super(stock_inventory_line, self).create(cr, uid, values, context=context)
+
     def _resolve_inventory_line(self, cr, uid, inventory_line, context=None):
         stock_move_obj = self.pool.get('stock.move')
         diff = inventory_line.theoretical_qty - inventory_line.product_qty
