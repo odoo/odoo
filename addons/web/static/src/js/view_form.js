@@ -3076,6 +3076,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.floating = false;
         this.current_display = null;
         this.is_started = false;
+        this.ignore_focusout = false;
     },
     reinit_value: function(val) {
         this.internal_set_value(val);
@@ -3201,6 +3202,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var ed_delay = 200;
         var ed_duration = 15000;
         var anyoneLoosesFocus = function (e) {
+            if (self.ignore_focusout) { return; }
             var used = false;
             if (self.floating) {
                 if (self.last_search.length > 0) {
@@ -3393,7 +3395,12 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     _search_create_popup: function() {
         this.no_ed = true;
         this.ed_def.reject();
-        return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
+        this.ignore_focusout = true;
+        this.reinit_value(false);
+        var res = instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
+        this.ignore_focusout = false;
+        this.no_ed = false;
+        return res;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
