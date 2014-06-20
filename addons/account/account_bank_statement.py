@@ -448,8 +448,8 @@ class account_bank_statement_line(osv.osv):
         """ Used to instanciate a batch of reconciliations in a single request """
         # Build a list of reconciliations data
         ret = []
+        statement_line_done = {}
         mv_line_ids_selected = []
-        ids2 = []
         for st_line in self.browse(cr, uid, ids, context=context):
             # look for structured communication first
             exact_match_id = self.search_structured_com(cr, uid, st_line, context=context)
@@ -460,18 +460,19 @@ class account_bank_statement_line(osv.osv):
                 }
                 for mv_line in reconciliation_data['reconciliation_proposition']:
                     mv_line_ids_selected.append(mv_line['id'])
-                ret.append(reconciliation_data)
-            else:
-                ids2.append(st_line.id)
+                statement_line_done[st_line.id] = reconciliation_data
                 
-        for st_line_id in ids2:
-            reconciliation_data = {
-                'st_line': self.get_statement_line_for_reconciliation(cr, uid, st_line_id, context),
-                'reconciliation_proposition': self.get_reconciliation_proposition(cr, uid, st_line_id, mv_line_ids_selected, context)
-            }
-            for mv_line in reconciliation_data['reconciliation_proposition']:
-                mv_line_ids_selected.append(mv_line['id'])
-            ret.append(reconciliation_data)
+        for st_line_id in ids:
+            if statement_line_done.get(st_line_id):
+                ret.append(statement_line_done.get(st_line_id))
+            else:
+                reconciliation_data = {
+                    'st_line': self.get_statement_line_for_reconciliation(cr, uid, st_line_id, context),
+                    'reconciliation_proposition': self.get_reconciliation_proposition(cr, uid, st_line_id, mv_line_ids_selected, context)
+                }
+                for mv_line in reconciliation_data['reconciliation_proposition']:
+                    mv_line_ids_selected.append(mv_line['id'])
+                ret.append(reconciliation_data)
 
         # Check if, now that 'candidate' move lines were selected, there are moves left for statement lines
         #for reconciliation_data in ret:
