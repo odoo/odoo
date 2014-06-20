@@ -24,6 +24,7 @@ try:
     import slugify as slugify_lib
 except ImportError:
     slugify_lib = None
+    import unicodedata
 
 import openerp
 from openerp.osv import orm, osv, fields
@@ -85,14 +86,30 @@ def is_multilang_url(local_url, langs=None):
         return False
 
 def slugify(s, max_length=None):
+    """ Transform a string to a slug that can be used in a url path.
+
+    This method will first try to do the job with python-slugify if present.
+    Otherwise it will process string by stripping leading and ending spaces,
+    converting unicode chars to ascii, lowering all chars and replacing spaces
+    and underscore with hyphen "-".
+
+    :param s: str
+    :param max_length: int
+    :rtype: str
+    """
+
     if slugify_lib:
         # There are 2 different libraries only python-slugify is supported
         try:
             return slugify_lib.slugify(s, max_length=max_length)
         except TypeError:
             pass
-    spaceless = re.sub(r'\s+', '-', s)
-    specialless = re.sub(r'[^-_A-Za-z0-9]', '', spaceless)
+    if isinstance(s, str):
+        s = s.decode('utf-8')
+    uni = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
+    spaceless = re.sub('[\W_]', ' ', uni).strip().lower()
+    specialless = re.sub('[-\s]+', '-', spaceless)
+
     return specialless[:max_length]
 
 def slug(value):
@@ -147,7 +164,7 @@ class website(osv.osv):
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
     }
-    
+
     # cf. Wizard hack in website_views.xml
     def noop(self, *args, **kwargs):
         pass
