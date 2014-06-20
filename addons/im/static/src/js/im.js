@@ -36,7 +36,8 @@
         events: {
             "click": "clicked",
         },
-        clicked: function() {
+        clicked: function(ev) {
+            ev.preventDefault();
             this.trigger("clicked");
         },
     });

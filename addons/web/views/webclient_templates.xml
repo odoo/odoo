@@ -206,7 +206,8 @@
                             </t>
                             <t t-if="not init">
                                 var wc = new s.web.WebClient();
-                                wc.appendTo($(document.body));
+                                wc.setElement($(document.body));
+                                wc.start();
                             </t>
                         });
                     </script>

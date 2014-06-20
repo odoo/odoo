@@ -14,12 +14,14 @@ openerp.hr_attendance = function (instance) {
         start: function() {
             var self = this;
             var tmp = function() {
-                this.$('.fa').toggleClass("fa-sign-in", ! this.get("signed_in"));
-                this.$('.fa').toggleClass("fa-sign-out", this.get("signed_in"));
+                var $sign_in_out_icon = this.$('#oe_attendance_sign_in_out_icon');
+                $sign_in_out_icon.toggleClass("fa-sign-in", ! this.get("signed_in"));
+                $sign_in_out_icon.toggleClass("fa-sign-out", this.get("signed_in"));
             };
             this.on("change:signed_in", this, tmp);
             _.bind(tmp, this)();
-            this.$(".oe_attendance_sign_in_out").click(function() {
+            this.$(".oe_attendance_sign_in_out").click(function(ev) {
+                ev.preventDefault();
                 self.do_update_attendance();
             });
             this.$el.tooltip({
@@ -80,7 +82,7 @@ openerp.hr_attendance = function (instance) {
                 Users.call('has_group', ['base.group_user']).done(function(is_employee) {
                     if (is_employee) {
                         self.attendanceslider = new instance.hr_attendance.AttendanceSlider(self);
-                        self.attendanceslider.prependTo(window.$('.oe_systray'));
+                        self.attendanceslider.prependTo(instance.webclient.$('.oe_systray'));
                     } else {
                         self.attendanceslider = null;
                     }

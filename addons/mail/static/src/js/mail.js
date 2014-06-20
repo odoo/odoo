@@ -1996,11 +1996,12 @@ openerp.mail = function (session) {
         template:'mail.ComposeMessageTopButton',
 
         start: function () {
-            this.$el.on('click', this.on_compose_message );
+            this.$el.on('click', this.on_compose_message);
             this._super();
         },
 
         on_compose_message: function (event) {
+            event.preventDefault();
             event.stopPropagation();
             var action = {
                 type: 'ir.actions.act_window',
