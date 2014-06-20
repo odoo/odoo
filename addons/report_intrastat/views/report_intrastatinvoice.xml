@@ -56,7 +56,7 @@
                     <tr t-foreach="o.invoice_line" t-as="l">
                         <td><span t-field="l.name"/></td>
                         <td class="text-right"><span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_id))"/></td>
-                        <td class="text-right"><span t-esc="l.product_id.intrastat_id"/></td>
+                        <td class="text-right"><span t-esc="l.product_id.intrastat_id.name"/></td>
                         <td class="text-right"><span t-esc="l.product_id.weight"/></td>
                         <td class="text-right"><span t-field="l.quantity"/></td>
                         <td groups="product.group_uom"><span t-field="l.uos_id"/></td>
