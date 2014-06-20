@@ -288,6 +288,31 @@ class ir_translation(osv.osv):
                 })
         return len(ids)
 
+    def _get_source_query(self, cr, uid, name, types, lang, source, res_id):
+        if source:
+            query = """SELECT value
+                       FROM ir_translation
+                       WHERE lang=%s
+                        AND type in %s
+                        AND src=%s"""
+            params = (lang or '', types, tools.ustr(source))
+            if res_id:
+                query += "AND res_id=%s"
+                params += (res_id,)
+            if name:
+                query += " AND name=%s"
+                params += (tools.ustr(name),)
+        else:
+            query = """SELECT value
+                       FROM ir_translation
+                       WHERE lang=%s
+                        AND type in %s
+                        AND name=%s"""
+
+            params = (lang or '', types, tools.ustr(name))
+        
+        return (query, params)
+
     @tools.ormcache(skiparg=3)
     def _get_source(self, cr, uid, name, types, lang, source=None, res_id=None):
         """
@@ -310,27 +335,10 @@ class ir_translation(osv.osv):
             return tools.ustr(source or '')
         if isinstance(types, basestring):
             types = (types,)
-        if source:
-            query = """SELECT value
-                       FROM ir_translation
-                       WHERE lang=%s
-                        AND type in %s
-                        AND src=%s"""
-            params = (lang or '', types, tools.ustr(source))
-            if res_id:
-                query += "AND res_id=%s"
-                params += (res_id,)
-            if name:
-                query += " AND name=%s"
-                params += (tools.ustr(name),)
-            cr.execute(query, params)
-        else:
-            cr.execute("""SELECT value
-                          FROM ir_translation
-                          WHERE lang=%s
-                           AND type in %s
-                           AND name=%s""",
-                    (lang or '', types, tools.ustr(name)))
+        
+        query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)
+        
+        cr.execute(query, params)
         res = cr.fetchone()
         trad = res and res[0] or u''
         if source and not trad:
