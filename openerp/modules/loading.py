@@ -213,7 +213,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             # Set new modules and dependencies
             modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
             # Update translations for all installed languages
-            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None)
+            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
