@@ -110,9 +110,8 @@ class stock_fill_inventory(osv.osv_memory):
             local_context = dict(context)
             local_context['raise-exception'] = False
             # To avoid running out of memory, process limited batches
-            for i in range(0, len(all_move_ids), self.MAX_IMPORT_LINES):
-                move_ids = all_move_ids[i * self.MAX_IMPORT_LINES:
-                                        (i + 1) * self.MAX_IMPORT_LINES]
+            for i in xrange(0, len(all_move_ids), self.MAX_IMPORT_LINES):
+                move_ids = all_move_ids[i:i+self.MAX_IMPORT_LINES]
                 for move in move_obj.browse(cr, uid, move_ids, context=context):
                     lot_id = move.prodlot_id.id
                     prod_id = move.product_id.id
