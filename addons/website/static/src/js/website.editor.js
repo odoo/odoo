@@ -50,9 +50,6 @@
                 self.trigger('rte:ready');
             });
 
-            if (website.is_editable_button) {
-                this.$buttons.edit.removeClass("hidden");
-            }
             this.rte.appendTo(this.$('#website-top-edit .nav.js_editor_placeholder'));
             return this._super.apply(this, arguments);
             

@@ -18,11 +18,9 @@
                 $("button[data-action=edit]").removeClass("hidden");
                 $('button[data-action=edit]')
                     .text("Translate");
-                if (website.is_editable_button) {
-                    $('button[data-action=edit]')
-                        .parent()
-                        .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
-                }
+                $('button[data-action=edit]')
+                    .parent()
+                    .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
                 $('a[data-action=edit_master]').on('click', self, function(ev) {
                     self.edit_master(ev);
                 });

@@ -24,11 +24,11 @@
             </li>
         </ul>
 
-        <ul id="oe_editzone" class="nav navbar-nav hidden-xs" style="padding-left: 20px;">
-            <li><button type="button" data-action="edit" class="btn btn-primary btn-xs">Edit</button></li>
+        <ul id="oe_editzone" class="nav navbar-nav hidden-xs" style="padding-left: 20px;" groups="base.group_website_publisher">
+            <li><button type="button" data-action="edit" class="btn btn-primary btn-xs" style="display: none;">Edit</button></li>
         </ul>
 
-        <ul id="oe_systray" class="nav navbar-nav navbar-right hidden-xs">
+        <ul id="oe_systray" class="nav navbar-nav navbar-right pull-right hidden-xs">
             <!-- Mobile -->
             <li>
                 <a data-action="show-mobile-preview" href="#">
@@ -37,26 +37,26 @@
             </li>
 
             <!-- Promote -->
-            <li>
+            <li groups="base.group_website_designer">
                 <a data-action="promote-current-page" href="#">
                     <span title="Promote page on the web">Promote</span>
                 </a>
             </li>
 
             <!-- Content -->
-            <li class="dropdown">
+            <li class="dropdown" groups="base.group_website_publisher">
                 <a id="content-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
                     Content <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu oe_content_menu" role="menu">
-                    <li><a data-action="edit-structure" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
-                    <li class="divider"> </li>
-                    <li><a href="#" data-action="new_page">New Page</a></li>
+                    <li groups="base.group_website_designer"><a data-action="edit-structure" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
+                    <li class="divider" groups="base.group_website_designer"> </li>
+                    <li groups="base.group_website_designer"><a href="#" data-action="new_page">New Page</a></li>
                 </ul>
             </li>
 
             <!-- Customize -->
-            <li class="dropdown" id="customize-menu">
+            <li class="dropdown" id="customize-menu" groups="base.group_website_designer">
                 <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
                     Customize <span class="caret"></span>
                 </a>

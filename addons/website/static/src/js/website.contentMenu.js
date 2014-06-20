@@ -5,8 +5,6 @@
     website.contentMenu = {};
     website.add_template_file('/website/static/src/xml/website.contentMenu.xml');
     var _t = openerp._t;
-    website.is_editable_button = true;
-
 
     website.EditorBarContent = openerp.Widget.extend({
         start: function() {
