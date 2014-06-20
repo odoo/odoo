@@ -1,0 +1,68 @@
+(function () {
+    'use strict';
+
+    var website = openerp.website;
+
+    website.snippet.animationRegistry.follow = website.snippet.Animation.extend({
+        selector: ".js_follow",
+        start: function (editable_mode) {
+            var self = this;
+            this.is_user = false;
+
+            openerp.jsonRpc('/website_mail/is_follower', 'call', {
+                model: this.$target.data('object'),
+                id: this.$target.data('id'),
+            }).always(function (data) {
+                self.is_user = data.is_user;
+                self.email = data.email;
+                self.toggle_subscription(data.is_follower, data.email);
+                self.$target.removeClass("hidden");
+            });
+
+            // not if editable mode to allow designer to edit alert field
+            if (!editable_mode) {
+                $('.js_follow > .alert').addClass("hidden");
+                $('.js_follow > .input-group-btn.hidden').removeClass("hidden");
+                this.$target.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
+                    event.preventDefault();
+                    self.on_click();
+                });
+            }
+            return;
+        },
+        on_click: function () {
+            var self = this;
+            var $email = this.$target.find(".js_follow_email");
+
+            if ($email.length && !$email.val().match(/.+@.+/)) {
+                this.$target.addClass('has-error');
+                return false;
+            }
+            this.$target.removeClass('has-error');
+
+            openerp.jsonRpc('/website_mail/follow', 'call', {
+                'id': +this.$target.data('id'),
+                'object': this.$target.data('object'),
+                'message_is_follower': this.$target.attr("data-follow") || "off",
+                'email': $email.length ? $email.val() : false,
+            }).then(function (follow) {
+                self.toggle_subscription(follow, self.email);
+            });
+        },
+        toggle_subscription: function(follow, email) {
+            console.log(follow, email);
+            if (follow) {
+                this.$target.find(".js_follow_btn").addClass("hidden");
+                this.$target.find(".js_unfollow_btn").removeClass("hidden");
+            }
+            else {
+                this.$target.find(".js_follow_btn").removeClass("hidden");
+                this.$target.find(".js_unfollow_btn").addClass("hidden");
+            }
+            this.$target.find('input.js_follow_email')
+                .val(email ? email : "")
+                .attr("disabled", follow || (email.length && this.is_user) ? "disabled" : false);
+            this.$target.attr("data-follow", follow ? 'on' : 'off');
+        },
+    });
+})();

@@ -27,7 +27,7 @@ class account_invoice(osv.Model):
                     template_values = Composer.onchange_template_id(
                         cr, uid, composer_id, line.product_id.email_template_id.id, 'comment', 'account.invoice', invoice.id
                     )['value']
-                    template_values['attachment_ids'] = [(4, id) for id in template_values.get('attachment_ids', '[]')]
+                    template_values['attachment_ids'] = [(4, id) for id in template_values.get('attachment_ids', [])]
                     Composer.write(cr, uid, [composer_id], template_values, context=context)
                     Composer.send_mail(cr, uid, [composer_id], context=context)
         return True

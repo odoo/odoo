@@ -32,14 +32,16 @@ class Website(openerp.addons.web.controllers.main.Home):
         page = 'homepage'
         try:
             main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
+        except Exception:
+            pass
+        else:
             first_menu = main_menu.child_id and main_menu.child_id[0]
             if first_menu:
                 if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url=='/')):
                     return request.redirect(first_menu.url)
                 if first_menu.url.startswith('/page/'):
-                    page = first_menu[6:]
-        except:
-            pass
+                    page = first_menu.url[6:]
+
         return self.page(page)
 
     @http.route(website=True, auth="public")
@@ -47,7 +49,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         # TODO: can't we just put auth=public, ... in web client ?
         return super(Website, self).web_login(*args, **kw)
 
-    @http.route('/page/<path:page>', type='http', auth="public", website=True)
+    @http.route('/page/<page:page>', type='http', auth="public", website=True)
     def page(self, page, **opt):
         values = {
             'path': page,

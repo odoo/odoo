@@ -2,8 +2,8 @@
 <openerp>
 <data>
 
-<template id="footer_mailing_list" inherit_id="website.layout" name="Footer Mailing List Link">
-    <xpath expr="//footer//div[@name='info']/ul" position="inside">
+<template id="footer_mailing_list" inherit_id="website.footer_default" name="Footer Mailing List Link">
+    <xpath expr="//div[@id='info']/ul" position="inside">
         <li><a t-attf-href="/groups">Mailing List</a></li>
     </xpath>
 </template>
@@ -45,7 +45,7 @@
                 </div>
                 <div class="col-md-2">
                     <i class='fa fa-user'/> <t t-esc="len(group.message_follower_ids)"/> participants<br />
-                    <i class='fa fa-envelope-o'/> <t t-esc="len(group.message_ids)"/> messages
+                    <i class='fa fa-envelope-o'/> <t t-raw="group_data[group.id]['monthly_message_nbr']"/> messages / month
                 </div>
                 <div class="col-md-3">
                     <t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>

@@ -6,7 +6,7 @@
             <field name="name">ir.values.form.action</field>
             <field name="model">ir.values</field>
             <field name="arch" type="xml">
-                <form string="Action Bindings" version="7.0">
+                <form string="Action Bindings">
                     <group>
                         <group>
                             <field name="name"/>
@@ -28,7 +28,7 @@
             <field name="name">ir.values.form.defaults</field>
             <field name="model">ir.values</field>
             <field name="arch" type="xml">
-                <form string="User-defined Defaults" version="7.0">
+                <form string="User-defined Defaults">
                     <group>
                         <group>
                             <field name="name"/>
@@ -67,7 +67,7 @@
                     <field name="name"
                         filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('key2','ilike',self)]"
                         string="Client Action"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Model" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'key2'}"/>
                     </group>

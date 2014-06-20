@@ -60,7 +60,7 @@
             <field name="model">hr.expense.expense</field>
             <field eval="25" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Expenses Sheet" version="7.0">
+                <form string="Expenses Sheet">
                 <header>
                     <button name="confirm" states="draft" string="Submit to Manager" type="workflow" class="oe_highlight"/>
                     <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
@@ -87,7 +87,7 @@
                     <notebook>
                         <page string="Description">
                             <field name="line_ids" context="{'currency_id': currency_id, 'default_analytic_account': context.get('analytic_account', '')}">
-                                <form string="Expense Lines" version="7.0">
+                                <form string="Expense Lines">
                                     <group>
                                         <group>
                                             <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
@@ -162,7 +162,7 @@
                     <filter domain="[('user_id', '=', uid)]" string="My Expenses"/>
                     <field name="employee_id"/>
                     <field name="department_id" string="Department" context="{'invisible_department': False}"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Expenses Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Expenses by Month"/>

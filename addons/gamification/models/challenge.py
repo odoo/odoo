@@ -58,7 +58,7 @@ def start_end_date_for_period(period, default_start_date=False, default_end_date
         end_date = default_end_date
 
     if start_date and end_date:
-        return (start_date.strftime(DF), end_date.strftime(DF))
+        return (datetime.strftime(start_date, DF), datetime.strftime(end_date, DF))
     else:
         return (start_date, end_date)
 
@@ -379,10 +379,6 @@ class gamification_challenge(osv.Model):
 
 
     ##### Automatic actions #####
-
-    def generate_goals_from_challenge(self, cr, uid, ids, context=None):
-        _logger.warning("Deprecated, use private method _generate_goals_from_challenge(...) instead.")
-        return self._generate_goals_from_challenge(cr, uid, ids, context=context)
 
     def _generate_goals_from_challenge(self, cr, uid, ids, context=None):
         """Generate the goals for each line and user.

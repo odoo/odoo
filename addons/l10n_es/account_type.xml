@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    
+    <!-- Actualizar método de cierre de tipos de cuenta estándar -->
+    
+    <data noupdate="1">
+        <record id="account.data_account_type_income"
+            model="account.account.type">
+            <field name="name">Income</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account.data_account_type_expense"
+            model="account.account.type">
+            <field name="name">Expense</field>
+            <field name="close_method">balance</field>
+        </record>
+    </data>
+    
+    <!-- Tipos de cuenta nuevos -->
+    
+    <data noupdate="0">
+        <record id="account_type_capital" model="account.account.type">
+            <field name="name">Capital</field>
+            <field name="code">capital</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_inmo" model="account.account.type">
+            <field name="name">Inmovilizado</field>
+            <field name="code">inmo</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_stock" model="account.account.type">
+            <field name="name">Existencias</field>
+            <field name="code">stock</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_terceros" model="account.account.type">
+            <field name="name">Terceros</field>
+            <field name="code">terceros</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_financieras" model="account.account.type">
+            <field name="name">Financieras</field>
+            <field name="code">financieras</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_gastos_neto" model="account.account.type">
+            <field name="name">Gastos patrimonio neto</field>
+            <field name="code">gastos_neto</field>
+            <field name="report_type">expense</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_ingresos_neto" model="account.account.type">
+            <field name="name">Ingresos patrimonio neto</field>
+            <field name="code">ingresos_neto</field>
+            <field name="report_type">income</field>
+            <field name="close_method">balance</field>
+        </record>
+    </data>
+    
+</openerp>

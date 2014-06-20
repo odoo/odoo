@@ -449,7 +449,22 @@ class account_bank_statement_line(osv.osv):
         # Build a list of reconciliations data
         ret = []
         mv_line_ids_selected = []
-        for st_line_id in ids:
+        ids2 = []
+        for st_line in self.browse(cr, uid, ids, context=context):
+            # look for structured communication first
+            exact_match_id = self.search_structured_com(cr, uid, st_line, context=context)
+            if exact_match_id:
+                reconciliation_data = {
+                    'st_line': self.get_statement_line_for_reconciliation(cr, uid, st_line.id, context),
+                    'reconciliation_proposition': self.make_counter_part_lines(cr, uid, st_line, [exact_match_id], context=context)
+                }
+                for mv_line in reconciliation_data['reconciliation_proposition']:
+                    mv_line_ids_selected.append(mv_line['id'])
+                ret.append(reconciliation_data)
+            else:
+                ids2.append(st_line.id)
+                
+        for st_line_id in ids2:
             reconciliation_data = {
                 'st_line': self.get_statement_line_for_reconciliation(cr, uid, st_line_id, context),
                 'reconciliation_proposition': self.get_reconciliation_proposition(cr, uid, st_line_id, mv_line_ids_selected, context)
@@ -529,10 +544,6 @@ class account_bank_statement_line(osv.osv):
             if st_line.amount < 0:
                 sign = -1
 
-        # look for structured communication
-        exact_match_id = self.search_structured_com(cr, uid, st_line, context=context)
-        if exact_match_id:
-            return self.make_counter_part_lines(cr, uid, st_line, [exact_match_id], context=context)
         #we don't propose anything if there is no partner detected
         if not st_line.partner_id.id:
             return []
@@ -546,6 +557,7 @@ class account_bank_statement_line(osv.osv):
             mv_lines = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[(amount_field, '<', 0)])
         else:
             mv_lines = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[(amount_field, '>', 0)])
+
         ret = []
         total = 0
         # get_move_lines_counterparts inverts debit and credit
@@ -554,7 +566,7 @@ class account_bank_statement_line(osv.osv):
             if total + line[amount_field] <= abs(st_line.amount):
                 ret.append(line)
                 total += line[amount_field]
-            if total >= st_line.amount:
+            if total >= abs(st_line.amount):
                 break
         return ret
 

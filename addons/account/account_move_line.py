@@ -579,6 +579,9 @@ class account_move_line(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_date_id_index',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX account_move_line_date_id_index ON account_move_line (date DESC, id desc)')
         return res
 
     def _check_no_view(self, cr, uid, ids, context=None):
@@ -738,6 +741,8 @@ class account_move_line(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
+        if context.get('fiscalyear'):
+            args.append(('period_id.fiscalyear_id', '=', context.get('fiscalyear', False)))
         if context and context.get('next_partner_only', False):
             if not context.get('partner_id', False):
                 partner = self.list_partners_to_reconcile(cr, uid, context=context)
@@ -820,7 +825,7 @@ class account_move_line(osv.osv):
             'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
         }, context=context)
         move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
-        return True
+        return r_id
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
         account_obj = self.pool.get('account.account')

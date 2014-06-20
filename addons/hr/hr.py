@@ -225,7 +225,7 @@ class hr_employee(osv.osv):
                  "resized as a 128x128px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized photo", type="binary", multi="_get_image",
+            string="Small-sized photo", type="binary", multi="_get_image",
             store = {
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
@@ -349,10 +349,12 @@ class hr_employee(osv.osv):
         else:
             return super(hr_employee, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)
 
-    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
+    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=None, context=None):
         """ Overwrite of the original method to always follow user_id field,
         even when not track_visibility so that a user will follow it's employee
         """
+        if auto_follow_fields is None:
+            auto_follow_fields = ['user_id']
         user_field_lst = []
         for name, column_info in self._all_columns.items():
             if name in auto_follow_fields and name in updated_fields and column_info.column._obj == 'res.users':

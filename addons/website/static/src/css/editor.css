@@ -472,13 +472,14 @@ ul.oe_menu_editor .disclose {
   right: 0;
   z-index: 1000;
   height: 100%;
+  background: #2f3129;
+  color: white;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title {
   width: 100%;
   padding-top: 0;
   padding-left: 0;
   height: 30px;
-  background: #2f3129;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title .oe_view_list {
   width: 50%;
@@ -496,12 +497,15 @@ ul.oe_menu_editor .disclose {
 }
 .oe_ace_view_editor .ace_editor {
   position: absolute;
-  top: 30px;
+  top: 50px;
   right: 0;
   left: 0;
 }
 .oe_ace_view_editor .ace_editor .ace_gutter {
   cursor: ew-resize;
+}
+.oe_ace_view_editor #ace-view-id {
+  padding: 0 1em;
 }
 .oe_ace_view_editor.oe_ace_open {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=97);
@@ -511,37 +515,4 @@ ul.oe_menu_editor .disclose {
   z-index: -1000;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
-}
-
-/* ---- EDITOR TOUR ---- {{{ */
-div.tour-backdrop {
-  z-index: 2009;
-}
-
-.popover.tour.orphan .arrow {
-  display: none;
-}
-.popover.tour .popover-navigation {
-  padding: 9px 14px;
-}
-.popover.tour .popover-navigation *[data-role="end"] {
-  float: right;
-}
-.popover.tour .popover-navigation *[data-role="next"], .popover.tour .popover-navigation *[data-role="end"] {
-  cursor: pointer;
-}
-
-.popover.fixed {
-  position: fixed;
-}
-
-.tour-backdrop {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1100;
-  background-color: black;
-  opacity: 0.8;
 }

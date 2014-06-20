@@ -55,7 +55,7 @@ class table_compute(object):
                     self.table[(pos/PPR)+y2][(pos%PPR)+x2] = False
             self.table[pos/PPR][pos%PPR] = {
                 'product': p, 'x':x, 'y': y,
-                'class': " ".join(map(lambda x: x.html_class, p.website_style_ids))
+                'class': " ".join(map(lambda x: x.html_class or '', p.website_style_ids))
             }
             if index<=PPG:
                 maxy=max(maxy,y+(pos/PPR))
@@ -169,7 +169,7 @@ class website_sale(http.Controller):
 
         values = {
             'search': search,
-            'category': category and int(category),
+            'category': category,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'pager': pager,
@@ -210,6 +210,8 @@ class website_sale(http.Controller):
             context['pricelist'] = int(self.get_pricelist())
             product = request.registry.get('product.template').browse(request.cr, request.uid, int(product), context=context)
 
+        variants = [[p.id, map(int, p.attribute_value_ids), p.price] for p in product.product_variant_ids]
+
         values = {
             'search': search,
             'category': category,
@@ -220,6 +222,7 @@ class website_sale(http.Controller):
             'category_list': category_list,
             'main_object': product,
             'product': product,
+            'variants': variants,
         }
         return request.website.render("website_sale.product", values)
 

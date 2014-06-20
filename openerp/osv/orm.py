@@ -1704,8 +1704,8 @@ class BaseModel(object):
            :return: True if the current user is a member of one of the
                     given groups
         """
-        return any([self.pool.get('res.users').has_group(cr, uid, group_ext_id)
-                        for group_ext_id in groups.split(',')])
+        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id)
+                   for group_ext_id in groups.split(','))
 
     def _get_default_form_view(self, cr, user, context=None):
         """ Generates a default single-line form view using all fields
@@ -1718,13 +1718,14 @@ class BaseModel(object):
         :rtype: etree._Element
         """
         view = etree.Element('form', string=self._description)
+        group = etree.SubElement(view, 'group', col="4")
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         for field, descriptor in self.fields_get(cr, user, context=context).iteritems():
             if descriptor['type'] in ('one2many', 'many2many'):
                 continue
-            etree.SubElement(view, 'field', name=field)
+            etree.SubElement(group, 'field', name=field)
             if descriptor['type'] == 'text':
-                etree.SubElement(view, 'newline')
+                etree.SubElement(group, 'newline')
         return view
 
     def _get_default_search_view(self, cr, user, context=None):
@@ -2449,7 +2450,7 @@ class BaseModel(object):
         fetched_data = cr.dictfetchall()
 
         if not groupby_fields:
-            return {r.pop('id'): r for r in fetched_data}
+            return fetched_data
 
         many2onefields = [gb['field'] for gb in annotated_groupbys if gb['type'] == 'many2one']
         if many2onefields:
@@ -2806,7 +2807,7 @@ class BaseModel(object):
                                 ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                             ]
-                            if f_pg_type == 'varchar' and f._type == 'char' and ((f.size is None and f_pg_size) or f_pg_size < f.size):
+                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size and (f.size is None or f_pg_size < f.size):
                                 try:
                                     with cr.savepoint():
                                         cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" TYPE %s' % (self._table, k, pg_varchar(f.size)))
@@ -3347,6 +3348,8 @@ class BaseModel(object):
             return []
         if fields_to_read is None:
             fields_to_read = self._columns.keys()
+        else:
+            fields_to_read = list(set(fields_to_read))
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if

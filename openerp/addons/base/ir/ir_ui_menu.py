@@ -312,9 +312,13 @@ class ir_ui_menu(osv.osv):
                     menu_ref = [menu_ref]
                 model_data_obj = self.pool.get('ir.model.data')
                 for menu_data in menu_ref:
-                    model, id = model_data_obj.get_object_reference(cr, uid, menu_data.split('.')[0], menu_data.split('.')[1])
-                    if (model == 'ir.ui.menu'):
-                        menu_ids.add(id)
+                    try:
+                        model, id = model_data_obj.get_object_reference(cr, uid, menu_data.split('.')[0], menu_data.split('.')[1])
+                        if (model == 'ir.ui.menu'):
+                            menu_ids.add(id)
+                    except Exception:
+                        pass
+
         menu_ids = list(menu_ids)
 
         for menu in self.browse(cr, uid, menu_ids, context=context):

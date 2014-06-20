@@ -1,9 +1,6 @@
 (function () {
     'use strict';
-
-    var website = openerp.website;
-
-    website.Tour.register({
+    openerp.Tour.register({
         id:   'shop_customize',
         name: "Customize the page and search a product",
         path: '/shop',
@@ -32,12 +29,12 @@
             },
             {
                 title:     "finish",
-                waitFor:   'label:contains(32 Go) input',
+                waitFor:   'form[action="/shop/cart/update"] label:contains(32 Go) input',
             }
         ]
     });
 
-    website.Tour.register({
+    openerp.Tour.register({
         id:   'shop_buy_product',
         name: "Try to buy products",
         path: '/shop',
