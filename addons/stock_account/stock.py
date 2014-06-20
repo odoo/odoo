@@ -27,11 +27,10 @@ class stock_location_path(osv.osv):
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not Applicable")], "Invoice Status",
-            required=True,),
+            ("none", "Not Applicable")], "Invoice Status",),
     }
     _defaults = {
-        'invoice_state': 'none',
+        'invoice_state': '',
     }
 
 #----------------------------------------------------------
@@ -43,11 +42,10 @@ class procurement_rule(osv.osv):
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not Applicable")], "Invoice Status",
-            required=True),
+            ("none", "Not Applicable")], "Invoice Status",),
         }
     _defaults = {
-        'invoice_state': 'none',
+        'invoice_state': '',
     }
 
 #----------------------------------------------------------
@@ -61,16 +59,16 @@ class procurement_order(osv.osv):
         'invoice_state': fields.selection([("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
-         ], "Invoice Control", required=True),
+         ], "Invoice Control"),
         }
 
     def _run_move_create(self, cr, uid, procurement, context=None):
         res = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
-        res.update({'invoice_state': (procurement.rule_id.invoice_state in ('none', False) and procurement.invoice_state or procurement.rule_id.invoice_state) or 'none'})
+        res.update({'invoice_state': procurement.rule_id.invoice_state or procurement.invoice_state or 'none'})
         return res
 
     _defaults = {
-        'invoice_state': 'none'
+        'invoice_state': ''
         }
 
 
@@ -92,7 +90,7 @@ class stock_move(osv.osv):
     }
 
     def _get_master_data(self, cr, uid, move, company, context=None):
-        ''' returns a tupple (browse_record(res.partner), ID(res.users), ID(res.currency)'''
+        ''' returns a tuple (browse_record(res.partner), ID(res.users), ID(res.currency)'''
         return move.picking_id.partner_id, uid, company.currency_id.id
 
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
@@ -204,7 +202,7 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, ids, context=context):
             key = group and picking.id or True
             for move in picking.move_lines:
-                if move.procurement_id and (move.procurement_id.invoice_state == '2binvoiced') or move.invoice_state == '2binvoiced':
+                if move.invoice_state == '2binvoiced':
                     if (move.state != 'cancel') and not move.scrapped:
                         todo.setdefault(key, [])
                         todo[key].append(move)
@@ -259,12 +257,7 @@ class stock_picking(osv.osv):
             invoice_line_vals['origin'] = origin
 
             move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
-
             move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
-            if move.procurement_id:
-                self.pool.get('procurement.order').write(cr, uid, [move.procurement_id.id], {
-                    'invoice_state': 'invoiced',
-                }, context=context)
 
         invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoices.values()
