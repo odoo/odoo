@@ -859,7 +859,7 @@ class mail_thread(osv.AbstractModel):
         thread_references = references or in_reply_to
 
         # 1. message is a reply to an existing message (exact match of message_id)
-        msg_references = thread_references.split()
+        msg_references = mail_header_msgid_re.findall(thread_references)
         mail_message_ids = mail_msg_obj.search(cr, uid, [('message_id', 'in', msg_references)], context=context)
         if mail_message_ids:
             original_msg = mail_msg_obj.browse(cr, SUPERUSER_ID, mail_message_ids[0], context=context)
