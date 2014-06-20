@@ -448,15 +448,31 @@ class account_bank_statement_line(osv.osv):
         """ Used to instanciate a batch of reconciliations in a single request """
         # Build a list of reconciliations data
         ret = []
+        statement_line_done = {}
         mv_line_ids_selected = []
+        for st_line in self.browse(cr, uid, ids, context=context):
+            # look for structured communication first
+            exact_match_id = self.search_structured_com(cr, uid, st_line, context=context)
+            if exact_match_id:
+                reconciliation_data = {
+                    'st_line': self.get_statement_line_for_reconciliation(cr, uid, st_line.id, context),
+                    'reconciliation_proposition': self.make_counter_part_lines(cr, uid, st_line, [exact_match_id], context=context)
+                }
+                for mv_line in reconciliation_data['reconciliation_proposition']:
+                    mv_line_ids_selected.append(mv_line['id'])
+                statement_line_done[st_line.id] = reconciliation_data
+                
         for st_line_id in ids:
-            reconciliation_data = {
-                'st_line': self.get_statement_line_for_reconciliation(cr, uid, st_line_id, context),
-                'reconciliation_proposition': self.get_reconciliation_proposition(cr, uid, st_line_id, mv_line_ids_selected, context)
-            }
-            for mv_line in reconciliation_data['reconciliation_proposition']:
-                mv_line_ids_selected.append(mv_line['id'])
-            ret.append(reconciliation_data)
+            if statement_line_done.get(st_line_id):
+                ret.append(statement_line_done.get(st_line_id))
+            else:
+                reconciliation_data = {
+                    'st_line': self.get_statement_line_for_reconciliation(cr, uid, st_line_id, context),
+                    'reconciliation_proposition': self.get_reconciliation_proposition(cr, uid, st_line_id, mv_line_ids_selected, context)
+                }
+                for mv_line in reconciliation_data['reconciliation_proposition']:
+                    mv_line_ids_selected.append(mv_line['id'])
+                ret.append(reconciliation_data)
 
         # Check if, now that 'candidate' move lines were selected, there are moves left for statement lines
         #for reconciliation_data in ret:
@@ -529,10 +545,6 @@ class account_bank_statement_line(osv.osv):
             if st_line.amount < 0:
                 sign = -1
 
-        # look for structured communication
-        exact_match_id = self.search_structured_com(cr, uid, st_line, context=context)
-        if exact_match_id:
-            return self.make_counter_part_lines(cr, uid, st_line, [exact_match_id], context=context)
         #we don't propose anything if there is no partner detected
         if not st_line.partner_id.id:
             return []

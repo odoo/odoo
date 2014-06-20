@@ -1356,8 +1356,6 @@ openerp.account = function (instance) {
             var self = this;
             if (! self.is_consistent) return;
     
-            self.getParent().unexcludeMoveLines(_.map(self.get("mv_lines_selected"), function(o){ return o.id }));
-    
             // Prepare data
             var mv_line_dicts = [];
             _.each(self.get("mv_lines_selected"), function(o) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(o)) });
