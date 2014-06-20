@@ -171,7 +171,7 @@ openerp.account = function (instance) {
             deferred_promises.push(self.model_bank_statement
                 .call("get_format_currency_js_function", [self.statement_id])
                 .then(function(data){
-                    self.formatCurrency = new Function("amount", data);
+                    self.formatCurrency = new Function("amount, currency_id", data);
                 })
             );
     
@@ -245,7 +245,7 @@ openerp.account = function (instance) {
     
         keyboardShortcutsHandler: function(e) {
             var self = this;
-            if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
+            if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
                 $.each(self.getChildren(), function(i, o){
                     if (o.is_valid && o.persistAndDestroy()) {
                         self.lines_reconciled_with_ctrl_enter++;
@@ -789,6 +789,9 @@ openerp.account = function (instance) {
             line.q_amount = (line.debit !== 0 ? "- "+line.q_debit : "") + (line.credit !== 0 ? line.q_credit : "");
             line.q_popover = QWeb.render("bank_statement_reconciliation_move_line_details", {line: line});
             line.q_label = line.name;
+            if (line.has_no_partner){
+                line.q_label = line.partner_name + ': ' +line.q_label;
+            }
     
             // WARNING : pretty much of a ugly hack
             // The value of account_move.ref is either the move's communication or it's name without the slashes
@@ -981,6 +984,7 @@ openerp.account = function (instance) {
         lineOpenBalanceClickHandler: function() {
             var self = this;
             if (self.get("mode") === "create") {
+                self.addLineBeingEdited();
                 self.set("mode", "match");
             } else {
                 self.set("mode", "create");
@@ -1038,7 +1042,8 @@ openerp.account = function (instance) {
             var slice_start = self.get("pager_index") * self.max_move_lines_displayed;
             var slice_end = (self.get("pager_index")+1) * self.max_move_lines_displayed;
             _( _.filter(self.mv_lines_deselected, function(o){
-                    return o.name.indexOf(self.filter) !== -1 || o.ref.indexOf(self.filter) !== -1 })
+                    return o.q_label.indexOf(self.filter) !== -1 || (o.ref && o.ref.indexOf(self.filter) !== -1)
+                })
                 .slice(slice_start, slice_end)).each(function(line){
                 var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: false}));
                 self.bindPopoverTo($line.find(".line_info_button"));
@@ -1057,7 +1062,6 @@ openerp.account = function (instance) {
     
         updatePagerControls: function() {
             var self = this;
-    
             if (self.get("pager_index") === 0)
                 self.$(".pager_control_left").addClass("disabled");
             else
@@ -1075,7 +1079,7 @@ openerp.account = function (instance) {
         balanceChanged: function() {
             var self = this;
             var balance = self.get("balance");
-    
+            self.$(".tbody_open_balance").empty();
             // Special case hack : no identified partner
             if (self.st_line.has_no_partner) {
                 if (Math.abs(balance).toFixed(3) === "0.000") {
@@ -1088,19 +1092,23 @@ openerp.account = function (instance) {
                     self.$(".button_ok").attr("disabled", "disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = false;
+                    var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
+                    var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
+                    var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {debit: debit, credit: credit, account_code: self.map_account_id_code[self.st_line.open_balance_account_id]}));
+                    $line.find('.js_open_balance')[0].innerHTML = "Choose counterpart";
+                    self.$(".tbody_open_balance").append($line);
                 }
                 return;
             }
     
-            self.$(".tbody_open_balance").empty();
             if (Math.abs(balance).toFixed(3) === "0.000") {
                 self.$(".button_ok").addClass("oe_highlight");
                 self.$(".button_ok").text("OK");
             } else {
                 self.$(".button_ok").removeClass("oe_highlight");
                 self.$(".button_ok").text("Keep open");
-                var debit = (balance > 0 ? self.formatCurrency(balance) : "");
-                var credit = (balance < 0 ? self.formatCurrency(-1*balance) : "");
+                var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
+                var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
                 var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {debit: debit, credit: credit, account_code: self.map_account_id_code[self.st_line.open_balance_account_id]}));
                 self.$(".tbody_open_balance").append($line);
             }
@@ -1111,21 +1119,15 @@ openerp.account = function (instance) {
     
             self.$(".action_pane.active").removeClass("active");
     
-            // Special case hack : if no_partner, either inactive or create
+            // Special case hack : if no_partner and mode == inactive
             if (self.st_line.has_no_partner) {
                 if (self.get("mode") === "inactive") {
                     self.$(".match").slideUp(self.animation_speed);
                     self.$(".create").slideUp(self.animation_speed);
                     self.$(".toggle_match").removeClass("visible_toggle");
                     self.el.dataset.mode = "inactive";
-                } else {
-                    self.initializeCreateForm();
-                    self.$(".match").slideUp(self.animation_speed);
-                    self.$(".create").slideDown(self.animation_speed);
-                    self.$(".toggle_match").addClass("visible_toggle");
-                    self.el.dataset.mode = "create";
-                }
-                return;
+                    return;
+                } 
             }
     
             if (self.get("mode") === "inactive") {
@@ -1198,6 +1200,8 @@ openerp.account = function (instance) {
             var self = this;
             var line_created_being_edited = self.get("line_created_being_edited");
             line_created_being_edited[0][elt.corresponding_property] = val.newValue;
+             
+            line_created_being_edited[0].currency_id = self.st_line.currency_id;
     
             // Specific cases
             if (elt === self.account_id_field)
@@ -1215,7 +1219,7 @@ openerp.account = function (instance) {
                             var tax = data.taxes[0];
                             var tax_account_id = (amount > 0 ? tax.account_collected_id : tax.account_paid_id)
                             line_created_being_edited[0].amount = (data.total.toFixed(3) === amount.toFixed(3) ? amount : data.total);
-                            line_created_being_edited[1] = {id: line_created_being_edited[0].id, account_id: tax_account_id, account_num: self.map_account_id_code[tax_account_id], label: tax.name, amount: tax.amount, no_remove_action: true};
+                            line_created_being_edited[1] = {id: line_created_being_edited[0].id, account_id: tax_account_id, account_num: self.map_account_id_code[tax_account_id], label: tax.name, amount: tax.amount, no_remove_action: true, currency_id: self.st_line.currency_id};
                         }
                     );
                 } else {
@@ -1228,10 +1232,9 @@ openerp.account = function (instance) {
             $.when(deferred_tax).then(function(){
                 // Format amounts
                 if (line_created_being_edited[0].amount)
-                    line_created_being_edited[0].amount_str = self.formatCurrency(Math.abs(line_created_being_edited[0].amount));
+                    line_created_being_edited[0].amount_str = self.formatCurrency(Math.abs(line_created_being_edited[0].amount), line_created_being_edited[0].currency_id);
                 if (line_created_being_edited[1] && line_created_being_edited[1].amount)
-                    line_created_being_edited[1].amount_str = self.formatCurrency(Math.abs(line_created_being_edited[1].amount));
-
+                    line_created_being_edited[1].amount_str = self.formatCurrency(Math.abs(line_created_being_edited[1].amount), line_created_being_edited[0].currency_id);
                 self.set("line_created_being_edited", line_created_being_edited);
                 self.createdLinesChanged(); // TODO For some reason, previous line doesn't trigger change handler
             });
@@ -1268,10 +1271,10 @@ openerp.account = function (instance) {
             line.initial_amount = line.debit !== 0 ? line.debit : -1 * line.credit;
             if (balance < 0) {
                 line.debit -= balance;
-                line.debit_str = self.formatCurrency(line.debit);
+                line.debit_str = self.formatCurrency(line.debit, self.st_line.currency_id);
             } else {
                 line.credit -= balance;
-                line.credit_str = self.formatCurrency(line.credit);
+                line.credit_str = self.formatCurrency(line.credit, self.st_line.currency_id);
             }
             line.propose_partial_reconcile = false;
             line.partial_reconcile = true;
@@ -1291,12 +1294,13 @@ openerp.account = function (instance) {
         },
     
         unpartialReconcileLine: function(line) {
+            var self = this;
             if (line.initial_amount > 0) {
                 line.debit = line.initial_amount;
-                line.debit_str = this.formatCurrency(line.debit);
+                line.debit_str = self.formatCurrency(line.debit, self.st_line.currency_id);
             } else {
                 line.credit = -1 * line.initial_amount;
-                line.credit_str = this.formatCurrency(line.credit);
+                line.credit_str = self.formatCurrency(line.credit, self.st_line.currency_id);
             }
             line.propose_partial_reconcile = true;
             line.partial_reconcile = false;
@@ -1359,16 +1363,15 @@ openerp.account = function (instance) {
             if (limit > 0) {
                 // Load move lines
                 deferred_move_lines = self.model_bank_statement_line
-                    .call("get_move_lines_counterparts", [self.st_line.id, excluded_ids, self.filter, offset, limit])
+                    .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids, self.filter, offset, limit])
                     .then(function (lines) {
                         _(lines).each(self.decorateMoveLine.bind(self));
                         move_lines = lines;
                     });
             }
-    
             // Fetch the number of move lines corresponding to this statement line and this filter
             var deferred_total_move_lines_num = self.model_bank_statement_line
-                .call("get_move_lines_counterparts", [self.st_line.id, excluded_ids, self.filter, offset, limit, true])
+                .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids, self.filter, 0, undefined, true])
                 .then(function(num){
                     move_lines_num = num;
                 });
