@@ -27,11 +27,11 @@ class project_configuration(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_project_mrp': fields.boolean('Generate tasks from sale orders',
+        'module_sale_service': fields.boolean('Generate tasks from sale orders',
             help='This feature automatically creates project tasks from service products in sale orders. '
                  'More precisely, tasks are created for procurement lines with product of type \'Service\', '
                  'procurement method \'Make to Order\', and supply method \'Manufacture\'.\n'
-                 '-This installs the module project_mrp.'),
+                 '-This installs the module sale_service.'),
         'module_pad': fields.boolean("Use integrated collaborative note pads on task",
             help='Lets the company customize which Pad installation should be used to link to new pads '
                  '(for example: http://ietherpad.com/).\n'

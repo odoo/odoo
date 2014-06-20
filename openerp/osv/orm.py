@@ -1704,8 +1704,8 @@ class BaseModel(object):
            :return: True if the current user is a member of one of the
                     given groups
         """
-        return any([self.pool.get('res.users').has_group(cr, uid, group_ext_id)
-                        for group_ext_id in groups.split(',')])
+        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id)
+                   for group_ext_id in groups.split(','))
 
     def _get_default_form_view(self, cr, user, context=None):
         """ Generates a default single-line form view using all fields
@@ -3348,6 +3348,8 @@ class BaseModel(object):
             return []
         if fields_to_read is None:
             fields_to_read = self._columns.keys()
+        else:
+            fields_to_read = list(set(fields_to_read))
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if

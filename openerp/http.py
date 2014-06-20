@@ -1037,6 +1037,15 @@ mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 
+class Retry(RuntimeError):
+    """ Exception raised during QWeb rendering to signal that the rendering
+    should be retried with the provided ``render_updates`` dict merged into
+    the previous rendering context
+    """
+    def __init__(self, name, render_updates=None):
+        super(Retry, self).__init__(name)
+        self.updates = render_updates or {}
+
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
 
@@ -1077,7 +1086,13 @@ class Response(werkzeug.wrappers.Response):
     def render(self):
         view_obj = request.registry["ir.ui.view"]
         uid = self.uid or request.uid or openerp.SUPERUSER_ID
-        return view_obj.render(request.cr, uid, self.template, self.qcontext, context=request.context)
+        while True:
+            try:
+                return view_obj.render(
+                    request.cr, uid, self.template, self.qcontext,
+                    context=request.context)
+            except Retry, e:
+                self.qcontext.update(e.updates)
 
     def flatten(self):
         self.response.append(self.render())

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="website.tour_popover">
+    <t t-name="tour.popover">
         <div t-attf-class="#{ fixed ? 'popover tour fixed' : 'popover tour' }">
-            <div class="arrow"></div>
+            <div class="arrow" t-if="!next"></div>
             <h3 class="popover-title"></h3>
             <div class="popover-content"></div>
             <t t-if="next or end">
@@ -21,7 +21,7 @@
             </t>
         </div>
     </t>
-    <t t-name="website.tour_popover_title">
+    <t t-name="tour.popover_title">
         <t t-esc="title"/><button title="End This Tutorial" type="button" class="close" data-role="end">×</button>
     </t>
 </templates>

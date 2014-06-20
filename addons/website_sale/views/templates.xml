@@ -240,7 +240,7 @@
 <!-- Add to cart button-->
 
 <template id="categories_recursive" name="Category list">
-  <li t-att-class="'active' if c.id == category else ''">
+  <li t-att-class="'active' if c.id == int(category or 0) else ''">
       <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-field="c.name"></a>
       <ul t-if="c.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
           <t t-foreach="c.child_id" t-as="c">

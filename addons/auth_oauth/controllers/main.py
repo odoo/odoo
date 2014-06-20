@@ -74,7 +74,7 @@ class OAuthLogin(Home):
         state = dict(
             d=request.session.db,
             p=provider['id'],
-            r=redirect,
+            r=werkzeug.url_quote_plus(redirect),
         )
         token = request.params.get('token')
         if token:
@@ -143,7 +143,7 @@ class OAuthController(http.Controller):
                 cr.commit()
                 action = state.get('a')
                 menu = state.get('m')
-                redirect = state.get('r')
+                redirect = werkzeug.url_unquote_plus(state['r']) if state.get('r') else False
                 url = '/web'
                 if redirect:
                     url = redirect

@@ -22,6 +22,7 @@
 
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/tour.js"></script>
             <script type="text/javascript" charset="utf-8">
                 openerp._modules = <t t-raw="modules"/>;
             </script>
@@ -246,6 +247,7 @@
                     <t t-call="web.assets_backend"/>
 
                     <script type="text/javascript" id="qunit_config">
+                        localStorage.clear();
                         QUnit.config.testTimeout = 5 * 60 * 1000;
                         QUnit.moduleDone(function(result) {
                             console.log(result.name + " (" + result.passed + "/" + result.total + " passed tests)");
