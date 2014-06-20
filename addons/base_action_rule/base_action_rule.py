@@ -156,7 +156,8 @@ class base_action_rule(osv.osv):
         """ Return a wrapper around `old_create` calling both `old_create` and
             `_process`, in that order.
         """
-        def create(cr, uid, vals, context=None):
+        def create(cr, uid, vals, *args, **kwargs):
+            context = kwargs.get('context')
             # avoid loops or cascading actions
             if context and context.get('action'):
                 return old_create(cr, uid, vals, context=context)
@@ -180,7 +181,8 @@ class base_action_rule(osv.osv):
         """ Return a wrapper around `old_write` calling both `old_write` and
             `_process`, in that order.
         """
-        def write(cr, uid, ids, vals, context=None):
+        def write(cr, uid, ids, vals, *args, **kwargs):
+            context = kwargs.get('context')
             # avoid loops or cascading actions
             if context and context.get('action'):
                 return old_write(cr, uid, ids, vals, context=context)
