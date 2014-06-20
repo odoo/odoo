@@ -308,6 +308,16 @@
                 window.document.body.scrollTop = +location.hash.match(/scrollTop=([0-9]+)/)[1];
             }
         },0);
+
+        /* ----- WEBSITE TOP BAR ---- */
+
+        var $collapse = $('#oe_applications ul.dropdown-menu').clone()
+                .attr("id", "oe_applications_collapse")
+                .attr("class", "nav navbar-nav navbar-left navbar-collapse collapse");
+        $('#oe_applications').before($collapse);
+        $collapse.wrap('<div class="visible-xs"/>');
+        $('[data-target="#oe_applications"]').attr("data-target", "#oe_applications_collapse");
+
     });
 
     return website;

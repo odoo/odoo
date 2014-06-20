@@ -283,6 +283,14 @@
         } else {
             // remove padding of fake editor bar
             // document.body.style.padding = 0;
+            var resize_smartphone = function () {
+                is_smartphone = $(document.body)[0].clientWidth < 767;
+                if (!is_smartphone) {
+                    $(window).off("resize", resize_smartphone);
+                    website.init_editor();
+                }
+            };
+            $(window).on("resize", resize_smartphone);
         }
 
         $(document).on('click', 'a.js_link2post', function (ev) {
