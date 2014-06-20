@@ -8,13 +8,14 @@
             <field name="arch" type="xml">
                 <form string="System Update" version="7.0">
                     <div><label string="Your system will be updated."/></div>
+                    <div><label string="This will permanently erase all data currently stored by the To remove modules!"/></div>
                     <div><label string="Note that this operation might take a few minutes."/></div>
                     <separator string="Modules to Update"/>
                     <field name="module_info"/>
                     <footer>
                         <button name="upgrade_module" string="Update" type="object" class="oe_highlight"/>
                         or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button string="Cancel" class="oe_link" name="upgrade_module_cancel" type="object"/>
                     </footer>
                 </form>
             </field>

@@ -490,6 +490,7 @@ class module(osv.osv):
         Uninstall the selected module(s) immediately and fully,
         returns the next res.config action to execute
         """
+        #TODO remove me in master
         return self._button_immediate_function(cr, uid, ids, self.button_uninstall, context=context)
 
     def button_uninstall(self, cr, uid, ids, context=None):
