@@ -29,7 +29,7 @@ openerp.account = function (instance) {
             this.time_widget_loaded = Date.now();
     
             // Stuff used by the children bankStatementReconciliationLine
-            this.max_move_lines_displayed = 5;
+            this.max_move_lines_displayed = 1;
             this.animation_speed = 100; // "Blocking" animations
             this.aestetic_animation_speed = 300; // eye candy
             this.map_tax_id_amount = {};
@@ -486,7 +486,6 @@ openerp.account = function (instance) {
             this.presets = this.getParent().presets;
             this.is_valid = true;
             this.is_consistent = true; // Used to prevent bad server requests
-            this.total_move_lines_num = undefined; // Used for pagers
             this.filter = "";
     
             this.set("balance", undefined); // Debit is +, credit is -
@@ -838,16 +837,12 @@ openerp.account = function (instance) {
     
         pagerControlLeftHandler: function() {
             var self = this;
-            if (self.$(".pager_control_left").hasClass("disabled")) { return; /* shouldn't happen, anyway*/ }
-            if (self.total_move_lines_num < 0) { return; }
             self.set("pager_index", self.get("pager_index")-1 );
         },
     
         pagerControlRightHandler: function() {
             var self = this;
             var new_index = self.get("pager_index")+1;
-            if (self.$(".pager_control_right").hasClass("disabled")) { return; /* shouldn't happen, anyway*/ }
-            if ((new_index * self.max_move_lines_displayed) >= self.total_move_lines_num) { return; }
             self.set("pager_index", new_index );
         },
     
@@ -1105,10 +1100,6 @@ openerp.account = function (instance) {
     
         mvLinesChanged: function() {
             var self = this;
-            // If pager_index is out of range, set it to display the last page
-            if (self.get("pager_index") !== 0 && self.total_move_lines_num <= (self.get("pager_index") * self.max_move_lines_displayed)) {
-                self.set("pager_index", Math.ceil(self.total_move_lines_num/self.max_move_lines_displayed)-1);
-            }
     
             // If there is no match to display, disable match view and pass in mode inactive
             if (self.get("mv_lines").length === 0 && self.filter === "") {
