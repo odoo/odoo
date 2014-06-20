@@ -22,13 +22,13 @@
 import base64
 import logging
 import re
-from urllib import urlencode
 from urlparse import urljoin
 
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -59,6 +59,7 @@ class mail_mail(osv.Model):
         'recipient_ids': fields.many2many('res.partner', string='To (Partners)'),
         'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
+        'headers': fields.text('Headers'),
         # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
         # and during unlink() we will not cascade delete the parent and its attachments
         'notification': fields.boolean('Is Notification',
@@ -67,6 +68,7 @@ class mail_mail(osv.Model):
 
     _defaults = {
         'state': 'outgoing',
+        'headers': '{}',
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -210,8 +212,6 @@ class mail_mail(osv.Model):
             'subject': self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context),
             'email_to': self.send_get_mail_to(cr, uid, mail, partner=partner, context=context),
         }
-        if mail.model and mail.res_id and self.pool.get(mail.model) and hasattr(self.pool[mail.model], 'message_get_email_values'):
-            res.update(self.pool[mail.model].message_get_email_values(cr, uid, mail.res_id, mail, context=context))
         return res
 
     def send(self, cr, uid, ids, auto_commit=False, raise_exception=False, context=None):
@@ -267,13 +267,15 @@ class mail_mail(osv.Model):
                         headers['Return-Path'] = '%s-%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
                     else:
                         headers['Return-Path'] = '%s-%d@%s' % (bounce_alias, mail.id, catchall_domain)
+                if mail.headers:
+                    try:
+                        headers.update(eval(mail.headers))
+                    except Exception:
+                        pass
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
                 for email in email_list:
-                    email_headers = dict(headers)
-                    if email.get('headers'):
-                        email_headers.update(email['headers'])
                     msg = ir_mail_server.build_email(
                         email_from=mail.email_from,
                         email_to=email.get('email_to'),
@@ -288,7 +290,7 @@ class mail_mail(osv.Model):
                         object_id=mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
                         subtype='html',
                         subtype_alternative='plain',
-                        headers=email_headers)
+                        headers=headers)
                     res = ir_mail_server.send_email(cr, uid, msg,
                                                     mail_server_id=mail.mail_server_id.id,
                                                     context=context)
