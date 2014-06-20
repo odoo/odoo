@@ -267,10 +267,7 @@ class mail_compose_message(osv.TransientModel):
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and wizard.model:
                 # always keep a copy, reset record name (avoid browsing records)
-                mail_values.update(notification=True, record_name=False)
-                if hasattr(self.pool[wizard.model], 'message_new'):
-                    mail_values['model'] = wizard.model
-                    mail_values['res_id'] = res_id
+                mail_values.update(notification=True, model=wizard.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail
                 if 'mail_auto_delete' in context:
                     mail_values['auto_delete'] = context.get('mail_auto_delete')

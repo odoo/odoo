@@ -469,7 +469,7 @@
                     }
                 );
             });
-            menu.on('click', 'a[data-action!=ace]', function (event) {
+            menu.on('click', 'a[data-view-id]', function (event) {
                 var view_id = $(event.currentTarget).data('view-id');
                 return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                     model: 'ir.ui.view',
@@ -1516,7 +1516,7 @@
                 url: this.link
             });
             this.media.renameNode("img");
-            this.media.$.attributes.src = this.link;
+            $(this.media).attr('src', this.link);
             return this._super();
         },
         clear: function () {
@@ -2000,6 +2000,11 @@
         //       a/@href, ...)
         _(mutations).chain()
             .filter(function (m) {
+                // ignore any SVG target, these blokes are like weird mon
+                if (m.target && m.target instanceof SVGElement) {
+                    return false;
+                }
+
                 // ignore any change related to mundane image-edit-button
                 if (m.target && m.target.className
                         && m.target.className.indexOf('image-edit-button') !== -1) {

@@ -95,6 +95,7 @@ def py2exe_options():
                         "markupsafe",   # dependence of jinja2 and mako
                         "mock",
                         "openerp",
+                        "passlib",
                         "poplib",
                         "psutil",
                         "pychart",
@@ -163,6 +164,7 @@ setuptools.setup(
           'lxml', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'mako',
           'mock',
+          'passlib',
           'pillow', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'psutil', # windows binary code.google.com/p/psutil/downloads/list
           'psycopg2 >= 2.2',

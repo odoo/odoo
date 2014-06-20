@@ -92,9 +92,8 @@ class WebsiteMail(http.Controller):
                 values['is_follower'] = len(
                     request.registry['mail.followers'].search(
                         cr, SUPERUSER_ID, [
-                            ('res_model', '=', 'mail.group'),
+                            ('res_model', '=', model),
                             ('res_id', '=', obj_ids[0]),
                             ('partner_id', '=', partner_id.id)
                         ], context=context)) == 1
-
         return values
