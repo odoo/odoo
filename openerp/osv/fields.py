@@ -1431,8 +1431,12 @@ class property(function):
         if isinstance(default_val, openerp.osv.orm.browse_record):
             if default_val.id != id_val:
                 property_create = True
-        elif isinstance(default_val, openerp.osv.orm.browse_null) and not id_val:
-            pass # nothing to do in this case
+        elif not id_val and isinstance(default_val,
+                                       openerp.osv.orm.browse_null):
+            # don't create a new property record as
+            # we have a False or None value on one side
+            # and a browse_null record on the other side
+            pass
         elif default_val != id_val:
             property_create = True
 
