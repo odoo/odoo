@@ -2218,7 +2218,7 @@ $sheet-padding: 16px
     .oe_list_editable .oe_list_content td.oe_list_field_cell
         padding: 4px 6px 3px
     .oe_list.oe_list_editable.oe_editing
-        .oe_edition .oe_list_field_cell:not(.oe_readonly)
+        .oe_edition .oe_list_field_cell
             *
                 visibility: hidden
             color: transparent
@@ -2230,6 +2230,11 @@ $sheet-padding: 16px
         .oe_input_icon
             margin-top: 5px
         .oe_form_field
+            &.oe_list_field_handle
+                color: transparent
+            &.oe_readonly
+                padding: 4px 6px 3px
+                text-align: left
             min-width: 0
             max-width: none
             input, textarea
@@ -2240,9 +2245,13 @@ $sheet-padding: 16px
             input, textarea, select
                 min-width: 0
             &.oe_form_field_float,&.oe_form_view_integer
-                input
+                &.oe_readonly
+                    padding: 6px 0px 0px
                     text-align: right
+                    max-width: 100px
+                input
                     width: 100% !important
+                    text-align: right
             &.oe_form_field_datetime,&.oe_form_field_date
                 input.oe_datepicker_master
                     width: 100% !important
