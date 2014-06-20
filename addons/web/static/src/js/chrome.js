@@ -1016,7 +1016,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 var avatar_src = self.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: self.session.uid});
                 $avatar.attr('src', avatar_src);
 
-                self.getParent().menu.reflow();
+                openerp.web.bus.trigger('resize');  // Re-trigger the reflow logic
             });
         };
         this.update_promise = this.update_promise.then(fct, fct);

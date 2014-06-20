@@ -281,8 +281,6 @@
         if (!is_smartphone) {
             website.ready().then(website.init_editor);
         } else {
-            // remove padding of fake editor bar
-            // document.body.style.padding = 0;
             var resize_smartphone = function () {
                 is_smartphone = $(document.body)[0].clientWidth < 767;
                 if (!is_smartphone) {
