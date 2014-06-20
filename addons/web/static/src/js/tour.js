@@ -78,12 +78,12 @@ var Tour = {
         this.time = new Date().getTime();
         if (tour.path && !window.location.href.match(new RegExp("("+Tour.getLang()+")?"+tour.path+"#?$", "i"))) {
             var href = Tour.getLang()+tour.path;
-            console.log("Tour Begin from run method (redirection to "+href+")");
+            console.log("Tour '"+tour_id+"' Begin from run method (redirection to "+href+")");
             Tour.saveState(tour.id, mode || tour.mode, -1, 0);
             $(document).one("ajaxStop", Tour.running);
             window.location.href = href;
         } else {
-            console.log("Tour Begin from run method");
+            console.log("Tour '"+tour_id+"' Begin from run method");
             Tour.saveState(tour.id, mode || tour.mode, 0, 0);
             Tour.running();
         }
@@ -304,7 +304,7 @@ var Tour = {
                 "step_id": 0
             };
             window.location.hash = "";
-            console.log("Tour Begin from url hash");
+            console.log("Tour '"+state.id+"' Begin from url hash");
             Tour.saveState(state.id, state.mode, state.step_id, 0);
         }
         if (!state.id) {
@@ -433,7 +433,7 @@ var Tour = {
         Tour.saveState(state.id, state.mode, step.id, state.number);
 
         if (step.id !== state.step_id) {
-            console.log("Tour Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
+            console.log("Tour '"+state.id+"' Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
         }
 
         Tour.autoTogglePopover(true);
@@ -465,8 +465,10 @@ var Tour = {
         var test = state.step.id >= state.tour.steps.length-1;
         Tour.reset();
         if (test) {
+            console.log("Tour '"+state.id+"' finish: ok");
             console.log('ok');
         } else {
+            console.log("Tour '"+state.id+"' finish: error");
             console.log('error');
         }
     },
