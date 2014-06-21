@@ -1568,8 +1568,7 @@ class account_invoice_line(osv.osv):
         company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
         for line in inv.invoice_line:
             mres = self.move_line_get_item(cr, uid, line, context)
-            if not mres:
-                continue
+            mres['invl_id'] = line.id
             res.append(mres)
             tax_code_found= False
             for tax in tax_obj.compute_all(cr, uid, line.invoice_line_tax_id,
