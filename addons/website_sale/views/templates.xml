@@ -240,7 +240,7 @@
 <!-- Add to cart button-->
 
 <template id="categories_recursive" name="Category list">
-  <li t-att-class="'active' if c.id == category else ''">
+  <li t-att-class="'active' if c.id == int(category or 0) else ''">
       <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-field="c.name"></a>
       <ul t-if="c.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
           <t t-foreach="c.child_id" t-as="c">
@@ -664,7 +664,7 @@
                               <td>
                                   <div class="input-group">
                                       <span class="input-group-addon">
-                                          <a t-attf-href="#" class="mb8 js_add_cart_json">
+                                          <a t-attf-href="#" class="mb8 js_add_cart_json" data-no-instant="">
                                               <i class="fa fa-minus"></i>
                                           </a>
                                       </span>
@@ -673,7 +673,7 @@
                                           t-att-data-product-id="line.product_id.id"
                                           t-att-value="int(line.product_uom_qty)"/>
                                       <span class="input-group-addon">
-                                          <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
+                                          <a t-attf-href="#" class="mb8 float_left js_add_cart_json" data-no-instant="">
                                               <i class="fa fa-plus"></i>
                                           </a>
                                       </span>

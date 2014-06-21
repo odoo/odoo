@@ -114,7 +114,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // Extracts the integer/float fields which are not 'id'
     get_measures: function() {
         return _.compact(_.map(this.fields, function (f, id) {
-            if (((f.type === 'integer') || (f.type === 'float')) && (id !== 'id')) {
+            if (((f.type === 'integer') || (f.type === 'float')) && 
+                (id !== 'id') &&
+                (f.store !== false)) {
                 return {field:id, type: f.type, string: f.string};
             }
         }));

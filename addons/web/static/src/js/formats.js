@@ -233,7 +233,8 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                 value = value.replace(instance.web._t.database.parameters.thousands_sep, "");
             } while(tmp !== value);
             tmp = Number(value);
-            if (isNaN(tmp))
+            // do not accept not numbers or float values
+            if (isNaN(tmp) || tmp % 1)
                 throw new Error(_.str.sprintf(_t("'%s' is not a correct integer"), value));
             return tmp;
         case 'float':
@@ -270,12 +271,22 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                     value, (date_pattern + ' ' + time_pattern));
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
+            datetime = Date.parseExact(value.replace(/\d+/g, function(m){
+                return m.length === 1 ? "0" + m : m ;
+            }), (date_pattern + ' ' + time_pattern));
+            if (datetime !== null)
+                return instance.web.datetime_to_str(datetime);
             datetime = Date.parse(value);
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
             throw new Error(_.str.sprintf(_t("'%s' is not a correct datetime"), value));
         case 'date':
             var date = Date.parseExact(value, date_pattern);
+            if (date !== null)
+                return instance.web.date_to_str(date);
+            date = Date.parseExact(value.replace(/\d+/g, function(m){
+                return m.length === 1 ? "0" + m : m ;
+            }), date_pattern);
             if (date !== null)
                 return instance.web.date_to_str(date);
             date = Date.parse(value);

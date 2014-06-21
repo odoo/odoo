@@ -1310,15 +1310,16 @@
 <t t-name="FieldBinaryImage">
     <span class="oe_form_field oe_form_field_image" t-att-style="widget.node.attrs.style">
         <div class="oe_form_field_image_controls oe_edit_only">
-            <t t-call="HiddenInputFile">
-                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                Edit 
-            </t>
+            <i class="fa fa-pencil fa-1g pull-left col-md-offset-1 oe_form_binary_file_edit" title="Edit"/>
+            <i class="fa fa-trash-o fa-1g col-md-offset-5 oe_form_binary_file_clear" title="Clear"/>
             <div class="oe_form_binary_progress" style="display: none">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
         </div>
+        <t t-call="HiddenInputFile">
+            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+        </t>
     </span>
 </t>
 <t t-name="FieldBinaryImage-img">
@@ -2038,4 +2039,5 @@
 </t>
 <t t-name="StatInfo">
     <strong><t t-esc="value"/></strong><br/><t t-esc="text"/></t>
+
 </templates>

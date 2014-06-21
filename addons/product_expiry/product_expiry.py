@@ -92,7 +92,7 @@ class stock_quant(osv.osv):
 
     def apply_removal_strategy(self, cr, uid, location, product, qty, domain, removal_strategy, context=None):
         if removal_strategy == 'fefo':
-            order = 'removal_date, id'
+            order = 'removal_date, in_date, id'
             return self._quants_get_order(cr, uid, location, product, qty, domain, order, context=context)
         return super(stock_quant, self).apply_removal_strategy(cr, uid, location, product, qty, domain, removal_strategy, context=context)
 

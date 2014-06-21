@@ -686,7 +686,7 @@ class sale_order(osv.osv):
 
     def procurement_needed(self, cr, uid, ids, context=None):
         #when sale is installed only, there is no need to create procurements, that's only
-        #further installed modules (project_mrp, sale_stock) that will change this.
+        #further installed modules (sale_service, sale_stock) that will change this.
         sale_line_obj = self.pool.get('sale.order.line')
         res = []
         for order in self.browse(cr, uid, ids, context=context):
@@ -839,7 +839,7 @@ class sale_order_line(osv.osv):
 
     def need_procurement(self, cr, uid, ids, context=None):
         #when sale is installed only, there is no need to create procurements, that's only
-        #further installed modules (project_mrp, sale_stock) that will change this.
+        #further installed modules (sale_service, sale_stock) that will change this.
         return False
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):

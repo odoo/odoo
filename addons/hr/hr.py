@@ -225,7 +225,7 @@ class hr_employee(osv.osv):
                  "resized as a 128x128px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized photo", type="binary", multi="_get_image",
+            string="Small-sized photo", type="binary", multi="_get_image",
             store = {
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
