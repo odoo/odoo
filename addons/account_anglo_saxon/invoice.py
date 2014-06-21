@@ -1,8 +1,8 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 
-#    2004-2010 Tiny SPRL (<http://tiny.be>). 
+#    Copyright (C)
+#    2004-2010 Tiny SPRL (<http://tiny.be>).
 #    2009-2010 Veritos (http://veritos.nl).
 #    All Rights Reserved
 #
@@ -17,7 +17,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -115,6 +115,8 @@ class account_invoice_line(osv.osv):
                         diff_res = []
                         # calculate and write down the possible price difference between invoice price and product price
                         for line in res:
+                            if line.get('invl_id', False) != i_line.id:
+                                continue
                             if a == line['account_id'] and i_line.product_id.id == line['product_id']:
                                 uom = i_line.product_id.uos_id or i_line.product_id.uom_id
                                 standard_price = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.product_id.standard_price, i_line.uos_id.id)

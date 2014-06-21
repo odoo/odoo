@@ -133,7 +133,7 @@ class account_invoice(osv.osv):
                     result[invoice.id] = new_value
 
             #prevent the residual amount on the invoice to be less than 0
-            result[invoice.id] = max(result[invoice.id], 0.0)            
+            result[invoice.id] = max(result[invoice.id], 0.0)
         return result
 
     # Give Journal Items related to the payment reconciled to this invoice
@@ -1566,6 +1566,7 @@ class account_invoice_line(osv.osv):
         company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
         for line in inv.invoice_line:
             mres = self.move_line_get_item(cr, uid, line, context)
+            mres['invl_id'] = line.id
             if not mres:
                 continue
             res.append(mres)
