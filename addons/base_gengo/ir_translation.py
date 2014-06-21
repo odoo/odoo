@@ -87,7 +87,7 @@ class ir_translation(osv.Model):
         return lang in LANG_CODE_MAPPING and LANG_CODE_MAPPING[lang][0] or lang
 
     def _get_source_query(self, cr, uid, name, types, lang, source, res_id):
-        query, params = super(ir_translation, self)._get_source_query(name, types, lang, source, res_id)
+        query, params = super(ir_translation, self)._get_source_query(cr, uid, name, types, lang, source, res_id)
 
         query += """
                     ORDER BY
