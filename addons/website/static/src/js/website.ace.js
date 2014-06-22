@@ -6,14 +6,8 @@
 
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.ace.xml');
-    var hash = "#advanced-view-editor";
 
     website.Ace = openerp.Widget.extend({
-        start: function () {
-            this._super();
-            this.globalEditor = null;
-            this.launchAce();
-        },
         launchAce: function (e) {
             if (e) {
                 e.preventDefault();
@@ -23,7 +17,6 @@
             } else {
                 this.globalEditor = new website.ace.ViewEditor(this);
                 this.globalEditor.appendTo($(document.body));
-                this.globalEditor.open();
             }
         },
     });
@@ -365,7 +358,7 @@
 
     website.ready().done(function() {
         var ace = new website.Ace();
-        $('a[data-action=ace]').on('click', this, function() {
+        $('a[data-action=ace]').on('click', function() {
             ace.launchAce();
         });
     });
