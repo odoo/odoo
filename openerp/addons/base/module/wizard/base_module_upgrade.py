@@ -68,6 +68,20 @@ class base_module_upgrade(osv.osv_memory):
         res = mod_obj.read(cr, uid, ids, ['name','state'], context)
         return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res))}
 
+    def upgrade_module_cancel(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.module.module')
+        to_installed_ids = mod_obj.search(cr, uid, [
+            ('state', 'in', ['to upgrade', 'to remove'])])
+        if to_installed_ids:
+            mod_obj.write(cr, uid, to_installed_ids, {'state': 'installed'}, context=context)
+
+        to_uninstalled_ids = mod_obj.search(cr, uid, [
+            ('state', '=', 'to install')])
+        if to_uninstalled_ids:
+            mod_obj.write(cr, uid, to_uninstalled_ids, {'state': 'uninstalled'}, context=context)
+
+        return {'type': 'ir.actions.act_window_close'}
+
     def upgrade_module(self, cr, uid, ids, context=None):
         ir_module = self.pool.get('ir.module.module')
 
