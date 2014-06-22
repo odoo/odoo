@@ -5,13 +5,6 @@
     var _t = openerp._t;
 
     website.EditorBarContent.include({
-        start: function() {
-            var self = this;
-            $('a[data-action=new_event]').on('click', this, function() {
-                self.new_event();
-            });
-            return this._super();
-        },
         new_event: function() {
             website.prompt({
                 id: "editor_new_event",

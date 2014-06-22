@@ -5,13 +5,6 @@
     var _t = openerp._t;
 
     website.EditorBarContent.include({
-        start: function() {
-            var self = this;
-            $('a[data-action=new_blog_post]').on('click', this, function() {
-                self.new_blog_post();
-            });
-            return this._super();
-        },
         new_blog_post: function() {
             website.prompt({
                 id: "editor_new_blog",

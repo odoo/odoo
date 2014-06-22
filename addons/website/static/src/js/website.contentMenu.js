@@ -11,12 +11,12 @@
     website.EditorBarContent = openerp.Widget.extend({
         start: function() {
             var self = this;
-            $('a[data-action="edit-structure"]').on('click', this, function() {
-                self.edit_menu();
-            });
-            $('a[data-action="new_page"]').on('click', this, function() {
-                self.new_page();
-            });
+            self.$el.on('click', 'a', function(ev) {
+                ev.preventDefault();
+                var $content_item = $(this);
+                self[$content_item.data('action')]();
+            })
+            
             return this._super();
         },
         edit_menu: function() {
@@ -229,6 +229,7 @@
 
     website.ready().done(function() {
         var content = new website.EditorBarContent()
+        content.setElement($('.oe_content_menu'));
         content.start();
     });
 
