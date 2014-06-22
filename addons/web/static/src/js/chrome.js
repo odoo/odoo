@@ -805,6 +805,10 @@ instance.web.Menu =  instance.web.Widget.extend({
     /**
      * Reflow the menu items and dock overflowing items into a "More" menu item.
      * Automatically called when 'menu_loaded' event is triggered and on window resizing.
+     *
+     * @param {string} behavior If set to 'all_outside', all the items are displayed. If set to
+     * 'all_inside', all the items are hidden under the more item. If not set, only the 
+     * overflowing items are hidden.
      */
     reflow: function(behavior) {
         var self = this;
@@ -812,9 +816,9 @@ instance.web.Menu =  instance.web.Widget.extend({
         var $more = this.$('#menu_more');
         var $systray = this.$el.parents().find('.oe_systray');
 
-        $more.children('li').insertBefore($more_container);  // Pull all the items out the more menu
+        $more.children('li').insertBefore($more_container);  // Pull all the items out of the more menu
         
-        // All outside more displau all the items, hide the more menu and exit
+        // 'all_outside' beahavior should display all the items, so hide the more menu and exit
         if (behavior === 'all_outside') {
             this.$el.find('li').show();
             $more_container.hide();
