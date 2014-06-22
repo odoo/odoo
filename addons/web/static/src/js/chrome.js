@@ -963,9 +963,9 @@ instance.web.Menu =  instance.web.Widget.extend({
         var id = $(ev.currentTarget).data('menu');
 
         // Fetch the menu leaves ids in order to check if they need a 'needaction'
-        $secondary_menu = this.$el.parents().find('.oe_secondary_menu[data-menu-parent=' + id + ']')
-        $menu_leaves = $secondary_menu.children().find('.oe_menu_leaf')
-        menu_ids = $.map($menu_leaves, function (leave) {return parseInt($(leave).attr('data-menu'));});
+        var $secondary_menu = this.$el.parents().find('.oe_secondary_menu[data-menu-parent=' + id + ']');
+        var $menu_leaves = $secondary_menu.children().find('.oe_menu_leaf');
+        var menu_ids = _.map($menu_leaves, function (leave) {return parseInt($(leave).attr('data-menu'), 10);});
 
         self.do_load_needaction(menu_ids).then(function () {
             self.trigger("need_action_reloaded");
