@@ -212,9 +212,9 @@ PSEUDOCONFIG_MAPPER = {
     'debug': ['openerp:DEBUG'],
     'debug_sql': ['openerp.sql_db:DEBUG'],
     'info': [],
-    'warn': ['openerp:WARNING'],
-    'error': ['openerp:ERROR'],
-    'critical': ['openerp:CRITICAL'],
+    'warn': ['openerp:WARNING', 'werkzeug:WARNING'],
+    'error': ['openerp:ERROR', 'werkzeug:ERROR'],
+    'critical': ['openerp:CRITICAL', 'werkzeug:CRITICAL'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
