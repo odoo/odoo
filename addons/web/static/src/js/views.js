@@ -271,7 +271,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     }
                     action_loaded = this.do_action(state.action, { additional_context: add_context });
                     $.when(action_loaded || null).done(function() {
-                        instance.webclient.menu.has_been_loaded.done(function() {
+                        instance.webclient.menu.is_bound.done(function() {
                             if (self.inner_action && self.inner_action.id) {
                                 instance.webclient.menu.open_action(self.inner_action.id);
                             }

@@ -737,10 +737,10 @@ instance.web.Menu =  instance.web.Widget.extend({
     init: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.has_been_loaded = $.Deferred();
+        this.is_bound = $.Deferred();
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
-        this.on("menu_loaded", this, function() {
+        this.on("menu_bound", this, function() {
             // launch the fetch of needaction counters, asynchronous
             var $all_menus = self.$el.parents('body').find('.oe_webclient').find('[data-menu]');
             var all_menu_ids = _.map($all_menus, function (menu) {return parseInt($(menu).attr('data-menu'), 10);});
@@ -751,13 +751,13 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        return this.do_reload();
+        return this.bind_menu();
     },
     do_reload: function() {
         var self = this;
-        self.menu_loaded();
+        self.bind_menu();
     },
-    menu_loaded: function() {
+    bind_menu: function() {
         var self = this;
         this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container')
         this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
@@ -767,7 +767,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         if (self.current_menu) {
             self.open_menu(self.current_menu);
         }
-        this.trigger('menu_loaded');
+        this.trigger('menu_bound');
 
         var lazyreflow = _.debounce(this.reflow.bind(this), 200);
         instance.web.bus.on('resize', this, function() {
@@ -779,7 +779,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         });
         instance.web.bus.trigger('resize');
 
-        this.has_been_loaded.resolve();
+        this.is_bound.resolve();
     },
     do_load_needaction: function (menu_ids) {
         var self = this;
@@ -804,7 +804,7 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     /**
      * Reflow the menu items and dock overflowing items into a "More" menu item.
-     * Automatically called when 'menu_loaded' event is triggered and on window resizing.
+     * Automatically called when 'menu_bound' event is triggered and on window resizing.
      *
      * @param {string} behavior If set to 'all_outside', all the items are displayed. If set to
      * 'all_inside', all the items are hidden under the more item. If not set, only the 
@@ -1243,7 +1243,7 @@ instance.web.WebClient = instance.web.Client.extend({
         self.toggle_bars(true);
 
         self.update_logo();
-        this.$el.find('.oe_logo_edit_admin').click(function(ev) {
+        this.$('.oe_logo_edit_admin').click(function(ev) {
             self.logo_edit(ev);
         });
 
@@ -1352,7 +1352,7 @@ instance.web.WebClient = instance.web.Client.extend({
 
         var state = $.bbq.getState(true);
         if (_.isEmpty(state) || state.action == "login") {
-            self.menu.has_been_loaded.done(function() {
+            self.menu.is_bound.done(function() {
                 new instance.web.Model("res.users").call("read", [self.session.uid, ["action_id"]]).done(function(data) {
                     if(data.action_id) {
                         self.action_manager.do_action(data.action_id[0]);
@@ -1375,7 +1375,7 @@ instance.web.WebClient = instance.web.Client.extend({
         if (!_.isEqual(this._current_state, stringstate)) {
             var state = event.getState(true);
             if(!state.action && state.menu_id) {
-                self.menu.has_been_loaded.done(function() {
+                self.menu.is_bound.done(function() {
                     self.menu.do_reload();
                     self.menu.menu_click(state.menu_id);
                 });
