@@ -85,6 +85,7 @@
     // elements are used for e.g. support of FontAwesome icons
     CKEDITOR.dtd.$removeEmpty = {};
 
+
     website.init_editor = function () {
         CKEDITOR.plugins.add('customdialogs', {
             // requires: 'link,image',
