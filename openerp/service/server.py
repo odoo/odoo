@@ -43,8 +43,15 @@ SLEEP_INTERVAL = 60 # 1 min
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
 #----------------------------------------------------------
+class LoggingBaseWSGIServerMixIn(object):
+    def handle_error(self, request, client_address):
+        t, e, _ = sys.exc_info()
+        if t == socket.error and e.errno == errno.EPIPE:
+            # broken pipe, ignore error
+            return
+        _logger.exception('Exception happened during processing of request from %s', client_address)
 
-class BaseWSGIServerNoBind(werkzeug.serving.BaseWSGIServer):
+class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGIServer):
     """ werkzeug Base WSGI Server patched to skip socket binding. PreforkServer
     use this class, sets the socket and calls the process_request() manually
     """
@@ -63,7 +70,7 @@ class BaseWSGIServerNoBind(werkzeug.serving.BaseWSGIServer):
 # should also work with systemd socket activation. This is currently untested
 # and not yet used.
 
-class ThreadedWSGIServerReloadable(werkzeug.serving.ThreadedWSGIServer):
+class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
     given by the environement, this is used by autoreload to keep the listen
     socket open when a reload happens.
