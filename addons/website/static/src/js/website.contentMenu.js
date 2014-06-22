@@ -232,20 +232,4 @@
         content.start();
     });
 
-
-// TODO sle: FIXME
-// edit: function () {
-//     this.on('rte:ready', this, function () {
-//         $('a:has(span[data-oe-model="website.menu"])').tooltip({
-//             title: _t('Save this page and use the top "Content" menu to edit the menu.'),
-//             placement: "bottom",
-//             trigger: "hover",
-//             show: 50,
-//             hide: 100,
-//             container: 'body'
-//         });
-//     });
-//     return this._super();
-// },
-
 })();
