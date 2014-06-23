@@ -22,9 +22,10 @@
 import logging
 import re
 import time
+import uuid
 
 from openerp.osv import osv, fields
-from openerp import tools
+from openerp import tools, SUPERUSER_ID
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -46,9 +47,20 @@ class base_gengo_translations(osv.osv_memory):
         'lang_id': fields.many2one('res.lang', 'Language', required=True),
         'sync_limit': fields.integer("No. of terms to sync"),
     }
-    _defaults = {'sync_type' : 'both',
-                 'sync_limit' : 20
-         }
+    _defaults = {
+        'sync_type': 'both',
+        'sync_limit': 20
+    }
+
+    def init(self, cr):
+        icp = self.pool['ir.config_parameter']
+        if not icp.get_param(cr, SUPERUSER_ID, self.GENGO_KEY, default=None):
+            icp.set_param(cr, SUPERUSER_ID, self.GENGO_KEY, str(uuid.uuid4()), groups=['base.group_website_designer', 'base.group_website_publisher'])
+
+    def get_gengo_key(self, cr):
+        icp = self.pool['ir.config_parameter']
+        return icp.get_param(cr, SUPERUSER_ID, self.GENGO_KEY, default="Undefined")
+
     def gengo_authentication(self, cr, uid, context=None):
         '''
         This method tries to open a connection with Gengo. For that, it uses the Public and Private

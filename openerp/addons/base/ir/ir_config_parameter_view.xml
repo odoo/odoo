@@ -16,6 +16,7 @@
                 <tree string="System Parameters">
                     <field name="key"/>
                     <field name="value"/>
+                    <field name="group_ids"/>
                 </tree>
             </field>
         </record>
@@ -27,6 +28,7 @@
                     <group>
                         <field name="key"/>
                         <field name="value"/>
+                        <field name="group_ids" widget="many2many_tags"/>
                     </group>
                   </sheet>
                 </form>
