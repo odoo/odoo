@@ -324,11 +324,6 @@ class product_template(osv.osv):
         return res
 
     _columns = {
-        'valuation':fields.selection([('manual_periodic', 'Periodical (manual)'),
-            ('real_time','Real Time (automated)'),], 'Inventory Valuation',
-            help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
-                 "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
-            , required=True),
         'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
         'property_stock_procurement': fields.property(
             type='many2one',
@@ -376,7 +371,6 @@ class product_template(osv.osv):
 
     _defaults = {
         'sale_delay': 7,
-        'valuation': 'manual_periodic',
     }
 
     def action_view_routes(self, cr, uid, ids, context=None):

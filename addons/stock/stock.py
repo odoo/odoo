@@ -272,25 +272,25 @@ class stock_quant(osv.osv):
 
     _columns = {
         'name': fields.function(_get_quant_name, type='char', string='Identifier'),
-        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete="restrict", readonly=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="restrict", readonly=True),
-        'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product", readonly=True),
-        'package_id': fields.many2one('stock.quant.package', string='Package', help="The package containing this quant", readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete="restrict", readonly=True, select=True),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="restrict", readonly=True, select=True),
+        'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product", readonly=True, select=True),
+        'package_id': fields.many2one('stock.quant.package', string='Package', help="The package containing this quant", readonly=True, select=True),
         'packaging_type_id': fields.related('package_id', 'packaging_id', type='many2one', relation='product.packaging', string='Type of packaging', readonly=True, store=True),
-        'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="The move the quant is reserved for", readonly=True),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True),
+        'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="The move the quant is reserved for", readonly=True, select=True),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True, select=True),
         'cost': fields.float('Unit Cost'),
-        'owner_id': fields.many2one('res.partner', 'Owner', help="This is the owner of the quant", readonly=True),
+        'owner_id': fields.many2one('res.partner', 'Owner', help="This is the owner of the quant", readonly=True, select=True),
 
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'in_date': fields.datetime('Incoming Date', readonly=True),
+        'in_date': fields.datetime('Incoming Date', readonly=True, select=True),
 
         'history_ids': fields.many2many('stock.move', 'stock_quant_move_rel', 'quant_id', 'move_id', 'Moves', help='Moves that operate(d) on this quant'),
-        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong", required=True, readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong", required=True, readonly=True, select=True),
         'inventory_value': fields.function(_calc_inventory_value, string="Inventory Value", type='float', readonly=True),
 
         # Used for negative quants to reconcile after compensated by a new positive one
-        'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from', readonly=True),
+        'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from', readonly=True, select=True),
         'negative_move_id': fields.many2one('stock.move', 'Move Negative Quant', help='If this is a negative quant, this will be the move that caused this negative quant.', readonly=True),
         'negative_dest_location_id': fields.related('negative_move_id', 'location_dest_id', type='many2one', relation='stock.location', string="Negative Destination Location", readonly=True, 
                                                     help="Technical field used to record the destination location of a move that created a negative quant"),
@@ -635,7 +635,7 @@ class stock_picking(osv.osv):
         """
         res = {}
         for id in ids:
-            res[id] = {'min_date': False, 'max_date': False}
+            res[id] = {'min_date': False, 'max_date': False, 'priority': '1'}
         if not ids:
             return res
         cr.execute("""select
@@ -3114,6 +3114,109 @@ class stock_warehouse(osv.osv):
         pull_obj.write(cr, uid, warehouse.mto_pull_id.id, mto_pull_vals, context=context)
         return True
 
+    def create_sequences_and_picking_types(self, cr, uid, warehouse, context=None):
+        seq_obj = self.pool.get('ir.sequence')
+        picking_type_obj = self.pool.get('stock.picking.type')
+        #create new sequences
+        in_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': warehouse.name + _(' Sequence in'), 'prefix': warehouse.code + '/IN/', 'padding': 5}, context=context)
+        out_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': warehouse.name + _(' Sequence out'), 'prefix': warehouse.code + '/OUT/', 'padding': 5}, context=context)
+        pack_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': warehouse.name + _(' Sequence packing'), 'prefix': warehouse.code + '/PACK/', 'padding': 5}, context=context)
+        pick_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': warehouse.name + _(' Sequence picking'), 'prefix': warehouse.code + '/PICK/', 'padding': 5}, context=context)
+        int_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': warehouse.name + _(' Sequence internal'), 'prefix': warehouse.code + '/INT/', 'padding': 5}, context=context)
+
+        wh_stock_loc = warehouse.lot_stock_id
+        wh_input_stock_loc = warehouse.wh_input_stock_loc_id
+        wh_output_stock_loc = warehouse.wh_output_stock_loc_id
+        wh_pack_stock_loc = warehouse.wh_pack_stock_loc_id
+
+        #fetch customer and supplier locations, for references
+        customer_loc, supplier_loc = self._get_partner_locations(cr, uid, warehouse.id, context=context)
+
+        #create in, out, internal picking types for warehouse
+        input_loc = wh_input_stock_loc
+        if warehouse.reception_steps == 'one_step':
+            input_loc = wh_stock_loc
+        output_loc = wh_output_stock_loc
+        if warehouse.delivery_steps == 'ship_only':
+            output_loc = wh_stock_loc
+
+        #choose the next available color for the picking types of this warehouse
+        color = 0
+        available_colors = [c%9 for c in range(3, 12)]  # put flashy colors first
+        all_used_colors = self.pool.get('stock.picking.type').search_read(cr, uid, [('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')
+        #don't use sets to preserve the list order
+        for x in all_used_colors:
+            if x['color'] in available_colors:
+                available_colors.remove(x['color'])
+        if available_colors:
+            color = available_colors[0]
+
+        #order the picking types with a sequence allowing to have the following suit for each warehouse: reception, internal, pick, pack, ship. 
+        max_sequence = self.pool.get('stock.picking.type').search_read(cr, uid, [], ['sequence'], order='sequence desc')
+        max_sequence = max_sequence and max_sequence[0]['sequence'] or 0
+
+        in_type_id = picking_type_obj.create(cr, uid, vals={
+            'name': _('Receptions'),
+            'warehouse_id': warehouse.id,
+            'code': 'incoming',
+            'sequence_id': in_seq_id,
+            'default_location_src_id': supplier_loc.id,
+            'default_location_dest_id': input_loc.id,
+            'sequence': max_sequence + 1,
+            'color': color}, context=context)
+        out_type_id = picking_type_obj.create(cr, uid, vals={
+            'name': _('Delivery Orders'),
+            'warehouse_id': warehouse.id,
+            'code': 'outgoing',
+            'sequence_id': out_seq_id,
+            'return_picking_type_id': in_type_id,
+            'default_location_src_id': output_loc.id,
+            'default_location_dest_id': customer_loc.id,
+            'sequence': max_sequence + 4,
+            'color': color}, context=context)
+        picking_type_obj.write(cr, uid, [in_type_id], {'return_picking_type_id': out_type_id}, context=context)
+        int_type_id = picking_type_obj.create(cr, uid, vals={
+            'name': _('Internal Transfers'),
+            'warehouse_id': warehouse.id,
+            'code': 'internal',
+            'sequence_id': int_seq_id,
+            'default_location_src_id': wh_stock_loc.id,
+            'default_location_dest_id': wh_stock_loc.id,
+            'active': True,
+            'sequence': max_sequence + 2,
+            'color': color}, context=context)
+        pack_type_id = picking_type_obj.create(cr, uid, vals={
+            'name': _('Pack'),
+            'warehouse_id': warehouse.id,
+            'code': 'internal',
+            'sequence_id': pack_seq_id,
+            'default_location_src_id': wh_pack_stock_loc.id,
+            'default_location_dest_id': output_loc.id,
+            'active': warehouse.delivery_steps == 'pick_pack_ship',
+            'sequence': max_sequence + 3,
+            'color': color}, context=context)
+        pick_type_id = picking_type_obj.create(cr, uid, vals={
+            'name': _('Pick'),
+            'warehouse_id': warehouse.id,
+            'code': 'internal',
+            'sequence_id': pick_seq_id,
+            'default_location_src_id': wh_stock_loc.id,
+            'default_location_dest_id': wh_pack_stock_loc.id,
+            'active': warehouse.delivery_steps != 'ship_only',
+            'sequence': max_sequence + 2,
+            'color': color}, context=context)
+
+        #write picking types on WH
+        vals = {
+            'in_type_id': in_type_id,
+            'out_type_id': out_type_id,
+            'pack_type_id': pack_type_id,
+            'pick_type_id': pick_type_id,
+            'int_type_id': int_type_id,
+        }
+        super(stock_warehouse, self).write(cr, uid, warehouse.id, vals=vals, context=context)
+
+
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
@@ -3153,108 +3256,10 @@ class stock_warehouse(osv.osv):
             }, context=context_with_inactive)
             vals[values['field']] = location_id
 
-        #create new sequences
-        in_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence in'), 'prefix': vals.get('code', '') + '/IN/', 'padding': 5}, context=context)
-        out_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence out'), 'prefix': vals.get('code', '') + '/OUT/', 'padding': 5}, context=context)
-        pack_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence packing'), 'prefix': vals.get('code', '') + '/PACK/', 'padding': 5}, context=context)
-        pick_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence picking'), 'prefix': vals.get('code', '') + '/PICK/', 'padding': 5}, context=context)
-        int_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence internal'), 'prefix': vals.get('code', '') + '/INT/', 'padding': 5}, context=context)
-
         #create WH
         new_id = super(stock_warehouse, self).create(cr, uid, vals=vals, context=context)
-
         warehouse = self.browse(cr, uid, new_id, context=context)
-        wh_stock_loc = warehouse.lot_stock_id
-        wh_input_stock_loc = warehouse.wh_input_stock_loc_id
-        wh_output_stock_loc = warehouse.wh_output_stock_loc_id
-        wh_pack_stock_loc = warehouse.wh_pack_stock_loc_id
-
-        #fetch customer and supplier locations, for references
-        customer_loc, supplier_loc = self._get_partner_locations(cr, uid, new_id, context=context)
-
-        #create in, out, internal picking types for warehouse
-        input_loc = wh_input_stock_loc
-        if warehouse.reception_steps == 'one_step':
-            input_loc = wh_stock_loc
-        output_loc = wh_output_stock_loc
-        if warehouse.delivery_steps == 'ship_only':
-            output_loc = wh_stock_loc
-
-        #choose the next available color for the picking types of this warehouse
-        color = 0
-        available_colors = [c%9 for c in range(3, 12)]  # put flashy colors first
-        all_used_colors = self.pool.get('stock.picking.type').search_read(cr, uid, [('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')
-        #don't use sets to preserve the list order
-        for x in all_used_colors:
-            if x['color'] in available_colors:
-                available_colors.remove(x['color'])
-        if available_colors:
-            color = available_colors[0]
-
-        #order the picking types with a sequence allowing to have the following suit for each warehouse: reception, internal, pick, pack, ship. 
-        max_sequence = self.pool.get('stock.picking.type').search_read(cr, uid, [], ['sequence'], order='sequence desc')
-        max_sequence = max_sequence and max_sequence[0]['sequence'] or 0
-
-        in_type_id = picking_type_obj.create(cr, uid, vals={
-            'name': _('Receptions'),
-            'warehouse_id': new_id,
-            'code': 'incoming',
-            'sequence_id': in_seq_id,
-            'default_location_src_id': supplier_loc.id,
-            'default_location_dest_id': input_loc.id,
-            'sequence': max_sequence + 1,
-            'color': color}, context=context)
-        out_type_id = picking_type_obj.create(cr, uid, vals={
-            'name': _('Delivery Orders'),
-            'warehouse_id': new_id,
-            'code': 'outgoing',
-            'sequence_id': out_seq_id,
-            'return_picking_type_id': in_type_id,
-            'default_location_src_id': output_loc.id,
-            'default_location_dest_id': customer_loc.id,
-            'sequence': max_sequence + 4,
-            'color': color}, context=context)
-        picking_type_obj.write(cr, uid, [in_type_id], {'return_picking_type_id': out_type_id}, context=context)
-        int_type_id = picking_type_obj.create(cr, uid, vals={
-            'name': _('Internal Transfers'),
-            'warehouse_id': new_id,
-            'code': 'internal',
-            'sequence_id': int_seq_id,
-            'default_location_src_id': wh_stock_loc.id,
-            'default_location_dest_id': wh_stock_loc.id,
-            'active': True,
-            'sequence': max_sequence + 2,
-            'color': color}, context=context)
-        pack_type_id = picking_type_obj.create(cr, uid, vals={
-            'name': _('Pack'),
-            'warehouse_id': new_id,
-            'code': 'internal',
-            'sequence_id': pack_seq_id,
-            'default_location_src_id': wh_pack_stock_loc.id,
-            'default_location_dest_id': output_loc.id,
-            'active': delivery_steps == 'pick_pack_ship',
-            'sequence': max_sequence + 3,
-            'color': color}, context=context)
-        pick_type_id = picking_type_obj.create(cr, uid, vals={
-            'name': _('Pick'),
-            'warehouse_id': new_id,
-            'code': 'internal',
-            'sequence_id': pick_seq_id,
-            'default_location_src_id': wh_stock_loc.id,
-            'default_location_dest_id': wh_pack_stock_loc.id,
-            'active': delivery_steps != 'ship_only',
-            'sequence': max_sequence + 2,
-            'color': color}, context=context)
-
-        #write picking types on WH
-        vals = {
-            'in_type_id': in_type_id,
-            'out_type_id': out_type_id,
-            'pack_type_id': pack_type_id,
-            'pick_type_id': pick_type_id,
-            'int_type_id': int_type_id,
-        }
-        super(stock_warehouse, self).write(cr, uid, new_id, vals=vals, context=context)
+        self.create_sequences_and_picking_types(cr, uid, warehouse, context=context)
         warehouse.refresh()
 
         #create routes and push/pull rules
@@ -3298,7 +3303,8 @@ class stock_warehouse(osv.osv):
             for push in route.push_ids:
                 push_obj.write(cr, uid, push.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context)
         #change the mto pull rule name
-        pull_obj.write(cr, uid, warehouse.mto_pull_id.id, {'name': warehouse.mto_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
+        if warehouse.mto_pull_id.id:
+            pull_obj.write(cr, uid, warehouse.mto_pull_id.id, {'name': warehouse.mto_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
 
     def _check_delivery_resupply(self, cr, uid, warehouse, new_location, change_to_multiple, context=None):
         """ Will check if the resupply routes from this warehouse follow the changes of number of delivery steps """
@@ -3380,11 +3386,12 @@ class stock_warehouse(osv.osv):
                 if vals.get('name'):
                     name = vals.get('name', warehouse.name)
                 self._handle_renaming(cr, uid, warehouse, name, vals.get('code', warehouse.code), context=context_with_inactive)
-                seq_obj.write(cr, uid, warehouse.in_type_id.sequence_id.id, {'name': name + _(' Sequence in'), 'prefix': vals.get('code', warehouse.code) + '\IN\\'}, context=context)
-                seq_obj.write(cr, uid, warehouse.out_type_id.sequence_id.id, {'name': name + _(' Sequence out'), 'prefix': vals.get('code', warehouse.code) + '\OUT\\'}, context=context)
-                seq_obj.write(cr, uid, warehouse.pack_type_id.sequence_id.id, {'name': name + _(' Sequence packing'), 'prefix': vals.get('code', warehouse.code) + '\PACK\\'}, context=context)
-                seq_obj.write(cr, uid, warehouse.pick_type_id.sequence_id.id, {'name': name + _(' Sequence picking'), 'prefix': vals.get('code', warehouse.code) + '\PICK\\'}, context=context)
-                seq_obj.write(cr, uid, warehouse.int_type_id.sequence_id.id, {'name': name + _(' Sequence internal'), 'prefix': vals.get('code', warehouse.code) + '\INT\\'}, context=context)
+                if warehouse.in_type_id:
+                    seq_obj.write(cr, uid, warehouse.in_type_id.sequence_id.id, {'name': name + _(' Sequence in'), 'prefix': vals.get('code', warehouse.code) + '\IN\\'}, context=context)
+                    seq_obj.write(cr, uid, warehouse.out_type_id.sequence_id.id, {'name': name + _(' Sequence out'), 'prefix': vals.get('code', warehouse.code) + '\OUT\\'}, context=context)
+                    seq_obj.write(cr, uid, warehouse.pack_type_id.sequence_id.id, {'name': name + _(' Sequence packing'), 'prefix': vals.get('code', warehouse.code) + '\PACK\\'}, context=context)
+                    seq_obj.write(cr, uid, warehouse.pick_type_id.sequence_id.id, {'name': name + _(' Sequence picking'), 'prefix': vals.get('code', warehouse.code) + '\PICK\\'}, context=context)
+                    seq_obj.write(cr, uid, warehouse.int_type_id.sequence_id.id, {'name': name + _(' Sequence internal'), 'prefix': vals.get('code', warehouse.code) + '\INT\\'}, context=context)
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
             for cmd in vals.get('resupply_wh_ids'):
                 if cmd[0] == 6:
@@ -3591,13 +3598,13 @@ class stock_package(osv.osv):
         'complete_name': fields.function(_complete_name, type='char', string="Package Name",),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
-        'packaging_id': fields.many2one('product.packaging', 'Packaging', help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense."),
+        'packaging_id': fields.many2one('product.packaging', 'Packaging', help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense.", select=True),
         'ul_id': fields.many2one('product.ul', 'Logistic Unit'),
         'location_id': fields.function(_get_package_info, type='many2one', relation='stock.location', string='Location', multi="package",
                                     store={
                                        'stock.quant': (_get_packages, ['location_id'], 10),
                                        'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
-                                    }, readonly=True),
+                                    }, readonly=True, select=True),
         'quant_ids': fields.one2many('stock.quant', 'package_id', 'Bulk Content', readonly=True),
         'parent_id': fields.many2one('stock.quant.package', 'Parent Package', help="The package containing this item", ondelete='restrict', readonly=True),
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Contained Packages', readonly=True),
@@ -3605,12 +3612,12 @@ class stock_package(osv.osv):
                                     store={
                                        'stock.quant': (_get_packages, ['company_id'], 10),
                                        'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
-                                    }, readonly=True),
+                                    }, readonly=True, select=True),
         'owner_id': fields.function(_get_package_info, type='many2one', relation='res.partner', string='Owner', multi="package",
                                 store={
                                        'stock.quant': (_get_packages, ['owner_id'], 10),
                                        'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
-                                    }, readonly=True),
+                                    }, readonly=True, select=True),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
@@ -4087,11 +4094,11 @@ class stock_picking_type(osv.osv):
             tristates = []
             for picking in picking_obj.browse(cr, uid, picking_ids, context=context):
                 if picking.date_done > picking.date:
-                    tristates.insert(0, {'tooltip': picking.name + _(': Late'), 'value': -1})
+                    tristates.insert(0, {'tooltip': picking.name or '' + _(': Late'), 'value': -1})
                 elif picking.backorder_id:
-                    tristates.insert(0, {'tooltip': picking.name + _(': Backorder exists'), 'value': 0})
+                    tristates.insert(0, {'tooltip': picking.name or '' + _(': Backorder exists'), 'value': 0})
                 else:
-                    tristates.insert(0, {'tooltip': picking.name + _(': OK'), 'value': 1})
+                    tristates.insert(0, {'tooltip': picking.name or '' + _(': OK'), 'value': 1})
             res[picking_type_id] = tristates
         return res
 
