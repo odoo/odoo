@@ -350,7 +350,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 e.preventDefault();
                 break;
             case $.ui.keyCode.RIGHT:
-                this.focusFollowing(e.target);
+                if (!this.autocomplete.is_on_expandable_item()) {
+                    this.focusFollowing(e.target);
+                }
+                //this.focusFollowing(e.target);
                 e.preventDefault();
                 break;
             }
@@ -484,53 +487,66 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * Sets up search view's view-wide auto-completion widget
      */
     setup_global_completion: function () {
-        var autocomplete = this.$el.autocomplete({
+        var self = this;
+
+        this.autocomplete = new instance.web.search.AutoComplete(this, {
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
-            focus: function (e) { e.preventDefault(); },
-            html: true,
-            autoFocus: true,
-            minLength: 1,
-            delay: 250,
-        }).data('autocomplete');
-
-        this.$el.on('input', function () {
-            this.$el.autocomplete('close');
-        }.bind(this));
-
-        // MonkeyPatch autocomplete instance
-        _.extend(autocomplete, {
-            _renderItem: function (ul, item) {
-                // item of completion list
-                var $item = $( "<li></li>" )
-                    .data( "item.autocomplete", item )
-                    .appendTo( ul );
-
-                if (item.facet !== undefined) {
-                    // regular completion item
-                    if (item.first) {
-                        $item.css('borderTop', '1px solid #cccccc');
-                    }
-                    return $item.append(
-                        (item.label)
-                            ? $('<a>').html(item.label)
-                            : $('<a>').text(item.value));
-                }
-                return $item.text(item.label)
-                    .css({
-                        borderTop: '1px solid #cccccc',
-                        margin: 0,
-                        padding: 0,
-                        zoom: 1,
-                        'float': 'left',
-                        clear: 'left',
-                        width: '100%'
-                    });
-            },
-            _value: function() {
+            delay: 0,
+            get_search_string: function () { 
                 return self.$('div.oe_searchview_input').text();
-            },
+            }
         });
+        this.autocomplete.appendTo(this.$el);
+
+
+        // var autocomplete = this.$el.autocomplete({
+        //     source: this.proxy('complete_global_search'),
+        //     select: this.proxy('select_completion'),
+        //     focus: function (e) { e.preventDefault(); },
+        //     html: true,
+        //     autoFocus: true,
+        //     minLength: 1,
+        //     delay: 250,
+        // }).data('autocomplete');
+
+        // this.$el.on('input', function () {
+        //     this.$el.autocomplete('close');
+        // }.bind(this));
+
+        // // MonkeyPatch autocomplete instance
+        // _.extend(autocomplete, {
+        //     _renderItem: function (ul, item) {
+        //         // item of completion list
+        //         var $item = $( "<li></li>" )
+        //             .data( "item.autocomplete", item )
+        //             .appendTo( ul );
+
+        //         if (item.facet !== undefined) {
+        //             // regular completion item
+        //             if (item.first) {
+        //                 $item.css('borderTop', '1px solid #cccccc');
+        //             }
+        //             return $item.append(
+        //                 (item.label)
+        //                     ? $('<a>').html(item.label)
+        //                     : $('<a>').text(item.value));
+        //         }
+        //         return $item.text(item.label)
+        //             .css({
+        //                 borderTop: '1px solid #cccccc',
+        //                 margin: 0,
+        //                 padding: 0,
+        //                 zoom: 1,
+        //                 'float': 'left',
+        //                 clear: 'left',
+        //                 width: '100%'
+        //             });
+        //     },
+        //     _value: function() {
+        //         return self.$('div.oe_searchview_input').text();
+        //     },
+        // });
     },
     /**
      * Provide auto-completion result for req.term (an array to `resp`)
@@ -579,14 +595,15 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     childBlurred: function () {
         var val = this.$el.val();
         this.$el.val('');
-        var complete = this.$el.data('autocomplete');
-        if ((val && complete.term === undefined) || complete.previous) {
-            throw new Error("new jquery.ui version altering implementation" +
-                            " details relied on");
-        }
-        delete complete.term;
+        // var complete = this.$el.data('autocomplete');
+        // if ((val && complete.term === undefined) || complete.previous) {
+        //     throw new Error("new jquery.ui version altering implementation" +
+        //                     " details relied on");
+        // }
+        // delete complete.term;
         this.$el.removeClass('oe_focused')
                      .trigger('blur');
+        this.autocomplete.close();
     },
     /**
      * Call the renderFacets method with the correct arguments.
@@ -1639,7 +1656,27 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         this._super(view_section, field, parent);
         this.model = new instance.web.Model(this.attrs.relation);
     },
-    complete: function (needle) {
+
+    complete: function (value) {
+        if (_.isEmpty(value)) { return $.when(null); }
+        var label = _.str.sprintf(_.str.escapeHTML(
+            _t("Search %(field)s for: %(value)s")), {
+                field: '<em>' + _.escape(this.attrs.string) + '</em>',
+                value: '<strong>' + _.escape(value) + '</strong>'});
+        return $.when([{
+            label: label,
+            facet: {
+                category: this.attrs.string,
+                field: this,
+                values: [{label: value, value: value}]
+            },
+            expand: this.expand.bind(this),
+        }]);
+    },
+
+    expand: function (needle) {
+        // TO DO
+        console.log('TO DO');
         var self = this;
         // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
         var context = instance.web.pyeval.eval(
@@ -2309,6 +2346,155 @@ instance.web.search.custom_filters = new instance.web.Registry({
     'selection': 'instance.web.search.ExtendedSearchProposition.Selection',
 
     'id': 'instance.web.search.ExtendedSearchProposition.Id'
+});
+
+instance.web.search.AutoComplete = instance.web.Widget.extend({
+    template: "SearchView.autocomplete",
+
+    init: function (parent, options) {
+        this._super(parent);
+        this.$input = parent.$el;
+        this.source = options.source;
+        this.delay = options.delay;
+        this.select = options.select,
+        this.get_search_string = options.get_search_string;
+
+        this.choices = [];
+        this.selected = -1;
+
+        this.searching = true;
+        this.search_string = null;
+        this.current_search = null;
+    },
+
+    start: function () {
+        var self = this;
+        this.$input.on('keyup', function (ev) {
+            if (ev.which === $.ui.keyCode.RIGHT) {
+                ev.preventDefault();
+                return;
+            }
+            if (!self.searching) {
+                self.searching = true;
+                return;
+            }
+            self.search_string = self.get_search_string();
+            if (self.search_string.length) {
+                var search_string = self.search_string;
+                setTimeout(function () { self.initiate_search(search_string);}, self.delay);
+            } else {
+                self.close();
+            }
+        });
+        this.$input.on('keydown', function (ev) {
+            switch (ev.which) {
+                case $.ui.keyCode.TAB:
+                case $.ui.keyCode.ENTER:
+                    if (self.get_search_string().length) {
+                        self.select(ev, {item: {facet: self.choices[self.selected].facet}});
+                        self.close();
+                    }
+                    break;
+                case $.ui.keyCode.DOWN:
+                    self.move('down');
+                    self.searching = false;
+                    break;
+                case $.ui.keyCode.UP:
+                    self.move('up');
+                    self.searching = false;
+                    break;
+                case $.ui.keyCode.RIGHT:
+                    if (self.choices[self.selected].expand) {
+                        self.choices[self.selected].expand(self.get_search_string()).then(function (results) {
+                            console.log(results);
+                        });
+                    }
+                    self.searching = false;
+                    ev.preventDefault();
+                    break;
+                case $.ui.keyCode.ESCAPE:
+                    self.close();
+                    self.searching = false;
+                    break;
+            }
+        });
+    },
+
+    initiate_search: function (search_string) {
+        console.log(search_string, this.search_string, this.current_search, this.searching);
+        if (search_string !== this.search_string) return;
+        if (search_string === this.current_search) return;
+        this.search(search_string);
+    },
+
+    search: function (search_string) {
+        this.current_search = search_string;
+        var self = this;
+        this.source({term:search_string}, function (results) {
+            if (results.length) {
+                self.choices = results;
+                self.render_search_results(results);
+                self.selected = 0;
+                self.focus_element(self.choices[self.selected].$el);
+            } else {
+                self.close();
+            }
+        });
+    },
+
+    render_search_results: function (results) {
+        var self = this;
+        var $list = this.$('ul');
+        $list.empty();
+        results.forEach(function (r) {
+            var $item = self.make_list_item(r); 
+            r.$el = $item;
+            $list.append($item);
+            console.log('item done', $item, r);
+        });
+        this.show();
+    },
+
+    make_list_item: function (result) {
+        var self = this;
+        var $li = $('<li>');
+        if (result.expand) {
+            $li.append($('<span class="oe-expand">').text('▶'));
+        }
+        $li.append($('<span>').html(result.label));
+        $li.hover(function (ev) {self.focus_element($li);});
+        $li.mousedown(function (ev) {
+            self.select(ev, {item: {facet: result.facet}});
+            self.close();
+        });
+        return $li;
+    },
+
+    focus_element: function ($li) {
+        this.$('li').removeClass('oe-selection-focus');
+        $li.addClass('oe-selection-focus');
+    },
+
+    show: function () {
+        this.$el.show();
+    },
+
+    close: function () {
+        this.current_search = null;
+        this.search_string = null;
+        this.searching = true;
+        this.$el.hide();
+    },
+
+    move: function (direction) {
+        var delta = direction === 'up' ? -1 : +1;
+        this.selected = (this.selected + delta + this.choices.length) % this.choices.length;
+        this.focus_element(this.choices[this.selected].$el);
+    },
+
+    is_on_expandable_item: function () {
+        return !!this.$('.oe-selection-focus .oe-expand').length;
+    },
 });
 
 })();
