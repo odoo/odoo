@@ -27,6 +27,7 @@ from openerp.osv import fields, osv
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
+    _order = 'sequence desc'
     _columns = {
         'name': fields.char('Fiscal Position', size=64, required=True),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a fiscal position without deleting it."),
@@ -34,6 +35,13 @@ class account_fiscal_position(osv.osv):
         'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Tax Mapping'),
         'note': fields.text('Notes'),
+        'apply_onchange': fields.boolean('Apply onchange',
+            help="Can apply automatically this fiscal position onchange vat, country or state partner values."),
+        'vat_required': fields.boolean('VAT required', help="The partner must have a VAT number to apply fiscal position."),
+        'country_ids': fields.many2many('res.country', 'Countries', help="Countries have to match to apply fiscal position."),
+        'states_ids': fields.many2many('res.country.state', 'States', help="States have to match to apply fiscal position.",
+            domain="[('country_id', 'in', country_ids)]"),
+        'sequence': fields.integer('Sequence'),
     }
 
     _defaults = {
@@ -252,6 +260,21 @@ class res_partner(osv.osv):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + \
             ['debit_limit', 'property_account_payable', 'property_account_receivable', 'property_account_position',
              'property_payment_term', 'property_supplier_payment_term', 'last_reconciliation_date']
+
+    def onchange_apply_fiscal(self, cr, uid, ids, country, state, vat=None, context=None):
+        value = {}
+        if country:
+            pos_obj = self.pool['account.fiscal.position']
+            fiscal_position_ids = pos_obj.search(cr, uid, [
+                ('apply_onchange', '=', True),
+                ('vat_required', '=', bool(vat)),
+                ('country_ids', '=', country),
+                ('states_ids', '=', state)], context=context)
+
+            if fiscal_position_ids:
+                value['property_account_position'] = fiscal_position_ids[0]
+
+        return {'value': value}
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

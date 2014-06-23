@@ -405,6 +405,7 @@ class website_sale(http.Controller):
         orm_partner = registry.get('res.partner')
         orm_user = registry.get('res.users')
         order_obj = request.registry.get('sale.order')
+        pos_obj = request.registry.get('account.fiscal.position')
 
         billing_info = self.checkout_parse('billing', checkout, True)
 
@@ -422,6 +423,13 @@ class website_sale(http.Controller):
         if partner_id and request.website.partner_id.id != partner_id:
             orm_partner.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
+            # search and apply a fiscal position
+            billing_info.update(orm_partner.onchange_apply_fiscal(cr, SUPERUSER_ID, [],
+                billing_info.get('country_id'),
+                billing_info.get('state_id'),
+                billing_info.get('vat'), context=context)['value'])
+            
+            # create partner
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
 
         # create a new shipping partner
