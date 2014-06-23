@@ -523,6 +523,25 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "id desc"
 
+    def _order_fields(self, cr, uid, ui_order, context=None):
+        return {
+            'name':         ui_order['name'],
+            'user_id':      ui_order['user_id'] or False,
+            'session_id':   ui_order['pos_session_id'],
+            'lines':        ui_order['lines'],
+            'pos_reference':ui_order['name'],
+            'partner_id':   ui_order['partner_id'] or False,
+        }
+
+    def _payment_fields(self, cr, uid, ui_paymentline, context=None):
+        return {
+            'amount':       ui_paymentline['amount'] or 0.0,
+            'payment_date': ui_paymentline['name'],
+            'statement_id': ui_paymentline['statement_id'],
+            'payment_name': ui_paymentline.get('note',False),
+            'journal':      ui_paymentline['journal_id'],
+        }
+
     def create_from_ui(self, cr, uid, orders, context=None):
         # Keep only new orders
         submitted_references = [o['data']['name'] for o in orders]
@@ -536,23 +555,9 @@ class pos_order(osv.osv):
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
 
-            order_id = self.create(cr, uid, {
-                'name': order['name'],
-                'user_id': order['user_id'] or False,
-                'session_id': order['pos_session_id'],
-                'lines': order['lines'],
-                'pos_reference':order['name'],
-                'partner_id': order['partner_id'] or False
-            }, context)
+            order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
             for payments in order['statement_ids']:
-                payment = payments[2]
-                self.add_payment(cr, uid, order_id, {
-                    'amount': payment['amount'] or 0.0,
-                    'payment_date': payment['name'],
-                    'statement_id': payment['statement_id'],
-                    'payment_name': payment.get('note', False),
-                    'journal': payment['journal_id']
-                }, context=context)
+                self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
 
             if order['amount_return']:
                 session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
