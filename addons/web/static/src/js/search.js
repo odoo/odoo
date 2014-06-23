@@ -340,16 +340,17 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         },
         'click .oe_searchview_unfold_drawer': function (e) {
             e.stopImmediatePropagation();
-            this.$el.toggleClass('oe_searchview_open_drawer');
+            if (this.drawer) 
+                this.drawer.toggle();
         },
         'keydown .oe_searchview_input, .oe_searchview_facet': function (e) {
             switch(e.which) {
             case $.ui.keyCode.LEFT:
-                this.focusPreceding(this);
+                this.focusPreceding(e.target);
                 e.preventDefault();
                 break;
             case $.ui.keyCode.RIGHT:
-                this.focusFollowing(this);
+                this.focusFollowing(e.target);
                 e.preventDefault();
                 break;
             }
@@ -383,18 +384,23 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.defaults = defaults || {};
         this.has_defaults = !_.isEmpty(this.defaults);
 
-        this.inputs = [];
-        this.controls = [];
-
         this.headless = this.options.hidden && !this.has_defaults;
 
         this.input_subviews = [];
+        this.view_manager = null;
+        this.$view_manager_header = null;
 
         this.ready = $.Deferred();
+        this.drawer_ready = $.Deferred();
+        this.fields_view_get = $.Deferred();
+        this.drawer = new instance.web.SearchViewDrawer(parent, this);
+
     },
     start: function() {
         var self = this;
         var p = this._super();
+
+        this.$view_manager_header = this.$el.parents(".oe_view_manager_header").first();
 
         this.setup_global_completion();
         this.query = new my.SearchQuery()
@@ -416,20 +422,32 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             });
 
             this.alive($.when(load_view)).then(function (r) {
+                self.fields_view_get.resolve(r);
                 return self.search_view_loaded(r);
             }).fail(function () {
                 self.ready.reject.apply(null, arguments);
             });
         }
 
-        instance.web.bus.on('click', this, function(ev) {
-            if ($(ev.target).parents('.oe_searchview').length === 0) {
-                self.$el.removeClass('oe_searchview_open_drawer');
-            }
-        });
+        var view_manager = this.getParent();
+        while (!(view_manager instanceof instance.web.ViewManager) &&
+                view_manager && view_manager.getParent) {
+            view_manager = view_manager.getParent();
+        }
 
+        if (view_manager) {
+            this.view_manager = view_manager;
+            view_manager.on('switch_mode', this, function (e) {
+                self.drawer.toggle(e === 'graph');
+            });
+        }
         return $.when(p, this.ready);
     },
+
+    set_drawer: function (drawer) {
+        this.drawer = drawer;
+    },
+
     show: function () {
         this.$el.show();
     },
@@ -462,14 +480,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 .$el.focus();
     },
 
-    /**
-     * Sets up thingie where all the mess is put?
-     */
-    select_for_drawer: function () {
-        return _(this.inputs).filter(function (input) {
-            return input.in_drawer();
-        });
-    },
     /**
      * Sets up search view's view-wide auto-completion widget
      */
@@ -530,7 +540,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * @param {Function} resp response callback
      */
     complete_global_search:  function (req, resp) {
-        $.when.apply(null, _(this.inputs).chain()
+        $.when.apply(null, _(this.drawer.inputs).chain()
             .filter(function (input) { return input.visible(); })
             .invoke('complete', req.term)
             .value()).then(function () {
@@ -630,87 +640,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         });
     },
 
-    /**
-     * Builds a list of widget rows (each row is an array of widgets)
-     *
-     * @param {Array} items a list of nodes to convert to widgets
-     * @param {Object} fields a mapping of field names to (ORM) field attributes
-     * @param {Object} [group] group to put the new controls in
-     */
-    make_widgets: function (items, fields, group) {
-        if (!group) {
-            group = new instance.web.search.Group(
-                this, 'q', {attrs: {string: _t("Filters")}});
-        }
-        var self = this;
-        var filters = [];
-        _.each(items, function (item) {
-            if (filters.length && item.tag !== 'filter') {
-                group.push(new instance.web.search.FilterGroup(filters, group));
-                filters = [];
-            }
-
-            switch (item.tag) {
-            case 'separator': case 'newline':
-                break;
-            case 'filter':
-                filters.push(new instance.web.search.Filter(item, group));
-                break;
-            case 'group':
-                self.make_widgets(item.children, fields,
-                    new instance.web.search.Group(group, 'w', item));
-                break;
-            case 'field':
-                var field = this.make_field(
-                    item, fields[item['attrs'].name], group);
-                group.push(field);
-                // filters
-                self.make_widgets(item.children, fields, group);
-                break;
-            }
-        }, this);
-
-        if (filters.length) {
-            group.push(new instance.web.search.FilterGroup(filters, this));
-        }
-    },
-    /**
-     * Creates a field for the provided field descriptor item (which comes
-     * from fields_view_get)
-     *
-     * @param {Object} item fields_view_get node for the field
-     * @param {Object} field fields_get result for the field
-     * @param {Object} [parent]
-     * @returns instance.web.search.Field
-     */
-    make_field: function (item, field, parent) {
-        // M2O combined with selection widget is pointless and broken in search views,
-        // but has been used in the past for unsupported hacks -> ignore it
-        if (field.type === "many2one" && item.attrs.widget === "selection"){
-            item.attrs.widget = undefined;
-        }
-        var obj = instance.web.search.fields.get_any( [item.attrs.widget, field.type]);
-        if(obj) {
-            return new (obj) (item, field, parent || this);
-        } else {
-            console.group('Unknown field type ' + field.type);
-            console.error('View node', item);
-            console.info('View field', field);
-            console.info('In view', this);
-            console.groupEnd();
-            return null;
-        }
-    },
-
-    add_common_inputs: function() {
-        // add Filters to this.inputs, need view.controls filled
-        (new instance.web.search.Filters(this));
-        // add custom filters to this.inputs
-        this.custom_filters = new instance.web.search.CustomFilters(this);
-        // add Advanced to this.inputs
-        (new instance.web.search.Advanced(this));
-    },
-
     search_view_loaded: function(data) {
         var self = this;
         this.fields_view = data;
@@ -720,24 +649,9 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                     "Got non-search view after asking for a search view: type %s, arch root %s",
                     data.type, data.arch.tag));
         }
-        this.make_widgets(
-            data['arch'].children,
-            data.fields);
 
-        this.add_common_inputs();
-
-        // build drawer
-        var drawer_started = $.when.apply(
-            null, _(this.select_for_drawer()).invoke(
-                'appendTo', this.$('.oe_searchview_drawer')));
-
-        
-        // load defaults
-        var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
-                'facet_for_defaults', this.defaults))
-            .then(this.proxy('setup_default_query'));
-
-        return $.when(drawer_started, defaults_fetched)
+        return this.drawer_ready
+            .then(this.proxy('setup_default_query'))
             .then(function () { 
                 self.trigger("search_view_loaded", data);
                 self.ready.resolve();
@@ -747,14 +661,14 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         // Hacky implementation of CustomFilters#facet_for_defaults ensure
         // CustomFilters will be ready (and CustomFilters#filters will be
         // correctly filled) by the time this method executes.
-        var custom_filters = this.custom_filters.filters;
+        var custom_filters = this.drawer.custom_filters.filters;
         if (!this.options.disable_custom_filters && !_(custom_filters).isEmpty()) {
             // Check for any is_default custom filter
             var personal_filter = _(custom_filters).find(function (filter) {
                 return filter.user_id && filter.is_default;
             });
             if (personal_filter) {
-                this.custom_filters.toggle_filter(personal_filter, true);
+                this.drawer.custom_filters.toggle_filter(personal_filter, true);
                 return;
             }
 
@@ -762,7 +676,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 return !filter.user_id && filter.is_default;
             });
             if (global_filter) {
-                this.custom_filters.toggle_filter(global_filter, true);
+                this.drawer.custom_filters.toggle_filter(global_filter, true);
                 return;
             }
         }
@@ -872,7 +786,165 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     on_invalid: function (errors) {
         this.do_notify(_t("Invalid Search"), _t("triggered from search view"));
         this.trigger('invalid_search', errors);
+    },
+
+    // The method appendTo is overwrited to be able to insert the drawer anywhere
+    appendTo: function ($searchview_parent, $searchview_drawer_node) {
+        var $searchview_drawer_node = $searchview_drawer_node || $searchview_parent;
+
+        return $.when(
+            this._super($searchview_parent),
+            this.drawer.appendTo($searchview_drawer_node)
+        );
+    },
+
+    destroy: function () {
+        this.drawer.destroy();
+        this.getParent().destroy.call(this);
     }
+});
+
+instance.web.SearchViewDrawer = instance.web.Widget.extend({
+    template: "SearchViewDrawer",
+
+    init: function(parent, searchview) {
+        this._super(parent);
+        this.searchview = searchview;
+        this.searchview.set_drawer(this);
+        this.ready = searchview.drawer_ready;
+        this.controls = [];
+        this.inputs = [];
+    },
+
+    toggle: function (visibility) {
+        this.$el.toggle(visibility);
+        var $view_manager_body = this.$el.closest('.oe_view_manager_body');
+        if ($view_manager_body.length) {
+            $view_manager_body.scrollTop(0);
+        }
+    },
+
+    start: function() {
+        var self = this;
+        var filters_ready = this.searchview.fields_view_get
+                                .then(this.proxy('prepare_filters'));
+        return $.when(this._super(), filters_ready).then(function () {
+            var defaults = arguments[1][0];
+            self.ready.resolve.apply(null, defaults);
+        });
+    },
+    prepare_filters: function (data) {
+        this.make_widgets(
+            data['arch'].children,
+            data.fields);
+
+        this.add_common_inputs();
+
+        // build drawer
+        var in_drawer = this.select_for_drawer();
+
+        var $first_col = this.$(".col-md-7"),
+            $snd_col = this.$(".col-md-5");
+
+        var add_custom_reports = in_drawer[0].appendTo($first_col),
+            add_filters = in_drawer[1].appendTo($first_col),
+            add_rest = $.when.apply(null, _(in_drawer.slice(2)).invoke('appendTo', $snd_col)),
+            defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
+                'facet_for_defaults', this.searchview.defaults));
+
+        return $.when(defaults_fetched, add_custom_reports, add_filters, add_rest);
+    },
+    /**
+     * Sets up thingie where all the mess is put?
+     */
+    select_for_drawer: function () {
+        return _(this.inputs).filter(function (input) {
+            return input.in_drawer();
+        });
+    },
+
+    /**
+     * Builds a list of widget rows (each row is an array of widgets)
+     *
+     * @param {Array} items a list of nodes to convert to widgets
+     * @param {Object} fields a mapping of field names to (ORM) field attributes
+     * @param {Object} [group] group to put the new controls in
+     */
+    make_widgets: function (items, fields, group) {
+        if (!group) {
+            group = new instance.web.search.Group(
+                this, 'q', {attrs: {string: _t("Filters")}});
+        }
+        var self = this;
+        var filters = [];
+        _.each(items, function (item) {
+            if (filters.length && item.tag !== 'filter') {
+                group.push(new instance.web.search.FilterGroup(filters, group));
+                filters = [];
+            }
+
+            switch (item.tag) {
+            case 'separator': case 'newline':
+                break;
+            case 'filter':
+                filters.push(new instance.web.search.Filter(item, group));
+                break;
+            case 'group':
+                self.make_widgets(item.children, fields,
+                    new instance.web.search.Group(group, 'w', item));
+                break;
+            case 'field':
+                var field = this.make_field(
+                    item, fields[item['attrs'].name], group);
+                group.push(field);
+                // filters
+                self.make_widgets(item.children, fields, group);
+                break;
+            }
+        }, this);
+
+        if (filters.length) {
+            group.push(new instance.web.search.FilterGroup(filters, this));
+        }
+    },
+    /**
+     * Creates a field for the provided field descriptor item (which comes
+     * from fields_view_get)
+     *
+     * @param {Object} item fields_view_get node for the field
+     * @param {Object} field fields_get result for the field
+     * @param {Object} [parent]
+     * @returns instance.web.search.Field
+     */
+    make_field: function (item, field, parent) {
+        // M2O combined with selection widget is pointless and broken in search views,
+        // but has been used in the past for unsupported hacks -> ignore it
+        if (field.type === "many2one" && item.attrs.widget === "selection"){
+            item.attrs.widget = undefined;
+        }
+        var obj = instance.web.search.fields.get_any( [item.attrs.widget, field.type]);
+        if(obj) {
+            return new (obj) (item, field, parent || this);
+        } else {
+            console.group('Unknown field type ' + field.type);
+            console.error('View node', item);
+            console.info('View field', field);
+            console.info('In view', this);
+            console.groupEnd();
+            return null;
+        }
+    },
+
+    add_common_inputs: function() {
+        // add custom filters to this.inputs
+        this.custom_filters = new instance.web.search.CustomReports(this);
+        // add Filters to this.inputs, need view.controls filled
+        (new instance.web.search.Filters(this));
+        (new instance.web.search.SaveFilter(this, this.custom_filters));
+        // add Advanced to this.inputs
+        (new instance.web.search.Advanced(this));
+    },
+
 });
 
 /**
@@ -932,9 +1004,10 @@ instance.web.search.Widget = instance.web.Widget.extend( /** @lends instance.web
         this._super(parent);
         var ancestor = parent;
         do {
-            this.view = ancestor;
-        } while (!(ancestor instanceof instance.web.SearchView)
+            this.drawer = ancestor;
+        } while (!(ancestor instanceof instance.web.SearchViewDrawer)
                && (ancestor = (ancestor.getParent && ancestor.getParent())));
+        this.view = this.drawer.searchview || this.drawer;
     }
 });
 
@@ -956,7 +1029,7 @@ instance.web.search.Group = instance.web.search.Widget.extend({
         this.name = attrs.string;
         this.children = [];
 
-        this.view.controls.push(this);
+        this.drawer.controls.push(this);
     },
     push: function (input) {
         this.children.push(input);
@@ -977,7 +1050,7 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
     init: function (parent) {
         this._super(parent);
         this.load_attrs({});
-        this.view.inputs.push(this);
+        this.drawer.inputs.push(this);
     },
     /**
      * Fetch auto-completion values for the widget.
@@ -1088,7 +1161,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      */
     search_change: function () {
         var self = this;
-        var $filters = this.$('> li').removeClass('oe_selected');
+        var $filters = this.$('> li').removeClass('badge');
         var facet = this.view.query.find(_.bind(this.match_facet, this));
         if (!facet) { return; }
         facet.values.each(function (v) {
@@ -1096,7 +1169,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
             if (i === -1) { return; }
             $filters.filter(function () {
                 return Number($(this).data('index')) === i;
-            }).addClass('oe_selected');
+            }).addClass('badge');
         });
     },
     /**
@@ -1628,12 +1701,12 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
     }
 });
 
-instance.web.search.CustomFilters = instance.web.search.Input.extend({
-    template: 'SearchView.CustomFilters',
+instance.web.search.CustomReports = instance.web.search.Input.extend({
+    template: 'SearchView.CustomReports',
     _in_drawer: true,
     init: function () {
         this.is_ready = $.Deferred();
-        this._super.apply(this, arguments);
+        this._super.apply(this,arguments);
     },
     start: function () {
         var self = this;
@@ -1648,13 +1721,6 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 self.clear_selection();
             })
             .on('reset', this.proxy('clear_selection'));
-        this.$el.on('submit', 'form', this.proxy('save_current'));
-        this.$el.on('click', 'input[type=checkbox]', function() {
-            $(this).siblings('input[type=checkbox]').prop('checked', false);
-        });
-        this.$el.on('click', 'h4', function () {
-            self.$el.toggleClass('oe_opened');
-        });
         return this.model.call('get_filters', [this.view.model])
             .then(this.proxy('set_filters'))
             .done(function () { self.is_ready.resolve(); })
@@ -1708,7 +1774,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         };
     },
     clear_selection: function () {
-        this.$('li.oe_selected').removeClass('oe_selected');
+        this.$('span.badge').removeClass('badge');
     },
     append_filter: function (filter) {
         var self = this;
@@ -1721,12 +1787,13 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         } else {
             var id = filter.id;
             this.filters[key] = filter;
-            $filter = this.$filters[key] = $('<li></li>')
+            $filter = $('<li></li>')
                 .appendTo(this.$('.oe_searchview_custom_list'))
-                .addClass(filter.user_id ? 'oe_searchview_custom_private'
-                                         : 'oe_searchview_custom_public')
                 .toggleClass('oe_searchview_custom_default', filter.is_default)
-                .text(filter.name);
+                .append(this.$filters[key] = $('<span>').text(filter.name));
+
+            this.$filters[key].addClass(filter.user_id ? 'oe_searchview_custom_private'
+                                         : 'oe_searchview_custom_public')
 
             $('<a class="oe_searchview_custom_delete">x</a>')
                 .click(function (e) {
@@ -1738,14 +1805,18 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                         $filter.remove();
                         delete self.$filters[key];
                         delete self.filters[key];
+                        if (_.isEmpty(self.filters)) {
+                            self.hide();
+                        }
                     });
                 })
                 .appendTo($filter);
         }
 
-        $filter.unbind('click').click(function () {
+        this.$filters[key].unbind('click').click(function () {
             self.toggle_filter(filter);
         });
+        this.show();
     },
     toggle_filter: function (filter, preventSearch) {
         var current = this.view.query.find(function (facet) {
@@ -1753,15 +1824,44 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         });
         if (current) {
             this.view.query.remove(current);
-            this.$filters[this.key_for(filter)].removeClass('oe_selected');
+            this.$filters[this.key_for(filter)].removeClass('badge');
             return;
         }
         this.view.query.reset([this.facet_for(filter)], {
             preventSearch: preventSearch || false});
-        this.$filters[this.key_for(filter)].addClass('oe_selected');
+        this.$filters[this.key_for(filter)].addClass('badge');
     },
     set_filters: function (filters) {
         _(filters).map(_.bind(this.append_filter, this));
+        if (!filters.length) {
+            this.hide();
+        }
+    },
+    hide: function () {
+        this.$el.hide();
+    },
+    show: function () {
+        this.$el.show();
+    },
+});
+
+instance.web.search.SaveFilter = instance.web.search.Input.extend({
+    template: 'SearchView.SaveFilter',
+    _in_drawer: true,
+    init: function (parent, custom_reports) {
+        this._super(parent);
+        this.custom_reports = custom_reports;
+    },
+    start: function () {
+        var self = this;
+        this.model = new instance.web.Model('ir.filters');
+        this.$el.on('submit', 'form', this.proxy('save_current'));
+        this.$el.on('click', 'input[type=checkbox]', function() {
+            $(this).siblings('input[type=checkbox]').prop('checked', false);
+        });
+        this.$el.on('click', 'h4', function () {
+            self.$el.toggleClass('oe_opened');
+        });
     },
     save_current: function () {
         var self = this;
@@ -1799,14 +1899,16 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             // FIXME: current context?
             return self.model.call('create_or_replace', [filter]).done(function (id) {
                 filter.id = id;
-                self.append_filter(filter);
+                if (self.custom_reports) {
+                    self.custom_reports.append_filter(filter);
+                }
                 self.$el
                     .removeClass('oe_opened')
                     .find('form')[0].reset();
             });
         });
         return false;
-    }
+    },
 });
 
 instance.web.search.Filters = instance.web.search.Input.extend({
@@ -1814,22 +1916,13 @@ instance.web.search.Filters = instance.web.search.Input.extend({
     _in_drawer: true,
     start: function () {
         var self = this;
-        var running_count = 0;
-        // get total filters count
         var is_group = function (i) { return i instanceof instance.web.search.FilterGroup; };
-        var visible_filters = _(this.view.controls).chain().reject(function (group) {
+        var visible_filters = _(this.drawer.controls).chain().reject(function (group) {
             return _(_(group.children).filter(is_group)).isEmpty()
                 || group.modifiers.invisible;
         });
-        var filters_count = visible_filters
-            .pluck('children')
-            .flatten()
-            .filter(is_group)
-            .map(function (i) { return i.filters.length; })
-            .sum()
-            .value();
 
-        var col1 = [], col2 = visible_filters.map(function (group) {
+        var groups = visible_filters.map(function (group) {
                 var filters = _(group.children).filter(is_group);
                 return {
                     name: _.str.sprintf("<span class='oe_i'>%s</span> %s",
@@ -1840,27 +1933,16 @@ instance.web.search.Filters = instance.web.search.Input.extend({
                 };
             }).value();
 
-        while (col2.length) {
-            // col1 + group should be smaller than col2 + group
-            if ((running_count + col2[0].length) <= (filters_count - running_count)) {
-                running_count += col2[0].length;
-                col1.push(col2.shift());
-            } else {
-                break;
-            }
-        }
+        var $dl = $('<dl class="dl-horizontal">').appendTo(this.$el);
 
-        return $.when(
-            this.render_column(col1, $('<div>').appendTo(this.$el)),
-            this.render_column(col2, $('<div>').appendTo(this.$el)));
+        var rendered_lines = _.map(groups, function (group) {
+            $('<dt>').html(group.name).appendTo($dl);
+            var $dd = $('<dd>').appendTo($dl);
+            return $.when.apply(null, _(group.filters).invoke('appendTo', $dd));
+        });
+
+        return $.when.apply(this, rendered_lines);
     },
-    render_column: function (column, $el) {
-        return $.when.apply(null, _(column).map(function (group) {
-            $('<h3>').html(group.name).appendTo($el);
-            return $.when.apply(null,
-                _(group.filters).invoke('appendTo', $el));
-        }));
-    }
 });
 
 instance.web.search.Advanced = instance.web.search.Input.extend({

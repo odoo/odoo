@@ -92,13 +92,13 @@ class stock_quant(osv.osv):
 
     def apply_removal_strategy(self, cr, uid, location, product, qty, domain, removal_strategy, context=None):
         if removal_strategy == 'fefo':
-            order = 'removal_date, id'
+            order = 'removal_date, in_date, id'
             return self._quants_get_order(cr, uid, location, product, qty, domain, order, context=context)
         return super(stock_quant, self).apply_removal_strategy(cr, uid, location, product, qty, domain, removal_strategy, context=context)
 
 
 class product_product(osv.osv):
-    _inherit = 'product.product'
+    _inherit = 'product.template'
     _columns = {
         'life_time': fields.integer('Product Life Time',
             help='When a new a Serial Number is issued, this is the number of days before the goods may become dangerous and must not be consumed.'),

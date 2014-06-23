@@ -1,42 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-        <template id="google_map">
-
+<data>
+<template id="google_map">
 &lt;!DOCTYPE html&gt;
 <html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>World wide map</title>
-
-    <style type="text/css">
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: Helvetica, Arial, sans-serif !important;
-      }
-      .marker {
-        font-size: 12px !important;
-      }
-      .marker b {
-        font-weight: 500;
-      }
-      .marker pre {
-        font-size: 10px !important;
-      }
-    </style>
-    <script>var partner_url = '<t t-raw="partner_url or ''"/>';</script>
-    <script src="//maps.google.com/maps/api/js?sensor=false"></script>
-    <script type="text/javascript" t-attf-src="/google_map/partners.json?partner_ids=#{ partner_ids }"></script>
-    <script type="text/javascript" src="/website_google_map/static/src/js/markerclusterer_compiled.js"></script>
-    <script src="//code.jquery.com/jquery-1.6.1.min.js"></script>
-    <script type="text/javascript" src="/website_google_map/static/src/js/google_map.js"></script>
-  </head>
-  <body>
-    <div id="map" t-attf-style="width: #{ width }px; height:  #{ height }px"></div>
-  </body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <title>World Map</title>
+        <link rel="stylesheet" type="text/css" href="/website_google_map/static/src/css/google-map.css" />
+    </head>
+    <body t-att-data-partner-url="partner_url or ''">
+        <script>
+            var odoo_partner_data = <t t-raw="partner_data"/>;
+        </script>
+        <div id="odoo-google-map"></div>
+        <script src="//maps.google.com/maps/api/js?sensor=false"></script>
+        <script type="text/javascript" src="/website_google_map/static/src/js/markerclusterer_compiled.js"></script>
+        <script type="text/javascript" src="/website_google_map/static/src/js/google_map.js"></script>
+    </body>
 </html>
-
-        </template>
-     </data>
+</template>
+</data>
 </openerp>

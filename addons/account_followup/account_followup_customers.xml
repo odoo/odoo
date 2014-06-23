@@ -51,7 +51,7 @@
                         <filter string="My Follow-ups" domain="[('payment_responsible_id','=', uid)]" name="my"/>
                     </group>
                 </search>
-                <group string="Group By..." position="inside">
+                <group string="Group By" position="inside">
                     <filter string="Follow-up Responsible" context="{'group_by':'payment_responsible_id'}"/>
                     <filter string="Followup Level" context="{'group_by':'latest_followup_level_id'}"/>
                 </group>
@@ -78,7 +78,7 @@
             <field name="model">res.partner</field>
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml" >
-                <page string="Accounting" position="before" version="7.0">
+                <page string="Accounting" position="before">
                     <page string="Payment Follow-up" groups="account.group_account_invoice" name="followup_tab">
                         <div class="oe_right oe_button_box" name="followup_button">
                             <button name="do_button_print" type="object" string="Print Overdue Payments" groups="account.group_account_user" 

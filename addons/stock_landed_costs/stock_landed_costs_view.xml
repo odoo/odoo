@@ -7,7 +7,7 @@
             <field name="name">stock.landed.cost.form</field>
             <field name="model">stock.landed.cost</field>
             <field name="arch" type="xml">
-                <form string="Landed Costs" version="7.0">
+                <form string="Landed Costs">
                     <header>
                         <button name="button_validate" string="Validate" states="draft" class="oe_highlight" type="object"/>
                         <button name="button_cancel" string="Cancel" states="draft" type="object"/>
@@ -35,7 +35,7 @@
                             <separator string="Cost Lines" colspan="4"/>
                             <group>
                                 <field name="cost_lines" nolabel="1">
-                                    <form string="Cost Lines" version="7.0">
+                                    <form string="Cost Lines">
                                         <group>
                                             <group>
                                                 <field name="product_id"
@@ -74,7 +74,7 @@
                         <group>
                             <group>
                                 <field name="valuation_adjustment_lines" nolabel="1">
-                                    <form string="Valuation Adjustments" version="7.0">
+                                    <form string="Valuation Adjustments">
                                         <group>
                                             <group>
                                                 <field name="product_id"/>
@@ -132,7 +132,7 @@
                     <separator/>
                     <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
                     <filter string="Done" name="done" domain="[('state','=','done')]"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Month" context="{'group_by': 'date'}"/>
                         <filter string="Status" context="{'group_by': 'state'}"/>
                     </group>
@@ -163,23 +163,18 @@
             <field name="name">stock.landed.cost.type.form</field>
             <field name="model">product.product</field>
 	    <field name="arch" type="xml">
-                <form string="Landed Costs" version="7.0">
+                <form string="Landed Costs">
 		    <sheet>
-                        <field name="is_only_child" invisible="1"/>
-                        <field name="image_medium" widget="image" class="oe_avatar oe_left"
-                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                        <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
-                                <label for="name" name='label_name' string="Product Name"
-                                    attrs="{'invisible': [('is_only_child', '=', False)]}"/>
+                                <label for="name" name='label_name' string="Product Name"/>
                             </div>
                             <h1>
-                                <field name="name" class="oe_inline"
-                                    attrs="{'required': [('is_only_child', '=', True)],
-                                            'invisible': [('is_only_child', '=', False)]}"/>
+                                <field name="name" class="oe_inline"/>
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
-                            <h2><field name="categ_id" attrs="{'readonly': [('is_only_child', '=', False)]}"/></h2>
+                            <h2><field name="categ_id"/></h2>
                             <div name="options" groups="base.group_user">
 				<field name="landed_cost_ok" readonly="1"/>
 				<label for="landed_cost_ok"/>
@@ -196,13 +191,11 @@
                                         <field name="property_account_expense"/>
                                     </group>
                                     <group>
-                                        <field name="company_id" groups="base.group_multi_company" widget="selection"
-                                            attrs="{'invisible': [('is_only_child', '=', False)]}"/>
-                                        <field name="type" attrs="{'invisible': [('is_only_child', '=', False)]}"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="type"/>
                                     </group>
                                 </group>
-                                <field name="description" placeholder="describe the product characteristics..."
-                                    attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                                <field name="description" placeholder="describe the product characteristics..."/>
                             </page>
                         </notebook>
                     </sheet>

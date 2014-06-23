@@ -176,7 +176,7 @@ class mail_notification(osv.Model):
         references = message.parent_id.message_id if message.parent_id else False
 
         # create email values
-        max_recipients = 100
+        max_recipients = 50
         chunks = [email_pids[x:x + max_recipients] for x in xrange(0, len(email_pids), max_recipients)]
         email_ids = []
         for chunk in chunks:
@@ -188,7 +188,7 @@ class mail_notification(osv.Model):
                 'references': references,
             }
             email_ids.append(self.pool.get('mail.mail').create(cr, uid, mail_values, context=context))
-        if force_send and len(chunks) < 6:  # for more than 500 followers, use the queue system
+        if force_send and len(chunks) < 2:  # for more than 50 followers, use the queue system
             self.pool.get('mail.mail').send(cr, uid, email_ids, context=context)
         return True
 

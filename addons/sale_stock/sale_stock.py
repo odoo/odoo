@@ -277,7 +277,7 @@ class sale_order_line(osv.osv):
             warning_msgs = res.get('warning') and res['warning'].get('message', '') or ''
 
         products = product_obj.browse(cr, uid, product, context=context)
-        if not products.packaging:
+        if not products.packaging_ids:
             packaging = result['product_packaging'] = False
 
         if packaging:
@@ -388,7 +388,7 @@ class stock_move(osv.osv):
         return super(stock_move, self).action_cancel(cr, uid, ids, context=context)
 
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
-        invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
+        invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
         if move.procurement_id and move.procurement_id.sale_line_id:
             sale_line = move.procurement_id.sale_line_id
             self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {

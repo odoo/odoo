@@ -1197,7 +1197,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         this.fvg = fvg;
         this.version = parseFloat(this.fvg.arch.attrs.version);
         if (isNaN(this.version)) {
-            this.version = 6.1;
+            this.version = 7.0;
         }
     },
     set_tags_registry: function(tags_registry) {
@@ -1209,7 +1209,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     set_widgets_registry: function(widgets_registry) {
         this.widgets_registry = widgets_registry;
     },
-    // Backward compatibility tools, current default version: v6.1
+    // Backward compatibility tools, current default version: v7
     process_version: function() {
         if (this.version < 7.0) {
             this.$form.find('form:first').wrapInner('<group col="4"/>');
@@ -2595,7 +2595,8 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         };
         this.$('.select_records').on('click', self.on_click);
     },
-    on_click: function(ev) {
+    on_click: function(event) {
+        event.preventDefault();
         var self = this;
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
         this.pop = new instance.web.form.SelectCreatePopup(this);
@@ -2614,15 +2615,14 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
                 });
             }
             else {
-                var domain = ["id", "in", element_ids];
+                var domain = [["id", "in", element_ids]];
                 var domain_done = $.Deferred().resolve(domain);
             }
             $.when(domain_done).then(function (domain) {
                 var domain = self.pop.dataset.domain.concat(domain || []);
-                self.set_value(JSON.stringify(domain))
+                self.set_value(domain);
             });
         });
-        event.preventDefault();
     },
 });
 
@@ -2632,6 +2632,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     type_of_date: "datetime",
     events: {
         'change .oe_datepicker_master': 'change_datetime',
+        'keypress .oe_datepicker_master': 'change_datetime',
     },
     init: function(parent) {
         this._super(parent);
@@ -2750,8 +2751,8 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     format_client: function(v) {
         return instance.web.format_value(v, {"widget": this.type_of_date});
     },
-    change_datetime: function() {
-        if (this.is_valid_()) {
+    change_datetime: function(e) {
+        if ((e.type !== "keypress" || e.which === 13) && this.is_valid_()) {
             this.set_value_from_ui_();
             this.trigger("datetime_changed");
         }
@@ -2809,7 +2810,9 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
-        this.datewidget.$input.css('height', height);
+        if (!this.get("effective_readonly")) {
+            this.datewidget.$input.css('height', height);
+        }
     }
 });
 
@@ -3509,6 +3512,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.floating = false;
         this.current_display = null;
         this.is_started = false;
+        this.ignore_focusout = false;
     },
     reinit_value: function(val) {
         this.internal_set_value(val);
@@ -3640,6 +3644,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var ed_delay = 200;
         var ed_duration = 15000;
         var anyoneLoosesFocus = function (e) {
+            if (self.ignore_focusout) { return; }
             var used = false;
             if (self.floating) {
                 if (self.last_search.length > 0) {
@@ -3843,11 +3848,17 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     _search_create_popup: function() {
         this.no_ed = true;
         this.ed_def.reject();
-        return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
+        this.ignore_focusout = true;
+        this.reinit_value(false);
+        var res = instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
+        this.ignore_focusout = false;
+        this.no_ed = false;
+        return res;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
-        this.$input.css('height', height);
+        if (!this.get("effective_readonly") && this.$input)
+            this.$input.css('height', height);
     }
 });
 
@@ -4463,7 +4474,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             else
                 return $.when();
         }).done(function () {
-            if (!self.o2m.options.reload_on_button) {
+            var ds = self.o2m.dataset;
+            var cached_records = _.any([ds.to_create, ds.to_delete, ds.to_write], function(value) {
+                return value.length;
+            });
+            if (!self.o2m.options.reload_on_button && !cached_records) {
                 self.handle_button(name, id, callback);
             }else {
                 self.handle_button(name, id, function(){
@@ -4854,7 +4869,8 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         pop.select_element(
             this.model,
             {
-                title: _t("Add: ") + this.m2m_field.string
+                title: _t("Add: ") + this.m2m_field.string,
+                no_create: this.m2m_field.options.no_create,
             },
             new instance.web.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
             this.m2m_field.build_context()
@@ -5301,8 +5317,12 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         if (this.searchview) {
             this.searchview.destroy();
         }
+        if (this.searchview_drawer) {
+            this.searchview_drawer.destroy();
+        }
         this.searchview = new instance.web.SearchView(this,
                 this.dataset, false,  search_defaults);
+        this.searchview_drawer = new instance.web.SearchViewDrawer(this, this.searchview);
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
@@ -5348,7 +5368,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
             });
         });
-        this.searchview.appendTo($(".oe_popup_search", self.$el));
+        this.searchview.appendTo(this.$(".oe_popup_search"));
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
@@ -5496,9 +5516,13 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         this._super.apply(this, arguments);
     },
     initialize_content: function() {
+        var self= this;
         this.$el.find('input.oe_form_binary_file').change(this.on_file_change);
         this.$el.find('button.oe_form_binary_file_save').click(this.on_save_as);
         this.$el.find('.oe_form_binary_file_clear').click(this.on_clear);
+        this.$el.find('.oe_form_binary_file_edit').click(function(event){
+            self.$el.find('input.oe_form_binary_file').click();
+        });
     },
     on_file_change: function(e) {
         var self = this;
@@ -5666,8 +5690,6 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
                 return;
             $img.css("max-width", "" + self.options.size[0] + "px");
             $img.css("max-height", "" + self.options.size[1] + "px");
-            $img.css("margin-left", "" + (self.options.size[0] - $img.width()) / 2 + "px");
-            $img.css("margin-top", "" + (self.options.size[1] - $img.height()) / 2 + "px");
         });
         $img.on('error', function() {
             $img.attr('src', self.placeholder);

@@ -4,7 +4,7 @@
             <field name="name">picking.wave.form</field>
             <field name="model">stock.picking.wave</field>
             <field name="arch" type="xml">
-                <form string="Stock Picking Waves" version="7.0">
+                <form string="Stock Picking Waves">
                     <header>
                         <button name="confirm_picking" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                         <button name="done" states="in_progress" string="Done" type="object" class="oe_highlight"/>
@@ -63,7 +63,7 @@
                     <field name="name" string="Picking Wave"/>
                     <filter name="in_progress" string="In Progress" domain="[('state','=', 'in_progress')]" help="Picking Waves not finished"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="State" domain="[]" context="{'group_by':'state'}"/>
                     </group>

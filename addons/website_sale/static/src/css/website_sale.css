@@ -281,6 +281,33 @@
 }
 
 /* product detail */
+.css_attribute_color {
+  display: inline-block;
+  border: 1px solid #999999;
+  text-align: center;
+}
+.css_attribute_color input {
+  margin: 8px;
+  height: 13px;
+  opacity: 0;
+}
+.css_attribute_color.active {
+  border: 3px ridge #66ee66;
+}
+.css_attribute_color.active input {
+  margin: 6px;
+}
+
+.js_add_cart_variants option.css_not_available {
+  color: #cccccc;
+}
+.js_add_cart_variants label.css_not_available {
+  opacity: 0.3;
+}
+.js_add_cart_variants label.css_not_available input {
+  opacity: 0;
+}
+
 .product_detail_img {
   margin-left: auto;
   margin-right: auto;

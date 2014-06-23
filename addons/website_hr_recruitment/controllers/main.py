@@ -40,6 +40,7 @@ class website_hr_recruitment(http.Controller):
         countries = set(j.address_id.country_id for j in jobs if j.address_id and j.address_id.country_id)
         departments = set(j.department_id for j in jobs if j.department_id)
         offices = set(j.address_id for j in jobs if j.address_id)
+        countries = set(o.country_id for o in offices if o.country_id)
 
         # Default search by user country
         if not country and not department and not office_id and GeoIP:
@@ -64,6 +65,7 @@ class website_hr_recruitment(http.Controller):
             'country_id': country,
             'department_id': department,
             'office_id': office_id,
+            'countries': countries
         })
 
     @http.route('/jobs/add', type='http', auth="user", methods=['POST'], website=True)

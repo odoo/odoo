@@ -20,7 +20,7 @@
             <div t-if="fax and 'fax' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-file-text-o'/> <span itemprop="faxNumber" t-esc="fax"/></div>
             <div t-if="website and 'website' in fields" class='css_editable_mode_hidden'>
                 <i t-if="not options.get('no_marker')" class='fa fa-globe'/>
-                <a t-att-href="website"><span itemprop="website" t-esc="website"/></a>
+                <a t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)"><span itemprop="website" t-esc="website"/></a>
             </div>
             <div t-if="email and 'email' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-envelope'/> <span itemprop="email" t-esc="email"/></div>
         </div>

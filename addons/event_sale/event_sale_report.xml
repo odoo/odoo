@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <record id="paperformat_euro_lowmargin" model="report.paperformat">
+        <field name="name">European A4 low margin</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">0</field>
+        <field name="dpi">80</field>
+    </record>
+    <report 
+        id="action_report_registrationbadge"
+        model="event.registration" 
+        string="Badge"
+        report_type="qweb-html"
+        name="event_sale.report_registrationbadge"
+        file="event_sale.report_registrationbadge"
+    />
+    <record id="action_report_registrationbadge" model="ir.actions.report.xml">
+        <field name="paperformat_id" ref="event_sale.paperformat_euro_lowmargin"/>
+    </record>
+
+    </data>
+</openerp>

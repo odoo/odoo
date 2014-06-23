@@ -729,7 +729,6 @@ class BaseModel(object):
     _all_columns = {}
 
     _table = None
-    _invalids = set()
     _log_create = False
     _sql_constraints = []
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
@@ -1543,9 +1542,6 @@ class BaseModel(object):
 
             yield dbid, xid, converted, dict(extras, record=stream.index)
 
-    def get_invalid_fields(self, cr, uid):
-        return list(self._invalids)
-
     def _validate(self, cr, uid, ids, context=None):
         context = context or {}
         lng = context.get('lang')
@@ -1566,12 +1562,9 @@ class BaseModel(object):
                 # Check presence of __call__ directly instead of using
                 # callable() because it will be deprecated as of Python 3.0
                 if hasattr(msg, '__call__'):
-                    tmp_msg = msg(self, cr, uid, ids, context=context)
-                    if isinstance(tmp_msg, tuple):
-                        tmp_msg, params = tmp_msg
-                        translated_msg = tmp_msg % params
-                    else:
-                        translated_msg = tmp_msg
+                    translated_msg = msg(self, cr, uid, ids, context=context)
+                    if isinstance(translated_msg, tuple):
+                        translated_msg = translated_msg[0] % translated_msg[1]
                 else:
                     translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg)
                 if extra_error:
@@ -1579,11 +1572,8 @@ class BaseModel(object):
                 error_msgs.append(
                         _("The field(s) `%s` failed against a constraint: %s") % (', '.join(fields), translated_msg)
                 )
-                self._invalids.update(fields)
         if error_msgs:
             raise except_orm('ValidateError', '\n'.join(error_msgs))
-        else:
-            self._invalids.clear()
 
     def default_get(self, cr, uid, fields_list, context=None):
         """
@@ -1714,8 +1704,8 @@ class BaseModel(object):
            :return: True if the current user is a member of one of the
                     given groups
         """
-        return any([self.pool.get('res.users').has_group(cr, uid, group_ext_id)
-                        for group_ext_id in groups.split(',')])
+        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id)
+                   for group_ext_id in groups.split(','))
 
     def _get_default_form_view(self, cr, user, context=None):
         """ Generates a default single-line form view using all fields
@@ -1728,13 +1718,14 @@ class BaseModel(object):
         :rtype: etree._Element
         """
         view = etree.Element('form', string=self._description)
+        group = etree.SubElement(view, 'group', col="4")
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         for field, descriptor in self.fields_get(cr, user, context=context).iteritems():
             if descriptor['type'] in ('one2many', 'many2many'):
                 continue
-            etree.SubElement(view, 'field', name=field)
+            etree.SubElement(group, 'field', name=field)
             if descriptor['type'] == 'text':
-                etree.SubElement(view, 'newline')
+                etree.SubElement(group, 'newline')
         return view
 
     def _get_default_search_view(self, cr, user, context=None):
@@ -2459,7 +2450,7 @@ class BaseModel(object):
         fetched_data = cr.dictfetchall()
 
         if not groupby_fields:
-            return {r.pop('id'): r for r in fetched_data}
+            return fetched_data
 
         many2onefields = [gb['field'] for gb in annotated_groupbys if gb['type'] == 'many2one']
         if many2onefields:
@@ -2816,7 +2807,7 @@ class BaseModel(object):
                                 ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                             ]
-                            if f_pg_type == 'varchar' and f._type == 'char' and ((f.size is None and f_pg_size) or f_pg_size < f.size):
+                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size and (f.size is None or f_pg_size < f.size):
                                 try:
                                     with cr.savepoint():
                                         cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" TYPE %s' % (self._table, k, pg_varchar(f.size)))
@@ -3357,6 +3348,8 @@ class BaseModel(object):
             return []
         if fields_to_read is None:
             fields_to_read = self._columns.keys()
+        else:
+            fields_to_read = list(set(fields_to_read))
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if

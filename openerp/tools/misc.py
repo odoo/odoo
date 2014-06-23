@@ -27,6 +27,7 @@ Miscellaneous tools used by OpenERP.
 
 from functools import wraps
 import cProfile
+from contextlib import contextmanager
 import subprocess
 import logging
 import os
@@ -34,6 +35,7 @@ import socket
 import sys
 import threading
 import time
+import werkzeug.utils
 import zipfile
 from collections import defaultdict, Mapping
 from datetime import datetime
@@ -50,6 +52,7 @@ except ImportError:
 
 from config import config
 from cache import *
+from .parse_version import parse_version 
 
 import openerp
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
@@ -1209,6 +1212,19 @@ def dumpstacks(sig=None, frame=None):
 
     _logger.info("\n".join(code))
 
+@contextmanager
+def ignore(*exc):
+    try:
+        yield
+    except exc:
+        pass
 
+# Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
+if parse_version(getattr(werkzeug, '__version__', '0.0')) < parse_version('0.9.0'):
+    def html_escape(text):
+        return werkzeug.utils.escape(text, quote=True)
+else:
+    def html_escape(text):
+        return werkzeug.utils.escape(text)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

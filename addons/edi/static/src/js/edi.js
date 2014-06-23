@@ -39,16 +39,15 @@ instance.edi.EdiImport = instance.web.Widget.extend({
             });
         }
         else {
-            $('<div>').dialog({
-                modal: true,
-                title: 'Import Successful!',
-                buttons: {
-                    Ok: function() {
-                        $(this).dialog("close");
-                        window.location = "/";
+            new instance.web.Dialog(this,{
+                    title: 'Import Successful!',
+                    buttons: {
+                        Ok: function() {
+                            this.parents('.modal').modal('hide');
+                            window.location = "/";
+                        }
                     }
-                }
-            }).html(_t('The document has been successfully imported!'));
+                },$('<div>').html(_t('The document has been successfully imported!'))).open();
         }
     },
     on_imported_error: function(response){
@@ -58,13 +57,12 @@ instance.edi.EdiImport = instance.web.Widget.extend({
             msg += "\n " + _t("Reason:") + response.data.message;
         }
         var params = {error: response, message: msg};
-        $(instance.web.qweb.render("CrashManager.warning", params)).dialog({
-            title: _t("Document Import Notification"),
-            modal: true,
-            buttons: {
-                Ok: function() { $(this).dialog("close"); }
-            }
-        });
+        new instance.web.Dialog(this,{
+                title: _t("Document Import Notification"),
+                buttons: {
+                    Ok: function() { this.parents('.modal').modal('hide');}
+                }
+            },$(instance.web.qweb.render("CrashManager.warning", params))).open();
     }
 });
 

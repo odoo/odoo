@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009-2010 Salvatore J. Trimarchi <salvatore@trimarchi.co.cc>
-# (http://salvatoreweb.co.cc)
+# Copyright (c) 2009-2010 Salvatore Josué Trimarchi Pinto <salvatore@trigluu.com>
+# (http://trigluu.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@
 # José Rodrigo Fernández Menegazzo, Soluciones Tecnologócias Prisma S.A.
 # (http://www.solucionesprisma.com)
 #
-# This module works with OpenERP 6.0
+# This module works with OpenERP 6.0 to 8.0
 #
 
 {
@@ -44,7 +44,7 @@ Agrega una nomenclatura contable para Honduras. También incluye impuestos y la
 moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes
 and the Lempira currency.""",
     'author': 'Salvatore Josue Trimarchi Pinto',
-    'website': 'http://trimarchi.co.cc',
+    'website': 'http://trigluu.com',
     'depends': ['base', 'account', 'account_chart'],
     'data': [
         'account_types.xml',

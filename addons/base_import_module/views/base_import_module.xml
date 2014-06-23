@@ -6,12 +6,14 @@
             <field name="name">Import Module</field>
             <field name="model">base.import.module</field>
             <field name="arch" type="xml">
-                <form string="Import module" version="7.0">
+                <form string="Import module">
                     <field name="state" invisible="1"/>
                     <separator string="Import Module" colspan="4"/>
                     <group states="init" col="4">
                         <label string="Select module package to import (.zip file):" colspan="4"/>
                         <field name="module_file" colspan="4"/>
+
+                        <field name="force"/>
                     </group>
                     <group states="done" col="4">
                         <field name="import_message" colspan="4" nolabel="1" readonly="1"/>

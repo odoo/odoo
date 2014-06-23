@@ -92,7 +92,7 @@
       </section>
   </template>
 
-  <template id="change_quantity" inherit_option_id="website_quote.pricing" name="Change Quantity">
+  <template id="change_quantity" inherit_id="website_quote.pricing" optional="disabled" name="Change Quantity">
       <xpath expr="//div[@id='quote_qty']" position="replace">
           <div class="input-group">
               <span class="input-group-addon hidden-print">
@@ -130,7 +130,7 @@
   </template>
 
   <!-- Options:Quotation Chatter: user can reply -->
-  <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments" inherit_option_id="website_quote.chatter" inherit_id="website_quote.chatter">
+  <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments" optional="enabled" inherit_id="website_quote.chatter">
       <xpath expr="//h1" position="after">
           <section class="mb32 css_editable_mode_hidden hidden-print">
               <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post" method="POST">
@@ -388,7 +388,7 @@
   </template>
 
   <!-- Options:Quotation Signature -->
-  <template id="opt_quotation_signature" name="Ask Signature" inherit_option_id="website_quote.so_quotation" inherit_id="website_quote.so_quotation">
+  <template id="opt_quotation_signature" name="Ask Signature" optional="enabled" inherit_id="website_quote.so_quotation">
       <xpath expr="//div[@id='sign-dialog']" position="inside">
         <div class="panel panel-default mt16 mb0" id="drawsign">
             <div class="panel-heading">

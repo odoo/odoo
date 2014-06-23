@@ -188,9 +188,12 @@ class product_pricelist(osv.osv):
 
         products = map(lambda x: x[0], products_by_qty_by_partner)
         currency_obj = self.pool.get('res.currency')
-        product_obj = self.pool.get('product.product')
+        product_obj = self.pool.get('product.template')
         product_uom_obj = self.pool.get('product.uom')
         price_type_obj = self.pool.get('product.price.type')
+
+        if not products:
+            return {}
 
         version = False
         for v in pricelist.version_id:
@@ -207,8 +210,13 @@ class product_pricelist(osv.osv):
                 categ = categ.parent_id
         categ_ids = categ_ids.keys()
 
-        prod_ids = [x.id for x in products]
-        prod_tmpl_ids = [x.product_tmpl_id.id for x in products]
+        is_product_template = products[0]._name == "product.template"
+        if is_product_template:
+            prod_tmpl_ids = [tmpl.id for tmpl in products]
+            prod_ids = [product.id for product in tmpl.product_variant_ids for tmpl in products]
+        else:
+            prod_ids = [product.id for product in products]
+            prod_tmpl_ids = [product.product_tmpl_id.id for product in products]
 
         # Load all rules
         cr.execute(
@@ -234,10 +242,17 @@ class product_pricelist(osv.osv):
             for rule in items:
                 if rule.min_quantity and qty<rule.min_quantity:
                     continue
-                if rule.product_tmpl_id and product.product_tmpl_id.id<>rule.product_tmpl_id.id:
-                    continue
-                if rule.product_id and product.id<>rule.product_id.id:
-                    continue
+                if is_product_template:
+                    if rule.product_tmpl_id and product.id<>rule.product_tmpl_id.id:
+                        continue
+                    if rule.product_id:
+                        continue
+                else:
+                    if rule.product_tmpl_id and product.product_tmpl_id.id<>rule.product_tmpl_id.id:
+                        continue
+                    if rule.product_id and product.id<>rule.product_id.id:
+                        continue
+
                 if rule.categ_id:
                     cat = product.categ_id
                     while cat:

@@ -127,8 +127,8 @@ class account_move_line(osv.osv):
 
             if move_line.reconcile_id:
                 continue
-            if not move_line.account_id.type in ('payable', 'receivable'):
-                #this function does not suport to be used on move lines not related to payable or receivable accounts
+            if not move_line.account_id.reconcile:
+                #this function does not suport to be used on move lines not related to a reconcilable account
                 continue
 
             if move_line.currency_id:
@@ -430,7 +430,7 @@ class account_move_line(osv.osv):
             elif line.reconcile_partial_id:
                 res[line.id] = str(line.reconcile_partial_id.name)
         return res
-        
+
     def _get_move_from_reconcile(self, cr, uid, ids, context=None):
         move = {}
         for r in self.pool.get('account.move.reconcile').browse(cr, uid, ids, context=context):
@@ -491,7 +491,7 @@ class account_move_line(osv.osv):
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', 
+        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company',
                             string='Company', store=True, readonly=True)
     }
 
@@ -579,6 +579,9 @@ class account_move_line(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_date_id_index',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX account_move_line_date_id_index ON account_move_line (date DESC, id desc)')
         return res
 
     def _check_no_view(self, cr, uid, ids, context=None):
@@ -738,6 +741,8 @@ class account_move_line(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
+        if context.get('fiscalyear'):
+            args.append(('period_id.fiscalyear_id', '=', context.get('fiscalyear', False)))
         if context and context.get('next_partner_only', False):
             if not context.get('partner_id', False):
                 partner = self.list_partners_to_reconcile(cr, uid, context=context)
@@ -765,7 +770,7 @@ class account_move_line(osv.osv):
                 WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
                 ORDER BY last_reconciliation_date""")
         ids = [x[0] for x in cr.fetchall()]
-        if not ids: 
+        if not ids:
             return []
 
         # To apply the ir_rules
@@ -793,9 +798,11 @@ class account_move_line(osv.osv):
             else:
                 currency_id = line.company_id.currency_id
             if line.reconcile_id:
-                raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name)) 
+                raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
+                    if line2.state != 'valid':
+                        raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not balanced!") % (line2.name, line2.id))
                     if not line2.reconcile_id:
                         if line2.id not in merges:
                             merges.append(line2.id)
@@ -818,7 +825,7 @@ class account_move_line(osv.osv):
             'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
         }, context=context)
         move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
-        return True
+        return r_id
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
         account_obj = self.pool.get('account.account')
@@ -1119,7 +1126,7 @@ class account_move_line(osv.osv):
         period = period_obj.browse(cr, uid, period_id, context=context)
         for (state,) in result:
             if state == 'done':
-                raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))                
+                raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))
         if not result:
             jour_period_obj.create(cr, uid, {
                 'name': (journal.code or journal.name)+':'+(period.name or ''),

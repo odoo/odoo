@@ -27,6 +27,8 @@ import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 import openerp
 
+PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
+
 class procurement_group(osv.osv):
     '''
     The procurement group class is used to group products together
@@ -62,7 +64,7 @@ class procurement_group(osv.osv):
     }
     _defaults = {
         'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or '',
-        'move_type': lambda self, cr, uid, c: 'one'
+        'move_type': lambda self, cr, uid, c: 'direct'
     }
 
 class procurement_rule(osv.osv):
@@ -113,7 +115,7 @@ class procurement_order(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
 
         # These two fields are used for shceduling
-        'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority', required=True, select=True, track_visibility='onchange'),
+        'priority': fields.selection(PROCUREMENT_PRIORITIES, 'Priority', required=True, select=True, track_visibility='onchange'),
         'date_planned': fields.datetime('Scheduled Date', required=True, select=True, track_visibility='onchange'),
 
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
@@ -265,7 +267,7 @@ class procurement_order(osv.osv):
     #
     # Scheduler
     #
-    def run_scheduler(self, cr, uid, use_new_cursor=False, context=None):
+    def run_scheduler(self, cr, uid, use_new_cursor=False, company_id = False, context=None):
         '''
         Call the scheduler to check the procurement order. This is intented to be done for all existing companies at
         the same time, so we're running all the methods as SUPERUSER to avoid intercompany and access rights issues.
@@ -274,7 +276,8 @@ class procurement_order(osv.osv):
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
         @param ids: List of selected IDs
-        @param use_new_cursor: False or the dbname
+        @param use_new_cursor: if set, use a dedicated cursor and auto-commit after processing each procurement.
+            This is appropriate for batch jobs only.
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         '''
@@ -282,11 +285,14 @@ class procurement_order(osv.osv):
             context = {}
         try:
             if use_new_cursor:
-                cr = openerp.registry(use_new_cursor).cursor()
+                cr = openerp.registry(cr.dbname).cursor()
 
             # Run confirmed procurements
+            dom = [('state', '=', 'confirmed')]
+            if company_id:
+                dom += [('company_id', '=', company_id)]
             while True:
-                ids = self.search(cr, SUPERUSER_ID, [('state', '=', 'confirmed')], context=context)
+                ids = self.search(cr, SUPERUSER_ID, dom, context=context)
                 if not ids:
                     break
                 self.run(cr, SUPERUSER_ID, ids, context=context)
@@ -295,8 +301,11 @@ class procurement_order(osv.osv):
 
             # Check if running procurements are done
             offset = 0
+            dom = [('state', '=', 'running')]
+            if company_id:
+                dom += [('company_id', '=', company_id)]
             while True:
-                ids = self.search(cr, SUPERUSER_ID, [('state', '=', 'running')], offset=offset, context=context)
+                ids = self.search(cr, SUPERUSER_ID, dom, offset=offset, context=context)
                 if not ids:
                     break
                 done = self.check(cr, SUPERUSER_ID, ids, context=context)

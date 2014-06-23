@@ -216,7 +216,7 @@ class account_invoice(osv.osv):
     _name = "account.invoice"
     _inherit = ['mail.thread']
     _description = 'Invoice'
-    _order = "id desc"
+    _order = "number desc, id desc"
     _track = {
         'type': {
         },
@@ -295,7 +295,8 @@ class account_invoice(osv.osv):
             },
             multi='all'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}, track_visibility='always'),
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'journal_id': fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]},
+                                      domain="[('type', 'in', {'out_invoice': ['sale'], 'out_refund': ['sale_refund'], 'in_refund': ['purchase_refund'], 'in_invoice': ['purchase']}.get(type, [])), ('company_id', '=', company_id)]"),
         'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
         'check_total': fields.float('Verification Total', digits_compute=dp.get_precision('Account'), readonly=True, states={'draft':[('readonly',False)]}),
         'reconciled': fields.function(_reconciled, string='Paid/Reconciled', type='boolean',
@@ -1546,7 +1547,7 @@ class account_invoice_line(osv.osv):
         context = dict(context)
         context.update({'company_id': company_id})
         warning = {}
-        res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context=context)
+        res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context=context, company_id=company_id)
         if not uom:
             res['value']['price_unit'] = 0.0
         if product and uom:

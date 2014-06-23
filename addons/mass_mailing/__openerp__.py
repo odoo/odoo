@@ -48,6 +48,8 @@ professional emails and reuse templates in a few clicks.
         'views/res_config.xml',
         'views/res_partner.xml',
         'views/email_template.xml',
+        'views/website_mass_mailing.xml',
+        'views/snippets.xml',
         'security/ir.model.access.csv',
         'views/mass_mailing.xml',
     ],

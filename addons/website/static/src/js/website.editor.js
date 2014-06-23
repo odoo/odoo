@@ -3,6 +3,7 @@
 
     var website = openerp.website;
     var _t = openerp._t;
+    website.no_editor = !!$(document.documentElement).data('editable-no-editor');
 
     website.add_template_file('/website/static/src/xml/website.editor.xml');
     website.dom_ready.done(function () {
@@ -468,10 +469,16 @@
                     }
                 );
             });
-            menu.on('click', 'a[data-action!=ace]', function (event) {
+            menu.on('click', 'a[data-view-id]', function (event) {
                 var view_id = $(event.currentTarget).data('view-id');
-                openerp.jsonRpc('/website/customize_template_toggle', 'call', {
-                    'view_id': view_id
+                return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                    model: 'ir.ui.view',
+                    method: 'toggle',
+                    args: [],
+                    kwargs: {
+                        ids: [parseInt(view_id, 10)],
+                        context: website.get_context()
+                    }
                 }).then( function() {
                     window.location.reload();
                 });
@@ -489,6 +496,17 @@
 
             this.$('#website-top-edit').hide();
             this.$('#website-top-view').show();
+
+            var $edit_button = this.$('button[data-action=edit]')
+                    .prop('disabled', website.no_editor);
+            if (website.no_editor) {
+                var help_text = $(document.documentElement).data('editable-no-editor');
+                $edit_button.parent()
+                    // help must be set on form above button because it does
+                    // not appear on disabled button
+                    .attr('title', help_text);
+            }
+
 
             $('.dropdown-toggle').dropdown();
             this.customize_setup();
@@ -1498,7 +1516,7 @@
                 url: this.link
             });
             this.media.renameNode("img");
-            this.media.$.attributes.src = this.link;
+            $(this.media).attr('src', this.link);
             return this._super();
         },
         clear: function () {
@@ -1982,6 +2000,11 @@
         //       a/@href, ...)
         _(mutations).chain()
             .filter(function (m) {
+                // ignore any SVG target, these blokes are like weird mon
+                if (m.target && m.target instanceof SVGElement) {
+                    return false;
+                }
+
                 // ignore any change related to mundane image-edit-button
                 if (m.target && m.target.className
                         && m.target.className.indexOf('image-edit-button') !== -1) {
