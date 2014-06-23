@@ -517,7 +517,7 @@
     });
 
     website.ready().done(function() {
-        $('a[data-action=promote-current-page]').on('click', this, function() {
+        $(document.body).on('click', 'a[data-action=promote-current-page]', function() {
             new website.seo.Configurator(this).appendTo($(document.body));
         });
     });

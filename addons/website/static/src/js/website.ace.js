@@ -358,7 +358,7 @@
 
     website.ready().done(function() {
         var ace = new website.Ace();
-        $('a[data-action=ace]').on('click', function() {
+        $(document.body).on('click', 'a[data-action=ace]', function() {
             ace.launchAce();
         });
     });

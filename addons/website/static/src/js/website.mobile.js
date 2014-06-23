@@ -23,7 +23,7 @@
     });
 
     website.ready().done(function() {
-        $('a[data-action=show-mobile-preview]').on('click', function() {
+        $(document.body).on('click', 'a[data-action=show-mobile-preview]', function() {
             new website.MobilePreview().appendTo($(document.body));
         });
     });
