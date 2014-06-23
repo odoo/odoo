@@ -198,7 +198,7 @@ class base_gengo_translations(osv.osv_memory):
                 'term2.id': {...}
                 }
             }'''
-
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         translation_pool = self.pool.get('ir.translation')
         jobs = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -218,7 +218,7 @@ class base_gengo_translations(osv.osv_memory):
                     'lc_tgt': translation_pool._get_gengo_corresponding_language(term.lang),
                     'auto_approve': auto_approve,
                     'comment': comment,
-                    'callback_url': self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url') + '/website/gengo_callback?pgk=' + self.get_gengo_key(cr)
+                    'callback_url': "%s/website/gengo_callback?pgk=%s&db=%s" % (base_url, self.get_gengo_key(cr), cr.dbname)
                 }
         return {'jobs': jobs, 'as_group': 0}
 
