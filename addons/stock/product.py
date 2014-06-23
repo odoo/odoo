@@ -171,13 +171,13 @@ class product_product(osv.osv):
     def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
         res = {}
         for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = str(product.qty_available) +  _(" In Stock")
+            res[product.id] = str(product.qty_available) +  _(" On Hand")
         return res
 
     _columns = {
         'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
-        'qty_in_stock': fields.function(_product_available_text, type='char'),
+        'qty_available_text': fields.function(_product_available_text, type='char'),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
@@ -276,6 +276,12 @@ class product_product(osv.osv):
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
+
+
+    def action_view_routes(self, cr, uid, ids, context=None):
+        template_obj = self.pool.get("product.template")
+        templ_ids = list(set([x.product_tmpl_id.id for x in self.browse(cr, uid, ids, context=context)]))
+        return template_obj.action_view_routes(cr, uid, templ_ids, context=context)
 
 class product_template(osv.osv):
     _name = 'product.template'
