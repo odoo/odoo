@@ -28,6 +28,15 @@
                         <page string="Groups">
                             <field name="groups_id"/>
                         </page>
+                        <page string="Direct Inheritants">
+                            <field name="inherit_children_ids" context="{'default_model':model,'default_type':type,'default_inherit_id':active_id}">
+                                <tree>
+                                    <field name="priority"/>
+                                    <field name="name"/>
+                                    <field name="xml_id"/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
                   </sheet>
                 </form>
