@@ -1,15 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
 import re
 import werkzeug
-
-_logger = logging.getLogger(__name__)
-try:
-    import GeoIP
-except ImportError:
-    GeoIP = None
-    _logger.warn("Please install GeoIP python module to use events localisation.")
-
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
@@ -19,12 +10,6 @@ from openerp.tools.translate import _
 
 class WebsiteCrmPartnerAssign(http.Controller):
     _references_per_page = 40
-
-    def _get_current_country_code(self):
-        if not GeoIP:
-            return False
-        GI = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', 0)
-        return GI.country_code_by_addr(request.httprequest.remote_addr)
 
     @http.route([
         '/partners',
@@ -52,7 +37,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
         # group by grade
         grade_domain = list(base_partner_domain)
         if not country and not country_all:
-            country_code = self._get_current_country_code()
+            country_code = request.session['geoip'].get('country_code')
             if country_code:
                 country_ids = country_obj.search(request.cr, request.uid, [('code', '=', country_code)], context=request.context)
                 if country_ids:

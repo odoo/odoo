@@ -34,26 +34,19 @@
                             </page>
                             <page string="Advanced" groups="base.group_no_one">
                                 <group>
-                                    <div>
-                                        <group string="Status">
-                                            <field name="auto_delete"/>
-                                            <field name="notification"/>
-                                            <field name="type"/>
-                                            <field name="mail_server_id"/>
-                                            <field name="model"/>
-                                            <field name="res_id"/>
-                                        </group>
-                                    </div>
-                                    <div>
-                                        <group string="Headers">
-                                            <field name="message_id"/>
-                                            <field name="references"/>
-                                        </group>
-                                        <group string="Recipients">
-                                            <field name="partner_ids" widget="many2many_tags"/>
-                                            <field name="notified_partner_ids" widget="many2many_tags"/>
-                                        </group>
-                                    </div>
+                                    <group string="Status">
+                                        <field name="auto_delete"/>
+                                        <field name="notification"/>
+                                        <field name="type"/>
+                                        <field name="mail_server_id"/>
+                                        <field name="model"/>
+                                        <field name="res_id"/>
+                                    </group>
+                                    <group string="Headers">
+                                        <field name="message_id"/>
+                                        <field name="references"/>
+                                        <field name="headers"/>
+                                    </group>
                                 </group>
                             </page>
                             <page string="Attachments">
