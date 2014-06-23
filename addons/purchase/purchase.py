@@ -1310,6 +1310,7 @@ class procurement_order(osv.osv):
                 if available_draft_po_ids:
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
+                    #if the product has to be ordered earlier those in the existing PO, we replace the purchase date on the order to avoid ordering it too late
                     if datetime.strptime(po_rec.date_order, DEFAULT_SERVER_DATE_FORMAT) > purchase_date:
                         po_obj.write(cr, uid, [po_id], {'date_order': purchase_date}, context=context)
                     #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
@@ -1369,8 +1370,11 @@ class product_template(osv.Model):
     _inherit = 'product.template'
     
     def _get_buy_route(self, cr, uid, context=None):
-        buy_route = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'purchase', 'route_warehouse0_buy')[1]
-        return [buy_route]
+        
+        buy_route = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'purchase.route_warehouse0_buy')
+        if buy_route:
+            return [buy_route]
+        return []
 
     def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)

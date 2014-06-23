@@ -351,7 +351,7 @@
         <act_window
             id="action_account_items"
             name="Journal Items"
-            context="{'search_default_account_id': [active_id]}"
+            context="{'search_default_account_id': [active_id], 'fiscalyear': context.get('fiscalyear')}"
             res_model="account.move.line"
             src_model="account.account"
             key2="tree_but_open"/>

@@ -99,16 +99,16 @@ class stock_invoice_onshipping(osv.osv_memory):
         inv_type = journal2type.get(data.journal_type) or 'out_invoice'
         data_pool = self.pool.get('ir.model.data')
         if inv_type == "out_invoice":
-            action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree1")
+            action_id = data_pool.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree1')
         elif inv_type == "in_invoice":
-            action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree2")
+            action_id = data_pool.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree2')
         elif inv_type == "out_refund":
-            action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree3")
+            action_id = data_pool.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree3')
         elif inv_type == "in_refund":
-            action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree4")
+            action_id = data_pool.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree4')
 
-        if action_model:
-            action_pool = self.pool[action_model]
+        if action_id:
+            action_pool = self.pool['ir.actions.act_window']
             action = action_pool.read(cr, uid, action_id, context=context)
             action['domain'] = "[('id','in', ["+','.join(map(str,invoice_ids))+"])]"
             return action
@@ -117,7 +117,7 @@ class stock_invoice_onshipping(osv.osv_memory):
     def create_invoice(self, cr, uid, ids, context=None):
         context = context or {}
         picking_pool = self.pool.get('stock.picking')
-        data = self.browse(cr, uid, ids[0])
+        data = self.browse(cr, uid, ids[0], context=context)
         journal2type = {'sale':'out_invoice', 'purchase':'in_invoice', 'sale_refund':'out_refund', 'purchase_refund':'in_refund'}
         context['date_inv'] = data.invoice_date
         acc_journal = self.pool.get("account.journal")
