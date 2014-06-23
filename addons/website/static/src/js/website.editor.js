@@ -449,10 +449,17 @@
             var self = this;
             this.saving_mutex = new openerp.Mutex();
 
+            this.$buttons = {
+                edit: this.$el.parents().find('button[data-action=edit]'),
+                save: this.$('button[data-action=save]'),
+                cancel: this.$('button[data-action=cancel]'),
+            };
+
             this.$('#website-top-edit').hide();
             this.$('#website-top-view').show();
+            this.$buttons.edit.show();
 
-            var $edit_button = this.$('button[data-action=edit]')
+            var $edit_button = this.$buttons.edit
                     .prop('disabled', website.no_editor);
             if (website.no_editor) {
                 var help_text = $(document.documentElement).data('editable-no-editor');
@@ -463,12 +470,6 @@
             }
 
             $('.dropdown-toggle').dropdown();
-
-            this.$buttons = {
-                edit: this.$el.parents().find('button[data-action=edit]'),
-                save: this.$('button[data-action=save]'),
-                cancel: this.$('button[data-action=cancel]'),
-            };
 
             this.$buttons.edit.click(function(ev) {
                 self.edit();
@@ -481,7 +482,6 @@
                 self.trigger('rte:ready');
             });
 
-            this.$buttons.edit.show();
             this.rte.appendTo(this.$('#website-top-edit .nav.js_editor_placeholder'));
             return this._super.apply(this, arguments);
             
