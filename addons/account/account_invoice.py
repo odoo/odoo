@@ -145,7 +145,7 @@ class account_invoice(models.Model):
             else:
                 self.residual = new_value
         # prevent the residual amount on the invoice to be less than 0
-        self.residual = max(self.residual, 0.0)            
+        self.residual = max(self.residual, 0.0)
 
     @api.one
     @api.depends(
@@ -1548,6 +1548,14 @@ class account_invoice_tax(models.Model):
                     val['tax_amount'] = currency.compute(val['amount'] * tax['ref_tax_sign'], company_currency, round=False)
                     val['account_id'] = tax['account_paid_id'] or line.account_id.id
                     val['account_analytic_id'] = tax['account_analytic_paid_id']
+
+                # If the taxes generate moves on the same financial account as the invoice line
+                # and no default analytic account is defined at the tax level, propagate the
+                # analytic account from the invoice line to the tax line. This is necessary
+                # in situations were (part of) the taxes cannot be reclaimed,
+                # to ensure the tax move is allocated to the proper analytic account.
+                if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
+                    val['account_analytic_id'] = line.account_analytic_id.id
 
                 key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
                 if not key in tax_grouped:
