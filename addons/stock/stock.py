@@ -4094,11 +4094,11 @@ class stock_picking_type(osv.osv):
             tristates = []
             for picking in picking_obj.browse(cr, uid, picking_ids, context=context):
                 if picking.date_done > picking.date:
-                    tristates.insert(0, {'tooltip': picking.name + _(': Late'), 'value': -1})
+                    tristates.insert(0, {'tooltip': picking.name or '' + _(': Late'), 'value': -1})
                 elif picking.backorder_id:
-                    tristates.insert(0, {'tooltip': picking.name + _(': Backorder exists'), 'value': 0})
+                    tristates.insert(0, {'tooltip': picking.name or '' + _(': Backorder exists'), 'value': 0})
                 else:
-                    tristates.insert(0, {'tooltip': picking.name + _(': OK'), 'value': 1})
+                    tristates.insert(0, {'tooltip': picking.name or '' + _(': OK'), 'value': 1})
             res[picking_type_id] = tristates
         return res
 
