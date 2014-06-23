@@ -1,9 +1,7 @@
 (function () {
     'use strict';
 
-    var website = openerp.website;
-
-    website.Tour.register({
+    openerp.Tour.register({
         id:   'event_buy_tickets',
         name: "Try to buy tickets for event",
         path: '/event',

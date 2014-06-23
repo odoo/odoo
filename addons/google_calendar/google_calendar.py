@@ -699,7 +699,7 @@ class google_calendar(osv.AbstractModel):
         for att in att_obj.browse(cr, uid, my_att_ids, context=context):
             event = att.event_id
 
-            base_event_id = att.google_internal_event_id.split('_')[0]
+            base_event_id = att.google_internal_event_id.rsplit('_', 1)[0]
 
             if base_event_id not in event_to_synchronize:
                 event_to_synchronize[base_event_id] = {}
@@ -721,7 +721,7 @@ class google_calendar(osv.AbstractModel):
 
         for event in all_event_from_google.values():
             event_id = event.get('id')
-            base_event_id = event_id.split('_')[0]
+            base_event_id = event_id.rsplit('_', 1)[0]
 
             if base_event_id not in event_to_synchronize:
                 event_to_synchronize[base_event_id] = {}
@@ -786,7 +786,7 @@ class google_calendar(osv.AbstractModel):
                     if actSrc == 'OE':
                         self.delete_an_event(cr, uid, current_event[0], context=context)
                     elif actSrc == 'GG':
-                        new_google_event_id = event.GG.event['id'].split('_')[1]
+                        new_google_event_id = event.GG.event['id'].rsplit('_', 1)[1]
                         if 'T' in new_google_event_id:
                             new_google_event_id = new_google_event_id.replace('T', '')[:-1]
                         else:
@@ -795,7 +795,8 @@ class google_calendar(osv.AbstractModel):
                         if event.GG.status:
                             parent_event = {}
                             if not event_to_synchronize[base_event][0][1].OE.event_id:
-                                event_to_synchronize[base_event][0][1].OE.event_id = att_obj.search_read(cr, uid, [('google_internal_event_id', '=', event.GG.event['id'].split('_')[0])], ['event_id'], context=context_novirtual)[0].get('event_id')[0]
+                                main_ev = att_obj.search_read(cr, uid, [('google_internal_event_id', '=', event.GG.event['id'].rsplit('_', 1)[0])], fields=['event_id'], context=context_novirtual)
+                                event_to_synchronize[base_event][0][1].OE.event_id = main_ev[0].get('event_id')[0]
 
                             parent_event['id'] = "%s-%s" % (event_to_synchronize[base_event][0][1].OE.event_id, new_google_event_id)
                             res = self.update_from_google(cr, uid, parent_event, event.GG.event, "copy", context)

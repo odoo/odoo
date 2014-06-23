@@ -8,6 +8,6 @@ class TestUi(openerp.tests.HttpCase):
         self.phantom_js("/", "console.log('ok')", "openerp.website.editor", login='admin')
 
     def test_04_admin_tour_banner(self):
-        self.phantom_js("/", "openerp.website.Tour.run('banner', 'test')", "openerp.website.Tour.tours.banner", login='admin')
+        self.phantom_js("/", "openerp.Tour.run('banner', 'test')", "openerp.Tour.tours.banner", login='admin')
 
 # vim:et:

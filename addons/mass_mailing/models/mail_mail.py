@@ -84,7 +84,8 @@ class MailMail(osv.Model):
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
         res = super(MailMail, self).send_get_email_dict(cr, uid, mail, partner, context=context)
         if mail.mailing_id and res.get('body') and res.get('email_to'):
-            email_to = tools.email_split(res.get('email_to')[0])
+            emails = tools.email_split(res.get('email_to')[0])
+            email_to = emails and emails[0] or False
             unsubscribe_url = self._get_unsubscribe_url(cr, uid, mail, email_to, context=context)
             if unsubscribe_url:
                 res['body'] = tools.append_content_to_html(res['body'], unsubscribe_url, plaintext=False, container_tag='p')
