@@ -96,15 +96,21 @@ class ir_config_parameter(osv.osv):
 
         gids = []
         for group_xml in groups:
-            gids.append((4, self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, group_xml)))
+            res_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, group_xml)
+            if res_id:
+                gids.append((4, res_id))
 
+        vals = {'value': value}
+        if gids:
+            vals.update(group_ids=gids)
         if ids:
             param = self.browse(cr, uid, ids[0], context=context)
             old = param.value
-            self.write(cr, uid, ids, {'value': value, 'group_ids': gids}, context=context)
+            self.write(cr, uid, ids, vals, context=context)
             return old
         else:
-            self.create(cr, uid, {'key': key, 'value': value, 'group_ids': gids}, context=context)
+            vals.update(key=key)
+            self.create(cr, uid, vals, context=context)
             return False
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
