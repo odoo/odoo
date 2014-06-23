@@ -72,7 +72,6 @@ def cmd_setup_git():
         # alias
         run('git','config','alias.st','status')
         # merge bzr style
-        run('git','config','merge.ff','no')
         run('git','config','merge.commit','no')
         # pull let me choose between merge or rebase only works in git > 2.0, use an alias for 1
         run('git','config','pull.ff','only')
