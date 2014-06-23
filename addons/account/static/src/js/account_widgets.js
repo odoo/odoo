@@ -29,7 +29,7 @@ openerp.account = function (instance) {
             this.time_widget_loaded = Date.now();
     
             // Stuff used by the children bankStatementReconciliationLine
-            this.max_move_lines_displayed = 1;
+            this.max_move_lines_displayed = 5;
             this.animation_speed = 100; // "Blocking" animations
             this.aestetic_animation_speed = 300; // eye candy
             this.map_tax_id_amount = {};
