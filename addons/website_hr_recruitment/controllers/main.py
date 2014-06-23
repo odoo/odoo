@@ -5,14 +5,6 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
-import logging
-_logger = logging.getLogger(__name__)
-
-try:
-    import GeoIP
-except ImportError:
-    GeoIP = None
-    _logger.warn("Please install GeoIP python module to use events localisation.")
 
 class website_hr_recruitment(http.Controller):
     @http.route([
@@ -43,9 +35,8 @@ class website_hr_recruitment(http.Controller):
         countries = set(o.country_id for o in offices if o.country_id)
 
         # Default search by user country
-        if not country and not department and not office_id and GeoIP:
-            GI = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', 0)
-            country_code = GI.country_code_by_addr(request.httprequest.remote_addr)
+        if not country and not department and not office_id:
+            country_code = request.session['geoip'].get('country_code')
             if country_code:
                 country_ids = request.registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
                 if country_ids:
