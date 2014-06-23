@@ -1,0 +1,104 @@
+--- addons/account/account_bank_statement.py
++++ addons/account/account_bank_statement.py
+@@ -409,6 +417,10 @@
+             'domain':[('statement_id','in',ids)],
+             'context':ctx,
+         }
++
++    def number_of_lines_reconciled(self, cr, uid, id, context=None):
++        bsl_obj = self.pool.get('account.bank.statement.line')
++        return bsl_obj.search_count(cr, uid, [('statement_id', '=', id), ('journal_entry_id', '!=', False)], context=context)
+         
+     def get_format_currency_js_function(self, cr, uid, id, context=None):
+         """ Returns a string that can be used to instanciate a javascript function.
+@@ -432,9 +444,11 @@
+                 done_currencies.append(st_line_currency.id)
+         return function
+ 
+-    def number_of_lines_reconciled(self, cr, uid, id, context=None):
+-        bsl_obj = self.pool.get('account.bank.statement.line')
+-        return bsl_obj.search_count(cr, uid, [('statement_id', '=', id), ('journal_entry_id', '!=', False)], context=context)
++    def link_bank_to_partner(self, cr, uid, ids, context=None):
++        for statement in self.browse(cr, uid, ids, context=context):
++            for st_line in statement.line_ids:
++                if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
++                    self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
+ 
+ class account_bank_statement_line(osv.osv):
+ 
+@@ -453,11 +467,11 @@
+             ret.append(reconciliation_data)
+ 
+         # Check if, now that 'candidate' move lines were selected, there are moves left for statement lines
+-        for reconciliation_data in ret:
+-            if not reconciliation_data['st_line']['has_no_partner']:
+-                st_line = self.browse(cr, uid, reconciliation_data['st_line']['id'], context=context)
+-                if self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=mv_line_ids_selected, count=True, context=context) == 0:
+-                    reconciliation_data['st_line']['no_match'] = True
++        #for reconciliation_data in ret:
++        #    if not reconciliation_data['st_line']['has_no_partner']:
++        #        st_line = self.browse(cr, uid, reconciliation_data['st_line']['id'], context=context)
++        #        if not self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=mv_line_ids_selected, count=True, context=context):
++        #            reconciliation_data['st_line']['no_match'] = True
+         return ret
+ 
+     def get_statement_line_for_reconciliation(self, cr, uid, id, context=None):
+@@ -483,7 +497,7 @@
+             'amount': amount,
+             'amount_str': amount_str,
+             'currency_id': line.currency_id.id or statement_currency.id,
+-            'no_match': self.get_move_lines_counterparts(cr, uid, line, count=True, context=context) == 0 and line.partner_id.id,
++            'no_match': self.get_move_lines_counterparts(cr, uid, line, count=True, context=context) == 0,
+             'partner_id': line.partner_id.id,
+             'statement_id': line.statement_id.id,
+             'account_code': line.journal_id.default_debit_account_id.code,
+@@ -501,7 +515,7 @@
+     def search_structured_com(self, cr, uid, st_line, context=None):
+         if not st_line.ref:
+             return
+-        domain = [('name', '=', st_line.ref)]
++        domain = [('ref', '=', st_line.ref)]
+         if st_line.partner_id:
+             domain += [('partner_id', '=', st_line.partner_id.id)]
+         ids = self.pool.get('account.move.line').search(cr, uid, domain, limit=1, context=context)
+@@ -527,6 +540,9 @@
+         exact_match_id = self.search_structured_com(cr, uid, st_line, context=context)
+         if exact_match_id:
+             return self.make_counter_part_lines(cr, uid, st_line, [exact_match_id], count=False, context=context)
++        #we don't propose anything if there is no partner detected
++        if not st_line.partner_id.id:
++            return []
+         # look for exact match
+         exact_match_id = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
+         if exact_match_id:
+@@ -542,10 +558,10 @@
+         # get_move_lines_counterparts inverts debit and credit
+         amount_field = 'debit' if amount_field == 'credit' else 'credit'
+         for line in mv_lines:
+-            if total + line[amount_field] <= st_line.amount:
++            if total + line[amount_field] <= abs(st_line.amount):
+                 ret.append(line)
+                 total += line[amount_field]
+-            if total >= st_line.amount:
++            if total >= abs(st_line.amount):
+                 break
+         return ret
+ 
+@@ -574,14 +590,15 @@
+         if st_line.partner_id.id:
+             domain += [('partner_id', '=', st_line.partner_id.id),
+                 '|', ('account_id.type', '=', 'receivable'),
+-                ('account_id.type', '=', 'payable'),  # Let the front-end warn the user if he tries to mix payable and receivable in the same reconciliation
+-                ]
++                ('account_id.type', '=', 'payable')]
+         else:
+             domain += [('account_id.reconcile', '=', True)]
+             #domain += [('account_id.reconcile', '=', True), ('account_id.type', '=', 'other')]
+         if excluded_ids:
+             domain.append(('id', 'not in', excluded_ids))
+         if filter_str:
++            if not st_line.partner_id:
++                domain += [ '|', ('partner_id.name', 'ilike', filter_str)]
+             domain += ['|', ('move_id.name', 'ilike', filter_str), ('move_id.ref', 'ilike', filter_str)]
+         line_ids = mv_line_pool.search(cr, uid, domain, offset=offset, limit=limit, order="date_maturity asc, id asc", context=context)
+         return self.make_counter_part_lines(cr, uid, st_line, line_ids, count=count, context=context)

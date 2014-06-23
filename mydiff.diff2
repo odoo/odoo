@@ -1,0 +1,655 @@
+diff --git a/addons/account/account_bank_statement.py b/addons/account/account_bank_statement.py
+index 004bcd3..1ddab4b 100644
+--- a/addons/account/account_bank_statement.py
++++ b/addons/account/account_bank_statement.py
+@@ -26,6 +26,9 @@ from openerp.report import report_sxw
+ 
+ class account_bank_statement(osv.osv):
+     def create(self, cr, uid, vals, context=None):
++        if vals.get('name', '/') == '/':
++            journal_id = vals.get('journal_id', self._default_journal_id(cr, uid, context=context))
++            vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=context)
+         if 'line_ids' in vals:
+             for idx, line in enumerate(vals['line_ids']):
+                 line[2]['sequence'] = idx + 1
+@@ -65,17 +68,14 @@ class account_bank_statement(osv.osv):
+             return periods[0]
+         return False
+ 
+-    def _compute_default_statement_name(self, cr, uid, context=None):
++    def _compute_default_statement_name(self, cr, uid, journal_id, context=None):
+         if context is None:
+             context = {}
+         obj_seq = self.pool.get('ir.sequence')
+-        default_journal_id = self._default_journal_id(cr, uid, context=context)
+-        if default_journal_id != False:
+-            period = self.pool.get('account.period').browse(cr, uid, self._get_period(cr, uid, context=context), context=context)
+-            context['fiscalyear_id'] = period.fiscalyear_id.id
+-            journal = self.pool.get('account.journal').browse(cr, uid, default_journal_id, None)
+-            return obj_seq.next_by_id(cr, uid, journal.sequence_id.id, context=context)
+-        return obj_seq.next_by_code(cr, uid, 'account.bank.statement', context=context)
++        period = self.pool.get('account.period').browse(cr, uid, self._get_period(cr, uid, context=context), context=context)
++        context['fiscalyear_id'] = period.fiscalyear_id.id
++        journal = self.pool.get('account.journal').browse(cr, uid, journal_id, None)
++        return obj_seq.next_by_id(cr, uid, journal.sequence_id.id, context=context)
+ 
+     def _currency(self, cursor, user, ids, name, args, context=None):
+         res = {}
+@@ -150,7 +150,7 @@ class account_bank_statement(osv.osv):
+     }
+ 
+     _defaults = {
+-        'name': _compute_default_statement_name,
++        'name': '/', 
+         'date': fields.date.context_today,
+         'state': 'draft',
+         'journal_id': _default_journal_id,
+@@ -329,21 +329,29 @@ class account_bank_statement(osv.osv):
+                 move_ids.append(st_line.journal_entry_id.id)
+             self.pool.get('account.move').post(cr, uid, move_ids, context=context)
+             self.message_post(cr, uid, [st.id], body=_('Statement %s confirmed, journal items were created.') % (st.name,), context=context)
++        self.link_bank_to_partner(cr, uid, ids, context=context)
+         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
+ 
+     def button_cancel(self, cr, uid, ids, context=None):
+-        done = []
+         account_move_obj = self.pool.get('account.move')
++        reconcile_pool = self.pool.get('account.move.reconcile')
++        move_line_pool = self.pool.get('account.move.line')
++        move_ids = []
+         for st in self.browse(cr, uid, ids, context=context):
+-            if st.state=='draft':
+-                continue
+-            move_ids = []
+             for line in st.line_ids:
+-                move_ids += [x.id for x in line.move_ids]
++                if line.journal_entry_id:
++                    move_ids.append(line.journal_entry_id.id)
++                    for aml in line.journal_entry_id.line_id:
++                        if aml.reconcile_id:
++                            move_lines = [l.id for l in aml.reconcile_id.line_id]
++                            move_lines.remove(aml.id)
++                            reconcile_pool.unlink(cr, uid, [aml.reconcile_id.id], context=context)
++                            if len(move_lines) >= 2:
++                                move_line_pool.reconcile_partial(cr, uid, move_lines, 'auto', context=context)
++        if move_ids:
+             account_move_obj.button_cancel(cr, uid, move_ids, context=context)
+             account_move_obj.unlink(cr, uid, move_ids, context)
+-            done.append(st.id)
+-        return self.write(cr, uid, done, {'state':'draft'}, context=context)
++        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+ 
+     def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
+         res = False
+@@ -401,6 +409,10 @@ class account_bank_statement(osv.osv):
+             'domain':[('statement_id','in',ids)],
+             'context':ctx,
+         }
++
++    def number_of_lines_reconciled(self, cr, uid, id, context=None):
++        bsl_obj = self.pool.get('account.bank.statement.line')
++        return bsl_obj.search_count(cr, uid, [('statement_id', '=', id), ('journal_entry_id', '!=', False)], context=context)
+         
+     def get_format_currency_js_function(self, cr, uid, id, context=None):
+         """ Returns a string that can be used to instanciate a javascript function.
+@@ -424,9 +436,11 @@ class account_bank_statement(osv.osv):
+                 done_currencies.append(st_line_currency.id)
+         return function
+ 
+-    def number_of_lines_reconciled(self, cr, uid, id, context=None):
+-        bsl_obj = self.pool.get('account.bank.statement.line')
+-        return bsl_obj.search_count(cr, uid, [('statement_id', '=', id), ('journal_entry_id', '!=', False)], context=context)
++    def link_bank_to_partner(self, cr, uid, ids, context=None):
++        for statement in self.browse(cr, uid, ids, context=context):
++            for st_line in statement.line_ids:
++                if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
++                    self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
+ 
+ class account_bank_statement_line(osv.osv):
+ 
+@@ -445,11 +459,11 @@ class account_bank_statement_line(osv.osv):
+             ret.append(reconciliation_data)
+ 
+         # Check if, now that 'candidate' move lines were selected, there are moves left for statement lines
+-        for reconciliation_data in ret:
+-            if not reconciliation_data['st_line']['has_no_partner']:
+-                st_line = self.browse(cr, uid, reconciliation_data['st_line']['id'], context=context)
+-                if self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=mv_line_ids_selected, count=True, context=context) == 0:
+-                    reconciliation_data['st_line']['no_match'] = True
++        #for reconciliation_data in ret:
++        #    if not reconciliation_data['st_line']['has_no_partner']:
++        #        st_line = self.browse(cr, uid, reconciliation_data['st_line']['id'], context=context)
++        #        if not self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=mv_line_ids_selected, count=True, context=context):
++        #            reconciliation_data['st_line']['no_match'] = True
+         return ret
+ 
+     def get_statement_line_for_reconciliation(self, cr, uid, id, context=None):
+@@ -475,7 +489,7 @@ class account_bank_statement_line(osv.osv):
+             'amount': amount,
+             'amount_str': amount_str,
+             'currency_id': line.currency_id.id or statement_currency.id,
+-            'no_match': self.get_move_lines_counterparts(cr, uid, line, count=True, context=context) == 0 and line.partner_id.id,
++            'no_match': self.get_move_lines_counterparts(cr, uid, line, count=True, context=context) == 0,
+             'partner_id': line.partner_id.id,
+             'statement_id': line.statement_id.id,
+             'account_code': line.journal_id.default_debit_account_id.code,
+@@ -493,7 +507,7 @@ class account_bank_statement_line(osv.osv):
+     def search_structured_com(self, cr, uid, st_line, context=None):
+         if not st_line.ref:
+             return
+-        domain = [('name', '=', st_line.ref)]
++        domain = [('ref', '=', st_line.ref)]
+         if st_line.partner_id:
+             domain += [('partner_id', '=', st_line.partner_id.id)]
+         ids = self.pool.get('account.move.line').search(cr, uid, domain, limit=1, context=context)
+@@ -504,7 +518,6 @@ class account_bank_statement_line(osv.osv):
+         st_line = self.browse(cr, uid, id, context=context)
+         company_currency = st_line.journal_id.company_id.currency_id.id
+         statement_currency = st_line.journal_id.currency.id or company_currency
+-
+         # either use the unsigned debit/credit fields or the signed amount_currency field
+         sign = 1
+         if statement_currency == company_currency:
+@@ -520,6 +533,9 @@ class account_bank_statement_line(osv.osv):
+         exact_match_id = self.search_structured_com(cr, uid, st_line, context=context)
+         if exact_match_id:
+             return self.make_counter_part_lines(cr, uid, st_line, [exact_match_id], count=False, context=context)
++        #we don't propose anything if there is no partner detected
++        if not st_line.partner_id.id:
++            return []
+         # look for exact match
+         exact_match_id = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
+         if exact_match_id:
+@@ -535,10 +551,10 @@ class account_bank_statement_line(osv.osv):
+         # get_move_lines_counterparts inverts debit and credit
+         amount_field = 'debit' if amount_field == 'credit' else 'credit'
+         for line in mv_lines:
+-            if total + line[amount_field] <= st_line.amount:
++            if total + line[amount_field] <= abs(st_line.amount):
+                 ret.append(line)
+                 total += line[amount_field]
+-            if total >= st_line.amount:
++            if total >= abs(st_line.amount):
+                 break
+         return ret
+ 
+@@ -567,14 +583,15 @@ class account_bank_statement_line(osv.osv):
+         if st_line.partner_id.id:
+             domain += [('partner_id', '=', st_line.partner_id.id),
+                 '|', ('account_id.type', '=', 'receivable'),
+-                ('account_id.type', '=', 'payable'),  # Let the front-end warn the user if he tries to mix payable and receivable in the same reconciliation
+-                ]
++                ('account_id.type', '=', 'payable')]
+         else:
+             domain += [('account_id.reconcile', '=', True)]
+             #domain += [('account_id.reconcile', '=', True), ('account_id.type', '=', 'other')]
+         if excluded_ids:
+             domain.append(('id', 'not in', excluded_ids))
+         if filter_str:
++            if not st_line.partner_id:
++                domain += [ '|', ('partner_id.name', 'ilike', filter_str)]
+             domain += ['|', ('move_id.name', 'ilike', filter_str), ('move_id.ref', 'ilike', filter_str)]
+         line_ids = mv_line_pool.search(cr, uid, domain, offset=offset, limit=limit, order="date_maturity asc, id asc", context=context)
+         return self.make_counter_part_lines(cr, uid, st_line, line_ids, count=count, context=context)
+diff --git a/addons/account/account_move_line.py b/addons/account/account_move_line.py
+index a37ca6a..5926b97 100644
+--- a/addons/account/account_move_line.py
++++ b/addons/account/account_move_line.py
+@@ -127,8 +127,8 @@ class account_move_line(osv.osv):
+ 
+             if move_line.reconcile_id:
+                 continue
+-            if not move_line.account_id.type in ('payable', 'receivable'):
+-                #this function does not suport to be used on move lines not related to payable or receivable accounts
++            if not move_line.account_id.reconcile:
++                #this function does not suport to be used on move lines not related to a reconcilable account
+                 continue
+ 
+             if move_line.currency_id:
+diff --git a/addons/account/demo/account_bank_statement.xml b/addons/account/demo/account_bank_statement.xml
+index 5266782..b79d8b9 100644
+--- a/addons/account/demo/account_bank_statement.xml
++++ b/addons/account/demo/account_bank_statement.xml
+@@ -7,7 +7,6 @@
+             <field name="period_id" ref="account.period_5"/>
+             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+             <field name="user_id" ref="base.user_demo"/>
+-            <field name="reference_type">none</field>
+             <field name="name">BNK/2014/001</field>
+             <field name="balance_end" eval="2040.0"/>
+             <field name="company_id" ref="base.main_company"/>
+@@ -16,7 +15,7 @@
+             <field name="balance_end_real" eval="3707.58"/>
+         </record>
+         <record id="demo_bank_statement_line_1" model="account.bank.statement.line">
+-            <field name="ref">001</field>
++            <field name="ref"></field>
+             <field name="statement_id" ref="demo_bank_statement_1"/>
+             <field name="sequence" eval="1"/>
+             <field name="company_id" ref="base.main_company"/>
+@@ -27,7 +26,7 @@
+             <field name="partner_id" ref="base.res_partner_9"/>
+         </record>
+         <record id="demo_bank_statement_line_2" model="account.bank.statement.line">
+-            <field name="ref">002</field>
++            <field name="ref">SAJ2014002</field>
+             <field name="statement_id" ref="demo_bank_statement_1"/>
+             <field name="sequence" eval="2"/>
+             <field name="company_id" ref="base.main_company"/>
+@@ -38,7 +37,7 @@
+             <field name="partner_id" ref="base.res_partner_9"/>
+         </record>
+         <record id="demo_bank_statement_line_3" model="account.bank.statement.line">
+-            <field name="ref">003</field>
++            <field name="ref"></field>
+             <field name="statement_id" ref="demo_bank_statement_1"/>
+             <field name="sequence" eval="3"/>
+             <field name="company_id" ref="base.main_company"/>
+@@ -48,7 +47,7 @@
+             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+         </record>
+         <record id="demo_bank_statement_line_4" model="account.bank.statement.line">
+-            <field name="ref">004</field>
++            <field name="ref"></field>
+             <field name="statement_id" ref="demo_bank_statement_1"/>
+             <field name="sequence" eval="4"/>
+             <field name="company_id" ref="base.main_company"/>
+diff --git a/addons/account/static/src/css/account_bank_statement_reconciliation.css b/addons/account/static/src/css/account_bank_statement_reconciliation.css
+index 626d1f3..05caeab 100644
+--- a/addons/account/static/src/css/account_bank_statement_reconciliation.css
++++ b/addons/account/static/src/css/account_bank_statement_reconciliation.css
+@@ -120,8 +120,6 @@
+         cursor: pointer; }
+     .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line.no_match:not(.no_partner) .toggle_match {
+       visibility: hidden !important; }
+-    .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line.no_partner .partner_name, .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line.no_partner .line_open_balance {
+-      display: none !important; }
+     .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line > table > tbody > tr:nth-child(1) > td table {
+       margin-bottom: 10px; }
+     .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line table.details td:first-child {
+@@ -202,10 +200,6 @@
+         cursor: pointer; }
+     .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view td:nth-child(6) {
+       border-left: 1px solid black; }
+-    .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tr.initial_line > td:nth-child(5) {
+-      border-top: 1px solid black; }
+-    .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view tr.initial_line > td:nth-child(6) {
+-      border-top: 1px solid black; }
+     .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match .match_controls {
+       padding: 0 0 5px 18px; }
+       .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match .match_controls .filter {
+diff --git a/addons/account/static/src/css/account_bank_statement_reconciliation.scss b/addons/account/static/src/css/account_bank_statement_reconciliation.scss
+index 3b98689..248536b 100644
+--- a/addons/account/static/src/css/account_bank_statement_reconciliation.scss
++++ b/addons/account/static/src/css/account_bank_statement_reconciliation.scss
+@@ -194,12 +194,6 @@ $initialLineBackground: #f0f0f0;
+             }
+         }
+ 
+-        &.no_partner {
+-            .partner_name, .line_open_balance {
+-                display: none !important;
+-            }
+-        }
+-
+         /* gap between accounting_view and action view */
+         > table > tbody > tr:nth-child(1) > td table {
+             margin-bottom: 10px;
+@@ -341,10 +335,6 @@ $initialLineBackground: #f0f0f0;
+ 
+             // accounting "T"
+             td:nth-child(6) { border-left: $accountingBorder; }
+-            tr.initial_line > td {
+-                &:nth-child(5) { border-top: $accountingBorder; }
+-                &:nth-child(6) { border-top: $accountingBorder; }
+-            }
+         }
+ 
+ 
+diff --git a/addons/account/static/src/js/account_widgets.js b/addons/account/static/src/js/account_widgets.js
+index 56fdaaf..8f5786e 100644
+--- a/addons/account/static/src/js/account_widgets.js
++++ b/addons/account/static/src/js/account_widgets.js
+@@ -245,7 +245,7 @@ openerp.account = function (instance) {
+     
+         keyboardShortcutsHandler: function(e) {
+             var self = this;
+-            if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
++            if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
+                 $.each(self.getChildren(), function(i, o){
+                     if (o.is_valid && o.persistAndDestroy()) {
+                         self.lines_reconciled_with_ctrl_enter++;
+@@ -789,6 +789,9 @@ openerp.account = function (instance) {
+             line.q_amount = (line.debit !== 0 ? "- "+line.q_debit : "") + (line.credit !== 0 ? line.q_credit : "");
+             line.q_popover = QWeb.render("bank_statement_reconciliation_move_line_details", {line: line});
+             line.q_label = line.name;
++            if (line.has_no_partner){
++                line.q_label = line.partner_name + ': ' +line.q_label;
++            }
+     
+             // WARNING : pretty much of a ugly hack
+             // The value of account_move.ref is either the move's communication or it's name without the slashes
+@@ -981,6 +984,7 @@ openerp.account = function (instance) {
+         lineOpenBalanceClickHandler: function() {
+             var self = this;
+             if (self.get("mode") === "create") {
++                self.addLineBeingEdited();
+                 self.set("mode", "match");
+             } else {
+                 self.set("mode", "create");
+@@ -1038,7 +1042,8 @@ openerp.account = function (instance) {
+             var slice_start = self.get("pager_index") * self.max_move_lines_displayed;
+             var slice_end = (self.get("pager_index")+1) * self.max_move_lines_displayed;
+             _( _.filter(self.mv_lines_deselected, function(o){
+-                    return o.name.indexOf(self.filter) !== -1 || o.ref.indexOf(self.filter) !== -1 })
++                    return o.q_label.indexOf(self.filter) !== -1 || (o.ref && o.ref.indexOf(self.filter) !== -1)
++                })
+                 .slice(slice_start, slice_end)).each(function(line){
+                 var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: false}));
+                 self.bindPopoverTo($line.find(".line_info_button"));
+@@ -1057,7 +1062,6 @@ openerp.account = function (instance) {
+     
+         updatePagerControls: function() {
+             var self = this;
+-    
+             if (self.get("pager_index") === 0)
+                 self.$(".pager_control_left").addClass("disabled");
+             else
+@@ -1075,7 +1079,7 @@ openerp.account = function (instance) {
+         balanceChanged: function() {
+             var self = this;
+             var balance = self.get("balance");
+-    
++            self.$(".tbody_open_balance").empty();
+             // Special case hack : no identified partner
+             if (self.st_line.has_no_partner) {
+                 if (Math.abs(balance).toFixed(3) === "0.000") {
+@@ -1088,11 +1092,15 @@ openerp.account = function (instance) {
+                     self.$(".button_ok").attr("disabled", "disabled");
+                     self.$(".button_ok").text("OK");
+                     self.is_valid = false;
++                    var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
++                    var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
++                    var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {debit: debit, credit: credit, account_code: self.map_account_id_code[self.st_line.open_balance_account_id]}));
++                    $line.find('.js_open_balance')[0].innerHTML = "Choose counterpart";
++                    self.$(".tbody_open_balance").append($line);
+                 }
+                 return;
+             }
+     
+-            self.$(".tbody_open_balance").empty();
+             if (Math.abs(balance).toFixed(3) === "0.000") {
+                 self.$(".button_ok").addClass("oe_highlight");
+                 self.$(".button_ok").text("OK");
+@@ -1111,21 +1119,15 @@ openerp.account = function (instance) {
+     
+             self.$(".action_pane.active").removeClass("active");
+     
+-            // Special case hack : if no_partner, either inactive or create
++            // Special case hack : if no_partner and mode == inactive
+             if (self.st_line.has_no_partner) {
+                 if (self.get("mode") === "inactive") {
+                     self.$(".match").slideUp(self.animation_speed);
+                     self.$(".create").slideUp(self.animation_speed);
+                     self.$(".toggle_match").removeClass("visible_toggle");
+                     self.el.dataset.mode = "inactive";
+-                } else {
+-                    self.initializeCreateForm();
+-                    self.$(".match").slideUp(self.animation_speed);
+-                    self.$(".create").slideDown(self.animation_speed);
+-                    self.$(".toggle_match").addClass("visible_toggle");
+-                    self.el.dataset.mode = "create";
+-                }
+-                return;
++                    return;
++                } 
+             }
+     
+             if (self.get("mode") === "inactive") {
+@@ -1367,10 +1369,9 @@ openerp.account = function (instance) {
+                         move_lines = lines;
+                     });
+             }
+-    
+             // Fetch the number of move lines corresponding to this statement line and this filter
+             var deferred_total_move_lines_num = self.model_bank_statement_line
+-                .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids, self.filter, offset, limit, true])
++                .call("get_move_lines_counterparts_id", [self.st_line.id, excluded_ids, self.filter, 0, undefined, true])
+                 .then(function(num){
+                     move_lines_num = num;
+                 });
+diff --git a/addons/account/static/src/xml/account_bank_statement_reconciliation.xml b/addons/account/static/src/xml/account_bank_statement_reconciliation.xml
+index 4ea6761..b5a8492 100644
+--- a/addons/account/static/src/xml/account_bank_statement_reconciliation.xml
++++ b/addons/account/static/src/xml/account_bank_statement_reconciliation.xml
+@@ -128,7 +128,7 @@
+             <td><span class="glyphicon glyphicon-add-remove"></span></td>
+             <td><t t-esc="line.account_code"/></td>
+             <td><t t-esc="line.q_due_date"/></td>
+-            <td><t t-if="line.has_no_partner"><t t-esc="line.partner_name"/>: </t><t t-esc="line.q_label"/></td>
++            <td><t t-esc="line.q_label"/></td>
+ 
+             <td><t t-if="line.debit !== 0">
+                 <t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t>
+@@ -185,7 +185,7 @@
+             <td><span class="toggle_create glyphicon glyphicon-play"></span></td>
+             <td><t t-esc="account_code"/></td>
+             <td></td>
+-            <td>Open balance</td>
++            <td class="js_open_balance">Open balance</td>
+             <td><t t-esc="debit"/></td>
+             <td><t t-esc="credit"/></td>
+             <td></td>
+diff --git a/addons/l10n_be_coda/l10n_be_coda.py b/addons/l10n_be_coda/l10n_be_coda.py
+index 0dfa9bf..c4cd8ab 100644
+--- a/addons/l10n_be_coda/l10n_be_coda.py
++++ b/addons/l10n_be_coda/l10n_be_coda.py
+@@ -28,46 +28,4 @@ class account_bank_statement(osv.osv):
+     }
+ 
+ 
+-class account_bank_statement_line(osv.osv):
+-    _inherit = 'account.bank.statement.line'
+-    _columns = {
+-        'coda_account_number': fields.char('Account Number', help="The Counter Party Account Number")
+-    }
+-
+-    def create(self, cr, uid, data, context=None):
+-        """
+-            This function creates a Bank Account Number if, for a bank statement line,
+-            the partner_id field and the coda_account_number field are set,
+-            and the account number does not exist in the database
+-        """
+-        if 'partner_id' in data and data['partner_id'] and 'coda_account_number' in data and data['coda_account_number']:
+-            acc_number_ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', data['coda_account_number'])])
+-            if len(acc_number_ids) == 0:
+-                try:
+-                    type_model, type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'bank_normal')
+-                    type_id = self.pool.get('res.partner.bank.type').browse(cr, uid, type_id, context=context)
+-                    self.pool.get('res.partner.bank').create(cr, uid, {'acc_number': data['coda_account_number'], 'partner_id': data['partner_id'], 'state': type_id.code}, context=context)
+-                except ValueError:
+-                    pass
+-        return super(account_bank_statement_line, self).create(cr, uid, data, context=context)
+-
+-    def write(self, cr, uid, ids, vals, context=None):
+-        super(account_bank_statement_line, self).write(cr, uid, ids, vals, context)
+-        """
+-            Same as create function above, but for write function
+-        """
+-        if 'partner_id' in vals:
+-            for line in self.pool.get('account.bank.statement.line').browse(cr, uid, ids, context=context):
+-                if line.coda_account_number:
+-                    acc_number_ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', line.coda_account_number)])
+-                    if len(acc_number_ids) == 0:
+-                        try:
+-                            type_model, type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'bank_normal')
+-                            type_id = self.pool.get('res.partner.bank.type').browse(cr, uid, type_id, context=context)
+-                            self.pool.get('res.partner.bank').create(cr, uid, {'acc_number': line.coda_account_number, 'partner_id': vals['partner_id'], 'state': type_id.code}, context=context)
+-                        except ValueError:
+-                            pass
+-        return True
+-
+-
+ # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+diff --git a/addons/l10n_be_coda/l10n_be_coda_demo.xml b/addons/l10n_be_coda/l10n_be_coda_demo.xml
+index 63436a6..ce44539 100644
+--- a/addons/l10n_be_coda/l10n_be_coda_demo.xml
++++ b/addons/l10n_be_coda/l10n_be_coda_demo.xml
+@@ -32,5 +32,27 @@
+             <field eval="'2011-01-31'" name="date_stop"/>
+             <field name="company_id" ref="base.main_company"/>
+         </record>
++
++        <!-- invoice with BBA -->
++        <record id="coda_demo_invoice_1" model="account.invoice">
++            <field name="currency_id" ref="base.EUR"/>
++            <field name="company_id" ref="base.main_company"/>
++            <field name="journal_id" ref="account.sales_journal"/>
++            <field name="period_id" ref="period_1_2011"/>
++            <field name="state">draft</field>
++            <field name="type">out_invoice</field>
++            <field name="account_id" ref="account.a_recv"/>
++            <field name="partner_id" ref="base.res_partner_9"/>
++            <field name="reference_type">bba</field>
++            <field name="reference">+++240/2838/42818+++</field>
++        </record>
++        <record id="invoice_1_line_1" model="account.invoice.line">
++            <field name="name">Otpez Laptop without OS</field>
++            <field name="invoice_id" ref="coda_demo_invoice_1"/>
++            <field name="price_unit">608.89</field>
++            <field name="quantity">10</field>
++            <field name="account_id" ref="account.a_sale"/>
++        </record>
++        <workflow action="invoice_open" model="account.invoice" ref="coda_demo_invoice_1"/>
+     </data> 
+ </openerp>
+diff --git a/addons/l10n_be_coda/test_coda_file/Ontvangen_CODA.2011-01-11-18.59.15.txt b/addons/l10n_be_coda/test_coda_file/Ontvangen_CODA.2011-01-11-18.59.15.txt
+index bc3af59..d0add85 100644
+--- a/addons/l10n_be_coda/test_coda_file/Ontvangen_CODA.2011-01-11-18.59.15.txt
++++ b/addons/l10n_be_coda/test_coda_file/Ontvangen_CODA.2011-01-11-18.59.15.txt
+@@ -4,7 +4,7 @@
+ 2200010000                                                                                        GKCCBEBB                   1 0
+ 2300010000BE41063012345610                     PARTNER 1                                                                     0 1
+ 3100010001OL44483FW SCTOFBIONLO001010001001PARTNER 1                                                                         0 0
+-2100020000OL4414AC8BOVSOVSOVERS00000000030444501101110015000002010237                                              11011113501 0
++2100020000OL4414AC8BOVSOVSOVERS0000000003044450110111001500001101240283842818                                      11011113501 0
+ 2200020000                                                                                        BBRUBEBB                   1 0
+ 2300020000BE61310126985517                     PARTNER 2                                                                     0 1
+ 3100020001OL4414AC8BOVSOVSOVERS001500001001PARTNER 2                                                                         1 0
+diff --git a/addons/l10n_be_coda/wizard/account_coda_import.py b/addons/l10n_be_coda/wizard/account_coda_import.py
+index e50f853..cac4cce 100644
+--- a/addons/l10n_be_coda/wizard/account_coda_import.py
++++ b/addons/l10n_be_coda/wizard/account_coda_import.py
+@@ -291,79 +291,38 @@ class account_coda_import(osv.osv_memory):
+                     if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
+                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
+                     line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
+-                    partner = None
+                     partner_id = None
+-                    invoice = False
++                    structured_com = ""
++                    bank_account_id = False
+                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
+-                        ids = self.pool.get('account.invoice').search(cr, uid, [('reference', '=', line['communication']), ('reference_type', '=', 'bba')])
+-                        
+-# Gère les communications structurées
+-# TODO : à faire primer sur resolution_proposition : si la communication indique une facture, on la sélectionne
+-                        
+-#                        if ids:
+-#                            invoice = self.pool.get('account.invoice').browse(cr, uid, ids[0])
+-#                            partner = invoice.partner_id
+-#                            partner_id = partner.id
+-#                            if invoice.type in ['in_invoice', 'in_refund'] and line['debit'] == '1':
+-#                                line['transaction_type'] = 'supplier'
+-#                            elif invoice.type in ['out_invoice', 'out_refund'] and line['debit'] == '0':
+-#                                line['transaction_type'] = 'customer'
+-#                            line['account'] = invoice.account_id.id
+-#                            line['reconcile'] = False
+-#                            if invoice.type in ['in_invoice', 'out_invoice']:
+-#                                iml_ids = self.pool.get('account.move.line').search(cr, uid, [('move_id', '=', invoice.move_id.id), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
+-#                            if iml_ids:
+-#                                line['reconcile'] = iml_ids[0]
+-#                            if line['reconcile']:
+-#                                voucher_vals = {
+-#                                    'type': line['transaction_type'] == 'supplier' and 'payment' or 'receipt',
+-#                                    'name': line['name'],
+-#                                    'partner_id': partner_id,
+-#                                    'journal_id': statement['journal_id'].id,
+-#                                    'account_id': statement['journal_id'].default_credit_account_id.id,
+-#                                    'company_id': statement['journal_id'].company_id.id,
+-#                                    'currency_id': statement['journal_id'].company_id.currency_id.id,
+-#                                    'date': line['entryDate'],
+-#                                    'amount': abs(line['amount']),
+-#                                    'period_id': statement['period_id'],
+-#                                    'invoice_id': invoice.id,
+-#                                }
+-#                                context['invoice_id'] = invoice.id
+-#                                voucher_vals.update(self.pool.get('account.voucher').onchange_partner_id(cr, uid, [],
+-#                                    partner_id=partner_id,
+-#                                    journal_id=statement['journal_id'].id,
+-#                                    amount=abs(line['amount']),
+-#                                    currency_id=statement['journal_id'].company_id.currency_id.id,
+-#                                    ttype=line['transaction_type'] == 'supplier' and 'payment' or 'receipt',
+-#                                    date=line['transactionDate'],
+-#                                    context=context
+-#                                )['value'])
+-#                                line_drs = []
+-#                                for line_dr in voucher_vals['line_dr_ids']:
+-#                                    line_drs.append((0, 0, line_dr))
+-#                                voucher_vals['line_dr_ids'] = line_drs
+-#                                line_crs = []
+-#                                for line_cr in voucher_vals['line_cr_ids']:
+-#                                    line_crs.append((0, 0, line_cr))
+-#                                voucher_vals['line_cr_ids'] = line_crs
+-#                                line['voucher_id'] = self.pool.get('account.voucher').create(cr, uid, voucher_vals, context=context)
++                        structured_com = line['communication']
+                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
+                         ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
+-                        if ids and len(ids) > 0:
+-                            partner = self.pool.get('res.partner.bank').browse(cr, uid, ids[0], context=context).partner_id
+-                            partner_id = partner.id
++                        if ids:
++                            bank_account_id = ids[0]
++                            partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
++                        else:
++                            #create the bank account, not linked to any partner. The reconciliation will link the partner manually
++                            #chosen at the bank statement final confirmation time.
++                            try:
++                                type_model, type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'bank_normal')
++                                type_id = self.pool.get('res.partner.bank.type').browse(cr, uid, type_id, context=context)
++                                bank_code = type_id.code
++                            except ValueError:
++                                bank_code = 'bank'
++                            bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, {'acc_number': str(line['counterpartyNumber']), 'state': bank_code}, context=context)
+                     if 'communication' in line and line['communication'] != '':
+                         note.append(_('Communication') + ': ' + line['communication'])
+                     data = {
+                         'name': line['name'],
+-                        'note':  "\n".join(note),
++                        'note': "\n".join(note),
+                         'date': line['entryDate'],
+                         'amount': line['amount'],
+                         'partner_id': partner_id,
+                         'statement_id': statement['id'],
+-                        'ref': line['ref'],
++                        'ref': structured_com,
+                         'sequence': line['sequence'],
+-                        'coda_account_number': line['counterpartyNumber'],
++                        'bank_account_id': bank_account_id,
+                     }
+                     self.pool.get('account.bank.statement.line').create(cr, uid, data, context=context)
+             if statement['coda_note'] != '':
+diff --git a/openerp/addons/base/res/res_bank.py b/openerp/addons/base/res/res_bank.py
+index cc29c50..e8477ec 100644
+--- a/openerp/addons/base/res/res_bank.py
++++ b/openerp/addons/base/res/res_bank.py
+@@ -128,8 +128,7 @@ class res_partner_bank(osv.osv):
+             change_default=True, domain="[('country_id','=',country_id)]"),
+         'company_id': fields.many2one('res.company', 'Company',
+             ondelete='cascade', help="Only if this bank account belong to your company"),
+-        'partner_id': fields.many2one('res.partner', 'Account Owner', required=True,
+-            ondelete='cascade', select=True),
++        'partner_id': fields.many2one('res.partner', 'Account Owner', ondelete='cascade', select=True),
+         'state': fields.selection(_bank_type_get, 'Bank Account Type', required=True,
+             change_default=True),
+         'sequence': fields.integer('Sequence'),
