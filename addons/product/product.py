@@ -630,12 +630,11 @@ class product_template(osv.osv):
             # list of values combination
             all_variants = [[]]
             for variant_id in tmpl_id.attribute_line_ids:
-                if len(variant_id.value_ids) > 1:
-                    temp_variants = []
-                    for value_id in variant_id.value_ids:
-                        for variant in all_variants:
-                            temp_variants.append(variant + [int(value_id)])
-                    all_variants = temp_variants
+                temp_variants = []
+                for value_id in variant_id.value_ids:
+                    for variant in all_variants:
+                        temp_variants.append(variant + [int(value_id)])
+                all_variants = temp_variants
 
             # check product
             variant_ids_to_active = []
