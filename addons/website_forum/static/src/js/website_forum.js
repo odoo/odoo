@@ -148,7 +148,7 @@ function IsKarmaValid(eventNumber,minKarma){
         CKEDITOR.tools.callFunction(eventNumber,this);
         return false;
     } else {
-        alert("Sorry you need more than 30 Karma.");
+        alert("Sorry you need more than " + minKarma + " Karma.");
     }
 }
 
