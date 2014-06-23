@@ -1283,7 +1283,8 @@ openerp.account = function (instance) {
             var self = this;
             var lines_to_show = [];
             _.each(self.propositions_lines, function(line){
-                if (self.getParent().excluded_move_lines_ids.indexOf(line.id) === -1 && line.q_label.toLowerCase().indexOf(self.filter.toLowerCase()) > -1) {
+                var filter = (line.q_label.toLowerCase().indexOf(self.filter.toLowerCase()) > -1 || line.account_code.toLowerCase().indexOf(self.filter.toLowerCase()) > -1);
+                if (self.getParent().excluded_move_lines_ids.indexOf(line.id) === -1 && filter) {
                     lines_to_show.push(line);
                 }
             });
