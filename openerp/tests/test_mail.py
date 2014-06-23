@@ -291,7 +291,7 @@ class TestHtmlTools(unittest2.TestCase):
     def test_plaintext2html(self):
         cases = [
             ("First \nSecond \nThird\n \nParagraph\n\r--\nSignature paragraph", 'div',
-             "<div><p>First <br/>Second <br/>Third</p><p>Paragraph</p><p>--<br/>Signature paragraph</p></div>"),
+             "<div><p>First <br/>Second <br/>Third<br/> <br/>Paragraph<br/><br/>--<br/>Signature paragraph</p></div>"),
             ("First<p>It should be escaped</p>\nSignature", False,
              "<p>First&lt;p&gt;It should be escaped&lt;/p&gt;<br/>Signature</p>")
         ]

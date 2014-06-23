@@ -211,7 +211,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = re.sub('<br\s*/?>', '\n', html)
     html = re.sub('<.*?>', ' ', html)
     html = html.replace(' ' * 2, ' ')
-
+    html = html.replace('&gt;','>')
     # strip all lines
     html = '\n'.join([x.strip() for x in html.splitlines()])
     html = html.replace('\n' * 2, '\n')
@@ -242,8 +242,8 @@ def plaintext2html(text, container_tag=False):
     # 2-3: form paragraphs
     idx = 0
     final = '<p>'
-    br_tags = re.compile(r'(([<]\s*[bB][rR]\s*\/?[>]\s*){2,})')
-    for item in re.finditer(br_tags, text):
+    result = re.compile(r'(([<]\s*[bB][rR]\s*\/?[>]\s*){<p>\g<1></p>})')
+    for item in re.finditer(result, text):
         final += text[idx:item.start()] + '</p><p>'
         idx = item.end()
     final += text[idx:] + '</p>'

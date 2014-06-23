@@ -24,7 +24,7 @@ import openerp.tools as tools
 from openerp.osv import osv
 from openerp.osv import fields
 from openerp import SUPERUSER_ID
-
+from openerp.tools.translate import _
 
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
@@ -46,7 +46,7 @@ class mail_group(osv.Model):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
-        'description': fields.text('Description'),
+        'description': fields.text('Description',translate=True),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
         'public': fields.selection([('public', 'Public'), ('private', 'Private'), ('groups', 'Selected Group Only')], 'Privacy', required=True,
             help='This group is visible by non members. \
@@ -172,6 +172,8 @@ class mail_group(osv.Model):
         mail_alias = self.pool.get('mail.alias')
         alias_ids = [group.alias_id.id for group in groups if group.alias_id]
         # Delete mail_group
+        if self.pool['ir.model.data'].get_object_reference(cr, uid, 'mail', 'group_all_employees')[1] in ids:
+            raise osv.except_osv(_('Warning!'), _('You cannot delete this group, as it is referenced in other modules too.'))
         res = super(mail_group, self).unlink(cr, uid, ids, context=context)
         # Delete alias
         mail_alias.unlink(cr, SUPERUSER_ID, alias_ids, context=context)
