@@ -131,9 +131,6 @@ class res_partner(osv.osv):
         return True
 
     def onchange_apply_fiscal(self, cr, uid, ids, country, vat=None, context=None):
-
-        print ids, country, vat
-
         value = {'vat_subjected': bool(vat)}
         if country:
             pos_obj = self.pool['account.fiscal.position']
