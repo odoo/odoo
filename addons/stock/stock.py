@@ -635,7 +635,7 @@ class stock_picking(osv.osv):
         """
         res = {}
         for id in ids:
-            res[id] = {'min_date': False, 'max_date': False}
+            res[id] = {'min_date': False, 'max_date': False, 'priority': '1'}
         if not ids:
             return res
         cr.execute("""select
