@@ -2162,7 +2162,7 @@ class BaseModel(object):
                             node.getparent().remove(node)
                     elif pos == 'attributes':
                         for child in spec.getiterator('attribute'):
-                            attribute = (child.get('name'), child.text and child.text.encode('utf8') or None)
+                            attribute = (child.get('name'), child.text or None)
                             if attribute[1]:
                                 node.set(attribute[0], attribute[1])
                             else:
