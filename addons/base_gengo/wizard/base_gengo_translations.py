@@ -52,10 +52,10 @@ class base_gengo_translations(osv.osv_memory):
         'sync_limit': 20
     }
 
-    def init(self, cr):
-        icp = self.pool['ir.config_parameter']
-        if not icp.get_param(cr, SUPERUSER_ID, self.GENGO_KEY, default=None):
-            icp.set_param(cr, SUPERUSER_ID, self.GENGO_KEY, str(uuid.uuid4()), groups=['base.group_website_designer', 'base.group_website_publisher'])
+    # def init(self, cr):
+    #     icp = self.pool['ir.config_parameter']
+    #     if not icp.get_param(cr, SUPERUSER_ID, self.GENGO_KEY, default=None):
+    #         icp.set_param(cr, SUPERUSER_ID, self.GENGO_KEY, str(uuid.uuid4()), groups=['base.group_website_designer', 'base.group_website_publisher'])
 
     def get_gengo_key(self, cr):
         icp = self.pool['ir.config_parameter']

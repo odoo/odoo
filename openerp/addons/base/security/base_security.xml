@@ -101,7 +101,7 @@
     <record id="ir_config_parameter_rule" model="ir.rule">
         <field name="name">ICP read rule</field>
         <field name="model_id" ref="model_ir_config_parameter"/>
-        <field name="domain_force">[('group_ids','in', [g.id for g in user.groups_id])]</field>
+        <field name="domain_force">['|',('group_ids','in', [g.id for g in user.groups_id]), ('group_ids','=',False)]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_write" eval="False"/>
