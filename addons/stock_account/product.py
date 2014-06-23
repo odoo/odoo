@@ -142,11 +142,6 @@ class product_template(osv.osv):
             help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
     }
-    
-    _defaults = {
-        'valuation': 'manual_periodic',
-        'cost_method': 'standard',
-    }
 
 
 class product_category(osv.osv):
