@@ -95,12 +95,6 @@
         -webkit-transition: -webkit-transform 100ms linear
         -moz-transition: -moz-transform 100ms linear
         transition: transform 100ms linear
-    .oe_kanban_left
-        float: left
-    .oe_kanban_right
-        float: right
-    .oe_kanban_clear
-        clear: both
     .oe_kanban_content
         word-wrap: break-word
         .oe_star_on, .oe_star_off
@@ -115,9 +109,6 @@
             color: gold
         div:first-child
             margin-right: 16px
-    .oe_kanban_button_new
-        color: white
-        background: #DC5F59
     // }}}
     // KanbanGroups {{{
     .oe_kanban_groups
@@ -274,8 +265,6 @@
         font-size: 13px
         padding: 0 5px
         color: #4c4c4c
-        h4
-            margin: 0 0 4px 0
         .oe_tag
             display: inline-block
             margin: 0 2px 2px 0
@@ -287,11 +276,6 @@
         @include radius(4px)
         &:last-child
             margin-bottom: 0
-        .oe_kanban_title
-            font-weight: bold
-            margin: 2px 4px
-        .oe_kanban_alias
-            margin: 0px 0 8px 0
     &.oe_kanban_grouped
         .oe_kanban_record
             margin-bottom: 4px
@@ -309,15 +293,6 @@
         -moz-border-radius: 4px
         -webkit-border-radius: 4px
         margin-bottom: 5px
-    .oe_kanban_box_header
-        border-bottom: 1px solid #CCC
-    .oe_kanban_title
-        font-size: 95%
-        font-weight: bold
-        padding: 0 4px 0 4px
-    .oe_kanban_small
-        font-size: 80%
-        font-weight: normal
     .oe_kanban_show_more
         clear: both
         text-align: center
@@ -331,23 +306,6 @@
             box-sizing: border-box
             -moz-box-sizing: border-box
             -webkit-box-sizing: border-box
-    .oe_kanban_action_button
-        height: 22px
-        margin: 0
-    .oe_kanban_action_a
-        text-decoration: none
-        &:hover
-            text-decoration: none
-    .oe_kanban_table
-        width: 100%
-        border: none
-        border-collapse: collapse
-        margin: 0
-        padding: 0
-    .oe_kanban_table tr td
-        padding: 0
-    .oe_kanban_table tr td.oe_kanban_title
-        padding: 2px
     .oe_kanban_box_content
         padding: 4px
         font-size: 90%
@@ -364,35 +322,14 @@
         margin: 1px
     a.oe_kanban_button:hover, .openerp button.oe_kanban_button:hover
         background-color: #eeddf6
-    .oe_kanban_buttons_set
-        border-top: 1px dotted
-        white-space: nowrap
-        padding-top: 2px
-        position: relative
-        clear: both
-        a
-            padding: 2px
-    .oe_kanban_box_show_onclick
-        display: none
     .oe_kanban_draghandle
         cursor: move
-    .oe_kanban_color_border
-        border-color: #CCCCCC
     .oe_kanban_color_border
         border-color: #CCCCCC
     .oe_kanban_tooltip ul, ul.oe_kanban_tooltip
         padding: 0 0 4px 0
         margin: 5px 0 0 15px
         list-style: circle
-    .oe_kanban_highlight
-        border-radius: 2px
-        -moz-border-radius: 2px
-        -webkit-border-radius: 2px
-        padding: 1px 5px
-        margin: 1px 4px
-        white-space: nowrap
-        display: inline-block
-        line-height: 1em
     .oe_kanban_card, .oe_kanban_quick_create
         margin-bottom: 4px
         position: relative
@@ -420,10 +357,6 @@
                 li
                     float: left
        
-    .oe_kanban_star
-        float: left
-        position: inline-block
-        margin: 0 4px 0 0
     .oe_kanban_avatar
         @include radius(3px)
         @include box-shadow(0 1px 2px rgba(0,0,0,0.2))

@@ -77,6 +77,7 @@ The Dashboard for the Sales Manager will include
         'edi/sale_order_action_data.xml',
         'res_config_view.xml',
         'views/report_saleorder.xml',
+        'views/sale.xml',
     ],
     'demo': ['sale_demo.xml'],
     'test': [
@@ -87,6 +88,7 @@ The Dashboard for the Sales Manager will include
         'test/delete_order.yml',
         'test/edi_sale_order.yml',
     ],
+    'css': ['static/src/css/sale.css'],
     'installable': True,
     'auto_install': False,
     'application': True,

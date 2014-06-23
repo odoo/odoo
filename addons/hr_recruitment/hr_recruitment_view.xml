@@ -264,7 +264,7 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_applicant_kanaban oe_semantic_html_override">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                 <span class="oe_e">i</span>
                                 <ul class="oe_dropdown_menu">
@@ -272,33 +272,27 @@
                                     <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
-
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
-                                <div>
                                     <t t-if="record.partner_name.raw_value"><b><field name="partner_name"/></b><br/></t>
                                     <i><field name="name"/></i><br/>
                                     <field name="job_id"/><br/>
                                     <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
-                                </div>
-                                <div style="padding-left: 0.5em">
                                     <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
                                         <t t-if="record.date_action.raw_value"> : </t>
                                         <field name="title_action"/>
-                                </div>
-                                <div style="width:240px"><field name="categ_ids"/></div>
+                                        <field name="categ_ids" class="oe_margin_top_4"/>
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left" groups="base.group_user">
                                         <field name="priority" widget="priority"/>
                                     </div>
                                 </div>
-                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                <div class="oe_kanban_footer_left oe_margin_top_4">
                                     <t t-raw="record.message_summary.raw_value"/>
-                                    <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Documents</a>
+                                    <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object"> <field name="attachment_number"/> Documents</a>
                                 </div>
-
                             </div>
                             <div class="oe_clear"></div>
                         </div>
@@ -446,16 +440,16 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <t t-if="record.user_id.raw_value">
-                                        <img t-att-src="kanban_image('res.users', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar pull-right"/>
                                     </t>
                                     <t t-if="record.user_id.raw_value === false">
-                                        <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
+                                        <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar pull-right"/>
                                     </t>
                                     <div class="oe_job_detail">
-                                        <div class="text-center oe_job oe_name oe_kanban_ellipsis">
-                                            <field name="name"/>
+                                        <div class="text-center oe_job_font oe_kanban_ellipsis">
+                                            <strong><field name="name"/></strong>
                                         </div>
-                                        <div class="text-center oe_job oe_department oe_kanban_ellipsis">
+                                        <div class="text-center oe_job_font oe_kanban_ellipsis">
                                             <strong><field name="department_id"/>
                                             <span t-if="record.manager_id.value" class="oe_manager_name">
                                                 (<t t-esc="record.manager_id.value"/>)
@@ -467,29 +461,33 @@
 
                                     </div>
                                     <t t-if="record.state.raw_value == 'recruit'">
-                                        <div class="oe_applications">
-                                            <a name="%(action_hr_job_applications)d" type="action">
-                                                <span><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
-                                            </a>
-                                            <br/>
-                                            <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
-                                                <span t-if="record.document_ids.raw_value.length gt 1"><t t-esc="record.document_ids.raw_value.length"/> Documents</span>
-                                                <span t-if="record.document_ids.raw_value.length lt 2"><t t-esc="record.document_ids.raw_value.length"/> Document</span>
-                                            </a>
+                                        <div class="col-md-6 oe_applications">
+                                            <div class="oe_applications oe_job_font">
+                                                <a name="%(action_hr_job_applications)d" type="action">
+                                                    <span><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
+                                                </a>
+                                                <br/>
+                                                <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
+                                                    <span t-if="record.document_ids.raw_value.length gt 1"><t t-esc="record.document_ids.raw_value.length"/> Documents</span>
+                                                    <span t-if="record.document_ids.raw_value.length lt 2"><t t-esc="record.document_ids.raw_value.length"/> Document</span>
+                                                </a>
+                                            </div>
                                         </div>
-                                        <div class="oe_job_justgage">
-                                            <field state="recruit" name="no_of_hired_employee" widget="gauge"
-                                                style="margin-top:7px; width:160px; height: 120px;"
-                                                options="{
-                                                    'max_field': 'no_of_recruitment',
-                                                    'label': 'Hired Employees',
-                                                    'on_change': 'action_set_no_of_recruitment',
-                                                    'on_click_label': 'employee(s) to recruit',
-                                                    'force_set': False,
-                                                    'gauge_value_field': 'no_of_recruitment',
-                                                }">
-                                                Hired Employees
-                                            </field>
+                                        <div class="col-md-5">
+                                            <div class="oe_job_justgage">
+                                                <field state="recruit" name="no_of_hired_employee" widget="gauge"
+                                                    style="margin-top:7px; width:160px; height: 120px;"
+                                                    options="{
+                                                        'max_field': 'no_of_recruitment',
+                                                        'label': 'Hired Employees',
+                                                        'on_change': 'action_set_no_of_recruitment',
+                                                        'on_click_label': 'employee(s) to recruit',
+                                                        'force_set': False,
+                                                        'gauge_value_field': 'no_of_recruitment',
+                                                    }">
+                                                    Hired Employees
+                                                </field>
+                                            </div>
                                         </div>
                                     </t>
                                     <t t-if="record.state.raw_value == 'open'">

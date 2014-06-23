@@ -33,7 +33,7 @@
                                     <div class="oe_clear"></div>
                                     <div class="oe_kanban_salesteams_avatars">
                                         <t t-foreach="record.member_ids.raw_value.slice(0,10)" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                            <img class="oe_margin_top_16 img-rounded" t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
                                 </div>
