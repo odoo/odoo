@@ -47,16 +47,14 @@
                 popover:   { next: _t("Continue") },
             },
             {
-                element:   '.product_price .oe_currency_value',
+                element:   '.product_price .oe_currency_value:visible',
                 sampleText: '20.50',
                 placement: 'left',
                 title:     _t("Change the price"),
                 content:   _t("Edit the price of this product by clicking on the amount."),
             },
-
-
             {
-                waitNot:   '.product_price .oe_currency_value:containsExact(1.00)',
+                waitNot:   '.product_price .oe_currency_value:visible:containsExact(1.00)',
                 element:   '#wrap img.product_detail_img',
                 placement: 'top',
                 title:     _t("Update image"),
