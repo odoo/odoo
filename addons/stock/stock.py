@@ -272,25 +272,25 @@ class stock_quant(osv.osv):
 
     _columns = {
         'name': fields.function(_get_quant_name, type='char', string='Identifier'),
-        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete="restrict", readonly=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="restrict", readonly=True),
-        'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product", readonly=True),
-        'package_id': fields.many2one('stock.quant.package', string='Package', help="The package containing this quant", readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete="restrict", readonly=True, select=True),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="restrict", readonly=True, select=True),
+        'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product", readonly=True, select=True),
+        'package_id': fields.many2one('stock.quant.package', string='Package', help="The package containing this quant", readonly=True, select=True),
         'packaging_type_id': fields.related('package_id', 'packaging_id', type='many2one', relation='product.packaging', string='Type of packaging', readonly=True, store=True),
-        'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="The move the quant is reserved for", readonly=True),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True),
+        'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="The move the quant is reserved for", readonly=True, select=True),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True, select=True),
         'cost': fields.float('Unit Cost'),
-        'owner_id': fields.many2one('res.partner', 'Owner', help="This is the owner of the quant", readonly=True),
+        'owner_id': fields.many2one('res.partner', 'Owner', help="This is the owner of the quant", readonly=True, select=True),
 
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'in_date': fields.datetime('Incoming Date', readonly=True),
+        'in_date': fields.datetime('Incoming Date', readonly=True, select=True),
 
         'history_ids': fields.many2many('stock.move', 'stock_quant_move_rel', 'quant_id', 'move_id', 'Moves', help='Moves that operate(d) on this quant'),
-        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong", required=True, readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong", required=True, readonly=True, select=True),
         'inventory_value': fields.function(_calc_inventory_value, string="Inventory Value", type='float', readonly=True),
 
         # Used for negative quants to reconcile after compensated by a new positive one
-        'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from', readonly=True),
+        'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from', readonly=True, select=True),
         'negative_move_id': fields.many2one('stock.move', 'Move Negative Quant', help='If this is a negative quant, this will be the move that caused this negative quant.', readonly=True),
         'negative_dest_location_id': fields.related('negative_move_id', 'location_dest_id', type='many2one', relation='stock.location', string="Negative Destination Location", readonly=True, 
                                                     help="Technical field used to record the destination location of a move that created a negative quant"),
@@ -3598,13 +3598,13 @@ class stock_package(osv.osv):
         'complete_name': fields.function(_complete_name, type='char', string="Package Name",),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
-        'packaging_id': fields.many2one('product.packaging', 'Packaging', help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense."),
+        'packaging_id': fields.many2one('product.packaging', 'Packaging', help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense.", select=True),
         'ul_id': fields.many2one('product.ul', 'Logistic Unit'),
         'location_id': fields.function(_get_package_info, type='many2one', relation='stock.location', string='Location', multi="package",
                                     store={
                                        'stock.quant': (_get_packages, ['location_id'], 10),
                                        'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
-                                    }, readonly=True),
+                                    }, readonly=True, select=True),
         'quant_ids': fields.one2many('stock.quant', 'package_id', 'Bulk Content', readonly=True),
         'parent_id': fields.many2one('stock.quant.package', 'Parent Package', help="The package containing this item", ondelete='restrict', readonly=True),
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Contained Packages', readonly=True),
@@ -3612,12 +3612,12 @@ class stock_package(osv.osv):
                                     store={
                                        'stock.quant': (_get_packages, ['company_id'], 10),
                                        'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
-                                    }, readonly=True),
+                                    }, readonly=True, select=True),
         'owner_id': fields.function(_get_package_info, type='many2one', relation='res.partner', string='Owner', multi="package",
                                 store={
                                        'stock.quant': (_get_packages, ['owner_id'], 10),
                                        'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
-                                    }, readonly=True),
+                                    }, readonly=True, select=True),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
