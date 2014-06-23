@@ -8,12 +8,12 @@
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <field name="country_id" position="attributes">
-                    <attribute name="on_change">onchange_apply_fiscal(country_id, state_id, vat)</attribute>
+                    <attribute name="on_change">onchange_apply_fiscal(country_id, vat)</attribute>
                 </field>
                 <field name="property_account_position" position="after">
                     <label for="vat"/>
                     <div name="vat_info">
-                        <field name="vat" on_change="onchange_apply_fiscal(country_id, state_id, vat)" placeholder="e.g. BE0477472701" class="oe_inline"/>
+                        <field name="vat" on_change="onchange_apply_fiscal(country_id, vat)" placeholder="e.g. BE0477472701" class="oe_inline"/>
                         <button colspan="2" name="button_check_vat" string="Check Validity" type="object" icon="gtk-execute" class="oe_inline"/>
                         <field name="vat_subjected" class="oe_inline"/>
                     </div>

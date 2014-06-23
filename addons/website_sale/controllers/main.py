@@ -405,7 +405,6 @@ class website_sale(http.Controller):
         orm_partner = registry.get('res.partner')
         orm_user = registry.get('res.users')
         order_obj = request.registry.get('sale.order')
-        pos_obj = request.registry.get('account.fiscal.position')
 
         billing_info = self.checkout_parse('billing', checkout, True)
 
@@ -426,7 +425,6 @@ class website_sale(http.Controller):
             # search and apply a fiscal position
             billing_info.update(orm_partner.onchange_apply_fiscal(cr, SUPERUSER_ID, [],
                 billing_info.get('country_id'),
-                billing_info.get('state_id'),
                 billing_info.get('vat'), context=context)['value'])
             
             # create partner
@@ -485,6 +483,8 @@ class website_sale(http.Controller):
 
         self.checkout_form_save(values["checkout"])
         request.session['sale_last_order_id'] = order.id
+
+        request.website.sale_get_order(update_pricelist=True, context=context)
 
         return request.redirect("/shop/payment")
 

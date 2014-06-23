@@ -84,6 +84,14 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
                 context=context)
 
 
+class CountryGroup(osv.osv):
+    _description="Country Group"
+    _name = 'res.country.group'
+    _columns = {
+        'name': fields.char('Name', required=True),
+        'country_ids': fields.many2many('res.country', string='Countries'),
+    }
+
 class CountryState(osv.osv):
     _description="Country state"
     _name = 'res.country.state'

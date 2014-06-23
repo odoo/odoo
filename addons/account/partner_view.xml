@@ -11,10 +11,13 @@
                         <field name="name"/>
                         <field name="active"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    </group>
+                    <group>
                         <field name="apply_onchange"/>
-                        <field name="vat_required"/>
-                        <field name="country_ids" widget="many2many_tags"/>
-                        <field name="states_ids" widget="many2many_tags"/>
+                        <field name="sequence"/>
+                        <field name="vat_required" attrs="{'readonly': [('apply_onchange', '=', False)]}"/>
+                        <field name="country_id" attrs="{'readonly': ['|', ('country_group_id','!=',False), ('apply_onchange', '=', False)]}" />
+                        <field name="country_group_id" attrs="{'readonly': ['|', ('country_id','!=',False), ('apply_onchange', '=', False)]}"/>
                     </group>
                     <separator string="Taxes Mapping"/>
                     <field name="tax_ids" widget="one2many_list">
@@ -48,7 +51,7 @@
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
                 <tree string="Fiscal Position">
-                    <field name="sequence" widget="handler"/>
+                    <field name="sequence"/>
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
@@ -111,7 +114,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <field name="country_id" position="attributes">
-                    <attribute name="on_change">onchange_apply_fiscal(country_id, state_id)</attribute>
+                    <attribute name="on_change">onchange_apply_fiscal(country_id)</attribute>
                 </field>
 
                 <page name="sales_purchases" position="after">

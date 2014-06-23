@@ -27,7 +27,7 @@ from openerp.osv import fields, osv
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
-    _order = 'sequence desc'
+    _order = 'sequence'
     _columns = {
         'name': fields.char('Fiscal Position', size=64, required=True),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a fiscal position without deleting it."),
@@ -38,9 +38,8 @@ class account_fiscal_position(osv.osv):
         'apply_onchange': fields.boolean('Apply onchange',
             help="Can apply automatically this fiscal position onchange vat, country or state partner values."),
         'vat_required': fields.boolean('VAT required', help="The partner must have a VAT number to apply fiscal position."),
-        'country_ids': fields.many2many('res.country', 'Countries', help="Countries have to match to apply fiscal position."),
-        'states_ids': fields.many2many('res.country.state', 'States', help="States have to match to apply fiscal position.",
-            domain="[('country_id', 'in', country_ids)]"),
+        'country_id': fields.many2one('res.country', 'Countries', help="Country have to match to apply fiscal position."),
+        'country_group_id': fields.many2one('res.country.group', 'Country Group', help="Countries group have to match to apply fiscal position."),
         'sequence': fields.integer('Sequence'),
     }
 
@@ -261,15 +260,15 @@ class res_partner(osv.osv):
             ['debit_limit', 'property_account_payable', 'property_account_receivable', 'property_account_position',
              'property_payment_term', 'property_supplier_payment_term', 'last_reconciliation_date']
 
-    def onchange_apply_fiscal(self, cr, uid, ids, country, state, vat=None, context=None):
+    def onchange_apply_fiscal(self, cr, uid, ids, country, vat=None, context=None):
         value = {}
         if country:
             pos_obj = self.pool['account.fiscal.position']
             fiscal_position_ids = pos_obj.search(cr, uid, [
                 ('apply_onchange', '=', True),
                 ('vat_required', '=', bool(vat)),
-                ('country_ids', '=', country),
-                ('states_ids', '=', state)], context=context)
+                ('country_id', '=', country),
+                ('country_group_id.country_ids', '=', country)], context=context)
 
             if fiscal_position_ids:
                 value['property_account_position'] = fiscal_position_ids[0]
