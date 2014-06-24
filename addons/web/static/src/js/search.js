@@ -2449,7 +2449,13 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         var self = this;
         var $li = $('<li>');
         if (result.expand) {
-            $li.append($('<span class="oe-expand">').text('▶'));
+            var $expand = $('<span class="oe-expand">').text('▶');
+            $expand.mousedown(function (ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                self.expand();
+            });
+            $li.append($expand);
         }
         var $span = $('<span>').html(result.label);
         if (result.indent) $span.addClass('oe-indent');
@@ -2473,8 +2479,6 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 var $li = self.make_list_item(result);
                 self.current_result.$el.after($li);
             });
-            // self.current_result.$el.append(self.make_list_item)
-            // console.log(results);
         });
     },
     focus_element: function ($li) {
