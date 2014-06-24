@@ -414,16 +414,15 @@ class QWeb(orm.AbstractModel):
 
     def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
         """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
-        name = template_attributes['call-assets']
-
-        # Backward compatibility hack for manifest usage
-        qwebcontext['manifest_list'] = openerp.addons.web.controllers.main.manifest_list
-
-        d = qwebcontext.copy()
-        d.context['inherit_branding'] = False
-        content = self.render_tag_call(
-            element, {'call': name}, generated_attributes, d)
-        bundle = AssetsBundle(name, html=content)
+        if element.childNodes:
+            # An asset bundle is rendered in two differents contexts (when genereting html and
+            # when generating the bundle itself) so they must be qwebcontext free
+            # even '0' variable is forbidden
+            template = qwebcontext.get('__template__')
+            raise QWebException("t-call-assets cannot contain children nodes", template=template)
+        xmlid = template_attributes['call-assets']
+        cr, uid, context = [getattr(qwebcontext, attr) for attr in ('cr', 'uid', 'context')]
+        bundle = AssetsBundle(xmlid, cr=cr, uid=uid, context=context, registry=self.pool)
         css = self.get_attr_bool(template_attributes.get('css'), default=True)
         js = self.get_attr_bool(template_attributes.get('js'), default=True)
         return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')))
@@ -1004,13 +1003,32 @@ class AssetsBundle(object):
     cache = openerp.tools.lru.LRU(32)
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
 
-    def __init__(self, xmlid, html=None, debug=False):
-        self.debug = debug
+    def __init__(self, xmlid, debug=False, cr=None, uid=None, context=None, registry=None):
         self.xmlid = xmlid
+        self.debug = debug
+        self.cr = request.cr if cr is None else cr
+        self.uid = request.uid if uid is None else uid
+        self.context = request.context if context is None else context
+        self.registry = request.registry if registry is None else registry
         self.javascripts = []
         self.stylesheets = []
         self.remains = []
         self._checksum = None
+        self._last_modified = datetime.datetime(1970, 1, 1)
+
+        last_updates = []
+        context = self.context.copy()
+        context.update(
+            inherit_branding=False,
+            collect_last_updates=last_updates,
+        )
+        html = self.registry['ir.ui.view'].render(self.cr, self.uid, xmlid, context=context)
+        if last_updates:
+            # ir.ui.view are orm cached. If the bundle view is actually cached, we won't receive
+            # last_updates. In this case we consider it's already cached in self.cache and thus
+            # only the dates of the files/ir.attachements assets will be compared.
+            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            self._last_modified = datetime.datetime.strptime(max(last_updates), server_format)
         if html:
             self.parse(html)
 
@@ -1055,9 +1073,9 @@ class AssetsBundle(object):
                     response.append(jscript.to_html())
         else:
             if css and self.stylesheets:
-                response.append('<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
+                response.append('<link href="/web/css/%s/%s" rel="stylesheet"/>' % (self.xmlid, self.version))
             if js and self.javascripts:
-                response.append('<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
+                response.append('<script type="text/javascript" src="/web/js/%s/%s"></script>' % (self.xmlid, self.version))
         response.extend(self.remains)
         return sep + sep.join(response)
 
@@ -1066,8 +1084,12 @@ class AssetsBundle(object):
         return max(itertools.chain(
             (asset.last_modified for asset in self.javascripts),
             (asset.last_modified for asset in self.stylesheets),
-            [datetime.datetime(1970, 1, 1)],
+            [self._last_modified],
         ))
+
+    @lazy_property
+    def version(self):
+        return hashlib.sha1(str(self.last_modified)).hexdigest()[0:7]
 
     @lazy_property
     def checksum(self):
@@ -1077,17 +1099,23 @@ class AssetsBundle(object):
         return checksum.hexdigest()
 
     def js(self):
-        key = 'js_' + self.checksum
+        key = 'js_%s' % self.xmlid
+        if key in self.cache and self.cache[key][0] != self.version:
+            # Invalidate cache on version mismach
+            self.cache.pop(key)
         if key not in self.cache:
             content =';\n'.join(asset.minify() for asset in self.javascripts)
-            self.cache[key] = content
+            self.cache[key] = (self.version, content)
         if self.debug:
             return "/*\n%s\n*/\n" % '\n'.join(
                 [asset.url for asset in self.javascripts if asset.url]) + self.cache[key]
-        return self.cache[key]
+        return self.cache[key][1]
 
     def css(self):
-        key = 'css_' + self.checksum
+        key = 'css_%s' % self.xmlid
+        if key in self.cache and self.cache[key][0] != self.version:
+            # Invalidate cache on version mismach
+            self.cache.pop(key)
         if key not in self.cache:
             content = '\n'.join(asset.minify() for asset in self.stylesheets)
             # move up all @import rules to the top
@@ -1100,11 +1128,11 @@ class AssetsBundle(object):
 
             matches.append(content)
             content = u'\n'.join(matches)
-            self.cache[key] = content
+            self.cache[key] = (self.version, content)
         if self.debug:
             return "/*\n%s\n*/\n" % '\n'.join(
                 [asset.url for asset in self.javascripts if asset.url]) + self.cache[key]
-        return self.cache[key]
+        return self.cache[key][1]
 
 class WebAsset(object):
     def __init__(self, bundle, inline=None, url=None, cr=None, uid=SUPERUSER_ID):
@@ -1116,7 +1144,7 @@ class WebAsset(object):
         self._filename = None
         self._ir_attach = None
         if not inline and not url:
-            raise Exception("A bundle should either be inlined or url linked")
+            raise Exception("An asset should either be inlined or url linked")
 
     def stat(self):
         if not (self.inline or self._filename or self._ir_attach):
@@ -1128,8 +1156,10 @@ class WebAsset(object):
             except Exception:
                 try:
                     # Test url against ir.attachments
+                    fields = ['__last_update', 'datas', 'mimetype']
                     domain = [('type', '=', 'binary'), ('url', '=', self.url)]
-                    attach = request.registry['ir.attachment'].search_read(self.cr, self.uid, domain, ['__last_update', 'datas', 'mimetype'], context=request.context)
+                    ira = request.registry['ir.attachment']
+                    attach = ira.search_read(self.cr, self.uid, domain, fields, context=request.context)
                     self._ir_attach = attach[0]
                 except Exception:
                     raise AssetNotFound(url=self.url)
