@@ -216,7 +216,7 @@ class website_sale(http.Controller):
             product = template_obj.browse(cr, uid, int(product), context=context)
 
         attribute_value_ids = []
-        if request.website.company_pricelist_id.id != context['pricelist']:
+        if request.website.pricelist_id.id != context['pricelist']:
             company_currency_id = request.website.company_currency_id.id
             currency_id = self.get_pricelist().currency_id.id
             for p in product.product_variant_ids:
@@ -289,12 +289,11 @@ class website_sale(http.Controller):
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None, display=True):
         order = request.website.sale_get_order(force_create=1)
-        line_id, quantity, option_ids = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
+        line_id, quantity = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
         if not display:
             return None
         return {
             'quantity': quantity,
-            'option_ids': option_ids,
             'cart_quantity': order.cart_quantity,
             'website_sale.total': request.website._render("website_sale.total", {
                     'website_sale_order': request.website.sale_get_order()

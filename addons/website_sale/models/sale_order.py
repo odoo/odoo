@@ -51,18 +51,12 @@ class sale_order(osv.Model):
             'order': order
         }
 
-    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None):
+    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None, *args):
         for so in self.browse(cr, uid, ids, context=context):
-            order_line_id = None
-
             domain = [('order_id', '=', so.id), ('product_id', '=', product_id)]
             if line_id:
                 domain += [('id', '=', line_id)]
-
-            order_line_ids = self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
-            if order_line_ids:
-                order_line_id = order_line_ids[0]
-            return order_line_id
+            return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
 
     def _website_product_id_change(self, cr, uid, ids, order_id, product_id, line_id=None, context=None):
         so = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
@@ -87,13 +81,16 @@ class sale_order(osv.Model):
             values['tax_id'] = [(6, 0, values['tax_id'])]
         return values
 
-    def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, linked_line_id=None, optional_product_ids=None, context=None):
+    def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, *args):
         """ Add or set product quantity, add_qty can be negative """
         sol = self.pool.get('sale.order.line')
 
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
-            line_id = so._cart_find_product_line(product_id, line_id, context=context)
+            if line_id != False:
+                line_ids = so._cart_find_product_line(product_id, line_id, context=context, *args)
+                if line_ids:
+                    line_id = line_ids[0]
 
             # Create line if no line with product_id can be located
             if not line_id:
@@ -132,9 +129,7 @@ class website(orm.Model):
     _columns = {
         'pricelist_id': fields.related('user_id','partner_id','property_product_pricelist',
             type='many2one', relation='product.pricelist', string='Default pricelist'),
-        'company_pricelist_id': fields.related('company_id','partner_id','property_product_pricelist',
-            type='many2one', relation='product.pricelist', string='Default pricelist'),
-        'company_currency_id': fields.related('company_pricelist_id','currency_id',
+        'currency_id': fields.related('pricelist_id','currency_id',
             type='many2one', relation='res.currency', string='Default pricelist'),
     }
 
@@ -230,7 +225,7 @@ class website(orm.Model):
         })
 
     def compute_curency(self, cr, uid, ids, from_amount, from_currency_id=None, context=None):
-        from_currency_id = from_currency_id or self.browse(cr, SUPERUSER_ID, ids[0]).company_currency_id.id
+        from_currency_id = from_currency_id or self.browse(cr, SUPERUSER_ID, ids[0]).currency_id.id
         to_currency_id = self.pool.get("res.users").browse(cr, uid, uid).partner_id.property_product_pricelist.currency_id.id
         return self.pool['res.currency'].compute(cr, uid, from_currency_id, to_currency_id, from_amount, context=context)
 

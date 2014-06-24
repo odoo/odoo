@@ -85,7 +85,7 @@ $(document).ready(function () {
     $('input.js_variant_change, select.js_variant_change').change(function (ev) {
         var $ul = $(this).parents('ul.js_add_cart_variants:first');
         var $parent = $ul.parents('.js_product:first');
-        var $porduct_id = $parent.find('input.product_id, input.optional_product_id').first();
+        var $product_id = $parent.find('input.product_id').first();
         var $price = $parent.find(".oe_price:first .oe_currency_value");
         var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
         var variant_ids = $ul.data("attribute_value_ids");
@@ -127,42 +127,16 @@ $(document).ready(function () {
 
         if (product_id) {
             $parent.removeClass("css_not_available");
-            $porduct_id.val(product_id);
+            $product_id.val(product_id);
             $parent.find(".js_check_product").removeAttr("disabled");
         } else {
             $parent.addClass("css_not_available");
-            $porduct_id.val(0);
+            $product_id.val(0);
             $parent.find(".js_check_product").attr("disabled", "disabled");
         }
     });
     $('ul.js_add_cart_variants').each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
-    });
-
-    $('#modal_optional_products').on('show.bs.modal', function () {
-        var $confirm = $('#product_confirmation .js_attributes');
-        if (!$confirm.size()) return;
-        $confirm.empty();
-        $('.js_add_cart_variants:first ul:first > li').each(function () {
-            var $li = $(this);
-            var $span = $("<div><span></span>: <span></span></div>");
-            var attr = $li.children().first().text();
-            var value = $li.find("label:has(input:checked) span:first").text();
-            if (!/\S/.test(value)) {
-                value = $li.find("label:has(input:checked) input").attr("title");
-            }
-            $span.children().first().text( attr );
-            $span.children().last().text( value );
-            $confirm.append($span);
-        });
-    });
-
-    $("a.js_add, a.js_remove").click(function (event) {
-        event.preventDefault();
-        var $parent = $(this).parents('.js_product:first');
-        $parent.find("a.js_add, span.js_remove").toggleClass("hidden");
-        $parent.find("input.js_optional_same_quantity").val( $(this).hasClass("js_add") ? 1 : 0 );
-        var $remove = $parent.find(".js_remove");
     });
 
     $("input.js_quantity").change(function (event) {

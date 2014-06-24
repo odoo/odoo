@@ -132,7 +132,6 @@ class product_template(osv.Model):
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
         'website_url': fields.function(_website_url, string="Website url", type="char"),
         'public_categ_ids': fields.many2many('product.public.category', string='Public Category', help="Those categories are used to group similar products for e-commerce."),
-        'optional_product_ids': fields.many2many('product.template','product_optional_rel','src_id','dest_id',string='Optional Products', help="Products to propose when add to cart."),
     }
 
     def _defaults_website_sequence(self, cr, uid, *l, **kwargs):
