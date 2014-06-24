@@ -350,7 +350,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 e.preventDefault();
                 break;
             case $.ui.keyCode.RIGHT:
-                if (!this.autocomplete.is_on_expandable_item()) {
+                if (!this.autocomplete.is_expandable()) {
                     this.focusFollowing(e.target);
                 }
                 //this.focusFollowing(e.target);
@@ -2359,11 +2359,12 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         this.select = options.select,
         this.get_search_string = options.get_search_string;
 
+        this.current_result = null;
+
         this.searching = true;
         this.search_string = null;
         this.current_search = null;
     },
-
     start: function () {
         var self = this;
         this.$input.on('keyup', function (ev) {
@@ -2388,7 +2389,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 case $.ui.keyCode.TAB:
                 case $.ui.keyCode.ENTER:
                     if (self.get_search_string().length) {
-                        self.select(ev, {item: {facet: self.get_focused_result().facet}});
+                        self.select(ev, {item: {facet: self.current_result.facet}});
                         self.close();
                     }
                     break;
@@ -2403,7 +2404,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                     ev.preventDefault();
                     break;
                 case $.ui.keyCode.RIGHT:
-                    var expand = self.get_focused_result().expand;
+                    var expand = self.current_result.expand;
                     if (expand) {
                         expand(self.get_search_string()).then(function (results) {
                             console.log(results);
@@ -2419,13 +2420,11 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             }
         });
     },
-
     initiate_search: function (search_string) {
         if (search_string !== this.search_string) return;
         if (search_string === this.current_search) return;
         this.search(search_string);
     },
-
     search: function (search_string) {
         this.current_search = search_string;
         var self = this;
@@ -2438,7 +2437,6 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             }
         });
     },
-
     render_search_results: function (results) {
         var self = this;
         var $list = this.$('ul');
@@ -2450,7 +2448,6 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         });
         this.show();
     },
-
     make_list_item: function (result) {
         var self = this;
         var $li = $('<li>');
@@ -2466,27 +2463,21 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         $li.data('result', result);
         return $li;
     },
-
     focus_element: function ($li) {
         this.$('li').removeClass('oe-selection-focus');
         $li.addClass('oe-selection-focus');
+        this.current_result = $li.data('result');
     },
 
-    get_focused_result: function () {
-        console.log('fr', this.$('li.oe-selection-focus').data('result'));
-        return this.$('li.oe-selection-focus').data('result');
-    },
     show: function () {
         this.$el.show();
     },
-
     close: function () {
         this.current_search = null;
         this.search_string = null;
         this.searching = true;
         this.$el.hide();
     },
-
     move: function (direction) {
         if (direction === 'down') {
             var $next = this.$('li.oe-selection-focus').next();
@@ -2498,8 +2489,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             this.focus_element($previous);            
         }
     },
-
-    is_on_expandable_item: function () {
+    is_expandable: function () {
         return !!this.$('.oe-selection-focus .oe-expand').length;
     },
 });
