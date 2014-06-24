@@ -24,7 +24,7 @@ from lxml import etree
 import openerp.addons.decimal_precision as dp
 import openerp.exceptions
 
-from openerp.osv import fields, osv, orm
+from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 class account_invoice(osv.osv):
@@ -945,17 +945,10 @@ class account_invoice(osv.osv):
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
 
-            entry_type = ''
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
-                entry_type = 'journal_pur_voucher'
-                if inv.type == 'in_refund':
-                    entry_type = 'cont_voucher'
             else:
                 ref = self._convert_ref(cr, uid, inv.number)
-                entry_type = 'journal_sale_vou'
-                if inv.type == 'out_refund':
-                    entry_type = 'cont_voucher'
 
             diff_currency_p = inv.currency_id.id <> company_currency
             # create one move line for the total and possibly adjust the other lines amount
@@ -1302,14 +1295,6 @@ class account_invoice(osv.osv):
             amount_currency = False
             currency_id = False
 
-        pay_journal = self.pool.get('account.journal').read(cr, uid, pay_journal_id, ['type'], context=context)
-        if invoice.type in ('in_invoice', 'out_invoice'):
-            if pay_journal['type'] == 'bank':
-                entry_type = 'bank_pay_voucher' # Bank payment
-            else:
-                entry_type = 'pay_voucher' # Cash payment
-        else:
-            entry_type = 'cont_voucher'
         if invoice.type in ('in_invoice', 'in_refund'):
             ref = invoice.reference
         else:
@@ -1538,7 +1523,6 @@ class account_invoice_line(osv.osv):
             res_final['value']['price_unit'] = new_price
 
         if result['uos_id'] and result['uos_id'] != res.uom_id.id:
-            selected_uom = self.pool.get('product.uom').browse(cr, uid, result['uos_id'], context=context)
             new_price = self.pool.get('product.uom')._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uos_id'])
             res_final['value']['price_unit'] = new_price
         return res_final
