@@ -346,14 +346,15 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         'keydown .oe_searchview_input, .oe_searchview_facet': function (e) {
             switch(e.which) {
             case $.ui.keyCode.LEFT:
-                this.focusPreceding(e.target);
+                if (!this.autocomplete.is_expandable()) {
+                    this.focusPreceding(e.target);
+                }
                 e.preventDefault();
                 break;
             case $.ui.keyCode.RIGHT:
                 if (!this.autocomplete.is_expandable()) {
                     this.focusFollowing(e.target);
                 }
-                //this.focusFollowing(e.target);
                 e.preventDefault();
                 break;
             }
@@ -2389,8 +2390,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 case $.ui.keyCode.TAB:
                 case $.ui.keyCode.ENTER:
                     if (self.get_search_string().length) {
-                        self.select(ev, {item: {facet: self.current_result.facet}});
-                        self.close();
+                        self.select_item(ev);
                     }
                     break;
                 case $.ui.keyCode.DOWN:
@@ -2403,8 +2403,14 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                     self.searching = false;
                     ev.preventDefault();
                     break;
-                case $.ui.keyCode.RIGHT:
+                case $.ui.keyCode.LEFT:
                     if (self.current_result.expand) {
+                        self.fold();
+                    }
+                    self.searching = false;
+                    ev.preventDefault();
+                case $.ui.keyCode.RIGHT:
+                    if (self.current_result.expand && !self.current_result.expanded) {
                         self.expand();
                     }
                     self.searching = false;
@@ -2455,6 +2461,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 ev.stopPropagation();
                 self.expand();
             });
+            result.expanded = false;
             $li.append($expand);
         }
         var $span = $('<span>').html(result.label);
@@ -2470,7 +2477,8 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
     },
     expand: function () {
         var self = this;
-        this.current_result.expand(this.get_search_string()).then(function (results) {
+        var to_be_expanded = this.current_result;
+        to_be_expanded.expand(this.get_search_string()).then(function (results) {
             if (!results) {
                 results = [{label: '(no result)'}];
             }
@@ -2479,12 +2487,23 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 var $li = self.make_list_item(result);
                 self.current_result.$el.after($li);
             });
+            to_be_expanded.expanded = true;
         });
     },
+    fold: function () {
+        console.log('fold');
+    },
+
     focus_element: function ($li) {
         this.$('li').removeClass('oe-selection-focus');
         $li.addClass('oe-selection-focus');
         this.current_result = $li.data('result');
+    },
+    select_item: function (ev) {
+        if (this.current_result.facet) {
+            this.select(ev, {item: {facet: this.current_result.facet}});
+            this.close();
+        }
     },
 
     show: function () {
