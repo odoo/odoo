@@ -1297,6 +1297,10 @@ class stock_picking(osv.osv):
                         product_avail[product.id] += qty
 
 
+            # list all tracking_id with at least one move to pick partially
+            # this give us the tracking that cannot be reused
+            used_tracking_ids = [m.tracking_id.id for m in pick.move_lines
+                                 if move_product_qty[m.id] != 0]
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
@@ -1326,13 +1330,15 @@ class stock_picking(osv.osv):
                     if prodlot_id:
                         defaults.update(prodlot_id=prodlot_id)
                     move_obj.copy(cr, uid, move.id, defaults)
-                move_obj.write(cr, uid, [move.id],
-                        {
+                values = {
                             'product_qty': move.product_qty - partial_qty[move.id],
                             'product_uos_qty': move.product_qty - partial_qty[move.id], #TODO: put correct uos_qty
                             'prodlot_id': False,
-                            'tracking_id': False,
-                        })
+                        }
+                # erase tracking_id only if this one has already been used
+                if move.tracking_id.id in used_tracking_ids:
+                    values['tracking_id'] = False
+                move_obj.write(cr, uid, [move.id], values)
 
             if new_picking:
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
@@ -2695,7 +2701,8 @@ class stock_move(osv.osv):
         complete, too_many, too_few = [], [], []
         move_product_qty = {}
         prodlot_ids = {}
-        for move in self.browse(cr, uid, ids, context=context):
+        all_moves = self.browse(cr, uid, ids, context=context)
+        for move in all_moves:
             if move.state in ('done', 'cancel'):
                 continue
             partial_data = partial_datas.get('move%s'%(move.id), False)
@@ -2741,6 +2748,10 @@ class stock_move(osv.osv):
                                  'price_currency_id': product_currency,
                                 })
 
+        # list all tracking_id with at least one move to pick partially
+        # this give us the tracking that cannot be reused
+        used_tracking_ids = [m.tracking_id.id for m in all_moves
+                             if move_product_qty[m.id] != 0]
         for move in too_few:
             product_qty = move_product_qty[move.id]
             if product_qty != 0:
@@ -2757,13 +2768,15 @@ class stock_move(osv.osv):
                     defaults.update(prodlot_id=prodlot_id)
                 new_move = self.copy(cr, uid, move.id, defaults)
                 complete.append(self.browse(cr, uid, new_move))
-            self.write(cr, uid, [move.id],
-                    {
+            values = {
                         'product_qty': move.product_qty - product_qty,
                         'product_uos_qty': move.product_qty - product_qty,
                         'prodlot_id': False,
-                        'tracking_id': False,
-                    })
+                    }
+            # erase tracking_id only if this one has already been used
+            if move.tracking_id.id in used_tracking_ids:
+                values['tracking_id'] = False
+            self.write(cr, uid, [move.id], values)
 
 
         for move in too_many:
