@@ -2398,10 +2398,12 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 case $.ui.keyCode.DOWN:
                     self.move('down');
                     self.searching = false;
+                    ev.preventDefault();
                     break;
                 case $.ui.keyCode.UP:
                     self.move('up');
                     self.searching = false;
+                    ev.preventDefault();
                     break;
                 case $.ui.keyCode.RIGHT:
                     if (self.choices[self.selected].expand) {
