@@ -2359,9 +2359,6 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         this.select = options.select,
         this.get_search_string = options.get_search_string;
 
-        this.choices = [];
-        this.selected = -1;
-
         this.searching = true;
         this.search_string = null;
         this.current_search = null;
@@ -2391,7 +2388,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 case $.ui.keyCode.TAB:
                 case $.ui.keyCode.ENTER:
                     if (self.get_search_string().length) {
-                        self.select(ev, {item: {facet: self.choices[self.selected].facet}});
+                        self.select(ev, {item: {facet: self.get_focused_result().facet}});
                         self.close();
                     }
                     break;
@@ -2406,8 +2403,9 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                     ev.preventDefault();
                     break;
                 case $.ui.keyCode.RIGHT:
-                    if (self.choices[self.selected].expand) {
-                        self.choices[self.selected].expand(self.get_search_string()).then(function (results) {
+                    var expand = self.get_focused_result().expand;
+                    if (expand) {
+                        expand(self.get_search_string()).then(function (results) {
                             console.log(results);
                         });
                     }
@@ -2423,7 +2421,6 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
     },
 
     initiate_search: function (search_string) {
-        console.log(search_string, this.search_string, this.current_search, this.searching);
         if (search_string !== this.search_string) return;
         if (search_string === this.current_search) return;
         this.search(search_string);
@@ -2434,10 +2431,8 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         var self = this;
         this.source({term:search_string}, function (results) {
             if (results.length) {
-                self.choices = results;
                 self.render_search_results(results);
-                self.selected = 0;
-                self.focus_element(self.choices[self.selected].$el);
+                self.focus_element(self.$('li:first-child'));
             } else {
                 self.close();
             }
@@ -2452,7 +2447,6 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             var $item = self.make_list_item(r); 
             r.$el = $item;
             $list.append($item);
-            console.log('item done', $item, r);
         });
         this.show();
     },
@@ -2469,6 +2463,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             self.select(ev, {item: {facet: result.facet}});
             self.close();
         });
+        $li.data('result', result);
         return $li;
     },
 
@@ -2477,6 +2472,10 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         $li.addClass('oe-selection-focus');
     },
 
+    get_focused_result: function () {
+        console.log('fr', this.$('li.oe-selection-focus').data('result'));
+        return this.$('li.oe-selection-focus').data('result');
+    },
     show: function () {
         this.$el.show();
     },
@@ -2489,9 +2488,15 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
     },
 
     move: function (direction) {
-        var delta = direction === 'up' ? -1 : +1;
-        this.selected = (this.selected + delta + this.choices.length) % this.choices.length;
-        this.focus_element(this.choices[this.selected].$el);
+        if (direction === 'down') {
+            var $next = this.$('li.oe-selection-focus').next();
+            if (!$next.length) $next = this.$('li:first-child');
+            this.focus_element($next);
+        } else {
+            var $previous = this.$('li.oe-selection-focus').prev();
+            if (!$previous.length) $previous = this.$('li:last-child');
+            this.focus_element($previous);            
+        }
     },
 
     is_on_expandable_item: function () {
