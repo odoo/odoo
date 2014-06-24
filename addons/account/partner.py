@@ -73,6 +73,16 @@ class account_fiscal_position(osv.osv):
                 break
         return account_id
 
+    def get_fiscal_position(self, cr, uid, country_id, vat=None, context=None):
+        fiscal_position_ids = self.search(cr, uid, [
+            ('apply_onchange', '=', True),
+            '|', ('vat_required', '=', False), ('vat_required', '=', bool(vat)),
+            '|', ('country_id', '=', None), ('country_id', '=', country_id),
+            '|', ('country_group_id.country_ids', '=', None), ('country_group_id.country_ids', '=', country_id)], context=context)
+        if fiscal_position_ids:
+            return fiscal_position_ids[0]
+        return None
+
 
 class account_fiscal_position_tax(osv.osv):
     _name = 'account.fiscal.position.tax'
@@ -260,19 +270,11 @@ class res_partner(osv.osv):
             ['debit_limit', 'property_account_payable', 'property_account_receivable', 'property_account_position',
              'property_payment_term', 'property_supplier_payment_term', 'last_reconciliation_date']
 
-    def onchange_apply_fiscal(self, cr, uid, ids, country, vat=None, context=None):
+    def onchange_apply_fiscal(self, cr, uid, ids, country_id, vat=None, context=None):
         value = {}
-        if country:
-            pos_obj = self.pool['account.fiscal.position']
-            fiscal_position_ids = pos_obj.search(cr, uid, [
-                ('apply_onchange', '=', True),
-                ('vat_required', '=', bool(vat)),
-                ('country_id', '=', country),
-                ('country_group_id.country_ids', '=', country)], context=context)
-
-            if fiscal_position_ids:
-                value['property_account_position'] = fiscal_position_ids[0]
-
+        fiscal_position_id = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, country_id, vat, context=context)
+        if fiscal_position_id:
+            value['property_account_position'] = fiscal_position_id
         return {'value': value}
 
 

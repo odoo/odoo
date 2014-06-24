@@ -130,19 +130,11 @@ class res_partner(osv.osv):
                 return False
         return True
 
-    def onchange_apply_fiscal(self, cr, uid, ids, country, vat=None, context=None):
+    def onchange_apply_fiscal(self, cr, uid, ids, country_id, vat=None, context=None):
         value = {'vat_subjected': bool(vat)}
-        if country:
-            pos_obj = self.pool['account.fiscal.position']
-            fiscal_position_ids = pos_obj.search(cr, uid, [
-                ('apply_onchange', '=', True),
-                ('vat_required', '=', bool(vat)),
-                '|', ('country_id', '=', country), ('country_group_id.country_ids', '=', country)],
-                context=context)
-
-            if fiscal_position_ids:
-                value['property_account_position'] = fiscal_position_ids[0]
-
+        fiscal_position_id = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, country_id, vat, context=context)
+        if fiscal_position_id:
+            value['property_account_position'] = fiscal_position_id
         return {'value': value}
 
     _columns = {
