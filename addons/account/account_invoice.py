@@ -903,6 +903,7 @@ class account_invoice(osv.osv):
         move_obj = self.pool.get('account.move')
         if context is None:
             context = {}
+        inv_date = {}
         for inv in self.browse(cr, uid, ids, context=context):
             if not inv.journal_id.sequence_id:
                 raise osv.except_osv(_('Error!'), _('Please define sequence on the journal related to this invoice.'))
@@ -914,7 +915,7 @@ class account_invoice(osv.osv):
             ctx = context.copy()
             ctx.update({'lang': inv.partner_id.lang})
             if not inv.date_invoice:
-                self.write(cr, uid, [inv.id], {'date_invoice': fields.date.context_today(self,cr,uid,context=context)}, context=ctx)
+                inv_date = {'date_invoice': fields.date.context_today(self,cr,uid,context=context)}
             company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
             # create the analytical lines
             # one move line per invoice line
@@ -1048,7 +1049,9 @@ class account_invoice(osv.osv):
             move_id = move_obj.create(cr, uid, move, context=ctx)
             new_move_name = move_obj.browse(cr, uid, move_id, context=ctx).name
             # make the invoice point to that move
-            self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name}, context=ctx)
+            vals = inv_date
+            vals.update(move_id=move_id, period_id=period_id, move_name=new_move_name)
+            self.write(cr, uid, [inv.id], vals, context=ctx)
             # Pass invoice in context in method post: used if you want to get the same
             # account move reference when creating the same invoice after a cancelled one:
             move_obj.post(cr, uid, [move_id], context=ctx)
