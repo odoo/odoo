@@ -188,7 +188,7 @@ class im_livechat_channel(osv.Model):
         user_id = random.choice(users).id
         # create the session, and add the link with the given channel
         Session = self.pool["im_chat.session"]
-        newid = Session.create(cr, uid, {'user_ids': [(4, user_id)], 'channel_id': channel_id, 'name' : anonymous_name}, context=context)
+        newid = Session.create(cr, uid, {'user_ids': [(4, user_id)], 'channel_id': channel_id, 'anonymous_name' : anonymous_name}, context=context)
         return Session.session_info(cr, uid, [newid], context=context)
 
     def test_channel(self, cr, uid, channel, context=None):
@@ -221,6 +221,31 @@ class im_livechat_channel(osv.Model):
 class im_chat_session(osv.Model):
     _inherit = 'im_chat.session'
 
+    def _get_fullname(self, cr, uid, ids, fields, arg, context=None):
+        """ built the complete name of the session """
+        result = {}
+        sessions = self.browse(cr, uid, ids, context=context)
+        for session in sessions:
+            names = []
+            for user in session.user_ids:
+                names.append(user.name)
+            if session.anonymous_name:
+                names.append(session.anonymous_name)
+            result[session.id] = ', '.join(names)
+        return result
+
     _columns = {
+        'anonymous_name' : fields.char('Anonymous Name'),
         'channel_id': fields.many2one("im_livechat.channel", "Channel"),
+        'fullname' : fields.function(_get_fullname, type="string", string="Complete name"),
     }
+
+    def users_infos(self, cr, uid, ids, context=None):
+        """ add the anonymous user in the user of the session """
+        for session in self.browse(cr, uid, ids, context=context):
+            users_infos = super(im_chat_session, self).users_infos(cr, uid, ids, context=context)
+            if session.anonymous_name:
+                users_infos.append({'id' : False, 'name' : session.anonymous_name, 'im_status' : 'online'})
+            return users_infos
+
+

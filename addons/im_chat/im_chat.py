@@ -80,29 +80,21 @@ class im_chat_session(osv.Model):
     _name = 'im_chat.session'
     _rec_name = 'uuid'
 
-    def _get_users(self, cr, uid, ids, fields, arg, context=None):
-        """ built the user list of a given session """
-        result = {}
-        sessions = self.pool["im_chat.session"].browse(cr, uid, ids, context=context)
-        for session in sessions:
-            users_infos = self.pool["res.users"].read(cr, uid, [u.id for u in session.user_ids], ['id','name', 'im_status'], context=context)
-            if session.name:
-                users_infos.append({'id' : False, 'name' : session.name, 'im_status' : 'online'})
-            result[session.id] = users_infos
-        return result
-
     _columns = {
         'uuid': fields.char('UUID', size=50, select=True),
-        'name' : fields.char('Name'),
         'message_ids': fields.one2many('im_chat.message', 'to_id', 'Messages'),
         'user_ids': fields.many2many('res.users', 'im_chat_session_res_users_rel', 'session_id', 'user_id', "Session Users"),
         'session_res_users_rel': fields.one2many('im_chat.session_res_users_rel', 'session_id', 'Relation Session Users'),
-        'user_list' : fields.function(_get_users, type="string", string="Complete list of users in the Session"),
     }
     _defaults = {
         'uuid': lambda *args: '%s' % uuid.uuid4(),
-        'name' : "",
     }
+
+    def users_infos(self, cr, uid, ids, context=None):
+        """ get the user infos for all the user in the session """
+        for session in self.pool["im_chat.session"].browse(cr, uid, ids, context=context):
+            users_infos = self.pool["res.users"].read(cr, uid, [u.id for u in session.user_ids], ['id','name', 'im_status'], context=context)
+            return users_infos
 
     def is_private(self, cr, uid, ids, context=None):
         for session_id in ids:
@@ -115,7 +107,7 @@ class im_chat_session(osv.Model):
         for session in self.browse(cr, uid, ids, context=context):
             info = {
                 'uuid': session.uuid,
-                'users': session.user_list,
+                'users': session.users_infos(),
                 'state': 'open',
             }
             # add uid_state if available
