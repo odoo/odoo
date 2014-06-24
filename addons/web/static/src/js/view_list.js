@@ -1108,7 +1108,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     ids = value;
                 }
                 new instance.web.Model(column.relation)
-                    .call('name_get', [ids]).done(function (names) {
+                    .call('name_get', [ids, this.dataset.context]).done(function (names) {
                         // FIXME: nth horrible hack in this poor listview
                         record.set(column.id + '__display',
                                    _(names).pluck(1).join(', '));
