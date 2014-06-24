@@ -1338,7 +1338,7 @@ class stock_picking(osv.osv):
                 # erase tracking_id only if this one has already been used
                 if move.tracking_id.id in used_tracking_ids:
                     values['tracking_id'] = False
-                move_obj.write(cr, uid, [move.id], values)
+                move_obj.write(cr, uid, [move.id], values, context=context)
 
             if new_picking:
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
@@ -2776,7 +2776,7 @@ class stock_move(osv.osv):
             # erase tracking_id only if this one has already been used
             if move.tracking_id.id in used_tracking_ids:
                 values['tracking_id'] = False
-            self.write(cr, uid, [move.id], values)
+            self.write(cr, uid, [move.id], values, context=context)
 
 
         for move in too_many:
