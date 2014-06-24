@@ -2404,11 +2404,8 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                     ev.preventDefault();
                     break;
                 case $.ui.keyCode.RIGHT:
-                    var expand = self.current_result.expand;
-                    if (expand) {
-                        expand(self.get_search_string()).then(function (results) {
-                            console.log(results);
-                        });
+                    if (self.current_result.expand) {
+                        self.expand();
                     }
                     self.searching = false;
                     ev.preventDefault();
@@ -2454,7 +2451,9 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         if (result.expand) {
             $li.append($('<span class="oe-expand">').text('▶'));
         }
-        $li.append($('<span>').html(result.label));
+        var $span = $('<span>').html(result.label);
+        if (result.indent) $span.addClass('oe-indent');
+        $li.append($span);
         $li.hover(function (ev) {self.focus_element($li);});
         $li.mousedown(function (ev) {
             self.select(ev, {item: {facet: result.facet}});
@@ -2462,6 +2461,21 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         });
         $li.data('result', result);
         return $li;
+    },
+    expand: function () {
+        var self = this;
+        this.current_result.expand(this.get_search_string()).then(function (results) {
+            if (!results) {
+                results = [{label: '(no result)'}];
+            }
+            results.forEach(function (result) {
+                result.indent = true;
+                var $li = self.make_list_item(result);
+                self.current_result.$el.after($li);
+            });
+            // self.current_result.$el.append(self.make_list_item)
+            // console.log(results);
+        });
     },
     focus_element: function ($li) {
         this.$('li').removeClass('oe-selection-focus');
