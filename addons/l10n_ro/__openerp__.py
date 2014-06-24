@@ -1,11 +1,9 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#        @author -  Fekete Mihai <feketemihai@gmail.com>
-#    Copyright (C) 2011-2013 TOTAL PC SYSTEMS (http://www.www.erpsystems.ro). 
-#       Update of filsys module 2012 (<http://www.erpsystems.ro>).
-#       Modules for V5 and V6 developed by Fil System.
-#    Copyright (C) 2009 (<http://www.filsystem.ro>). All Rights Reserved
+#    @author -  Fekete Mihai <feketemihai@gmail.com>
+#    Copyright (C) 2011 TOTAL PC SYSTEMS (http://www.www.erpsystems.ro). 
+#    Copyright (C) 2009 (<http://www.filsystem.ro>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,20 +27,21 @@
     "category" : "Localization/Account Charts",
     "depends" : ['account','account_chart','base_vat'],
     "description": """
-This is the module to manage the accounting chart, VAT structure and Registration Number for Romania in OpenERP.
+This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.
+It also adds the Registration Number for Romania in OpenERP.
 ================================================================================================================
 
 Romanian accounting chart and localization.
     """,
     "demo" : [],
     "data" : ['partner_view.xml',
-			  'account_chart.xml',
-			  'account_tax_code_template.xml',
-			  'account_chart_template.xml',
-			  'account_tax_template.xml',
-			  'fiscal_position_template.xml',
-			  'l10n_chart_ro_wizard.xml',
-			  ],
+              'account_chart.xml',
+              'account_tax_code_template.xml',
+              'account_chart_template.xml',
+              'account_tax_template.xml',
+              'fiscal_position_template.xml',
+              'l10n_chart_ro_wizard.xml',
+              ],
     "installable": True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
