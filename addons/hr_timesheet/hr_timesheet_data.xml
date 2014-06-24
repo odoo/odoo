@@ -8,13 +8,23 @@
             <field name="type">general</field>
         </record>
 
-        <record id="hr.employee" model="hr.employee">
-            <field name="journal_id" ref="analytic_journal"/>
-        </record>
 
+        <!-- Service Product -->
         <record id="product.product_product_consultant" model="product.product">
             <field name="sale_ok">True</field>
+            <field name="list_price">75.0</field>
+            <field name="standard_price">30.0</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="name">Service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="type">service</field>
+            <field name="image" type="base64" file="hr_timesheet/static/img/product_product_consultant-image.jpg"/>
         </record>
 
+        <record id="hr.employee" model="hr.employee">
+            <field name="journal_id" ref="analytic_journal"/>
+            <field name="product_id" ref="product.product_product_consultant"/>
+        </record>
     </data>
 </openerp>
