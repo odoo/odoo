@@ -72,6 +72,8 @@ class purchase_requisition(osv.osv):
             for purchase_id in purchase.purchase_ids:
                 if str(purchase_id.state) in('draft'):
                     purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
+        procurement_ids = self.pool['procurement.order'].search(cr, uid, [('requisition_id', 'in', ids)], context=context)
+        self.pool['procurement.order'].write(cr, uid, procurement_ids, {'state': 'cancel'}, context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def tender_in_progress(self, cr, uid, ids, context=None):
@@ -81,6 +83,8 @@ class purchase_requisition(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'})
 
     def tender_done(self, cr, uid, ids, context=None):
+        procurement_ids = self.pool['procurement.order'].search(cr, uid, [('requisition_id', 'in', ids)], context=context)
+        self.pool['procurement.order'].write(cr, uid, procurement_ids, {'state': 'done'}, context=context)
         return self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def _planned_date(self, requisition, delay=0.0):
@@ -272,7 +276,7 @@ class procurement_order(osv.osv):
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_id.purchase_requisition:
                 user_company = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id
-                req = res[procurement.id] = requisition_obj.create(cr, uid, {
+                req = requisition_obj.create(cr, uid, {
                     'origin': procurement.origin,
                     'date_end': procurement.date_planned,
                     'warehouse_id': self._get_warehouse(procurement, user_company),
@@ -288,6 +292,7 @@ class procurement_order(osv.osv):
                     'state': 'running',
                     'requisition_id': req
                 })
+                res[procurement.id] = 0
             else:
                 non_requisition.append(procurement.id)
 
