@@ -87,7 +87,7 @@ class crm_claim(osv.osv):
                             ('object_id.model', '=', 'crm.claim')]"),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
-        'user_id': fields.many2one('res.users', 'Responsible'),
+        'user_id': fields.many2one('res.users', 'Responsible', track_visibility='always'),
         'user_fault': fields.char('Trouble Responsible', size=64),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help="Responsible sales team."\
