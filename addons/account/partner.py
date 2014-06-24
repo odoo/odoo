@@ -78,7 +78,7 @@ class account_fiscal_position(osv.osv):
             ('apply_onchange', '=', True),
             '|', ('vat_required', '=', False), ('vat_required', '=', bool(vat)),
             '|', ('country_id', '=', None), ('country_id', '=', country_id),
-            '|', ('country_group_id.country_ids', '=', None), ('country_group_id.country_ids', '=', country_id)], context=context)
+            '|', ('country_group_id', '=', None), ('country_group_id.country_ids', '=', country_id)], context=context)
         if fiscal_position_ids:
             return fiscal_position_ids[0]
         return None
