@@ -355,7 +355,7 @@
         <record model="ir.actions.act_window" id="location_open_quants">
             <field name="context">{'search_default_productgroup': 1}</field>
             <field name="domain">[('location_id', 'child_of', active_ids)]</field>
-            <field name="name">Quants</field>
+            <field name="name">Current Stock</field>
             <field name="res_model">stock.quant</field>
         </record>
 
@@ -1356,6 +1356,7 @@
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
                 <tree string="Picking Types">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="warehouse_id"/>
                     <field name="sequence_id"/>
@@ -1794,7 +1795,7 @@
         </record>
         <record model="ir.actions.act_window" id="product_open_quants">
             <field name="context">{'search_default_internal_loc': 1, 'search_default_product_id': active_id, 'search_default_locationgroup':1}</field>
-            <field name="name">Quants</field>
+            <field name="name">Current Stock</field>
             <field name="res_model">stock.quant</field>
         </record>
         

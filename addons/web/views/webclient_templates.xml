@@ -255,6 +255,8 @@
                         QUnit.done(function(result) {
                             if (result.failed === 0) {
                                 console.log('ok');
+                            } else {
+                                console.log('error');
                             }
                         });
                         openerp.web.qweb.add_template("/web/webclient/qweb");

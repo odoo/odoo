@@ -237,8 +237,8 @@ class test_message_compose(TestMail):
         email_template.send_mail(cr, uid, email_template_id, self.group_pigs_id, force_send=True, context=context)
         sent_emails = self._build_email_kwargs_list
         email_to_lst = [
-            ['b@b.b', 'c@c.c'], ['Administrator <admin@yourcompany.example.com>'],
-            ['Raoul Grosbedon <raoul@raoul.fr>'], ['Bert Tartignole <bert@bert.fr>']]
+            ['b@b.b', 'c@c.c'], ['"Administrator" <admin@yourcompany.example.com>'],
+            ['"Raoul Grosbedon" <raoul@raoul.fr>'], ['"Bert Tartignole" <bert@bert.fr>']]
         self.assertEqual(len(sent_emails), 4, 'email_template: send_mail: 3 valid email recipients + email_to -> should send 4 emails')
         for email in sent_emails:
             self.assertIn(email['email_to'], email_to_lst, 'email_template: send_mail: wrong email_recipients')

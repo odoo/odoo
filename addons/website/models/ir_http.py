@@ -24,6 +24,7 @@ class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
 
     rerouting_limit = 10
+    geo_ip_resolver = None
 
     def _get_converters(self):
         return dict(
@@ -52,6 +53,18 @@ class ir_http(orm.AbstractModel):
             request.website_enabled = True
 
         request.website_multilang = request.website_enabled and func and func.routing.get('multilang', True)
+
+        if not request.session.has_key('geoip'):
+            record = {}
+            if self.geo_ip_resolver is None:
+                try:
+                    import GeoIP
+                    self.geo_ip_resolver = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', GeoIP.GEOIP_STANDARD)
+                except ImportError:
+                    self.geo_ip_resolver = False
+            if self.geo_ip_resolver:
+                record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
+            request.session['geoip'] = record
 
         if request.website_enabled:
             if func:

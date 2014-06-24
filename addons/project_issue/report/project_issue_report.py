@@ -52,7 +52,7 @@ class project_issue_report(osv.osv):
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'user_id' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Contact'),
-        'channel_id': fields.many2one('crm.case.channel', 'Channel',readonly=True),
+        'channel': fields.char('Channel', readonly=True, help="Communication Channel."),
         'task_id': fields.many2one('project.task', 'Task'),
         'email': fields.integer('# Emails', size=128, readonly=True),
     }
@@ -81,7 +81,7 @@ class project_issue_report(osv.osv):
                     c.version_id as version_id,
                     1 as nbr,
                     c.partner_id,
-                    c.channel_id,
+                    c.channel,
                     c.task_id,
                     date_trunc('day',c.create_date) as create_date,
                     c.day_open as delay_open,
