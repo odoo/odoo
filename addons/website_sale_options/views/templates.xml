@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="optional_products" inherit_id="website_sale.product" name="Optional Products">
+  <xpath expr="//tr[@id='product_confirmation']" position="after">
+    <tr t-if="optional_product_ids"><td colspan="4"><h4>Select Your Options:</h4></td></tr>
+    <t t-set="option_inc" t-value="0"/>
+    <tr class="js_product" t-foreach="optional_product_ids" t-as="product">
+      <td width="100">
+        <input type="hidden" class="optional_product_id" t-attf-name="optional-product-#{option_inc}" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
+        <span t-field="product.image_small" t-field-options='{"widget": "image"}'/>
+      </td>
+      <td>
+        <div class="pull-left">
+          <strong class="media-heading" t-field="product.name"/>
+          <div class="text-muted" t-field="product.description_sale"/>
+        </div>
+      </td>
+      <td>
+        <div class="pull-right">
+          <t t-call="website_sale.variants"/>
+        </div>
+      </td>
+      <td>
+        <t t-if="(website.compute_curency(product.lst_price) - product.price) &gt; 0.1">
+        <span class="text-danger" style="text-decoration: line-through; white-space: nowrap;"
+          t-field="product.lst_price"
+          t-field-options='{
+            "widget": "monetary",
+            "from_currency": "website.company_currency_id",
+            "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+         }'/><br/>
+        </t>
+        <span class="oe_price" style="white-space: nowrap;"
+          t-field="product.price"
+          t-field-options='{
+             "widget": "monetary",
+             "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+         }'/>
+        <p class="css_not_available_msg bg-danger" style="position:absolute; padding: 15px;">Product not available</p>
+      </td>
+      <td>
+        <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-quantity-#{option_inc}" value="0"/>
+        <a href="#" class="js_add"><strong>Add to Cart</strong></a>
+        <span class="js_remove hidden">
+          <span class="js_item">1 Item</span><span class="js_items hidden">5 Items</span><br/>
+          <a href="#" class="js_remove"><small>Remove from cart</small></a>
+        </span>
+      </td>
+    </tr>
+  </xpath>
+</template>
+
+</data>
+</openerp>

@@ -98,17 +98,17 @@ class QueryURL(object):
         return path
 
 
-class website_sale(http.Controller):
+def get_pricelist():
+    cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+    sale_order = context.get('sale_order')
+    if sale_order:
+        pricelist = sale_order.pricelist_id
+    else:
+        partner = pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+        pricelist = partner.property_product_pricelist
+    return pricelist
 
-    def get_pricelist(self):
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        sale_order = context.get('sale_order')
-        if sale_order:
-            pricelist = sale_order.pricelist_id
-        else:
-            partner = pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
-            pricelist = partner.property_product_pricelist
-        return pricelist
+class website_sale(http.Controller):
 
     @http.route(['/shop',
         '/shop/page/<int:page>',
@@ -215,11 +215,6 @@ class website_sale(http.Controller):
             context['pricelist'] = int(self.get_pricelist())
             product = template_obj.browse(cr, uid, int(product), context=context)
 
-        optional_product_ids = []
-        for p in product.optional_product_ids:
-            ctx = dict(context, active_id=p.id)
-            optional_product_ids.append(template_obj.browse(cr, uid, p.id, context=ctx))
-
         attribute_value_ids = []
         if request.website.company_pricelist_id.id != context['pricelist']:
             company_currency_id = request.website.company_currency_id.id
@@ -240,7 +235,6 @@ class website_sale(http.Controller):
             'category_list': category_list,
             'main_object': product,
             'product': product,
-            'optional_product_ids': optional_product_ids,
             'attribute_value_ids': attribute_value_ids
         }
         return request.website.render("website_sale.product", values)
@@ -282,24 +276,13 @@ class website_sale(http.Controller):
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(self, product_id, add_qty=1, set_qty=0, goto_shop=None, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        order = request.website.sale_get_order(force_create=1)
+        prod_obj = pool['product.product']
 
-        optional_product_ids = []
-        for k, v in kw.items():
-            if "optional-product-" in k and int(kw.get(k.replace("product", "quantity"))):
-                optional_product_ids.append(int(v))
-        if add_qty or set_qty:
-            line_id, quantity, option_ids = order._cart_update(product_id=int(product_id),
-                add_qty=int(add_qty), set_qty=int(set_qty),
-                optional_product_ids=optional_product_ids)
-        # options have all time the same quantity
-        for option_id in optional_product_ids:
-            order._cart_update(product_id=option_id, set_qty=quantity, linked_line_id=line_id)
+        order = request.website.sale_get_order(force_create=1)
+        line_id, quantity = order._cart_update(product_id=int(product_id), add_qty=int(add_qty), set_qty=int(set_qty))
 
         if goto_shop:
-            attrib_list = request.httprequest.args.getlist('attrib')
-            keep = QueryURL('/shop', category=kw.get('category'), search=kw.get('search'), attrib=attrib_list)
-            return request.redirect( keep() )
+            return request.redirect("/shop/product/%s" % slug(prod_obj.browse(cr, uid, product_id).product_tmpl_id))
         else:
             return request.redirect("/shop/cart")
 
