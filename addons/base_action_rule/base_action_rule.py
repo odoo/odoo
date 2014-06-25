@@ -135,13 +135,13 @@ class base_action_rule(osv.osv):
         """ Return a wrapper around `old_create` calling both `old_create` and
             `_process`, in that order.
         """
-        def wrapper(cr, uid, vals, context=None):
+        def wrapper(cr, uid, vals, context=None, **kwargs):
             # avoid loops or cascading actions
             if context and context.get('action'):
                 return old_create(cr, uid, vals, context=context)
 
             context = dict(context or {}, action=True)
-            new_id = old_create(cr, uid, vals, context=context)
+            new_id = old_create(cr, uid, vals, context=context, **kwargs)
 
             # as it is a new record, we do not consider the actions that have a prefilter
             action_dom = [('model', '=', model), ('trg_date_id', '=', False), ('filter_pre_id', '=', False)]
@@ -159,10 +159,10 @@ class base_action_rule(osv.osv):
         """ Return a wrapper around `old_write` calling both `old_write` and
             `_process`, in that order.
         """
-        def wrapper(cr, uid, ids, vals, context=None):
+        def wrapper(cr, uid, ids, vals, context=None, **kwargs):
             # avoid loops or cascading actions
             if context and context.get('action'):
-                return old_write(cr, uid, ids, vals, context=context)
+                return old_write(cr, uid, ids, vals, context=context, **kwargs)
 
             context = dict(context or {}, action=True)
             ids = [ids] if isinstance(ids, (int, long, str)) else ids
@@ -178,7 +178,7 @@ class base_action_rule(osv.osv):
                 pre_ids[action] = self._filter(cr, uid, action, action.filter_pre_id, ids, context=context)
 
             # execute write
-            old_write(cr, uid, ids, vals, context=context)
+            old_write(cr, uid, ids, vals, context=context, **kwargs)
 
             # check postconditions, and execute actions on the records that satisfy them
             for action in actions:
