@@ -1300,7 +1300,8 @@ class stock_picking(osv.osv):
             # list all tracking_id with at least one move to pick partially
             # this give us the tracking that cannot be reused
             used_tracking_ids = [m.tracking_id.id for m in pick.move_lines
-                                 if move_product_qty[m.id] != 0]
+                                 if m.state in ('done', 'cancel')
+                                 or move_product_qty[m.id] != 0]
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
@@ -2751,7 +2752,8 @@ class stock_move(osv.osv):
         # list all tracking_id with at least one move to pick partially
         # this give us the tracking that cannot be reused
         used_tracking_ids = [m.tracking_id.id for m in all_moves
-                             if move_product_qty[m.id] != 0]
+                             if m.state in ('done', 'cancel')
+                             or move_product_qty[m.id] != 0]
         for move in too_few:
             product_qty = move_product_qty[move.id]
             if product_qty != 0:
