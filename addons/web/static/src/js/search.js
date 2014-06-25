@@ -2351,10 +2351,11 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                     self.searching = false;
                     ev.preventDefault();
                 case $.ui.keyCode.RIGHT:
+                    self.searching = false;
                     if (self.current_result.expand && !self.current_result.expanded) {
                         self.expand();
+                        self.searching = true;
                     }
-                    self.searching = false;
                     ev.preventDefault();
                     break;
                 case $.ui.keyCode.ESCAPE:
