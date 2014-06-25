@@ -2311,6 +2311,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         var self = this;
         this.$input.on('keyup', function (ev) {
             if (ev.which === $.ui.keyCode.RIGHT) {
+                self.searching = true;
                 ev.preventDefault();
                 return;
             }
@@ -2346,7 +2347,8 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                     break;
                 case $.ui.keyCode.RIGHT:
                     self.searching = false;
-                    if (self.current_result.expand && !self.current_result.expanded) {
+                    var current = self.current_result
+                    if (current && current.expand && !current.expanded) {
                         self.expand();
                         self.searching = true;
                     }
