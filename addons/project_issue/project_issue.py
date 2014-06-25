@@ -189,6 +189,13 @@ class project_issue(osv.Model):
             res[issue.id] = {'progress' : progress}
         return res
 
+    def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for issue in self.browse(cr, uid, ids, context=context):
+            if issue.project_id.parent_id.type == 'contract':
+                res[issue.id] = True
+        return res
+
     def on_change_project(self, cr, uid, ids, project_id, context=None):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
@@ -269,6 +276,7 @@ class project_issue(osv.Model):
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'can_escalate': fields.function(_can_escalate, type='boolean', string='Can Escalate'),
         'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
             store = {
                 'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),

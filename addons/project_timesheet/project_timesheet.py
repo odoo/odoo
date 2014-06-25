@@ -38,9 +38,9 @@ class project_project(osv.osv):
                 factor_id = data_obj.browse(cr, uid, data_id).res_id
                 res['value'].update({'to_invoice': factor_id})
         return res
-
+        
     _defaults = {
-        'use_timesheets': True,
+        'invoice_on_timesheets': True,
     }
 
     def open_timesheets(self, cr, uid, ids, context=None):

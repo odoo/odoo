@@ -13,9 +13,6 @@
                         <field name="to_invoice"/>
                     </group>
                  </xpath>
-                <xpath expr="//field[@name='use_timesheets']" position="replace">
-                    <field name="use_timesheets"/>
-                </xpath>
                 <xpath expr="/form/sheet" position='before'>
                     <header>
                         <button name="set_pending" string="To Renew" type="object" states="open" />
@@ -49,7 +46,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
+                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('invoice_on_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_invoice_on_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -71,7 +68,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
+                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('invoice_on_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_invoice_on_timesheets': 1}"/>
                 </field>
             </field>
         </record>

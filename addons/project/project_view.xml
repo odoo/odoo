@@ -79,7 +79,7 @@
                     <button name="set_open" string="Re-open project" type="object" states="pending" class="oe_highlight" groups="base.group_user"/>
                     <button name="set_done" string="Close Project" type="object" states="open,pending" groups="base.group_user"/>
                     <button name="set_open" string="Re-open project" type="object" states="cancelled,close" groups="base.group_user"/>
-                    <button name="set_pending" string="Pending" type="object" states="open" groups="base.group_user"/>
+                    <button name="set_pending" string="Set as Pending" type="object" states="open" groups="base.group_user"/>
                     <button name="set_template" string="Set as Template" type="object" states="open" groups="base.group_user"/>
                     <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}" class="oe_highlight" groups="base.group_user"/>
                     <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_highlight" groups="base.group_user"/>
@@ -93,9 +93,9 @@
                         <h1>
                             <field name="name" string="Project Name"/>
                         </h1>
-                        <div name="options_active">
+                        <div name="options_active" invisible="1">
                             <field name="use_tasks" class="oe_inline"/>
-                            <label for="use_tasks"/>
+                            <label for="use_tasks" name="use_task"/>
                         </div>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
@@ -115,10 +115,6 @@
                             <newline/>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                         </group>
-                            <p attrs="{'invisible': [('analytic_account_id','=',False)]}">
-                                To invoice or setup invoicing and renewal options, go to the related contract:
-                                <field name="analytic_account_id" readonly="1" required="0" class="oe_inline" nolabel="1"/>.
-                            </p>
                         <group name="group_alias"
                                 attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <label for="alias_name" string="Email Alias"/>
@@ -166,7 +162,7 @@
                                 <field name="resource_calendar_id"
                                         groups="project.group_time_work_estimation_tasks"/>
                             </group>
-                            <group string="Miscellaneous" name="misc">
+                            <group name="misc">
                                 <field name="date_start"/>
                                 <field name="date" string="End Date"/>
                                 <field name="sequence" groups="base.group_no_one"/>
@@ -176,7 +172,12 @@
                             </group>
                         </page>
                         <page string="Project Stages" attrs="{'invisible': [('use_tasks', '=', False)]}" name="project_stages">
-                             <field name="type_ids"/>
+                            <p class="oe_grey">
+                                Stages are defined globally and shared between projects.
+                                You can "configure all available stages".Stages are used to organize work in steps inside a project.
+                                In each step, you are able to change the status (validated, stopped) of the activity, no need to create specific stages for validation or blocked activities.
+                            </p>
+                            <field name="type_ids"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -274,6 +275,10 @@
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px">
                                             <t t-raw="record.task_ids.raw_value.length"/> Tasks
                                         </a>
+                                        <div t-if="record.use_tasks.raw_value and record.task_count.raw_value lt 1" style="margin-top: 6px;margin-left:20px;">
+                                            <img src="/project/static/src/img/top_left_arrow.png" style="margin-top: -8px; width: 22px;" />
+                                            <span>No activity yet, click to enter in the project.</span>
+                                        </div>
                                     </div>
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="doc_count"/> Documents</a>
@@ -451,17 +456,18 @@
                         <page string="Extra Info">
                             <group col="4">
                                 <field name="priority" groups="base.group_user" widget="priority"/>
-                                <field name="sequence"/>
+                                <field name="sequence" groups="base.group_no_one"/>
                                 <field name="partner_id"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="date_last_stage_update" groups="base.group_no_one"/>
                             </group>
                             <group>
                                 <group string="Gantt View">
+                                    <p class="oe_grey" colspan='2'>
+                                        Assign dates to make this task appear in the gantt chart (<span class="oe_form_gantt_avatars"></span> icon on the top right)
+                                    </p>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
-                                </group>
-                                <group>
-                                    <field name="date_last_stage_update" groups="base.group_no_one"/>
                                 </group>
                             </group>
                         </page>
@@ -738,6 +744,19 @@
         <menuitem action="open_task_type_form" name="Task Stages" id="menu_task_types_view" parent="base.menu_project_config_project" sequence="2"/>
         <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_project_management" sequence="1"/>
 
+         <record id="product_search_form_view_procurment_consume" model="ir.ui.view">
+            <field name="name">product.product.service.search</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='services']" position="replace">
+                    <filter string="Services" name="services" domain="[('type','=','service')]" invisible="context.get('consumable_services', False)"/>
+                 </xpath>
+                 <xpath expr="//filter[@name='consumable']" position="replace">
+                     <filter string="Consumable" name="consumable" domain="[('type','=','consu')]" help="Consumable products" invisible="context.get('consumable_services', False)"/>
+                 </xpath>
+            </field>
+        </record>
 
          <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
