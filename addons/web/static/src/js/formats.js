@@ -271,7 +271,7 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                     value, (date_pattern + ' ' + time_pattern));
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
-            datetime = Date.parseExact(value.replace(/\d+/g, function(m){
+            datetime = Date.parseExact(value.toString().replace(/\d+/g, function(m){
                 return m.length === 1 ? "0" + m : m ;
             }), (date_pattern + ' ' + time_pattern));
             if (datetime !== null)
@@ -284,7 +284,7 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
             var date = Date.parseExact(value, date_pattern);
             if (date !== null)
                 return instance.web.date_to_str(date);
-            date = Date.parseExact(value.replace(/\d+/g, function(m){
+            date = Date.parseExact(value.toString().replace(/\d+/g, function(m){
                 return m.length === 1 ? "0" + m : m ;
             }), date_pattern);
             if (date !== null)

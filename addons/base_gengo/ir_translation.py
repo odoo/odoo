@@ -56,16 +56,18 @@ LANG_CODE_MAPPING = {
     'fi_FI': ('fi', 'Finnish')
 }
 
+
 class ir_translation(osv.Model):
     _name = "ir.translation"
     _inherit = "ir.translation"
+
     _columns = {
         'gengo_comment': fields.text("Comments & Activity Linked to Gengo"),
-        'job_id': fields.char('Gengo Job ID', size=32),
+        'order_id': fields.char('Gengo Order ID', size=32),
         "gengo_translation": fields.selection([('machine', 'Translation By Machine'),
-                                            ('standard', 'Standard'),
-                                            ('pro', 'Pro'),
-                                            ('ultra', 'Ultra')], "Gengo Translation Service Level", help='You can select here the service level you want for an automatic translation using Gengo.'),
+                                             ('standard', 'Standard'),
+                                             ('pro', 'Pro'),
+                                             ('ultra', 'Ultra')], "Gengo Translation Service Level", help='You can select here the service level you want for an automatic translation using Gengo.'),
     }
 
     def _get_all_supported_languages(self, cr, uid, context=None):
@@ -83,3 +85,19 @@ class ir_translation(osv.Model):
 
     def _get_gengo_corresponding_language(cr, lang):
         return lang in LANG_CODE_MAPPING and LANG_CODE_MAPPING[lang][0] or lang
+
+    def _get_source_query(self, cr, uid, name, types, lang, source, res_id):
+        query, params = super(ir_translation, self)._get_source_query(cr, uid, name, types, lang, source, res_id)
+
+        query += """
+                    ORDER BY
+                        CASE
+                            WHEN gengo_translation=%s then 10
+                            WHEN gengo_translation=%s then 20
+                            WHEN gengo_translation=%s then 30
+                            WHEN gengo_translation=%s then 40
+                            ELSE 0
+                        END DESC
+                 """
+        params += ('machine', 'standard', 'ultra', 'pro',)
+        return (query, params)
