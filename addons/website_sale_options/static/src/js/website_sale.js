@@ -1,14 +1,13 @@
 $(document).ready(function () {
-
-    $('#add_to_cart')
+    $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
         .off('click')
         .removeClass('a-submit')
         .click(function (event) {
             var $form = $(this).closest('form');
-            var quantity = parseFloat($form.find('input[name="add_qty"]').val());
+            var quantity = parseFloat($form.find('input[name="add_qty"]').val() || 1);
             event.preventDefault();
             openerp.jsonRpc("/shop/modal", 'call', {
-                    'product_id': parseInt($('input.product_id[name="product_id"]').val(),10),
+                    'product_id': parseInt($form.find('input[name="product_id"]').val(),10),
                     kwargs: {
                        context: openerp.website.get_context()
                     },
@@ -27,7 +26,7 @@ $(document).ready(function () {
                             url:  '/shop/cart/update_option',
                             success: function (quantity) {
                                 if (!$a.hasClass('js_goto_shop')) {
-                                    window.location.href = "../cart";
+                                    window.location.href = window.location.href.replace(/shop([\/?].*)?$/, "shop/cart");
                                 }
                                 var $q = $(".my_cart_quantity");
                                 $q.parent().parent().removeClass("hidden", !quantity);

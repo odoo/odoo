@@ -1,18 +1,21 @@
 $(document).ready(function () {
-    var $shippingDifferent = $(".oe_website_sale input[name='shipping_different']");
+$('.oe_website_sale').each(function () {
+    var oe_website_sale = this;
+
+    var $shippingDifferent = $("input[name='shipping_different']", oe_website_sale);
     if ($shippingDifferent.is(':checked')) {
-       $(".oe_website_sale .js_shipping").show();
+       $(".js_shipping", oe_website_sale).show();
     }
     $shippingDifferent.change(function () {
-        $(".oe_website_sale .js_shipping").toggle();
+        $(".js_shipping", oe_website_sale).toggle();
     });
 
     // change for css
-    $(document).on('mouseup touchend', '.js_publish', function (ev) {
+    $(oe_website_sale).on('mouseup touchend', '.js_publish', function (ev) {
         $(ev.currentTarget).parents(".thumbnail").toggleClass("disabled");
     });
 
-    $(".oe_website_sale .oe_cart input.js_quantity").change(function () {
+    $(oe_website_sale).on("change", ".oe_cart input.js_quantity", function () {
         var $input = $(this);
         var value = parseInt($input.val(), 10);
         var line_id = parseInt($input.data('line-id'),10);
@@ -26,11 +29,6 @@ $(document).ready(function () {
                     location.reload();
                     return;
                 }
-                if (data.option_ids.length) {
-                    _.each(data.option_ids, function (line_id) {
-                        $(".js_quantity[data-line-id="+line_id+"]").text(data.quantity);
-                    });
-                }
                 var $q = $(".my_cart_quantity");
                 $q.parent().parent().removeClass("hidden", !data.quantity);
                 $q.html(data.cart_quantity).hide().fadeIn(600);
@@ -42,7 +40,7 @@ $(document).ready(function () {
     });
 
     // hack to add and rome from cart with json
-    $('.oe_website_sale').on('click', 'a.js_add_cart_json', function (ev) {
+    $(oe_website_sale).on('click', 'a.js_add_cart_json', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var $input = $link.parent().parent().find("input");
@@ -55,15 +53,15 @@ $(document).ready(function () {
         return false;
     });
 
-    $('.a-submit').on('click', function () {
+    $('.a-submit', oe_website_sale).off('click').on('click', function () {
         $(this).closest('form').submit();
     });
-    $('form.js_attributes input, form.js_attributes select').on('change', function () {
+    $('.form.js_attributes input, form.js_attributes select', oe_website_sale).on('change', function () {
         $(this).closest("form").submit();
     });
 
     // change price when they are variants
-    $('form.js_add_cart_json label').on('mouseup touchend', function (ev) {
+    $('form.js_add_cart_json label', oe_website_sale).on('mouseup touchend', function (ev) {
         var $label = $(this);
         var $price = $label.parents("form:first").find(".oe_price .oe_currency_value");
         if (!$price.data("price")) {
@@ -74,7 +72,7 @@ $(document).ready(function () {
         $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
     });
     // hightlight selected color
-    $('.css_attribute_color input').on('change', function (ev) {
+    $('.css_attribute_color input', oe_website_sale).on('change', function (ev) {
         $('.css_attribute_color').removeClass("active");
         $('.css_attribute_color:has(input:checked)').addClass("active");
     });
@@ -85,7 +83,7 @@ $(document).ready(function () {
         return price + (dec ? '' : '.0') + (dec%10 ? '' : '0');
     }
 
-    $('.oe_website_sale').on('change', 'input.js_variant_change, select.js_variant_change', function (ev) {
+    $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change', function (ev) {
         var $ul = $(this).parents('ul.js_add_cart_variants:first');
         var $parent = $ul.closest('.js_product');
         var $product_id = $parent.find('input.product_id').first();
@@ -138,21 +136,21 @@ $(document).ready(function () {
             $parent.find(".js_check_product").attr("disabled", "disabled");
         }
     });
-    $('ul.js_add_cart_variants').each(function () {
+    $('ul.js_add_cart_variants', oe_website_sale).each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
 
-    $(".oe_website_sale").on('change', "select[name='country_id']", function () {
+    $(oe_website_sale).on('change', "select[name='country_id']", function () {
         var $select = $("select[name='state_id']");
         $select.find("option:not(:first)").hide();
         var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
         $select.parent().toggle(nb>1);
     }).change();
-    $(".oe_website_sale").on('change', "select[name='shipping_country_id']", function () {
+    $(oe_website_sale).on('change', "select[name='shipping_country_id']", function () {
         var $select = $("select[name='shipping_state_id']");
         $select.find("option:not(:first)").hide();
         var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
         $select.parent().toggle(nb>1);
     }).change();
-
+});
 });

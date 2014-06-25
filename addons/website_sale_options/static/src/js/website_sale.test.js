@@ -1,10 +1,16 @@
 (function () {
     'use strict';
     
-    openerp.Tour.tours.shop_buy_product.steps.splice(3, 0, {
-        title:     "click in modal on 'Proceed to checkout' button",
-        element:   '.modal a:contains("Proceed to checkout")',
-    });
+    var steps = openerp.Tour.tours.shop_buy_product.steps;
+    for (var k=0; k<steps.length; k++) {
+        if (steps[k].title === "click on add to cart") {
+            steps.splice(k+1, 0, {
+                title:     "click in modal on 'Proceed to checkout' button",
+                element:   '.modal a:contains("Proceed to checkout")',
+            });
+            break;
+        }
+    }
 
     openerp.Tour.register({
         id:   'shop_customize',
