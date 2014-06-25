@@ -2409,8 +2409,12 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         var $li = $('<li>')
             .hover(function (ev) {self.focus_element($li);})
             .mousedown(function (ev) {
-                self.select(ev, {item: {facet: result.facet}});
-                self.close();
+                if (ev.button === 0) { // left button
+                    self.select(ev, {item: {facet: result.facet}});
+                    self.close();                    
+                } else {
+                    ev.preventDefault();
+                }
             })
             .data('result', result);
         if (result.expand) {
