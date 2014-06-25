@@ -470,7 +470,7 @@ class PreforkServer(CommonServer):
         cmd = nargs[0]
         cmd = os.path.join(os.path.dirname(cmd), "openerp-gevent")
         nargs[0] = cmd
-        popen = subprocess.Popen(nargs)
+        popen = subprocess.Popen([sys.executable] + nargs)
         self.long_polling_pid = popen.pid
 
     def worker_pop(self, pid):

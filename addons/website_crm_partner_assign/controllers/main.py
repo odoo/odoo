@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import re
 import werkzeug
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models.website import slug
+from openerp.addons.website.models.website import slug, unslug
 from openerp.tools.translate import _
 
 
@@ -131,7 +130,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, partner_name='', **post):
-        mo = re.search('([-0-9]+)$', str(partner_id))
+        _, partner_id = unslug(partner_id)
         current_grade, current_country = None, None
         grade_id = post.get('grade_id')
         country_id = post.get('country_id')
@@ -143,8 +142,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             country_ids = request.registry['res.country'].exists(request.cr, request.uid, int(country_id), context=request.context)
             if country_ids:
                 current_country = request.registry['res.country'].browse(request.cr, request.uid, country_ids[0], context=request.context)
-        if mo:
-            partner_id = int(mo.group(1))
+        if partner_id:
             partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
             if partner.exists() and partner.website_published:
                 values = {
