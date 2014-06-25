@@ -3860,7 +3860,7 @@ class BaseModel(object):
 
         parents_changed = []
         parent_order = self._parent_order or self._order
-        if self._parent_store and (self._parent_name in vals):
+        if self._parent_store and (self._parent_name in vals) and not context.get('defer_parent_store_computation'):
             # The parent_left/right computation may take up to
             # 5 seconds. No need to recompute the values if the
             # parent is the same.

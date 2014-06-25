@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import re
-
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+from openerp.addons.website.models.website import unslug
 from openerp.tools.translate import _
 
 import werkzeug.urls
@@ -105,9 +104,8 @@ class WebsiteMembership(http.Controller):
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/members/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
-        mo = re.search('([-0-9]+)$', str(partner_id))
-        if mo:
-            partner_id = int(mo.group(1))
+        _, partner_id = unslug(partner_id)
+        if partner_id:
             partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
             if partner.exists() and partner.website_published:
                 values = {}

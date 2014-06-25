@@ -762,7 +762,6 @@ class calendar_event(osv.Model):
                     res[meeting_id][field] = meeting.start_date if meeting.allday else meeting.start_datetime
                 elif field == 'stop':
                     res[meeting_id][field] = meeting.stop_date if meeting.allday else meeting.stop_datetime
-
         return res
 
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):

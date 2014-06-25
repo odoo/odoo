@@ -10,7 +10,7 @@ import werkzeug.routing
 import openerp
 from openerp.addons.base import ir
 from openerp.addons.base.ir import ir_qweb
-from openerp.addons.website.models.website import slug, url_for
+from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
 from openerp.osv import orm
 
@@ -24,6 +24,7 @@ class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
 
     rerouting_limit = 10
+    geo_ip_resolver = None
 
     def _get_converters(self):
         return dict(
@@ -52,6 +53,18 @@ class ir_http(orm.AbstractModel):
             request.website_enabled = True
 
         request.website_multilang = request.website_enabled and func and func.routing.get('multilang', True)
+
+        if not request.session.has_key('geoip'):
+            record = {}
+            if self.geo_ip_resolver is None:
+                try:
+                    import GeoIP
+                    self.geo_ip_resolver = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', GeoIP.GEOIP_STANDARD)
+                except ImportError:
+                    self.geo_ip_resolver = False
+            if self.geo_ip_resolver:
+                record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
+            request.session['geoip'] = record
 
         if request.website_enabled:
             if func:
@@ -189,7 +202,7 @@ class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False, domain='[]'):
         super(ModelConverter, self).__init__(url_map, model)
         self.domain = domain
-        self.regex = r'(?:[A-Za-z0-9-_]+?-)?(\d+)(?=$|/)'
+        self.regex = _UNSLUG_RE.pattern
 
     def to_url(self, value):
         return slug(value)
@@ -198,7 +211,7 @@ class ModelConverter(ir.ir_http.ModelConverter):
         m = re.match(self.regex, value)
         _uid = RequestUID(value=value, match=m, converter=self)
         return request.registry[self.model].browse(
-            request.cr, _uid, int(m.group(1)), context=request.context)
+            request.cr, _uid, int(m.group(2)), context=request.context)
 
     def generate(self, cr, uid, query=None, args=None, context=None):
         obj = request.registry[self.model]

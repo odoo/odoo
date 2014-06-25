@@ -121,16 +121,12 @@ class mail_compose_message(osv.TransientModel):
         # mass mode options
         'notify': fields.boolean('Notify followers',
             help='Notify followers of the document (mass post only)'),
-        'same_thread': fields.boolean('Replies in the document',
-            help='Replies to the messages will go into the selected document (mass mail only)'),
     }
-    #TODO change same_thread to False in trunk (Require view update)
     _defaults = {
         'composition_mode': 'comment',
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
         'partner_ids': lambda self, cr, uid, ctx={}: [],
-        'same_thread': True,
     }
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
@@ -251,6 +247,10 @@ class mail_compose_message(osv.TransientModel):
         # render all template-based value at once
         if mass_mail_mode and wizard.model:
             rendered_values = self.render_message_batch(cr, uid, wizard, res_ids, context=context)
+        # compute alias-based reply-to in batch
+        reply_to_value = dict.fromkeys(res_ids, None)
+        if mass_mail_mode and wizard.same_thread:
+            reply_to_value = self.pool['mail.thread'].message_get_reply_to(cr, uid, res_ids, default=wizard.email_from, context=dict(context, thread_model=wizard.model))
 
         for res_id in res_ids:
             # static wizard (mail.message) values
@@ -277,7 +277,9 @@ class mail_compose_message(osv.TransientModel):
                 mail_values.update(email_dict)
                 if wizard.same_thread:
                     mail_values.pop('reply_to')
-                elif not mail_values.get('reply_to'):
+                    if reply_to_value.get(res_id):
+                        mail_values['reply_to'] = reply_to_value[res_id]
+                if not wizard.same_thread and not mail_values.get('reply_to'):
                     mail_values['reply_to'] = mail_values['email_from']
                 # mail_mail values: body -> body_html, partner_ids -> recipient_ids
                 mail_values['body_html'] = mail_values.get('body', '')
