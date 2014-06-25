@@ -628,59 +628,57 @@
                         </div>
                     </header>
 
-                    <sheet>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
-                        <group col="4">
-                            <field name="picking_type_id" widget="selection" groups="stock.group_locations" 
-                                on_change="onchange_picking_type_id(picking_type_id)"/>
-                            <field name="stock_location_id" groups="stock.group_locations"/>
-                            <field name="pricelist_id" groups="product.group_sale_pricelist"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="journal_id" widget="selection"/>
-                            <field name="group_by" groups="account.group_account_user"/>
-                            <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group col="4">
+                        <field name="picking_type_id" widget="selection" groups="stock.group_locations" 
+                            on_change="onchange_picking_type_id(picking_type_id)"/>
+                        <field name="stock_location_id" groups="stock.group_locations"/>
+                        <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="journal_id" widget="selection"/>
+                        <field name="group_by" groups="account.group_account_user"/>
+                        <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
+                    </group>
+                    <separator string="Available Payment Methods" colspan="4"/>
+                    <field name="journal_ids" colspan="4" nolabel="1">
+                        <tree string="Journals">
+                            <field name="code" />
+                            <field name="name" />
+                            <field name="type" />
+                            <field name="cash_control" />
+                        </tree>
+                    </field>
+                    <group string="Features" >
+                        <group>
+                            <field name="iface_vkeyboard" />
+                            <field name="iface_invoicing" />
                         </group>
-                        <separator string="Available Payment Methods" colspan="4"/>
-                        <field name="journal_ids" colspan="4" nolabel="1">
-                            <tree string="Journals">
-                                <field name="code" />
-                                <field name="name" />
-                                <field name="type" />
-                                <field name="cash_control" />
-                            </tree>
-                        </field>
-                        <group string="Features" >
-                            <group>
-                                <field name="iface_vkeyboard" />
-                                <field name="iface_invoicing" />
-                            </group>
-                            <group>
-                                <field name="iface_big_scrollbars" />
-                            </group>
+                        <group>
+                            <field name="iface_big_scrollbars" />
                         </group>
-                        <group string="Hardware Proxy" >
-                            <field name="proxy_ip" />
-                            <field name="iface_print_via_proxy" />
-                            <field name="iface_scan_via_proxy" />
-                            <field name="iface_electronic_scale" />
-                            <field name="iface_cashdrawer" />
-                        </group>
-                        <group string="Receipt" >
-                            <field name="receipt_header" placeholder="A custom receipt header message"/>
-                            <field name="receipt_footer" placeholder="A custom receipt header footage"/>
-                        </group>
-                        <group string="Barcode Types" col="4">
-                            <field name="barcode_product" />
-                            <field name="barcode_cashier" />
-                            <field name="barcode_customer" />
-                            <field name="barcode_weight" />
-                            <field name="barcode_discount" />
-                            <field name="barcode_price" />
-                        </group>
-                    </sheet>
+                    </group>
+                    <group string="Hardware Proxy" >
+                        <field name="proxy_ip" />
+                        <field name="iface_print_via_proxy" />
+                        <field name="iface_scan_via_proxy" />
+                        <field name="iface_electronic_scale" />
+                        <field name="iface_cashdrawer" />
+                    </group>
+                    <group string="Receipt" >
+                        <field name="receipt_header" placeholder="A custom receipt header message"/>
+                        <field name="receipt_footer" placeholder="A custom receipt header footage"/>
+                    </group>
+                    <group string="Barcode Types" col="4">
+                        <field name="barcode_product" />
+                        <field name="barcode_cashier" />
+                        <field name="barcode_customer" />
+                        <field name="barcode_weight" />
+                        <field name="barcode_discount" />
+                        <field name="barcode_price" />
+                    </group>
 
                 </form>
             </field>
@@ -974,3 +972,4 @@
 
     </data>
 </openerp>
+

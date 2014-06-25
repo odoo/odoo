@@ -466,20 +466,18 @@
             <field name="model">product.category</field>
             <field name="arch" type="xml">
                 <form string="Product Categories">
-                    <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <group name="parent" col="4">
-                                <field name="parent_id"/>
-                                <field name="type"/>
-                            </group>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="parent" col="4">
+                            <field name="parent_id"/>
+                            <field name="type"/>
                         </group>
-                    </sheet>
+                    </group>
                 </form>
             </field>
         </record>

@@ -6,40 +6,38 @@
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
                 <form string="Model">
-                    <sheet>
-                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
-                        <div class="oe_title">
-                            <label for="modelname" class="oe_edit_only"/>
-                            <h1>
-                                <field name="modelname" />
-                            </h1>
-                            <label for="brand_id" class="oe_edit_only"/>
-                            <h2>
-                                <field name="brand_id" on_change="on_change_brand(brand_id)"/>
-                            </h2>
-                        </div>
-                        <notebook>
-                            <page string="Vendors">
-                                <field name="vendors" widget="many2many_kanban">
-                                    <kanban quick_create="false" create="true">
-                                        <field name="name"/>
-                                        <templates>
-                                            <t t-name="kanban-box">
-                                                <div style="position: relative">
-                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                    <div class="oe_module_vignette">
-                                                        <div class="oe_module_desc">
-                                                            <field name="name"/>
-                                                        </div>
+                    <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="modelname" class="oe_edit_only"/>
+                        <h1>
+                            <field name="modelname" />
+                        </h1>
+                        <label for="brand_id" class="oe_edit_only"/>
+                        <h2>
+                            <field name="brand_id" on_change="on_change_brand(brand_id)"/>
+                        </h2>
+                    </div>
+                    <notebook>
+                        <page string="Vendors">
+                            <field name="vendors" widget="many2many_kanban">
+                                <kanban quick_create="false" create="true">
+                                    <field name="name"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div style="position: relative">
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                <div class="oe_module_vignette">
+                                                    <div class="oe_module_desc">
+                                                        <field name="name"/>
                                                     </div>
                                                 </div>
-                                            </t>
-                                        </templates>
-                                    </kanban>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -98,17 +96,15 @@
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
                 <form string="Model Make">
-                    <sheet>
-                        <group>
-                            <div>
-                                <field name="image_medium" widget="image" class="oe_left oe_avatar"/>
-                                <label for="name" class="oe_edit_only"/>
-                                <h1>
-                                    <field name="name" class="oe_inline" />
-                                </h1>
-                            </div>
-                        </group>
-                    </sheet>
+                    <group>
+                        <div>
+                            <field name="image_medium" widget="image" class="oe_left oe_avatar"/>
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline" />
+                            </h1>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>
