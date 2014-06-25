@@ -34,7 +34,7 @@ class account_invoice_refund(osv.osv_memory):
        'date': fields.date('Date', help='This date will be used as the invoice date for credit note and period will be chosen accordingly!'),
        'period': fields.many2one('account.period', 'Force period'),
        'journal_id': fields.many2one('account.journal', 'Refund Journal', help='You can select here the journal to use for the credit note that will be created. If you leave that field empty, it will use the same journal as the current invoice.'),
-       'description': fields.char('Reason', size=128, required=True),
+       'description': fields.char('Reason', required=True),
        'filter_refund': fields.selection([('refund', 'Create a draft refund'), ('cancel', 'Cancel: create refund and reconcile'),('modify', 'Modify: create refund, reconcile and create a new draft invoice')], "Refund Method", required=True, help='Refund base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
     }
 

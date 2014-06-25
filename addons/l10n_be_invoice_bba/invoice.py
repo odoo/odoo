@@ -221,7 +221,7 @@ class account_invoice(osv.osv):
         return super(account_invoice, self).copy(cr, uid, id, default, context=context)
 
     _columns = {
-        'reference': fields.char('Communication', size=64, help="The partner reference of this invoice."),
+        'reference': fields.char('Communication', help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Communication Type',
             required=True),
     }

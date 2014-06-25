@@ -566,7 +566,7 @@ class survey_question(osv.Model):
                 ('datetime', 'Date and Time'),
                 ('simple_choice', 'Multiple choice: only one answer'),
                 ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-                ('matrix', 'Matrix')], 'Type of Question', required=1),
+                ('matrix', 'Matrix')], 'Type of Question', size=15, required=1),
         'matrix_subtype': fields.selection([('simple', 'One choice per row'),
             ('multiple', 'Multiple choices per row')], 'Matrix Type'),
         'labels_ids': fields.one2many('survey.label',

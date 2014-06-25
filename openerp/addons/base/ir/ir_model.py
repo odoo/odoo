@@ -100,7 +100,7 @@ class ir_model(osv.osv):
         'model': fields.char('Model', required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
+        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type', readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
         'osv_memory': fields.function(_is_osv_memory, string='Transient Model', type='boolean',
             fnct_search=_search_osv_memory,
@@ -1192,7 +1192,7 @@ class wizard_model_menu(osv.osv_memory):
     _name = 'wizard.ir.model.menu.create'
     _columns = {
         'menu_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
-        'name': fields.char('Menu Name', size=64, required=True),
+        'name': fields.char('Menu Name', required=True),
     }
 
     def menu_create(self, cr, uid, ids, context=None):

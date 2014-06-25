@@ -118,7 +118,7 @@ class wizard_user(osv.osv_memory):
     _columns = {
         'wizard_id': fields.many2one('portal.wizard', string='Wizard', required=True, ondelete='cascade'),
         'partner_id': fields.many2one('res.partner', string='Contact', required=True, readonly=True),
-        'email': fields.char(size=240, string='Email'),
+        'email': fields.char(string='Email', size=240),
         'in_portal': fields.boolean('In Portal'),
     }
 

@@ -40,7 +40,7 @@ class crm_case_channel(osv.osv):
     _description = "Channels"
     _order = 'name'
     _columns = {
-        'name': fields.char('Channel Name', size=64, required=True),
+        'name': fields.char('Channel Name', required=True),
         'active': fields.boolean('Active'),
     }
     _defaults = {
@@ -59,7 +59,7 @@ class crm_case_stage(osv.osv):
     _order = "sequence"
 
     _columns = {
-        'name': fields.char('Stage Name', size=64, required=True, translate=True),
+        'name': fields.char('Stage Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Used to order stages. Lower is better."),
         'probability': fields.float('Probability (%)', required=True, help="This percentage depicts the default/average probability of the Case for this stage to be a success"),
         'on_change': fields.boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity."),
@@ -74,7 +74,7 @@ class crm_case_stage(osv.osv):
         'type': fields.selection([('lead', 'Lead'),
                                     ('opportunity', 'Opportunity'),
                                     ('both', 'Both')],
-                                    string='Type', size=16, required=True,
+                                    string='Type', required=True,
                                     help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types."),
     }
 
@@ -87,13 +87,12 @@ class crm_case_stage(osv.osv):
         'case_default': True,
     }
 
-
 class crm_case_categ(osv.osv):
     """ Category of Case """
     _name = "crm.case.categ"
     _description = "Category of Case"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
@@ -113,7 +112,7 @@ class crm_case_resource_type(osv.osv):
     _description = "Campaign"
     _rec_name = "name"
     _columns = {
-        'name': fields.char('Campaign Name', size=64, required=True, translate=True),
+        'name': fields.char('Campaign Name', required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 
@@ -122,7 +121,7 @@ class crm_payment_mode(osv.osv):
     _name = "crm.payment.mode"
     _description = "CRM Payment Mode"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 

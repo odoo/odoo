@@ -35,7 +35,7 @@ class project_task_type(osv.osv):
     _description = 'Task Stage'
     _order = 'sequence'
     _columns = {
-        'name': fields.char('Stage Name', required=True, size=64, translate=True),
+        'name': fields.char('Stage Name', required=True, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
         'case_default': fields.boolean('Default for New Projects',
@@ -1139,7 +1139,7 @@ class project_work(osv.osv):
     _name = "project.task.work"
     _description = "Project Task Work"
     _columns = {
-        'name': fields.char('Work summary', size=128),
+        'name': fields.char('Work summary'),
         'date': fields.datetime('Date', select="1"),
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select="1"),
         'hours': fields.float('Time Spent'),
@@ -1355,6 +1355,6 @@ class project_category(osv.osv):
     _name = "project.category"
     _description = "Category of project's task, issue, ..."
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

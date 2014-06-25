@@ -203,7 +203,7 @@ class BlogPostHistory(osv.Model):
 
     _columns = {
         'post_id': fields.many2one('blog.post', 'Blog Post'),
-        'summary': fields.char('Summary', size=256, select=True),
+        'summary': fields.char('Summary', select=True),
         'content': fields.text("Content"),
         'create_date': fields.datetime("Date"),
         'create_uid': fields.many2one('res.users', "Modified By"),

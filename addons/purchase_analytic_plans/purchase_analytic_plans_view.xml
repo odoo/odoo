@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
         <field name="arch" type="xml">
             <field name="account_analytic_id" position="replace">
-                <field name="analytics_id"  context="{'journal_id':parent.journal_id}" domain="[('plan_id','&lt;&gt;',False)]"/>
+                <field name="analytics_id"  context="{'journal_id':parent.journal_id, 'model': 'purchase_order'}" domain="[('plan_id','&lt;&gt;',False)]"/>
             </field>
         </field>
     </record>

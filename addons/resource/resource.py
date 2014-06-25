@@ -44,7 +44,7 @@ class resource_calendar(osv.osv):
     _description = "Resource Calendar"
 
     _columns = {
-        'name': fields.char("Name", size=64, required=True),
+        'name': fields.char("Name", required=True),
         'company_id': fields.many2one('res.company', 'Company', required=False),
         'attendance_ids': fields.one2many('resource.calendar.attendance', 'calendar_id', 'Working Time'),
         'manager': fields.many2one('res.users', 'Workgroup Manager'),
@@ -631,7 +631,7 @@ class resource_calendar_attendance(osv.osv):
     _description = "Work Detail"
 
     _columns = {
-        'name' : fields.char("Name", size=64, required=True),
+        'name' : fields.char("Name", required=True),
         'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of Week', required=True, select=True),
         'date_from' : fields.date('Starting Date'),
         'hour_from' : fields.float('Work from', required=True, help="Start and End time of working.", select=True),
@@ -654,7 +654,7 @@ class resource_resource(osv.osv):
     _name = "resource.resource"
     _description = "Resource Detail"
     _columns = {
-        'name' : fields.char("Name", size=64, required=True),
+        'name' : fields.char("Name", required=True),
         'code': fields.char('Code', size=16),
         'active' : fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the resource record without removing it."),
         'company_id' : fields.many2one('res.company', 'Company'),
@@ -792,7 +792,7 @@ class resource_calendar_leaves(osv.osv):
     _name = "resource.calendar.leaves"
     _description = "Leave Detail"
     _columns = {
-        'name' : fields.char("Name", size=64),
+        'name' : fields.char("Name"),
         'company_id' : fields.related('calendar_id','company_id',type='many2one',relation='res.company',string="Company", store=True, readonly=True),
         'calendar_id' : fields.many2one("resource.calendar", "Working Time"),
         'date_from' : fields.datetime('Start Date', required=True),
