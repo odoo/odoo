@@ -914,8 +914,8 @@ class account_invoice(osv.osv):
 
             ctx = context.copy()
             ctx.update({'lang': inv.partner_id.lang})
-            if not inv.date_invoice:
-                inv_date = {'date_invoice': fields.date.context_today(self,cr,uid,context=context)}
+            date_invoice = inv.date_invoice or fields.date.context_today(self,cr,uid,context=context)
+            inv_date = {'date_invoice': date_invoice}
             company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
             # create the analytical lines
             # one move line per invoice line
@@ -961,11 +961,11 @@ class account_invoice(osv.osv):
             totlines = False
             if inv.payment_term:
                 totlines = payment_term_obj.compute(cr,
-                        uid, inv.payment_term.id, total, inv.date_invoice or False, context=ctx)
+                        uid, inv.payment_term.id, total, date_invoice or False, context=ctx)
             if totlines:
                 res_amount_currency = total_currency
                 i = 0
-                ctx.update({'date': inv.date_invoice})
+                ctx.update({'date': date_invoice})
                 for t in totlines:
                     if inv.currency_id.id != company_currency:
                         amount_currency = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, t[1], context=ctx)
@@ -1004,7 +1004,7 @@ class account_invoice(osv.osv):
                     'ref': ref
             })
 
-            date = inv.date_invoice or time.strftime('%Y-%m-%d')
+            date = date_invoice or time.strftime('%Y-%m-%d')
 
             part = self.pool.get("res.partner")._find_accounting_partner(inv.partner_id)
 
@@ -1031,7 +1031,7 @@ class account_invoice(osv.osv):
             period_id = inv.period_id and inv.period_id.id or False
             ctx.update(company_id=inv.company_id.id)
             if not period_id:
-                period_ids = period_obj.find(cr, uid, inv.date_invoice, context=ctx)
+                period_ids = period_obj.find(cr, uid, date_invoice, context=ctx)
                 period_id = period_ids and period_ids[0] or False
             if period_id:
                 move['period_id'] = period_id
