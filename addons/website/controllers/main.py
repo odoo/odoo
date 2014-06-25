@@ -105,8 +105,11 @@ class Website(openerp.addons.web.controllers.main.Home):
             locs = request.website.enumerate_pages()
             while True:
                 start = pages * LOC_PER_SITEMAP
-                loc_slice = islice(locs, start, start + LOC_PER_SITEMAP)
-                urls = iuv.render(cr, uid, 'website.sitemap_locs', dict(locs=loc_slice), context=context)
+                values = {
+                    'locs': islice(locs, start, start + LOC_PER_SITEMAP),
+                    'url_root': request.httprequest.url_root[:-1],
+                }
+                urls = iuv.render(cr, uid, 'website.sitemap_locs', values, context=context)
                 if urls.strip():
                     page = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
                     if not first_page:
