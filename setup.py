@@ -69,7 +69,7 @@ def py2exe_options():
     if os.name == 'nt':
         import py2exe
         return {
-            "console" : [ { "script": "openerp-server", "icon_resources": [(1, join("install","openerp-icon.ico"))], },
+            "console" : [ { "script": "openerp-server", "icon_resources": [(1, join("setup\windows","openerp-icon.ico"))], },
                           { "script": "openerp-gevent" },
                           { "script": "odoo.py" },
             ],
