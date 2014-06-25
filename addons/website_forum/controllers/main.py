@@ -214,6 +214,10 @@ class WebsiteForum(http.Controller):
         # increment view counter
         request.registry['forum.post'].set_viewed(cr, SUPERUSER_ID, [question.id], context=context)
 
+        if question.parent_id:
+            redirect_url = "/forum/%s/question/%s" % (slug(forum), slug(question.parent_id))
+            return werkzeug.utils.redirect(redirect_url, 301)
+
         filters = 'question'
         values = self._prepare_forum_values(forum=forum, searches=post)
         values.update({
