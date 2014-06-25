@@ -18,7 +18,7 @@
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <form string="Employee" version="7.0">
+                <form string="Employee">
                     <sheet>
                         <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
                         <div class="oe_title">
@@ -40,7 +40,9 @@
                             <page string="Public Information">
                                 <group>
                                     <group string="Contact Information">
-                                        <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="address_id" on_change="onchange_address_id(address_id)"
+                                            context="{'show_address': 1, 'default_customer': False}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
                                         <field name="mobile_phone"/>
                                         <field name="work_location"/>
                                     </group>
@@ -68,7 +70,9 @@
                                         <field name="otherid" groups="base.group_hr_user"/>
                                     </group>
                                     <group string="Contact Information">
-                                        <field name="address_home_id" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="address_home_id"
+                                            context="{'show_address': 1, 'default_customer': False}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
                                     </group>
                                     <group string="Status">
                                         <field name="gender"/>
@@ -121,7 +125,7 @@
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
                     <field name="department_id" />
                     <field name="category_ids" groups="base.group_hr_user"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
@@ -270,7 +274,7 @@
             <field name="name">hr.employee.category.form</field>
             <field name="model">hr.employee.category</field>
             <field name="arch" type="xml">
-                <form string="Employee Category" version="7.0">
+                <form string="Employee Category">
                     <group>
                         <field name="name"/>
                         <field name="parent_id"/>
@@ -332,7 +336,7 @@
             <field name="name">hr.job.form</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
-                <form string="Job" version="7.0">
+                <form string="Job">
                     <header>
                         <button name="set_recruit" string="Launch Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
                         <button name="set_open" string="Stop Recruitment" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
@@ -394,7 +398,7 @@
                     <filter domain="[('state','=','open')]" string="In Position"/>
                     <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
                     <field name="department_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -433,7 +437,7 @@
             <field name="name">hr.department.form</field>
             <field name="model">hr.department</field>
             <field name="arch" type="xml">
-                <form string="department" version="7.0">
+                <form string="department">
                     <sheet>
                         <group col="4">
                             <field name="name"/>

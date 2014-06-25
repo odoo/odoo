@@ -7,7 +7,7 @@
             <field name="name">mail.alias.form</field>
             <field name="model">mail.alias</field>
             <field name="arch" type="xml">
-                <form string="Alias" version="7.0">
+                <form string="Alias">
                     <sheet>
                         <h2><field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>
                         <div class="oe_right oe_button_box">
@@ -60,7 +60,7 @@
                     <field name="alias_parent_thread_id"/>
                     <separator/>
                     <filter string="Active" name="active" domain="[('alias_name', '!=', False)]"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="User" name="User" context="{'group_by':'alias_user_id'}"/>
                         <filter string="Model" name="Model" context="{'group_by':'alias_model_id'}"/>
                     </group>

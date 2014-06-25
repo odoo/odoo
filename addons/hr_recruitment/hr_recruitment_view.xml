@@ -68,7 +68,7 @@
         <field name="name">Jobs - Recruitment Form</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-          <form string="Jobs - Recruitment Form" version="7.0">
+          <form string="Jobs - Recruitment Form">
             <header>
                 <field name="stage_id" widget="statusbar" clickable="True"/>
             </header>
@@ -208,7 +208,7 @@
                 <separator/>
                 <field name="categ_ids"/>
                 <separator/>
-                <group expand="0" string="Group By...">
+                <group expand="0" string="Group By">
                     <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
                     <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
@@ -397,7 +397,7 @@
             <field name="name">hr.job.kanban</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_background_grey">
+                <kanban class="oe_background_grey">
                     <field name="name"/>
                     <field name="department_id"/>
                     <field name="no_of_recruitment"/>
@@ -529,7 +529,7 @@
         <field name="name">hr.recruitment.stage.form</field>
         <field name="model">hr.recruitment.stage</field>
         <field name="arch" type="xml">
-            <form string="Stage" version="7.0">
+            <form string="Stage">
                 <sheet>
                 <group string="Stage Definition">
                     <group>
@@ -589,7 +589,7 @@
         <field name="name">hr.recruitment.degree.form</field>
         <field name="model">hr.recruitment.degree</field>
         <field name="arch" type="xml">
-            <form string="Degree" version="7.0">
+            <form string="Degree">
                 <sheet>
                 <group>
                     <field name="name"/>
@@ -629,7 +629,7 @@
         <field name="name">hr.recruitment.source.form</field>
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
-            <form string="Sources of Applicants" version="7.0">
+            <form string="Sources of Applicants">
                 <sheet>
                 <group>
                     <field name="name"/>

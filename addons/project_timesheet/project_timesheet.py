@@ -137,7 +137,7 @@ class project_work(osv.osv):
                 amount = vals_line['unit_amount']
                 prod_id = vals_line['product_id']
                 unit = False
-                timeline_id = timesheet_obj.create(cr, uid, vals=vals_line, context=context)
+                timeline_id = timesheet_obj.create(cr, uid, vals_line, context=context)
 
                 # Compute based on pricetype
                 amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, timeline_id,

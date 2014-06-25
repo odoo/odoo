@@ -32,7 +32,7 @@
                     <field name="reviewer_id"/>
                     <field name="user_id"/>
                     <field name="stage_id" domain="[]"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Reviewers" name="group_reviewer_id" domain="[]"  context="{'group_by':'reviewer_id'}"/>
                         <filter string="Users" name="group_user_id" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                         <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
@@ -70,7 +70,7 @@
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <form string="Project" version="7.0">
+                <form string="Project">
                 <header>
                     <button name="set_open" string="Re-open project" type="object" states="pending" class="oe_highlight" groups="base.group_user"/>
                     <button name="set_done" string="Close Project" type="object" states="open,pending" groups="base.group_user"/>
@@ -201,7 +201,7 @@
                     <filter string="Project(s) Manager" domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact" filter_domain="[('partner_id', 'child_of', self)]"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Manager" name="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Contact" name="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Parent" name="Parent" help="Parent" icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
@@ -236,7 +236,7 @@
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_background_grey">
+                <kanban class="oe_background_grey">
                     <field name="effective_hours"/>
                     <field name="planned_hours"/>
                     <field name="name"/>
@@ -341,7 +341,7 @@
             <field name="name">project.task.work.form</field>
             <field name="model">project.task.work</field>
             <field name="arch" type="xml">
-                <form string="Task Work" version="7.0">
+                <form string="Task Work">
                     <group col="4">
                         <field colspan="4" name="name"/>
                         <field name="hours" widget="float_time"/>
@@ -373,7 +373,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Project" version="7.0">
+                <form string="Project">
                     <header>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"/>
@@ -685,7 +685,7 @@
             <field name="name">project.task.type.form</field>
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
-                <form string="Task Stage" version="7.0">
+                <form string="Task Stage">
                     <group>
                         <group>
                             <field name="name"/>
@@ -771,7 +771,9 @@
             <field name="model">project.category</field>
             <field name="arch" type="xml">
                 <form string="Tags">
-                    <field name="name"/>
+                    <group col="4">
+                        <field name="name"/>
+                    </group>
                 </form>
             </field>
         </record>

@@ -25,7 +25,7 @@
         <record id="impuestos_plantilla_isv_por_cobrar" model="account.tax.template">
             <field name="chart_template_id" ref="cuentas_plantilla"/>
             <field name="name">ISV por Cobrar</field>
-        <field name="amount" eval="0.12"/>
+        <field name="amount" eval="0.15"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="cta110301"/>
             <field name="account_paid_id" ref="cta110301"/>
@@ -42,7 +42,7 @@
         <record id="impuestos_plantilla_isv_por_pagar" model="account.tax.template">
             <field name="chart_template_id" ref="cuentas_plantilla"/>
             <field name="name">ISV por Pagar</field>
-            <field name="amount" eval="0.12"/>
+            <field name="amount" eval="0.15"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="cta210201"/>
             <field name="account_paid_id" ref="cta210201"/>

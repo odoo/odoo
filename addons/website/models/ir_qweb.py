@@ -15,6 +15,7 @@ import urllib2
 import urlparse
 import re
 
+import pytz
 import werkzeug.urls
 import werkzeug.utils
 from dateutil import parser
@@ -25,6 +26,7 @@ import openerp.modules
 import openerp
 from openerp.osv import orm, fields
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import html_escape as escape
 from openerp.addons.web.http import request
 from openerp.addons.base.ir import ir_qweb
 
@@ -152,15 +154,15 @@ class DateTime(orm.AbstractModel):
     def attributes(self, cr, uid, field_name, record, options,
                    source_element, g_att, t_att, qweb_context,
                    context=None):
-        column = record._model._all_columns[field_name].column
         value = record[field_name]
         if isinstance(value, basestring):
             value = datetime.datetime.strptime(
                 value, DEFAULT_SERVER_DATETIME_FORMAT)
         if value:
+            # convert from UTC (server timezone) to user timezone
             value = fields.datetime.context_timestamp(
                 cr, uid, timestamp=value, context=context)
-            value = value.strftime(openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            value = value.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         attrs = super(DateTime, self).attributes(
             cr, uid, field_name, record, options, source_element, g_att, t_att,
@@ -170,11 +172,31 @@ class DateTime(orm.AbstractModel):
         ])
 
     def from_html(self, cr, uid, model, column, element, context=None):
+        if context is None: context = {}
         value = element.text_content().strip()
         if not value: return False
 
-        datetime.datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)
-        return value
+        # parse from string to datetime
+        dt = datetime.datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)
+
+        # convert back from user's timezone to UTC
+        tz_name = context.get('tz') \
+            or self.pool['res.users'].read(cr, openerp.SUPERUSER_ID, uid, ['tz'], context=context)['tz']
+        if tz_name:
+            try:
+                user_tz = pytz.timezone(tz_name)
+                utc = pytz.utc
+
+                dt = user_tz.localize(dt).astimezone(utc)
+            except Exception:
+                logger.warn(
+                    "Failed to convert the value for a field of the model"
+                    " %s back from the user's timezone (%s) to UTC",
+                    model, tz_name,
+                    exc_info=True)
+
+        # format back to string
+        return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
 class Text(orm.AbstractModel):
     _name = 'website.qweb.field.text'
@@ -276,7 +298,7 @@ class Image(orm.AbstractModel):
                 url_params[options_key] = options[options_key]
 
         return ir_qweb.HTMLSafe('<img class="%s" src="/website/image?%s"/>' % (
-            ' '.join(itertools.imap(werkzeug.utils.escape, classes)),
+            ' '.join(itertools.imap(escape, classes)),
             werkzeug.urls.url_encode(url_params)
         ))
 

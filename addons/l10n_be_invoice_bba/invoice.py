@@ -141,7 +141,7 @@ class account_invoice(osv.osv):
                 elif algorithm == 'random':
                     if not self.check_bbacomm(reference):
                         base = random.randint(1, 9999999999)
-                        bbacomm = str(base).rjust(7, '0')
+                        bbacomm = str(base).rjust(10, '0')
                         base = int(bbacomm)
                         mod = base % 97 or 97
                         mod = str(mod).rjust(2, '0')
@@ -221,7 +221,7 @@ class account_invoice(osv.osv):
         return super(account_invoice, self).copy(cr, uid, id, default, context=context)
 
     _columns = {
-        'reference': fields.char('Communication', size=64, help="The partner reference of this invoice."),
+        'reference': fields.char('Communication', help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Communication Type',
             required=True),
     }

@@ -30,7 +30,7 @@
                     <field name="list_id"/>
                     <separator/>
                     <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Creation Date" name="group_create_date"
                             context="{'group_by': 'create_date'}"/>
                         <filter string="Mailing Lists" name="group_list_id"
@@ -106,7 +106,7 @@
             <field name="name">mail.mass_mailing.list.form</field>
             <field name="model">mail.mass_mailing.list</field>
             <field name="arch" type="xml">
-                <form string="Contact List" version="7.0">
+                <form string="Contact List">
                     <sheet>
                         <div class="oe_right oe_button_box" name="buttons">
                             <button name="%(mass_mailing.action_view_mass_mailing_contacts_from_list)d"
@@ -151,7 +151,7 @@
                <search string="Mass Mailings">
                     <field name="name" string="Mailings"/>
                     <field name="mass_mailing_campaign_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="State" name="group_state"
                             context="{'group_by': 'state'}"/>
                         <filter string="Campaign" name="group_mass_mailing_campaign_id"
@@ -183,7 +183,7 @@
             <field name="name">mail.mass_mailing.form</field>
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
-                <form string="Mass Mailing" version="7.0">
+                <form string="Mass Mailing">
                     <header>
                         <button name="action_test_mailing" type="object"
                             class="oe_highlight" string="Test Mailing"
@@ -421,7 +421,7 @@
                     <field name="name" string="Campaigns"/>
                     <field name="category_ids"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Stage" name="group_stage_id"
                             context="{'group_by': 'stage_id'}"/>
                         <filter string="Responsible" name="group_user_id"
@@ -449,7 +449,7 @@
             <field name="name">mail.mass_mailing.campaign.form</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
-                <form string="Mass Mailing Campaign" version="7.0">
+                <form string="Mass Mailing Campaign">
                     <header>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
@@ -591,6 +591,7 @@
                     <field name="mail_mail_id"/>
                     <field name="message_id"/>
                     <field name="sent"/>
+                    <field name="exception"/>
                     <field name="opened"/>
                     <field name="replied"/>
                     <field name="bounced"/>
@@ -602,7 +603,7 @@
             <field name="name">mail.mail.statistics.form</field>
             <field name="model">mail.mail.statistics</field>
             <field name="arch" type="xml">
-                <form string="Mail Statistics" version="7.0">
+                <form string="Mail Statistics">
                     <group>
                         <group>
                             <field name="mail_mail_id"/>

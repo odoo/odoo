@@ -22,13 +22,13 @@
 import base64
 import logging
 import re
-from urllib import urlencode
 from urlparse import urljoin
 
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -59,6 +59,7 @@ class mail_mail(osv.Model):
         'recipient_ids': fields.many2many('res.partner', string='To (Partners)'),
         'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
+        'headers': fields.text('Headers'),
         # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
         # and during unlink() we will not cascade delete the parent and its attachments
         'notification': fields.boolean('Is Notification',
@@ -67,6 +68,7 @@ class mail_mail(osv.Model):
 
     _defaults = {
         'state': 'outgoing',
+        'headers': '{}',
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -186,11 +188,8 @@ class mail_mail(osv.Model):
           - if 'partner' and mail is a notification on a document: followers (Followers of 'Doc' <email>)
           - elif 'partner', no notificatoin or no doc: recipient specific (Partner Name <email>)
           - else fallback on mail.email_to splitting """
-        if partner and mail.notification and mail.record_name:
-            sanitized_record_name = re.sub(r'[^\w+.]+', '-', mail.record_name)
-            email_to = [_('"Followers of %s" <%s>') % (sanitized_record_name, partner.email)]
-        elif partner:
-            email_to = ['%s <%s>' % (partner.name, partner.email)]
+        if partner:
+            email_to = ['"%s" <%s>' % (partner.name, partner.email)]
         else:
             email_to = tools.email_split(mail.email_to)
         return email_to
@@ -204,12 +203,13 @@ class mail_mail(osv.Model):
         """
         body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
         body_alternative = tools.html2plaintext(body)
-        return {
+        res = {
             'body': body,
             'body_alternative': body_alternative,
             'subject': self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context),
             'email_to': self.send_get_mail_to(cr, uid, mail, partner=partner, context=context),
         }
+        return res
 
     def send(self, cr, uid, ids, auto_commit=False, raise_exception=False, context=None):
         """ Sends the selected emails immediately, ignoring their current
@@ -264,6 +264,11 @@ class mail_mail(osv.Model):
                         headers['Return-Path'] = '%s-%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
                     else:
                         headers['Return-Path'] = '%s-%d@%s' % (bounce_alias, mail.id, catchall_domain)
+                if mail.headers:
+                    try:
+                        headers.update(eval(mail.headers))
+                    except Exception:
+                        pass
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None

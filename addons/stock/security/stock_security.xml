@@ -50,7 +50,7 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
     
-    <record model="ir.rule" id="stock_picking_rule">
+    <record model="ir.rule" id="stock_picking_type_rule">
         <field name="name">Stock Picking Type multi-company</field>
         <field name="model_id" search="[('model','=','stock.picking.type')]" model="ir.model"/>
         <field name="global" eval="True"/>

@@ -20,7 +20,6 @@
 ##############################################################################
 
 import logging
-import re
 
 from openerp import tools
 
@@ -124,13 +123,15 @@ class mail_message(osv.Model):
                         ('email', 'Email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
-                        ], 'Type',
+                        ], 'Type', size=12, 
             help="Message type: email for email message, notification for system "\
                  "message, comment for other messages such as user replies"),
         'email_from': fields.char('From',
             help="Email address of the sender. This field is set when no matching partner is found for incoming emails."),
         'reply_to': fields.char('Reply-To',
             help='Reply email address. Setting the reply_to bypasses the automatic thread creation.'),
+        'same_thread': fields.boolean('Same thread',
+            help='Redirect answers to the same discussion thread.'),
         'author_id': fields.many2one('res.partner', 'Author', select=1,
             ondelete='set null',
             help="Author of the message. If not set, email_from may hold an email address that did not match any partner."),
@@ -188,6 +189,7 @@ class mail_message(osv.Model):
         'author_id': lambda self, cr, uid, ctx=None: self._get_default_author(cr, uid, ctx),
         'body': '',
         'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
+        'same_thread': True,
     }
 
     #------------------------------------------------------
@@ -766,42 +768,12 @@ class mail_message(osv.Model):
         """ Return a specific reply_to: alias of the document through message_get_reply_to
             or take the email_from
         """
-        email_reply_to = None
-
-        ir_config_parameter = self.pool.get("ir.config_parameter")
-        catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
-
-        # model, res_id, email_from: comes from values OR related message
         model, res_id, email_from = values.get('model'), values.get('res_id'), values.get('email_from')
-
-        # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
-        if not email_reply_to and model and res_id and catchall_domain and hasattr(self.pool[model], 'message_get_reply_to'):
-            email_reply_to = self.pool[model].message_get_reply_to(cr, uid, [res_id], context=context)[0]
-        # no alias reply_to -> catchall alias
-        if not email_reply_to and catchall_domain:
-            catchall_alias = ir_config_parameter.get_param(cr, uid, "mail.catchall.alias", context=context)
-            if catchall_alias:
-                email_reply_to = '%s@%s' % (catchall_alias, catchall_domain)
-        # still no reply_to -> reply_to will be the email_from
-        if not email_reply_to and email_from:
-            email_reply_to = email_from
-
-        # format 'Document name <email_address>'
-        if email_reply_to and model and res_id:
-            emails = tools.email_split(email_reply_to)
-            if emails:
-                email_reply_to = emails[0]
-            document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
-            if document_name:
-                # sanitize document name
-                sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1])
-                # generate reply to
-                email_reply_to = _('"Followers of %s" <%s>') % (sanitized_doc_name, email_reply_to)
-
-        return email_reply_to
+        ctx = dict(context, thread_model=model)
+        return self.pool['mail.thread'].message_get_reply_to(cr, uid, [res_id], default=email_from, context=ctx)[res_id]
 
     def _get_message_id(self, cr, uid, values, context=None):
-        if values.get('reply_to'):
+        if values.get('same_thread', True) is False:
             message_id = tools.generate_tracking_message_id('reply_to')
         elif values.get('res_id') and values.get('model'):
             message_id = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)

@@ -167,8 +167,8 @@ class ir_mail_server(osv.osv):
     _name = "ir.mail_server"
 
     _columns = {
-        'name': fields.char('Description', size=64, required=True, select=True),
-        'smtp_host': fields.char('SMTP Server', size=128, required=True, help="Hostname or IP of SMTP server"),
+        'name': fields.char('Description', required=True, select=True),
+        'smtp_host': fields.char('SMTP Server', required=True, help="Hostname or IP of SMTP server"),
         'smtp_port': fields.integer('SMTP Port', size=5, required=True, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."),
         'smtp_user': fields.char('Username', size=64, help="Optional username for SMTP authentication"),
         'smtp_pass': fields.char('Password', size=64, help="Optional password for SMTP authentication"),

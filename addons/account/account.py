@@ -59,7 +59,7 @@ class account_payment_term(osv.osv):
     _name = "account.payment.term"
     _description = "Payment Term"
     _columns = {
-        'name': fields.char('Payment Term', size=64, translate=True, required=True),
+        'name': fields.char('Payment Term', translate=True, required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the payment term without removing it."),
         'note': fields.text('Description', translate=True),
         'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms'),
@@ -180,7 +180,7 @@ class account_account_type(osv.osv):
             return obj_financial_report.write(cr, uid, [financial_report_ref[field_value].id], {'account_type_ids': [(4, account_type_id)]})
 
     _columns = {
-        'name': fields.char('Account Type', size=64, required=True, translate=True),
+        'name': fields.char('Account Type', required=True, translate=True),
         'code': fields.char('Code', size=32, required=True, select=True),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
 
@@ -444,7 +444,7 @@ class account_account(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=256, required=True, select=True),
+        'name': fields.char('Name', required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True, select=1),
         'type': fields.selection([
@@ -580,7 +580,14 @@ class account_account(osv.osv):
             pass
         if name:
             if operator not in expression.NEGATIVE_TERM_OPERATORS:
-                ids = self.search(cr, user, ['|', ('code', '=like', name+"%"), '|',  ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
+                plus_percent = lambda n: n+'%'
+                code_op, code_conv = {
+                    'ilike': ('=ilike', plus_percent),
+                    'like': ('=like', plus_percent),
+                }.get(operator, (operator, lambda n: n))
+
+                ids = self.search(cr, user, ['|', ('code', code_op, code_conv(name)), '|', ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
+
                 if not ids and len(name.split()) >= 2:
                     #Separating code and name of account for searching
                     operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
@@ -708,7 +715,7 @@ class account_journal(osv.osv):
     _description = "Journal"
     _columns = {
         'with_last_closing_balance' : fields.boolean('Opening With Last Closing Balance'),
-        'name': fields.char('Journal Name', size=64, required=True),
+        'name': fields.char('Journal Name', required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for customer invoices journals."\
@@ -852,7 +859,7 @@ class account_fiscalyear(osv.osv):
     _name = "account.fiscalyear"
     _description = "Fiscal Year"
     _columns = {
-        'name': fields.char('Fiscal Year', size=64, required=True),
+        'name': fields.char('Fiscal Year', required=True),
         'code': fields.char('Code', size=6, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'date_start': fields.date('Start Date', required=True),
@@ -945,10 +952,9 @@ class account_period(osv.osv):
     _name = "account.period"
     _description = "Account period"
     _columns = {
-        'name': fields.char('Period Name', size=64, required=True),
+        'name': fields.char('Period Name', required=True),
         'code': fields.char('Code', size=12),
-        'special': fields.boolean('Opening/Closing Period', size=12,
-            help="These periods can overlap."),
+        'special': fields.boolean('Opening/Closing Period',help="These periods can overlap."),
         'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly',True)]}),
         'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
@@ -1085,10 +1091,10 @@ class account_journal_period(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Journal-Period Name', size=64, required=True),
+        'name': fields.char('Journal-Period Name', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, ondelete="cascade"),
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
-        'icon': fields.function(_icon_get, string='Icon', type='char', size=32),
+        'icon': fields.function(_icon_get, string='Icon', type='char'),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the journal period without removing it."),
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True,
                                   help='When journal period is created. The status is \'Draft\'. If a report is printed it comes to \'Printed\' status. When all transactions are done, it comes in \'Done\' status.'),
@@ -1228,8 +1234,8 @@ class account_move(osv.osv):
         return [line.move_id.id for line in line_obj.browse(cr, uid, ids, context=context)]
 
     _columns = {
-        'name': fields.char('Number', size=64, required=True),
-        'ref': fields.char('Reference', size=64),
+        'name': fields.char('Number', required=True),
+        'ref': fields.char('Reference'),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
         'state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', required=True, readonly=True,
@@ -1622,8 +1628,8 @@ class account_move_reconcile(osv.osv):
     _name = "account.move.reconcile"
     _description = "Account Reconciliation"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'type': fields.char('Type', size=16, required=True),
+        'name': fields.char('Name', required=True),
+        'type': fields.char('Type', required=True),
         'line_id': fields.one2many('account.move.line', 'reconcile_id', 'Entry Lines'),
         'line_partial_ids': fields.one2many('account.move.line', 'reconcile_partial_id', 'Partial Entry lines'),
         'create_date': fields.date('Creation date', readonly=True),
@@ -1780,7 +1786,7 @@ class account_tax_code(osv.osv):
     _description = 'Tax Code'
     _rec_name = 'code'
     _columns = {
-        'name': fields.char('Tax Case Name', size=64, required=True, translate=True),
+        'name': fields.char('Tax Case Name', required=True, translate=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'sum': fields.function(_sum_year, string="Year Sum"),
@@ -1869,7 +1875,7 @@ class account_tax(osv.osv):
     _name = 'account.tax'
     _description = 'Tax'
     _columns = {
-        'name': fields.char('Tax Name', size=64, required=True, translate=True, help="This name will be displayed on reports"),
+        'name': fields.char('Tax Name', required=True, translate=True, help="This name will be displayed on reports"),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."),
         'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For taxes of type percentage, enter % ratio between 0-1."),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the tax without removing it."),
@@ -1877,7 +1883,7 @@ class account_tax(osv.osv):
             help="The computation method for the tax amount."),
         'applicable_type': fields.selection( [('true','Always'), ('code','Given by Python Code')], 'Applicability', required=True,
             help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
-        'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
+        'domain':fields.char('Domain', help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
         'account_collected_id':fields.many2one('account.account', 'Invoice Tax Account', help="Set the account that will be set by default on invoice tax lines for invoices. Leave empty to use the expense account."),
         'account_paid_id':fields.many2one('account.account', 'Refund Tax Account', help="Set the account that will be set by default on invoice tax lines for refunds. Leave empty to use the expense account."),
         'account_analytic_collected_id':fields.many2one('account.analytic.account', 'Invoice Tax Analytic Account', help="Set the analytic account that will be used by default on the invoice tax lines for invoices. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."),
@@ -2260,7 +2266,7 @@ class account_model(osv.osv):
     _name = "account.model"
     _description = "Account Model"
     _columns = {
-        'name': fields.char('Model Name', size=64, required=True, help="This is a model for recurring accounting entries"),
+        'name': fields.char('Model Name', required=True, help="This is a model for recurring accounting entries"),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'lines_id': fields.one2many('account.model.line', 'model_id', 'Model Entries'),
@@ -2367,7 +2373,7 @@ class account_model_line(osv.osv):
     _name = "account.model.line"
     _description = "Account Model Entries"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the resources from lower sequences to higher ones."),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Account'), help="The optional quantity on entries."),
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
@@ -2395,8 +2401,8 @@ class account_subscription(osv.osv):
     _name = "account.subscription"
     _description = "Account Subscription"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'ref': fields.char('Reference', size=16),
+        'name': fields.char('Name', required=True),
+        'ref': fields.char('Reference'),
         'model_id': fields.many2one('account.model', 'Model', required=True),
         'date_start': fields.date('Start Date', required=True),
         'period_total': fields.integer('Number of Periods', required=True),
@@ -2500,7 +2506,7 @@ class account_account_template(osv.osv):
     _description ='Templates for Accounts'
 
     _columns = {
-        'name': fields.char('Name', size=256, required=True, select=True),
+        'name': fields.char('Name', required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True, select=1),
         'type': fields.selection([
@@ -2681,7 +2687,7 @@ class account_tax_code_template(osv.osv):
     _order = 'code'
     _rec_name = 'code'
     _columns = {
-        'name': fields.char('Tax Case Name', size=64, required=True),
+        'name': fields.char('Tax Case Name', required=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
@@ -2751,7 +2757,7 @@ class account_chart_template(osv.osv):
     _description= "Templates for Account Chart"
 
     _columns={
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
         'code_digits': fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
@@ -2785,12 +2791,12 @@ class account_tax_template(osv.osv):
 
     _columns = {
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
-        'name': fields.char('Tax Name', size=64, required=True),
+        'name': fields.char('Tax Name', required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from lower sequences to higher ones. The order is important if you have a tax that has several tax children. In this case, the evaluation order is important."),
         'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For Tax Type percent enter % ratio between 0-1."),
         'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True),
         'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True, help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
-        'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
+        'domain':fields.char('Domain', help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
         'account_collected_id':fields.many2one('account.account.template', 'Invoice Tax Account'),
         'account_paid_id':fields.many2one('account.account.template', 'Refund Tax Account'),
         'parent_id':fields.many2one('account.tax.template', 'Parent Tax Account', select=True),
@@ -2914,11 +2920,11 @@ class account_fiscal_position_template(osv.osv):
     _description = 'Template for Fiscal Position'
 
     _columns = {
-        'name': fields.char('Fiscal Position Template', size=64, required=True),
+        'name': fields.char('Fiscal Position Template', required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping'),
-        'note': fields.text('Notes', translate=True),
+        'note': fields.text('Notes'),
     }
 
     def generate_fiscal_position(self, cr, uid, chart_temp_id, tax_template_ref, acc_template_ref, company_id, context=None):
@@ -3546,10 +3552,10 @@ class account_bank_accounts_wizard(osv.osv_memory):
     _name='account.bank.accounts.wizard'
 
     _columns = {
-        'acc_name': fields.char('Account Name.', size=64, required=True),
+        'acc_name': fields.char('Account Name.', required=True),
         'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True, ondelete='cascade'),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
-        'account_type': fields.selection([('cash','Cash'), ('check','Check'), ('bank','Bank')], 'Account Type', size=32),
+        'account_type': fields.selection([('cash','Cash'), ('check','Check'), ('bank','Bank')], 'Account Type'),
     }
 
 

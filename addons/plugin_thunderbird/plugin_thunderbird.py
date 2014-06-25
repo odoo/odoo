@@ -27,8 +27,8 @@ class plugin_thunderbird_installer(osv.osv_memory):
 
     _columns = {
         'thunderbird': fields.boolean('Thunderbird Plug-in', help="Allows you to select an object that you would like to add to your email and its attachments."),
-        'plugin_name': fields.char('File name', size=64),
-        'plugin_file': fields.char('Thunderbird Plug-in', size=256, readonly=True, help="Thunderbird plug-in file. Save this file and install it in Thunderbird."),
+        'plugin_name': fields.char('File name'),
+        'plugin_file': fields.char('Thunderbird Plug-in', readonly=True, help="Thunderbird plug-in file. Save this file and install it in Thunderbird."),
     }
 
     _defaults = {

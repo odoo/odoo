@@ -78,7 +78,7 @@ class PostgreSQLHandler(logging.Handler):
         dbname = tools.config['log_db'] or ct_db
         if not dbname:
             return
-        with tools.ignore(Exception), sql_db.db_connect(dbname).cursor() as cr:
+        with tools.ignore(Exception), tools.mute_logger('openerp.sql_db'), sql_db.db_connect(dbname).cursor() as cr:
             msg = tools.ustr(record.msg)
             if record.args:
                 msg = msg % record.args
@@ -212,9 +212,9 @@ PSEUDOCONFIG_MAPPER = {
     'debug': ['openerp:DEBUG'],
     'debug_sql': ['openerp.sql_db:DEBUG'],
     'info': [],
-    'warn': ['openerp:WARNING'],
-    'error': ['openerp:ERROR'],
-    'critical': ['openerp:CRITICAL'],
+    'warn': ['openerp:WARNING', 'werkzeug:WARNING'],
+    'error': ['openerp:ERROR', 'werkzeug:ERROR'],
+    'critical': ['openerp:CRITICAL', 'werkzeug:CRITICAL'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

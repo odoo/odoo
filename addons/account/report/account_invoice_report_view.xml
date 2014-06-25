@@ -35,7 +35,7 @@
                 <field name="partner_id"/>
                 <field name="user_id" />
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
-                <group expand="1" string="Group By...">
+                <group expand="1" string="Group By">
                     <filter string="Partner" name="partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Commercial Partner" name="commercial_partner_id" context="{'group_by':'commercial_partner_id','residual_visible':True}"/>
                     <filter string="Commercial Partner's Country" name="country_id" context="{'group_by':'country_id'}"/>

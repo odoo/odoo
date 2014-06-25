@@ -45,7 +45,7 @@ class ir_config_parameter(osv.osv):
     _rec_name = 'key'
 
     _columns = {
-        'key': fields.char('Key', size=256, required=True, select=1),
+        'key': fields.char('Key', required=True, select=1),
         'value': fields.text('Value', required=True),
     }
 

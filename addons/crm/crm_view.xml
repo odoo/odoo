@@ -41,7 +41,7 @@
             <field name="name">crm.case.channel.form</field>
             <field name="model">crm.case.channel</field>
             <field name="arch" type="xml">
-                <form string="Channel" version="7.0">
+                <form string="Channel">
                     <group>
                         <field name="name"/>
                         <field name="active"/>
@@ -92,7 +92,7 @@
             <field name="model">crm.case.stage</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <form string="Stage" version="7.0">
+                <form string="Stage">
                     <group>
                         <group>
                             <field name="name"/>
@@ -130,7 +130,7 @@
             <field name="name">crm.case.categ.form</field>
             <field name="model">crm.case.categ</field>
             <field name="arch" type="xml">
-                <form string="Case Category" version="7.0">
+                <form string="Case Category">
                     <group>
                         <field name="name"/>
                         <field name="section_id" groups="base.group_multi_salesteams"/>
@@ -172,7 +172,7 @@
             <field name="name">crm.case.resource.type.form</field>
             <field name="model">crm.case.resource.type</field>
             <field name="arch" type="xml">
-                <form string="Campaign" version="7.0">
+                <form string="Campaign">
                     <group>
                         <field name="name"/>
                         <field name="section_id" groups="base.group_multi_salesteams"/>
@@ -218,7 +218,7 @@
             <field name="name">crm.segmentation.line.form</field>
             <field name="model">crm.segmentation.line</field>
             <field name="arch" type="xml">
-                <form string="Partner Segmentation Lines" version="7.0">
+                <form string="Partner Segmentation Lines">
                     <group col="4">
                         <field colspan="4" name="name"/>
                         <group col="2" colspan="4">
@@ -238,7 +238,7 @@
             <field name="name">crm.segmentation.form</field>
             <field name="model">crm.segmentation</field>
             <field name="arch" type="xml">
-                <form string="Partner Segmentation" version="7.0">
+                <form string="Partner Segmentation">
                     <header>
                         <button name="process_start"
                             states="not running"
@@ -335,7 +335,7 @@
             <field name="name">crm.payment.mode.form</field>
             <field name="model">crm.payment.mode</field>
             <field name="arch" type="xml">
-                <form string="Payment Mode" version="7.0">
+                <form string="Payment Mode">
                     <group>
                         <field name="name"/>
                         <field name="section_id" groups="base.group_multi_salesteams"/>

@@ -37,7 +37,7 @@
             <field name="name">Badge Form</field>
             <field name="model">gamification.badge</field>
             <field name="arch" type="xml">
-                <form string="Badge" version="7.0">
+                <form string="Badge">
                     <header>
                         <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [('remaining_sending','=',0)]}" />
                         <button string="Check Badge" type="object" name="check_automatic" groups="base.group_no_one" />
@@ -99,7 +99,7 @@
             <field name="name">Badge Kanban View</field>
             <field name="model">gamification.badge</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_background_grey">
+                <kanban class="oe_background_grey">
                     <field name="name"/>
                     <field name="description"/>
                     <field name="image"/>
@@ -163,7 +163,7 @@
             <field name="name">Badge User Kanban View</field>
             <field name="model">gamification.badge.user</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_background_grey">
+                <kanban class="oe_background_grey">
                     <field name="badge_name"/>
                     <field name="badge_id"/>
                     <field name="user_id"/>

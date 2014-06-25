@@ -607,7 +607,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
   
-
         return this.switch_mode(default_view, null, this.flags[default_view] && this.flags[default_view].options);
       
         
@@ -647,7 +646,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
-                    var container = self.$el.find("> .oe_view_manager_body > .oe_view_manager_view_" + view_name);
+                    var container = self.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_name);
                     if (view_name === view_type) {
                         container.show();
                         controller.do_show(view_options || {});
@@ -690,7 +689,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         controller.on('switch_mode', self, this.switch_mode);
         controller.on('previous_view', self, this.prev_view);
         
-        var container = this.$el.find("> .oe_view_manager_body > .oe_view_manager_view_" + view_type);
+        var container = this.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
         this.views[view_type].deferred.resolve(view_type);
@@ -705,6 +704,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             self.trigger("controller_inited",view_type,controller);
         });
     },
+
     /**
      * @returns {Number|Boolean} the view id of the given type, false if not found
      */
@@ -800,6 +800,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         if (this.searchview) {
             this.searchview.destroy();
         }
+
         var options = {
             hidden: this.flags.search_view === false,
             disable_custom_filters: this.flags.search_disable_custom_filters,
@@ -807,7 +808,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.searchview = new instance.web.SearchView(this, this.dataset, view_id, search_defaults, options);
 
         this.searchview.on('search_data', self, this.do_searchview_search);
-        return this.searchview.appendTo(this.$el.find(".oe_view_manager_view_search"));
+        return this.searchview.appendTo(this.$(".oe_view_manager_view_search"),
+                                      this.$(".oe_searchview_drawer_container"));
     },
     do_searchview_search: function(domains, contexts, groupbys) {
         var self = this,

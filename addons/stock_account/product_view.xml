@@ -30,11 +30,7 @@
                         <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                     </group>
-		</xpath>
-		<xpath expr="//field[@name='standard_price']" position='replace'>
-                    <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
-                    <field name="cost_method" groups="stock_account.group_inventory_valuation"/>
-		</xpath>
+                </xpath>
             </field>
         </record>
 
@@ -43,7 +39,7 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="standard_price" position="replace" version="7.0">
+                <field name="standard_price" position="replace">
                     <field name="cost_method" groups="stock_account.group_inventory_valuation"/>
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
