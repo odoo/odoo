@@ -24,7 +24,7 @@
             {
                 title:     "add suggested",
                 waitNot:   '#cart_products:contains("[A8767] Apple In-Ear Headphones")',
-                element:   'form[action="/shop/cart/update"] .btn-link:contains("Add to Cart")',
+                element:   '.oe_cart a:contains("Add to Cart")',
             },
             {
                 title:     "add one more iPod",

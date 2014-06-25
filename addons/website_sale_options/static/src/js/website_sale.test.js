@@ -1,6 +1,11 @@
 (function () {
     'use strict';
     
+    openerp.Tour.tours.shop_buy_product.steps.splice(3, 0, {
+        title:     "click in modal on 'Proceed to checkout' button",
+        element:   '.modal a:contains("Proceed to checkout")',
+    });
+
     openerp.Tour.register({
         id:   'shop_customize',
         name: "Customize the page and search a product",
@@ -25,54 +30,58 @@
                 waitFor:   'form.js_attributes label:contains(16 Go) input:checked',
             },
             {
-                title:     "select iPod",
+                title:     "select iPad",
                 waitNot:   '.oe_website_sale .oe_product_cart:eq(2)',
-                element:   '.oe_product_cart a:contains("iPod")',
-            },
-            {
-                title:     "open customize menu 2",
-                waitFor:   'form[action^="/shop/cart/update"] label:contains(32 Go) input',
-                element:   '#customize-menu-button',
-            },
-            {
-                title:     "click on 'Confirm: Add To Cart'",
-                element:   "#customize-menu a:contains(Confirm: Add To Cart)",
+                element:   '.oe_product_cart a:contains("iPad")',
             },
             {
                 title:     "click on 'Add to Cart' button",
                 waitNot:   '#customize-menu:visible',
-                element:   "a[data-toggle='modal']:contains(Add to Cart)",
+                element:   "a:contains(Add to Cart)",
+            },
+            {
+                title:     "add an optional Warranty",
+                element:   ".js_product:contains(Warranty) a:contains(Add to Cart)",
             },
             {
                 title:     "click in modal on 'Proceed to checkout' button",
+                waitFor:   '.js_product:contains(Warranty) a:contains(Add to Cart):hidden',
                 element:   '.modal a:contains("Proceed to checkout")',
             },
             {
-                title:     "return to the iPod product",
-                waitFor:   '#cart_products',
-                element:   "a:contains(iPod)",
+                title:     "check quantity",
+                waitFor:   '.my_cart_quantity:containsExact(2)',
             },
             {
-                title:     "open customize menu 3",
-                waitFor:   'form[action^="/shop/cart/update"] label:contains(32 Go) input',
-                element:   '#customize-menu-button',
+                title:     "check optional product",
+                waitFor:   '.optional_product',
             },
             {
-                title:     "click on 'Confirm: Add To Cart'",
-                element:   "#customize-menu a:contains(Confirm: Add To Cart)",
-            },
-            {
-                title:     "click on 'My Cart'",
-                waitFor:   "a.a-submit:contains(Add to Cart)",
-                element:   "a[href='/shop/cart']",
-            },
-            {
-                title:     "remove iPod from cart",
+                title:     "remove iPad from cart",
                 element:   '#cart_products a.js_add_cart_json:first',
             },
             {
+                title:     "check optional product is removed",
+                waitNot:   '.optional_product',
+            },
+            {
+                title:     "click on shop",
+                element:   "a:contains(Shop)",
+                waitNot:   '#products_grid_before .js_attributes',
+            },
+            {
+                title:     "open customize menu bis",
+                waitFor:   '#products_grid_before .js_attributes',
+                element:   '#customize-menu-button',
+            },
+            {
+                title:     "remove 'Product Attribute's Filters'",
+                element:   "#customize-menu a:contains(Product Attribute's Filters):has(.fa-check-square-o)",
+            },
+            {
                 title:     "finish",
-                waitFor:   '.my_cart_quantity:contains(1)',
+                waitNot:   '#products_grid_before .js_attributes',
+                waitFor:   'li:has(.my_cart_quantity):hidden',
             },
         ]
     });
