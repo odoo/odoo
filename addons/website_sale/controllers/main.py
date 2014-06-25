@@ -278,17 +278,10 @@ class website_sale(http.Controller):
         return request.website.render("website_sale.cart", values)
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
-    def cart_update(self, product_id, add_qty=1, set_qty=0, goto_shop=None, **kw):
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        prod_obj = pool['product.product']
-
-        order = request.website.sale_get_order(force_create=1)
-        order._cart_update(product_id=int(product_id), add_qty=int(add_qty), set_qty=int(set_qty))
-
-        if goto_shop:
-            return request.redirect("/shop/product/%s" % slug(prod_obj.browse(cr, uid, product_id).product_tmpl_id))
-        else:
-            return request.redirect("/shop/cart")
+    def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
+        cr, uid, context = request.cr, request.uid, request.context
+        request.website.sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=add_qty, set_qty=set_qty)
+        return request.redirect("/shop/cart")
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None, display=True):
