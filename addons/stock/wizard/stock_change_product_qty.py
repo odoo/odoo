@@ -99,7 +99,7 @@ class stock_change_product_qty(osv.osv_memory):
                 'location_id': data.location_id.id,
                 'product_id': rec_id,
                 'product_uom_id': res_original.uom_id.id,
-                'th_qty': th_qty,
+                'theoretical_qty': th_qty,
                 'prod_lot_id': data.lot_id.id
             }
             inventory_line_obj.create(cr , uid, line_data, context=context)

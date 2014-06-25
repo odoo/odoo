@@ -745,6 +745,8 @@ class calendar_event(osv.Model):
 
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}
+        if not isinstance(fields, list):
+            fields = [fields]
         for meeting_id in ids:
             res[meeting_id] = {}
             attendee = self._find_my_attendee(cr, uid, [meeting_id], context)
