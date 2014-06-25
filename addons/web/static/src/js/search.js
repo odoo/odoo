@@ -2401,13 +2401,16 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             $expand.mousedown(function (ev) {
                 ev.preventDefault();
                 ev.stopPropagation();
-                self.expand();
+                if (result.expanded)
+                    self.fold();
+                else
+                    self.expand();
             });
             result.expanded = false;
             $li.append($expand);
         }
         var $span = $('<span>').html(result.label);
-        if (result.indent) $span.addClass('oe-indent');
+        if (result.indent) $li.addClass('oe-indent');
         $li.append($span);
         $li.hover(function (ev) {self.focus_element($li);});
         $li.mousedown(function (ev) {
@@ -2430,10 +2433,17 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 self.current_result.$el.after($li);
             });
             to_be_expanded.expanded = true;
+            to_be_expanded.$el.find('span.oe-expand').html('▼');
         });
     },
     fold: function () {
-        console.log('fold');
+        var $next = this.current_result.$el.next();
+        while ($next.hasClass('oe-indent')) {
+            $next.remove();
+            $next = this.current_result.$el.next();
+        }
+        this.current_result.expanded = false;
+        this.current_result.$el.find('span.oe-expand').html('▶');        
     },
 
     focus_element: function ($li) {
