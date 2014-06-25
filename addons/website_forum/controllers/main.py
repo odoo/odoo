@@ -208,7 +208,7 @@ class WebsiteForum(http.Controller):
             }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), new_question_id))
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0])]"):question>'''], type='http', auth="public", website=True, multilang=True)
+    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True, multilang=True)
     def question(self, forum, question, **post):
         cr, uid, context = request.cr, request.uid, request.context
         # increment view counter
