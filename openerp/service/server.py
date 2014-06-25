@@ -130,14 +130,14 @@ class AutoReload(object):
         self.handler = EventHandler(self)
         self.notifier = pyinotify.Notifier(self.wm, self.handler, timeout=0)
         mask = pyinotify.IN_MODIFY | pyinotify.IN_CREATE  # IN_MOVED_FROM, IN_MOVED_TO ?
-        for path in openerp.modules.modules.ad_paths:
+        for path in openerp.modules.module.ad_paths:
             _logger.info('Watching addons folder %s', path)
             self.wm.add_watch(path, mask, rec=True)
 
     def process_data(self, files):
         xml_files = [i for i in files if i.endswith('.xml')]
         for i in xml_files:
-            for path in openerp.modules.modules.ad_paths:
+            for path in openerp.modules.module.ad_paths:
                 if i.startswith(path):
                     # find out wich addons path the file belongs to
                     # and extract it's module name
@@ -470,7 +470,7 @@ class PreforkServer(CommonServer):
         cmd = nargs[0]
         cmd = os.path.join(os.path.dirname(cmd), "openerp-gevent")
         nargs[0] = cmd
-        popen = subprocess.Popen(nargs)
+        popen = subprocess.Popen([sys.executable] + nargs)
         self.long_polling_pid = popen.pid
 
     def worker_pop(self, pid):
