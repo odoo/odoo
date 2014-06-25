@@ -558,7 +558,20 @@ openerp.testing.section('search.completions', {
                       new Date(2012, 4, 21, 21, 21, 21).getTime());
             });
     });
-    test("M2O", {asserts: 13}, function (instance, $s, mock) {
+    test("M2O complete", {asserts: 4}, function (instance, $s, mock) {
+        var view = {inputs: [], dataset: {get_context: function () {}}};
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
+        return f.complete("bob")
+            .done(function (c) {
+                equal(c.length, 1, "should return one line");
+                var bob = c[0];
+                ok(bob.expand, "should return an expand callback");
+                ok(bob.facet, "should have a facet");
+                ok(bob.label, "should have a label");
+            });
+    });
+    test("M2O expand", {asserts: 13}, function (instance, $s, mock) {
         mock('dummy.model:name_search', function (args, kwargs) {
             deepEqual(args, []);
             strictEqual(kwargs.name, 'bob');
@@ -568,7 +581,7 @@ openerp.testing.section('search.completions', {
         var view = {inputs: [], dataset: {get_context: function () {}}};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
-        return f.complete("bob")
+        return f.expand("bob")
             .done(function (c) {
                 equal(c.length, 3, "should return results + title");
                 var title = c[0];
@@ -597,7 +610,7 @@ openerp.testing.section('search.completions', {
         var view = {inputs: [], dataset: {get_context: function () {}}};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
-        return f.complete("bob")
+        return f.expand("bob")
             .done(function (c) {
                 ok(!c, "no match should yield no completion");
             });
@@ -620,7 +633,7 @@ openerp.testing.section('search.completions', {
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy', domain: '[["foo", "=", "bar"]]'}},
             {relation: 'dummy.model'}, view);
-        return f.complete("bob");
+        return f.expand("bob");
     });
     test("M2O custom operator", {asserts: 10}, function (instance, $s, mock) {
         mock('dummy.model:name_search', function (args, kwargs) {
@@ -635,7 +648,7 @@ openerp.testing.section('search.completions', {
             {attrs: {string: 'Dummy', operator: 'ilike'}},
             {relation: 'dummy.model'}, view);
 
-        return f.complete('bob')
+        return f.expand('bob')
             .done(function (c) {
                 equal(c.length, 2, "should return result + title");
                 var title = c[0];
