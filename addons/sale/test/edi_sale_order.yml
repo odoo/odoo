@@ -49,8 +49,8 @@
                 "__id": "base:5af12v70-dv70-1v70-bv70-701a04e25v70.EUR",
                 "__module": "base",
                 "__model": "res.currency",
-                "code": "EUR",
-                "symbol": "€",
+                "code": "USD",
+                "symbol": "$",
         },
         "company_id": ["base:5af12v70-dv70-1v70-bv70-701a04e25v70.main_company", "Client S.A."],
         "company_address": {
@@ -101,7 +101,6 @@
     assert len(order_new.partner_id.bank_ids) == 1, "Expected 1 bank entry related to partner"
     bank_info = order_new.partner_id.bank_ids[0]
     assert bank_info.acc_number == "Another bank: 032465700-156700", 'Expected "Another bank: 032465700-156700", got %s' % bank_info.acc_number
-
     assert order_new.pricelist_id.name == 'Public Pricelist' , "Public Price list was not automatically assigned"
     assert order_new.amount_total == 350, "Amount total is wrong"
     assert order_new.amount_untaxed == 350, "Untaxed amount is wrong"
@@ -135,8 +134,8 @@
                 "__id": "base:5af1272e-dd26-11e0-b65e-701a04e25543.EUR",
                 "__module": "base",
                 "__model": "res.currency",
-                "code": "EUR",
-                "symbol": "€",
+                "code": "USD",
+                "symbol": "$",
         },
         "company_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.main_company", "Client S.A."],
         "company_address": {
