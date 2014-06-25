@@ -494,7 +494,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             delay: 0,
             get_search_string: function () { 
                 return self.$('div.oe_searchview_input').text();
-            }
+            },
+            width: this.$el.width(),
         });
         this.autocomplete.appendTo(this.$el);
     },
@@ -2313,6 +2314,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         this.delay = options.delay;
         this.select = options.select,
         this.get_search_string = options.get_search_string;
+        this.width = options.width || 400;
 
         this.current_result = null;
 
@@ -2322,6 +2324,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
     },
     start: function () {
         var self = this;
+        this.$el.width(this.width);
         this.$input.on('keyup', function (ev) {
             if (ev.which === $.ui.keyCode.RIGHT) {
                 self.searching = true;
