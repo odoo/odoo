@@ -73,7 +73,7 @@ class purchase_requisition(osv.osv):
                 if str(purchase_id.state) in('draft'):
                     purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
         procurement_ids = self.pool['procurement.order'].search(cr, uid, [('requisition_id', 'in', ids)], context=context)
-        self.pool['procurement.order'].write(cr, uid, procurement_ids, {'state': 'cancel'}, context=context)
+        self.pool['procurement.order'].action_done(cr, uid, procurement_ids)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def tender_in_progress(self, cr, uid, ids, context=None):
@@ -84,7 +84,7 @@ class purchase_requisition(osv.osv):
 
     def tender_done(self, cr, uid, ids, context=None):
         procurement_ids = self.pool['procurement.order'].search(cr, uid, [('requisition_id', 'in', ids)], context=context)
-        self.pool['procurement.order'].write(cr, uid, procurement_ids, {'state': 'done'}, context=context)
+        self.pool['procurement.order'].action_done(cr, uid, procurement_ids)
         return self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def _planned_date(self, requisition, delay=0.0):
@@ -218,6 +218,10 @@ class purchase_order(osv.osv):
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
                     po.requisition_id.tender_done(context=context)
+            if po.requisition_id and all(purchase_id.state in ['draft', 'cancel'] for purchase_id in po.requisition_id.purchase_ids if purchase_id.id != po.id):
+                procurement_ids = self.pool['procurement.order'].search(cr, uid, [('requisition_id', '=', po.requisition_id.id)], context=context)
+                for procurement in proc_obj.browse(cr, uid, procurement_ids, context=context):
+                    procurement.move_id.write({'location_id': procurement.move_id.location_dest_id.id})
         return res
 
 purchase_order()
