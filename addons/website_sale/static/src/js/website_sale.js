@@ -15,9 +15,10 @@ $(document).ready(function () {
     $(".oe_website_sale .oe_cart input.js_quantity").change(function () {
         var $input = $(this);
         var value = parseInt($input.val(), 10);
+        var line_id = parseInt($input.data('line-id'),10);
         if (isNaN(value)) value = 0;
         openerp.jsonRpc("/shop/cart/update_json", 'call', {
-            'line_id': parseInt($input.data('line-id'),10),
+            'line_id': line_id,
             'product_id': parseInt($input.data('product-id'),10),
             'set_qty': value})
             .then(function (data) {
@@ -33,13 +34,15 @@ $(document).ready(function () {
                 var $q = $(".my_cart_quantity");
                 $q.parent().parent().removeClass("hidden", !data.quantity);
                 $q.html(data.cart_quantity).hide().fadeIn(600);
+
                 $input.val(data.quantity);
+                $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
                 $("#cart_total").replaceWith(data['website_sale.total']);
             });
     });
 
     // hack to add and rome from cart with json
-    $('.oe_website_sale a.js_add_cart_json').on('click', function (ev) {
+    $('.oe_website_sale').on('click', 'a.js_add_cart_json', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var $input = $link.parent().parent().find("input");
@@ -82,9 +85,9 @@ $(document).ready(function () {
         return price + (dec ? '' : '.0') + (dec%10 ? '' : '0');
     }
 
-    $('input.js_variant_change, select.js_variant_change').change(function (ev) {
+    $('.oe_website_sale').on('change', 'input.js_variant_change, select.js_variant_change', function (ev) {
         var $ul = $(this).parents('ul.js_add_cart_variants:first');
-        var $parent = $ul.parents('.js_product:first');
+        var $parent = $ul.closest('.js_product');
         var $product_id = $parent.find('input.product_id').first();
         var $price = $parent.find(".oe_price:first .oe_currency_value");
         var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
@@ -121,7 +124,7 @@ $(document).ready(function () {
                     return;
                 }
             }
-            $input.parents("label:first").addClass("css_not_available");
+            $input.closest("label").addClass("css_not_available");
             $input.find("option[value='" + id + "']").addClass("css_not_available");
         });
 
@@ -139,42 +142,13 @@ $(document).ready(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
 
-    $("input.js_quantity").change(function (event) {
-        var qty = parseFloat($(this).val());
-        if (qty === 1) {
-            $(".js_remove .js_items").addClass("hidden");
-            $(".js_remove .js_item").removeClass("hidden");
-        } else {
-            $(".js_remove .js_items").removeClass("hidden").text($(".js_remove .js_items").text().replace(/[0-9.,]+/, qty));
-            $(".js_remove .js_item").addClass("hidden");
-        }
-    });
-    
-
-    $('#product_detail form[action^="/shop/cart/update"] .a-submit').off("click").click(function (event) {
-        event.preventDefault();
-        var $link = $(this);
-        var $form = $link.parents("form:first");
-        var quantity = parseInt($('input[name="add_qty"]:last').val() || 1, 10);
-        var defs = [];
-        $link.attr('disabled', 'disabled');
-        $.when.apply($.when, defs).then(function () {
-            if ($link.hasClass("js_goto_shop")) {
-                $form.prepend('<input type="hidden" name="goto_shop" value="1"/>');
-            }
-            $form.submit();
-        });
-        return false;
-    });
-
-
-    $(".oe_website_sale select[name='country_id']").change(function () {
+    $(".oe_website_sale").on('change', "select[name='country_id']", function () {
         var $select = $("select[name='state_id']");
         $select.find("option:not(:first)").hide();
         var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
         $select.parent().toggle(nb>1);
     }).change();
-    $(".oe_website_sale select[name='shipping_country_id']").change(function () {
+    $(".oe_website_sale").on('change', "select[name='shipping_country_id']", function () {
         var $select = $("select[name='shipping_state_id']");
         $select.find("option:not(:first)").hide();
         var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();

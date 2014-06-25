@@ -1,38 +1,67 @@
 $(document).ready(function () {
 
-    $('#add_to_cart').click(function (event) {
-        event.preventDefault();
-        openerp.jsonRpc("/shop/cart/update_json", 'call', {
-            'line_id': parseInt($input.data('line-id'),10),
-            'product_id': parseInt($input.data('product-id'),10),
-            'set_qty': value})
-            .then(function (data) {
-                if (!data.quantity) {
-                    location.reload();
-                    return;
-                }
-                if (data.option_ids.length) {
-                    _.each(data.option_ids, function (line_id) {
-                        $(".js_quantity[data-line-id="+line_id+"]").text(data.quantity);
-                    });
-                }
-                var $q = $(".my_cart_quantity");
-                $q.parent().parent().removeClass("hidden", !data.quantity);
-                $q.html(data.cart_quantity).hide().fadeIn(600);
-                $input.val(data.quantity);
-                $("#cart_total").replaceWith(data['website_sale.total']);
-            });
-        return false;
-    });
+    $('#add_to_cart')
+        .off('click')
+        .removeClass('a-submit')
+        .click(function (event) {
+            var $form = $(this).closest('form');
+            var quantity = parseFloat($form.find('input[name="add_qty"]').val());
+            event.preventDefault();
+            openerp.jsonRpc("/shop/modal", 'call', {
+                    'product_id': parseInt($('input.product_id[name="product_id"]').val(),10),
+                    kwargs: {
+                       context: openerp.website.get_context()
+                    },
+                }).then(function (modal) {
+                    var $modal = $(modal);
 
-    $('form:has(#add_to_cart)').submit(function (event) {
-        event.preventDefault();
-        $(this).ajaxSubmit({
-            beforeSubmit:  function () { console.log("beforeSubmit"); },
-            success:       function () { console.log("success"); },
-            url:           '/stqdfdsfdf'
+                    $modal.appendTo($form)
+                        .modal()
+                        .on('hidden.bs.modal', function () {
+                            $(this).remove();
+                        });
+
+                    $modal.on('click', '.a-submit', function () {
+                        var $a = $(this);
+                        $form.ajaxSubmit({
+                            url:  '/shop/cart/update_option',
+                            success: function (quantity) {
+                                if (!$a.hasClass('js_goto_shop')) {
+                                    window.location.href = "../cart";
+                                }
+                                var $q = $(".my_cart_quantity");
+                                $q.parent().parent().removeClass("hidden", !quantity);
+                                $q.html(quantity).hide().fadeIn(600);
+                            }
+                        });
+                        $modal.modal('hide');
+                    });
+
+                    $modal.on("click", "a.js_add, a.js_remove", function (event) {
+                        event.preventDefault();
+                        var $parent = $(this).parents('.js_product:first');
+                        $parent.find("a.js_add, span.js_remove").toggleClass("hidden");
+                        $parent.find("input.js_optional_same_quantity").val( $(this).hasClass("js_add") ? 1 : 0 );
+                        var $remove = $parent.find(".js_remove");
+                    });
+
+                    $modal.on("change", "input.js_quantity", function (event) {
+                        var qty = parseFloat($(this).val());
+                        if (qty === 1) {
+                            $(".js_remove .js_items").addClass("hidden");
+                            $(".js_remove .js_item").removeClass("hidden");
+                        } else {
+                            $(".js_remove .js_items").removeClass("hidden").text($(".js_remove .js_items").text().replace(/[0-9.,]+/, qty));
+                            $(".js_remove .js_item").addClass("hidden");
+                        }
+                    });
+
+                    $modal.find('input[name="add_qty"]').val(quantity).change();
+                    $('ul.js_add_cart_variants').each(function () {
+                        $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
+                    });
+                });
+            return false;
         });
-        return false;
-    });
 
 });

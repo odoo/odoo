@@ -3,13 +3,13 @@
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models.website import slug
 from openerp.addons.website_sale.controllers.main import website_sale
 
 class website_sale_options(website_sale):
 
+    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
-        r = super(website_sale_options, self)
+        r = super(website_sale_options, self).product(product, category, search, **kwargs)
 
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         template_obj = pool['product.template']
@@ -22,30 +22,54 @@ class website_sale_options(website_sale):
         r.qcontext['optional_product_ids'] = optional_product_ids
         return r
 
-    @http.route(['/shop/cart/update_option_json'], type='json', auth="public", methods=['POST'], website=True)
+    @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True)
     def cart_options_update_json(self, product_id, add_qty=1, set_qty=0, goto_shop=None, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        order = request.website.sale_get_order(force_create=1)
 
-        line_id = None
+        order = request.website.sale_get_order(force_create=1)
+        product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
+
+
+        option_ids = [p.id for tmpl in product.optional_product_ids for p in tmpl.product_variant_ids]
         optional_product_ids = []
         for k, v in kw.items():
-            if "optional-product-" in k and int(kw.get(k.replace("product", "quantity"))):
+            if "optional-product-" in k and int(kw.get(k.replace("product", "add"))) and int(v) in option_ids:
                 optional_product_ids.append(int(v))
+
+        value = {}
         if add_qty or set_qty:
-            line_id, quantity = order._cart_update(product_id=int(product_id),
+            value = order._cart_update(product_id=int(product_id),
                 add_qty=int(add_qty), set_qty=int(set_qty),
                 optional_product_ids=optional_product_ids)
 
         # options have all time the same quantity
         for option_id in optional_product_ids:
-            order._cart_update(product_id=option_id, set_qty=quantity, linked_line_id=line_id)
+            order._cart_update(product_id=option_id,
+                set_qty=value.get('quantity'),
+                linked_line_id=value.get('line_id'))
 
-        return {
-            'quantity': quantity,
-            'cart_quantity': order.cart_quantity,
-            'website_sale.total': request.website._render("website_sale.total", {
-                    'website_sale_order': request.website.sale_get_order()
-                })
-            }
+        return str(order.cart_quantity)
 
+    @http.route(['/shop/modal'], type='json', auth="public", methods=['POST'], website=True)
+    def modal(self, product_id, **kw):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        currency_obj = pool['res.currency']
+        if not context.get('pricelist'):
+            context['pricelist'] = int(self.get_pricelist())
+
+        product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
+
+        attribute_value_ids = []
+        if request.website.pricelist_id.id != context['pricelist']:
+            website_currency_id = request.website.currency_id.id
+            currency_id = self.get_pricelist().currency_id.id
+            for p in product.product_variant_ids:
+                price = currency_obj.compute(cr, uid, website_currency_id, currency_id, p.lst_price)
+                attribute_value_ids.append([p.id, map(int, p.attribute_value_ids), p.price, price])
+        else:
+            attribute_value_ids = [[p.id, map(int, p.attribute_value_ids), p.price, p.lst_price] for p in product.product_variant_ids]
+
+        return request.website._render("website_sale_options.modal", {
+                'product': product,
+                'get_attribute_value_ids': self.get_attribute_value_ids,
+            })

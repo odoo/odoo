@@ -76,7 +76,7 @@
               <t t-if="(website.compute_curency(product.lst_price) - product.price) &gt; 0.1">
                 <del class="text-danger" style="white-space: nowrap;" t-field="product.lst_price" t-field-options='{
                   "widget": "monetary",
-                  "from_currency": "website.company_currency_id",
+                  "from_currency": "website.currency_id",
                   "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                 }'/>&amp;nbsp;
               </t>
@@ -416,7 +416,7 @@
 </template>
 
 <template id="product_quantity" inherit_id="website_sale.product" optional="enabled" name="Select Quantity">
-  <xpath expr="//form" position="inside">
+  <xpath expr="//a[@id='add_to_cart']" position="before">
     <div class="css_quantity input-group" style="width: 108px;">
         <span class="input-group-addon">
             <a t-attf-href="#" class="mb8 js_add_cart_json">
@@ -440,7 +440,7 @@
             t-field="product.lst_price"
             t-field-options='{
               "widget": "monetary",
-              "from_currency": "website.company_currency_id",
+              "from_currency": "website.currency_id",
               "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
            }'/><br/>
           <b class="oe_price" style="white-space: nowrap;"
@@ -473,7 +473,7 @@
         <span class="badge" t-if="variant_id.price_extra">
           <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" style="white-space: nowrap;" t-field-options='{
                 "widget": "monetary",
-                "from_currency": "website.company_currency_id",
+                "from_currency": "website.currency_id",
                 "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
               }'/>
         </span>
@@ -483,6 +483,7 @@
 </template>
 
 <template id="variants">
+  <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
   <ul t-attf-class="list-unstyled js_add_cart_variants #{ul_class}" t-att-data-attribute_value_ids="attribute_value_ids">
     <t t-foreach="product.attribute_line_ids" t-as="variant_id">
       <li t-if="len(variant_id.value_ids) > 1">
@@ -497,7 +498,7 @@
                   <span t-if="value_id.price_extra">
                       <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-field-options='{
                                "widget": "monetary",
-                                "from_currency": "website.company_currency_id",
+                                "from_currency": "website.currency_id",
                                "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                            }'/>
                   </span>
@@ -517,7 +518,7 @@
                           <span class="badge" t-if="value_id.price_extra">
                               <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-field-options='{
                                       "widget": "monetary",
-                                      "from_currency": "website.company_currency_id",
+                                      "from_currency": "website.currency_id",
                                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                                    }'/>
                           </span>
@@ -679,7 +680,8 @@
                           </tr>
                       </thead>
                       <tbody>
-                          <tr t-foreach="website_sale_order.website_order_line" t-as="line">
+                        <t t-foreach="website_sale_order.website_order_line" t-as="line">
+                          <tr>
                               <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
                               <td align="center" t-if="line.product_id.product_tmpl_id">
                                   <span t-field="line.product_id.image_small"
@@ -687,12 +689,9 @@
                               </td>
                               <td t-if="line.product_id.product_tmpl_id">
                                   <div>
-                                      <a t-if="not line.linked_line_id" t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+                                      <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
                                           <strong t-esc="line.product_id.name_get()[0][1]"/>
                                       </a>
-                                      <t t-if="line.linked_line_id">
-                                        <strong t-esc="line.product_id.name_get()[0][1]"/>
-                                      </t>
                                   </div>
                                   <div class="text-muted" t-field="line.name"/>
                               </td>
@@ -701,7 +700,7 @@
                                   <del class="text-danger" style="white-space: nowrap;"
                                     t-field="line.product_id.lst_price" t-field-options='{
                                         "widget": "monetary",
-                                        "from_currency": "website.company_currency_id",
+                                        "from_currency": "website.currency_id",
                                         "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                                     }'/>&amp;nbsp;
                                 </t>
@@ -711,7 +710,7 @@
                                  }'/>
                               </td>
                               <td class="text-center">
-                                  <div class="input-group" t-if="not line.linked_line_id">
+                                  <div class="input-group">
                                       <span class="input-group-addon">
                                           <a t-attf-href="#" class="mb8 js_add_cart_json" data-no-instant="">
                                               <i class="fa fa-minus"></i>
@@ -727,12 +726,9 @@
                                           </a>
                                       </span>
                                   </div>
-                                  <t t-if="line.linked_line_id">
-                                    <span class="js_quantity" t-att-data-line-id="line.id" t-esc="int(line.product_uom_qty)"/>
-                                  </t>
-
                               </td>
                           </tr>
+                        </t>
                       </tbody>
                   </table>
                   <t t-call="website_sale.total"/>
@@ -798,7 +794,7 @@
                         <del class="text-danger" style="white-space: nowrap;"
                           t-field="product.lst_price" t-field-options='{
                               "widget": "monetary",
-                              "from_currency": "website.company_currency_id",
+                              "from_currency": "website.currency_id",
                               "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                           }'/>&amp;nbsp;
                       </t>

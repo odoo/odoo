@@ -4,7 +4,6 @@ import random
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
 from openerp.addons.web.http import request
-from openerp.tools.translate import _
 
 
 class payment_transaction(orm.Model):
@@ -13,13 +12,6 @@ class payment_transaction(orm.Model):
     _columns = {
         # link with the sale order
         'sale_order_id': fields.many2one('sale.order', 'Sale Order'),
-    }
-
-class sale_order_line(osv.Model):
-    _inherit = "sale.order.line"
-    _columns = {
-        'linked_line_id': fields.many2one('sale.order.line', 'Linked Order Line', domain="[('order_id','!=',order_id)]"),
-        'option_line_ids': fields.one2many('sale.order.line', 'linked_line_id', string='Options Linked'),
     }
 
 class sale_order(osv.Model):
@@ -51,7 +43,7 @@ class sale_order(osv.Model):
             'order': order
         }
 
-    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None, *args):
+    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None, **kwargs):
         for so in self.browse(cr, uid, ids, context=context):
             domain = [('order_id', '=', so.id), ('product_id', '=', product_id)]
             if line_id:
@@ -81,14 +73,14 @@ class sale_order(osv.Model):
             values['tax_id'] = [(6, 0, values['tax_id'])]
         return values
 
-    def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, *args):
+    def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         sol = self.pool.get('sale.order.line')
 
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
             if line_id != False:
-                line_ids = so._cart_find_product_line(product_id, line_id, context=context, *args)
+                line_ids = so._cart_find_product_line(product_id, line_id, context=context, **kwargs)
                 if line_ids:
                     line_id = line_ids[0]
 
@@ -114,7 +106,7 @@ class sale_order(osv.Model):
                 values['product_uom_qty'] = quantity
                 sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
 
-        return (line_id, quantity)
+        return {'line_id': line_id, 'quantity': quantity}
 
     def _cart_accessories(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids, context=context):

@@ -11,11 +11,26 @@
 <template id="product_options_script" inherit_id="website_sale.product" name="Script for Options">
   <xpath expr="//t[@t-set='head']" position="inside">
       <script type="text/javascript" src="/website_sale_options/static/src/js/website_sale.js"></script>
+      <link rel='stylesheet' href='/website_sale_options/static/src/css/website_sale.css'/>
   </xpath>
 </template>
 
-<template id="optional_products" name="Optional Products">
-<div id="modal_optional_products" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+<template id="optional_products" inherit_id="website_sale.cart" name="Optional products">
+  <xpath expr="//table[@id='cart_products']/tbody//td[last()]/div" position="attributes">
+    <attribute name="t-if">not line.linked_line_id</attribute>
+  </xpath>
+  <xpath expr="//table[@id='cart_products']/tbody//tr" position="attributes">
+    <attribute name="t-att-class">'optional_product info' if line.linked_line_id else ''</attribute>
+  </xpath>
+  <xpath expr="//table[@id='cart_products']/tbody//td[last()]" position="inside">
+    <t t-if="line.linked_line_id">
+      <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-esc="int(line.product_uom_qty)"/>
+    </t>
+  </xpath>
+</template>
+
+<template id="modal" name="Optional Products">
+<div id="modal_optional_products" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -77,11 +92,11 @@
                 </td>
               </tr>
 
-              <tr t-if="optional_product_ids"><td colspan="4"><h4>Select Your Options:</h4></td></tr>
+              <tr t-if="product.optional_product_ids"><td colspan="5"><h4>Select Your Options:</h4></td></tr>
               <t t-set="option_inc" t-value="0"/>
-              <tr class="js_product" t-foreach="optional_product_ids" t-as="product">
+              <tr class="js_product" t-foreach="product.optional_product_ids" t-as="product">
                 <td width="100">
-                  <input type="hidden" class="optional_product_id" t-attf-name="optional-product-#{option_inc}" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
+                  <input type="hidden" class="product_id" t-attf-name="optional-product-#{option_inc}" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
                   <span t-field="product.image_small" t-field-options='{"widget": "image"}'/>
                 </td>
                 <td>
@@ -114,7 +129,7 @@
                   <p class="css_not_available_msg bg-danger" style="position:absolute; padding: 15px;">Product not available</p>
                 </td>
                 <td>
-                  <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-quantity-#{option_inc}" value="0"/>
+                  <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-add-#{option_inc}" value="0"/>
                   <a href="#" class="js_add"><strong>Add to Cart</strong></a>
                   <span class="js_remove hidden">
                     <span class="js_item">1 Item</span><span class="js_items hidden">5 Items</span><br/>
