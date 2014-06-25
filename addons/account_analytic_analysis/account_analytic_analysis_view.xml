@@ -197,7 +197,7 @@
         <record id="view_account_analytic_account_tree_c2c_3" model="ir.ui.view">
             <field name="name">account.analytic.account.list.contract</field>
             <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_list"/>
             <field name="arch" type="xml">
                 <field name="date_start" position="before">
                     <field name="last_invoice_date"/>
@@ -280,7 +280,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_id','=',False)]</field>
             <field name="context">{'search_default_to_invoice': 1}</field>
-            <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>
+            <field name="search_view_id" ref="analytic.view_account_analytic_line_filter"/>
             <field name="help" type="html">
               <p>
                 You will find here timesheets and purchases you did for
@@ -338,6 +338,21 @@
             </field>
         </record>
         <menuitem action="template_of_contract_action" id="menu_template_of_contract_action" parent="base.menu_base_config"/>
+        
+        <record id="account_analytic_analysis_form_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.invoice.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr='//div[@name="buttons"]' position='inside'>
+                    <button class="oe_inline oe_stat_button" string="Time &amp; Materials to Invoice"
+                        name="%(action_hr_tree_invoiced_all)d"
+                        type="action"
+                        context="{'search_default_account_id': [active_id], 'default_account_id': active_id}"/>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>
