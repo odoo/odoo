@@ -98,7 +98,7 @@ class ir_http(orm.AbstractModel):
             werkzeug.exceptions.abort(werkzeug.utils.redirect(url))
 
     def _handle_exception(self, exception, code=500):
-        is_website_request = getattr(request, 'website_enabled', False) and request.website
+        is_website_request = bool(getattr(request, 'website_enabled', False) and request.website)
         if not is_website_request:
             # Don't touch non website requests exception handling
             return super(ir_http, self)._handle_exception(exception)
@@ -118,6 +118,9 @@ class ir_http(orm.AbstractModel):
                 traceback=traceback.format_exc(exception),
             )
             code = getattr(exception, 'code', code)
+
+            if isinstance(exception, openerp.exceptions.AccessError):
+                code = 403
 
             if isinstance(exception, ir_qweb.QWebException):
                 values.update(qweb_exception=exception)
