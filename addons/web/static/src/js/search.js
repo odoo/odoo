@@ -2344,12 +2344,6 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                     self.searching = false;
                     ev.preventDefault();
                     break;
-                case $.ui.keyCode.LEFT:
-                    if (self.current_result.expand) {
-                        self.fold();
-                    }
-                    self.searching = false;
-                    ev.preventDefault();
                 case $.ui.keyCode.RIGHT:
                     self.searching = false;
                     if (self.current_result.expand && !self.current_result.expanded) {
@@ -2365,15 +2359,15 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             }
         });
     },
-    initiate_search: function (search_string) {
-        if (search_string !== this.search_string) return;
-        if (search_string === this.current_search) return;
-        this.search(search_string);
+    initiate_search: function (query) {
+        if (query === this.search_string && query !== this.current_search) {
+            this.search(query);
+        }
     },
-    search: function (search_string) {
-        this.current_search = search_string;
+    search: function (query) {
         var self = this;
-        this.source({term:search_string}, function (results) {
+        this.current_search = query;
+        this.source({term:query}, function (results) {
             if (results.length) {
                 self.render_search_results(results);
                 self.focus_element(self.$('li:first-child'));
@@ -2386,18 +2380,23 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         var self = this;
         var $list = this.$('ul');
         $list.empty();
-        results.forEach(function (r) {
-            var $item = self.make_list_item(r); 
-            r.$el = $item;
-            $list.append($item);
+        results.forEach(function (result) {
+            var $item = self.make_list_item(result).appendTo($list); 
+            result.$el = $item;
         });
         this.show();
     },
     make_list_item: function (result) {
         var self = this;
-        var $li = $('<li>');
+        var $li = $('<li>')
+            .hover(function (ev) {self.focus_element($li);})
+            .mousedown(function (ev) {
+                self.select(ev, {item: {facet: result.facet}});
+                self.close();
+            })
+            .data('result', result);
         if (result.expand) {
-            var $expand = $('<span class="oe-expand">').text('▶');
+            var $expand = $('<span class="oe-expand">').text('▶').appendTo($li);
             $expand.mousedown(function (ev) {
                 ev.preventDefault();
                 ev.stopPropagation();
@@ -2407,33 +2406,21 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                     self.expand();
             });
             result.expanded = false;
-            $li.append($expand);
         }
-        var $span = $('<span>').html(result.label);
         if (result.indent) $li.addClass('oe-indent');
-        $li.append($span);
-        $li.hover(function (ev) {self.focus_element($li);});
-        $li.mousedown(function (ev) {
-            self.select(ev, {item: {facet: result.facet}});
-            self.close();
-        });
-        $li.data('result', result);
+        $li.append($('<span>').html(result.label));
         return $li;
     },
     expand: function () {
         var self = this;
-        var to_be_expanded = this.current_result;
-        to_be_expanded.expand(this.get_search_string()).then(function (results) {
-            if (!results) {
-                results = [{label: '(no result)'}];
-            }
-            results.forEach(function (result) {
+        this.current_result.expand(this.get_search_string()).then(function (results) {
+            (results || [{label: '(no result)'}]).forEach(function (result) {
                 result.indent = true;
                 var $li = self.make_list_item(result);
                 self.current_result.$el.after($li);
             });
-            to_be_expanded.expanded = true;
-            to_be_expanded.$el.find('span.oe-expand').html('▼');
+            self.current_result.expanded = true;
+            self.current_result.$el.find('span.oe-expand').html('▼');
         });
     },
     fold: function () {
@@ -2445,7 +2432,6 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         this.current_result.expanded = false;
         this.current_result.$el.find('span.oe-expand').html('▶');        
     },
-
     focus_element: function ($li) {
         this.$('li').removeClass('oe-selection-focus');
         $li.addClass('oe-selection-focus');
@@ -2457,7 +2443,6 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             this.close();
         }
     },
-
     show: function () {
         this.$el.show();
     },
@@ -2468,15 +2453,15 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         this.$el.hide();
     },
     move: function (direction) {
+        var $next;
         if (direction === 'down') {
-            var $next = this.$('li.oe-selection-focus').next();
+            $next = this.$('li.oe-selection-focus').next();
             if (!$next.length) $next = this.$('li:first-child');
-            this.focus_element($next);
         } else {
-            var $previous = this.$('li.oe-selection-focus').prev();
-            if (!$previous.length) $previous = this.$('li:last-child');
-            this.focus_element($previous);            
+            $next = this.$('li.oe-selection-focus').prev();
+            if (!$next.length) $next = this.$('li:last-child');
         }
+        this.focus_element($next);
     },
     is_expandable: function () {
         return !!this.$('.oe-selection-focus .oe-expand').length;
