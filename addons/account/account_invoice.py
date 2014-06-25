@@ -24,7 +24,7 @@ from lxml import etree
 import openerp.addons.decimal_precision as dp
 import openerp.exceptions
 
-from openerp.osv import fields, osv, orm
+from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 class account_invoice(osv.osv):
@@ -903,6 +903,7 @@ class account_invoice(osv.osv):
         move_obj = self.pool.get('account.move')
         if context is None:
             context = {}
+        inv_date = {}
         for inv in self.browse(cr, uid, ids, context=context):
             if not inv.journal_id.sequence_id:
                 raise osv.except_osv(_('Error!'), _('Please define sequence on the journal related to this invoice.'))
@@ -913,8 +914,8 @@ class account_invoice(osv.osv):
 
             ctx = context.copy()
             ctx.update({'lang': inv.partner_id.lang})
-            if not inv.date_invoice:
-                self.write(cr, uid, [inv.id], {'date_invoice': fields.date.context_today(self,cr,uid,context=context)}, context=ctx)
+            date_invoice = inv.date_invoice or fields.date.context_today(self,cr,uid,context=context)
+            inv_date = {'date_invoice': date_invoice}
             company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
             # create the analytical lines
             # one move line per invoice line
@@ -944,17 +945,10 @@ class account_invoice(osv.osv):
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
 
-            entry_type = ''
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
-                entry_type = 'journal_pur_voucher'
-                if inv.type == 'in_refund':
-                    entry_type = 'cont_voucher'
             else:
                 ref = self._convert_ref(cr, uid, inv.number)
-                entry_type = 'journal_sale_vou'
-                if inv.type == 'out_refund':
-                    entry_type = 'cont_voucher'
 
             diff_currency_p = inv.currency_id.id <> company_currency
             # create one move line for the total and possibly adjust the other lines amount
@@ -967,11 +961,11 @@ class account_invoice(osv.osv):
             totlines = False
             if inv.payment_term:
                 totlines = payment_term_obj.compute(cr,
-                        uid, inv.payment_term.id, total, inv.date_invoice or False, context=ctx)
+                        uid, inv.payment_term.id, total, date_invoice or False, context=ctx)
             if totlines:
                 res_amount_currency = total_currency
                 i = 0
-                ctx.update({'date': inv.date_invoice})
+                ctx.update({'date': date_invoice})
                 for t in totlines:
                     if inv.currency_id.id != company_currency:
                         amount_currency = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, t[1], context=ctx)
@@ -1010,7 +1004,7 @@ class account_invoice(osv.osv):
                     'ref': ref
             })
 
-            date = inv.date_invoice or time.strftime('%Y-%m-%d')
+            date = date_invoice or time.strftime('%Y-%m-%d')
 
             part = self.pool.get("res.partner")._find_accounting_partner(inv.partner_id)
 
@@ -1037,7 +1031,7 @@ class account_invoice(osv.osv):
             period_id = inv.period_id and inv.period_id.id or False
             ctx.update(company_id=inv.company_id.id)
             if not period_id:
-                period_ids = period_obj.find(cr, uid, inv.date_invoice, context=ctx)
+                period_ids = period_obj.find(cr, uid, date_invoice, context=ctx)
                 period_id = period_ids and period_ids[0] or False
             if period_id:
                 move['period_id'] = period_id
@@ -1048,7 +1042,9 @@ class account_invoice(osv.osv):
             move_id = move_obj.create(cr, uid, move, context=ctx)
             new_move_name = move_obj.browse(cr, uid, move_id, context=ctx).name
             # make the invoice point to that move
-            self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name}, context=ctx)
+            vals = inv_date
+            vals.update(move_id=move_id, period_id=period_id, move_name=new_move_name)
+            self.write(cr, uid, [inv.id], vals, context=ctx)
             # Pass invoice in context in method post: used if you want to get the same
             # account move reference when creating the same invoice after a cancelled one:
             move_obj.post(cr, uid, [move_id], context=ctx)
@@ -1299,14 +1295,6 @@ class account_invoice(osv.osv):
             amount_currency = False
             currency_id = False
 
-        pay_journal = self.pool.get('account.journal').read(cr, uid, pay_journal_id, ['type'], context=context)
-        if invoice.type in ('in_invoice', 'out_invoice'):
-            if pay_journal['type'] == 'bank':
-                entry_type = 'bank_pay_voucher' # Bank payment
-            else:
-                entry_type = 'pay_voucher' # Cash payment
-        else:
-            entry_type = 'cont_voucher'
         if invoice.type in ('in_invoice', 'in_refund'):
             ref = invoice.reference
         else:
@@ -1535,7 +1523,6 @@ class account_invoice_line(osv.osv):
             res_final['value']['price_unit'] = new_price
 
         if result['uos_id'] and result['uos_id'] != res.uom_id.id:
-            selected_uom = self.pool.get('product.uom').browse(cr, uid, result['uos_id'], context=context)
             new_price = self.pool.get('product.uom')._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uos_id'])
             res_final['value']['price_unit'] = new_price
         return res_final
