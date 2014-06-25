@@ -1556,7 +1556,8 @@ class property(function):
         default_val = self._get_default(obj, cr, uid, prop_name, context)
 
         property_create = False
-        if isinstance(default_val, openerp.osv.orm.browse_record):
+        if isinstance(default_val, (openerp.osv.orm.browse_record,
+                                    openerp.osv.orm.browse_null)):
             if default_val.id != id_val:
                 property_create = True
         elif default_val != id_val:
