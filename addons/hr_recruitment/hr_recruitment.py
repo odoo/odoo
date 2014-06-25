@@ -20,6 +20,8 @@
 ##############################################################################
 
 from datetime import datetime
+
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -356,6 +358,13 @@ class hr_applicant(osv.Model):
         action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
         action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', ids)])
         return action
+
+    def message_get_reply_to(self, cr, uid, ids, context=None):
+        """ Override to get the reply_to of the parent project. """
+        applicants = self.browse(cr, SUPERUSER_ID, ids, context=context)
+        job_ids = set([applicant.job_id.id for applicant in applicants if applicant.job_id])
+        aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(job_ids), context=context)
+        return dict((applicant.id, aliases.get(applicant.job_id and applicant.job_id.id or 0, False)) for applicant in applicants)
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(hr_applicant, self).message_get_suggested_recipients(cr, uid, ids, context=context)

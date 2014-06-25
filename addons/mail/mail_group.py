@@ -23,6 +23,7 @@ import openerp
 import openerp.tools as tools
 from openerp.osv import osv
 from openerp.osv import fields
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp import SUPERUSER_ID
 
 
@@ -211,3 +212,17 @@ class mail_group(osv.Model):
             return []
         else:
             return super(mail_group, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)
+
+    def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
+        res = super(mail_group, self).message_get_email_values(cr, uid, id, notif_mail=notif_mail, context=context)
+        group = self.browse(cr, uid, id, context=context)
+        try:
+            headers = eval(res.get('headers', '{}'))
+        except Exception:
+            headers = {}
+        headers['Precedence'] = 'list'
+        if group.alias_domain and group.alias_name:
+            headers['List-Id'] = '%s.%s' % (group.alias_name, group.alias_domain)
+            headers['List-Post'] = '<mailto:%s@%s>' % (group.alias_name, group.alias_domain)
+        res['headers'] = '%s' % headers
+        return res

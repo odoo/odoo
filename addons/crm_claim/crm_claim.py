@@ -45,13 +45,10 @@ class crm_claim_stage(osv.osv):
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'case_default': fields.boolean('Common to All Teams',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
-        'fold': fields.boolean('Hide in Views when Empty',
-                        help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
 
     _defaults = {
         'sequence': lambda *args: 1,
-        'fold': False,
     }
 
 class crm_claim(osv.osv):
@@ -90,7 +87,7 @@ class crm_claim(osv.osv):
                             ('object_id.model', '=', 'crm.claim')]"),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
-        'user_id': fields.many2one('res.users', 'Responsible'),
+        'user_id': fields.many2one('res.users', 'Responsible', track_visibility='always'),
         'user_fault': fields.char('Trouble Responsible', size=64),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help="Responsible sales team."\
@@ -163,6 +160,13 @@ class crm_claim(osv.osv):
 
         # context: no_log, because subtype already handle this
         return super(crm_claim, self).create(cr, uid, vals, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        claim = self.browse(cr, uid, id, context=context)
+        default = dict(default or {},
+            stage_id = self._get_default_stage_id(cr, uid, context=context),
+            name = _('%s (copy)') % claim.name)
+        return super(crm_claim, self).copy(cr, uid, id, default, context=context)
 
     # -------------------------------------------------------
     # Mail gateway

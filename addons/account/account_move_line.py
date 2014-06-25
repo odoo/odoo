@@ -127,8 +127,8 @@ class account_move_line(osv.osv):
 
             if move_line.reconcile_id:
                 continue
-            if not move_line.account_id.type in ('payable', 'receivable'):
-                #this function does not suport to be used on move lines not related to payable or receivable accounts
+            if not move_line.account_id.reconcile:
+                #this function does not suport to be used on move lines not related to a reconcilable account
                 continue
 
             if move_line.currency_id:

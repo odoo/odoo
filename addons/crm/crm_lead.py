@@ -935,8 +935,10 @@ class crm_lead(format_address, osv.osv):
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
-        return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
-                    for lead in self.browse(cr, SUPERUSER_ID, ids, context=context)]
+        leads = self.browse(cr, SUPERUSER_ID, ids, context=context)
+        section_ids = set([lead.section_id.id for lead in leads if lead.section_id])
+        aliases = self.pool['crm.case.section'].message_get_reply_to(cr, uid, list(section_ids), context=context)
+        return dict((lead.id, aliases.get(lead.section_id and lead.section_id.id or 0, False)) for lead in leads)
 
     def get_formview_id(self, cr, uid, id, context=None):
         obj = self.browse(cr, uid, id, context=context)

@@ -2325,7 +2325,7 @@
 .openerp .oe_form .oe_form_field_image .oe_form_field_image_controls {
   position: absolute;
   top: 1px;
-  padding: 4px 0;
+  padding: 6px 0;
   width: 100%;
   display: none;
   text-align: center;
@@ -2373,7 +2373,7 @@
 }
 .openerp .oe_fileupload .oe_add button.oe_attach .oe_e {
   position: relative;
-  top: -1px;
+  top: -10px;
   left: -9px;
 }
 .openerp .oe_fileupload .oe_add input.oe_form_binary_file {
@@ -2647,11 +2647,11 @@
 .openerp .oe_list_editable .oe_list_content td.oe_list_field_cell {
   padding: 4px 6px 3px;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe_readonly) {
+.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell {
   color: transparent;
   text-shadow: none;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe_readonly) * {
+.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell * {
   visibility: hidden;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_m2o_drop_down_button {
@@ -2667,6 +2667,13 @@
   min-width: 0;
   max-width: none;
 }
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_list_field_handle {
+  color: transparent;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_readonly {
+  padding: 4px 6px 3px;
+  text-align: left;
+}
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea {
   height: 27px;
   -moz-border-radius: 0;
@@ -2678,9 +2685,14 @@
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field select {
   min-width: 0;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer input {
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float.oe_readonly, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer.oe_readonly {
+  padding: 6px 0px 0px;
   text-align: right;
+  max-width: 100px;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer input {
   width: 100% !important;
+  text-align: right;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime input.oe_datepicker_master, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date input.oe_datepicker_master {
   width: 100% !important;
@@ -3324,6 +3336,9 @@ body.oe_single_form .oe_single_form_container {
 .openerp_ie ul.oe_form_status li.oe_active > .arrow span, .openerp_ie ul.oe_form_status_clickable li.oe_active > .arrow span {
   background-color: #729fcf !important;
 }
+.openerp_ie .oe_webclient {
+  height: auto !important;
+}
 
 @media print {
   .openerp {
@@ -3445,6 +3460,39 @@ input[type="radio"], input[type="checkbox"] {
 .blockUI.blockOverlay {
   background-color: black;
   opacity: 0.6;
+}
+
+/* ---- EDITOR TOUR ---- {{{ */
+div.tour-backdrop {
+  z-index: 2009;
+}
+
+.popover.tour.orphan .arrow {
+  display: none;
+}
+.popover.tour .popover-navigation {
+  padding: 9px 14px;
+}
+.popover.tour .popover-navigation *[data-role="end"] {
+  float: right;
+}
+.popover.tour .popover-navigation *[data-role="next"], .popover.tour .popover-navigation *[data-role="end"] {
+  cursor: pointer;
+}
+
+.popover.fixed {
+  position: fixed;
+}
+
+.tour-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1100;
+  background-color: black;
+  opacity: 0.8;
 }
 
 body {

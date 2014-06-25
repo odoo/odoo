@@ -3348,6 +3348,8 @@ class BaseModel(object):
             return []
         if fields_to_read is None:
             fields_to_read = self._columns.keys()
+        else:
+            fields_to_read = list(set(fields_to_read))
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if
@@ -3858,7 +3860,7 @@ class BaseModel(object):
 
         parents_changed = []
         parent_order = self._parent_order or self._order
-        if self._parent_store and (self._parent_name in vals):
+        if self._parent_store and (self._parent_name in vals) and not context.get('defer_parent_store_computation'):
             # The parent_left/right computation may take up to
             # 5 seconds. No need to recompute the values if the
             # parent is the same.
