@@ -62,7 +62,7 @@ class account_analytic_journal(report_sxw.rml_parse):
 class report_analyticjournal(osv.AbstractModel):
     _name = 'report.account.report_analyticjournal'
     _inherit = 'report.abstract_report'
-    _template = 'account.report_analyticjournal'
+    _template = 'analytic.report_analyticjournal'
     _wrapped_report_class = account_analytic_journal
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

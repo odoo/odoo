@@ -140,7 +140,7 @@ class hr_expense_expense(osv.osv):
     def expense_confirm(self, cr, uid, ids, context=None):
         for expense in self.browse(cr, uid, ids):
             if not expense.line_ids:
-                raise osv.except_osv(_('Error!'),_('You cannot submit expense which has no expense line.'))
+                raise osv.except_osv(_('Error!'), _('You cannot submit expense which has no expense line.'))
             if expense.employee_id and expense.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [expense.id], user_ids=[expense.employee_id.parent_id.user_id.id])
         return self.write(cr, uid, ids, {'state': 'confirm', 'date_confirm': time.strftime('%Y-%m-%d')}, context=context)

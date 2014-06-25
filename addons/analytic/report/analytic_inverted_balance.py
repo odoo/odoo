@@ -124,7 +124,7 @@ class account_inverted_analytic_balance(report_sxw.rml_parse):
 class report_invertedanalyticbalance(osv.AbstractModel):
     _name = 'report.account.report_invertedanalyticbalance'
     _inherit = 'report.abstract_report'
-    _template = 'account.report_invertedanalyticbalance'
+    _template = 'analytic.report_invertedanalyticbalance'
     _wrapped_report_class = account_inverted_analytic_balance
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

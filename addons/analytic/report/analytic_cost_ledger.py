@@ -105,7 +105,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 class report_analyticcostledger(osv.AbstractModel):
     _name = 'report.account.report_analyticcostledger'
     _inherit = 'report.abstract_report'
-    _template = 'account.report_analyticcostledger'
+    _template = 'analytic.report_analyticcostledger'
     _wrapped_report_class = account_analytic_cost_ledger
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
