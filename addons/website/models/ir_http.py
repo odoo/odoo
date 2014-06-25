@@ -60,7 +60,6 @@ class ir_http(orm.AbstractModel):
                     request.lang = request.context['lang'] = path.pop(1)
                     path = '/'.join(path) or '/'
                     return self.reroute(path)
-                return self._handle_exception(code=404)
         return super(ir_http, self)._dispatch()
 
     def reroute(self, path):
@@ -93,51 +92,61 @@ class ir_http(orm.AbstractModel):
                     if str(arg.id) != placeholder.value and placeholder.value != good_slug:
                         # TODO: properly recompose the url instead of using replace()
                         url = url.replace(placeholder.value, good_slug)
-                except KeyError:
-                    return self._handle_exception(werkzeug.exceptions.NotFound())
+                except KeyError, e:
+                    return self._handle_exception(e, code=404)
         if url != original_url:
             werkzeug.exceptions.abort(werkzeug.utils.redirect(url))
 
-    def _handle_exception(self, exception=None, code=500):
-        try:
+    def _handle_exception(self, exception, code=500):
+        is_website_request = getattr(request, 'website_enabled', False) and request.website
+        if not is_website_request:
+            # Don't touch non website requests exception handling
             return super(ir_http, self)._handle_exception(exception)
-        except Exception:
-            if getattr(request, 'website_enabled', False) and request.website:
-                values = dict(
-                    exception=exception,
-                    traceback=traceback.format_exc(exception),
-                )
-                if exception:
-                    code = getattr(exception, 'code', code)
-                    if isinstance(exception, ir_qweb.QWebException):
-                        values.update(qweb_exception=exception)
-                        if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
-                            code = 403
-                if code == 500:
-                    logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
-                    if 'qweb_exception' in values:
-                        view = request.registry.get("ir.ui.view")
-                        views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
-                        to_reset = [v for v in views if v.model_data_id.noupdate is True]
-                        values['views'] = to_reset
-                elif code == 403:
-                    logger.warn("403 Forbidden:\n\n%s", values['traceback'])
+        else:
+            try:
+                response = super(ir_http, self)._handle_exception(exception)
+                if isinstance(response, Exception):
+                    exception = response
+                else:
+                    # if parent excplicitely returns a plain response, then we don't touch it
+                    return response
+            except Exception, e:
+                exception = e
 
-                values.update(
-                    status_message=werkzeug.http.HTTP_STATUS_CODES[code],
-                    status_code=code,
-                )
+            values = dict(
+                exception=exception,
+                traceback=traceback.format_exc(exception),
+            )
+            code = getattr(exception, 'code', code)
 
-                if not request.uid:
-                    self._auth_method_public()
+            if isinstance(exception, ir_qweb.QWebException):
+                values.update(qweb_exception=exception)
+                if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
+                    code = 403
 
-                try:
-                    html = request.website._render('website.%s' % code, values)
-                except Exception:
-                    html = request.website._render('website.http_error', values)
-                return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+            if code == 500:
+                logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
+                if 'qweb_exception' in values:
+                    view = request.registry.get("ir.ui.view")
+                    views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
+                    to_reset = [v for v in views if v.model_data_id.noupdate is True]
+                    values['views'] = to_reset
+            elif code == 403:
+                logger.warn("403 Forbidden:\n\n%s", values['traceback'])
 
-            raise
+            values.update(
+                status_message=werkzeug.http.HTTP_STATUS_CODES[code],
+                status_code=code,
+            )
+
+            if not request.uid:
+                self._auth_method_public()
+
+            try:
+                html = request.website._render('website.%s' % code, values)
+            except Exception:
+                html = request.website._render('website.http_error', values)
+            return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
 class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False):
