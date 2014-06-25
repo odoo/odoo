@@ -120,7 +120,7 @@ class ir_http(orm.AbstractModel):
             if response.status_code == 304:
                 return response
 
-            response.mimetype = attach[0]['mimetype']
+            response.mimetype = attach[0]['mimetype'] or 'application/octet-stream'
             response.data = datas.decode('base64')
             return response
 
