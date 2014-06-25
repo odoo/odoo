@@ -27,6 +27,7 @@ import werkzeug.urls
 import urllib2
 import json
 import re
+import openerp
 
 _logger = logging.getLogger(__name__)
 
@@ -63,7 +64,9 @@ class config(osv.Model):
         user_is_admin = self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
         if not google_drive_refresh_token:
             if user_is_admin:
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
+                model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base_setup', 'action_general_configuration')
+                msg = _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it .")
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
                 raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
         google_drive_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
@@ -81,7 +84,9 @@ class config(osv.Model):
             content = urllib2.urlopen(req).read()
         except urllib2.HTTPError:
             if user_is_admin:
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during the token generation. Please request again an authorization code in %(menu:base_setup.menu_general_configuration)s."), context=context)
+                model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base_setup', 'action_general_configuration')
+                msg = _("Something went wrong during the token generation. Please request again an authorization code .")
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
                 raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
         content = json.loads(content)
@@ -98,7 +103,7 @@ class config(osv.Model):
             req = urllib2.Request(request_url, None, headers)
             parents = urllib2.urlopen(req).read()
         except urllib2.HTTPError:
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("The Google Template cannot be found. Maybe it has been deleted."), context=context)
+            raise osv.except_osv(_('Warning!'), _("The Google Template cannot be found. Maybe it has been deleted."))
         parents_dict = json.loads(parents)
 
         record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
