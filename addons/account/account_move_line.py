@@ -756,6 +756,8 @@ class account_move_line(osv.osv):
         return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def list_partners_to_reconcile(self, cr, uid, context=None):
+        context = context or {}
+        domain = context.get('domain', [])
         cr.execute(
              """SELECT partner_id FROM (
                 SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
@@ -769,7 +771,11 @@ class account_move_line(osv.osv):
                 ) AS s
                 WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
                 ORDER BY last_reconciliation_date""")
-        ids = [x[0] for x in cr.fetchall()]
+
+        partner_ids = [x[0] for x in cr.fetchall()]
+        line_ids = self.search(cr, uid, [('partner_id', 'in', partner_ids)]+domain, context=context)
+        line_res = self.browse(cr, uid, line_ids, context=context)
+        ids = [x.partner_id.id for x in line_res]
         if not ids:
             return []
 
