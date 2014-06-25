@@ -198,6 +198,14 @@
         </t>
     </template>
 
+<!--
+     Theme
+-->
+
+    <template id="website.theme" name="Theme">
+        <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
+        <link rel="stylesheet" href='/website/static/src/css/website.css' t-ignore="true"/>
+    </template>
 
 <!--
      All Default Themes
@@ -283,6 +291,91 @@
             <link rel='stylesheet' href='/website/static/src/css/bootswatch/yeti.min.css' t-ignore="true"/>
             <link rel='stylesheet' href='/website/static/src/css/bootswatch/yeti.fix.css' t-ignore="true"/>
         </xpath>
+    </template>
+
+<!--
+    Customize Themes
+
+    Use input type 'checkbox' or 'radio'
+    Use 'data-unable' to checked one or more HTML id, or list separate by comma
+    Use 'data-disable' to un checked one or more HTML id, or list separate by comma
+    
+    The HTML class 'checked' is automatically apply to the parent label of the checked inputs
+-->
+
+    <template id="website.theme_customize" name="Customize Theme">
+        <section id="theme_customize_modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="mySmallModalLabel">Customize your theme</h4>
+              </div>
+              <div class="modal-body">
+                <table>
+                  <tr>
+                    <td>
+                      <label>
+                        <input id="t0" name="theme" type="radio" data-xmlid="" checked="checked"/>
+                        Standard
+                      </label>
+                      <label>
+                        <input id="t1" name="theme" type="radio" data-xmlid="website.theme_amelia"/>
+                        Amelia
+                      </label>
+                      <label>
+                        <input id="t2" name="theme" type="radio" data-xmlid="website.theme_cerulean"/>
+                        Cerulean
+                      </label>
+                      <label>
+                        <input id="t3" name="theme" type="radio" data-xmlid="website.theme_cosmo"/>
+                        Cosmo
+                      </label>
+                      <label>
+                        <input id="t4" name="theme" type="radio" data-xmlid="website.theme_cyborg"/>
+                        Cyborg
+                      </label>
+                      <label>
+                        <input id="t5" name="theme" type="radio" data-xmlid="website.theme_flatly"/>
+                        Flatly
+                      </label>
+                      <label>
+                        <input id="t6" name="theme" type="radio" data-xmlid="website.theme_journal"/>
+                        Journal
+                      </label>
+                    </td>
+                    <td>
+                      <label>
+                        <input id="t7" name="theme" type="radio" data-xmlid="website.theme_readable"/>
+                        Readable
+                      </label>
+                      <label>
+                        <input id="t8" name="theme" type="radio" data-xmlid="website.theme_simplex"/>
+                        Simplex
+                      </label>
+                      <label>
+                        <input id="t9" name="theme" type="radio" data-xmlid="website.theme_slate"/>
+                        Slate
+                      </label>
+                      <label>
+                        <input id="t10" name="theme" type="radio" data-xmlid="website.theme_spacelab"/>
+                        Spacelab
+                      </label>
+                      <label>
+                        <input id="t11" name="theme" type="radio" data-xmlid="website.theme_united"/>
+                        United
+                      </label>
+                      <label>
+                        <input id="t12" name="theme" type="radio" data-xmlid="website.theme_yeti"/>
+                        Yeti
+                      </label>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
     </template>
 
 </data>

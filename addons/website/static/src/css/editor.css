@@ -516,3 +516,25 @@ ul.oe_menu_editor .disclose {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
+
+/* ---- CUSTOMIZE THEME ---- {{{ */
+#theme_customize_modal {
+  top: 75px;
+  overflow: visible;
+  z-index: 1020;
+}
+#theme_customize_modal .modal-dialog {
+  width: 300px;
+  margin: 0;
+  position: absolute;
+  right: 10px;
+}
+#theme_customize_modal table {
+  width: 100%;
+}
+#theme_customize_modal label {
+  display: block;
+}
+#theme_customize_modal label.checked {
+  background: #dff0d8;
+}

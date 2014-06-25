@@ -349,6 +349,50 @@ class Website(openerp.addons.web.controllers.main.Home):
         obj = _object.browse(request.cr, request.uid, _id)
         return bool(obj.website_published)
 
+    @http.route(['/website/theme_customize_modal'], type='json', auth="public", website=True)
+    def theme_customize_modal(self):
+        return request.website._render('website.theme_customize')
+
+    @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
+    def theme_customize(self, unable, disable):
+        """ Unable or Disable lists of ``xml_id`` of the inherit templates
+        """
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        imd = pool['ir.model.data']
+        view = pool["ir.ui.view"]
+
+        view_model, view_theme_id = imd.get_object_reference(cr, uid, 'website', 'theme')
+
+        user = pool['res.users'].browse(cr, uid, uid, context)
+        user_groups = set(user.groups_id)
+
+        def set_application(ids, application):
+            xml_ids = []
+            for xml_id in ids:
+                if "." in xml_id:
+                    xml = xml_id.split(".")
+                    view_model, id = imd.get_object_reference(cr, uid, xml[0], xml[1])
+                else:
+                    id = int(xml_id)
+                xml_ids.append(id)
+
+            write_ids = []
+            for v in view.browse(cr, uid, xml_ids, context=context):
+                if not user_groups.issuperset(v.groups_id):
+                    continue
+                if v.application == 'always':
+                    continue
+                if v.application != application and v.inherit_id.id == view_theme_id:
+                    write_ids.append(v.id)
+
+            if write_ids:
+                view.write(cr, uid, write_ids, {'application': application})
+
+        set_application(disable, 'disabled')
+        set_application(unable, 'enabled')
+
+        return True
+
     #------------------------------------------------------
     # Helpers
     #------------------------------------------------------
