@@ -2293,6 +2293,19 @@ instance.web.search.custom_filters = new instance.web.Registry({
 instance.web.search.AutoComplete = instance.web.Widget.extend({
     template: "SearchView.autocomplete",
 
+    // Parameters for autocomplete constructor:
+    //
+    // parent: this is used to detect keyboard events 
+    //
+    // options.source: function ({term:query}, callback).  This function will be called to
+    //      obtain the search results corresponding to the query string.  It is assumed that
+    //      options.source will call callback with the results.
+    // options.delay: delay in millisecond before calling source.  Useful if you don't want
+    //      to make too many rpc calls
+    // options.select: function (ev, {item: {facet:facet}}).  Autocomplete widget will call
+    //      that function when a selection is made by the user
+    // options.get_search_string: function ().  This function will be called by autocomplete
+    //      to obtain the current search string.
     init: function (parent, options) {
         this._super(parent);
         this.$input = parent.$el;
