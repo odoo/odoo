@@ -1032,6 +1032,8 @@ class product_product(osv.osv):
         return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        if context is None:
+            context = {}
         if not args:
             args = []
         if name:
@@ -1059,6 +1061,17 @@ class product_product(osv.osv):
                 res = ptrn.search(name)
                 if res:
                     ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
+            # still no results, partner in context: search on supplier info as last hope to find something
+            if not ids and context.get('partner_id'):
+                supplier_ids = self.pool['product.supplierinfo'].search(
+                    cr, user, [
+                        ('name', '=', context.get('partner_id')),
+                        '|',
+                        ('product_code', operator, name),
+                        ('product_name', operator, name)
+                    ], context=context)
+                if supplier_ids:
+                    ids = self.search(cr, user, [('product_tmpl_id.seller_ids', 'in', supplier_ids)], limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context=context)

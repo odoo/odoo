@@ -48,7 +48,8 @@
                 <form string="Invoice Line">
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)"/>
+                            <field name="product_id"
+                                on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)" context="{'partner_id': parent.partner_id}"/>
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/>
@@ -194,7 +195,7 @@
                                 <tree string="Invoice lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
                                     <field name="product_id"
-                                        on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)"/>
+                                        on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)" context="{'partner_id': parent.partner_id}"/>
                                     <field name="name"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
