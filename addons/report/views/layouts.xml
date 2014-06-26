@@ -150,5 +150,23 @@
     <t t-raw="0" />
 </template>
 
+<template id="minimal_layout">
+    <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
+    &lt;!DOCTYPE html&gt;
+    <html style="height: 0;">
+        <head>
+            <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
+            <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+            <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+            <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+            <style type='text/css'><t t-raw="css"/></style>
+            <t t-raw="subst"/>
+        </head>
+        <body class="container" onload="subst()">
+            <t t-raw="body"/>
+        </body>
+    </html>
+</template>
+
 </data>
 </openerp>
