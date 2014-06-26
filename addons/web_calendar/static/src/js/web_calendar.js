@@ -218,7 +218,12 @@ openerp.web_calendar = function(instance) {
                 this.info_fields.push(fv.arch.children[fld].attrs.name);
             }
 
-            return (new instance.web.Model(this.dataset.model))
+            var edit_check = new instance.web.Model(this.dataset.model)
+                .call("check_access_rights", ["write", false])
+                .then(function (write_right) {
+                    self.write_right = write_right;
+                });
+            var init = new instance.web.Model(this.dataset.model)
                 .call("check_access_rights", ["create", false])
                 .then(function (create_right) {
                     self.create_right = create_right;
@@ -228,6 +233,7 @@ openerp.web_calendar = function(instance) {
                         self.ready.resolve();
                     });
                 });
+            return $.when(edit_check, init);
         },
 
         get_fc_init_options: function () {
@@ -657,17 +663,13 @@ openerp.web_calendar = function(instance) {
                     date_start_day = new Date(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),7);
                     date_stop_day = new Date(event_end.getFullYear(),event_end.getMonth(),event_end.getDate(),19);
                 }
-                data[this.date_start] = instance.web.parse_value(date_start_day, this.fields[this.date_start]);
-                if (this.date_stop) {
-                    data[this.date_stop] = instance.web.parse_value(date_stop_day, this.fields[this.date_stop]);
-                }
                 diff_seconds = Math.round((date_stop_day.getTime() - date_start_day.getTime()) / 1000);
                                 
             }
             else {
-                data[this.date_start] = instance.web.parse_value(event.start, this.fields[this.date_start]);
+                data[this.date_start] = event.start;
                 if (this.date_stop) {
-                    data[this.date_stop] = instance.web.parse_value(event_end, this.fields[this.date_stop]);
+                    data[this.date_stop] = event_end;
                 }
                 diff_seconds = Math.round((event_end.getTime() - event.start.getTime()) / 1000);
             }
@@ -841,7 +843,11 @@ openerp.web_calendar = function(instance) {
             if (! this.open_popup_action) {
                 var index = this.dataset.get_id_index(id);
                 this.dataset.index = index;
-                this.do_switch_view('form', null, { mode: "edit" });
+                if (this.write_right) {
+                    this.do_switch_view('form', null, { mode: "edit" });
+                } else {
+                    this.do_switch_view('form', null, { mode: "view" });
+                }
             }
             else {
                 var pop = new instance.web.form.FormOpenPopup(this);

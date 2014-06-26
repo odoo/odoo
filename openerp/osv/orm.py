@@ -3347,6 +3347,8 @@ class BaseModel(object):
             return []
         if fields_to_read is None:
             fields_to_read = self._columns.keys()
+        else:
+            fields_to_read = list(set(fields_to_read))
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if

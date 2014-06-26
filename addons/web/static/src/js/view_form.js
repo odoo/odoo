@@ -1869,25 +1869,9 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
     do_attach_tooltip: function(widget, trigger, options) {
         widget = widget || this;
         trigger = trigger || this.$el;
-        var container = 'body';
-        /*TODO: need to be refactor
-        in the case we can find the view form in the parent, 
-        attach the element to it (to prevent tooltip to keep showing
-        when switching view) or if we have a modal currently showing,
-        attach tooltip to the modal to prevent the tooltip to show in the body in the
-        case we close the modal too fast*/
-        if ($(trigger).parents('.oe_view_manager_view_form').length > 0){
-            container = $(trigger).parents('.oe_view_manager_view_form');
-        }
-        else {
-            if (window.$('.modal.in').length>0){
-                container = window.$('.modal.in:last()');
-            }
-        }
         options = _.extend({
                 delay: { show: 500, hide: 0 },
                 trigger: 'hover',
-                container: container,
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
@@ -2399,6 +2383,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
         if (li.length) {
             var value = {};
             value[self.name] = String(li.data('value'));
+            self.record_id = self.view.datarecord.id;
             if (self.record_id) {
                 return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {
@@ -2632,6 +2617,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     type_of_date: "datetime",
     events: {
         'change .oe_datepicker_master': 'change_datetime',
+        'keypress .oe_datepicker_master': 'change_datetime',
     },
     init: function(parent) {
         this._super(parent);
@@ -2750,8 +2736,8 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     format_client: function(v) {
         return instance.web.format_value(v, {"widget": this.type_of_date});
     },
-    change_datetime: function() {
-        if (this.is_valid_()) {
+    change_datetime: function(e) {
+        if ((e.type !== "keypress" || e.which === 13) && this.is_valid_()) {
             this.set_value_from_ui_();
             this.trigger("datetime_changed");
         }
@@ -2809,7 +2795,9 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
-        this.datewidget.$input.css('height', height);
+        if (!this.get("effective_readonly")) {
+            this.datewidget.$input.css('height', height);
+        }
     }
 });
 
@@ -3509,6 +3497,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.floating = false;
         this.current_display = null;
         this.is_started = false;
+        this.ignore_focusout = false;
     },
     reinit_value: function(val) {
         this.internal_set_value(val);
@@ -3640,6 +3629,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var ed_delay = 200;
         var ed_duration = 15000;
         var anyoneLoosesFocus = function (e) {
+            if (self.ignore_focusout) { return; }
             var used = false;
             if (self.floating) {
                 if (self.last_search.length > 0) {
@@ -3843,11 +3833,17 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     _search_create_popup: function() {
         this.no_ed = true;
         this.ed_def.reject();
-        return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
+        this.ignore_focusout = true;
+        this.reinit_value(false);
+        var res = instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
+        this.ignore_focusout = false;
+        this.no_ed = false;
+        return res;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
-        this.$input.css('height', height);
+        if (!this.get("effective_readonly") && this.$input)
+            this.$input.css('height', height);
     }
 });
 

@@ -214,6 +214,7 @@ class base_action_rule(osv.osv):
         """ Wrap the methods `create` and `write` of the models specified by
             the rules given by `ids` (or all existing rules if `ids` is `None`.)
         """
+        updated = False
         if ids is None:
             ids = self.search(cr, SUPERUSER_ID, [])
         for action_rule in self.browse(cr, SUPERUSER_ID, ids):
@@ -223,20 +224,21 @@ class base_action_rule(osv.osv):
                 model_obj.create = self._wrap_create(model_obj.create, model)
                 model_obj.write = self._wrap_write(model_obj.write, model)
                 model_obj.base_action_ruled = True
-        return True
+                updated = True
+        return updated
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
-        self._register_hook(cr, [res_id])
-        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
+        if self._register_hook(cr, [res_id]):
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
-        self._register_hook(cr, ids)
-        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
+        if self._register_hook(cr, ids):
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return True
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
@@ -266,7 +268,10 @@ class base_action_rule(osv.osv):
         action_ids = self.search(cr, uid, action_dom, context=context)
         for action in self.browse(cr, uid, action_ids, context=context):
             now = datetime.now()
-            last_run = get_datetime(action.last_run) if action.last_run else False
+            if action.last_run:
+                last_run = get_datetime(action.last_run)
+            else:
+                last_run = datetime.utcfromtimestamp(0)
 
             # retrieve all the records that satisfy the action's condition
             model = self.pool[action.model_id.model]
@@ -297,11 +302,16 @@ class base_action_rule(osv.osv):
                 if not record_dt:
                     continue
                 action_dt = self._check_delay(cr, uid, action, record, record_dt, context=context)
-                if last_run and (last_run <= action_dt < now) or (action_dt < now):
+                if last_run <= action_dt < now:
                     try:
+                        context = dict(context or {}, action=True)
                         self._process(cr, uid, action, [record.id], context=context)
                     except Exception:
                         import traceback
                         _logger.error(traceback.format_exc())
 
             action.write({'last_run': now.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+
+            if automatic:
+                # auto-commit for batch processing
+                cr.commit()

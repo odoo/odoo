@@ -129,6 +129,36 @@ class gamification_goal_definition(osv.Model):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return self.pool.get('mail.followers').search(cr, uid, [('res_model', '=', model_name), ('partner_id', '=', user.partner_id.id)], count=True, context=context)
 
+    def _check_domain_validity(self, cr, uid, ids, context=None):
+        # take admin as should always be present
+        superuser = self.pool['res.users'].browse(cr, uid, SUPERUSER_ID, context=context)
+        for definition in self.browse(cr, uid, ids, context=context):
+            if definition.computation_mode not in ('count', 'sum'):
+                continue
+
+            obj = self.pool[definition.model_id.model]
+            try:
+                domain = safe_eval(definition.domain, {'user': superuser})
+                # demmy search to make sure the domain is valid
+                obj.search(cr, uid, domain, context=context, count=True)
+            except (ValueError, SyntaxError), e:
+                msg = e.message or (e.msg + '\n' + e.text)
+                raise osv.except_osv(_('Error!'),_("The domain for the definition %s seems incorrect, please check it.\n\n%s" % (definition.name, msg)))
+        return True
+
+    def create(self, cr, uid, vals, context=None):
+        res_id = super(gamification_goal_definition, self).create(cr, uid, vals, context=context)
+        if vals.get('computation_mode') in ('count', 'sum'):
+            self._check_domain_validity(cr, uid, [res_id], context=context)
+
+        return res_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(gamification_goal_definition, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('computation_mode', 'count') in ('count', 'sum') and (vals.get('domain') or vals.get('model_id')):
+            self._check_domain_validity(cr, uid, ids, context=context)
+
+        return res
 
 
 class gamification_goal(osv.Model):

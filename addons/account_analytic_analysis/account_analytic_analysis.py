@@ -22,7 +22,6 @@ from dateutil.relativedelta import relativedelta
 import datetime
 import logging
 import time
-import traceback
 
 from openerp.osv import osv, fields
 from openerp.osv.orm import intersect, except_orm
@@ -73,6 +72,7 @@ class account_analytic_invoice_line(osv.osv):
 
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=local_context)
+        price = False
         if price_unit is not False:
             price = price_unit
         elif pricelist_id:
@@ -746,29 +746,32 @@ class account_analytic_account(osv.osv):
             contract_ids = ids
         else:
             contract_ids = self.search(cr, uid, [('recurring_next_date','<=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True), ('type', '=', 'contract')])
-        for contract in self.browse(cr, uid, contract_ids, context=context):
-            try:
-                invoice_values = self._prepare_invoice(cr, uid, contract, context=context)
-                invoice_ids.append(self.pool['account.invoice'].create(cr, uid, invoice_values, context=context))
-                next_date = datetime.datetime.strptime(contract.recurring_next_date or current_date, "%Y-%m-%d")
-                interval = contract.recurring_interval
-                if contract.recurring_rule_type == 'daily':
-                    new_date = next_date+relativedelta(days=+interval)
-                elif contract.recurring_rule_type == 'weekly':
-                    new_date = next_date+relativedelta(weeks=+interval)
-                elif contract.recurring_rule_type == 'monthly':
-                    new_date = next_date+relativedelta(months=+interval)
-                else:
-                    new_date = next_date+relativedelta(years=+interval)
-                self.write(cr, uid, [contract.id], {'recurring_next_date': new_date.strftime('%Y-%m-%d')}, context=context)
-                if automatic:
-                    cr.commit()
-            except Exception:
-                if automatic:
-                    cr.rollback()
-                    _logger.error(traceback.format_exc())
-                else:
-                    raise
+        if contract_ids:
+            cr.execute('SELECT company_id, array_agg(id) as ids FROM account_analytic_account WHERE id IN %s GROUP BY company_id', (tuple(contract_ids),))
+            for company_id, ids in cr.fetchall():
+                for contract in self.browse(cr, uid, ids, context=dict(context, company_id=company_id, force_company=company_id)):
+                    try:
+                        invoice_values = self._prepare_invoice(cr, uid, contract, context=context)
+                        invoice_ids.append(self.pool['account.invoice'].create(cr, uid, invoice_values, context=context))
+                        next_date = datetime.datetime.strptime(contract.recurring_next_date or current_date, "%Y-%m-%d")
+                        interval = contract.recurring_interval
+                        if contract.recurring_rule_type == 'daily':
+                            new_date = next_date+relativedelta(days=+interval)
+                        elif contract.recurring_rule_type == 'weekly':
+                            new_date = next_date+relativedelta(weeks=+interval)
+                        elif contract.recurring_rule_type == 'monthly':
+                            new_date = next_date+relativedelta(months=+interval)
+                        else:
+                            new_date = next_date+relativedelta(years=+interval)
+                        self.write(cr, uid, [contract.id], {'recurring_next_date': new_date.strftime('%Y-%m-%d')}, context=context)
+                        if automatic:
+                            cr.commit()
+                    except Exception:
+                        if automatic:
+                            cr.rollback()
+                            _logger.exception('Fail to create recurring invoice for contract %s', contract.code)
+                        else:
+                            raise
         return invoice_ids
 
 class account_analytic_account_summary_user(osv.osv):

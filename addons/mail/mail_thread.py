@@ -34,6 +34,7 @@ import pytz
 import socket
 import time
 import xmlrpclib
+import re
 from email.message import Message
 from urllib import urlencode
 
@@ -47,6 +48,8 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
+mail_header_msgid_re = re.compile('<[^<>]+>')
 
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode, filter(None, message.get_all(header, []))))
@@ -694,6 +697,16 @@ class mail_thread(osv.AbstractModel):
                 if record.alias_domain and record.alias_name else False
                 for record in self.browse(cr, SUPERUSER_ID, ids, context=context)]
 
+    def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
+        """ Temporary method to create custom notification email values for a given
+        model and document. This should be better to have a headers field on
+        the mail.mail model, computed when creating the notification email, but
+        this cannot be done in a stable version.
+
+        TDE FIXME: rethink this ulgy thing. """
+        res = dict()
+        return res
+
     #------------------------------------------------------
     # Mail gateway
     #------------------------------------------------------
@@ -1301,13 +1314,13 @@ class mail_thread(osv.AbstractModel):
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         if message.get('In-Reply-To'):
-            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To']))])
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To'].strip()))])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
         if message.get('References') and 'parent_id' not in msg_dict:
-            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in',
-                                                                         [x.strip() for x in decode(message['References']).split()])])
+            msg_list =  mail_header_msgid_re.findall(decode(message['References']))
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in', [x.strip() for x in msg_list])])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
