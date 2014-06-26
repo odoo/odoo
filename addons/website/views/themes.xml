@@ -97,6 +97,13 @@
         </xpath>
     </template>
 
+    <template id="website.them_custo" name="them_custo" inherit_id="website.theme" optional="disabled">
+        <xpath expr="//link[last()]" position="after">
+            <style>
+              body { background: #ff0000; }
+            </style>
+        </xpath>
+    </template>
 <!--
     Customize Themes
 
@@ -104,6 +111,8 @@
     'data-xmlid' (optional) xml id of the template to add if the input is checked
     'data-enable' (optional) to checked one or more HTML ids, or list separate by comma
     'data-disable' (optional) to unchecked one or more HTML ids, or list separate by comma
+    'data-reload="true"' (optional) force the reloading of the page otherwise, only the
+    '/web/css/website.assets_frontend' is reloaded
 
     For the sets (data-enable and/or data-disable without data-xmlid), the set is automatically
     checked if:

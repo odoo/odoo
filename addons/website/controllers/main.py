@@ -324,51 +324,48 @@ class Website(openerp.addons.web.controllers.main.Home):
         obj = _object.browse(request.cr, request.uid, _id)
         return bool(obj.website_published)
 
+    #------------------------------------------------------
+    # Themes
+    #------------------------------------------------------
+
     @http.route(['/website/theme_customize_modal'], type='json', auth="public", website=True)
     def theme_customize_modal(self):
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        imd = pool['ir.model.data']
-        view = pool["ir.ui.view"]
+        return request.website._render('website.theme_customize')
 
-        view_model, view_theme_id = imd.get_object_reference(cr, uid, 'website', 'theme')
+    def get_view_ids(self, xml_ids):
+        ids = []
+        imd = request.registry['ir.model.data']
+        for xml_id in xml_ids:
+            if "." in xml_id:
+                xml = xml_id.split(".")
+                view_model, id = imd.get_object_reference(request.cr, request.uid, xml[0], xml[1])
+            else:
+                id = int(xml_id)
+            ids.append(id)
+        return ids
 
-        inherit_xml_ids = []
-        inherit_ids = view.search(cr, uid, [('inherit_id', '=', view_theme_id)], context=context)
-        for v in view.browse(cr, uid, inherit_ids, context):
-            inherit_xml_ids.append([v.xml_id, v.application])
-
-        return (request.website._render('website.theme_customize'), inherit_xml_ids)
+    @http.route(['/website/get_theme_customize'], type='json', auth="public", website=True)
+    def get_theme_customize(self, xml_ids):
+        view = request.registry["ir.ui.view"]
+        datas = []
+        ids = self.get_view_ids(xml_ids)
+        for v in view.browse(request.cr, request.uid, ids, context=request.context):
+            datas.append([v.xml_id, v.application])
+        return datas
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
     def theme_customize(self, enable, disable):
         """ enable or Disable lists of ``xml_id`` of the inherit templates
         """
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        imd = pool['ir.model.data']
         view = pool["ir.ui.view"]
 
-        view_model, view_theme_id = imd.get_object_reference(cr, uid, 'website', 'theme')
-
-        user = pool['res.users'].browse(cr, uid, uid, context)
-        user_groups = set(user.groups_id)
-
         def set_application(ids, application):
-            xml_ids = []
-            for xml_id in ids:
-                if "." in xml_id:
-                    xml = xml_id.split(".")
-                    view_model, id = imd.get_object_reference(cr, uid, xml[0], xml[1])
-                else:
-                    id = int(xml_id)
-                xml_ids.append(id)
-
             write_ids = []
-            for v in view.browse(cr, uid, xml_ids, context=context):
-                if not user_groups.issuperset(v.groups_id):
-                    continue
+            for v in view.browse(cr, uid, self.get_view_ids(ids), context=context):
                 if v.application == 'always':
                     continue
-                if v.application != application and v.inherit_id.id == view_theme_id:
+                if v.application != application:
                     write_ids.append(v.id)
 
             if write_ids:

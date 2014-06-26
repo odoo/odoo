@@ -1,10 +1,8 @@
 (function () {
     'use strict';
 
-    $(document).on('click', "#theme_customize a", function (event) {
-        openerp.jsonRpc('/website/theme_customize_modal', 'call').then(function (data) {
-            var xmls = data[1];
-            var modal = data[0];
+    function theme_customize () {
+        openerp.jsonRpc('/website/theme_customize_modal', 'call').then(function (modal) {
             var $modal = $(modal);
             $modal.appendTo("body").modal({backdrop: false});
             $modal.on('hidden.bs.modal', function () {
@@ -25,15 +23,17 @@
                 return xml_ids;
             }
 
-            function update_style(enable, disable) {
+            function update_style(enable, disable, reload) {
                 $modal.addClass("loading");
-                openerp.jsonRpc('/website/theme_customize', 'call', {
+                var req = openerp.jsonRpc('/website/theme_customize', 'call', {
                         'enable': enable,
                         'disable': disable
-                    }).then(function () {
-                        var $style = $('style#theme_style');
+                    });
+                if (!reload) {
+                    req.then(function () {
+                        var $style = $('style#theme_style_assets_frontend');
                         if (!$style.size()) {
-                            $style = $('<style id="theme_style">').appendTo('head');
+                            $style = $('<style id="theme_style_assets_frontend">').appendTo('head');
                         }
                         $.get('/web/css/website.assets_frontend?'+new Date().getTime(), function (css) {
                             $('head link[href^="/web/css/website.assets_frontend"]').attr("disabled", false).remove();
@@ -41,9 +41,16 @@
                             $modal.removeClass("loading");
                         });
                     });
+                } else {
+                    setTimeout(function () {
+                        window.location.hash = "theme=true";
+                        window.location.reload();
+                    },25);
+                }
             }
 
             var run = false;
+            var reload = false;
             var time;
             $modal.on('change', 'input[data-xmlid],input[data-enable],input[data-disable]', function () {
                 var $option = $(this), $group, checked = $(this).is(":checked");
@@ -96,26 +103,45 @@
                     }
                 });
 
-                clearTimeout(time);
-                if (run) time = setTimeout(function () {
-                    update_style(get_xml_ids($enable), get_xml_ids($disable));
-                },0);
-            });
+                if ($(this).data('reload')) reload = true;
 
-            var removed = [];
-            _.each(xmls, function (xml) {
-                var $input = $modal.find('[data-xmlid="'+xml[0]+'"]');
-                if(!$input.size()) {
-                    removed.push(xml);
-                } else if(xml[1] !== "disabled") {
-                    $input.attr("checked", true).change();
+                clearTimeout(time);
+                if (run) {
+                    time = setTimeout(function () {
+                        update_style(get_xml_ids($enable), get_xml_ids($disable), reload);
+                        reload = false;
+                    },0);
+                } else {
+                    time = setTimeout(function () { reload = false; },0);
                 }
             });
-            if (removed.length) {
-                update_style([], removed);
-            }
-            run = true;
+
+            // todo call with all data-xmlid
+            openerp.jsonRpc('/website/get_theme_customize', 'call', {
+                    'xml_ids': get_xml_ids($("input[data-xmlid]"))
+                }).then(function (xmls) {
+                    var removed = [];
+                    _.each(xmls, function (xml) {
+                        var $input = $modal.find('[data-xmlid="'+xml[0]+'"]');
+                        if($input.size() && xml[1] !== "disabled") {
+                            $input.attr("checked", true).change();
+                        }
+                    });
+                    if (removed.length) {
+                        update_style([], removed);
+                    }
+                    run = true;
+                });
         });
-    });
+    }
+
+    $(document).on('click', "#theme_customize a",theme_customize);
+
+    setTimeout(function () {
+        if ((window.location.hash || "").indexOf("theme=true") !== -1) {
+            theme_customize();
+            window.location.hash = "";
+        }
+    },0);
 
 })();
