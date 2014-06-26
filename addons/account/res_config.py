@@ -304,6 +304,15 @@ class account_config_settings(osv.osv_memory):
         if not group_multi_currency:
             res['value'] = {'income_currency_exchange_account_id': False, 'expense_currency_exchange_account_id': False}
         return res
+        
+    def set_group_multi_currency(self, cr, uid, ids, context=None):
+        ir_model = self.pool['ir.model.data']
+        group_user = ir_model.get_object(cr, uid, 'base', 'group_user', context)
+        group_product = ir_model.get_object(cr, uid, 'product', 'group_sale_pricelist', context)
+        for config_obj in self.browse(cr, uid, ids, context=context):
+            if config_obj.group_multi_currency:
+                group_user.write({'implied_ids': [(4, group_product.id)]})
+        return True
     
     def onchange_start_date(self, cr, uid, id, start_date):
         if start_date:
