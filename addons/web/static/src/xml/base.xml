@@ -1792,13 +1792,13 @@
 <table t-name="ExportTreeView" class="oe_export"
        style="background-color: #F3F3F3;">
     <tr>
-        <td colspan="3">
+        <td colspan="3" class="oe_export_padding">
             This wizard will export all data that matches the current search criteria to a CSV file.
             You can export all data or only the fields that can be reimported after modification.
         </td>
     </tr>
     <tr>
-        <td colspan="3">
+        <td colspan="2" class="oe_export_left_padding oe_export_options">
             <label for="import_compat">Export Type:</label>
             <select id="import_compat" name="import_compat">
                 <option value="yes">Import-Compatible Export</option>
@@ -1808,17 +1808,19 @@
             <label for="export_format">Export Formats</label>
             <select id="export_format" name="export_format"></select>
         </td>
+        <td class="oe_export_right_padding">
+            <div id="ExistsExportList"></div>
+        </td>
     </tr>
 
     <tr>
-        <th>Available fields</th>
-        <th/>
-        <th>
+        <td class="oe_export_left_padding">Available fields</td>
+        <td/>
+        <td class="oe_export_right_padding">
             Fields to export
             <a style="color: blue; text-decoration: none;" href="#" id="export_new_list">Save fields list</a>
             <div id="savenewlist"></div>
-            <div id="ExistsExportList"></div>
-        </th>
+        </td>
     </tr>
     <tr style="height: 400px;">
         <td class="oe_export_fields_selector_left">
@@ -1827,11 +1829,11 @@
         </td>
         <td class="oe_export_fields_selector_center">
             <!-- TODO: replace ids by 'oe_*' classes -->
-            <button class="oe_button" id="add_field">Add</button>
-            <button class="oe_button" id="remove_field">Remove</button>
-            <button class="oe_button" id="remove_all_field">Remove All</button>
-            <button class="oe_button" id="move_up">Move Up</button>
-            <button class="oe_button" id="move_down">Move Down</button>
+            <button id="add_field">Add</button>
+            <button id="remove_field">Remove</button>
+            <button id="remove_all_field">Remove All</button>
+            <button id="move_up">Move Up</button>
+            <button id="move_down">Move Down</button>
         </td>
         <td class="oe_export_fields_selector_right">
             <select name="fields_list" id="fields_list"
@@ -1872,7 +1874,7 @@
                     </t>
                 </td>
                 <td id="tree-column" valign="middle" align="left" style="cursor: pointer;">
-                    <a t-att-id="'export-' + field.id"  t-att-string="field.string" href="javascript: void(0);" style="text-decoration: none;">
+                    <a t-att-id="'export-' + field.id"  t-att-string="field.string" t-att-import_compatible="field.import_compatible" href="javascript: void(0);" style="text-decoration: none;">
                         <t t-esc="field.string"/>
                     </a>
                 </td>
@@ -1881,11 +1883,9 @@
     </td>
 </tr>
 <t t-name="ExportNewList">
-    <tr>
-        <th><label>Save as:</label></th>
-        <td><input size="10" type="text" id="savelist_name"/></td>
-        <td><button class="oe_button oe_export_button_export" id="add_export_list">Ok</button></td>
-    </tr>
+    <label for="savelist_name">Save as:</label>
+    <input size="10" type="text" id="savelist_name"/>
+    <button class="oe_button oe_export_button_export" id="add_export_list">Ok</button>
 </t>
 <t t-name="Exists.ExportList">
     <label for="saved_export_list">Saved exports:</label>

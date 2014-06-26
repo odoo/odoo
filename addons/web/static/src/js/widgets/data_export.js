@@ -20,8 +20,9 @@ var DataExport = Dialog.extend({
                 .removeClass('ui-selected')
                 .find('a').each(function () {
                     var id = $(this).attr('id').split('-')[1];
+                    var import_compatible = $(this).attr('import_compatible');
                     var string = $(this).attr('string');
-                    self.add_field(id, string);
+                    self.add_field(id, string, import_compatible);
                 });
         },
         'click #remove_field': function () {
@@ -55,13 +56,23 @@ var DataExport = Dialog.extend({
 
         var got_fields = new $.Deferred();
         this.$el.find('#import_compat').change(function() {
-            self.$el.find('#fields_list').empty();
             self.$el.find('#field-tree-structure').remove();
             var import_comp = self.$el.find("#import_compat").val();
             self.rpc("/web/export/get_fields", {
                 model: self.dataset.model,
                 import_compat: !!import_comp,
             }).done(function (records) {
+                if (import_comp) {
+                    var export_list = self.$("#fields_list option").map(function (res) {
+                        console.log(this);
+                        for (var i = 0; i < records.length; i++) {
+                            if (this.value === records[i].id || $(this).attr("import_compatible") === "false") {break;}
+                        }
+                        if (i === records.length) {
+                            this.remove();
+                        }
+                    });
+                }
                 got_fields.resolve();
                 self.on_show_data(records);
             });
@@ -187,9 +198,6 @@ var DataExport = Dialog.extend({
                 return [0, 0, {name: field}];
             })
         }).then(function (export_list_id) {
-            if (!export_list_id) {
-                return;
-            }
             if (!self.$el.find("#saved_export_list").length || self.$el.find("#saved_export_list").is(":hidden")) {
                 self.show_exports_list();
             }
@@ -342,7 +350,7 @@ var DataExport = Dialog.extend({
             self.$el.find("tr[id='treerow-" + record.id + "']").dblclick(function() {
                 var $o2m_selection = self.$el.find("tr[id^='treerow-" + record.id + "']").find('#tree-column');
                 if (!$o2m_selection.hasClass("oe_export_readonlyfield")) {
-                   self.add_field(record.id, $(this).find("a").attr("string"));
+                   self.add_field(record.id, $(this).find("a").attr("string"), $(this).find("a").attr("import_compatible"));
                 }
             });
         });
@@ -352,7 +360,7 @@ var DataExport = Dialog.extend({
                     var field_id = event.relatedTarget.attributes["id"]["value"];
                     if (field_id && field_id.split("-")[0] === 'export') {
                         if (!self.$el.find("tr[id='treerow-" + field_id.split("-")[1] + "']").find('#tree-column').hasClass("oe_export_readonlyfield")) {
-                            self.add_field(field_id.split("-")[1], event.relatedTarget.attributes["string"]["value"]);
+                            self.add_field(field_id.split("-")[1], event.relatedTarget.attributes["string"]["value"],event.relatedTarget.attributes["import_compatible"]["value"]);
                         }
                     }
                 }
@@ -386,11 +394,12 @@ var DataExport = Dialog.extend({
             }
         }
     },
-    add_field: function(field_id, string) {
+    add_field: function(field_id, string, import_compatible) {
         var field_list = this.$el.find('#fields_list');
         if (this.$el.find("#fields_list option[value='" + field_id + "']")
                 && !this.$el.find("#fields_list option[value='" + field_id + "']").length) {
-            field_list.append(new Option(string, field_id));
+            var option = new Option(string, field_id)
+            field_list.append($(option).attr('import_compatible',import_compatible));
         }
     },
     get_fields: function() {
