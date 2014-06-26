@@ -2,24 +2,24 @@ openerp.project = function(openerp) {
     openerp.web_kanban.KanbanView.include({
         project_display_members_names: function() {
             /*
-             * Set avatar title for members.
+             * Set avatar title for message_follower_ids.
              * In kanban views, many2many fields only return a list of ids.
              * We can implement return value of m2m fields like [(1,"Adminstration"),...].
              */
             var self = this;
-            var members_ids = [];
+            var message_follower_ids = [];
 
             // Collect members ids
-            self.$el.find('img[data-member_id]').each(function() {
-                members_ids.push($(this).data('member_id'));
+            self.$el.find('img[data-follower_id]').each(function() {
+                message_follower_ids.push($(this).data('follower_id'));
             });
 
             // Find their matching names
-            var dataset = new openerp.web.DataSetSearch(self, 'res.users', self.session.context, [['id', 'in', _.uniq(members_ids)]]);
+            var dataset = new openerp.web.DataSetSearch(self, 'res.partner', self.session.context, [['id', 'in', _.uniq(message_follower_ids)]]);
             dataset.read_slice(['id', 'name']).done(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM
-                    self.$el.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tooltip();
+                    self.$el.find('img[data-follower_id=' + v.id + ']').attr('title', v.name).tooltip();
                 });
             });
         },

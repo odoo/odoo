@@ -84,12 +84,12 @@ class crm_merge_opportunity(osv.osv_memory):
             to the ones user_id is member of. """
         if user_id:
             if section_id:
-                user_in_section = self.pool.get('crm.case.section').search(cr, uid, [('id', '=', section_id), '|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context, count=True)
+                user_in_section = self.pool.get('crm.case.section').search(cr, uid, [('id', '=', section_id), '|', ('user_id', '=', user_id), ('message_is_follower', '=', True)], context=context, count=True)
             else:
                 user_in_section = False
             if not user_in_section:
                 section_id = False
-                section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
+                section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('message_is_follower', '=', True)], context=context)
                 if section_ids:
                     section_id = section_ids[0]
         return {'value': {'section_id': section_id}}

@@ -138,8 +138,8 @@
                     <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Helpdesk Request" />
                     <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="All pending Helpdesk Request" />
                     <separator/>
-                    <filter string="Assigned to Me or My Sales Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                            help="Helpdesk requests that are assigned to me or to one of the sale teams I manage" groups="base.group_multi_salesteams"/>
+                    <filter string="Assigned to Me" icon="terp-personal+" domain="[('user_id','=',uid)]"
+                            help="Helpdesk requests that are assigned to me"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="user_id"/>
                     <field name="section_id" string="Sales Team" groups="base.group_multi_salesteams"/>

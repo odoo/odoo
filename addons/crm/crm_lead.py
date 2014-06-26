@@ -324,7 +324,7 @@ class crm_lead(format_address, osv.osv):
             to the ones user_id is member of. """
         section_id = self._get_default_section_id(cr, uid, context=context) or False
         if user_id and not section_id:
-            section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
+            section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('message_is_follower', '=', True)], context=context)
             if section_ids:
                 section_id = section_ids[0]
         return {'value': {'section_id': section_id}}

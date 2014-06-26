@@ -30,9 +30,9 @@
             <field name="partner_id" ref="base.res_partner_10"/>
             <field name="parent_id" ref="all_projects_account"/>
             <field name="privacy_visibility">public</field>
-            <field name="members" eval="[(6, 0, [
-                    ref('base.user_root'),
-                    ref('base.user_demo')])]"/>
+            <field name="message_follower_ids" eval="[(6, 0, [
+                    ref('base.partner_root'),
+                    ref('base.partner_demo')])]"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="description">Implement new website for Sale and Warehouse Management for a customer.</field>
             <field name="alias_model">project.task</field>
@@ -66,7 +66,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
             <field name="privacy_visibility">employees</field>
-            <field name="members" eval="[(4, ref('base.user_root')), (4, ref('base.user_demo'))]"/>
+            <field name="message_follower_ids" eval="[(4, ref('base.partner_root')), (4, ref('base.partner_demo'))]"/>
         </record>
 
         <record id="project_project_3" model="project.project">
@@ -81,7 +81,7 @@
             <field name="privacy_visibility">followers</field>
             <field name="alias_model">project.task</field>
             <field name="privacy_visibility">employees</field>
-            <field name="members" eval="[(4, ref('base.user_root')), (4,ref('base.user_demo'))]"/>
+            <field name="message_follower_ids" eval="[(4, ref('base.partner_root')), (4,ref('base.partner_demo'))]"/>
         </record>
 
         <record id="project_project_4" model="project.project">
@@ -95,9 +95,9 @@
             <field name="name">Data Import/Export Plugin</field>
             <field name="alias_model">project.task</field>
             <field name="privacy_visibility">followers</field>
-            <field name="members" eval="[(6, 0, [
-                    ref('base.user_root'),
-                    ref('base.user_demo')])]"/>
+            <field name="message_follower_ids" eval="[(6, 0, [
+                    ref('base.partner_root'),
+                    ref('base.partner_demo')])]"/>
         </record>
 
         <record id="project_project_5" model="project.project">

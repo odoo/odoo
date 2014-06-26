@@ -6,18 +6,18 @@
         </record>
         
         <record id="section_sales_department" model="crm.case.section">
-            <field name="member_ids" eval="[(4, ref('base.user_demo'))]"/>
+            <field name="message_follower_ids" eval="[(4, ref('base.partner_demo'))]"/>
         </record>
         <record model="crm.case.section" id="crm_case_section_1">
             <field name="name">Indirect Sales</field>
             <field name="code">IM</field>
-            <field name="member_ids" eval="[(4, ref('base.user_root')),(4, ref('base.user_demo'))]"/>
+            <field name="message_follower_ids" eval="[(4, ref('base.partner_root')),(4, ref('base.partner_demo'))]"/>
         </record>
 
         <record model="crm.case.section" id="crm_case_section_2">
             <field name="name">Marketing</field>
             <field name="code">SPD</field>
-            <field name="member_ids" eval="[(4, ref('base.user_root')),(4, ref('base.user_demo'))]"/>
+            <field name="message_follower_ids" eval="[(4, ref('base.partner_root')),(4, ref('base.partner_demo'))]"/>
         </record>
     </data>
 </openerp>

@@ -404,6 +404,7 @@
                     <field name="name" string="Job"/>
                     <filter domain="[('state','=','open')]" string="In Position"/>
                     <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
+                    <filter domain="[('message_is_follower','=',True)]" string="Followed Jobs" name="followers"/>
                     <field name="department_id"/>
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>

@@ -135,27 +135,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Team" name="team">
-                            <field colspan="4" name="members" widget="many2many_kanban" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}">
-                                <kanban quick_create="false" create="true" delete="true">
-                                    <field name="name"/>
-                                    <templates>
-                                        <t t-name="kanban-box">
-                                            <div style="position: relative">
-                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                <div class="oe_module_vignette">
-                                                    <img t-att-src="kanban_image('res.users', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
-                                                    <div class="oe_module_desc">
-                                                        <field name="name"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </t>
-                                    </templates>
-                                </kanban>
-                            </field>
-                        </page>
-                        <page string="Other Info">
+                        <page string="Project Details">
                             <group string="Administration">
                                 <field name="privacy_visibility" widget="radio"/>
                                 <field name="planned_hours" widget="float_time"
@@ -197,7 +177,7 @@
                     <filter string="Pending" name="Pending" domain="[('state', '=','pending')]"/>
                     <filter string="Template" name="Template" domain="[('state', '=','template')]"/>
                     <separator/>
-                    <filter string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]"/>
+                    <filter string="Followed Projects" domain="['|',('user_id', '=', uid),('message_is_follower', '=', True)]" help="Projects in which I am a follower."/>
                     <filter string="Manager" domain="[('user_id','=',uid)]"/>
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
@@ -242,7 +222,7 @@
                     <field name="effective_hours"/>
                     <field name="planned_hours"/>
                     <field name="name"/>
-                    <field name="members"/>
+                    <field name="message_follower_ids"/>
                     <field name="use_tasks"/>
                     <field name="user_id"/>
                     <field name="date"/>
@@ -288,8 +268,8 @@
                                         </span>
                                     </div>
                                     <div class="oe_kanban_project_avatars">
-                                        <t t-foreach="record.members.raw_value.slice(0,11)" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                        <t t-foreach="record.message_follower_ids.raw_value.slice(0,11)" t-as="follower">
+                                            <img t-att-src="kanban_image('res.partner', 'image_small', follower)" t-att-data-follower_id="follower"/>
                                         </t>
                                     </div>
                                 </div>
