@@ -29,27 +29,26 @@
         <function id="default_alias_domain_project" model="ir.values" name="set_default" eval="('project.config.settings', 'generate_project_alias', True)"/>
 
         <!-- Task Stages -->
-
         <record id="project_stage_0" model="project.task.type">
             <field name="sequence">1</field>
             <field name="name">To Do</field>
-            <field name="case_default" eval="True"/>
+            <field name="default">link</field>
         </record>
         <record id="project_stage_1" model="project.task.type">
             <field name="sequence">10</field>
             <field name="name">In Progress</field>
-            <field name="case_default" eval="True"/>
+            <field name="default">link</field>
         </record>
         <record id="project_stage_2" model="project.task.type">
             <field name="sequence">20</field>
             <field name="name">Done</field>
-            <field name="case_default" eval="True"/>
+            <field name="default">link</field>
             <field name="fold" eval="True"/>
         </record>
         <record id="project_stage_3" model="project.task.type">
             <field name="sequence">30</field>
             <field name="name">Cancelled</field>
-            <field name="case_default" eval="True"/>
+            <field name="default">link</field>
             <field name="fold" eval="True"/>
         </record>
     </data>

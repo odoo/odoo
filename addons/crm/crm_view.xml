@@ -116,6 +116,7 @@
                 <tree string="Stages">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
+                    <field name="default"/>
                     <field name="probability"/>
                     <field name="type"/>
                 </tree>
@@ -140,7 +141,7 @@
                         <group>
                             <field name="fold"/>
                             <field name="on_change"/>
-                            <field name="case_default" groups="base.group_multi_salesteams"/>
+                            <field name="default" groups="base.group_multi_salesteams"/>
                         </group>
 
                     </group>

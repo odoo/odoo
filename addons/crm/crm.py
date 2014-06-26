@@ -125,8 +125,10 @@ class crm_case_stage(osv.osv):
         'requirements': fields.text('Requirements'),
         'section_ids': fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', string='Sections',
                                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
-        'case_default': fields.boolean('Default to New Sales Team',
-                                       help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
+        'default': fields.selection([('none', 'Used in sales team'), ('copy', 'Copy to each new sales team'), ('link', 'Link to each new sales team')], 'Default', help="Will allow you to display the stages (Kanban) as per the option selected:\n"
+                    "- Used in sales team: This column will be available in sales team. It will not be linked to new sales team by default.\n" 
+                    "- Copy to each new sales team: This column will be duplicated and the copy will be linked to every new sales team.\n"
+                    "- Link to each new sales team: The column will be available for all sales team by default.\n"),
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
@@ -135,14 +137,59 @@ class crm_case_stage(osv.osv):
                                  help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types."),
     }
 
+    def _get_default_section_id(self, cr, uid, context=None):
+        section_id = self.pool['crm.lead']._resolve_section_id_from_context(cr, uid, context=context)
+        if section_id:
+            return [section_id]
+        return None
+
     _defaults = {
         'sequence': 1,
         'probability': 0.0,
         'on_change': True,
         'fold': False,
         'type': 'both',
-        'case_default': True,
+        'default': 'copy',
+        'section_ids': _get_default_section_id
     }
+
+    def create(self, cr, uid, vals, context=None):
+        if context is None: context = {}
+        section_id = self._get_default_section_id(cr, uid, context=context)
+        if vals.get('default') == 'copy' and section_id:
+            vals.update({'section_ids': False})
+            type_id = super(crm_case_stage, self).create(cr, uid, vals, context=context)
+            context.update({'default_section_id': False})
+            type_id = self.copy(cr, uid, type_id, default={'default': 'none', 'section_ids': [[6, False, section_id]]}, context=context)
+        else:
+            type_id = super(crm_case_stage, self).create(cr, uid, vals, context=context)
+        return type_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None: context = {}
+        section_id = self._get_default_section_id(cr, uid, context=context)
+        section_obj = self.pool.get('crm.case.section')
+        if vals.get('default') == 'copy' and section_id:
+            for stage in self.browse(cr, uid, ids, context=context):
+                new_stage_id = self.copy(cr, uid, stage.id, vals, context=context)
+                section_obj.write(cr, uid, section_id, {'stage_ids': [(3, stage.id),(4, new_stage_id),]}, context=context)
+                self._update_leads(cr, uid, section_id, stage.id, new_stage_id, context=context)
+                return True
+        elif vals.get('default') == 'copy':
+            for stage in self.browse(cr, uid, ids, context=context):
+                values = vals.copy()
+                if stage.section_ids:
+                    self.copy(cr, uid, stage.id, values, context=context)
+                    values.update({'default': 'none'})
+                super(crm_case_stage, self).write(cr, uid, stage.id, values, context=context)
+            return True
+        return super(crm_case_stage, self).write(cr, uid, ids, vals, context=context)
+
+    def _update_leads(self, cr, uid, section_id, old_stage_id, new_stage_id, context=None):
+        if context is None: context = {}
+        crm_lead_obj = self.pool.get('crm.lead')
+        lead_ids = crm_lead_obj.search(cr, uid, [('stage_id', '=', old_stage_id),('section_id', 'in', section_id)], context=context)
+        return crm_lead_obj.write(cr, uid, lead_ids, {'stage_id': new_stage_id}, context=context)
 
 
 class crm_case_categ(osv.osv):
