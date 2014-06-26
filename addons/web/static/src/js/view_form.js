@@ -2399,6 +2399,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
         if (li.length) {
             var value = {};
             value[self.name] = String(li.data('value'));
+            self.record_id = self.view.datarecord.id;
             if (self.record_id) {
                 return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {
