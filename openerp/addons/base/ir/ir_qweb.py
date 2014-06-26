@@ -30,7 +30,6 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_escape as escape
 from openerp.tools.translate import _
-from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -1074,6 +1073,7 @@ class AssetsBundle(object):
             sep = '\n            '
         response = []
         if debug:
+            self.compile_css()
             if css:
                 for style in self.stylesheets:
                     response.append(style.to_html())
@@ -1198,20 +1198,19 @@ class AssetsBundle(object):
             asset_id = fragments.pop(0)
             asset = next(asset for asset in sass if asset.id == asset_id)
             asset.content = fragments.pop(0)
-            if asset.url:
-                # TODO: write in ir.attachment for debug mode
-                pass
 
 class WebAsset(object):
     html_url = '%s'
 
-    def __init__(self, bundle, inline=None, url=None, cr=None, uid=SUPERUSER_ID):
+    def __init__(self, bundle, inline=None, url=None):
         self.id = str(uuid.uuid4())
         self.bundle = bundle
         self.inline = inline
         self.url = url
-        self.cr = cr if cr is not None else request.cr
-        self.uid = uid
+        self.cr = bundle.cr
+        self.uid = bundle.uid
+        self.registry = bundle.registry
+        self.context = bundle.context
         self._filename = None
         self._ir_attach = None
         if not inline and not url:
@@ -1229,8 +1228,8 @@ class WebAsset(object):
                     # Test url against ir.attachments
                     fields = ['__last_update', 'datas', 'mimetype']
                     domain = [('type', '=', 'binary'), ('url', '=', self.url)]
-                    ira = request.registry['ir.attachment']
-                    attach = ira.search_read(self.cr, self.uid, domain, fields, context=request.context)
+                    ira = self.registry['ir.attachment']
+                    attach = ira.search_read(self.cr, self.uid, domain, fields, context=self.context)
                     self._ir_attach = attach[0]
                 except Exception:
                     raise AssetNotFound(url=self.url)
@@ -1274,7 +1273,9 @@ class WebAsset(object):
     def minify(self):
         return self.content
 
-    def with_header(self, content):
+    def with_header(self, content=None):
+        if content is None:
+            content = self.content
         location = self.url or "Inline in bundle '%s'" % self.bundle.xmlid
         return '\n/* %s */\n%s' % (location, content)
 
@@ -1294,7 +1295,7 @@ class JavascriptAsset(WebAsset):
         if self.url:
             return '<script type="text/javascript" src="%s"></script>' % (self.html_url % self.url)
         else:
-            return '<script type="text/javascript" charset="utf-8">%s</script>' % self.content
+            return '<script type="text/javascript" charset="utf-8">%s</script>' % self.with_header()
 
 class StylesheetAsset(WebAsset):
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
@@ -1339,13 +1340,32 @@ class StylesheetAsset(WebAsset):
         if self.url:
             return '<link rel="stylesheet" href="%s" type="text/css"/>' % (self.html_url % self.url)
         else:
-            return '<style type="text/css">%s</style>' % self.content
+            return '<style type="text/css">%s</style>' % self.with_header()
 
 class SassAsset(StylesheetAsset):
     html_url = '%s.css'
 
     def minify(self):
-        return self.with_header(self.content)
+        return self.with_header()
+
+    def to_html(self):
+        if self.url:
+            ira = self.registry['ir.attachment']
+            url = self.html_url % self.url
+            domain = [('type', '=', 'binary'), ('url', '=', self.url)]
+            ira_id = ira.search(self.cr, self.uid, domain, context=self.context)
+            if ira_id:
+                # TODO: update only if needed
+                ira.write(self.cr, self.uid, [ira_id], {'datas': self.content}, context=self.context)
+            else:
+                ira.create(self.cr, self.uid, dict(
+                    datas=self.content.encode('base64'),
+                    mimetype='text/css',
+                    type='binary',
+                    name=url,
+                    url=url,
+                ), context=self.context)
+        return super(SassAsset, self).to_html()
 
     def get_source(self):
         return "/*! %s */\n%s" % (self.id, textwrap.dedent(self.content))
