@@ -18,12 +18,12 @@
                 element:   "#customize-menu a:contains(Product Attribute's Filters)",
             },
             {
-                title:     "select product attribute memory 16 Go",
-                element:   'form.js_attributes label:contains(16 Go) input:not(:checked)',
+                title:     "select product attribute memory 16 GB",
+                element:   'form.js_attributes label:contains(16 GB) input:not(:checked)',
             },
             {
                 title:     "check the selection",
-                waitFor:   'form.js_attributes label:contains(16 Go) input:checked',
+                waitFor:   'form.js_attributes label:contains(16 GB) input:checked',
             },
             {
                 title:     "select ipod",
@@ -32,7 +32,7 @@
             },
             {
                 title:     "finish",
-                waitFor:   'label:contains(32 Go) input',
+                waitFor:   'label:contains(32 GB) input',
             }
         ]
     });
@@ -48,13 +48,13 @@
                 element:   '.oe_product_cart a:contains("iPod")',
             },
             {
-                title:     "select ipod 32Go",
+                title:     "select ipod 32GB",
                 waitFor:   '#product_detail',
-                element:   'label:contains(32 Go) input',
+                element:   'label:contains(32 GB) input',
             },
             {
                 title:     "click on add to cart",
-                waitFor:   'label:contains(32 Go) input[checked]',
+                waitFor:   'label:contains(32 GB) input[checked]',
                 element:   'form[action="/shop/cart/update"] .btn',
             },
             {
@@ -65,11 +65,11 @@
             {
                 title:     "add one more iPod",
                 waitFor:   '.my_cart_quantity:contains(2)',
-                element:   '#cart_products tr:contains("32 Go") a.js_add_cart_json:eq(1)',
+                element:   '#cart_products tr:contains("32 GB") a.js_add_cart_json:eq(1)',
             },
             {
                 title:     "remove Headphones",
-                waitFor:   '#cart_products tr:contains("32 Go") input.js_quantity[value=2]',
+                waitFor:   '#cart_products tr:contains("32 GB") input.js_quantity[value=2]',
                 element:   '#cart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
             },
             {
