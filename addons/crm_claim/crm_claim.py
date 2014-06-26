@@ -39,19 +39,16 @@ class crm_claim_stage(osv.osv):
     _order = "sequence"
 
     _columns = {
-        'name': fields.char('Stage Name', size=64, required=True, translate=True),
+        'name': fields.char('Stage Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Used to order stages. Lower is better."),
         'section_ids':fields.many2many('crm.case.section', 'section_claim_stage_rel', 'stage_id', 'section_id', string='Sections',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'case_default': fields.boolean('Common to All Teams',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
-        'fold': fields.boolean('Hide in Views when Empty',
-                        help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
 
     _defaults = {
         'sequence': lambda *args: 1,
-        'fold': False,
     }
 
 class crm_claim(osv.osv):
@@ -73,9 +70,9 @@ class crm_claim(osv.osv):
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Claim Subject', size=128, required=True),
+        'name': fields.char('Claim Subject', required=True),
         'active': fields.boolean('Active'),
-        'action_next': fields.char('Next Action', size=200),
+        'action_next': fields.char('Next Action'),
         'date_action_next': fields.datetime('Next Action Date'),
         'description': fields.text('Description'),
         'resolution': fields.text('Resolution'),
@@ -90,8 +87,8 @@ class crm_claim(osv.osv):
                             ('object_id.model', '=', 'crm.claim')]"),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
-        'user_id': fields.many2one('res.users', 'Responsible'),
-        'user_fault': fields.char('Trouble Responsible', size=64),
+        'user_id': fields.many2one('res.users', 'Responsible', track_visibility='always'),
+        'user_fault': fields.char('Trouble Responsible'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help="Responsible sales team."\
                                 " Define Responsible user and Email account for"\
@@ -100,7 +97,7 @@ class crm_claim(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'email_from': fields.char('Email', size=128, help="Destination email for email gateway."),
-        'partner_phone': fields.char('Phone', size=32),
+        'partner_phone': fields.char('Phone'),
         'stage_id': fields.many2one ('crm.claim.stage', 'Stage', track_visibility='onchange',
                 domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
@@ -163,6 +160,13 @@ class crm_claim(osv.osv):
 
         # context: no_log, because subtype already handle this
         return super(crm_claim, self).create(cr, uid, vals, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        claim = self.browse(cr, uid, id, context=context)
+        default = dict(default or {},
+            stage_id = self._get_default_stage_id(cr, uid, context=context),
+            name = _('%s (copy)') % claim.name)
+        return super(crm_claim, self).copy(cr, uid, id, default, context=context)
 
     # -------------------------------------------------------
     # Mail gateway

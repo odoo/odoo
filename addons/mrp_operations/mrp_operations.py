@@ -376,7 +376,7 @@ class mrp_production(osv.osv):
 class mrp_operations_operation_code(osv.osv):
     _name="mrp_operations.operation.code"
     _columns={
-        'name': fields.char('Operation Name',size=64, required=True),
+        'name': fields.char('Operation Name', required=True),
         'code': fields.char('Code', size=16, required=True),
         'start_stop': fields.selection([('start','Start'),('pause','Pause'),('resume','Resume'),('cancel','Cancelled'),('done','Done')], 'Status', required=True),
     }

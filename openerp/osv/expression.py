@@ -1036,33 +1036,29 @@ class expression(object):
 
                     unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
 
-                    trans_left = unaccent('value')
-                    quote_left = unaccent(_quote(left))
                     instr = unaccent('%s')
 
                     if sql_operator == 'in':
                         # params will be flatten by to_sql() => expand the placeholders
                         instr = '(%s)' % ', '.join(['%s'] * len(right))
 
-                    subselect = """(SELECT res_id
-                                      FROM ir_translation
-                                     WHERE name = %s
-                                       AND lang = %s
-                                       AND type = %s
-                                       AND {trans_left} {operator} {right}
-                                   ) UNION (
-                                    SELECT id
-                                      FROM "{table}"
-                                     WHERE {left} {operator} {right}
-                                   )
-                                """.format(trans_left=trans_left, operator=sql_operator,
-                                           right=instr, table=working_model._table, left=quote_left)
+                    subselect = """WITH temp_irt_current (id, name) as (
+                            SELECT ct.id, coalesce(it.value,ct.{quote_left})
+                            FROM {current_table} ct 
+                            LEFT JOIN ir_translation it ON (it.name = %s and 
+                                        it.lang = %s and 
+                                        it.type = %s and 
+                                        it.res_id = ct.id and 
+                                        it.value != '')
+                            ) 
+                            SELECT id FROM temp_irt_current WHERE {name} {operator} {right} order by name
+                            """.format(current_table=working_model._table, quote_left=_quote(left), name=unaccent('name'), 
+                                       operator=sql_operator, right=instr)
 
                     params = (
                         working_model._name + ',' + left,
                         context.get('lang') or 'en_US',
                         'model',
-                        right,
                         right,
                     )
                     push(create_substitution_leaf(leaf, ('id', inselect_operator, (subselect, params)), working_model))

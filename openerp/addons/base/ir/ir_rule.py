@@ -72,7 +72,7 @@ class ir_rule(osv.osv):
         return not any(rule.model_id.model == self._name for rule in self.browse(cr, uid, ids, context))
 
     _columns = {
-        'name': fields.char('Name', size=128, select=1),
+        'name': fields.char('Name', select=1),
         'active': fields.boolean('Active', help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module."),
         'model_id': fields.many2one('ir.model', 'Object',select=1, required=True, ondelete="cascade"),
         'global': fields.function(_get_value, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone"),

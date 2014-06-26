@@ -7,14 +7,15 @@
             <field name="model">base.module.upgrade</field>
             <field name="arch" type="xml">
                 <form string="System Update">
-                    <div><label string="Your system will be updated."/></div>
-                    <div><label string="Note that this operation might take a few minutes."/></div>
-                    <separator string="Modules to Update"/>
+                    <p>This module will trigger the uninstallation of below modules.</p>
+                    <p><strong>This operation will permanently erase all data currently stored by the modules!</strong></p>
+                    <p>If you wish to cancel the process, press the cancel button below</p>
+                    <separator string="Impacted Modules"/>
                     <field name="module_info"/>
                     <footer>
-                        <button name="upgrade_module" string="Update" type="object" class="oe_highlight"/>
+                        <button name="upgrade_module" string="Confirm" type="object" class="oe_highlight"/>
                         or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button string="Cancel" class="oe_link" name="upgrade_module_cancel" type="object"/>
                     </footer>
                 </form>
             </field>

@@ -1,43 +1,7 @@
 (function () {
     'use strict';
 
-    var website = openerp.website;
-
-    website.Tour.register({
-        id:   'shop_customize',
-        name: "Customize the page and search a product",
-        path: '/shop',
-        mode: 'test',
-        steps: [
-            {
-                title:     "open customize menu",
-                element:   '#customize-menu-button',
-            },
-            {
-                title:     "click on 'Product Attribute's Filters'",
-                element:   "#customize-menu a:contains(Product Attribute's Filters)",
-            },
-            {
-                title:     "select product attribute memory 16 Go",
-                element:   'form.js_attributes label:contains(16 Go) input:not(:checked)',
-            },
-            {
-                title:     "check the selection",
-                waitFor:   'form.js_attributes label:contains(16 Go) input:checked',
-            },
-            {
-                title:     "select ipod",
-                waitNot:   '.oe_website_sale .oe_product_cart:eq(2)',
-                element:   '.oe_product_cart a:contains("iPod")',
-            },
-            {
-                title:     "finish",
-                waitFor:   'form[action="/shop/cart/update"] label:contains(32 Go) input',
-            }
-        ]
-    });
-
-    website.Tour.register({
+    openerp.Tour.register({
         id:   'shop_buy_product',
         name: "Try to buy products",
         path: '/shop',
@@ -60,7 +24,7 @@
             {
                 title:     "add suggested",
                 waitNot:   '#cart_products:contains("[A8767] Apple In-Ear Headphones")',
-                element:   'form[action="/shop/cart/update"] .btn-link:contains("Add to Cart")',
+                element:   '.oe_cart a:contains("Add to Cart")',
             },
             {
                 title:     "add one more iPod",

@@ -27,7 +27,7 @@ class asset_asset_report(osv.osv):
     _description = "Assets Analysis"
     _auto = False
     _columns = {
-        'name': fields.char('Year', size=16, required=False, readonly=True),
+        'name': fields.char('Year', required=False, readonly=True),
         'purchase_date': fields.date('Purchase Date', readonly=True),
         'depreciation_date': fields.date('Depreciation Date', readonly=True),
         'asset_id': fields.many2one('account.asset.asset', string='Asset', readonly=True),

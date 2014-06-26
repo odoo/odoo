@@ -35,7 +35,7 @@ class account_coda_import(osv.osv_memory):
     _description = 'Import CODA File'
     _columns = {
         'coda_data': fields.binary('CODA File', required=True),
-        'coda_fname': fields.char('CODA Filename', size=128, required=True),
+        'coda_fname': fields.char('CODA Filename', required=True),
         'note': fields.text('Log'),
     }
 
@@ -291,79 +291,38 @@ class account_coda_import(osv.osv_memory):
                     if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
                     line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
-                    partner = None
                     partner_id = None
-                    invoice = False
+                    structured_com = ""
+                    bank_account_id = False
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
-                        ids = self.pool.get('account.invoice').search(cr, uid, [('reference', '=', line['communication']), ('reference_type', '=', 'bba')])
-                        
-# Gère les communications structurées
-# TODO : à faire primer sur resolution_proposition : si la communication indique une facture, on la sélectionne
-                        
-#                        if ids:
-#                            invoice = self.pool.get('account.invoice').browse(cr, uid, ids[0])
-#                            partner = invoice.partner_id
-#                            partner_id = partner.id
-#                            if invoice.type in ['in_invoice', 'in_refund'] and line['debit'] == '1':
-#                                line['transaction_type'] = 'supplier'
-#                            elif invoice.type in ['out_invoice', 'out_refund'] and line['debit'] == '0':
-#                                line['transaction_type'] = 'customer'
-#                            line['account'] = invoice.account_id.id
-#                            line['reconcile'] = False
-#                            if invoice.type in ['in_invoice', 'out_invoice']:
-#                                iml_ids = self.pool.get('account.move.line').search(cr, uid, [('move_id', '=', invoice.move_id.id), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
-#                            if iml_ids:
-#                                line['reconcile'] = iml_ids[0]
-#                            if line['reconcile']:
-#                                voucher_vals = {
-#                                    'type': line['transaction_type'] == 'supplier' and 'payment' or 'receipt',
-#                                    'name': line['name'],
-#                                    'partner_id': partner_id,
-#                                    'journal_id': statement['journal_id'].id,
-#                                    'account_id': statement['journal_id'].default_credit_account_id.id,
-#                                    'company_id': statement['journal_id'].company_id.id,
-#                                    'currency_id': statement['journal_id'].company_id.currency_id.id,
-#                                    'date': line['entryDate'],
-#                                    'amount': abs(line['amount']),
-#                                    'period_id': statement['period_id'],
-#                                    'invoice_id': invoice.id,
-#                                }
-#                                context['invoice_id'] = invoice.id
-#                                voucher_vals.update(self.pool.get('account.voucher').onchange_partner_id(cr, uid, [],
-#                                    partner_id=partner_id,
-#                                    journal_id=statement['journal_id'].id,
-#                                    amount=abs(line['amount']),
-#                                    currency_id=statement['journal_id'].company_id.currency_id.id,
-#                                    ttype=line['transaction_type'] == 'supplier' and 'payment' or 'receipt',
-#                                    date=line['transactionDate'],
-#                                    context=context
-#                                )['value'])
-#                                line_drs = []
-#                                for line_dr in voucher_vals['line_dr_ids']:
-#                                    line_drs.append((0, 0, line_dr))
-#                                voucher_vals['line_dr_ids'] = line_drs
-#                                line_crs = []
-#                                for line_cr in voucher_vals['line_cr_ids']:
-#                                    line_crs.append((0, 0, line_cr))
-#                                voucher_vals['line_cr_ids'] = line_crs
-#                                line['voucher_id'] = self.pool.get('account.voucher').create(cr, uid, voucher_vals, context=context)
+                        structured_com = line['communication']
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
                         ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
-                        if ids and len(ids) > 0:
-                            partner = self.pool.get('res.partner.bank').browse(cr, uid, ids[0], context=context).partner_id
-                            partner_id = partner.id
+                        if ids:
+                            bank_account_id = ids[0]
+                            partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
+                        else:
+                            #create the bank account, not linked to any partner. The reconciliation will link the partner manually
+                            #chosen at the bank statement final confirmation time.
+                            try:
+                                type_model, type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'bank_normal')
+                                type_id = self.pool.get('res.partner.bank.type').browse(cr, uid, type_id, context=context)
+                                bank_code = type_id.code
+                            except ValueError:
+                                bank_code = 'bank'
+                            bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, {'acc_number': str(line['counterpartyNumber']), 'state': bank_code}, context=context)
                     if 'communication' in line and line['communication'] != '':
                         note.append(_('Communication') + ': ' + line['communication'])
                     data = {
                         'name': line['name'],
-                        'note':  "\n".join(note),
+                        'note': "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
                         'partner_id': partner_id,
                         'statement_id': statement['id'],
-                        'ref': line['ref'],
+                        'ref': structured_com,
                         'sequence': line['sequence'],
-                        'coda_account_number': line['counterpartyNumber'],
+                        'bank_account_id': bank_account_id,
                     }
                     self.pool.get('account.bank.statement.line').create(cr, uid, data, context=context)
             if statement['coda_note'] != '':

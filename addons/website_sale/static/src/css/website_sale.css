@@ -298,14 +298,32 @@
   margin: 6px;
 }
 
-.js_add_cart_variants option.css_not_available {
+.css_not_available_msg {
+  display: none;
+}
+
+.css_not_available.js_product > *:nth-child(4) > * {
+  display: none;
+}
+.css_not_available.js_product .product_price, .css_not_available.js_product .css_quantity {
+  display: none;
+}
+.css_not_available.js_product .css_not_available_msg {
+  display: block;
+}
+
+option.css_not_available {
   color: #cccccc;
 }
-.js_add_cart_variants label.css_not_available {
-  opacity: 0.3;
+
+label.css_not_available {
+  opacity: 0.6;
 }
-.js_add_cart_variants label.css_not_available input {
-  opacity: 0;
+
+label.css_attribute_color.css_not_available {
+  opacity: 1;
+  background-image: url("/website_sale/static/src/img/redcross.png");
+  background-size: cover;
 }
 
 .product_detail_img {

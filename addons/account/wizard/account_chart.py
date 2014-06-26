@@ -62,9 +62,10 @@ class account_chart(osv.osv_memory):
                                ORDER BY p.date_stop DESC
                                LIMIT 1) AS period_stop''', (fiscalyear_id, fiscalyear_id))
             periods =  [i[0] for i in cr.fetchall()]
-            if periods and len(periods) > 1:
+            if periods:
                 start_period = periods[0]
-                end_period = periods[1]
+                if len(periods) > 1:
+                    end_period = periods[1]
             res['value'] = {'period_from': start_period, 'period_to': end_period}
         else:
             res['value'] = {'period_from': False, 'period_to': False}

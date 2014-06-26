@@ -97,7 +97,7 @@ class module_category(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char("Name", size=128, required=True, translate=True, select=True),
+        'name': fields.char("Name", required=True, translate=True, select=True),
         'parent_id': fields.many2one('ir.module.category', 'Parent Application', select=True),
         'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Applications'),
         'module_nr': fields.function(_module_nbr, string='Number of Modules', type='integer'),
@@ -105,7 +105,7 @@ class module_category(osv.osv):
         'description': fields.text("Description", translate=True),
         'sequence': fields.integer('Sequence'),
         'visible': fields.boolean('Visible'),
-        'xml_id': fields.function(osv.osv.get_external_id, type='char', size=128, string="External ID"),
+        'xml_id': fields.function(osv.osv.get_external_id, type='char', string="External ID"),
     }
     _order = 'name'
 
@@ -255,26 +255,26 @@ class module(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char("Technical Name", size=128, readonly=True, required=True, select=True),
+        'name': fields.char("Technical Name", readonly=True, required=True, select=True),
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
-        'shortdesc': fields.char('Module Name', size=64, readonly=True, translate=True),
-        'summary': fields.char('Summary', size=64, readonly=True, translate=True),
+        'shortdesc': fields.char('Module Name', readonly=True, translate=True),
+        'summary': fields.char('Summary', readonly=True, translate=True),
         'description': fields.text("Description", readonly=True, translate=True),
         'description_html': fields.function(_get_desc, string='Description HTML', type='html', method=True, readonly=True),
-        'author': fields.char("Author", size=128, readonly=True),
-        'maintainer': fields.char('Maintainer', size=128, readonly=True),
+        'author': fields.char("Author", readonly=True),
+        'maintainer': fields.char('Maintainer', readonly=True),
         'contributors': fields.text('Contributors', readonly=True),
-        'website': fields.char("Website", size=256, readonly=True),
+        'website': fields.char("Website", readonly=True),
 
         # attention: Incorrect field names !!
         #   installed_version refers the latest version (the one on disk)
         #   latest_version refers the installed version (the one in database)
         #   published_version refers the version available on the repository
         'installed_version': fields.function(_get_latest_version, string='Latest Version', type='char'),
-        'latest_version': fields.char('Installed Version', size=64, readonly=True),
-        'published_version': fields.char('Published Version', size=64, readonly=True),
+        'latest_version': fields.char('Installed Version', readonly=True),
+        'published_version': fields.char('Published Version', readonly=True),
 
-        'url': fields.char('URL', size=128, readonly=True),
+        'url': fields.char('URL', readonly=True),
         'sequence': fields.integer('Sequence'),
         'dependencies_id': fields.one2many('ir.module.module.dependency', 'module_id', 'Dependencies', readonly=True),
         'auto_install': fields.boolean('Automatic Installation',
@@ -303,7 +303,7 @@ class module(osv.osv):
         'reports_by_module': fields.function(_get_views, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, string='Views', type='text', multi="meta", store=True),
         'application': fields.boolean('Application', readonly=True),
-        'icon': fields.char('Icon URL', size=128),
+        'icon': fields.char('Icon URL'),
         'icon_image': fields.function(_get_icon_image, string='Icon', type="binary"),
     }
 
@@ -496,6 +496,7 @@ class module(osv.osv):
             'params': {'menu_id': menu_ids and menu_ids[0] or False}
         }
 
+    #TODO remove me in master, not called anymore
     def button_immediate_uninstall(self, cr, uid, ids, context=None):
         """
         Uninstall the selected module(s) immediately and fully,
@@ -770,7 +771,7 @@ class module_dependency(osv.osv):
 
     _columns = {
         # The dependency name
-        'name': fields.char('Name', size=128, select=True),
+        'name': fields.char('Name', select=True),
 
         # The module that depends on it
         'module_id': fields.many2one('ir.module.module', 'Module', select=True, ondelete='cascade'),

@@ -26,6 +26,7 @@ from openerp.addons.website.models.website import slug
 from urlparse import urljoin
 from itertools import product
 from collections import Counter
+from collections import OrderedDict
 
 import datetime
 import logging
@@ -289,8 +290,7 @@ class survey_survey(osv.Model):
            :param finished: True for completely filled survey,Falser otherwise.
            :returns list of filtered user_input_ids.
         '''
-        if context is None:
-            context = {}
+        context = context if context else {}
         if filters:
             input_line_obj = self.pool.get('survey.user_input_line')
             domain_filter, choice, filter_display_data = [], [], []
@@ -339,22 +339,27 @@ class survey_survey(osv.Model):
                 filter_display_data.append({'question_text': question.question, 'labels': [label.value for label in labels]})
         return filter_display_data
 
-    def prepare_result(self, cr, uid, question, current_filters=[], context=None):
+    def prepare_result(self, cr, uid, question, current_filters=None, context=None):
         ''' Compute statistical data for questions by counting number of vote per choice on basis of filter '''
-        if context is None:
-            context = {}
+        current_filters = current_filters if current_filters else []
+        context = context if context else {}
+
         #Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:
-            result_summary = {}
-            [result_summary.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
-            for input_line in question.user_input_line_ids:
-                if input_line.answer_type == 'suggestion' and result_summary.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    result_summary[input_line.value_suggested.id]['count'] += 1
-            result_summary = result_summary.values()
+            result_summary = []
+            for label in question.labels_ids:
+                count = 0
+                for input_line in question.user_input_line_ids:
+                    if input_line.answer_type == 'suggestion' and input_line.value_suggested.id == label.id and (not current_filters or input_line.user_input_id.id in current_filters):
+                        count = count + 1
+                label_summary = {'text': label.value, 'count': count, 'answer_id': label.id}
+                result_summary = result_summary + [label_summary]
 
         #Calculate and return statistics for matrix
         if question.type == 'matrix':
-            rows, answers, res = {}, {}, {}
+            rows = OrderedDict()
+            answers = OrderedDict()
+            res = dict()
             [rows.update({label.id: label.value}) for label in question.labels_ids_2]
             [answers.update({label.id: label.value}) for label in question.labels_ids]
             for cell in product(rows.keys(), answers.keys()):
@@ -386,10 +391,10 @@ class survey_survey(osv.Model):
                                        'most_comman': Counter(all_inputs).most_common(5)})
         return result_summary
 
-    def get_input_summary(self, cr, uid, question, current_filters=[], context=None):
+    def get_input_summary(self, cr, uid, question, current_filters=None, context=None):
         ''' Returns overall summary of question e.g. answered, skipped, total_inputs on basis of filter '''
-        if context is None:
-            context = {}
+        current_filters = current_filters if current_filters else []
+        context = context if context else {}
         result = {}
         if question.survey_id.user_input_ids:
             total_input_ids = current_filters or [input_id.id for input_id in question.survey_id.user_input_ids if input_id.state != 'new']
@@ -561,7 +566,7 @@ class survey_question(osv.Model):
                 ('datetime', 'Date and Time'),
                 ('simple_choice', 'Multiple choice: only one answer'),
                 ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-                ('matrix', 'Matrix')], 'Type of Question', required=1),
+                ('matrix', 'Matrix')], 'Type of Question', size=15, required=1),
         'matrix_subtype': fields.selection([('simple', 'One choice per row'),
             ('multiple', 'Multiple choices per row')], 'Matrix Type'),
         'labels_ids': fields.one2many('survey.label',

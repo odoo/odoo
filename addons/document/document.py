@@ -158,7 +158,7 @@ class document_directory(osv.osv):
     _description = 'Directory'
     _order = 'name'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=1),
+        'name': fields.char('Name', required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),
         'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
@@ -172,7 +172,7 @@ class document_directory(osv.osv):
         'type': fields.selection([ ('directory','Static Directory'), ('ressource','Folders per resource'), ],
             'Type', required=True, select=1, change_default=True,
             help="Each directory can either have the type Static or be linked to another resource. A static directory, as with Operating Systems, is the classic directory that can contain a set of files. The directories linked to systems resources automatically possess sub-directories for each of resource types defined in the parent directory."),
-        'domain': fields.char('Domain', size=128, help="Use a domain if you want to apply an automatic filter on visible resources."),
+        'domain': fields.char('Domain', help="Use a domain if you want to apply an automatic filter on visible resources."),
         'ressource_type_id': fields.many2one('ir.model', 'Resource model', change_default=True,
             help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
@@ -370,8 +370,8 @@ class document_directory_dctx(osv.osv):
     _description = 'Directory Dynamic Context'
     _columns = {
         'dir_id': fields.many2one('document.directory', 'Directory', required=True, ondelete="cascade"),
-        'field': fields.char('Field', size=20, required=True, select=1, help="The name of the field."),
-        'expr': fields.char('Expression', size=64, required=True, help="A python expression used to evaluate the field.\n" + \
+        'field': fields.char('Field', required=True, select=1, help="The name of the field."),
+        'expr': fields.char('Expression', required=True, help="A python expression used to evaluate the field.\n" + \
                 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"),
         }
 
@@ -379,10 +379,10 @@ class document_directory_content_type(osv.osv):
     _name = 'document.directory.content.type'
     _description = 'Directory Content Type'
     _columns = {
-        'name': fields.char('Content Type', size=64, required=True),
+        'name': fields.char('Content Type', required=True),
         'code': fields.char('Extension', size=4),
         'active': fields.boolean('Active'),
-        'mimetype': fields.char('Mime Type',size=32)
+        'mimetype': fields.char('Mime Type')
     }
     _defaults = {
         'active': lambda *args: 1
@@ -399,7 +399,7 @@ class document_directory_content(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Content Name', size=64, required=True),
+        'name': fields.char('Content Name', required=True),
         'sequence': fields.integer('Sequence', size=16),
         'prefix': fields.char('Prefix', size=16),
         'suffix': fields.char('Suffix', size=16),

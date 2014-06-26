@@ -31,9 +31,11 @@ except ImportError:
 from lxml import etree
 import logging
 import pytz
+import re
 import socket
 import time
 import xmlrpclib
+import re
 from email.message import Message
 from urllib import urlencode
 
@@ -47,6 +49,8 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
+mail_header_msgid_re = re.compile('<[^<>]+>')
 
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode, filter(None, message.get_all(header, []))))
@@ -685,14 +689,56 @@ class mail_thread(osv.AbstractModel):
             res[record.id] = {'partner_ids': list(recipient_ids), 'email_to': email_to, 'email_cc': email_cc}
         return res
 
-    def message_get_reply_to(self, cr, uid, ids, context=None):
+    def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Returns the preferred reply-to email address that is basically
             the alias of the document, if it exists. """
-        if not self._inherits.get('mail.alias'):
-            return [False for id in ids]
-        return ["%s@%s" % (record.alias_name, record.alias_domain)
-                if record.alias_domain and record.alias_name else False
-                for record in self.browse(cr, SUPERUSER_ID, ids, context=context)]
+        if context is None:
+            context = {}
+        model_name = context.get('thread_model') or self._name
+        alias_domain = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.catchall.domain", context=context)
+        res = dict.fromkeys(ids, False)
+
+        # alias domain: check for aliases and catchall
+        aliases = {}
+        doc_names = {}
+        if alias_domain:
+            if model_name and model_name != 'mail.thread':
+                alias_ids = self.pool['mail.alias'].search(
+                    cr, SUPERUSER_ID, [
+                        ('alias_parent_model_id.model', '=', model_name),
+                        ('alias_parent_thread_id', 'in', ids),
+                        ('alias_name', '!=', False)
+                    ], context=context)
+                aliases.update(
+                    dict((alias.alias_parent_thread_id, '%s@%s' % (alias.alias_name, alias_domain))
+                         for alias in self.pool['mail.alias'].browse(cr, SUPERUSER_ID, alias_ids, context=context)))
+                doc_names.update(
+                    dict((ng_res[0], ng_res[1])
+                         for ng_res in self.pool[model_name].name_get(cr, SUPERUSER_ID, aliases.keys(), context=context)))
+            # left ids: use catchall
+            left_ids = set(ids).difference(set(aliases.keys()))
+            if left_ids:
+                catchall_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.catchall.alias", context=context)
+                if catchall_alias:
+                    aliases.update(dict((res_id, '%s@%s' % (catchall_alias, alias_domain)) for res_id in left_ids))
+            # compute name of reply-to
+            company_name = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).company_id.name
+            res.update(
+                dict((res_id, '"%(company_name)s%(document_name)s" <%(email)s>' %
+                     {'company_name': company_name,
+                      'document_name': doc_names.get(res_id) and ' ' + re.sub(r'[^\w+.]+', '-', doc_names[res_id]) or '',
+                      'email': aliases[res_id]
+                      } or False) for res_id in aliases.keys()))
+        left_ids = set(ids).difference(set(aliases.keys()))
+        if left_ids and default:
+            res.update(dict((res_id, default) for res_id in left_ids))
+        return res
+
+    def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
+        """ Get specific notification email values to store on the notification
+        mail_mail. Void method, inherit it to add custom values. """
+        res = dict()
+        return res
 
     #------------------------------------------------------
     # Mail gateway
@@ -1301,13 +1347,13 @@ class mail_thread(osv.AbstractModel):
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         if message.get('In-Reply-To'):
-            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To']))])
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To'].strip()))])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
         if message.get('References') and 'parent_id' not in msg_dict:
-            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in',
-                                                                         [x.strip() for x in decode(message['References']).split()])])
+            msg_list =  mail_header_msgid_re.findall(decode(message['References']))
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in', [x.strip() for x in msg_list])])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 

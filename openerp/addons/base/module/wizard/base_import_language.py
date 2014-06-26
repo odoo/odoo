@@ -31,7 +31,7 @@ class base_language_import(osv.osv_memory):
     _name = "base.language.import"
     _description = "Language Import"
     _columns = {
-        'name': fields.char('Language Name', size=64 , required=True),
+        'name': fields.char('Language Name', required=True),
         'code': fields.char('ISO Code', size=5, help="ISO Language and Country code, e.g. en_US", required=True),
         'data': fields.binary('File', required=True),
         'overwrite': fields.boolean('Overwrite Existing Terms',

@@ -7,15 +7,15 @@
                     <t t-call="report.external_layout">
                         <div class="page">
                             <div class="row"><div class="col-xs-4 pull-right">
-                            <img t-att-src="'/report/barcode/Code128/%s' % o.name"/>
+                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;"/>
                             </div></div>
-                             <div t-if="o.picking_type_id.code=='incoming'">
+                             <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
                                  <span><strong>Supplier Address:</strong></span>
                              </div>
-                             <div t-if="o.picking_type_id.code=='internal'">
+                             <div t-if="o.picking_type_id.code=='internal' and o.partner_id">
                                  <span><strong>Warehouse Address:</strong></span>
                              </div>
-                             <div t-if="o.picking_type_id.code=='outgoing'">
+                             <div t-if="o.picking_type_id.code=='outgoing' and o.partner_id">
                                  <span><strong>Customer Address:</strong></span>
                              </div>
                              <div t-if="o.partner_id" name="partner_header">
@@ -73,7 +73,7 @@
                                     <t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="move.location_id"/></td></t>
                                     <td>
                                         <span t-if="move.product_id and move.product_id.ean13">
-                                            <img t-att-src="'/report/barcode/EAN13/%s' % move.product_id.ean13"/>
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move.product_id.ean13, 600, 100)" style="width:300px;height:50px"/>
                                         </span>
                                     </td>
                                     <t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="move.location_dest_id"/></td></t>
@@ -104,13 +104,13 @@
                                     </t>
                                     <td>
                                         <span t-if="pack_operation.lot_id">
-                                            <img t-att-src="'/report/barcode/Code128/%s' % pack_operation.lot_id.name"/>
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', pack_operation.lot_id.name, 600, 100)" style="width:300px;height:50px"/>
                                         </span>
                                         <span t-if="pack_operation.product_id and not pack_operation.lot_id and pack_operation.product_id.ean13">
-                                            <img t-att-src="'/report/barcode/EAN13/%s' % pack_operation.product_id.ean13"/>
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', pack_operation.product_id.ean13, 600, 100)" style="width:300px;height:50px"/>
                                         </span>
                                         <span t-if="pack_operation.package_id and not pack_operation.product_id">
-                                            <img t-att-src="'/report/barcode/Code128/%s' % pack_operation.package_id.name"/>
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', pack_operation.package_id.name, 600, 100)" style="width:300px;height:50px"/>
                                         </span>
                                     </td>
                                     <t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="pack_operation.location_dest_id"/>

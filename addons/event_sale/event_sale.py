@@ -208,7 +208,7 @@ class event_ticket(osv.osv):
         
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'event_id': fields.many2one('event.event', "Event", required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[("event_type_id", "!=", False)]),
         'registration_ids': fields.one2many('event.registration', 'event_ticket_id', 'Registrations'),
@@ -245,7 +245,8 @@ class event_ticket(osv.osv):
     ]
 
     def onchange_product_id(self, cr, uid, ids, product_id=False, context=None):
-        return {'value': {'price': self.pool.get("product.product").browse(cr, uid, product_id).list_price or 0}}
+        price = self.pool.get("product.product").browse(cr, uid, product_id).list_price if product_id else 0
+        return {'value': {'price': price}}
 
 
 class event_registration(osv.osv):
