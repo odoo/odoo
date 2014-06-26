@@ -12,7 +12,6 @@ window.openerp.website.EditorBar.include({
             }
             var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
             $menuItem.click(function () {
-                T.reset();
                 T.run(tour.id);
             });
             menu.append($menuItem);

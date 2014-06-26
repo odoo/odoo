@@ -75,15 +75,22 @@ var Tour = {
         if (!tour) {
             Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
         }
+        console.log("Tour '"+tour_id+"' Begin from run method");
+        var state = Tour.getState();
+        if (state) {
+             if (state.mode === "test") {
+                Tour.error(false, "An other running tour has been detected all tours are now killed.");
+            } else {
+                Tour.endTour();
+            }
+        }
         this.time = new Date().getTime();
         if (tour.path && !window.location.href.match(new RegExp("("+Tour.getLang()+")?"+tour.path+"#?$", "i"))) {
             var href = Tour.getLang()+tour.path;
-            console.log("Tour '"+tour_id+"' Begin from run method (redirection to "+href+")");
             Tour.saveState(tour.id, mode || tour.mode, -1, 0);
             $(document).one("ajaxStop", Tour.running);
             window.location.href = href;
         } else {
-            console.log("Tour '"+tour_id+"' Begin from run method");
             Tour.saveState(tour.id, mode || tour.mode, 0, 0);
             Tour.running();
         }
