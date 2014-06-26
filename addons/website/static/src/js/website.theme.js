@@ -11,8 +11,6 @@
             $("body").removeClass("modal-open");
 
             var time;
-            var $style;
-            var $newstyle;
             $modal.on('change', 'input', function () {
                 var $option = $(this), $group, checked = $(this).is(":checked");
                 if (checked) {
@@ -50,25 +48,30 @@
                     $disable = $disable.filter(function () { return $(this).data("xmlid") !== "";});
                     var disable = $.makeArray($disable.map(function () { return $(this).data("xmlid"); }));
                     
+                    $modal.addClass("loading");
                     openerp.jsonRpc('/website/theme_customize', 'call', {
                             'unable': unable,
                             'disable': disable
                         }).then(function () {
-                            $modal.addClass("loading");
-                            $style = $('head link[href^="/web/css/website.assets_frontend"]');
-                            $newstyle = $('<link href="/web/css/website.assets_frontend?"'+new Date().getTime()+' rel="stylesheet">');
-                            $newstyle.attr("onload", "$('#theme_customize_modal').data('callback')();");
-                            $('head').append($newstyle);
+                            $('head link[href^="/web/css/website.assets_frontend"]').attr("disabled", false);
+
+                            var url = '/web/css/website.assets_frontend?'+new Date().getTime();
+                            if (!$style.size()) {
+                                $style = $('<link rel="stylesheet">').appenTo('head');
+                            }
+
+                            var img = document.createElement('img');
+                            img.onerror = function() {
+                                $modal.removeClass("loading");
+                            };
+                            $style.attr("href", url);
+                            img.src = url;
+
+                            $.get(url, function (css) {
+                                console.log(css);
+                            });
                         });
                 },0);
-
-                $modal.data("callback", function () {
-                    if ($style.size()) {
-                        $style.attr("href", $newstyle.attr("href"));
-                        $newstyle.remove();
-                    }
-                    $modal.removeClass("loading");
-                });
             });
         });
     });
