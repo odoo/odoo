@@ -3162,9 +3162,9 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this._super(field_manager, node);
         this.selection = _.clone(this.field.selection) || [];
         this.domain = false;
+        this.uniqueId = _.uniqueId("radio");
     },
     initialize_content: function () {
-        this.uniqueId = _.uniqueId("radio");
         this.on("change:effective_readonly", this, this.render_value);
         this.field_manager.on("view_content_has_changed", this, this.get_selection);
         this.get_selection();

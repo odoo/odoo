@@ -364,7 +364,7 @@
                         <group>
                             <field name="name" groups="product.group_mrp_properties"/>
                             <field name="code" string="Reference"/>
-                            <field name="type"/>
+                            <field name="type" widget="radio"/>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
                                 When processing a sales order for this product, the delivery order
                                 will contain the raw materials, instead of the finished product.
