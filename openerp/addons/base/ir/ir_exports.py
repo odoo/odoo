@@ -26,8 +26,8 @@ class ir_exports(osv.osv):
     _name = "ir.exports"
     _order = 'name'
     _columns = {
-        'name': fields.char('Export Name', size=128),
-        'resource': fields.char('Resource', size=128, select=True),
+        'name': fields.char('Export Name'),
+        'resource': fields.char('Resource', select=True),
         'export_fields': fields.one2many('ir.exports.line', 'export_id',
                                          'Export ID'),
     }
@@ -37,7 +37,7 @@ class ir_exports_line(osv.osv):
     _name = 'ir.exports.line'
     _order = 'id'
     _columns = {
-        'name': fields.char('Field Name', size=64),
+        'name': fields.char('Field Name'),
         'export_id': fields.many2one('ir.exports', 'Export', select=True, ondelete='cascade'),
     }
 

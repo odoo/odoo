@@ -44,7 +44,7 @@ class hr_payroll_structure(osv.osv):
     _name = 'hr.payroll.structure'
     _description = 'Salary Structure'
     _columns = {
-        'name':fields.char('Name', size=256, required=True),
+        'name':fields.char('Name', required=True),
         'code':fields.char('Reference', size=64, required=True),
         'company_id':fields.many2one('res.company', 'Company', required=True),
         'note': fields.text('Description'),
@@ -160,7 +160,7 @@ class contrib_register(osv.osv):
     _columns = {
         'company_id':fields.many2one('res.company', 'Company'),
         'partner_id':fields.many2one('res.partner', 'Partner'),
-        'name':fields.char('Name', size=256, required=True, readonly=False),
+        'name':fields.char('Name', required=True, readonly=False),
         'register_line_ids':fields.one2many('hr.payslip.line', 'register_id', 'Register Line', readonly=True),
         'note': fields.text('Description'),
     }
@@ -179,7 +179,7 @@ class hr_salary_rule_category(osv.osv):
     _name = 'hr.salary.rule.category'
     _description = 'Salary Rule Category'
     _columns = {
-        'name':fields.char('Name', size=64, required=True, readonly=False),
+        'name':fields.char('Name', required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, readonly=False),
         'parent_id':fields.many2one('hr.salary.rule.category', 'Parent', help="Linking a salary category to its parent is used only for the reporting purpose."),
         'children_ids': fields.one2many('hr.salary.rule.category', 'parent_id', 'Children'),
@@ -214,7 +214,7 @@ class hr_payslip_run(osv.osv):
     _name = 'hr.payslip.run'
     _description = 'Payslip Batches'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.char('Name', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'slip_ids': fields.one2many('hr.payslip', 'payslip_run_id', 'Payslips', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([
             ('draft', 'Draft'),
@@ -267,8 +267,8 @@ class hr_payslip(osv.osv):
 
     _columns = {
         'struct_id': fields.many2one('hr.payroll.structure', 'Structure', readonly=True, states={'draft': [('readonly', False)]}, help='Defines the rules that have to be applied to this payslip, accordingly to the contract chosen. If you let empty the field contract, this field isn\'t mandatory anymore and thus the rules applied will be all the rules set on the structure of all contracts of the employee valid for the chosen period'),
-        'name': fields.char('Payslip Name', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'number': fields.char('Reference', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.char('Payslip Name', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'number': fields.char('Reference', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_from': fields.date('Date From', readonly=True, states={'draft': [('readonly', False)]}, required=True),
         'date_to': fields.date('Date To', readonly=True, states={'draft': [('readonly', False)]}, required=True),
@@ -731,7 +731,7 @@ class hr_payslip_worked_days(osv.osv):
     _name = 'hr.payslip.worked_days'
     _description = 'Payslip Worked Days'
     _columns = {
-        'name': fields.char('Description', size=256, required=True),
+        'name': fields.char('Description', required=True),
         'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade', select=True),
         'sequence': fields.integer('Sequence', required=True, select=True),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
@@ -752,7 +752,7 @@ class hr_payslip_input(osv.osv):
     _name = 'hr.payslip.input'
     _description = 'Payslip Input'
     _columns = {
-        'name': fields.char('Description', size=256, required=True),
+        'name': fields.char('Description', required=True),
         'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade', select=True),
         'sequence': fields.integer('Sequence', required=True, select=True),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
@@ -770,17 +770,17 @@ class hr_salary_rule(osv.osv):
 
     _name = 'hr.salary.rule'
     _columns = {
-        'name':fields.char('Name', size=256, required=True, readonly=False),
+        'name':fields.char('Name', required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, help="The code of salary rules can be used as reference in computation of other rules. In that case, it is case sensitive."),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence', select=True),
-        'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."),
+        'quantity': fields.char('Quantity', help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."),
         'category_id':fields.many2one('hr.salary.rule.category', 'Category', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used to display the salary rule on payslip."),
         'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'condition_select': fields.selection([('none', 'Always True'),('range', 'Range'), ('python', 'Python Expression')], "Condition Based on", required=True),
-        'condition_range':fields.char('Range Based on',size=1024, readonly=False, help='This will be used to compute the % fields values; in general it is on basic, but you can also use categories code fields in lowercase as a variable names (hra, ma, lta, etc.) and the variable basic.'),
+        'condition_range':fields.char('Range Based on', readonly=False, help='This will be used to compute the % fields values; in general it is on basic, but you can also use categories code fields in lowercase as a variable names (hra, ma, lta, etc.) and the variable basic.'),
         'condition_python':fields.text('Python Condition', required=True, readonly=False, help='Applied this rule for calculation if condition is true. You can specify condition like basic > 1000.'),
         'condition_range_min': fields.float('Minimum Range', required=False, help="The minimum amount, applied for this rule."),
         'condition_range_max': fields.float('Maximum Range', required=False, help="The maximum amount, applied for this rule."),
@@ -792,7 +792,7 @@ class hr_salary_rule(osv.osv):
         'amount_fix': fields.float('Fixed Amount', digits_compute=dp.get_precision('Payroll'),),
         'amount_percentage': fields.float('Percentage (%)', digits_compute=dp.get_precision('Payroll Rate'), help='For example, enter 50.0 to apply a percentage of 50%'),
         'amount_python_compute':fields.text('Python Code'),
-        'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
+        'amount_percentage_base':fields.char('Percentage based on', required=False, readonly=False, help='result will be affected to a variable'),
         'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule'),
         'register_id':fields.many2one('hr.contribution.register', 'Contribution Register', help="Eventual third party involved in the salary payment of the employees."),
         'input_ids': fields.one2many('hr.rule.input', 'input_id', 'Inputs'),
@@ -911,7 +911,7 @@ class hr_rule_input(osv.osv):
     _name = 'hr.rule.input'
     _description = 'Salary Rule Input'
     _columns = {
-        'name': fields.char('Description', size=256, required=True),
+        'name': fields.char('Description', required=True),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
         'input_id': fields.many2one('hr.salary.rule', 'Salary Rule Input', required=True)
     }

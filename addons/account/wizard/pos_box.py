@@ -5,7 +5,7 @@ from openerp.tools.translate import _
 class CashBox(osv.osv_memory):
     _register = False
     _columns = {
-        'name' : fields.char('Reason', size=64, required=True),
+        'name' : fields.char('Reason', required=True),
         # Attention, we don't set a domain, because there is a journal_type key 
         # in the context of the action
         'amount' : fields.float('Amount',
@@ -49,7 +49,7 @@ class CashBoxIn(CashBox):
 
     _columns = CashBox._columns.copy()
     _columns.update({
-        'ref' : fields.char('Reference', size=32),
+        'ref' : fields.char('Reference'),
     })
 
     def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):

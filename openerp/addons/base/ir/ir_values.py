@@ -139,8 +139,8 @@ class ir_values(osv.osv):
         }
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True),
-        'model': fields.char('Model Name', size=128, select=True, required=True,
+        'name': fields.char('Name', required=True),
+        'model': fields.char('Model Name', select=True, required=True,
                              help="Model to which this entry applies"),
 
         # TODO: model_id and action_id should be read-write function fields
@@ -158,10 +158,10 @@ class ir_values(osv.osv):
                                           type='text',
                                           string='Default value or action reference'),
         'key': fields.selection([('action','Action'),('default','Default')],
-                                'Type', size=128, select=True, required=True,
+                                'Type', select=True, required=True,
                                 help="- Action: an action attached to one slot of the given model\n"
                                      "- Default: a default value for a model field"),
-        'key2' : fields.char('Qualifier', size=128, select=True,
+        'key2' : fields.char('Qualifier', select=True,
                              help="For actions, one of the possible action slots: \n"
                                   "  - client_action_multi\n"
                                   "  - client_print_multi\n"

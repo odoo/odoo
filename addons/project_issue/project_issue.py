@@ -31,7 +31,7 @@ class project_issue_version(osv.Model):
     _name = "project.issue.version"
     _order = "name desc"
     _columns = {
-        'name': fields.char('Version Number', size=32, required=True),
+        'name': fields.char('Version Number', required=True),
         'active': fields.boolean('Active', required=False),
     }
     _defaults = {
@@ -231,7 +231,7 @@ class project_issue(osv.Model):
         return issues
     _columns = {
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Issue', size=128, required=True),
+        'name': fields.char('Issue', required=True),
         'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date', readonly=True,select=True),
         'write_date': fields.datetime('Update Date', readonly=True),

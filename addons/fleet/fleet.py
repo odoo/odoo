@@ -145,7 +145,7 @@ class fleet_vehicle_model(osv.Model):
 
     _columns = {
         'name': fields.function(_model_name_get_fnc, type="char", string='Name', store=True),
-        'modelname': fields.char('Model name', size=32, required=True), 
+        'modelname': fields.char('Model name', required=True), 
         'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
         'vendors': fields.many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors'),
         'image': fields.related('brand_id', 'image', type="binary", string="Logo"),
@@ -170,7 +170,7 @@ class fleet_vehicle_model_brand(osv.Model):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
-        'name': fields.char('Brand Name', size=64, required=True),
+        'name': fields.char('Brand Name', required=True),
         'image': fields.binary("Logo",
             help="This field holds the image used as logo for the brand, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
@@ -337,8 +337,8 @@ class fleet_vehicle(osv.Model):
     _columns = {
         'name': fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
         'company_id': fields.many2one('res.company', 'Company'),
-        'license_plate': fields.char('License Plate', size=32, required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
-        'vin_sn': fields.char('Chassis Number', size=32, help='Unique number written on the vehicle motor (VIN/SN number)'),
+        'license_plate': fields.char('License Plate', required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
+        'vin_sn': fields.char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)'),
         'driver_id': fields.many2one('res.partner', 'Driver', help='Driver of the vehicle'),
         'model_id': fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
         'log_fuel': fields.one2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs'),
@@ -350,9 +350,9 @@ class fleet_vehicle(osv.Model):
         'fuel_logs_count': fields.function(_count_all, type='integer', string='Fuel Logs', multi=True),
         'odometer_count': fields.function(_count_all, type='integer', string='Odometer', multi=True),
         'acquisition_date': fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
-        'color': fields.char('Color', size=32, help='Color of the vehicle'),
+        'color': fields.char('Color', help='Color of the vehicle'),
         'state_id': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ondelete="set null"),
-        'location': fields.char('Location', size=128, help='Location of the vehicle (garage, ...)'),
+        'location': fields.char('Location', help='Location of the vehicle (garage, ...)'),
         'seats': fields.integer('Seats Number', help='Number of seats of the vehicle'),
         'doors': fields.integer('Doors Number', help='Number of doors of the vehicle'),
         'tag_ids' :fields.many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id','tag_id', 'Tags'),
@@ -607,7 +607,7 @@ class fleet_vehicle_log_services(osv.Model):
     _description = 'Services for vehicles'
     _columns = {
         'purchaser_id': fields.many2one('res.partner', 'Purchaser', domain="['|',('customer','=',True),('employee','=',True)]"),
-        'inv_ref': fields.char('Invoice Reference', size=64),
+        'inv_ref': fields.char('Invoice Reference'),
         'vendor_id': fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
         'notes': fields.text('Notes'),
@@ -847,5 +847,5 @@ class fleet_contract_state(osv.Model):
     _description = 'Contains the different possible status of a leasing contract'
 
     _columns = {
-        'name':fields.char('Contract Status', size=64, required=True),
+        'name':fields.char('Contract Status', required=True),
     }
