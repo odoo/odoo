@@ -493,7 +493,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
             size: 'medium',
             title: error.title,
             buttons: [
-                {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }}
+                {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
             ]
         }, $('<div>').html(error.error)).open();
     },
@@ -706,7 +706,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
         var $button = self.$el.find('.oe_form_button');
         $button.appendTo(this.getParent().$buttons);
         $button.eq(2).click(function(){
-           self.getParent().close();
+           self.$el.parents('.modal').modal('hide');
         });
         $button.eq(0).click(function(){
           self.rpc("/web/session/change_password",{
@@ -726,7 +726,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
             size: 'medium',
             title: error.title,
             buttons: [
-                {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }}
+                {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
             ]
         }, $('<div>').html(error.error)).open();
     },

@@ -192,14 +192,14 @@ class config(osv.Model):
         return result
 
     _columns = {
-        'name': fields.char('Template Name', required=True, size=1024),
+        'name': fields.char('Template Name', required=True),
         'model_id': fields.many2one('ir.model', 'Model', ondelete='set null', required=True),
         'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
         'filter_id': fields.many2one('ir.filters', 'Filter', domain="[('model_id', '=', model)]"),
         'google_drive_template_url': fields.char('Template URL', required=True, size=1024),
         'google_drive_resource_id': fields.function(_resource_get, type="char", string='Resource Id'),
         'google_drive_client_id': fields.function(_client_id_get, type="char", string='Google Client '),
-        'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
+        'name_template': fields.char('Google Drive Name Pattern', help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
         'active': fields.boolean('Active'),
     }
 
@@ -235,12 +235,12 @@ class base_config_settings(osv.TransientModel):
     _inherit = "base.config.settings"
 
     _columns = {
-        'google_drive_authorization_code': fields.char('Authorization Code', size=124),
+        'google_drive_authorization_code': fields.char('Authorization Code'),
         'google_drive_uri': fields.char('URI', readonly=True, help="The URL to generate the authorization code from Google"),
     }
     _defaults = {
         'google_drive_uri': lambda s, cr, uid, c: s.pool['google.service']._get_google_token_uri(cr, uid, 'drive', scope=s.pool['google.drive.config'].get_google_scope(), context=c),
-        'google_drive_authorization_code': lambda s, cr, uid, c: s.pool['ir.config_parameter'].get_param(cr, uid, 'google_drive_authorization_code', context=c),
+        'google_drive_authorization_code': lambda s, cr, uid, c: s.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'google_drive_authorization_code', context=c),
     }
 
     def set_google_authorization_code(self, cr, uid, ids, context=None):
@@ -249,5 +249,5 @@ class base_config_settings(osv.TransientModel):
         auth_code = config.google_drive_authorization_code
         if auth_code and auth_code != ir_config_param.get_param(cr, uid, 'google_drive_authorization_code', context=context):
             refresh_token = self.pool['google.service'].generate_refresh_token(cr, uid, 'drive', config.google_drive_authorization_code, context=context)
-            ir_config_param.set_param(cr, uid, 'google_drive_authorization_code', auth_code)
-            ir_config_param.set_param(cr, uid, 'google_drive_refresh_token', refresh_token)
+            ir_config_param.set_param(cr, uid, 'google_drive_authorization_code', auth_code, groups=['base.group_system'])
+            ir_config_param.set_param(cr, uid, 'google_drive_refresh_token', refresh_token, groups=['base.group_system'])

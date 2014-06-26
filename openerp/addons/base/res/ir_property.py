@@ -33,9 +33,9 @@ class ir_property(osv.osv):
     _name = 'ir.property'
 
     _columns = {
-        'name': fields.char('Name', size=128, select=1),
+        'name': fields.char('Name', select=1),
 
-        'res_id': fields.char('Resource', size=128, help="If not set, acts as a default value for new resources", select=1),
+        'res_id': fields.char('Resource', help="If not set, acts as a default value for new resources", select=1),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'fields_id': fields.many2one('ir.model.fields', 'Field', ondelete='cascade', required=True, select=1),
 
@@ -43,7 +43,7 @@ class ir_property(osv.osv):
         'value_integer' : fields.integer('Value'),
         'value_text' : fields.text('Value'), # will contain (char, text)
         'value_binary' : fields.binary('Value'),
-        'value_reference': fields.char('Value', size=128),
+        'value_reference': fields.char('Value'),
         'value_datetime' : fields.datetime('Value'),
 
         'type' : fields.selection([('char', 'Char'),

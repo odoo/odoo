@@ -99,7 +99,7 @@ class res_bank(osv.osv):
         return results
         
     _columns = {
-        'rib_code': fields.char('RIB Bank Code', size=64),
+        'rib_code': fields.char('RIB Bank Code'),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

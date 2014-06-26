@@ -29,41 +29,41 @@ from openerp.tools.translate import _
 class account_account_template(osv.osv):
     _inherit = 'account.account.template'
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True, translate=True),
+        'name': fields.char('Name', required=True, select=True, translate=True),
     }
 
 class account_account(osv.osv):
     _inherit = 'account.account'
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True, translate=True),
+        'name': fields.char('Name', required=True, select=True, translate=True),
     }
 
 class account_tax(osv.osv):
     _inherit = 'account.tax'
     _columns = {
-        'name': fields.char('Tax Name', size=128, required=True, select=True, translate=True),
+        'name': fields.char('Tax Name', required=True, select=True, translate=True),
     }
 
 
 class account_tax_template(osv.osv):
     _inherit = 'account.tax.template'
     _columns = {
-        'name': fields.char('Tax Name', size=128, required=True, select=True, translate=True),
+        'name': fields.char('Tax Name', required=True, select=True, translate=True),
     }
 
 
 class account_tax_code_template(osv.osv):
     _inherit = 'account.tax.code.template'
     _columns = {
-        'name': fields.char('Tax Case Name', size=64, required=True, translate=True),
+        'name': fields.char('Tax Case Name', required=True, translate=True),
     }
 
 
 class account_chart_template(osv.osv):
     _inherit = 'account.chart.template'
     _columns={
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'spoken_languages': fields.char('Spoken Languages', size=64, help="State here the languages for which the translations of templates could be loaded at the time of installation of this localization module and copied in the final object when generating them from templates. You must provide the language codes separated by ';'"),
+        'name': fields.char('Name', required=True, translate=True),
+        'spoken_languages': fields.char('Spoken Languages', help="State here the languages for which the translations of templates could be loaded at the time of installation of this localization module and copied in the final object when generating them from templates. You must provide the language codes separated by ';'"),
     }
     _order = 'name'
 
@@ -71,7 +71,7 @@ class account_chart_template(osv.osv):
 class account_fiscal_position(osv.osv):
     _inherit = 'account.fiscal.position'
     _columns = {
-        'name': fields.char('Fiscal Position', size=64, required=True, translate=True),
+        'name': fields.char('Fiscal Position', required=True, translate=True),
         'note': fields.text('Notes', translate=True),
     }
 
@@ -79,7 +79,7 @@ class account_fiscal_position(osv.osv):
 class account_fiscal_position_template(osv.osv):
     _inherit = 'account.fiscal.position.template'
     _columns = {
-        'name': fields.char('Fiscal Position Template', size=64, required=True, translate=True),
+        'name': fields.char('Fiscal Position Template', required=True, translate=True),
         'note': fields.text('Notes', translate=True),
     }
 
@@ -87,19 +87,19 @@ class account_fiscal_position_template(osv.osv):
 class account_journal(osv.osv):
     _inherit = 'account.journal'
     _columns = {
-        'name': fields.char('Journal Name', size=64, required=True, translate=True),
+        'name': fields.char('Journal Name', required=True, translate=True),
     }
 
 
 class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _columns = {
-        'name': fields.char('Account Name', size=128, required=True, translate=True),
+        'name': fields.char('Account Name', required=True, translate=True),
     }
 
 
 class account_analytic_journal(osv.osv):
     _inherit = 'account.analytic.journal'
     _columns = {
-        'name': fields.char('Journal Name', size=64, required=True, translate=True),
+        'name': fields.char('Journal Name', required=True, translate=True),
     }

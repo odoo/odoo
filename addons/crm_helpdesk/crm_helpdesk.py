@@ -37,7 +37,7 @@ class crm_helpdesk(osv.osv):
 
     _columns = {
             'id': fields.integer('ID', readonly=True),
-            'name': fields.char('Name', size=128, required=True),
+            'name': fields.char('Name', required=True),
             'active': fields.boolean('Active', required=False),
             'date_action_last': fields.datetime('Last Action', readonly=1),
             'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -70,7 +70,7 @@ class crm_helpdesk(osv.osv):
                  ('open', 'In Progress'),
                  ('pending', 'Pending'),
                  ('done', 'Closed'),
-                 ('cancel', 'Cancelled')], 'Status', size=16, readonly=True, track_visibility='onchange',
+                 ('cancel', 'Cancelled')], 'Status', readonly=True, track_visibility='onchange',
                                   help='The status is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the status is set to \'Open\'.\
                                   \nWhen the case is over, the status is set to \'Done\'.\

@@ -46,7 +46,7 @@ class crm_lead_report(osv.osv):
     _rec_name = 'date_deadline'
 
     _columns = {
-        'date_deadline': fields.date('Exp. Closing', size=10, readonly=True, help="Expected Closing"),
+        'date_deadline': fields.date('Exp. Closing', readonly=True, help="Expected Closing"),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'opening_date': fields.date('Assignation Date', readonly=True),
         'date_closed': fields.date('Close Date', readonly=True),

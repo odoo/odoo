@@ -140,7 +140,7 @@ class Post(osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Title', size=128),
+        'name': fields.char('Title'),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
         'content': fields.html('Content'),
         'tag_ids': fields.many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tags'),

@@ -11,6 +11,7 @@
     var nodialog = 'website_translator_nodialog';
 
     website.EditorBar.include({
+        do_not_translate : ['-','*','!'],
         start: function () {
             var self = this;
             this.initial_content = {};
@@ -133,7 +134,7 @@
                         node.className += ' oe_translatable_inprogress';
                 }
             } else {
-                node.className += ' oe_translatable_todo';
+                node.className += this.do_not_translate.indexOf(node.textContent.trim()) ? ' oe_translatable_todo' : '';
             }
             node.contentEditable = true;
             var nid = _.uniqueId();
