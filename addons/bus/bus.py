@@ -35,7 +35,7 @@ def hashable(key):
     return key
 
 class ImBus(osv.Model):
-    _name = 'im.bus'
+    _name = 'bus.bus'
     _columns = {
         'id' : fields.integer('Id'),
         'create_date' : fields.datetime('Create date'),
@@ -58,7 +58,7 @@ class ImBus(osv.Model):
                 "message" : json_dump(message)
             }
             cr.commit()
-            self.pool['im.bus'].create(cr, openerp.SUPERUSER_ID, values)
+            self.pool['bus.bus'].create(cr, openerp.SUPERUSER_ID, values)
             if random.random() < 0.01:
                 self.gc(cr, uid)
         if channels:
@@ -96,7 +96,7 @@ class ImDispatch(object):
 
         # immediatly returns if past notifications exist
         with registry.cursor() as cr:
-            notifications = registry['im.bus'].poll(cr, openerp.SUPERUSER_ID, channels, last)
+            notifications = registry['bus.bus'].poll(cr, openerp.SUPERUSER_ID, channels, last)
         # or wait for future ones
         if not notifications:
             event = self.Event()
@@ -105,7 +105,7 @@ class ImDispatch(object):
             try:
                 event.wait(timeout=timeout)
                 with registry.cursor() as cr:
-                    notifications = registry['im.bus'].poll(cr, openerp.SUPERUSER_ID, channels, last)
+                    notifications = registry['bus.bus'].poll(cr, openerp.SUPERUSER_ID, channels, last)
             except Exception:
                 # timeout
                 pass
@@ -167,9 +167,9 @@ class Controller(openerp.http.Controller):
     @openerp.http.route('/longpolling/send', type="json", auth="public")
     def send(self, channel, message):
         if not isinstance(channel, basestring):
-            raise Exception("im.Bus only string channels are allowed.")
+            raise Exception("bus.Bus only string channels are allowed.")
         registry, cr, uid, context = request.registry, request.cr, request.session.uid, request.context
-        return registry['im.bus'].sendone(cr, uid, channel, message)
+        return registry['bus.bus'].sendone(cr, uid, channel, message)
 
     # override to add channels
     def _poll(self, dbname, channels, last, options):
@@ -181,10 +181,10 @@ class Controller(openerp.http.Controller):
         if options is None:
             options = {}
         if not dispatch:
-            raise Exception("im.Bus unavailable")
+            raise Exception("bus.Bus unavailable")
         if [c for c in channels if not isinstance(c, basestring)]:
             print channels
-            raise Exception("im.Bus only string channels are allowed.")
+            raise Exception("bus.Bus only string channels are allowed.")
         return self._poll(request.db, channels, last, options)
 
 # vim:et:

@@ -20,7 +20,7 @@
             });
             // business
             this.sessions = {};
-            this.bus = openerp.im.bus;
+            this.bus = openerp.bus.bus;
             this.bus.on("notification", this, this.on_notification);
             this.bus.options["im_presence"] = true;
 
@@ -489,7 +489,7 @@
                     self.c_manager.on_notification(notif);
                 });
                 // start polling
-                openerp.im.bus.start_polling();
+                openerp.bus.bus.start_polling();
             });
             return;
         },
@@ -537,7 +537,7 @@
                     right: -this.$el.outerWidth(),
                 }, opt);
             } else {
-                 if (! openerp.im.bus.activated) {
+                 if (! openerp.bus.bus.activated) {
                     this.do_warn("Instant Messaging is not activated on this server. Try later.", "");
                     return;
                 }

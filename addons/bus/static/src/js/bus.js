@@ -1,9 +1,9 @@
 (function() {
-    var im = openerp.im = {};
+    var bus = openerp.bus = {};
 
-    im.ERROR_DELAY = 30000;
+    bus.ERROR_DELAY = 30000;
 
-    im.Bus = openerp.Widget.extend({
+    bus.Bus = openerp.Widget.extend({
         init: function(){
             this._super();
             this.options = {};
@@ -24,7 +24,7 @@
                 _.each(result, _.bind(self.on_notification, self));
                 self.poll();
             }, function(unused, e) {
-                setTimeout(_.bind(self.poll, self), im.ERROR_DELAY);
+                setTimeout(_.bind(self.poll, self), bus.ERROR_DELAY);
             });
         },
         on_notification: function(notification) {
@@ -44,6 +44,6 @@
     });
 
     // singleton
-    im.bus = new im.Bus();
-    return im;
+    bus.bus = new bus.Bus();
+    return bus;
 })();

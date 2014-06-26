@@ -121,8 +121,8 @@
                 }
                 var conv = self.manager.activate_session(session, [], true);
                 // start the polling
-                openerp.im.bus.add_channel(session.uuid);
-                openerp.im.bus.start_polling();
+                openerp.bus.bus.add_channel(session.uuid);
+                openerp.bus.bus.start_polling();
                 // add the automatic welcome message
                 if(session.users.length > 0){
                     if (self.options.defaultMessage) {

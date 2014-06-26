@@ -12,7 +12,7 @@ import openerp
 from openerp.http import request
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.addons.im.im import TIMEOUT
+from openerp.addons.bus.bus import TIMEOUT
 
 _logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ AWAY_TIMER = 600 # 10 minutes
 #----------------------------------------------------------
 # Controllers
 #----------------------------------------------------------
-class Controller(openerp.addons.im.im.Controller):
+class Controller(openerp.addons.bus.bus.Controller):
     def _poll(self, dbname, channels, last, options):
         if request.session.uid:
             registry, cr, uid, context = request.registry, request.cr, request.session.uid, request.context
@@ -144,7 +144,7 @@ class im_chat_session(osv.Model):
                 else:
                     state = 'open'
             self.pool['im_chat.conversation_state'].write(cr, uid, ids, {'state': state}, context=context)
-            self.pool['im.bus'].sendone(cr, uid, (cr.dbname, 'im_chat.session', uid), sr.session_id.session_info())
+            self.pool['bus.bus'].sendone(cr, uid, (cr.dbname, 'im_chat.session', uid), sr.session_id.session_info())
 
     def add_user(self, cr, uid, uuid, user_id, context=None):
         """ add the given user to the given session """
@@ -160,7 +160,7 @@ class im_chat_session(osv.Model):
                 # Anonymous are not notified when a new user is added : cannot exec session_info as uid = None
                 info = self.session_info(cr, openerp.SUPERUSER_ID, [session.id], context=context)
                 notifications.append([session.uuid, info])
-                self.pool['im.bus'].sendmany(cr, uid, notifications)
+                self.pool['bus.bus'].sendmany(cr, uid, notifications)
                 # send a message to the conversation
                 user = self.pool['res.users'].read(cr, uid, user_id, ['name'], context=context)
                 self.pool["im_chat.message"].post(cr, uid, uid, session.uuid, "meta", user['name'] + " joined the conversation.", context=context)
@@ -255,7 +255,7 @@ class im_chat_message(osv.Model):
             notifications.append([uuid, data])
             for user in session.user_ids:
                 notifications.append([(cr.dbname, 'im_chat.session', user.id), data])
-            self.pool['im.bus'].sendmany(cr, uid, notifications)
+            self.pool['bus.bus'].sendmany(cr, uid, notifications)
         return message_id
 
 
@@ -310,7 +310,7 @@ class im_chat_presence(osv.Model):
         cr.commit()
         # notify if the status has changed
         if send_notification:
-            self.pool['im.bus'].sendone(cr, uid, (cr.dbname,'im_chat.presence'), {'id': uid, 'im_status': vals['status']})
+            self.pool['bus.bus'].sendone(cr, uid, (cr.dbname,'im_chat.presence'), {'id': uid, 'im_status': vals['status']})
         # gc : disconnect the users having a too old last_poll. 1 on 100 chance to do it.
         if random.random() < 0.01:
             self.check_users_disconnection(cr, uid, context=context)
@@ -325,7 +325,7 @@ class im_chat_presence(osv.Model):
         notifications = []
         for presence in presences:
             notifications.append([(cr.dbname,'im_chat.presence'), {'id': presence.user_id.id, 'im_status': presence.status}])
-        self.pool['im.bus'].sendmany(cr, uid, notifications)
+        self.pool['bus.bus'].sendmany(cr, uid, notifications)
         return True
 
 

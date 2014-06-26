@@ -6,7 +6,7 @@
     'sequence': '18',
     'category': 'Tools',
     'complexity': 'easy',
-    'description': 
+    'description':
         """
 Instant Messaging
 =================
@@ -19,7 +19,7 @@ chat in real time. It support several chats in parallel.
         'security/im_security.xml',
         'views/im_chat.xml',
     ],
-    'depends' : ['base', 'web', 'im'],
+    'depends' : ['base', 'web', 'bus'],
     'qweb': ['static/src/xml/*.xml'],
     'application': True,
 }
