@@ -340,8 +340,8 @@ class Website(openerp.addons.web.controllers.main.Home):
         return (request.website._render('website.theme_customize'), inherit_xml_ids)
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
-    def theme_customize(self, unable, disable):
-        """ Unable or Disable lists of ``xml_id`` of the inherit templates
+    def theme_customize(self, enable, disable):
+        """ enable or Disable lists of ``xml_id`` of the inherit templates
         """
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         imd = pool['ir.model.data']
@@ -375,7 +375,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 view.write(cr, uid, write_ids, {'application': application})
 
         set_application(disable, 'disabled')
-        set_application(unable, 'enabled')
+        set_application(enable, 'enabled')
 
         return True
 

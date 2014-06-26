@@ -101,10 +101,18 @@
     Customize Themes
 
     Use input type 'checkbox' or 'radio'
-    Use 'data-unable' to checked one or more HTML id, or list separate by comma
-    Use 'data-disable' to un checked one or more HTML id, or list separate by comma
+    'data-xmlid' (optional) xml id of the template to add if the input is checked
+    'data-enable' (optional) to checked one or more HTML ids, or list separate by comma
+    'data-disable' (optional) to unchecked one or more HTML ids, or list separate by comma
+
+    For the sets (data-enable and/or data-disable without data-xmlid), the set is automatically
+    checked if:
+    - all related fields are enabled for data-enable
+    - all related fields are disabled for data-disable
+    else unchecked
     
-    The HTML class 'checked' is automatically apply to the parent label of the checked inputs
+    The HTML class 'checked' is apply to the parent label when input is checked
+    The HTML class 'loading' is apply to the modal when the new css is loading
 -->
 
     <template id="website.theme_customize" name="Customize Theme">
@@ -122,19 +130,19 @@
                     <td>
                       <label class="checked">
                         <img src="/website/static/src/img/bootswatch_default_thumbnail.png" alt="Default Theme"/>
-                        <input id="t0" name="theme" type="radio" data-xmlid="" checked="checked"/>
+                        <input name="theme" type="radio" data-xmlid="" checked="checked"/>
                       </label>
                     </td>
                     <td>
                       <label>
                         <img src="http://bootswatch.com/amelia/thumbnail.png" alt="Amelia"/>
-                        <input id="t1" name="theme" type="radio" data-xmlid="website.theme_amelia"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_amelia"/>
                       </label>
                     </td>
                     <td>
                       <label>
                         <img src="http://bootswatch.com/cerulean/thumbnail.png" alt="Cerulean"/>
-                        <input id="t2" name="theme" type="radio" data-xmlid="website.theme_cerulean"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_cerulean"/>
                       </label>
                     </td>
                   </tr>
@@ -142,19 +150,19 @@
                     <td>
                       <label>
                         <img src="http://bootswatch.com/cosmo/thumbnail.png" alt="Cosmo"/>
-                        <input id="t3" name="theme" type="radio" data-xmlid="website.theme_cosmo"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_cosmo" data-disable="ee"/>
                       </label>
                     </td>
                     <td>
                       <label>
                         <img src="http://bootswatch.com/cyborg/thumbnail.png" alt="Cyborg"/>
-                        <input id="t4" name="theme" type="radio" data-xmlid="website.theme_cyborg"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_cyborg"/>
                       </label>
                     </td>
                     <td>
                       <label>
                         <img src="http://bootswatch.com/flatly/thumbnail.png" alt="Flatly"/>
-                        <input id="t5" name="theme" type="radio" data-xmlid="website.theme_flatly"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_flatly"/>
                       </label>
                     </td>
                   </tr>
@@ -162,19 +170,19 @@
                     <td>
                       <label>
                         <img src="http://bootswatch.com/journal/thumbnail.png" alt="Journal"/>
-                        <input id="t6" name="theme" type="radio" data-xmlid="website.theme_journal"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_journal"/>
                       </label>
                     </td>
                     <td>
                       <label>
                         <img src="http://bootswatch.com/readable/thumbnail.png" alt="Readable"/>
-                        <input id="t7" name="theme" type="radio" data-xmlid="website.theme_readable"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_readable"/>
                       </label>
                     </td>
                     <td>
                       <label>
                         <img src="http://bootswatch.com/simplex/thumbnail.png" alt="Simplex"/>
-                        <input id="t8" name="theme" type="radio" data-xmlid="website.theme_simplex"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_simplex"/>
                       </label>
                     </td>
                   </tr>
@@ -182,19 +190,19 @@
                     <td>
                       <label>
                         <img src="http://bootswatch.com/slate/thumbnail.png" alt="Slate"/>
-                        <input id="t9" name="theme" type="radio" data-xmlid="website.theme_slate"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_slate"/>
                       </label>
                     </td>
                     <td>
                       <label>
                         <img src="http://bootswatch.com/spacelab/thumbnail.png" alt="Spacelab"/>
-                        <input id="t10" name="theme" type="radio" data-xmlid="website.theme_spacelab"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_spacelab"/>
                       </label>
                     </td>
                     <td>
                       <label>
                         <img src="http://bootswatch.com/united/thumbnail.png" alt="United"/>
-                        <input id="t11" name="theme" type="radio" data-xmlid="website.theme_united"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_united"/>
                       </label>
                     </td>
                   </tr>
@@ -202,7 +210,7 @@
                     <td>
                       <label>
                         <img src="http://bootswatch.com/yeti/thumbnail.png" alt="Yeti"/>
-                        <input id="t12" name="theme" type="radio" data-xmlid="website.theme_yeti"/>
+                        <input name="theme" type="radio" data-xmlid="website.theme_yeti"/>
                       </label>
                     </td>
                   </tr>

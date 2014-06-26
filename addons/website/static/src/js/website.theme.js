@@ -12,10 +12,23 @@
             });
             $("body").removeClass("modal-open");
 
-            function update_style(unable, disable) {
+            function get_inputs (string) {
+                return $modal.find('#'+string.split(",").join(", #"));
+            }
+            function get_xml_ids ($inputs) {
+                var xml_ids = [];
+                $inputs.each(function () {
+                    if ($(this).data('xmlid') && $(this).data('xmlid').length) {
+                        xml_ids.push($(this).data('xmlid'));
+                    }
+                });
+                return xml_ids;
+            }
+
+            function update_style(enable, disable) {
                 $modal.addClass("loading");
                 openerp.jsonRpc('/website/theme_customize', 'call', {
-                        'unable': unable,
+                        'enable': enable,
                         'disable': disable
                     }).then(function () {
                         var $style = $('style#theme_style');
@@ -32,11 +45,11 @@
 
             var run = false;
             var time;
-            $modal.on('change', 'input', function () {
+            $modal.on('change', 'input[data-xmlid],input[data-enable],input[data-disable]', function () {
                 var $option = $(this), $group, checked = $(this).is(":checked");
                 if (checked) {
-                    if ($option.data('unable')) {
-                        $group = $modal.find('#'+$option.data('unable').split(", #"));
+                    if ($option.data('enable')) {
+                        $group = $modal.find('#'+$option.data('enable').split(",").join(", #"));
                         $group.each(function () {
                             var check = $(this).is(":checked");
                             $(this).attr("checked", true).closest("label").addClass("checked");
@@ -44,7 +57,7 @@
                         });
                     }
                     if ($option.data('disable')) {
-                        $group = $modal.find('#'+$option.data('disable').split(", #"));
+                        $group = $modal.find('#'+$option.data('disable').split(",").join(", #"));
                         $group.each(function () {
                             var check = $(this).is(":checked");
                             $(this).attr("checked", false).closest("label").removeClass("checked");
@@ -57,31 +70,47 @@
                 }
                 $(this).attr("checked", checked);
 
-                clearTimeout(time);
-                time = setTimeout(function () {
-                    var $unable = $modal.find('[data-xmlid]:checked');
-                    $unable.closest("label").addClass("checked");
-                    $unable = $unable.filter(function () { return $(this).data("xmlid") !== "";});
-                    var unable = $.makeArray($unable.map(function () { return $(this).data("xmlid"); }));
+                var $enable = $modal.find('[data-xmlid]:checked');
+                $enable.closest("label").addClass("checked");
+                var $disable = $modal.find('[data-xmlid]:not(:checked)');
+                $disable.closest("label").removeClass("checked");
 
-                    var $disable = $modal.find('[data-xmlid]:not(:checked)');
-                    $disable.closest("label").removeClass("checked");
-                    $disable = $disable.filter(function () { return $(this).data("xmlid") !== "";});
-                    var disable = $.makeArray($disable.map(function () { return $(this).data("xmlid"); }));
-                    
-                    if(run) update_style(unable, disable);
+                var $sets = $modal.find('input[data-enable]:not([data-xmlid]), input[data-disable]:not([data-xmlid])');
+                $sets.each(function () {
+                    var $set = $(this);
+                    var checked = true;
+                    if ($set.data("enable")) {
+                        get_inputs($(this).data("enable")).each(function () {
+                            if ($(this).is(":not(:checked)")) checked = false;
+                        });
+                    }
+                    if ($set.data("disable")) {
+                        get_inputs($(this).data("disable")).each(function () {
+                            if ($(this).is(":checked")) checked = false;
+                        });
+                    }
+                    if (checked) {
+                        $set.attr("checked", true).closest("label").addClass("checked");
+                    } else {
+                        $set.attr("checked", false).closest("label").removeClass("checked");
+                    }
+                });
+
+                clearTimeout(time);
+                if (run) time = setTimeout(function () {
+                    update_style(get_xml_ids($enable), get_xml_ids($disable));
                 },0);
             });
 
             var removed = [];
-            for (var k=0; k<xmls.length; k++) {
-                var $input = $modal.find('[data-xmlid="'+xmls[k][0]+'"]');
+            _.each(xmls, function (xml) {
+                var $input = $modal.find('[data-xmlid="'+xml[0]+'"]');
                 if(!$input.size()) {
-                    removed.push(xmls[k]);
-                } else if(xmls[k][1] !== "disabled") {
+                    removed.push(xml);
+                } else if(xml[1] !== "disabled") {
                     $input.attr("checked", true).change();
                 }
-            }
+            });
             if (removed.length) {
                 update_style([], removed);
             }
