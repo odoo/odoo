@@ -1465,9 +1465,5 @@ class account_invoice_line(osv.Model):
             readonly=True),
     }
 
-class product_template(osv.osv):
-    _inherit = "product.template"
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

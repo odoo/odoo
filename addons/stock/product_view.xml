@@ -111,6 +111,13 @@
                         <field name="loc_case"/>
                     </group>
                 </group>
+                <group name="status" position="before">
+                    <group name="lot" groups="stock.group_production_lot" string="Lots">
+                        <field name="track_all" groups="stock.group_production_lot"/>
+                        <field name="track_incoming" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                        <field name="track_outgoing" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                    </group>
+                </group>
                 <group name="weight" position="before">
                     <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
                         <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
@@ -192,13 +199,6 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <group name="status" position="before">
-                    <group name="lot" groups="stock.group_production_lot" string="Lots">
-                        <field name="track_all" groups="stock.group_production_lot"/>
-                        <field name="track_incoming" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
-                        <field name="track_outgoing" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
-                    </group>
-                </group>
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button class="oe_stat_button"
                            name="%(product_open_quants)d"
