@@ -26,8 +26,7 @@ class res_partner(osv.osv):
     _name = "res.partner"
     _inherit = "res.partner"
     _columns = {
-        'name' : fields.char('Name', size=256, required=True, select=True),
-        'nrc' : fields.char('NRC', size=16, help='Registration number at the Registry of Commerce'),
+        'nrc' : fields.char('NRC', help='Registration number at the Registry of Commerce'),
     }
 
     def _auto_init(self, cr, context=None):
