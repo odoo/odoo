@@ -34,8 +34,10 @@ import lxml.html
 import cStringIO
 import subprocess
 from distutils.version import LooseVersion
-from functools import partial
-from pyPdf import PdfFileWriter, PdfFileReader
+try:
+    from pyPdf import PdfFileWriter, PdfFileReader
+except ImportError:
+    PdfFileWriter = PdfFileReader = None
 
 
 _logger = logging.getLogger(__name__)
@@ -68,6 +70,23 @@ class Report(osv.Model):
     _description = "Report"
 
     public_user = None
+
+    MINIMAL_HTML_PAGE = """
+<base href="{base_url}">
+<!DOCTYPE html>
+<html style="height: 0;">
+    <head>
+        <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
+        <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+        <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+        <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+        <style type='text/css'>{css}</style>
+        {subst}
+    </head>
+    <body class="container" onload="subst()">
+        {body}
+    </body>
+</html>"""
 
     #--------------------------------------------------------------------------
     # Extension of ir_ui_view.render with arguments frequently used in reports
@@ -115,7 +134,6 @@ class Report(osv.Model):
         website = None
         if request and hasattr(request, 'website'):
             website = request.website
-            context.update(translatable=context.get('lang') != request.website.default_lang_code)
         values.update({
             'time': time,
             'translate_doc': translate_doc,
@@ -179,11 +197,6 @@ class Report(osv.Model):
         footerhtml = []
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
 
-        # Minimal page renderer
-        view_obj = self.pool['ir.ui.view']
-        render_minimal = partial(view_obj.render, cr, uid, 'report.minimal_layout', context=context)
-
-
         # The received html report must be simplified. We convert it in a xml tree
         # in order to extract headers, bodies and footers.
         try:
@@ -194,12 +207,12 @@ class Report(osv.Model):
 
             for node in root.xpath("//div[@class='header']"):
                 body = lxml.html.tostring(node)
-                header = render_minimal(dict(css=css, subst=subst, body=body, base_url=base_url))
+                header = self.MINIMAL_HTML_PAGE.format(css=css, subst=subst, body=body, base_url=base_url)
                 headerhtml.append(header)
 
             for node in root.xpath("//div[@class='footer']"):
                 body = lxml.html.tostring(node)
-                footer = render_minimal(dict(css=css, subst=subst, body=body, base_url=base_url))
+                footer = self.MINIMAL_HTML_PAGE.format(css=css, subst=subst, body=body, base_url=base_url)
                 footerhtml.append(footer)
 
             for node in root.xpath("//div[@class='page']"):
@@ -216,7 +229,7 @@ class Report(osv.Model):
                     reportid = False
 
                 body = lxml.html.tostring(node)
-                reportcontent = render_minimal(dict(css=css, subst='', body=body, base_url=base_url))
+                reportcontent = self.MINIMAL_HTML_PAGE.format(css=css, subst='', body=body, base_url=base_url)
 
                 # FIXME: imo the best way to extract record id from html reports is by using the
                 # qweb branding. As website editor is not yet splitted in a module independant from
