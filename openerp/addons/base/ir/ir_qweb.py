@@ -1028,26 +1028,14 @@ class AssetsBundle(object):
         self.css_errors = []
         self.remains = []
         self._checksum = None
-        self._last_modified = datetime.datetime(1970, 1, 1)
 
-        last_updates = []
         context = self.context.copy()
-        context.update(
-            inherit_branding=False,
-            collect_last_updates=last_updates,
-        )
-        html = self.registry['ir.ui.view'].render(self.cr, self.uid, xmlid, context=context)
-        if last_updates:
-            # ir.ui.view are orm cached. If the bundle view is actually cached, we won't receive
-            # last_updates. In this case we consider it's already cached in self.cache and thus
-            # only the dates of the files/ir.attachements assets will be compared.
-            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-            self._last_modified = datetime.datetime.strptime(max(last_updates), server_format)
-        if html:
-            self.parse(html)
+        context['inherit_branding'] = False
+        self.html = self.registry['ir.ui.view'].render(self.cr, self.uid, xmlid, context=context)
+        self.parse()
 
-    def parse(self, html):
-        fragments = lxml.html.fragments_fromstring(html)
+    def parse(self):
+        fragments = lxml.html.fragments_fromstring(self.html)
         for el in fragments:
             if isinstance(el, basestring):
                 self.remains.append(el)
@@ -1102,22 +1090,24 @@ class AssetsBundle(object):
 
     @lazy_property
     def last_modified(self):
+        """Returns last modified date of linked files"""
         return max(itertools.chain(
             (asset.last_modified for asset in self.javascripts),
             (asset.last_modified for asset in self.stylesheets),
-            [self._last_modified],
         ))
 
     @lazy_property
     def version(self):
-        return hashlib.sha1(str(self.last_modified)).hexdigest()[0:7]
+        return self.checksum[0:7]
 
     @lazy_property
     def checksum(self):
-        checksum = hashlib.new('sha1')
-        for asset in itertools.chain(self.javascripts, self.stylesheets):
-            checksum.update(asset.content.encode("utf-8"))
-        return checksum.hexdigest()
+        """
+        Not really a full checksum.
+        We compute a SHA1 on the rendered bundle + max linked files last_modified date
+        """
+        check = self.html + str(self.last_modified)
+        return hashlib.sha1(check).hexdigest()
 
     def js(self):
         key = 'js_%s' % self.xmlid

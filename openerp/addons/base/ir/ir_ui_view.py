@@ -367,13 +367,9 @@ class view(osv.osv):
             ])
         view_ids = self.search(cr, uid, conditions, context=context)
 
-        inheriting_views = []
-        for view in self.browse(cr, 1, view_ids, context):
-            if not (view.groups_id and user_groups.isdisjoint(view.groups_id)):
-                inheriting_views.append((view.arch, view.id))
-                if 'collect_last_updates' in context:
-                    context['collect_last_updates'].append(view.write_date)
-        return inheriting_views
+        return [(view.arch, view.id)
+                for view in self.browse(cr, 1, view_ids, context)
+                if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
     def raise_view_error(self, cr, uid, message, view_id, context=None):
         view = self.browse(cr, uid, view_id, context)
@@ -550,18 +546,13 @@ class view(osv.osv):
             v = v.inherit_id
         root_id = v.id
 
-        collect_last_updates = 'collect_last_updates' in context
         # arch and model fields are always returned
         if fields:
             fields = list(set(fields) | set(['arch', 'model']))
-            if collect_last_updates and 'write_date' not in fields:
-                fields.append('write_date')
 
         # read the view arch
         [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
         view_arch = etree.fromstring(view['arch'].encode('utf-8'))
-        if collect_last_updates:
-            context['collect_last_updates'].append(view['write_date'])
         if not v.inherit_id:
             arch_tree = view_arch
         else:
