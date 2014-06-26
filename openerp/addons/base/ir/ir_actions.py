@@ -47,9 +47,9 @@ class actions(osv.osv):
     _table = 'ir_actions'
     _order = 'name'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'type': fields.char('Action Type', required=True, size=32),
-        'usage': fields.char('Action Usage', size=32),
+        'name': fields.char('Name', required=True),
+        'type': fields.char('Action Type', required=True),
+        'usage': fields.char('Action Usage'),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
             translate=True),
@@ -155,8 +155,8 @@ class ir_actions_report_xml(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
     _columns = {
-        'type': fields.char('Action Type', size=32, required=True),
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'type': fields.char('Action Type', required=True),
+        'name': fields.char('Name', required=True, translate=True),
 
         'model': fields.char('Model', required=True),
         'report_type': fields.selection([('qweb-pdf', 'PDF'),
@@ -172,10 +172,10 @@ class ir_actions_report_xml(osv.osv):
         # options
         'multi': fields.boolean('On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
-        'attachment': fields.char('Save as Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
+        'attachment': fields.char('Save as Attachment Prefix', help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
 
         # Deprecated rml stuff
-        'usage': fields.char('Action Usage', size=32),
+        'usage': fields.char('Action Usage'),
         'header': fields.boolean('Add RML Header', help="Add or not the corporate RML header"),
         'parser': fields.char('Parser Class'),
         'auto': fields.boolean('Custom Python Parser'),
@@ -264,24 +264,24 @@ class ir_actions_act_window(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Action Name', size=64, translate=True),
-        'type': fields.char('Action Type', size=32, required=True),
+        'name': fields.char('Action Name', translate=True),
+        'type': fields.char('Action Type', required=True),
         'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
         'domain': fields.char('Domain Value',
             help="Optional domain filtering of the destination data, as a Python expression"),
         'context': fields.char('Context Value', required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
         'res_id': fields.integer('Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only"),
-        'res_model': fields.char('Destination Model', size=64, required=True,
+        'res_model': fields.char('Destination Model', required=True,
             help="Model name of the object to open in the view window"),
-        'src_model': fields.char('Source Model', size=64,
+        'src_model': fields.char('Source Model',
             help="Optional model name of the objects on which this action should be visible"),
         'target': fields.selection([('current','Current Window'),('new','New Window'),('inline','Inline Edit'),('inlineview','Inline View')], 'Target Window'),
-        'view_mode': fields.char('View Mode', size=250, required=True,
+        'view_mode': fields.char('View Mode', required=True,
             help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)"),
         'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
             help="View type: Tree type to use for the tree view, set to 'tree' for a hierarchical tree view, or 'form' for a regular list view"),
-        'usage': fields.char('Action Usage', size=32,
+        'usage': fields.char('Action Usage',
             help="Used to filter menu and home actions from the user form."),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
         'views': fields.function(_views_get_fnc, type='binary', string='Views',
@@ -403,8 +403,8 @@ class ir_actions_act_url(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
     _columns = {
-        'name': fields.char('Action Name', size=64, translate=True),
-        'type': fields.char('Action Type', size=32, required=True),
+        'name': fields.char('Action Name', translate=True),
+        'type': fields.char('Action Type', required=True),
         'url': fields.text('Action URL',required=True),
         'target': fields.selection((
             ('new', 'New Window'),
@@ -467,7 +467,7 @@ class ir_actions_server(osv.osv):
         return self._get_states(cr, uid, context)
 
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64, translate=True),
+        'name': fields.char('Action Name', required=True, translate=True),
         'condition': fields.char('Condition',
                                  help="Condition verified before executing the server action. If it "
                                  "is not verified, the action will not be executed. The condition is "
@@ -483,8 +483,8 @@ class ir_actions_server(osv.osv):
                                   "- 'Write on a Record': update the values of a record\n"
                                   "- 'Execute several actions': define an action that triggers several other server actions\n"
                                   "- 'Send Email': automatically send an email (available in email_template)"),
-        'usage': fields.char('Action Usage', size=32),
-        'type': fields.char('Action Type', size=32, required=True),
+        'usage': fields.char('Action Usage'),
+        'type': fields.char('Action Type', required=True),
         # Generic
         'sequence': fields.integer('Sequence',
                                    help="When dealing with multiple actions, the execution order is "
@@ -1065,7 +1065,7 @@ class ir_actions_todo(osv.osv):
             'ir.actions.actions', 'Action', select=True, required=True),
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='Status', required=True),
-        'name': fields.char('Name', size=64),
+        'name': fields.char('Name'),
         'type': fields.selection(TODO_TYPES, 'Type', required=True,
             help="""Manual: Launched manually.
 Automatic: Runs whenever the system is reconfigured.
@@ -1183,14 +1183,14 @@ class ir_actions_act_client(osv.osv):
             self.write(cr, uid, id, {'params_store': field_value}, context=context)
 
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64, translate=True),
-        'tag': fields.char('Client action tag', size=64, required=True,
+        'name': fields.char('Action Name', required=True, translate=True),
+        'tag': fields.char('Client action tag', required=True,
                            help="An arbitrary string, interpreted by the client"
                                 " according to its own needs and wishes. There "
                                 "is no central tag repository across clients."),
-        'res_model': fields.char('Destination Model', size=64, 
+        'res_model': fields.char('Destination Model', 
             help="Optional model, mostly used for needactions."),
-        'context': fields.char('Context Value', size=250, required=True,
+        'context': fields.char('Context Value', required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
         'params': fields.function(_get_params, fnct_inv=_set_params,
                                   type='binary', 

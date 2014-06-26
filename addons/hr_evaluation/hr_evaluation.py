@@ -33,7 +33,7 @@ class hr_evaluation_plan(osv.Model):
     _name = "hr_evaluation.plan"
     _description = "Appraisal Plan"
     _columns = {
-        'name': fields.char("Appraisal Plan", size=64, required=True),
+        'name': fields.char("Appraisal Plan", required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'phase_ids': fields.one2many('hr_evaluation.plan.phase', 'plan_id', 'Appraisal Phases'),
         'month_first': fields.integer('First Appraisal in (months)', help="This number of months will be used to schedule the first evaluation date of the employee when selecting an evaluation plan. "),

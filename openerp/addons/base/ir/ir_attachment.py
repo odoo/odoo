@@ -60,7 +60,7 @@ class ir_attachment(osv.osv):
                 if res_name:
                     field = self._columns.get('res_name',False)
                     if field and len(res_name) > field.size:
-                        res_name = res_name[:field.size-3] + '...' 
+                        res_name = res_name[:30] + '...' 
                 data[attachment.id] = res_name
             else:
                 data[attachment.id] = False
@@ -182,11 +182,11 @@ class ir_attachment(osv.osv):
 
     _name = 'ir.attachment'
     _columns = {
-        'name': fields.char('Attachment Name',size=256, required=True),
-        'datas_fname': fields.char('File Name',size=256),
+        'name': fields.char('Attachment Name', required=True),
+        'datas_fname': fields.char('File Name'),
         'description': fields.text('Description'),
-        'res_name': fields.function(_name_get_resname, type='char', size=128, string='Resource Name', store=True),
-        'res_model': fields.char('Resource Model',size=64, readonly=True, help="The database object this attachment will be attached to"),
+        'res_name': fields.function(_name_get_resname, type='char', string='Resource Name', store=True),
+        'res_model': fields.char('Resource Model', readonly=True, help="The database object this attachment will be attached to"),
         'res_id': fields.integer('Resource ID', readonly=True, help="The record id this is attached to"),
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
@@ -196,7 +196,7 @@ class ir_attachment(osv.osv):
         'url': fields.char('Url', size=1024),
         # al: We keep shitty field names for backward compatibility with document
         'datas': fields.function(_data_get, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
-        'store_fname': fields.char('Stored Filename', size=256),
+        'store_fname': fields.char('Stored Filename'),
         'db_datas': fields.binary('Database Data'),
         'file_size': fields.integer('File Size'),
     }

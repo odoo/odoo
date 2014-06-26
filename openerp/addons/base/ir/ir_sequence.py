@@ -32,7 +32,7 @@ class ir_sequence_type(openerp.osv.osv.osv):
     _name = 'ir.sequence.type'
     _order = 'name'
     _columns = {
-        'name': openerp.osv.fields.char('Name', size=64, required=True),
+        'name': openerp.osv.fields.char('Name', required=True),
         'code': openerp.osv.fields.char('Code', size=32, required=True),
     }
 
@@ -92,8 +92,8 @@ class ir_sequence(openerp.osv.osv.osv):
             "and 'No gap'. The later is slower than the former but forbids any"
             " gap in the sequence (while they are possible in the former)."),
         'active': openerp.osv.fields.boolean('Active'),
-        'prefix': openerp.osv.fields.char('Prefix', size=64, help="Prefix value of the record for the sequence"),
-        'suffix': openerp.osv.fields.char('Suffix', size=64, help="Suffix value of the record for the sequence"),
+        'prefix': openerp.osv.fields.char('Prefix', help="Prefix value of the record for the sequence"),
+        'suffix': openerp.osv.fields.char('Suffix', help="Suffix value of the record for the sequence"),
         'number_next': openerp.osv.fields.integer('Next Number', required=True, help="Next number of this sequence"),
         'number_next_actual': openerp.osv.fields.function(_get_number_next_actual, fnct_inv=_set_number_next_actual, type='integer', required=True, string='Next Number', help='Next number that will be used. This number can be incremented frequently so the displayed value might already be obsolete'),
         'number_increment': openerp.osv.fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),

@@ -339,7 +339,7 @@ class ir_ui_menu(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Menu', size=64, required=True, translate=True),
+        'name': fields.char('Menu', required=True, translate=True),
         'sequence': fields.integer('Sequence'),
         'child_id': fields.one2many('ir.ui.menu', 'parent_id', 'Child IDs'),
         'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True, ondelete="restrict"),
@@ -352,8 +352,8 @@ class ir_ui_menu(osv.osv):
             string='Full Path', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
         'icon_pict': fields.function(_get_icon_pict, type='char', size=32),
-        'web_icon': fields.char('Web Icon File', size=128),
-        'web_icon_hover': fields.char('Web Icon File (hover)', size=128),
+        'web_icon': fields.char('Web Icon File'),
+        'web_icon_hover': fields.char('Web Icon File (hover)'),
         'web_icon_data': fields.function(_get_image_icon, string='Web Icon Image', type='binary', readonly=True, store=True, multi='icon'),
         'web_icon_hover_data': fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
         'needaction_enabled': fields.function(_get_needaction_enabled,
@@ -362,7 +362,7 @@ class ir_ui_menu(osv.osv):
             string='Target model uses the need action mechanism',
             help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.'),
         'action': fields.function(_action, fnct_inv=_action_inv,
-            type='reference', string='Action',
+            type='reference', string='Action', size=21,
             selection=[
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),

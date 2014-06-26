@@ -147,7 +147,7 @@ class hr_timesheet_sheet(osv.osv):
         }
 
     _columns = {
-        'name': fields.char('Note', size=64, select=1,
+        'name': fields.char('Note', select=1,
                             states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'user_id': fields.related('employee_id', 'user_id', type="many2one", relation="res.users", store=True, string="User", required=False, readonly=True),#fields.many2one('res.users', 'User', required=True, select=1, states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),

@@ -123,7 +123,7 @@ class mail_message(osv.Model):
                         ('email', 'Email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
-                        ], 'Type',
+                        ], 'Type', size=12, 
             help="Message type: email for email message, notification for system "\
                  "message, comment for other messages such as user replies"),
         'email_from': fields.char('From',

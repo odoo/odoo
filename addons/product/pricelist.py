@@ -53,7 +53,7 @@ class price_type(osv.osv):
     _name = "product.price.type"
     _description = "Price Type"
     _columns = {
-        "name" : fields.char("Price Name", size=32, required=True, translate=True, help="Name of this kind of price."),
+        "name" : fields.char("Price Name", required=True, translate=True, help="Name of this kind of price."),
         "active" : fields.boolean("Active"),
         "field" : fields.selection(_price_field_get, "Product Field", size=32, required=True, help="Associated field in the product form."),
         "currency_id" : fields.many2one('res.currency', "Currency", required=True, help="The currency the field is expressed in."),
@@ -72,8 +72,8 @@ class product_pricelist_type(osv.osv):
     _name = "product.pricelist.type"
     _description = "Pricelist Type"
     _columns = {
-        'name': fields.char('Name',size=64, required=True, translate=True),
-        'key': fields.char('Key', size=64, required=True, help="Used in the code to select specific prices based on the context. Keep unchanged."),
+        'name': fields.char('Name', required=True, translate=True),
+        'key': fields.char('Key', required=True, help="Used in the code to select specific prices based on the context. Keep unchanged."),
     }
 
 
@@ -94,7 +94,7 @@ class product_pricelist(osv.osv):
     _description = "Pricelist"
     _order = 'name'
     _columns = {
-        'name': fields.char('Pricelist Name',size=64, required=True, translate=True),
+        'name': fields.char('Pricelist Name', required=True, translate=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the pricelist without removing it."),
         'type': fields.selection(_pricelist_type_get, 'Pricelist Type', required=True),
         'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions'),
@@ -332,7 +332,7 @@ class product_pricelist_version(osv.osv):
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Price List',
             required=True, select=True, ondelete='cascade'),
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'active': fields.boolean('Active',
             help="When a version is duplicated it is set to non active, so that the " \
             "dates do not overlaps with original version. You should change the dates " \
@@ -435,7 +435,7 @@ class product_pricelist_item(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Rule Name', size=64, help="Explicit rule name for this pricelist line."),
+        'name': fields.char('Rule Name', help="Explicit rule name for this pricelist line."),
         'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True, ondelete='cascade'),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Specify a template if this rule only applies to one product template. Keep empty otherwise."),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Specify a product if this rule only applies to one product. Keep empty otherwise."),

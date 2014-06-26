@@ -124,7 +124,7 @@ class res_partner_category(osv.osv):
     _description = 'Partner Tags'
     _name = 'res.partner.category'
     _columns = {
-        'name': fields.char('Category Name', required=True, size=64, translate=True),
+        'name': fields.char('Category Name', required=True, translate=True),
         'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True, ondelete='cascade'),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Full Name'),
         'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Child Categories'),
@@ -147,9 +147,9 @@ class res_partner_title(osv.osv):
     _name = 'res.partner.title'
     _order = 'name'
     _columns = {
-        'name': fields.char('Title', required=True, size=46, translate=True),
-        'shortcut': fields.char('Abbreviation', size=16, translate=True),
-        'domain': fields.selection([('partner', 'Partner'), ('contact', 'Contact')], 'Domain', required=True, size=24)
+        'name': fields.char('Title', required=True, translate=True),
+        'shortcut': fields.char('Abbreviation', translate=True),
+        'domain': fields.selection([('partner', 'Partner'), ('contact', 'Contact')], 'Domain', required=True)
     }
     _defaults = {
         'domain': 'contact',
@@ -229,13 +229,13 @@ class res_partner(osv.osv, format_address):
 
     _order = "display_name"
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True),
+        'name': fields.char('Name', required=True, select=True),
         'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
         'parent_id': fields.many2one('res.partner', 'Related Company', select=True),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override
-        'ref': fields.char('Contact Reference', size=64, select=1),
+        'ref': fields.char('Contact Reference', select=1),
         'lang': fields.selection(_lang_get, 'Language',
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
         'tz': fields.selection(_tz_get,  'Timezone', size=64,
@@ -244,9 +244,9 @@ class res_partner(osv.osv, format_address):
                  "that is otherwise used to pick and render date and time values: your computer's timezone."),
         'tz_offset': fields.function(_get_tz_offset, type='char', size=5, string='Timezone offset', invisible=True),
         'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this contact if any.'),
-        'vat': fields.char('TIN', size=32, help="Tax Identification Number. Check the box if this contact is subjected to taxes. Used by the some of the legal statements."),
+        'vat': fields.char('TIN', help="Tax Identification Number. Check the box if this contact is subjected to taxes. Used by the some of the legal statements."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
-        'website': fields.char('Website', size=64, help="Website of Partner or Company"),
+        'website': fields.char('Website', help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
         'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
@@ -255,22 +255,24 @@ class res_partner(osv.osv, format_address):
         'customer': fields.boolean('Customer', help="Check this box if this contact is a customer."),
         'supplier': fields.boolean('Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
-        'function': fields.char('Job Position', size=128),
+        'function': fields.char('Job Position'),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
                                    ('delivery', 'Shipping'), ('contact', 'Contact'),
                                    ('other', 'Other')], 'Address Type',
             help="Used to select automatically the right address according to the context in sales and purchases documents."),
-        'street': fields.char('Street', size=128),
-        'street2': fields.char('Street2', size=128),
-        'zip': fields.char('Zip', change_default=True, size=24),
-        'city': fields.char('City', size=128),
+        'street': fields.char('Street'),
+        'street2': fields.char('Street2'),
+        'zip': fields.char('Zip', size=24, change_default=True),
+        'city': fields.char('City'),
         'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict'),
         'country_id': fields.many2one('res.country', 'Country', ondelete='restrict'),
-        'email': fields.char('Email', size=240),
-        'phone': fields.char('Phone', size=64),
-        'fax': fields.char('Fax', size=64),
-        'mobile': fields.char('Mobile', size=64),
-        'birthdate': fields.char('Birthdate', size=64),
+        'country': fields.related('country_id', type='many2one', relation='res.country', string='Country',
+                                  deprecated="This field will be removed as of OpenERP 7.1, use country_id instead"),
+        'email': fields.char('Email'),
+        'phone': fields.char('Phone'),
+        'fax': fields.char('Fax'),
+        'mobile': fields.char('Mobile'),
+        'birthdate': fields.char('Birthdate'),
         'is_company': fields.boolean('Is a Company', help="Check if the contact is a company, otherwise it is a person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         # image: all image fields are base64 encoded and PIL-supported

@@ -171,7 +171,7 @@ class account_analytic_account(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Account/Contract Name', size=128, required=True, track_visibility='onchange'),
+        'name': fields.char('Account/Contract Name', required=True, track_visibility='onchange'),
         'complete_name': fields.function(_get_full_name, type='char', string='Full Name'),
         'code': fields.char('Reference', select=True, track_visibility='onchange'),
         'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', required=True,
@@ -314,7 +314,7 @@ class account_analytic_line(osv.osv):
     _description = 'Analytic Line'
 
     _columns = {
-        'name': fields.char('Description', size=256, required=True),
+        'name': fields.char('Description', required=True),
         'date': fields.date('Date', required=True, select=True),
         'amount': fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price. Always expressed in the company main currency.', digits_compute=dp.get_precision('Account')),
         'unit_amount': fields.float('Quantity', help='Specifies the amount of quantity to count.'),

@@ -40,14 +40,14 @@ class HeaderHTML(osv.osv):
         'html' : fields.text('webkit header', help="Set Webkit Report Header"),
         'footer_html' : fields.text('webkit footer', help="Set Webkit Report Footer."),
         'css' : fields.text('Header CSS'),
-        'name' : fields.char('Name', size=128, required=True),
+        'name' : fields.char('Name', required=True),
         'margin_top' : fields.float('Top Margin (mm)'),
         'margin_bottom' : fields.float('Bottom Margin (mm)'),
         'margin_left' : fields.float('Left Margin (mm)'),
         'margin_right' : fields.float('Right Margin (mm)'),
         'orientation' : fields.selection(
                         [('Landscape','Landscape'),('Portrait', 'Portrait')],
-                        'Orientation'
+                        'Orientation',
                         ),
         'format': fields.selection(
                 [
@@ -94,8 +94,8 @@ class HeaderImage(osv.osv):
     _columns = {
         'company_id' : fields.many2one('res.company', 'Company'),
         'img' : fields.binary('Image'),
-        'name' : fields.char('Name', size=128, required =True, help="Name of Image"),
-        'type' : fields.char('Type', size=32, required =True, help="Image type(png,gif,jpeg)")
+        'name' : fields.char('Name', required =True, help="Name of Image"),
+        'type' : fields.char('Type', required =True, help="Image type(png,gif,jpeg)")
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

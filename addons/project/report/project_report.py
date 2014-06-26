@@ -28,7 +28,7 @@ class report_project_task_user(osv.osv):
     _description = "Tasks by user and project"
     _auto = False
     _columns = {
-        'name': fields.char('Task Summary', size=128, readonly=True),
+        'name': fields.char('Task Summary', readonly=True),
         'user_id': fields.many2one('res.users', 'Assigned To', readonly=True),
         'date_start': fields.date('Assignation Date', readonly=True),
         'no_of_days': fields.integer('# of Days', size=128, readonly=True),
@@ -49,7 +49,7 @@ class report_project_task_user(osv.osv):
         'delay_endings_days': fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
         'nbr': fields.integer('# of tasks', readonly=True),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')],
-            string='Priority', readonly=True),
+            string='Priority', size=1, readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'Status', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Contact', readonly=True),
