@@ -1014,6 +1014,7 @@ class AssetsBundle(object):
     cmd_sass = ['sass', '--stdin', '-t', 'compressed', '--unix-newlines', '--compass', '-r', 'bootstrap-sass']
     cache = openerp.tools.lru.LRU(32)
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
+    rx_sass_import = re.compile("""(@import\s?['"]([^'"]+)['"])""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
     def __init__(self, xmlid, debug=False, cr=None, uid=None, context=None, registry=None):
@@ -1175,6 +1176,19 @@ class AssetsBundle(object):
         if not sass:
             return
         source = '\n'.join([asset.get_source() for asset in sass])
+
+        # move up all @import rules to the top and exclude file imports
+        imports = []
+        def push(matchobj):
+            ref = matchobj.group(2)
+            line = '@import "%s"' % ref
+            if '.' not in ref and line not in imports and not ref.startswith(('.', '/', '~')):
+                imports.append(line)
+            return ''
+        source = re.sub(self.rx_sass_import, push, source)
+        imports.append(source)
+        source = u'\n'.join(imports)
+
         try:
             compiler = Popen(self.cmd_sass, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         except Exception:
@@ -1184,7 +1198,8 @@ class AssetsBundle(object):
             return
         result = compiler.communicate(input=source)
         if compiler.returncode:
-            msg = "Error while compiling Sass for bundle '%s':\n\n%s" % (self.xmlid, ''. join(result))
+            error = (''. join(result)).split('Load paths')[0]
+            msg = "Error while compiling Sass for bundle '%s':\n\n%s" % (self.xmlid, error.strip())
             _logger.warning(msg)
             self.css_errors.append(msg)
             return
