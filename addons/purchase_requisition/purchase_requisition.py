@@ -19,9 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -40,8 +37,8 @@ class purchase_requisition(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Call for Bids Reference', size=32, required=True),
-        'origin': fields.char('Source Document', size=32),
+        'name': fields.char('Call for Bids Reference', required=True),
+        'origin': fields.char('Source Document'),
         'ordering_date': fields.date('Scheduled Ordering Date'),
         'date_end': fields.datetime('Bid Submission Deadline'),
         'schedule_date': fields.date('Scheduled Date', select=True, help="The expected and scheduled date where all the products are received"),
@@ -55,7 +52,7 @@ class purchase_requisition(osv.osv):
         'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'state': fields.selection([('draft', 'Draft'), ('in_progress', 'Confirmed'), ('open', 'Bid Selection'), ('done', 'PO Created'), ('cancel', 'Cancelled')],
-            'Status', track_visibility='onchange', required=True),
+                                  'Status', track_visibility='onchange', required=True),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
@@ -63,7 +60,7 @@ class purchase_requisition(osv.osv):
 
     def _get_picking_in(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
-        return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1]
+        return obj_data.get_object_reference(cr, uid, 'stock', 'picking_type_in')[1]
 
     _defaults = {
         'state': 'draft',
@@ -85,8 +82,7 @@ class purchase_requisition(osv.osv):
 
     def tender_cancel(self, cr, uid, ids, context=None):
         purchase_order_obj = self.pool.get('purchase.order')
-        #try to set all associated quotations to cancel state
-        purchase_ids = []
+        # try to set all associated quotations to cancel state
         for tender in self.browse(cr, uid, ids, context=context):
             for purchase_order in tender.purchase_ids:
                 purchase_order_obj.action_cancel(cr, uid, [purchase_order.id], context=context)
@@ -163,8 +159,11 @@ class purchase_requisition(osv.osv):
         date_order = requisition.ordering_date or fields.date.context_today(self, cr, uid, context=context)
         qty = product_uom._compute_qty(cr, uid, requisition_line.product_uom_id.id, requisition_line.product_qty, default_uom_po_id)
         supplier_pricelist = supplier.property_product_pricelist_purchase and supplier.property_product_pricelist_purchase.id or False
-        vals = po_line_obj.onchange_product_id(cr, uid, [], supplier_pricelist, product.id, qty, default_uom_po_id,
-            supplier.id, date_order=date_order, fiscal_position_id=supplier.property_account_position, date_planned=requisition_line.schedule_date,
+        vals = po_line_obj.onchange_product_id(
+            cr, uid, [], supplier_pricelist, product.id, qty, default_uom_po_id,
+            supplier.id, date_order=date_order,
+            fiscal_position_id=supplier.property_account_position,
+            date_planned=requisition_line.schedule_date,
             name=False, price_unit=False, state='draft', context=context)['value']
         vals.update({
             'order_id': purchase_id,
@@ -233,8 +232,6 @@ class purchase_requisition(osv.osv):
         """
         Generate all purchase order based on selected lines, should only be called on one tender at a time
         """
-        if context is None:
-            contex = {}
         po = self.pool.get('purchase.order')
         poline = self.pool.get('purchase.order.line')
         id_per_supplier = {}
@@ -267,8 +264,7 @@ class purchase_requisition(osv.osv):
                         id_per_supplier[po_line.partner_id.id] = [po_line]
 
             #generate po based on supplier and cancel all previous RFQ
-            ctx = context.copy()
-            ctx['force_requisition_id'] = True
+            ctx = dict(context or {}, force_requisition_id=True)
             for supplier, product_line in id_per_supplier.items():
                 #copy a quotation for this supplier and change order_line then validate it
                 quotation_id = po.search(cr, uid, [('requisition_id', '=', tender.id), ('partner_id', '=', supplier)], limit=1)[0]
@@ -429,12 +425,9 @@ class procurement_order(osv.osv):
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def _check(self, cr, uid, procurement, context=None):
-        requisition_obj = self.pool.get('purchase.requisition')
         if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition:
             if procurement.requisition_id.state == 'done':
                 if any([purchase.shipped for purchase in procurement.requisition_id.purchase_ids]):
                     return True
             return False
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

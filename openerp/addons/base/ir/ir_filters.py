@@ -126,7 +126,7 @@ class ir_filters(osv.osv):
                             (lower(name), model_id, COALESCE(user_id,-1))""")
 
     _columns = {
-        'name': fields.char('Filter Name', size=64, translate=True, required=True),
+        'name': fields.char('Filter Name', translate=True, required=True),
         'user_id': fields.many2one('res.users', 'User', ondelete='cascade',
                                    help="The user this filter is private to. When left empty the filter is public "
                                         "and available to all users."),

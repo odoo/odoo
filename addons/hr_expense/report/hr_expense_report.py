@@ -36,7 +36,7 @@ class hr_expense_report(osv.osv):
         'day': fields.char('Day', size=128, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+            ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Force Journal', readonly=True),
         'product_qty':fields.float('Qty', readonly=True),

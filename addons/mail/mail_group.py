@@ -46,7 +46,7 @@ class mail_group(osv.Model):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'description': fields.text('Description'),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
         'public': fields.selection([('public', 'Public'), ('private', 'Private'), ('groups', 'Selected Group Only')], 'Privacy', required=True,

@@ -130,17 +130,17 @@ class lang(osv.osv):
         return '%H:%M:%S'
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'code': fields.char('Locale Code', size=16, required=True, help='This field is used to set/get locales for user'),
         'iso_code': fields.char('ISO code', size=16, required=False, help='This ISO code is the name of po files to use for translations'),
         'translatable': fields.boolean('Translatable'),
         'active': fields.boolean('Active'),
-        'direction': fields.selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], 'Direction',required=True),
-        'date_format':fields.char('Date Format',size=64,required=True),
-        'time_format':fields.char('Time Format',size=64,required=True),
-        'grouping':fields.char('Separator Format',size=64,required=True,help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."),
-        'decimal_point':fields.char('Decimal Separator', size=64,required=True),
-        'thousands_sep':fields.char('Thousands Separator',size=64),
+        'direction': fields.selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], 'Direction', required=True),
+        'date_format':fields.char('Date Format', required=True),
+        'time_format':fields.char('Time Format', required=True),
+        'grouping':fields.char('Separator Format', required=True,help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."),
+        'decimal_point':fields.char('Decimal Separator', required=True),
+        'thousands_sep':fields.char('Thousands Separator'),
     }
     _defaults = {
         'active': 1,

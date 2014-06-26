@@ -188,11 +188,8 @@ class mail_mail(osv.Model):
           - if 'partner' and mail is a notification on a document: followers (Followers of 'Doc' <email>)
           - elif 'partner', no notificatoin or no doc: recipient specific (Partner Name <email>)
           - else fallback on mail.email_to splitting """
-        if partner and mail.notification and mail.record_name:
-            sanitized_record_name = re.sub(r'[^\w+.]+', '-', mail.record_name)
-            email_to = [_('"Followers of %s" <%s>') % (sanitized_record_name, partner.email)]
-        elif partner:
-            email_to = ['%s <%s>' % (partner.name, partner.email)]
+        if partner:
+            email_to = ['"%s" <%s>' % (partner.name, partner.email)]
         else:
             email_to = tools.email_split(mail.email_to)
         return email_to

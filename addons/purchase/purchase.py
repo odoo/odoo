@@ -194,11 +194,11 @@ class purchase_order(osv.osv):
         },
     }
     _columns = {
-        'name': fields.char('Order Reference', size=64, required=True, select=True, help="Unique number of the purchase order, computed automatically when the purchase order is created."),
-        'origin': fields.char('Source Document', size=64,
+        'name': fields.char('Order Reference', required=True, select=True, help="Unique number of the purchase order, computed automatically when the purchase order is created."),
+        'origin': fields.char('Source Document',
             help="Reference of the document that generated this purchase order request; a sales order or an internal procurement request."
         ),
-        'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, size=64,
+        'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
             help="Reference of the sales order or bid sent by your supplier. It's mainly used to do the matching when you receive the products as this reference is usually written on the delivery order sent by your supplier."),
         'date_order':fields.date('Order Date', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, select=True, help="Date on which this document has been created."),
         'date_approve':fields.date('Date Approved', readonly=1, select=True, help="Date on which purchase order has been approved"),

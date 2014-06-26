@@ -32,7 +32,7 @@ class account_entries_report(osv.osv):
         'date': fields.date('Effective Date', readonly=True),
         'date_created': fields.date('Date Created', readonly=True),
         'date_maturity': fields.date('Date Maturity', readonly=True),
-        'ref': fields.char('Reference', size=64, readonly=True),
+        'ref': fields.char('Reference', readonly=True),
         'nbr': fields.integer('# of Items', readonly=True),
         'debit': fields.float('Debit', readonly=True),
         'credit': fields.float('Credit', readonly=True),

@@ -325,59 +325,6 @@ openerp.web_calendar = function(instance) {
                     firstDay: translate.firstDay,
                 });
 
-            
-                if (this.useContacts) {
-                    //Get my Partner ID
-                    
-                    new instance.web.Model("res.users").query(["partner_id"]).filter([["id", "=",this.dataset.context.uid]]).first()
-                        .done(
-                            function(result) {
-                                var sidebar_items = {};
-                                var filter_value = result.partner_id[0];
-                                var filter_item = {
-                                    value: filter_value,
-                                    label: result.partner_id[1] + _lt(" [Me]"),
-                                    color: self.get_color(filter_value),
-                                    avatar_model: self.avatar_model,
-                                    is_checked: true
-                                };
-
-                                sidebar_items[filter_value] = filter_item ;
-                                filter_item = {
-                                        value: -1,
-                                        label: _lt("Everybody's calendars"),
-                                        color: self.get_color(-1),
-                                        avatar_model: self.avatar_model,
-                                        is_checked: false
-                                    };
-                                sidebar_items[-1] = filter_item ;
-                                //Get my coworkers/contacts
-                                new instance.web.Model("calendar.contacts").query(["partner_id"]).filter([["user_id", "=",self.dataset.context.uid]]).all().then(function(result) {
-                                    _.each(result, function(item) {
-                                        filter_value = item.partner_id[0];
-                                        filter_item = {
-                                            value: filter_value,
-                                            label: item.partner_id[1],
-                                            color: self.get_color(filter_value),
-                                            avatar_model: self.avatar_model,
-                                            is_checked: true
-                                        };
-                                        sidebar_items[filter_value] = filter_item ;
-                                    });
-
-                                    self.all_filters = sidebar_items;
-                                    self.now_filter_ids = $.map(self.all_filters, function(o) { return o.value; });
-                                    
-                                    self.sidebar.filter.events_loaded(self.all_filters);
-                                    self.sidebar.filter.set_filters();
-                                                                        
-                                    self.sidebar.filter.addUpdateButton();
-                                }).done(function () {
-                                    self.$calendar.fullCalendar('refetchEvents');
-                                });
-                            }
-                         );
-                }
                 this.extraSideBar();                
             }
             self.$calendar.fullCalendar(self.get_fc_init_options());
@@ -663,17 +610,13 @@ openerp.web_calendar = function(instance) {
                     date_start_day = new Date(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),7);
                     date_stop_day = new Date(event_end.getFullYear(),event_end.getMonth(),event_end.getDate(),19);
                 }
-                data[this.date_start] = instance.web.parse_value(date_start_day, this.fields[this.date_start]);
-                if (this.date_stop) {
-                    data[this.date_stop] = instance.web.parse_value(date_stop_day, this.fields[this.date_stop]);
-                }
                 diff_seconds = Math.round((date_stop_day.getTime() - date_start_day.getTime()) / 1000);
                                 
             }
             else {
-                data[this.date_start] = instance.web.parse_value(event.start, this.fields[this.date_start]);
+                data[this.date_start] = event.start;
                 if (this.date_stop) {
-                    data[this.date_stop] = instance.web.parse_value(event_end, this.fields[this.date_stop]);
+                    data[this.date_stop] = event_end;
                 }
                 diff_seconds = Math.round((event_end.getTime() - event.start.getTime()) / 1000);
             }
@@ -1430,19 +1373,13 @@ openerp.web_calendar = function(instance) {
             this.$el.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
         },
         filter_click: function(e) {
-            var self = this;            
-            self.view.all_filters[parseInt(e.target.value)].is_checked = e.target.checked;
+            var self = this;
+            if (self.view.all_filters[0] && e.target.value == self.view.all_filters[0].value) {
+                self.view.all_filters[0].is_checked = e.target.checked;
+            } else {
+                self.view.all_filters[parseInt(e.target.value)].is_checked = e.target.checked;
+            }
             self.view.$calendar.fullCalendar('refetchEvents');
-        },
-        addUpdateButton: function() {
-            var self=this;
-            this.$('div.oe_calendar_all_responsibles').append(QWeb.render('CalendarView.sidebar.button_add_contact'));
-            this.$(".add_contacts_link_btn").on('click', function() {
-                self.rpc("/web/action/load", {
-                    action_id: "calendar.action_calendar_contacts"
-                }).then( function(result) { return self.do_action(result); });
-            });
-            
         },
     });
 

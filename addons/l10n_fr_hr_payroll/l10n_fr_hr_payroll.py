@@ -30,8 +30,8 @@ class res_company(osv.osv):
         'plafond_secu': fields.float('Plafond de la Securite Sociale', digits_compute=dp.get_precision('Payroll')),
         'nombre_employes': fields.integer('Nombre d\'employes'),
         'cotisation_prevoyance': fields.float('Cotisation Patronale Prevoyance', digits_compute=dp.get_precision('Payroll')),
-        'org_ss': fields.char('Organisme de securite sociale', size=64),
-        'conv_coll': fields.char('Convention collective', size=64),
+        'org_ss': fields.char('Organisme de securite sociale'),
+        'conv_coll': fields.char('Convention collective'),
     }
 
 
@@ -39,16 +39,16 @@ class hr_contract(osv.osv):
     _inherit = 'hr.contract'
 
     _columns = {
-        'qualif': fields.char('Qualification', size=64),
-        'niveau': fields.char('Niveau', size=64),
-        'coef': fields.char('Coefficient', size=64),
+        'qualif': fields.char('Qualification'),
+        'niveau': fields.char('Niveau'),
+        'coef': fields.char('Coefficient'),
     }
 
 class hr_payslip(osv.osv):
     _inherit = 'hr.payslip'
 
     _columns = {
-        'payment_mode': fields.char('Mode de paiement', size=64),
+        'payment_mode': fields.char('Mode de paiement'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

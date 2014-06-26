@@ -51,7 +51,7 @@ class hr_employee_category(osv.Model):
     _name = "hr.employee.category"
     _description = "Employee Category"
     _columns = {
-        'name': fields.char("Employee Tag", size=64, required=True),
+        'name': fields.char("Employee Tag", required=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('hr.employee.category', 'Parent Employee Tag', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories'),
@@ -96,7 +96,7 @@ class hr_job(osv.Model):
     _description = "Job Position"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _columns = {
-        'name': fields.char('Job Name', size=128, required=True, select=True),
+        'name': fields.char('Job Name', required=True, select=True),
         'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
@@ -192,20 +192,20 @@ class hr_employee(osv.osv):
         'name_related': fields.related('resource_id', 'name', type='char', string='Name', readonly=True, store=True),
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Date of Birth"),
-        'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
-        'sinid': fields.char('SIN No', size=32, help="Social Insurance Number"),
-        'identification_id': fields.char('Identification No', size=32),
-        'otherid': fields.char('Other Id', size=64),
+        'ssnid': fields.char('SSN No', help='Social Security Number'),
+        'sinid': fields.char('SIN No', help="Social Insurance Number"),
+        'identification_id': fields.char('Identification No'),
+        'otherid': fields.char('Other Id'),
         'gender': fields.selection([('male', 'Male'), ('female', 'Female')], 'Gender'),
         'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'address_id': fields.many2one('res.partner', 'Working Address'),
         'address_home_id': fields.many2one('res.partner', 'Home Address'),
         'bank_account_id': fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
-        'work_phone': fields.char('Work Phone', size=32, readonly=False),
-        'mobile_phone': fields.char('Work Mobile', size=32, readonly=False),
+        'work_phone': fields.char('Work Phone', readonly=False),
+        'mobile_phone': fields.char('Work Mobile', readonly=False),
         'work_email': fields.char('Work Email', size=240),
-        'work_location': fields.char('Office Location', size=32),
+        'work_location': fields.char('Office Location'),
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager'),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Tags'),
@@ -232,7 +232,7 @@ class hr_employee(osv.osv):
             help="Small-sized photo of the employee. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'passport_id': fields.char('Passport No', size=64),
+        'passport_id': fields.char('Passport No'),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
         'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
@@ -384,7 +384,7 @@ class hr_department(osv.osv):
 
     _name = "hr.department"
     _columns = {
-        'name': fields.char('Department Name', size=64, required=True),
+        'name': fields.char('Department Name', required=True),
         'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
         'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),

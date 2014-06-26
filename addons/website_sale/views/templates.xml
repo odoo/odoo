@@ -408,7 +408,7 @@
 
 <template id="product_price">
   <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
-      <h4 class="oe_price_h4">
+      <h4 class="oe_price_h4 css_editable_mode_hidden">
           <t t-if="product.lst_price != product.price">
           <span class="text-danger" style="text-decoration: line-through;"
             t-field="product.lst_price"
@@ -425,6 +425,13 @@
            }'/>
           <span itemprop="price" style="display:none;" t-esc="product.price"/>
           <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
+      </h4>
+      <h4 class="css_editable_mode_display" style="display: none;">
+        <span t-field="product.lst_price"
+            t-field-options='{
+               "widget": "monetary",
+               "display_currency": "website.pricelist_id.currency_id"
+           }'/>
       </h4>
       <h4 class="hidden oe_not_available bg-warning">Product not available</h4>
   </div>

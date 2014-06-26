@@ -27,7 +27,7 @@ class payment_advice_report(osv.osv):
     _description = "Payment Advice Analysis"
     _auto = False
     _columns = {
-        'name':fields.char('Name', size=32, readonly=True),
+        'name':fields.char('Name', readonly=True),
         'date': fields.date('Date', readonly=True,),
         'year': fields.char('Year', size=4, readonly=True),
         'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
@@ -41,14 +41,14 @@ class payment_advice_report(osv.osv):
         ], 'Status', select=True, readonly=True),
         'employee_id': fields.many2one('hr.employee', 'Employee', readonly=True),
         'nbr': fields.integer('# Payment Lines', readonly=True),
-        'number':fields.char('Number', size=16, readonly=True),
+        'number':fields.char('Number', readonly=True),
         'bysal': fields.float('By Salary', readonly=True),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'cheque_nos':fields.char('Cheque Numbers', size=256, readonly=True),
+        'cheque_nos':fields.char('Cheque Numbers', readonly=True),
         'neft': fields.boolean('NEFT Transaction', readonly=True),
         'ifsc_code': fields.char('IFSC Code', size=32, readonly=True),
-        'employee_bank_no': fields.char('Employee Bank Account', size=32, required=True),
+        'employee_bank_no': fields.char('Employee Bank Account', required=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'payment_advice_report')

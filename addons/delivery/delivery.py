@@ -62,7 +62,7 @@ class delivery_carrier(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Delivery Method', size=64, required=True),
+        'name': fields.char('Delivery Method', required=True),
         'partner_id': fields.many2one('res.partner', 'Transport Company', required=True, help="The partner that is doing the delivery service."),
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
@@ -171,8 +171,8 @@ class delivery_grid(osv.osv):
     _name = "delivery.grid"
     _description = "Delivery Grid"
     _columns = {
-        'name': fields.char('Grid Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', size=64, required=True, help="Gives the sequence order when displaying a list of delivery grid."),
+        'name': fields.char('Grid Name', required=True),
+        'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of delivery grid."),
         'carrier_id': fields.many2one('delivery.carrier', 'Carrier', required=True, ondelete='cascade'),
         'country_ids': fields.many2many('res.country', 'delivery_grid_country_rel', 'grid_id', 'country_id', 'Countries'),
         'state_ids': fields.many2many('res.country.state', 'delivery_grid_state_rel', 'grid_id', 'state_id', 'States'),
@@ -229,8 +229,8 @@ class delivery_grid_line(osv.osv):
     _name = "delivery.grid.line"
     _description = "Delivery Grid Line"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', size=64, required=True, help="Gives the sequence order when calculating delivery grid."),
+        'name': fields.char('Name', required=True),
+        'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when calculating delivery grid."),
         'grid_id': fields.many2one('delivery.grid', 'Grid',required=True, ondelete='cascade'),
         'type': fields.selection([('weight','Weight'),('volume','Volume'),\
                                   ('wv','Weight * Volume'), ('price','Price'), ('quantity','Quantity')],\

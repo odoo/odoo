@@ -103,17 +103,7 @@ class base_module_upgrade(osv.osv_memory):
 
         openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
-        ir_model_data = self.pool.get('ir.model.data')
-        __, res_id = ir_model_data.get_object_reference(cr, uid, 'base', 'view_base_module_upgrade_install')
-        return {
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'base.module.upgrade',
-                'views': [(res_id, 'form')],
-                'view_id': False,
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-            }
+        return {'type': 'ir.actions.act_window_close'}
 
     def config(self, cr, uid, ids, context=None):
         return self.pool.get('res.config').next(cr, uid, [], context=context)
