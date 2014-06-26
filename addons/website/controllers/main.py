@@ -326,7 +326,18 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route(['/website/theme_customize_modal'], type='json', auth="public", website=True)
     def theme_customize_modal(self):
-        return request.website._render('website.theme_customize')
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        imd = pool['ir.model.data']
+        view = pool["ir.ui.view"]
+
+        view_model, view_theme_id = imd.get_object_reference(cr, uid, 'website', 'theme')
+
+        inherit_xml_ids = []
+        inherit_ids = view.search(cr, uid, [('inherit_id', '=', view_theme_id)], context=context)
+        for v in view.browse(cr, uid, inherit_ids, context):
+            inherit_xml_ids.append([v.xml_id, v.application])
+
+        return (request.website._render('website.theme_customize'), inherit_xml_ids)
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
     def theme_customize(self, unable, disable):
