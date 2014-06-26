@@ -46,7 +46,7 @@ class Controller(openerp.addons.im.im.Controller):
         message_id = registry["im_chat.message"].post(cr, openerp.SUPERUSER_ID, uid, uuid, message_type, message_content, context=context)
         return message_id
 
-    @openerp.http.route('/im_chat/image', type='http', auth="none")
+    @openerp.http.route(['/im_chat/image/<string:uuid>/<string:user_id>'], type='http', auth="none")
     def image(self, uuid, user_id):
         registry, cr, context, uid = request.registry, request.cr, request.context, request.session.uid
         # get the image
@@ -61,9 +61,10 @@ class Controller(openerp.addons.im.im.Controller):
 #----------------------------------------------------------
 # Models
 #----------------------------------------------------------
-class im_chat_session_res_users_rel(osv.Model):
+class im_chat_conversation_state(osv.Model):
     """ Adds a state on the m2m between user and session.  """
-    _name = 'im_chat.session_res_users_rel'
+    _name = 'im_chat.conversation_state'
+    _table = "im_chat_session_res_users_rel"
 
     _columns = {
         "state" : fields.selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')]),
@@ -84,7 +85,7 @@ class im_chat_session(osv.Model):
         'uuid': fields.char('UUID', size=50, select=True),
         'message_ids': fields.one2many('im_chat.message', 'to_id', 'Messages'),
         'user_ids': fields.many2many('res.users', 'im_chat_session_res_users_rel', 'session_id', 'user_id', "Session Users"),
-        'session_res_users_rel': fields.one2many('im_chat.session_res_users_rel', 'session_id', 'Relation Session Users'),
+        'session_res_users_rel': fields.one2many('im_chat.conversation_state', 'session_id', 'Relation Session Users'),
     }
     _defaults = {
         'uuid': lambda *args: '%s' % uuid.uuid4(),
@@ -113,7 +114,7 @@ class im_chat_session(osv.Model):
             # add uid_state if available
             if uid:
                 domain = [('user_id','=',uid), ('session_id','=',session.id)]
-                uid_state = self.pool['im_chat.session_res_users_rel'].search_read(cr, uid, domain, ['state'], context=context)
+                uid_state = self.pool['im_chat.conversation_state'].search_read(cr, uid, domain, ['state'], context=context)
                 if uid_state:
                     info['state'] = uid_state[0]['state']
             return info
@@ -134,15 +135,15 @@ class im_chat_session(osv.Model):
     def update_state(self, cr, uid, uuid, state=None, context=None):
         """ modify the fold_state of the given session, and broadcast to himself (e.i. : to sync multiple tabs) """
         domain = [('user_id','=',uid), ('session_id.uuid','=',uuid)]
-        ids = self.pool['im_chat.session_res_users_rel'].search(cr, uid, domain, context=context)
-        for sr in self.pool['im_chat.session_res_users_rel'].browse(cr, uid, ids, context=context):
+        ids = self.pool['im_chat.conversation_state'].search(cr, uid, domain, context=context)
+        for sr in self.pool['im_chat.conversation_state'].browse(cr, uid, ids, context=context):
             if not state:
                 state = sr.state
                 if sr.state == 'open':
                     state = 'folded'
                 else:
                     state = 'open'
-            self.pool['im_chat.session_res_users_rel'].write(cr, uid, ids, {'state': state}, context=context)
+            self.pool['im_chat.conversation_state'].write(cr, uid, ids, {'state': state}, context=context)
             self.pool['im.bus'].sendone(cr, uid, (cr.dbname, 'im_chat.session', uid), sr.session_id.session_info())
 
     def add_user(self, cr, uid, uuid, user_id, context=None):
@@ -215,9 +216,9 @@ class im_chat_message(osv.Model):
         # get the session of the messages and the not-closed ones
         session_ids = map(lambda m: m['to_id'][0], messages)
         domain = [('user_id','=',uid), '|', ('state','!=','closed'), ('session_id', 'in', session_ids)]
-        session_rels_ids = self.pool['im_chat.session_res_users_rel'].search(cr, uid, domain, context=context)
+        session_rels_ids = self.pool['im_chat.conversation_state'].search(cr, uid, domain, context=context)
         # re-open the session where a message have been recieve recently
-        session_rels = self.pool['im_chat.session_res_users_rel'].browse(cr, uid, session_rels_ids, context=context)
+        session_rels = self.pool['im_chat.conversation_state'].browse(cr, uid, session_rels_ids, context=context)
 
         reopening_session = []
         notifications = []
@@ -230,7 +231,7 @@ class im_chat_message(osv.Model):
             notifications.append([(cr.dbname,'im_chat.session', uid), si])
         for m in messages:
             notifications.append([(cr.dbname,'im_chat.session', uid), m])
-        self.pool['im_chat.session_res_users_rel'].write(cr, uid, reopening_session, {'state': 'folded'}, context=context)
+        self.pool['im_chat.conversation_state'].write(cr, uid, reopening_session, {'state': 'folded'}, context=context)
         return notifications
 
     def post(self, cr, uid, from_uid, uuid, message_type, message_content, context=None):

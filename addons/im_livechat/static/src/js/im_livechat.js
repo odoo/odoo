@@ -4,6 +4,8 @@
 
 (function() {
 
+    "use strict";
+
     var _t = openerp._t;
 
     var im_livechat = {};

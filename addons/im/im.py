@@ -44,10 +44,10 @@ class ImBus(osv.Model):
     }
 
     def gc(self, cr, uid):
-        timeout_ago = datetime.datetime.now()-datetime.timedelta(seconds=TIMEOUT*2)
+        timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT*2)
         domain = [('create_date', '<', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
-        ids  = self.search(cr, uid, domain)
-        self.unlink(cr, uid, ids)
+        ids  = self.search(cr, openerp.SUPERUSER_ID, domain)
+        self.unlink(cr, openerp.SUPERUSER_ID, ids)
 
     def sendmany(self, cr, uid, notifications):
         channels = set()
@@ -58,7 +58,7 @@ class ImBus(osv.Model):
                 "message" : json_dump(message)
             }
             cr.commit()
-            self.pool['im.bus'].create(cr, uid, values)
+            self.pool['im.bus'].create(cr, openerp.SUPERUSER_ID, values)
             if random.random() < 0.01:
                 self.gc(cr, uid)
         if channels:
@@ -71,14 +71,14 @@ class ImBus(osv.Model):
     def poll(self, cr, uid, channels, last=0):
         # first poll return the notification in the 'buffer'
         if last == 0:
-            timeout_ago = datetime.datetime.now()-datetime.timedelta(seconds=TIMEOUT)
+            timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT)
             domain = [('create_date', '>', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         else:
             # else returns the unread notifications
             domain = [('id','>',last)]
         channels = [json_dump(c) for c in channels]
         domain.append(('channel','in',channels))
-        notifications = self.search_read(cr, uid, domain)
+        notifications = self.search_read(cr, openerp.SUPERUSER_ID, domain)
         return [{"id":notif["id"], "channel": simplejson.loads(notif["channel"]), "message":simplejson.loads(notif["message"])} for notif in notifications]
 
 class ImDispatch(object):

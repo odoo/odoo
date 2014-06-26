@@ -304,7 +304,7 @@
             var last_date_day, last_user_id = -1;
             _.each(this.get("messages"), function(current){
                 // add the url of the avatar for all users in the conversation
-                current.from_id[2] = openerp.session.url('/im_chat/image', {uuid: self.get('session').uuid, user_id: current.from_id[0]});
+                current.from_id[2] = openerp.session.url(_.str.sprintf("/im_chat/image/%s/%s", self.get('session').uuid, current.from_id[0]));
                 var date_day = current.create_date.split(" ")[0];
                 if(date_day !== last_date_day){
                     res[date_day] = [];
@@ -337,9 +337,12 @@
             this.$("input").val("");
             this.send_message(mes, "message");
         },
-        smiley: function(str){
+        get_smiley_list: function(){
             var kitten = jQuery.deparam !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined;
             var smileys = {
+                ":'(": "&#128546;",
+                ":O" : "&#128561;",
+                "3:)": "&#128520;",
                 ":)" : "&#128522;",
                 ":D" : "&#128517;",
                 ";)" : "&#128521;",
@@ -349,23 +352,27 @@
                 ":/" : "&#128527;",
                 "8)" : "&#128563;",
                 ":s" : "&#128534;",
-                ":'(": "&#128546;",
-                ":O" : "&#128561;",
-                "3:)": "&#128520;",
             };
             if(kitten){
-                smileys = {
+                _.extend(smileys, {
                     ":)" : "&#128570;",
                     ":D" : "&#128569;",
                     ";)" : "&#128572;",
                     ":p" : "&#128573;",
                     ":(" : "&#128576;",
                     ":|" : "&#128575;",
-                };
+                });
             }
-            for (var key in smileys){
-                str = str.replace(key, '<span class="smiley">'+smileys[key]+'</span>');
-            }
+            return smileys;
+        },
+        smiley: function(str){
+            var re_escape = function(str){
+                return String(str).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
+             };
+             var smileys = this.get_smiley_list();
+            _.each(_.keys(smileys), function(key){
+                str = str.replace( new RegExp("(?:^|\\s)(" + re_escape(key) + ")(?:\\s|$)"), ' <span class="smiley">'+smileys[key]+'</span> ');
+            });
             return str;
         },
         escape_keep_url: function(str){

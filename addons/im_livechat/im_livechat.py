@@ -54,16 +54,9 @@ class LiveChatController(http.Controller):
         cr, uid, context, db = request.cr, request.uid, request.context, request.db
         uid = uid or openerp.SUPERUSER_ID
         reg = openerp.modules.registry.RegistryManager.get(db)
-        # add the location to the anonymous name
-        ip = request.httprequest.environ['REMOTE_ADDR']
-        try:
-            import GeoIP
-            _geo_ip = GeoIP.open('/usr/share/GeoIP/GeoLiteCity.dat', GeoIP.GEOIP_STANDARD)
-            result = _geo_ip.record_by_addr(ip)
-            if result:
-                anonymous_name = anonymous_name + " ("+result["country_name"]+")"
-        except Exception:
-            pass
+        # if geoip, add the country name to the anonymous name
+        if hasattr(request, 'geoip'):
+            anonymous_name = anonymous_name + " ("+request.geoip.get('country_name', "")+")"
         return reg.get("im_livechat.channel").get_channel_session(cr, uid, channel_id, anonymous_name, context=context)
 
     @http.route('/im_livechat/available', type='json', auth="none")
