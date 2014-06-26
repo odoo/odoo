@@ -556,7 +556,7 @@ class Home(http.Controller):
     ], type='http', auth='public')
     def js_bundle(self, xmlid, sha=None, **kw):
         try:
-            bundle = AssetsBundle(xmlid, debug=request.debug)
+            bundle = AssetsBundle(xmlid)
         except QWebTemplateNotFound:
             return request.not_found()
 
@@ -569,7 +569,7 @@ class Home(http.Controller):
     ], type='http', auth='public')
     def css_bundle(self, xmlid, sha=None, **kw):
         try:
-            bundle = AssetsBundle(xmlid, debug=request.debug)
+            bundle = AssetsBundle(xmlid)
         except QWebTemplateNotFound:
             return request.not_found()
 

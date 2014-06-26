@@ -9,9 +9,12 @@ import math
 import os
 import re
 import sys
+import textwrap
+import uuid
 import xml  # FIXME use lxml and etree
 import itertools
 import lxml.html
+from subprocess import Popen, PIPE
 from urlparse import urlparse
 
 import babel
@@ -1000,18 +1003,28 @@ class AssetNotFound(Exception):
         self.url = url
 
 class AssetsBundle(object):
+    # Sass installation:
+    #
+    #       sudo gem install sass compass bootstrap-sass
+    #
+    # If the following error is encountered:
+    #       'ERROR: Cannot load compass.'
+    # Use this:
+    #       sudo gem install compass --pre
+    cmd_sass = ['sass', '--stdin', '-t', 'compressed', '--unix-newlines', '--compass', '-r', 'bootstrap-sass']
     cache = openerp.tools.lru.LRU(32)
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
+    rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
     def __init__(self, xmlid, debug=False, cr=None, uid=None, context=None, registry=None):
         self.xmlid = xmlid
-        self.debug = debug
         self.cr = request.cr if cr is None else cr
         self.uid = request.uid if uid is None else uid
         self.context = request.context if context is None else context
         self.registry = request.registry if registry is None else registry
         self.javascripts = []
         self.stylesheets = []
+        self.css_errors = []
         self.remains = []
         self._checksum = None
         self._last_modified = datetime.datetime(1970, 1, 1)
@@ -1040,10 +1053,17 @@ class AssetsBundle(object):
             elif isinstance(el, lxml.html.HtmlElement):
                 src = el.get('src')
                 href = el.get('href')
+                atype = el.get('type')
                 if el.tag == 'style':
-                    self.stylesheets.append(StylesheetAsset(self, inline=el.text))
+                    if atype == 'text/sass' or src.endswith('.sass'):
+                        self.stylesheets.append(SassAsset(self, inline=el.text))
+                    else:
+                        self.stylesheets.append(StylesheetAsset(self, inline=el.text))
                 elif el.tag == 'link' and el.get('rel') == 'stylesheet' and self.can_aggregate(href):
-                    self.stylesheets.append(StylesheetAsset(self, url=href))
+                    if href.endswith('.sass') or atype == 'text/sass':
+                        self.stylesheets.append(SassAsset(self, url=href))
+                    else:
+                        self.stylesheets.append(StylesheetAsset(self, url=href))
                 elif el.tag == 'script' and not src:
                     self.javascripts.append(JavascriptAsset(self, inline=el.text))
                 elif el.tag == 'script' and self.can_aggregate(src):
@@ -1106,9 +1126,6 @@ class AssetsBundle(object):
         if key not in self.cache:
             content =';\n'.join(asset.minify() for asset in self.javascripts)
             self.cache[key] = (self.version, content)
-        if self.debug:
-            return "/*\n%s\n*/\n" % '\n'.join(
-                [asset.url for asset in self.javascripts if asset.url]) + self.cache[key]
         return self.cache[key][1]
 
     def css(self):
@@ -1117,7 +1134,13 @@ class AssetsBundle(object):
             # Invalidate cache on version mismach
             self.cache.pop(key)
         if key not in self.cache:
+            self.compile_css()
             content = '\n'.join(asset.minify() for asset in self.stylesheets)
+
+            if self.css_errors:
+                msg = '\n'.join(self.css_errors)
+                content += self.css_message(msg.replace('\n', '\\A '))
+
             # move up all @import rules to the top
             matches = []
             def push(matchobj):
@@ -1128,14 +1151,57 @@ class AssetsBundle(object):
 
             matches.append(content)
             content = u'\n'.join(matches)
+            if self.css_errors:
+                return content
             self.cache[key] = (self.version, content)
-        if self.debug:
-            return "/*\n%s\n*/\n" % '\n'.join(
-                [asset.url for asset in self.javascripts if asset.url]) + self.cache[key]
+
         return self.cache[key][1]
 
+    def css_message(self, message):
+        return """
+            body:before {
+                background: #ffc;
+                width: 100%%;
+                font-size: 14px;
+                font-family: monospace;
+                white-space: pre;
+                content: "%s";
+            }
+        """ % message.replace('"', '\\"')
+
+    def compile_css(self):
+        # Css compilation is global because they are independant
+        sass = [asset for asset in self.stylesheets if isinstance(asset, SassAsset)]
+        if not sass:
+            return
+        source = '\n'.join([asset.get_source() for asset in sass])
+        try:
+            compiler = Popen(self.cmd_sass, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        except Exception:
+            msg ="Could not find 'sass' program needed to compile sass/scss files" 
+            _logger.error(msg)
+            self.css_errors.append(msg)
+            return
+        result = compiler.communicate(input=source)
+        if compiler.returncode:
+            msg = "Error while compiling Sass for bundle '%s':\n\n%s" % (self.xmlid, ''. join(result))
+            _logger.warning(msg)
+            self.css_errors.append(msg)
+            return
+        fragments = self.rx_css_split.split(result[0].strip())[1:]
+        while fragments:
+            asset_id = fragments.pop(0)
+            asset = next(asset for asset in sass if asset.id == asset_id)
+            asset.content = fragments.pop(0)
+            if asset.url:
+                # TODO: write in ir.attachment for debug mode
+                pass
+
 class WebAsset(object):
+    html_url = '%s'
+
     def __init__(self, bundle, inline=None, url=None, cr=None, uid=SUPERUSER_ID):
+        self.id = str(uuid.uuid4())
         self.bundle = bundle
         self.inline = inline
         self.url = url
@@ -1163,6 +1229,9 @@ class WebAsset(object):
                     self._ir_attach = attach[0]
                 except Exception:
                     raise AssetNotFound(url=self.url)
+
+    def to_html():
+        raise NotImplementedError()
 
     @lazy_property
     def last_modified(self):
@@ -1200,9 +1269,13 @@ class WebAsset(object):
     def minify(self):
         return self.content
 
+    def with_header(self, content):
+        location = self.url or "Inline in bundle '%s'" % self.bundle.xmlid
+        return '\n/* %s */\n%s' % (location, content)
+
 class JavascriptAsset(WebAsset):
     def minify(self):
-        return rjsmin(self.content)
+        return self.with_header(rjsmin(self.content))
 
     def _fetch_content(self):
         try:
@@ -1214,9 +1287,9 @@ class JavascriptAsset(WebAsset):
 
     def to_html(self):
         if self.url:
-            return '<script type="text/javascript" src="%s"></script>' % self.url
+            return '<script type="text/javascript" src="%s"></script>' % (self.html_url % self.url)
         else:
-            return '<script type="text/javascript" charset="utf-8">%s</script>' % self.inline
+            return '<script type="text/javascript" charset="utf-8">%s</script>' % self.content
 
 class StylesheetAsset(WebAsset):
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
@@ -1242,17 +1315,9 @@ class StylesheetAsset(WebAsset):
             # remove charset declarations, we only support utf-8
             content = self.rx_charset.sub('', content)
         except AssetNotFound, e:
-            content = """
-                body:before {
-                    background: #ffc;
-                    width: 100%%;
-                    padding: 1em 2%%;
-                    float: left;
-                    clear: both;
-                    font-size: 14px;
-                    content: "Could not find stylesheet '%s' defined in bundle '%s'";
-                }
-            """ % (e.url, self.bundle.xmlid)
+            error = "Could not find stylesheet '%s' in bundle '%s'" % (e.url, self.bundle.xmlid)
+            self.bundle.css_errors.append(error)
+            return ''
         return content
 
     def minify(self):
@@ -1263,13 +1328,22 @@ class StylesheetAsset(WebAsset):
         # space
         content = re.sub(r'\s+', ' ', content)
         content = re.sub(r' *([{}]) *', r'\1', content)
-        return content
+        return self.with_header(content)
 
     def to_html(self):
         if self.url:
-            return '<link rel="stylesheet" href="%s" type="text/css"/>' % self.url
+            return '<link rel="stylesheet" href="%s" type="text/css"/>' % (self.html_url % self.url)
         else:
-            return '<style type="text/css">%s</style>' % self.inline
+            return '<style type="text/css">%s</style>' % self.content
+
+class SassAsset(StylesheetAsset):
+    html_url = '%s.css'
+
+    def minify(self):
+        return self.with_header(self.content)
+
+    def get_source(self):
+        return "/*! %s */\n%s" % (self.id, textwrap.dedent(self.content))
 
 def rjsmin(script):
     """ Minify js with a clever regex.
