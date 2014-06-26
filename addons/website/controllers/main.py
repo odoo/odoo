@@ -347,11 +347,15 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route(['/website/get_theme_customize'], type='json', auth="public", website=True)
     def get_theme_customize(self, xml_ids):
         view = request.registry["ir.ui.view"]
-        datas = []
+        enable = []
+        disable = []
         ids = self.get_view_ids(xml_ids)
         for v in view.browse(request.cr, request.uid, ids, context=request.context):
-            datas.append([v.xml_id, v.application])
-        return datas
+            if v.application != "disabled":
+                enable.append(v.xml_id)
+            else:
+                disable.append(v.xml_id)
+        return [enable, disable]
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
     def theme_customize(self, enable, disable):

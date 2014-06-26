@@ -3,6 +3,7 @@
 
     function theme_customize () {
         openerp.jsonRpc('/website/theme_customize_modal', 'call').then(function (modal) {
+            $('#theme_customize_modal, style#theme_style_assets').remove();
             var $modal = $(modal);
             $modal.appendTo("body").modal({backdrop: false});
             $modal.on('hidden.bs.modal', function () {
@@ -17,10 +18,17 @@
                 var xml_ids = [];
                 $inputs.each(function () {
                     if ($(this).data('xmlid') && $(this).data('xmlid').length) {
-                        xml_ids.push($(this).data('xmlid'));
+                        xml_ids = xml_ids.concat($(this).data('xmlid').split(","));
                     }
                 });
                 return xml_ids;
+            }
+            // force the browse to re-compute the stylesheets
+            function stylesheet() {
+                $('body').css("margin-top", "0.1px");
+                setTimeout(function () {
+                    $('body').css("margin-top", "0px");
+                }, 0);
             }
 
             function update_style(enable, disable, reload) {
@@ -29,17 +37,17 @@
                         'enable': enable,
                         'disable': disable
                     });
-                if (!reload) {
+                var $assets = $('link[href*=".assets_"]');
+                if (!reload && $assets.size()) {
                     req.then(function () {
-                        var $style = $('style#theme_style_assets_frontend');
-                        if (!$style.size()) {
-                            $style = $('<style id="theme_style_assets_frontend">').appendTo('head');
-                        }
-                        $.get('/web/css/website.assets_frontend?'+new Date().getTime(), function (css) {
-                            $('head link[href^="/web/css/website.assets_frontend"]').attr("disabled", false).remove();
-                            $style.html(css);
-                            $modal.removeClass("loading");
+                        $assets.each(function () {
+                            var href = $(this).attr("href").split("?")[0]+"?v="+new Date().getTime();
+                            var $asset = $('<link rel="stylesheet" href="'+href+'"/>');
+                            $asset.attr("onload", "$(this).prev().attr('disable', true).remove();");
+                            $(this).after($asset);
                         });
+                        $modal.removeClass("loading");
+                        stylesheet();
                     });
                 } else {
                     setTimeout(function () {
@@ -117,19 +125,15 @@
             });
 
             // todo call with all data-xmlid
+            var $inputs = $("input[data-xmlid]");
             openerp.jsonRpc('/website/get_theme_customize', 'call', {
-                    'xml_ids': get_xml_ids($("input[data-xmlid]"))
-                }).then(function (xmls) {
-                    var removed = [];
-                    _.each(xmls, function (xml) {
-                        var $input = $modal.find('[data-xmlid="'+xml[0]+'"]');
-                        if($input.size() && xml[1] !== "disabled") {
-                            $input.attr("checked", true).change();
+                    'xml_ids': get_xml_ids($inputs)
+                }).then(function (data) {
+                    $inputs.each(function () {
+                        if (!_.difference(get_xml_ids($(this)), data[0]).length) {
+                            $(this).attr("checked", true).change();
                         }
                     });
-                    if (removed.length) {
-                        update_style([], removed);
-                    }
                     run = true;
                 });
         });
