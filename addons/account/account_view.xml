@@ -1675,7 +1675,7 @@
                 <form string="Payment Term">
                     <group>
                         <group string="Amount Computation">
-                            <field name="value"/>
+                            <field name="value" widget="radio" nolabel="1" colspan="4"/>
                             <label for="value_amount" string="Amount To Pay"  attrs="{'invisible':[('value','=','balance')]}"/>
                             <div attrs="{'invisible':[('value','=','balance')]}">
                                 <field name="value_amount" class="oe_inline"/>

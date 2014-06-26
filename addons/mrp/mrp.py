@@ -195,7 +195,7 @@ class mrp_bom(osv.osv):
         'name': fields.char('Name'),
         'code': fields.char('Reference', size=16),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
-        'type': fields.selection([('normal', 'Normal'), ('phantom', 'Set')], 'BoM Type', required=True,
+        'type': fields.selection([('normal','Manufacture this product as a normal bill of material'),('phantom','Sell and ship this product as a set of components(phantom)')], 'BoM Type', required=True,
                 help= "Set: When processing a sales order for this product, the delivery order will contain the raw materials, instead of the finished product."),
         'position': fields.char('Internal Reference', help="Reference to a position in an external plan."),
         'product_tmpl_id': fields.many2one('product.template', 'Product', required=True),
