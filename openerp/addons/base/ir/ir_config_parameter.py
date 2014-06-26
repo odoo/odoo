@@ -64,7 +64,8 @@ class ir_config_parameter(osv.osv):
             # force=True skips search and always performs the 'if' body (because ids=False)
             ids = not force and self.search(cr, SUPERUSER_ID, [('key','=',key)])
             if not ids:
-                self.set_param(cr, SUPERUSER_ID, key, func()[0], groups=func()[1])
+                value, groups = func()
+                self.set_param(cr, SUPERUSER_ID, key, value, groups=groups)
 
 
     def get_param(self, cr, uid, key, default=False, context=None):
