@@ -166,6 +166,8 @@ class view(osv.osv):
   different model than this one), then this view's inheritance specs
   (<xpath/>) are applied, and the result is used as if it were this view's
   actual arch.
+* if inherit_id is False/Null, if this view is requested, Odoo will ignore
+  any "primary" node in its inheritance tree and any child of such an node.
 """),
         'application': fields.selection([
                 ('always', "Always applied"),
