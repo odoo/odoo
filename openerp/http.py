@@ -1266,7 +1266,10 @@ class Root(object):
             request = self.get_request(httprequest)
 
             def _dispatch_nodb():
-                func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
+                try:
+                    func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
+                except werkzeug.exceptions.HTTPException, e:
+                    return request._handle_exception(e)
                 request.set_handler(func, arguments, "none")
                 result = request.dispatch()
                 return result

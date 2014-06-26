@@ -42,7 +42,7 @@ class web_linkedin_settings(osv.osv_memory):
     _inherit = 'sale.config.settings'
     _columns = {
         'api_key': fields.char(string="API Key", size=50),
-        'server_domain': fields.char(size=100),
+        'server_domain': fields.char(),
     }
     
     def get_default_linkedin(self, cr, uid, fields, context=None):
@@ -85,8 +85,8 @@ class web_linkedin_fields(osv.Model):
         return res
 
     _columns = {
-        'linkedin_id': fields.char(string="LinkedIn ID", size=50),
-        'linkedin_url': fields.char(string="LinkedIn url", size=100, store=True),
+        'linkedin_id': fields.char(string="LinkedIn ID"),
+        'linkedin_url': fields.char(string="LinkedIn url", store=True),
         'linkedin_public_url': fields.function(_get_url, type='text', string="LinkedIn url", 
             help="This url is set automatically when you join the partner with a LinkedIn account."),
     }

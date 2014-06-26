@@ -39,7 +39,7 @@ class account_budget_post(osv.osv):
     _description = "Budgetary Position"
     _columns = {
         'code': fields.char('Code', size=64, required=True),
-        'name': fields.char('Name', size=256, required=True),
+        'name': fields.char('Name', required=True),
         'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts'),
         'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -56,7 +56,7 @@ class crossovered_budget(osv.osv):
     _description = "Budget"
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, states={'done':[('readonly',True)]}),
+        'name': fields.char('Name', required=True, states={'done':[('readonly',True)]}),
         'code': fields.char('Code', size=16, required=True, states={'done':[('readonly',True)]}),
         'creating_user_id': fields.many2one('res.users', 'Responsible User'),
         'validating_user_id': fields.many2one('res.users', 'Validate User', readonly=True),

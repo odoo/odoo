@@ -44,7 +44,7 @@ class crm_phonecall_report(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'nbr': fields.integer('# of Cases', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'duration': fields.float('Duration', digits=(16,2),readonly=True, group_operator="avg"),

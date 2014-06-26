@@ -28,8 +28,8 @@ class outlook_installer(osv.osv_memory):
     _name = 'outlook.installer'
     _inherit = 'res.config.installer'
     _columns = {
-        'plugin32': fields.char('Outlook Plug-in 32bits', size=256, readonly=True, help="Outlook plug-in file. Save this file and install it in Outlook."),
-        'plugin64': fields.char('Outlook Plug-in 64bits', size=256, readonly=True, help="Outlook plug-in file. Save this file and install it in Outlook."),
+        'plugin32': fields.char('Outlook Plug-in 32bits', readonly=True, help="Outlook plug-in file. Save this file and install it in Outlook."),
+        'plugin64': fields.char('Outlook Plug-in 64bits', readonly=True, help="Outlook plug-in file. Save this file and install it in Outlook."),
     }
 
     def default_get(self, cr, uid, fields, context=None):

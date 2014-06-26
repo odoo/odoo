@@ -56,7 +56,7 @@ class pos_config(osv.osv):
         return result
 
     _columns = {
-        'name' : fields.char('Point of Sale Name', size=32, select=1,
+        'name' : fields.char('Point of Sale Name', select=1,
              required=True, help="An internal identification of the point of sale"),
         'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 
              'pos_config_id', 'journal_id', 'Available Payment Methods',
@@ -227,7 +227,7 @@ class pos_session(osv.osv):
                                       domain="[('state', '=', 'active')]",
                                      ),
 
-        'name' : fields.char('Session ID', size=32, required=True, readonly=True),
+        'name' : fields.char('Session ID', required=True, readonly=True),
         'user_id' : fields.many2one('res.users', 'Responsible',
                                     required=True,
                                     select=1,
@@ -650,7 +650,7 @@ class pos_order(osv.osv):
         return super(pos_order, self).copy(cr, uid, id, d, context=context)
 
     _columns = {
-        'name': fields.char('Order Ref', size=64, required=True, readonly=True),
+        'name': fields.char('Order Ref', required=True, readonly=True),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
@@ -684,7 +684,7 @@ class pos_order(osv.osv):
         'location_id': fields.related('session_id', 'config_id', 'stock_location_id', string="Location", type='many2one', store=True, relation='stock.location'),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
-        'pos_reference': fields.char('Receipt Ref', size=64, readonly=True),
+        'pos_reference': fields.char('Receipt Ref', readonly=True),
         'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='account.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
     }
 
@@ -1256,8 +1256,8 @@ class pos_order_line(osv.osv):
 
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'name': fields.char('Line No', size=32, required=True),
-        'notice': fields.char('Discount Notice', size=128),
+        'name': fields.char('Line No', required=True),
+        'notice': fields.char('Discount Notice'),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
         'price_unit': fields.float(string='Unit Price', digits_compute=dp.get_precision('Account')),
         'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoS')),
@@ -1288,7 +1288,7 @@ import io, StringIO
 class ean_wizard(osv.osv_memory):
     _name = 'pos.ean_wizard'
     _columns = {
-        'ean13_pattern': fields.char('Reference', size=32, required=True, translate=True),
+        'ean13_pattern': fields.char('Reference', size=13, required=True, translate=True),
     }
     def sanitize_ean13(self, cr, uid, ids, context):
         for r in self.browse(cr,uid,ids):

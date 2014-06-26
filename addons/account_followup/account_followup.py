@@ -49,7 +49,7 @@ class followup_line(osv.osv):
     _name = 'account_followup.followup.line'
     _description = 'Follow-up Criteria'
     _columns = {
-        'name': fields.char('Follow-Up Action', size=64, required=True),
+        'name': fields.char('Follow-Up Action', required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of follow-up lines."),
         'delay': fields.integer('Due Days', help="The number of days after the due date of the invoice to wait before sending the reminder.  Could be negative if you want to send a polite alert beforehand.", required=True),
         'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),

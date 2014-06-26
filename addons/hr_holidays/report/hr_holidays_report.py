@@ -27,10 +27,10 @@ class hr_holidays_remaining_leaves_user(osv.osv):
     _description = "Total holidays by type"
     _auto = False
     _columns = {
-        'name': fields.char('Employee', size=64),
+        'name': fields.char('Employee'),
         'no_of_leaves': fields.integer('Remaining leaves'),
         'user_id': fields.many2one('res.users', 'User'),
-        'leave_type': fields.char('Leave Type', size=64),
+        'leave_type': fields.char('Leave Type'),
         }
 
     def init(self, cr):

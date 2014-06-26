@@ -208,7 +208,7 @@ class event_ticket(osv.osv):
         
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'event_id': fields.many2one('event.event', "Event", required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[("event_type_id", "!=", False)]),
         'registration_ids': fields.one2many('event.registration', 'event_ticket_id', 'Registrations'),

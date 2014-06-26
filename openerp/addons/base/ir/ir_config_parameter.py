@@ -46,7 +46,7 @@ class ir_config_parameter(osv.osv):
     _rec_name = 'key'
 
     _columns = {
-        'key': fields.char('Key', size=256, required=True, select=1),
+        'key': fields.char('Key', required=True, select=1),
         'value': fields.text('Value', required=True),
         'group_ids': fields.many2many('res.groups', 'ir_config_parameter_groups_rel', 'icp_id', 'group_id', string='Groups'),
     }

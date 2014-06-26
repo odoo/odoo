@@ -56,7 +56,7 @@ class payroll_advice(osv.osv):
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice'
     _columns = {
-        'name':fields.char('Name', size=32, readonly=True, required=True, states={'draft': [('readonly', False)]},),
+        'name':fields.char('Name', readonly=True, required=True, states={'draft': [('readonly', False)]},),
         'note': fields.text('Description'),
         'date': fields.date('Date', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Advice Date is used to search Payslips"),
         'state':fields.selection([
@@ -64,9 +64,9 @@ class payroll_advice(osv.osv):
             ('confirm', 'Confirmed'),
             ('cancel', 'Cancelled'),
         ], 'Status', select=True, readonly=True),
-        'number':fields.char('Reference', size=16, readonly=True),
+        'number':fields.char('Reference', readonly=True),
         'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
-        'chaque_nos':fields.char('Cheque Numbers', size=256),
+        'chaque_nos':fields.char('Cheque Numbers'),
         'neft': fields.boolean('NEFT Transaction', help="Check this box if your company use online transfer for salary"),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank from which the salary is going to be paid"),

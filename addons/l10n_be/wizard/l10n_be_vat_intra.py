@@ -46,8 +46,8 @@ class partner_vat_intra(osv.osv_memory):
         return self.pool.get('res.country').search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])
 
     _columns = {
-        'name': fields.char('File Name', size=32),
-        'period_code': fields.char('Period Code',size = 6,required = True, help = '''This is where you have to set the period code for the intracom declaration using the format: ppyyyy
+        'name': fields.char('File Name'),
+        'period_code': fields.char('Period Code', size=6, required=True, help='''This is where you have to set the period code for the intracom declaration using the format: ppyyyy
       PP can stand for a month: from '01' to '12'.
       PP can stand for a trimester: '31','32','33','34'
           The first figure means that it is a trimester,
@@ -59,9 +59,9 @@ class partner_vat_intra(osv.osv_memory):
         'period_ids': fields.many2many('account.period', 'account_period_rel', 'acc_id', 'period_id', 'Period (s)', help = 'Select here the period(s) you want to include in your intracom declaration'),
         'tax_code_id': fields.many2one('account.tax.code', 'Company', domain=[('parent_id', '=', False)], help="Keep empty to use the user's company", required=True),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
-        'mand_id' : fields.char('Reference', size=14, help="Reference given by the Representative of the sending company."),
-        'msg': fields.text('File created', size=14, readonly=True),
-        'no_vat': fields.text('Partner With No VAT', size=14, readonly=True, help="The Partner whose VAT number is not defined  and they are not included in XML File."),
+        'mand_id' : fields.char('Reference', help="Reference given by the Representative of the sending company."),
+        'msg': fields.text('File created', readonly=True),
+        'no_vat': fields.text('Partner With No VAT', readonly=True, help="The Partner whose VAT number is not defined and they are not included in XML File."),
         'file_save' : fields.binary('Save File', readonly=True),
         'country_ids': fields.many2many('res.country', 'vat_country_rel', 'vat_id', 'country_id', 'European Countries'),
         'comments': fields.text('Comments'),
@@ -225,7 +225,7 @@ class partner_vat_intra(osv.osv_memory):
         data_head = """<?xml version="1.0" encoding="ISO-8859-1"?>
 <ns2:IntraConsignment xmlns="http://www.minfin.fgov.be/InputCommon" xmlns:ns2="http://www.minfin.fgov.be/IntraConsignment" IntraListingsNbr="1">
     <ns2:Representative>
-        <RepresentativeID identificationType="NVAT" issuedBy="%(issued_by)s">%(company_vat)s</RepresentativeID>
+        <RepresentativeID identificationType="NVAT" issuedBy="%(issued_by)s">%(vatnum)s</RepresentativeID>
         <Name>%(company_name)s</Name>
         <Street>%(street)s</Street>
         <PostCode>%(post_code)s</PostCode>

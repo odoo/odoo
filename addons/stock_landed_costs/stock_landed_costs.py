@@ -80,7 +80,7 @@ class stock_landed_cost(osv.osv):
         return {'value': result}
 
     _columns = {
-        'name': fields.char('Name', size=256, track_visibility='always', readonly=True),
+        'name': fields.char('Name', track_visibility='always', readonly=True),
         'date': fields.date('Date', required=True, states={'done': [('readonly', True)]}, track_visibility='onchange'),
         'picking_ids': fields.many2many('stock.picking', string='Pickings', states={'done': [('readonly', True)]}),
         'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines', states={'done': [('readonly', True)]}),
@@ -260,7 +260,7 @@ class stock_landed_cost_lines(osv.osv):
         return {'value': result}
 
     _columns = {
-        'name': fields.char('Description', size=256),
+        'name': fields.char('Description'),
         'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),

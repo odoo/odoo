@@ -70,7 +70,7 @@ class account_analytic_plan(osv.osv):
     _name = "account.analytic.plan"
     _description = "Analytic Plan"
     _columns = {
-        'name': fields.char('Analytic Plan', size=64, required=True, select=True),
+        'name': fields.char('Analytic Plan', required=True, select=True),
         'plan_ids': fields.one2many('account.analytic.plan.line', 'plan_id', 'Analytic Plans'),
     }
 
@@ -81,7 +81,7 @@ class account_analytic_plan_line(osv.osv):
     _order = "sequence, id"
     _columns = {
         'plan_id': fields.many2one('account.analytic.plan','Analytic Plan',required=True),
-        'name': fields.char('Axis Name', size=64, required=True, select=True),
+        'name': fields.char('Axis Name', required=True, select=True),
         'sequence': fields.integer('Sequence'),
         'root_analytic_id': fields.many2one('account.analytic.account', 'Root Account', help="Root account of this plan.", required=False),
         'min_required': fields.float('Minimum Allowed (%)'),
@@ -97,7 +97,7 @@ class account_analytic_plan_instance(osv.osv):
     _name = "account.analytic.plan.instance"
     _description = "Analytic Plan Instance"
     _columns = {
-        'name': fields.char('Analytic Distribution', size=64),
+        'name': fields.char('Analytic Distribution'),
         'code': fields.char('Distribution Code', size=16),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal' ),
         'account_ids': fields.one2many('account.analytic.plan.instance.line', 'plan_id', 'Account Id'),

@@ -22,7 +22,7 @@
         </record>
         <record forcecreate="True" id="default_valuation" model="ir.property">
             <field name="name">Valuation Property</field>
-            <field name="fields_id" search="[('model', '=', 'product.product'), ('name', '=', 'valuation')]"/>
+            <field name="fields_id" search="[('model', '=', 'product.template'), ('name', '=', 'valuation')]"/>
             <field name="value">manual_periodic</field>
             <field name="type">selection</field>
         </record>
