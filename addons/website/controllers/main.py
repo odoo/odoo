@@ -157,31 +157,6 @@ class Website(openerp.addons.web.controllers.main.Home):
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
 
-    @http.route('/website/theme_change', type='http', auth="user", website=True)
-    def theme_change(self, theme_id=False, **kwargs):
-        imd = request.registry['ir.model.data']
-        Views = request.registry['ir.ui.view']
-
-        _, theme_template_id = imd.get_object_reference(
-            request.cr, request.uid, 'website', 'theme')
-        views = Views.search(request.cr, request.uid, [
-            ('inherit_id', '=', theme_template_id),
-            ('application', '=', 'enabled'),
-        ], context=request.context)
-        Views.write(request.cr, request.uid, views, {
-            'application': 'disabled',
-        }, context=request.context)
-
-        if theme_id:
-            module, xml_id = theme_id.split('.')
-            _, view_id = imd.get_object_reference(
-                request.cr, request.uid, module, xml_id)
-            Views.write(request.cr, request.uid, [view_id], {
-                'application': 'enabled'
-            }, context=request.context)
-
-        return request.render('website.themes', {'theme_changed': True})
-
     @http.route(['/website/snippets'], type='json', auth="public", website=True)
     def snippets(self):
         return request.website._render('website.snippets')

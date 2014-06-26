@@ -453,11 +453,12 @@ $infobar_height: 20px
 /* ---- CUSTOMIZE THEME ---- {{{ */
 
 #theme_customize_modal
-    top: 75px
     overflow: visible
     z-index: 1020
+    background: transparent
     .modal-dialog
-        width: 300px
+        top: 75px
+        width: 410px
         margin: 0
         position: absolute
         right: 10px
@@ -465,8 +466,26 @@ $infobar_height: 20px
         width: 100%
     label
         display: block
+        img
+            width: 120px
+            height: 70px
+            margin: 2px
+            border: 1px solid rgba(136, 136, 136, 0.5)
+        input
+            display: none
     label.checked
-        background: #dff0d8
+        background: #00FF00
+    .loading_backdrop
+        display: none
+    &.loading
+        .loading_backdrop
+            display: block
+            width: 100%
+            height: 100%
+            background: #000
+            opacity: 0.3
+            position: absolute
+            z-index: 1
 
 // }}}
 

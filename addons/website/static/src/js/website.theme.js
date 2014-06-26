@@ -11,6 +11,8 @@
             $("body").removeClass("modal-open");
 
             var time;
+            var $style;
+            var $newstyle;
             $modal.on('change', 'input', function () {
                 var $option = $(this), $group, checked = $(this).is(":checked");
                 if (checked) {
@@ -52,14 +54,21 @@
                             'unable': unable,
                             'disable': disable
                         }).then(function () {
-                            var $style = $('head link[href^="/web/css/website.assets_frontend"]');
-                            if ($style.size()) {
-                                $style.attr("href", "/web/css/website.assets_frontend?" + new Date().getTime());
-                            } else {
-                                $('head').append('<link href="/web/css/website.assets_frontend" rel="stylesheet">');
-                            }
+                            $modal.addClass("loading");
+                            $style = $('head link[href^="/web/css/website.assets_frontend"]');
+                            $newstyle = $('<link href="/web/css/website.assets_frontend?"'+new Date().getTime()+' rel="stylesheet">');
+                            $newstyle.attr("onload", "$('#theme_customize_modal').data('callback')();");
+                            $('head').append($newstyle);
                         });
                 },0);
+
+                $modal.data("callback", function () {
+                    if ($style.size()) {
+                        $style.attr("href", $newstyle.attr("href"));
+                        $newstyle.remove();
+                    }
+                    $modal.removeClass("loading");
+                });
             });
         });
     });
