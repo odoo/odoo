@@ -1632,13 +1632,12 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             context: context
         }).then(function (results) {
             if (_.isEmpty(results)) { return null; }
-            return [{label: self.attrs.string}].concat(
-                _(results).map(function (result) {
-                    return {
-                        label: _.escape(result[1]),
-                        facet: facet_from(self, result)
-                    };
-                }));
+            return _(results).map(function (result) {
+                return {
+                    label: _.escape(result[1]),
+                    facet: facet_from(self, result)
+                };
+            });
         });
     },
     facet_for: function (value) {
@@ -2436,7 +2435,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
     expand: function () {
         var self = this;
         this.current_result.expand(this.get_search_string()).then(function (results) {
-            (results || [{label: '(no result)'}]).forEach(function (result) {
+            (results || [{label: '(no result)'}]).reverse().forEach(function (result) {
                 result.indent = true;
                 var $li = self.make_list_item(result);
                 self.current_result.$el.after($li);
