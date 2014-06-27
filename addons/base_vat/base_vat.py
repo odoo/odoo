@@ -130,16 +130,8 @@ class res_partner(osv.osv):
                 return False
         return True
 
-    def onchange_apply_fiscal(self, cr, uid, ids, country_id, vat=None, context=None):
-        value = {'vat_subjected': bool(vat)}
-        fiscal_position_id = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, country_id, vat, context=context)
-        if fiscal_position_id:
-            value['property_account_position'] = fiscal_position_id
-        return {'value': value}
-
-    _columns = {
-        'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
-    }
+    def vat_change(self, cr, uid, ids, value, context=None):
+        return {'value': {'vat_subjected': bool(value)}}
 
     def _commercial_fields(self, cr, uid, context=None):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['vat_subjected']
@@ -282,6 +274,5 @@ class res_partner(osv.osv):
             # 10 is not a valid check digit for an organization number
             return False
         return check == int(vat[8])
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

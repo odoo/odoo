@@ -422,11 +422,6 @@ class website_sale(http.Controller):
         if partner_id and request.website.partner_id.id != partner_id:
             orm_partner.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
-            # search and apply a fiscal position
-            billing_info.update(orm_partner.onchange_apply_fiscal(cr, SUPERUSER_ID, [],
-                billing_info.get('country_id'),
-                billing_info.get('vat'), context=context)['value'])
-            
             # create partner
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
 
@@ -444,7 +439,9 @@ class website_sale(http.Controller):
             'partner_invoice_id': partner_id,
             'partner_shipping_id': shipping_id or partner_id
         }
-        order_info.update(registry.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
+        order_info.update(order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
+        order_info.update(order_obj.onchange_delivery_id(cr, SUPERUSER_ID, [], order.company_id.id, partner_id, shipping_id or partner_id, context=context)['value'])
+
         order_info.pop('user_id')
 
         order_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)

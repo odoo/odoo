@@ -73,16 +73,24 @@ class account_fiscal_position(osv.osv):
                 break
         return account_id
 
-    def get_fiscal_position(self, cr, uid, country_id, vat=None, context=None):
+    def get_fiscal_position(self, cr, uid, country_id, vat_subjected=False, context=None):
         fiscal_position_ids = self.search(cr, uid, [
             ('apply_onchange', '=', True),
-            '|', ('vat_required', '=', False), ('vat_required', '=', bool(vat)),
+            '|', ('vat_required', '=', False), ('vat_required', '=', bool(vat_subjected)),
             '|', ('country_id', '=', None), ('country_id', '=', country_id),
             '|', ('country_group_id', '=', None), ('country_group_id.country_ids', '=', country_id)], context=context)
         if fiscal_position_ids:
             return fiscal_position_ids[0]
         return None
 
+    def get_sale_fiscal_position(self, cr, uid, company_id, partner_id, delivery_id, context=None):
+        # todo: improve and use the fiscal position specific rules
+        part_obj = self.pool['res.partner']
+        part = part_obj.browse(cr, uid, partner_id, context=context)
+        if part.property_account_position:
+            return part.property_account_position.id
+        delivery = part_obj.browse(cr, uid, delivery_id, context=context)
+        return self.get_fiscal_position(cr, uid, delivery.country_id.id, part.vat_subjected, context=context)
 
 class account_fiscal_position_tax(osv.osv):
     _name = 'account.fiscal.position.tax'
@@ -223,6 +231,7 @@ class res_partner(osv.osv):
         return self.write(cr, uid, ids, {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     _columns = {
+        'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement."),
         'credit': fields.function(_credit_debit_get,
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
@@ -269,13 +278,6 @@ class res_partner(osv.osv):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + \
             ['debit_limit', 'property_account_payable', 'property_account_receivable', 'property_account_position',
              'property_payment_term', 'property_supplier_payment_term', 'last_reconciliation_date']
-
-    def onchange_apply_fiscal(self, cr, uid, ids, country_id, vat=None, context=None):
-        value = {}
-        fiscal_position_id = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, country_id, vat, context=context)
-        if fiscal_position_id:
-            value['property_account_position'] = fiscal_position_id
-        return {'value': value}
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
