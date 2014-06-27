@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <template id="ccavenue_acquirer_button">
+            <form t-if="acquirer.merchant_id" t-att-action="tx_url" method="post" target="_self">
+                <input type="hidden" name="Merchant_Id" t-att-value="tx_values['Merchant_Id']"/>
+                <input type="hidden" name="WorkingKey" t-att-value="tx_values['WorkingKey']"/>
+                <input type="hidden" name="Amount" t-att-value="tx_values['Amount'] or '0.0'"/>
+                <input type="hidden" name="Order_Id" t-att-value="tx_values['Order_Id']"/>
+                <input type="hidden" name="Currency" t-att-value="tx_values['Currency']"/>
+                <input type="hidden" name="TxnType" t-att-value="tx_values['TxnType']"/>
+                <input type="hidden" name="actionID" t-att-value="tx_values['actionID']"/>
+                <input type="hidden" name="billing_cust_name" t-att-value="tx_values['billing_cust_name']"/>
+                <input type="hidden" name="billing_cust_address" t-att-value="tx_values['billing_cust_address']"/>
+                <input type="hidden" name="billing_cust_email" t-att-value="tx_values['billing_cust_email']"/>
+                <!-- URLs -->
+                <input t-if="tx_values.get('Redirect_Url')" type='hidden' name='Redirect_Url'
+                    t-att-value="tx_values.get('Redirect_Url')"/>
+                <!-- submit -->
+                <button type="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_ccavenue/static/src/img/ccavenue_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+                </button>
+            </form>
+        </template>
+
+    </data>
+</openerp>

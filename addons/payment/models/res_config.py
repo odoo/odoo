@@ -19,4 +19,7 @@ class AccountPaymentConfig(osv.TransientModel):
         'module_payment_buckaroo': fields.boolean(
             'Manage Payments Using Buckaroo',
             help='-It installs the module payment_buckaroo.'),
+        'module_payment_ccavenue': fields.boolean(
+            'Manage Payments Using CCAvenue',
+            help='-It installs the module payment_ccavenue.'),
     }
