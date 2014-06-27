@@ -2337,7 +2337,6 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = self.view.datarecord.id;
         this.states = self.prepare_dropdown_selection();;
         this.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
@@ -2347,10 +2346,10 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
         var li = $(e.target).closest( "li" );
         if (li.length) {
             var value = {};
+            var record_id = self.view.datarecord.id;
             value[self.name] = String(li.data('value'));
-            self.record_id = self.view.datarecord.id;
-            if (self.record_id) {
-                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
+            if (record_id) {
+                return self.view.dataset._model.call('write', [[record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {
                 return self.view.on_button_save().done(function(result) {
                     if (result) {
@@ -2388,7 +2387,6 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = self.view.datarecord.id;
         this.priorities = self.prepare_priority();
         this.$el.html(QWeb.render("Priority", {'widget': this}));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
@@ -2398,9 +2396,10 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
         var li = $(e.target).closest( "li" );
         if (li.length) {
             var value = {};
+            var record_id = self.view.datarecord.id;
             value[self.name] = String(li.data('value'));
-            if (self.record_id) {
-                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
+            if (record_id) {
+                return self.view.dataset._model.call('write', [[record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {
                 return self.view.on_button_save().done(function(result) {
                     if (result) {

@@ -1,0 +1,49 @@
+diff --git a/addons/web/static/src/css/base.css b/addons/web/static/src/css/base.css
+index b234e27..7585316 100644
+--- a/addons/web/static/src/css/base.css
++++ b/addons/web/static/src/css/base.css
+@@ -483,14 +483,6 @@
+   padding-top: 8px;
+   margin-right: 4px !important;
+ }
+-.openerp .btn-group.kanban_state .dropdown-menu {
+-  min-width: 100%;
+-  padding-right: 10px !important;
+-}
+-.openerp .btn-group.kanban_state .dropdown-menu li a, .openerp .btn-group.kanban_state .dropdown-menu li a:hover, .openerp .btn-group.kanban_state .dropdown-menu li a:focus {
+-  padding-left: 5px;
+-  padding-right: 0px;
+-}
+ .openerp .btn-group.kanban_state a {
+   color: #333333;
+ }
+diff --git a/addons/web/static/src/css/base.sass b/addons/web/static/src/css/base.sass
+index 093ebf6..c00a9af 100644
+--- a/addons/web/static/src/css/base.sass
++++ b/addons/web/static/src/css/base.sass
+@@ -442,12 +442,6 @@ $sheet-padding: 16px
+     .btn-group.kanban_state
+         padding-top: 8px
+         margin-right: 4px !important
+-        .dropdown-menu
+-            min-width: 100%
+-            padding-right: 10px !important
+-        .dropdown-menu li a, .dropdown-menu li a:hover, .dropdown-menu li a:focus
+-            padding-left: 5px
+-            padding-right: 0px
+         a
+             color: #333333
+     // }}}
+diff --git a/addons/web/static/src/xml/base.xml b/addons/web/static/src/xml/base.xml
+index 913783a..19654b2 100644
+--- a/addons/web/static/src/xml/base.xml
++++ b/addons/web/static/src/xml/base.xml
+@@ -1050,7 +1050,7 @@
+                 </a>
+             </a>
+         </t>
+-        <ul class="dropdown-menu state" role="menu">
++        <ul class="dropdown-menu" role="menu">
+             <t t-foreach="widget.states" t-as="rec">
+                 <t t-if="widget.get('value') !== rec.name">
+                     <li class="oe_legend" t-att-data-value="rec.name" ><a href="#">
