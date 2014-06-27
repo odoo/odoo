@@ -30,8 +30,8 @@ class event_type(osv.osv):
     _name = 'event.type'
     _description = __doc__
     _columns = {
-        'name': fields.char('Event Type', size=64, required=True),
-        'default_reply_to': fields.char('Default Reply-To', size=64,help="The email address of the organizer which is put in the 'Reply-To' of all emails sent automatically at event or registrations confirmation. You can also put your email address of your mail gateway if you use one." ),
+        'name': fields.char('Event Type', required=True),
+        'default_reply_to': fields.char('Default Reply-To', size=64, help="The email address of the organizer which is put in the 'Reply-To' of all emails sent automatically at event or registrations confirmation. You can also put your email address of your mail gateway if you use one." ),
         'default_email_event': fields.many2one('email.template','Event Confirmation Email', help="It will select this default confirmation event mail value when you choose this event"),
         'default_email_registration': fields.many2one('email.template','Registration Confirmation Email', help="It will select this default confirmation registration mail value when you choose this event"),
         'default_registration_min': fields.integer('Default Minimum Registration', help="It will select this default minimum value when you choose this event"),
@@ -174,7 +174,7 @@ class event_event(osv.osv):
         return [(x, x) for x in pytz.all_timezones]
 
     _columns = {
-        'name': fields.char('Event Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
+        'name': fields.char('Event Name', required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
         'type': fields.many2one('event.type', 'Type of Event', readonly=False, states={'done': [('readonly', True)]}),
         'seats_max': fields.integer('Maximum Avalaible Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
@@ -299,14 +299,14 @@ class event_registration(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _columns = {
         'id': fields.integer('ID'),
-        'origin': fields.char('Source Document', size=124,readonly=True,help="Reference of the sales order which created the registration"),
+        'origin': fields.char('Source Document', readonly=True,help="Reference of the sales order which created the registration"),
         'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'date_closed': fields.datetime('Attended Date', readonly=True),
         'date_open': fields.datetime('Registration Date', readonly=True),
-        'reply_to': fields.related('event_id','reply_to',string='Reply-to Email', type='char', size=128, readonly=True,),
+        'reply_to': fields.related('event_id','reply_to',string='Reply-to Email', type='char', readonly=True,),
         'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('model','=',_name)]),
         'event_end_date': fields.related('event_id','date_end', type='datetime', string="Event End Date", readonly=True),
         'event_begin_date': fields.related('event_id', 'date_begin', type='datetime', string="Event Start Date", readonly=True),
@@ -316,10 +316,10 @@ class event_registration(osv.osv):
                                     ('cancel', 'Cancelled'),
                                     ('open', 'Confirmed'),
                                     ('done', 'Attended')], 'Status',
-                                    size=16, readonly=True),
+                                    readonly=True),
         'email': fields.char('Email', size=64),
         'phone': fields.char('Phone', size=64),
-        'name': fields.char('Name', size=128, select=True),
+        'name': fields.char('Name', select=True),
     }
     _defaults = {
         'nb_register': 1,

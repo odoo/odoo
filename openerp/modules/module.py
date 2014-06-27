@@ -384,11 +384,12 @@ class TestStream(object):
         if self.r.match(s):
             return
         first = True
-        for c in s.split('\n'):
+        level = logging.ERROR if s.startswith(('ERROR', 'FAIL', 'Traceback')) else logging.INFO
+        for c in s.splitlines():
             if not first:
                 c = '` ' + c
             first = False
-            self.logger.info(c)
+            self.logger.log(level, c)
 
 current_test = None
 

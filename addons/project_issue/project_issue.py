@@ -23,7 +23,6 @@ from datetime import datetime
 
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.addons.crm import crm
 from openerp.osv import fields, osv, orm
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
@@ -32,7 +31,7 @@ class project_issue_version(osv.Model):
     _name = "project.issue.version"
     _order = "name desc"
     _columns = {
-        'name': fields.char('Version Number', size=32, required=True),
+        'name': fields.char('Version Number', required=True),
         'active': fields.boolean('Active', required=False),
     }
     _defaults = {
@@ -232,7 +231,7 @@ class project_issue(osv.Model):
         return issues
     _columns = {
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Issue', size=128, required=True),
+        'name': fields.char('Issue', required=True),
         'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date', readonly=True,select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
@@ -259,7 +258,7 @@ class project_issue(osv.Model):
         'date_closed': fields.datetime('Closed', readonly=True,select=True),
         'date': fields.datetime('Date'),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
-        'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
+        'channel': fields.char('Channel', help="Communication channel."),
         'categ_ids': fields.many2many('project.category', string='Tags'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
@@ -414,8 +413,10 @@ class project_issue(osv.Model):
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
-        return [issue.project_id.message_get_reply_to()[0] if issue.project_id else False
-                    for issue in self.browse(cr, uid, ids, context=context)]
+        issues = self.browse(cr, SUPERUSER_ID, ids, context=context)
+        project_ids = set([issue.project_id.id for issue in issues if issue.project_id])
+        aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(project_ids), context=context)
+        return dict((issue.id, aliases.get(issue.project_id and issue.project_id.id or 0, False)) for issue in issues)
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(project_issue, self).message_get_suggested_recipients(cr, uid, ids, context=context)

@@ -194,11 +194,11 @@ class purchase_order(osv.osv):
         },
     }
     _columns = {
-        'name': fields.char('Order Reference', size=64, required=True, select=True, help="Unique number of the purchase order, computed automatically when the purchase order is created."),
-        'origin': fields.char('Source Document', size=64,
+        'name': fields.char('Order Reference', required=True, select=True, help="Unique number of the purchase order, computed automatically when the purchase order is created."),
+        'origin': fields.char('Source Document',
             help="Reference of the document that generated this purchase order request; a sales order or an internal procurement request."
         ),
-        'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, size=64,
+        'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
             help="Reference of the sales order or bid sent by your supplier. It's mainly used to do the matching when you receive the products as this reference is usually written on the delivery order sent by your supplier."),
         'date_order':fields.date('Order Date', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, select=True, help="Date on which this document has been created."),
         'date_approve':fields.date('Date Approved', readonly=1, select=True, help="Date on which purchase order has been approved"),
@@ -700,6 +700,7 @@ class purchase_order(osv.osv):
             'origin': order.name,
             'route_ids': order.picking_type_id.warehouse_id and [(6, 0, [x.id for x in order.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id':order.picking_type_id.warehouse_id.id,
+            'invoice_state': order.invoice_method == 'picking' and '2binvoiced' or 'none'
         }
 
         diff_quantity = order_line.product_qty
@@ -709,9 +710,10 @@ class purchase_order(osv.osv):
             tmp.update({
                 'product_uom_qty': min(procurement_qty, diff_quantity),
                 'product_uos_qty': min(procurement_qty, diff_quantity),
-                'move_dest_id': procurement.move_dest_id.id,  # blabla
-                'group_id': procurement.group_id.id or group_id,  # blabla to check ca devrait etre bon et groupé dans le meme picking qd meme
+                'move_dest_id': procurement.move_dest_id.id,  #move destination is same as procurement destination
+                'group_id': procurement.group_id.id or group_id,  #move group is same as group of procurements if it exists, otherwise take another group
                 'procurement_id': procurement.id,
+                'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state) or (order.invoice_method == 'picking' and '2binvoiced') or 'none', #dropship case takes from sale
             })
             diff_quantity -= min(procurement_qty, diff_quantity)
             res.append(tmp)
@@ -1299,6 +1301,7 @@ class procurement_order(osv.osv):
                 res[procurement.id] = False
             else:
                 schedule_date = self._get_purchase_schedule_date(cr, uid, procurement, company, context=context)
+                purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context) 
                 line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=context)
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
                 available_draft_po_ids = po_obj.search(cr, uid, [
@@ -1306,6 +1309,10 @@ class procurement_order(osv.osv):
                     ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id), ('dest_address_id', '=', procurement.partner_dest_id.id)], context=context)
                 if available_draft_po_ids:
                     po_id = available_draft_po_ids[0]
+                    po_rec = po_obj.browse(cr, uid, po_id, context=context)
+                    #if the product has to be ordered earlier those in the existing PO, we replace the purchase date on the order to avoid ordering it too late
+                    if datetime.strptime(po_rec.date_order, DEFAULT_SERVER_DATE_FORMAT) > purchase_date:
+                        po_obj.write(cr, uid, [po_id], {'date_order': purchase_date}, context=context)
                     #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
                     available_po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', po_id), ('product_id', '=', line_vals['product_id']), ('product_uom', '=', line_vals['product_uom'])], context=context)
                     if available_po_line_ids:
@@ -1318,7 +1325,6 @@ class procurement_order(osv.osv):
                         po_line_id = po_line_obj.create(cr, SUPERUSER_ID, line_vals, context=context)
                         linked_po_ids.append(procurement.id)
                 else:
-                    purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
                     name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
                     po_vals = {
                         'name': name,
@@ -1363,6 +1369,13 @@ class product_template(osv.Model):
     _name = 'product.template'
     _inherit = 'product.template'
     
+    def _get_buy_route(self, cr, uid, context=None):
+        
+        buy_route = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'purchase.route_warehouse0_buy')
+        if buy_route:
+            return [buy_route]
+        return []
+
     def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         for template in self.browse(cr, uid, ids, context=context):
@@ -1374,6 +1387,7 @@ class product_template(osv.Model):
     }
     _defaults = {
         'purchase_ok': 1,
+        'route_ids': _get_buy_route,
     }
 
 class product_product(osv.Model):
@@ -1451,15 +1465,9 @@ class account_invoice_line(osv.Model):
             readonly=True),
     }
 
-class product_product(osv.osv):
-    _inherit = "product.product"
+class product_template(osv.osv):
+    _inherit = "product.template"
 
-    def _get_buy_route(self, cr, uid, context=None):
-        buy_route = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'purchase', 'route_warehouse0_buy')[1]
-        return [buy_route]
 
-    _defaults = {
-        'route_ids': _get_buy_route,
-    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

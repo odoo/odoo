@@ -87,7 +87,7 @@ class mail_alias(osv.Model):
                                       help="Optional ID of a thread (record) to which all incoming "
                                            "messages will be attached, even if they did not reply to it. "
                                            "If set, this will disable the creation of new records completely."),
-        'alias_domain': fields.function(_get_alias_domain, string="Alias domain", type='char', size=None),
+        'alias_domain': fields.function(_get_alias_domain, string="Alias domain", type='char'),
         'alias_parent_model_id': fields.many2one('ir.model', 'Parent Model',
             help="Parent model holding the alias. The model holding the alias reference\n"
                     "is not necessarily the model given by alias_model_id\n"

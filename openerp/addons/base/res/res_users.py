@@ -86,7 +86,7 @@ class res_groups(osv.osv):
         return where
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
@@ -172,7 +172,7 @@ class res_users(osv.osv):
             help="Specify a value only when creating a user or if you're "\
                  "changing the user's password, otherwise leave empty. After "\
                  "a change of password, the user has to login again."),
-        'signature': fields.text('Signature'),
+        'signature': fields.html('Signature'),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at log on for this user, in addition to the standard menu."),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
@@ -182,9 +182,6 @@ class res_users(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True,
             help='The company this user is currently working for.', context={'user_preference': True}),
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
-        # backward compatibility fields
-        'user_email': fields.related('email', type='char',
-            deprecated='Use the email field instead of user_email. This field will be removed with OpenERP 7.1.'),
     }
 
     def on_change_login(self, cr, uid, ids, login, context=None):

@@ -1,10 +1,9 @@
 (function () {
     'use strict';
 
-    var website = openerp.website;
     var _t = openerp._t;
 
-    website.Tour.register({
+    openerp.Tour.register({
         id:   'banner',
         name: _t("Build a page"),
         path: '/page/website.homepage',
@@ -85,7 +84,7 @@
                 popover:   { fixed: true },
             },
             {
-                waitFor:   'button[data-action=edit]:visible',
+                waitFor:   'button[data-action=save]:not(:visible)',
                 title:     _t("Good Job!"),
                 content:   _t("Well done, you created your homepage."),
                 popover:   { next: _t("Continue") },

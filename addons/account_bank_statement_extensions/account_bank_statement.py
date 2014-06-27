@@ -62,7 +62,7 @@ class account_bank_statement_line_global(osv.osv):
     _description = 'Batch Payment Info'
 
     _columns = {
-        'name': fields.char('OBI', size=128, required=True, help="Originator to Beneficiary Information"),
+        'name': fields.char('OBI', required=True, help="Originator to Beneficiary Information"),
         'code': fields.char('Code', size=64, required=True),
         'parent_id': fields.many2one('account.bank.statement.line.global', 'Parent Code', ondelete='cascade'),
         'child_ids': fields.one2many('account.bank.statement.line.global', 'parent_id', 'Child Codes'),

@@ -27,17 +27,17 @@ class Bank(osv.osv):
     _name = 'res.bank'
     _order = 'name'
     _columns = {
-        'name': fields.char('Name', size=128, required=True),
-        'street': fields.char('Street', size=128),
-        'street2': fields.char('Street2', size=128),
+        'name': fields.char('Name', required=True),
+        'street': fields.char('Street'),
+        'street2': fields.char('Street2'),
         'zip': fields.char('Zip', change_default=True, size=24),
-        'city': fields.char('City', size=128),
+        'city': fields.char('City'),
         'state': fields.many2one("res.country.state", 'Fed. State',
             domain="[('country_id', '=', country)]"),
         'country': fields.many2one('res.country', 'Country'),
-        'email': fields.char('Email', size=64),
-        'phone': fields.char('Phone', size=64),
-        'fax': fields.char('Fax', size=64),
+        'email': fields.char('Email'),
+        'phone': fields.char('Phone'),
+        'fax': fields.char('Fax'),
         'active': fields.boolean('Active'),
         'bic': fields.char('Bank Identifier Code', size=64,
             help="Sometimes called BIC or Swift."),
@@ -56,7 +56,7 @@ class res_partner_bank_type(osv.osv):
     _name = 'res.partner.bank.type'
     _order = 'name'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'code': fields.char('Code', size=64, required=True),
         'field_ids': fields.one2many('res.partner.bank.type.field', 'bank_type_id', 'Type Fields'),
         'format_layout': fields.text('Format Layout', translate=True)
@@ -70,7 +70,7 @@ class res_partner_bank_type_fields(osv.osv):
     _name = 'res.partner.bank.type.field'
     _order = 'name'
     _columns = {
-        'name': fields.char('Field Name', size=64, required=True, translate=True),
+        'name': fields.char('Field Name', required=True, translate=True),
         'bank_type_id': fields.many2one('res.partner.bank.type', 'Bank Type', required=True, ondelete='cascade'),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
@@ -113,23 +113,22 @@ class res_partner_bank(osv.osv):
         return value
 
     _columns = {
-        'name': fields.char('Bank Account', size=64), # to be removed in v6.2 ?
+        'name': fields.char('Bank Account'), # to be removed in v6.2 ?
         'acc_number': fields.char('Account Number', size=64, required=True),
         'bank': fields.many2one('res.bank', 'Bank'),
         'bank_bic': fields.char('Bank Identifier Code', size=16),
-        'bank_name': fields.char('Bank Name', size=32),
-        'owner_name': fields.char('Account Owner Name', size=128),
-        'street': fields.char('Street', size=128),
+        'bank_name': fields.char('Bank Name'),
+        'owner_name': fields.char('Account Owner Name'),
+        'street': fields.char('Street'),
         'zip': fields.char('Zip', change_default=True, size=24),
-        'city': fields.char('City', size=128),
+        'city': fields.char('City'),
         'country_id': fields.many2one('res.country', 'Country',
             change_default=True),
         'state_id': fields.many2one("res.country.state", 'Fed. State',
             change_default=True, domain="[('country_id','=',country_id)]"),
         'company_id': fields.many2one('res.company', 'Company',
             ondelete='cascade', help="Only if this bank account belong to your company"),
-        'partner_id': fields.many2one('res.partner', 'Account Owner', required=True,
-            ondelete='cascade', select=True),
+        'partner_id': fields.many2one('res.partner', 'Account Owner', ondelete='cascade', select=True),
         'state': fields.selection(_bank_type_get, 'Bank Account Type', required=True,
             change_default=True),
         'sequence': fields.integer('Sequence'),

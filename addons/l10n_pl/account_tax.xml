@@ -1,126 +1,588 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data noupdate="1">
-    <record id="tax_vat_23_due" model="account.tax.template">
-        <field name="chart_template_id" ref="pl_chart_template"/>
-        <field name="name">VAT-23%(23.0%)</field>
-        <field name="amount">0.230000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="account_collected_id" ref="chart222030100"/>
-        <field name="account_paid_id" ref="chart222030100"/>
-        <field name="base_code_id" ref="vat_code_base_due"/>
-        <field name="tax_code_id" ref="vat_code_due_tva"/>
-        <field name="ref_base_code_id" ref="vat_code_base_due"/>
-        <field name="ref_tax_code_id" ref="vat_code_due_tva"/>
-        <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_sign" eval="-1"/>
-    </record>
-    <record id="tax_vat_8_due" model="account.tax.template">
-        <field name="chart_template_id" ref="pl_chart_template"/>
-        <field name="name">VAT-8%(8.0%)</field>
-        <field name="amount">0.080000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="account_collected_id" ref="chart222030200"/>
-        <field name="account_paid_id" ref="chart222030200"/>
-        <field name="base_code_id" ref="vat_code_base_due"/>
-        <field name="tax_code_id" ref="vat_code_due_tva"/>
-        <field name="ref_base_code_id" ref="vat_code_base_due"/>
-        <field name="ref_tax_code_id" ref="vat_code_due_tva"/>
-        <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_sign" eval="-1"/>
-    </record>
-    <record id="tax_vat_5_due" model="account.tax.template">
-        <field name="chart_template_id" ref="pl_chart_template"/>
-        <field name="name">VAT-5%(5.0%)</field>
-        <field name="amount">0.050000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="account_collected_id" ref="chart222030400"/>
-        <field name="account_paid_id" ref="chart222030400"/>
-        <field name="base_code_id" ref="vat_code_base_due"/>
-        <field name="tax_code_id" ref="vat_code_due_tva"/>
-        <field name="ref_base_code_id" ref="vat_code_base_due"/>
-        <field name="ref_tax_code_id" ref="vat_code_due_tva"/>
-        <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_sign" eval="-1"/>
-    </record>
-    <record id="tax_vat_0_due" model="account.tax.template">
-        <field name="chart_template_id" ref="pl_chart_template"/>
-        <field name="name">VAT-0%(0.0%)</field>
-        <field name="amount">0.000000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="account_collected_id" ref="chart222030300"/>
-        <field name="account_paid_id" ref="chart222030300"/>
-        <field name="base_code_id" ref="vat_code_base_due"/>
-        <field name="tax_code_id" ref="vat_code_due_tva"/>
-        <field name="ref_base_code_id" ref="vat_code_base_due"/>
-        <field name="ref_tax_code_id" ref="vat_code_due_tva"/>
-        <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_sign" eval="-1"/>
-    </record>
 
-    <record id="tax_vat_23_recivable" model="account.tax.template">
-        <field name="chart_template_id" ref="pl_chart_template"/>
-        <field name="name">VAT naliczony-23%(23.0%)</field>
-        <field name="amount">0.230000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="account_collected_id" ref="chart222020100"/>
-        <field name="account_paid_id" ref="chart222020100"/>
-        <field name="base_code_id" ref="vat_code_receivable_net"/>
-        <field name="tax_code_id" ref="vat_code_payable"/>
-        <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable"/>
-        <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_sign" eval="-1"/>
-    </record>
-    <record id="tax_vat_8_recivable" model="account.tax.template">
-        <field name="chart_template_id" ref="pl_chart_template"/>
-        <field name="name">VAT naliczony-8%(8.0%)</field>
-        <field name="amount">0.080000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="account_collected_id" ref="chart222020200"/>
-        <field name="account_paid_id" ref="chart222020200"/>
-        <field name="base_code_id" ref="vat_code_receivable_net"/>
-        <field name="tax_code_id" ref="vat_code_payable"/>
-        <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable"/>
-        <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_sign" eval="-1"/>
-    </record>
-    <record id="tax_vat_5_recivable" model="account.tax.template">
-        <field name="chart_template_id" ref="pl_chart_template"/>
-        <field name="name">VAT naliczony-5%(5.0%)</field>
-        <field name="amount">0.050000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="account_collected_id" ref="chart222020400"/>
-        <field name="account_paid_id" ref="chart222020200"/>
-        <field name="base_code_id" ref="vat_code_receivable_net"/>
-        <field name="tax_code_id" ref="vat_code_payable"/>
-        <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable"/>
-        <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_sign" eval="-1"/>
-    </record>
-    <record id="tax_vat_0_recivable" model="account.tax.template">
-        <field name="chart_template_id" ref="pl_chart_template"/>
-        <field name="name">VAT naliczony-0%(0.0%)</field>
-        <field name="amount">0.000000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="account_collected_id" ref="chart222020300"/>
-        <field name="account_paid_id" ref="chart222020300"/>
-        <field name="base_code_id" ref="vat_code_receivable_net"/>
-        <field name="tax_code_id" ref="vat_code_payable"/>
-        <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable"/>
-        <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_sign" eval="-1"/>
-    </record>
+# VAT kraj należny (sprzedaż)
+
+        <record id="vs_kraj_23" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT-23%</field>
+                <field name="description">V23</field>
+                <field name="amount">0.230000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+       <field name="sequence" eval="0"/>
+                <field name="account_collected_id" ref="chart22030400"/>
+                <field name="account_paid_id" ref="chart22030400"/>
+                <field name="base_code_id" ref="p_dost_kraj_22"/>
+                <field name="tax_code_id" ref="v_dost_kraj_22"/>
+                <field name="ref_base_code_id" ref="p_dost_kraj_22"/>
+                <field name="ref_tax_code_id" ref="v_dost_kraj_22"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vs_kraj_22" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT-22%</field>
+                <field name="description">V22</field>
+                <field name="amount">0.220000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="account_collected_id" ref="chart22030100"/>
+                <field name="account_paid_id" ref="chart22030100"/>
+                <field name="base_code_id" ref="p_dost_kraj_22"/>
+                <field name="tax_code_id" ref="v_dost_kraj_22"/>
+                <field name="ref_base_code_id" ref="p_dost_kraj_22"/>
+                <field name="ref_tax_code_id" ref="v_dost_kraj_22"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vs_kraj_8" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT-8%</field>
+                <field name="description">V8</field>
+                <field name="amount">0.080000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="account_collected_id" ref="chart22030500"/>
+                <field name="account_paid_id" ref="chart22030500"/>
+                <field name="base_code_id" ref="p_dost_kraj_7"/>
+                <field name="tax_code_id" ref="v_dost_kraj_7"/>
+                <field name="ref_base_code_id" ref="p_dost_kraj_7"/>
+                <field name="ref_tax_code_id" ref="v_dost_kraj_7"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vs_kraj_7" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT-7%</field>
+                <field name="description">V7</field>
+                <field name="amount">0.070000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="account_collected_id" ref="chart22030200"/>
+                <field name="account_paid_id" ref="chart22030200"/>
+                <field name="base_code_id" ref="p_dost_kraj_7"/>
+                <field name="tax_code_id" ref="v_dost_kraj_7"/>
+                <field name="ref_base_code_id" ref="p_dost_kraj_7"/>
+                <field name="ref_tax_code_id" ref="v_dost_kraj_7"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vs_kraj_5" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT-5%</field>
+                <field name="description">V5</field>
+                <field name="amount">0.050000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="account_collected_id" ref="chart22030600"/>
+                <field name="account_paid_id" ref="chart22030600"/>
+                <field name="base_code_id" ref="p_dost_kraj_3"/>
+                <field name="tax_code_id" ref="v_dost_kraj_3"/>
+                <field name="ref_base_code_id" ref="p_dost_kraj_3"/>
+                <field name="ref_tax_code_id" ref="v_dost_kraj_3"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vs_kraj_3" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT-3%</field>
+                <field name="description">V3</field>
+                <field name="amount">0.030000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="account_collected_id" ref="chart22030300"/>
+                <field name="account_paid_id" ref="chart22030300"/>
+                <field name="base_code_id" ref="p_dost_kraj_3"/>
+                <field name="tax_code_id" ref="v_dost_kraj_3"/>
+                <field name="ref_base_code_id" ref="p_dost_kraj_3"/>
+                <field name="ref_tax_code_id" ref="v_dost_kraj_3"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+
+        <record id="vs_kraj_0" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT-0%</field>
+                <field name="description">V0</field>
+                <field name="amount">0.000000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="base_code_id" ref="p_dost_kraj_0"/>
+                <field name="ref_base_code_id" ref="p_dost_kraj_0"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vs_kraj_zw" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT-ZW</field>
+                <field name="description">VZW</field>
+                <field name="amount">0.000000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="base_code_id" ref="p_dost_kraj_zw"/>
+                <field name="ref_base_code_id" ref="p_dost_kraj_zw"/>
+                <field name="ref_base_sign" eval="-1"/>
+        </record>
+
+        <record id="vs_kraj_usl_23" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT usł-23%</field>
+                <field name="description">VU23</field>
+                <field name="amount">0.230000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="account_collected_id" ref="chart22030400"/>
+                <field name="account_paid_id" ref="chart22030400"/>
+                <field name="base_code_id" ref="p_dost_kraj_22"/>
+                <field name="tax_code_id" ref="v_dost_kraj_22"/>
+                <field name="ref_base_code_id" ref="p_dost_kraj_22"/>
+                <field name="ref_tax_code_id" ref="v_dost_kraj_22"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+
+
+        <record id="vs_kraj_usl_22" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT usł-22%</field>
+                <field name="description">VU22</field>
+                <field name="amount">0.220000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="account_collected_id" ref="chart22030100"/>
+                <field name="account_paid_id" ref="chart22030100"/>
+                <field name="base_code_id" ref="p_dost_kraj_22"/>
+                <field name="tax_code_id" ref="v_dost_kraj_22"/>
+                <field name="ref_base_code_id" ref="p_dost_kraj_22"/>
+                <field name="ref_tax_code_id" ref="v_dost_kraj_22"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+
+
+# VAT kraj naliczony
+
+        <record id="vz_kraj_23" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT naliczony-23%</field>
+                <field name="description">Z23</field>
+                <field name="amount">0.230000</field>
+                <field name="type">percent</field>
+        <field name="sequence" eval="0"/>
+                <field name="type_tax_use">purchase</field>
+                <field name="account_collected_id" ref="chart22020400"/>
+                <field name="account_paid_id" ref="chart22020400"/>
+                <field name="base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vz_kraj_22" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT naliczony-22%</field>
+                <field name="description">Z22</field>
+                <field name="amount">0.220000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">purchase</field>
+                <field name="account_collected_id" ref="chart22020100"/>
+                <field name="account_paid_id" ref="chart22020100"/>
+                <field name="base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vz_kraj_8" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT naliczony-8%</field>
+                <field name="description">Z8</field>
+                <field name="amount">0.080000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">purchase</field>
+                <field name="account_collected_id" ref="chart22020500"/>
+                <field name="account_paid_id" ref="chart22020500"/>
+                <field name="base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vz_kraj_7" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT naliczony-7%</field>
+                <field name="description">Z7</field>
+                <field name="amount">0.070000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">purchase</field>
+                <field name="account_collected_id" ref="chart22020200"/>
+                <field name="account_paid_id" ref="chart22020200"/>
+                <field name="base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vz_kraj_5" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT naliczony-5%</field>
+                <field name="description">Z5</field>
+                <field name="amount">0.050000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">purchase</field>
+                <field name="account_collected_id" ref="chart22020600"/>
+                <field name="account_paid_id" ref="chart22020600"/>
+                <field name="base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vz_kraj_3" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT naliczony-3%</field>
+                <field name="description">Z3</field>
+                <field name="amount">0.030000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">purchase</field>
+                <field name="account_collected_id" ref="chart22020300"/>
+                <field name="account_paid_id" ref="chart22020300"/>
+                <field name="base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+
+        <record id="vz_kraj_0" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT naliczony-0%</field>
+                <field name="description">Z0</field>
+                <field name="amount">0.000000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">purchase</field>
+                <field name="base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vz_kraj_zw" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT naliczony-ZW</field>
+                <field name="description">ZZW</field>
+                <field name="amount">0.000000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">purchase</field>
+                <field name="base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+
+        <record id="vz_kraj_usl_23" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT usł nalicz-23%</field>
+                <field name="description">ZU23</field>
+                <field name="amount">0.230000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">purchase</field>
+                <field name="account_collected_id" ref="chart22020400"/>
+                <field name="account_paid_id" ref="chart22020400"/>
+                <field name="base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+        <record id="vz_kraj_usl_22" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">VAT usł nalicz-22%</field>
+                <field name="description">ZU22</field>
+                <field name="amount">0.220000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">purchase</field>
+                <field name="account_collected_id" ref="chart22020100"/>
+                <field name="account_paid_id" ref="chart22020100"/>
+                <field name="base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+                <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
+                <field name="ref_base_sign" eval="-1"/>
+                <field name="ref_tax_sign" eval="-1"/>
+        </record>
+
+
+# Unia
+#===========================================================
+
+        <record id="vs_unia" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">Dost tow. unia</field>
+                <field name="description">UDT</field>
+                <field name="amount">0.000000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="base_code_id" ref="p_dost_wspol"/>
+                <field name="ref_base_code_id" ref="p_dost_wspol"/>
+                <field name="ref_base_sign" eval="-1"/>
+        </record>
+
+        <record id="vz_unia" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">Nab tow unia</field>
+                <field name="description">UNT</field>
+                <field name="amount">0.23</field>
+                <field name="type">percent</field>
+                <field eval="True" name="child_depend"/>
+                <field name="type_tax_use">purchase</field>
+                <field name="base_code_id" ref="p_wew_wspol_nab_tow"/>
+                <field name="ref_base_code_id" ref="p_wew_wspol_nab_tow"/>
+                <field name="ref_base_sign" eval="-1"/>
+        </record>
+
+                <record id="vz_unia_1" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">Nab tow unia 1</field>
+                        <field name="description">UNT1</field>
+                        <field name="amount" eval="1.00"/>
+                        <field name="sequence" eval="100"/>
+                        <field name="type">percent</field>
+                        <field name="parent_id" ref="vz_unia"/>
+                        <field name="account_collected_id" ref="chart22020400"/>
+                        <field name="account_paid_id" ref="chart22020400"/>
+                        <field name="tax_code_id" eval="v_wew_wspol_nab_tow"/>
+                        <field name="ref_tax_code_id" eval="v_wew_wspol_nab_tow"/>
+                        <field name="type_tax_use">purchase</field>
+                </record>
+                <record id="vz_unia_2" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">Nab tow unia 2</field>
+                        <field name="description">UNT2</field>
+                        <field name="amount" eval="-1.00"/>
+                        <field name="sequence" eval="110"/>
+                        <field name="type">percent</field>
+                        <field name="parent_id" ref="vz_unia"/>
+                        <field name="account_collected_id" ref="chart22040300"/>
+                        <field name="account_paid_id" ref="chart22040300"/>
+                        <field name="type_tax_use">purchase</field>
+                </record>
+
+
+# Eksport / Import
+#================================================
+
+        <record id="vs_eksp_tow" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">Eksp Tow</field>
+                <field name="description">EXT</field>
+                <field name="amount">0.000000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="base_code_id" ref="p_eksport"/>
+                <field name="ref_base_code_id" ref="p_eksport"/>
+                <field name="ref_base_sign" eval="-1"/>
+        </record>
+
+        <record id="vz_imp_tow" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">Imp Tow</field>
+                <field name="description">IMT</field>
+                <field name="amount">0.23</field>
+                <field name="type">percent</field>
+                <field eval="True" name="child_depend"/>
+                <field name="type_tax_use">purchase</field>
+                <field name="base_code_id" ref="p_import_tow_art33a"/>
+                <field name="ref_base_code_id" ref="p_import_tow_art33a"/>
+                <field name="ref_base_sign" eval="-1"/>
+        </record>
+
+                <record id="vz_imp_tow_1" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">Imp Tow 1</field>
+                        <field name="description">IMT1</field>
+                        <field name="amount" eval="1.00"/>
+                        <field name="sequence" eval="200"/>
+                        <field name="type">percent</field>
+                        <field name="parent_id" ref="vz_imp_tow"/>
+                        <field name="account_collected_id" ref="chart22020400"/>
+                        <field name="account_paid_id" ref="chart22020400"/>
+                        <field name="tax_code_id" eval="v_import_tow_art33a"/>
+                        <field name="ref_tax_code_id" eval="v_import_tow_art33a"/>
+                        <field name="type_tax_use">purchase</field>
+                </record>
+                <record id="vz_imp_tow_2" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">Imp Tow 2</field>
+                        <field name="description">IMT2</field>
+                        <field name="amount" eval="-1.00"/>
+                        <field name="sequence" eval="210"/>
+                        <field name="type">percent</field>
+                        <field name="parent_id" ref="vz_imp_tow"/>
+                        <field name="account_collected_id" ref="chart22040300"/>
+                        <field name="account_paid_id" ref="chart22040300"/>
+                        <field name="type_tax_use">purchase</field>
+                </record>
+
+        <record id="vs_ekspu" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">Eksp Usł</field>
+                <field name="description">EXU</field>
+                <field name="amount">0.000000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="base_code_id" ref="p_dost_poza_kraj"/>
+                <field name="ref_base_code_id" ref="p_dost_poza_kraj"/>
+                <field name="ref_base_sign" eval="-1"/>
+        </record>
+
+        <record id="vs_dostu" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">Świad Usł</field>
+                <field name="description">UDU</field>
+                <field name="amount">0.000000</field>
+                <field name="type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="base_code_id" ref="p_us_poza_kraj_art100"/>
+                <field name="ref_base_code_id" ref="p_us_poza_kraj_art100"/>
+                <field name="ref_base_sign" eval="-1"/>
+        </record>
+
+        <record id="vz_impu" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">Imp Usł</field>
+                <field name="description">IMU</field>
+                <field name="amount">0.23</field>
+                <field name="type">percent</field>
+                <field eval="True" name="child_depend"/>
+                <field name="type_tax_use">purchase</field>
+                <field name="base_code_id" ref="p_import_uslug"/>
+                <field name="ref_base_code_id" ref="p_import_uslug"/>
+                <field name="ref_base_sign" eval="-1"/>
+        </record>
+
+                <record id="vz_impu_1" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">Imp Usł 1</field>
+                        <field name="description">IMU1</field>
+                        <field name="amount" eval="1.00"/>
+                        <field name="sequence" eval="200"/>
+                        <field name="type">percent</field>
+                        <field name="parent_id" ref="vz_impu"/>
+                        <field name="account_collected_id" ref="chart22020400"/>
+                        <field name="account_paid_id" ref="chart22020400"/>
+                        <field name="tax_code_id" eval="v_import_uslug"/>
+                        <field name="ref_tax_code_id" eval="v_import_uslug"/>
+                        <field name="type_tax_use">purchase</field>
+                </record>
+                <record id="vz_impu_2" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">Imp Usł 2</field>
+                        <field name="description">IMU2</field>
+                        <field name="amount" eval="-1.00"/>
+                        <field name="sequence" eval="210"/>
+                        <field name="type">percent</field>
+                        <field name="parent_id" ref="vz_impu"/>
+                        <field name="account_collected_id" ref="chart22040300"/>
+                        <field name="account_paid_id" ref="chart22040300"/>
+                        <field name="type_tax_use">purchase</field>
+                </record>
+
+        <record id="vz_nabu" model="account.tax.template">
+                <field name="chart_template_id" ref="pl_chart_template"/>
+                <field name="name">Nab Usł</field>
+                <field name="description">UNU</field>
+                <field name="amount">0.23</field>
+                <field name="type">percent</field>
+                <field eval="True" name="child_depend"/>
+                <field name="type_tax_use">purchase</field>
+                <field name="base_code_id" ref="p_import_uslug_art28b"/>
+                <field name="ref_base_code_id" ref="p_import_uslug_art28b"/>
+                <field name="ref_base_sign" eval="-1"/>
+        </record>
+
+                <record id="vz_nabu_1" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">Nab Usł 1</field>
+                        <field name="description">UNU1</field>
+                        <field name="amount" eval="1.00"/>
+                        <field name="sequence" eval="200"/>
+                        <field name="type">percent</field>
+                        <field name="parent_id" ref="vz_nabu"/>
+                        <field name="account_collected_id" ref="chart22020400"/>
+                        <field name="account_paid_id" ref="chart22020400"/>
+                        <field name="tax_code_id" eval="v_import_uslug_art28b"/>
+                        <field name="ref_tax_code_id" eval="v_import_uslug_art28b"/>
+                        <field name="type_tax_use">purchase</field>
+                </record>
+                <record id="vz_nabu_2" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">Nab Usł 2</field>
+                        <field name="description">UNU2</field>
+                        <field name="amount" eval="-1.00"/>
+                        <field name="sequence" eval="210"/>
+                        <field name="type">percent</field>
+                        <field name="parent_id" ref="vz_nabu"/>
+                        <field name="account_collected_id" ref="chart22040300"/>
+                        <field name="account_paid_id" ref="chart22040300"/>
+                        <field name="type_tax_use">purchase</field>
+                </record>
+
+# Leasing pojazdu
+#================================================
+
+                <record id="vp_leas" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">VAT - leasing pojazdu</field>
+                        <field name="description">VLP</field>
+                        <field name="amount">1.00</field>
+                        <field name="sequence" eval="1"/>
+                        <field name="type">percent</field>
+                        <field eval="True" name="child_depend"/>
+                        <field name="type_tax_use">all</field>
+                </record>
+
+                <record id="vp_leas_1" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">VAT - leasing pojazdu 60% x 23%</field>
+                        <field name="description">VLP-1</field>
+                        <field name="amount" eval="0.1380"/>
+                        <field name="sequence" eval="10"/>
+                        <field name="type">percent</field>
+                        <field name="parent_id" ref="vp_leas"/>
+                        <field name="account_collected_id" ref="chart22020400"/>
+                        <field name="account_paid_id" ref="chart22020400"/>
+                        <field name="base_code_id" ref="p_nab_tow_usluga"/>
+                        <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+                        <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+                        <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
+                        <field name="type_tax_use">all</field>
+                </record>
+
+                <record id="vp_leas_2" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">VAT - leasing pojazdu 40% x 23%</field>
+                        <field name="description">VLP-2</field>
+                        <field name="amount" eval="0.092000"/>
+                        <field name="sequence" eval="20"/>
+                        <field name="type">percent</field>
+                        <field name="parent_id" ref="vp_leas"/>
+                        <field name="account_collected_id" ref="chart76140000"/>
+                        <field name="account_paid_id" ref="chart76140000"/>
+                        <field name="type_tax_use">all</field>
+                </record>
+
 </data>
 </openerp>

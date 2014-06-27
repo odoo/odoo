@@ -25,7 +25,7 @@
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
             <field name="arch" type="xml">
-                <form string="Timesheet Activities" version="7.0">
+                <form string="Timesheet Activities">
                     <sheet>
                     <group>
                         <group>
@@ -70,7 +70,7 @@
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="account_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Analytic account" icon="terp-folder-green" domain="[]" context="{'group_by':'account_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>

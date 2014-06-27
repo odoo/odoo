@@ -8,7 +8,7 @@
             <field name="name">ir.actions.actions</field>
             <field name="model">ir.actions.actions</field>
             <field name="arch" type="xml">
-                <form string="Action" version="7.0">
+                <form string="Action">
                     <group>
                         <field name="name"/>
                         <field name="type"/>
@@ -53,7 +53,7 @@
             <field name="name">ir.actions.report.xml</field>
             <field name="model">ir.actions.report.xml</field>
             <field name="arch" type="xml">
-                <form string="Report" version="7.0">
+                <form string="Report">
                     <group>
                         <group>
                             <field name="name"/>
@@ -149,7 +149,7 @@
             <field name="name">ir.actions.windows.form</field>
             <field name="model">ir.actions.act_window</field>
             <field name="arch" type="xml">
-                <form string="Open a Window" version="7.0">
+                <form string="Open a Window">
                     <group>
                         <group>
                             <field name="name"/>
@@ -186,7 +186,7 @@
                             </group>
                             <group string="Views">
                                 <field colspan="2" name="view_ids" nolabel="1">
-                                    <form string="Views" version="7.0">
+                                    <form string="Views">
                                         <group>
                                             <field colspan="4" name="sequence"/>
                                             <field name="view_mode"/>
@@ -248,7 +248,7 @@
             <field name="name">Server Action</field>
             <field name="model">ir.actions.server</field>
             <field name="arch" type="xml">
-                <form string="Server Action" version="7.0">
+                <form string="Server Action">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -349,8 +349,9 @@
                                             Check to attach the newly created record to the record on which the server action runs.
                                         </p>
                                         <group>
+                                            <field name="model_name" invisible="1"/>
                                             <field name="link_field_id"
-                                                    domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name), ('ttype', 'in', ['many2one'])]"
+                                                    domain="[('model_id', '=', crud_model_id), ('relation', '=', model_name), ('ttype', 'in', ['many2one'])]"
                                                     attrs="{'required': [('state', '=', 'object_create'), ('link_new_record', '=', True)],
                                                             'invisible': ['|', ('state', '!=', 'object_create'), ('link_new_record', '=', False)]}"/>
                                         </group>
@@ -376,7 +377,7 @@
                                             <field name="type"/>
                                             <field name="value"/>
                                         </tree>
-                                        <form string="Field Mapping" version="7.0">
+                                        <form string="Field Mapping">
                                             <group >
                                                 <field name="col1" domain="[('model_id', '=', parent.crud_model_id)]"/>
                                                 <field name="type"/>
@@ -516,7 +517,7 @@
             <field name="model">ir.actions.todo</field>
             <field name="name">Config Wizard Steps</field>
             <field name="arch" type="xml">
-                <form string="Config Wizard Steps" version="7.0">
+                <form string="Config Wizard Steps">
                   <header>
                         <button name="action_launch"
                             states="open" string="Launch"

@@ -21,55 +21,62 @@
 
 from openerp import tools
 from openerp.osv import fields,osv
-from openerp.addons.decimal_precision import decimal_precision as dp
-
 
 class hr_timesheet_report(osv.osv):
-    _name = "hr.timesheet.report"
-    _description = "Timesheet"
-    _auto = False
+    _inherit = "hr.timesheet.report"
     _columns = {
-        'date': fields.date('Date', readonly=True),
-        'name': fields.char('Description', size=64,readonly=True),
-        'product_id' : fields.many2one('product.product', 'Product',readonly=True),
-        'journal_id' : fields.many2one('account.analytic.journal', 'Journal',readonly=True),
-        'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),
-        'user_id': fields.many2one('res.users', 'User',readonly=True),
-        'account_id': fields.many2one('account.analytic.account', 'Analytic Account',readonly=True),
-        'company_id': fields.many2one('res.company', 'Company',readonly=True),
-        'cost': fields.float('Cost',readonly=True, digits_compute=dp.get_precision('Account')),
-        'quantity': fields.float('Time',readonly=True),
-    }
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing',readonly=True),
+        'nbr': fields.integer('#Nbr',readonly=True),
+        'total_diff': fields.float('#Total Diff',readonly=True),
+        'total_timesheet': fields.float('#Total Timesheet',readonly=True),
+        'total_attendance': fields.float('#Total Attendance',readonly=True),
+        'department_id':fields.many2one('hr.department','Department',readonly=True),
+        'date_from': fields.date('Date from',readonly=True,),
+        'date_to': fields.date('Date to',readonly=True),
+        'date_current': fields.date('Current date', required=True),
+        'state' : fields.selection([
+            ('new', 'New'),
+            ('draft','Draft'),
+            ('confirm','Confirmed'),
+            ('done','Done')], 'Status', readonly=True),
+        }
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'hr_timesheet_report')
-        cr.execute("""
-            create or replace view hr_timesheet_report as (
-                select
-                    min(t.id) as id,
-                    l.date as date,
-                    sum(l.amount) as cost,
-                    sum(l.unit_amount) as quantity,
-                    l.account_id as account_id,
-                    l.journal_id as journal_id,
-                    l.product_id as product_id,
-                    l.general_account_id as general_account_id,
-                    l.user_id as user_id,
-                    l.company_id as company_id,
-                    l.currency_id as currency_id
-                from
-                    hr_analytic_timesheet as t
-                    left join account_analytic_line as l ON (t.line_id=l.id)
-                group by
-                    l.date,
-                    l.account_id,
-                    l.product_id,
-                    l.general_account_id,
-                    l.journal_id,
-                    l.user_id,
-                    l.company_id,
-                    l.currency_id
-            )
-        """)
+    def _select(self):
+        return super(hr_timesheet_report, self)._select() + """,
+                        htss.name,
+                        htss.date_from,
+                        htss.date_to,
+                        count(*) as nbr,
+                        (SELECT   sum(day.total_difference)
+                            FROM hr_timesheet_sheet_sheet AS sheet 
+                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
+                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_diff,
+                        (SELECT sum(day.total_timesheet)
+                            FROM hr_timesheet_sheet_sheet AS sheet 
+                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
+                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_timesheet,
+                        (SELECT sum(day.total_attendance)
+                            FROM hr_timesheet_sheet_sheet AS sheet 
+                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
+                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_attendance,
+                        aal.to_invoice,
+                        htss.department_id,
+                        htss.state"""
+
+    def _from(self):
+        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (hat.sheet_id=htss.id)"
+
+    def _group_by(self):
+        return super(hr_timesheet_report, self)._group_by() + """,
+                        htss.date_from,
+                        htss.date_to,
+                        aal.unit_amount,
+                        aal.amount,
+                        aal.to_invoice,
+                        htss.name,
+                        htss.state,
+                        htss.id,
+                        htss.department_id"""
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

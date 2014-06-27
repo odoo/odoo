@@ -8,17 +8,14 @@
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row">
-                        <div class="col-xs-4">
-                            <img class="image" t-att-src="'data:image/png;base64,%s' % res_company.logo" style="border:auto;"/>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-xs-6 mt6">
                             <table class="table table-condensed" style="border-bottom: 3px solid black !important;"><thead><th> </th></thead></table>
                             <img t-if="not o.loc_barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
                             <img t-if="o.loc_barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.loc_barcode, 600, 100)" style="width:300px;height:50px"/>
-                            <p class="text-center" t-if="not o.loc_barcode" t-field="o.name"></p>
-                            <p class="text-center" t-if="o.loc_barcode" t-field="o.loc_barcode"></p>
+                            <p>
+                            <span t-if="not o.loc_barcode" t-field="o.name"/>
+                            <span t-if="o.loc_barcode" t-field="o.loc_barcode"/>
+                            </p>
                         </div>
                     </div>
                 </div>

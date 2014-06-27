@@ -22,9 +22,8 @@
 from openerp.addons.mail.mail_mail import mail_mail
 from openerp.addons.mail.mail_thread import mail_thread
 from openerp.addons.mail.tests.common import TestMail
-from openerp.tools import mute_logger, email_split
+from openerp.tools import mute_logger, email_split, html2plaintext
 from openerp.tools.mail import html_sanitize
-
 
 class test_mail(TestMail):
 
@@ -449,8 +448,8 @@ class test_mail(TestMail):
                         'message_post: mail.mail notifications should have been auto-deleted!')
 
         # Test: notifications emails: to a and b, c is email only, r is author
-        # test_emailto = ['Administrator <a@a>', 'Bert Tartopoils <b@b>']
-        test_emailto = ['"Followers of -Pigs-" <a@a>', '"Followers of -Pigs-" <b@b>']
+        test_emailto = ['"Administrator" <a@a>', '"Bert Tartopoils" <b@b>']
+        # test_emailto = ['"Followers of -Pigs-" <a@a>', '"Followers of -Pigs-" <b@b>']
         self.assertEqual(len(sent_emails), 2,
                         'message_post: notification emails wrong number of send emails')
         self.assertEqual(set([m['email_to'][0] for m in sent_emails]), set(test_emailto),
@@ -462,7 +461,7 @@ class test_mail(TestMail):
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
                             'message_post: notification email email_to incorrect')
-            self.assertEqual(sent_email['reply_to'], '"Followers of -Pigs-" <group+pigs@schlouby.fr>',
+            self.assertEqual(sent_email['reply_to'], '"YourCompany -Pigs-" <group+pigs@schlouby.fr>',
                             'message_post: notification email reply_to incorrect')
             self.assertEqual(_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
@@ -474,7 +473,7 @@ class test_mail(TestMail):
                             'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
-            self.assertIn(user_raoul.signature, sent_email['body_alternative'],
+            self.assertIn(html2plaintext(user_raoul.signature), sent_email['body_alternative'],
                             'message_post: notification email body alternative should contain the sender signature')
             self.assertFalse(sent_email['references'],
                             'message_post: references should be False when sending a message that is not a reply')
@@ -523,8 +522,8 @@ class test_mail(TestMail):
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg2_id)]), 'mail.mail notifications should have been auto-deleted!')
 
         # Test: emails send by server (to a, b, c, d)
-        # test_emailto = [u'Administrator <a@a>', u'Bert Tartopoils <b@b>', u'Carine Poilvache <c@c>', u'D\xe9d\xe9 Grosbedon <d@d>']
-        test_emailto = [u'"Followers of Pigs" <a@a>', u'"Followers of Pigs" <b@b>', u'"Followers of Pigs" <c@c>', u'"Followers of Pigs" <d@d>']
+        test_emailto = [u'"Administrator" <a@a>', u'"Bert Tartopoils" <b@b>', u'"Carine Poilvache" <c@c>', u'"D\xe9d\xe9 Grosbedon" <d@d>']
+        # test_emailto = [u'"Followers of Pigs" <a@a>', u'"Followers of Pigs" <b@b>', u'"Followers of Pigs" <c@c>', u'"Followers of Pigs" <d@d>']
         # self.assertEqual(len(sent_emails), 3, 'sent_email number of sent emails incorrect')
         for sent_email in sent_emails:
             self.assertEqual(sent_email['email_from'], 'Raoul Grosbedon <r@r>',
@@ -545,7 +544,7 @@ class test_mail(TestMail):
                             'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
-            self.assertIn(user_raoul.signature, sent_email['body_alternative'],
+            self.assertIn(html2plaintext(user_raoul.signature), sent_email['body_alternative'],
                             'message_post: notification email body alternative should contain the sender signature')
             self.assertIn(msg_message_id, sent_email['references'],
                             'message_post: notification email references lacks parent message message_id')

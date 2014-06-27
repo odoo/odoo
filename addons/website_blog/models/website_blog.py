@@ -74,7 +74,6 @@ class BlogPost(osv.Model):
         'history_ids': fields.one2many(
             'blog.post.history', 'post_id',
             'History', help='Last post modifications',
-            deprecated='This field will be removed for OpenERP v9.'
         ),
         # creation / update stuff
         'create_date': fields.datetime(
@@ -204,7 +203,7 @@ class BlogPostHistory(osv.Model):
 
     _columns = {
         'post_id': fields.many2one('blog.post', 'Blog Post'),
-        'summary': fields.char('Summary', size=256, select=True),
+        'summary': fields.char('Summary', select=True),
         'content': fields.text("Content"),
         'create_date': fields.datetime("Date"),
         'create_uid': fields.many2one('res.users', "Modified By"),

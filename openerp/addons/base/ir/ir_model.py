@@ -100,7 +100,7 @@ class ir_model(osv.osv):
         'model': fields.char('Model', required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
+        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type', readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
         'osv_memory': fields.function(_is_osv_memory, string='Transient Model', type='boolean',
             fnct_search=_search_osv_memory,
@@ -1141,13 +1141,20 @@ class ir_model_data(osv.osv):
 
         # Remove non-model records first, then model fields, and finish with models
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
-                                if model not in ('ir.model','ir.model.fields'))
+                                if model not in ('ir.model','ir.model.fields','ir.model.constraint'))
+        unlink_if_refcount((model, res_id) for model, res_id in to_unlink
+                                if model == 'ir.model.constraint')
+
+        ir_module_module = self.pool['ir.module.module']
+        ir_model_constraint = self.pool['ir.model.constraint']
+        modules_to_remove_ids = ir_module_module.search(cr, uid, [('name', 'in', modules_to_remove)], context=context)
+        constraint_ids = ir_model_constraint.search(cr, uid, [('module', 'in', modules_to_remove_ids)], context=context)
+        ir_model_constraint._module_data_uninstall(cr, uid, constraint_ids, context)
+
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
                                 if model == 'ir.model.fields')
 
         ir_model_relation = self.pool['ir.model.relation']
-        ir_module_module = self.pool['ir.module.module']
-        modules_to_remove_ids = ir_module_module.search(cr, uid, [('name', 'in', modules_to_remove)])
         relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove_ids)])
         ir_model_relation._module_data_uninstall(cr, uid, relation_ids, context)
 
@@ -1185,7 +1192,7 @@ class wizard_model_menu(osv.osv_memory):
     _name = 'wizard.ir.model.menu.create'
     _columns = {
         'menu_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
-        'name': fields.char('Menu Name', size=64, required=True),
+        'name': fields.char('Menu Name', required=True),
     }
 
     def menu_create(self, cr, uid, ids, context=None):

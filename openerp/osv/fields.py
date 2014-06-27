@@ -422,7 +422,7 @@ class datetime(_column):
             tz_name = registry.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
         if tz_name:
             try:
-                utc = pytz.timezone('UTC')
+                utc = pytz.utc
                 context_tz = pytz.timezone(tz_name)
                 utc_timestamp = utc.localize(timestamp, is_dst=False) # UTC = no DST
                 return utc_timestamp.astimezone(context_tz)
@@ -561,7 +561,7 @@ class many2one(_column):
         # we use uid=1 because the visibility of a many2one field value (just id and name)
         # must be the access right of the parent form and not the linked object itself.
         records = dict(obj.name_get(cr, SUPERUSER_ID,
-                                    list(set([x for x in res.values() if isinstance(x, (int,long))])),
+                                    list(set([x for x in res.values() if x and isinstance(x, (int,long))])),
                                     context=context))
         for id in res:
             if res[id] in records:
@@ -1261,8 +1261,16 @@ class function(_column):
         return new_values
 
     def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
-        result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
-        if self._multi:
+        multi = self._multi
+        # if we already have a value, don't recompute it.
+        # This happen if case of stored many2one fields
+        if values and not multi and name in values[0]:
+            result = {v['id']: v[name] for v in values}
+        elif values and multi and all(n in values[0] for n in name):
+            result = {v['id']: dict((n, v[n]) for n in name) for v in values}
+        else:
+            result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
+        if multi:
             swap = {}
             for rid, values in result.iteritems():
                 for f, v in values.iteritems():
@@ -1548,7 +1556,8 @@ class property(function):
         default_val = self._get_default(obj, cr, uid, prop_name, context)
 
         property_create = False
-        if isinstance(default_val, openerp.osv.orm.browse_record):
+        if isinstance(default_val, (openerp.osv.orm.browse_record,
+                                    openerp.osv.orm.browse_null)):
             if default_val.id != id_val:
                 property_create = True
         elif default_val != id_val:

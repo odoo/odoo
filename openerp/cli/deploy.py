@@ -15,20 +15,21 @@ class Deploy(Command):
         super(Deploy, self).__init__()
         self.session = requests.session()
 
-    def deploy_module(self, module_path, url, login, password, db=''):
+    def deploy_module(self, module_path, url, login, password, db='', force=False):
         url = url.rstrip('/')
         self.authenticate(url, login, password, db)
         module_file = self.zip_module(module_path)
         try:
-            return self.upload_module(url, module_file)
+            return self.upload_module(url, module_file, force=force)
         finally:
             os.remove(module_file)
 
-    def upload_module(self, server, module_file):
+    def upload_module(self, server, module_file, force=False):
         print("Uploading module file...")
         url = server + '/base_import_module/upload'
         files = dict(mod_file=open(module_file, 'rb'))
-        res = self.session.post(url, files=files)
+        force = '1' if force else ''
+        res = self.session.post(url, files=files, data=dict(force=force))
         if res.status_code != 200:
             raise Exception("Could not authenticate on server '%s'" % server)
         return res.text
@@ -75,6 +76,7 @@ class Deploy(Command):
         parser.add_argument('--login', dest='login', default="admin", help='Login (default=admin)')
         parser.add_argument('--password', dest='password', default="admin", help='Password (default=admin)')
         parser.add_argument('--verify-ssl', action='store_true', help='Verify SSL certificate')
+        parser.add_argument('--force', action='store_true', help='Force init even if module is already installed. (will update `noupdate="1"` records)')
         if not cmdargs:
             sys.exit(parser.print_help())
 
@@ -86,7 +88,7 @@ class Deploy(Command):
         try:
             if not args.url.startswith(('http://', 'https://')):
                 args.url = 'https://%s' % args.url
-            result = self.deploy_module(args.path, args.url, args.login, args.password, args.db)
+            result = self.deploy_module(args.path, args.url, args.login, args.password, args.db, force=args.force)
             print(result)
         except Exception, e:
             sys.exit("ERROR: %s" % e)

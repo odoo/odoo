@@ -56,7 +56,7 @@
             <field name="name">Events</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <form string="Events" version="7.0">
+                <form string="Events">
                     <header>
                         <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
                         <button string="Finish Event" name="button_done" states="confirm" type="object" class="oe_highlight" groups="base.group_user"/>
@@ -280,7 +280,7 @@
                     <filter string="Upcoming" name="upcoming" domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Upcoming events from today" />
                     <field name="type"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Responsible" context="{'group_by': 'user_id'}"/>
                         <filter string="Event Type" context="{'group_by':'type'}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>
@@ -351,7 +351,7 @@
             <field name="name">event.registration.form</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <form string="Event Registration" version="7.0">
+                <form string="Event Registration">
                     <header>
                         <button name="registration_open" string="Confirm" states="draft" type="object" class="oe_highlight"/>
                         <button name="button_reg_close" string="Attended" states="open" type="object" class="oe_highlight"/>
@@ -436,7 +436,7 @@
                     <field name="event_id"/>
                     <field name="user_id"/>
                     <field name="partner_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Responsible"  domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>

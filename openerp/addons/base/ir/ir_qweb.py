@@ -16,7 +16,6 @@ from urlparse import urlparse
 
 import babel
 import babel.dates
-import werkzeug
 from PIL import Image
 
 import openerp.http
@@ -26,6 +25,7 @@ import openerp.tools.lru
 from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
+from openerp.tools import html_escape as escape
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
@@ -257,8 +257,13 @@ class QWeb(orm.AbstractModel):
                     uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
                     can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
                     if not can_see:
+                        if qwebcontext.get('editable') and not qwebcontext.get('editable_no_editor'):
+                            errmsg = _("Editor disabled because some content can not be seen by a user who does not belong to the groups %s")
+                            raise openerp.http.Retry(
+                                _("User does not belong to groups %s") % attribute_value, {
+                                    'editable_no_editor': errmsg % attribute_value
+                                })
                         return ''
-                    continue
 
                 if isinstance(attribute_value, unicode):
                     attribute_value = attribute_value.encode("utf8")
@@ -269,14 +274,14 @@ class QWeb(orm.AbstractModel):
                     for attribute in self._render_att:
                         if attribute_name[2:].startswith(attribute):
                             att, val = self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
-                            generated_attributes += val and ' %s="%s"' % (att, werkzeug.utils.escape(val)) or " "
+                            generated_attributes += val and ' %s="%s"' % (att, escape(val)) or " "
                             break
                     else:
                         if attribute_name[2:] in self._render_tag:
                             t_render = attribute_name[2:]
                         template_attributes[attribute_name[2:]] = attribute_value
                 else:
-                    generated_attributes += ' %s="%s"' % (attribute_name, werkzeug.utils.escape(attribute_value))
+                    generated_attributes += ' %s="%s"' % (attribute_name, escape(attribute_value))
 
             if 'debug' in template_attributes:
                 debugger = template_attributes.get('debug', 'pdb')
@@ -302,7 +307,7 @@ class QWeb(orm.AbstractModel):
             for current_node in element.childNodes:
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
-                except QWebException:
+                except (QWebException, openerp.http.Retry):
                     raise
                 except Exception:
                     template = qwebcontext.get('__template__')
@@ -334,10 +339,10 @@ class QWeb(orm.AbstractModel):
             att, val = attribute_name[7:], self.eval_format(attribute_value, qwebcontext)
         elif attribute_name.startswith("t-att-"):
             att, val = attribute_name[6:], self.eval(attribute_value, qwebcontext)
-            if isinstance(val, unicode):
-                val = val.encode("utf8")
         else:
             att, val = self.eval_object(attribute_value, qwebcontext)
+        if val and not isinstance(val, str):
+            val = unicode(val).encode("utf8")
         return att, val
 
     # Tags
@@ -354,39 +359,40 @@ class QWeb(orm.AbstractModel):
     def render_tag_foreach(self, element, template_attributes, generated_attributes, qwebcontext):
         expr = template_attributes["foreach"]
         enum = self.eval_object(expr, qwebcontext)
-        if enum is not None:
-            var = template_attributes.get('as', expr).replace('.', '_')
-            copy_qwebcontext = qwebcontext.copy()
-            size = -1
-            if isinstance(enum, (list, tuple)):
-                size = len(enum)
-            elif hasattr(enum, 'count'):
-                size = enum.count()
-            copy_qwebcontext["%s_size" % var] = size
-            copy_qwebcontext["%s_all" % var] = enum
-            index = 0
-            ru = []
-            for i in enum:
-                copy_qwebcontext["%s_value" % var] = i
-                copy_qwebcontext["%s_index" % var] = index
-                copy_qwebcontext["%s_first" % var] = index == 0
-                copy_qwebcontext["%s_even" % var] = index % 2
-                copy_qwebcontext["%s_odd" % var] = (index + 1) % 2
-                copy_qwebcontext["%s_last" % var] = index + 1 == size
-                if index % 2:
-                    copy_qwebcontext["%s_parity" % var] = 'odd'
-                else:
-                    copy_qwebcontext["%s_parity" % var] = 'even'
-                if 'as' in template_attributes:
-                    copy_qwebcontext[var] = i
-                elif isinstance(i, dict):
-                    copy_qwebcontext.update(i)
-                ru.append(self.render_element(element, template_attributes, generated_attributes, copy_qwebcontext))
-                index += 1
-            return "".join(ru)
-        else:
+        if enum is None:
             template = qwebcontext.get('__template__')
             raise QWebException("foreach enumerator %r is not defined while rendering template %r" % (expr, template), template=template)
+
+        varname = template_attributes['as'].replace('.', '_')
+        copy_qwebcontext = qwebcontext.copy()
+        size = -1
+        if isinstance(enum, collections.Sized):
+            size = len(enum)
+        copy_qwebcontext["%s_size" % varname] = size
+        copy_qwebcontext["%s_all" % varname] = enum
+        ru = []
+        for index, item in enumerate(enum):
+            copy_qwebcontext.update({
+                varname: item,
+                '%s_value' % varname: item,
+                '%s_index' % varname: index,
+                '%s_first' % varname: index == 0,
+                '%s_last' % varname: index + 1 == size,
+            })
+            if index % 2:
+                copy_qwebcontext.update({
+                    '%s_parity' % varname: 'odd',
+                    '%s_even' % varname: False,
+                    '%s_odd' % varname: True,
+                })
+            else:
+                copy_qwebcontext.update({
+                    '%s_parity' % varname: 'even',
+                    '%s_even' % varname: True,
+                    '%s_odd' % varname: False,
+                })
+            ru.append(self.render_element(element, template_attributes, generated_attributes, copy_qwebcontext))
+        return "".join(ru)
 
     def render_tag_if(self, element, template_attributes, generated_attributes, qwebcontext):
         if self.eval_bool(template_attributes["if"], qwebcontext):
@@ -489,7 +495,7 @@ class FieldConverter(osv.AbstractModel):
         """
         Generates the metadata attributes (prefixed by ``data-oe-`` for the
         root node of the field conversion. Attribute values are escaped by the
-        parent using ``werkzeug.utils.escape``.
+        parent.
 
         The default attributes are:
 
@@ -542,7 +548,7 @@ class FieldConverter(osv.AbstractModel):
                 record._model._all_columns[field_name].column,
                 options, context=context)
             if options.get('html-escape', True):
-                content = werkzeug.utils.escape(content)
+                content = escape(content)
             elif hasattr(content, '__html__'):
                 content = content.__html__()
         except Exception:
@@ -553,7 +559,7 @@ class FieldConverter(osv.AbstractModel):
         if context and context.get('inherit_branding'):
             # add branding attributes
             g_att += ''.join(
-                ' %s="%s"' % (name, werkzeug.utils.escape(value))
+                ' %s="%s"' % (name, escape(value))
                 for name, value in self.attributes(
                     cr, uid, field_name, record, options,
                     source_element, g_att, t_att, qweb_context)
@@ -755,7 +761,7 @@ class MonetaryConverter(osv.AbstractModel):
         if context is None:
             context = {}
         Currency = self.pool['res.currency']
-        display = self.display_currency(cr, uid, options)
+        display_currency = self.display_currency(cr, uid, options['display_currency'], options)
 
         # lang.format mandates a sprintf-style format. These formats are non-
         # minimal (they have a default fixed precision instead), and
@@ -766,17 +772,23 @@ class MonetaryConverter(osv.AbstractModel):
         # The log10 of the rounding should be the number of digits involved if
         # negative, if positive clamp to 0 digits and call it a day.
         # nb: int() ~ floor(), we want nearest rounding instead
-        precision = int(round(math.log10(display.rounding)))
+        precision = int(round(math.log10(display_currency.rounding)))
         fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+
+        from_amount = record[field_name]
+
+        if options.get('from_currency'):
+            from_currency = self.display_currency(cr, uid, options['from_currency'], options)
+            from_amount = Currency.compute(cr, uid, from_currency.id, display_currency.id, from_amount)
 
         lang_code = context.get('lang') or 'en_US'
         lang = self.pool['res.lang']
         formatted_amount = lang.format(cr, uid, [lang_code], 
-            fmt, Currency.round(cr, uid, display, record[field_name]),
+            fmt, Currency.round(cr, uid, display_currency, from_amount),
             grouping=True, monetary=True)
 
         pre = post = u''
-        if display.position == 'before':
+        if display_currency.position == 'before':
             pre = u'{symbol} '
         else:
             post = u' {symbol}'
@@ -785,12 +797,12 @@ class MonetaryConverter(osv.AbstractModel):
             formatted_amount,
             pre=pre, post=post,
         ).format(
-            symbol=display.symbol,
+            symbol=display_currency.symbol,
         ))
 
-    def display_currency(self, cr, uid, options):
+    def display_currency(self, cr, uid, currency, options):
         return self.qweb_object().eval_object(
-            options['display_currency'], options['_qweb_context'])
+            currency, options['_qweb_context'])
 
 TIMEDELTA_UNITS = (
     ('year',   3600 * 24 * 365),
@@ -875,7 +887,7 @@ class Contact(orm.AbstractModel):
 
         val = {
             'name': value.split("\n")[0],
-            'address': werkzeug.utils.escape("\n".join(value.split("\n")[1:])),
+            'address': escape("\n".join(value.split("\n")[1:])),
             'phone': field_browse.phone,
             'mobile': field_browse.mobile,
             'fax': field_browse.fax,
@@ -919,7 +931,7 @@ class QwebWidget(osv.AbstractModel):
         return self.pool['ir.qweb'].eval_str(inner, qwebcontext)
 
     def format(self, inner, options, qwebcontext):
-        return werkzeug.utils.escape(self._format(inner, options, qwebcontext))
+        return escape(self._format(inner, options, qwebcontext))
 
 class QwebWidgetMonetary(osv.AbstractModel):
     _name = 'ir.qweb.widget.monetary'
@@ -979,7 +991,7 @@ def nl2br(string, options=None):
     if options is None: options = {}
 
     if options.get('html-escape', True):
-        string = werkzeug.utils.escape(string)
+        string = escape(string)
     return HTMLSafe(string.replace('\n', '<br>\n'))
 
 def get_field_type(column, options):

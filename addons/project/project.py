@@ -35,7 +35,7 @@ class project_task_type(osv.osv):
     _description = 'Task Stage'
     _order = 'sequence'
     _columns = {
-        'name': fields.char('Stage Name', required=True, size=64, translate=True),
+        'name': fields.char('Stage Name', required=True, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
         'case_default': fields.boolean('Default for New Projects',
@@ -228,9 +228,6 @@ class project(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
-        'priority': fields.integer('Sequence (deprecated)',
-            deprecated='Will be removed with OpenERP v8; use sequence field instead',
-            help="Gives the sequence order when displaying the list of projects"),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
@@ -785,6 +782,7 @@ class task(osv.osv):
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
+        'reviewer_id': fields.many2one('res.users', 'Reviewer', select=True, track_visibility='onchange'),
         'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
         'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
@@ -804,6 +802,7 @@ class task(osv.osv):
         'progress': 0,
         'sequence': 10,
         'active': True,
+        'reviewer_id': lambda obj, cr, uid, ctx=None: uid,
         'user_id': lambda obj, cr, uid, ctx=None: uid,
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=ctx),
         'partner_id': lambda self, cr, uid, ctx=None: self._get_default_partner(cr, uid, context=ctx),
@@ -1093,10 +1092,17 @@ class task(osv.osv):
     # Mail gateway
     # ---------------------------------------------------
 
+    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=None, context=None):
+        if auto_follow_fields is None:
+            auto_follow_fields = ['user_id', 'reviewer_id']
+        return super(task, self)._message_get_auto_subscribe_fields(cr, uid, updated_fields, auto_follow_fields, context=context)
+
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
-        return [task.project_id.message_get_reply_to()[0] if task.project_id else False
-                    for task in self.browse(cr, uid, ids, context=context)]
+        tasks = self.browse(cr, SUPERUSER_ID, ids, context=context)
+        project_ids = set([task.project_id.id for task in tasks if task.project_id])
+        aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(project_ids), context=context)
+        return dict((task.id, aliases.get(task.project_id and task.project_id.id or 0, False)) for task in tasks)
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """
@@ -1133,7 +1139,7 @@ class project_work(osv.osv):
     _name = "project.task.work"
     _description = "Project Task Work"
     _columns = {
-        'name': fields.char('Work summary', size=128),
+        'name': fields.char('Work summary'),
         'date': fields.datetime('Date', select="1"),
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select="1"),
         'hours': fields.float('Time Spent'),
@@ -1349,6 +1355,6 @@ class project_category(osv.osv):
     _name = "project.category"
     _description = "Category of project's task, issue, ..."
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

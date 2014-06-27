@@ -1197,7 +1197,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         this.fvg = fvg;
         this.version = parseFloat(this.fvg.arch.attrs.version);
         if (isNaN(this.version)) {
-            this.version = 6.1;
+            this.version = 7.0;
         }
     },
     set_tags_registry: function(tags_registry) {
@@ -1209,7 +1209,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     set_widgets_registry: function(widgets_registry) {
         this.widgets_registry = widgets_registry;
     },
-    // Backward compatibility tools, current default version: v6.1
+    // Backward compatibility tools, current default version: v7
     process_version: function() {
         if (this.version < 7.0) {
             this.$form.find('form:first').wrapInner('<group col="4"/>');
@@ -1869,25 +1869,9 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
     do_attach_tooltip: function(widget, trigger, options) {
         widget = widget || this;
         trigger = trigger || this.$el;
-        var container = 'body';
-        /*TODO: need to be refactor
-        in the case we can find the view form in the parent, 
-        attach the element to it (to prevent tooltip to keep showing
-        when switching view) or if we have a modal currently showing,
-        attach tooltip to the modal to prevent the tooltip to show in the body in the
-        case we close the modal too fast*/
-        if ($(trigger).parents('.oe_view_manager_view_form').length > 0){
-            container = $(trigger).parents('.oe_view_manager_view_form');
-        }
-        else {
-            if (window.$('.modal.in').length>0){
-                container = window.$('.modal.in:last()');
-            }
-        }
         options = _.extend({
                 delay: { show: 500, hide: 0 },
                 trigger: 'hover',
-                container: container,
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
@@ -2399,6 +2383,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
         if (li.length) {
             var value = {};
             value[self.name] = String(li.data('value'));
+            self.record_id = self.view.datarecord.id;
             if (self.record_id) {
                 return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {
@@ -2595,7 +2580,7 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         };
         this.$('.select_records').on('click', self.on_click);
     },
-    on_click: function(ev) {
+    on_click: function(event) {
         event.preventDefault();
         var self = this;
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
@@ -2632,6 +2617,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     type_of_date: "datetime",
     events: {
         'change .oe_datepicker_master': 'change_datetime',
+        'keypress .oe_datepicker_master': 'change_datetime',
     },
     init: function(parent) {
         this._super(parent);
@@ -2750,8 +2736,8 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     format_client: function(v) {
         return instance.web.format_value(v, {"widget": this.type_of_date});
     },
-    change_datetime: function() {
-        if (this.is_valid_()) {
+    change_datetime: function(e) {
+        if ((e.type !== "keypress" || e.which === 13) && this.is_valid_()) {
             this.set_value_from_ui_();
             this.trigger("datetime_changed");
         }
@@ -2809,7 +2795,9 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
-        this.datewidget.$input.css('height', height);
+        if (!this.get("effective_readonly")) {
+            this.datewidget.$input.css('height', height);
+        }
     }
 });
 
@@ -3509,6 +3497,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.floating = false;
         this.current_display = null;
         this.is_started = false;
+        this.ignore_focusout = false;
     },
     reinit_value: function(val) {
         this.internal_set_value(val);
@@ -3640,6 +3629,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var ed_delay = 200;
         var ed_duration = 15000;
         var anyoneLoosesFocus = function (e) {
+            if (self.ignore_focusout) { return; }
             var used = false;
             if (self.floating) {
                 if (self.last_search.length > 0) {
@@ -3843,11 +3833,17 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     _search_create_popup: function() {
         this.no_ed = true;
         this.ed_def.reject();
-        return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
+        this.ignore_focusout = true;
+        this.reinit_value(false);
+        var res = instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
+        this.ignore_focusout = false;
+        this.no_ed = false;
+        return res;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
-        this.$input.css('height', height);
+        if (!this.get("effective_readonly") && this.$input)
+            this.$input.css('height', height);
     }
 });
 
@@ -4858,7 +4854,8 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         pop.select_element(
             this.model,
             {
-                title: _t("Add: ") + this.m2m_field.string
+                title: _t("Add: ") + this.m2m_field.string,
+                no_create: this.m2m_field.options.no_create,
             },
             new instance.web.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
             this.m2m_field.build_context()
@@ -5305,8 +5302,12 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         if (this.searchview) {
             this.searchview.destroy();
         }
+        if (this.searchview_drawer) {
+            this.searchview_drawer.destroy();
+        }
         this.searchview = new instance.web.SearchView(this,
                 this.dataset, false,  search_defaults);
+        this.searchview_drawer = new instance.web.SearchViewDrawer(this, this.searchview);
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
@@ -5352,7 +5353,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
             });
         });
-        this.searchview.appendTo($(".oe_popup_search", self.$el));
+        this.searchview.appendTo(this.$(".oe_popup_search"));
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
@@ -5500,9 +5501,13 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         this._super.apply(this, arguments);
     },
     initialize_content: function() {
+        var self= this;
         this.$el.find('input.oe_form_binary_file').change(this.on_file_change);
         this.$el.find('button.oe_form_binary_file_save').click(this.on_save_as);
         this.$el.find('.oe_form_binary_file_clear').click(this.on_clear);
+        this.$el.find('.oe_form_binary_file_edit').click(function(event){
+            self.$el.find('input.oe_form_binary_file').click();
+        });
     },
     on_file_change: function(e) {
         var self = this;
@@ -5670,8 +5675,6 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
                 return;
             $img.css("max-width", "" + self.options.size[0] + "px");
             $img.css("max-height", "" + self.options.size[1] + "px");
-            $img.css("margin-left", "" + (self.options.size[0] - $img.width()) / 2 + "px");
-            $img.css("margin-top", "" + (self.options.size[1] - $img.height()) / 2 + "px");
         });
         $img.on('error', function() {
             $img.attr('src', self.placeholder);

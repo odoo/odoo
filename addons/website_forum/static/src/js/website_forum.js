@@ -54,15 +54,10 @@ $(document).ready(function () {
                         '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                         'Sorry, anonymous users cannot choose correct answer.'+
                         '</div>');
-                } else if (data['error'] == 'own_post'){
-                    var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
-                        '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                        'Sorry, only the user who asked this question can accept the answer as correct.'+
-                        '</div>');
                 } else if (data['error'] == 'not_enough_karma') {
                     var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="max-width: 500px; position:absolute; margin-top: -30px; margin-left: 90px;">'+
                         '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                        'Sorry, at least ' + data['karma'] + ' karma is required to accept your own answers. You can gain karma by answering questions and receiving votes.'+
+                        'Sorry, at least ' + data['karma'] + ' karma is required to accept this answer. You can gain karma by answering questions and receiving votes.'+
                         '</div>');
                 }
                 correct_answer_alert = $link.parent().find("#correct_answer_alert");
@@ -153,7 +148,7 @@ function IsKarmaValid(eventNumber,minKarma){
         CKEDITOR.tools.callFunction(eventNumber,this);
         return false;
     } else {
-        alert("Sorry you need more than 30 Karma.");
+        alert("Sorry you need more than " + minKarma + " Karma.");
     }
 }
 

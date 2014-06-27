@@ -62,6 +62,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     load_kanban: function(data) {
         this.fields_view = data;
+
+        // use default order if defined in xml description
+        var default_order = this.fields_view.arch.attrs.default_order,
+            unsorted = !this.dataset._sort.length;
+        if (unsorted && default_order) {
+            this.dataset.set_sort(default_order.split(','));
+        }
+
         this.$el.addClass(this.fields_view.arch.attrs['class']);
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
         if (this.options.$buttons) {
@@ -930,10 +938,6 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         var self = this;
         this.setup_color_picker();
         this.$el.find('[title]').each(function(){
-            //in case of kanban, attach tooltip to the element itself
-            //otherwise it might stay on screen when kanban view reload
-            //since default container is body.
-            //(when clicking on ready for next stage for example)
             $(this).tooltip({
                 delay: { show: 500, hide: 0},
                 container: $(this),

@@ -13,7 +13,7 @@
         <record id="ir_filters_view_form" model="ir.ui.view">
             <field name="model">ir.filters</field>
             <field name="arch" type="xml">
-                <form string="Filters" version="7.0">
+                <form string="Filters">
                   <sheet>
                     <group col="4">
                         <field name="name"/>
@@ -51,7 +51,7 @@
                     <filter string="Shared" domain="[('user_id','=',False)]" name="shared" help="Filters shared with all users"/>
                     <filter string="My filters" domain="[('user_id','=',uid)]" name="my_filters" help="Filters created by myself"/>
                     <separator/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>

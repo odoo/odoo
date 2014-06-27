@@ -7,7 +7,7 @@
             <field name="name">account.fiscalyear.form</field>
             <field name="model">account.fiscalyear</field>
             <field name="arch" type="xml">
-                <form string="Fiscal year" version="7.0">
+                <form string="Fiscal year">
                 <header>
                     <button name="create_period" states="draft" string="Create Monthly Periods" type="object" class="oe_highlight"/>
                     <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" class="oe_highlight"/>
@@ -26,7 +26,7 @@
                         </group>
                     </group>
                     <field colspan="4" name="period_ids" nolabel="1" widget="one2many_list">
-                        <form string="Period" version="7.0">
+                        <form string="Period">
                             <group col="4">
                                 <field name="name"/>
                                 <field name="code"/>
@@ -61,7 +61,7 @@
                     <filter string="Open" domain="[('state','=','draft')]" icon="terp-camera_test"/>
                     <filter string="Closed" domain="[('state','=','done')]" icon="terp-dialog-close"/>
                     <field name="state"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </search>
@@ -94,7 +94,7 @@
             <field name="name">account.period.form</field>
             <field name="model">account.period</field>
             <field name="arch" type="xml">
-                <form string="Account Period" version="7.0">
+                <form string="Account Period">
                     <header>
                         <button string="Close Period" name="%(account.action_account_period_close)d" type="action" class="oe_highlight" states="draft"/>
                         <button name="action_draft" states="done" string="Re-Open Period" type="object" groups="account.group_account_manager"/>
@@ -168,7 +168,7 @@
             <field name="name">account.account.form</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <form string="Account" version="7.0">
+                <form string="Account">
                     <label for="code" class="oe_edit_only" string="Account Code and Name"/>
                     <h1>
                         <field name="code" class="oe_inline" placeholder="Account code" style="width: 6em"/> -
@@ -232,7 +232,7 @@
                     <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
                     <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                     <field name="user_type"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Parent Account" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
                         <filter string="Account Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'user_type'}"/>
                         <filter string="Internal Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'type'}"/>
@@ -351,7 +351,7 @@
         <act_window
             id="action_account_items"
             name="Journal Items"
-            context="{'search_default_account_id': [active_id]}"
+            context="{'search_default_account_id': [active_id], 'fiscalyear': context.get('fiscalyear')}"
             res_model="account.move.line"
             src_model="account.account"
             key2="tree_but_open"/>
@@ -381,7 +381,7 @@
                     <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity" icon="terp-dolar"/>
                     <filter domain="['|', ('type', '=', 'general'), ('type', '=', 'situation')]" string="Others" icon="terp-stock"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="User" context="{'group_by':'user_id'}" icon="terp-personal"/>
                         <filter string="Type" context="{'group_by':'type'}" icon="terp-stock_symbol-selection"/>
                         <filter string="Company" context="{'group_by':'company_id'}" icon="terp-go-home" groups="base.group_multi_company"/>
@@ -393,7 +393,7 @@
             <field name="name">account.journal.form</field>
             <field name="model">account.journal</field>
             <field name="arch" type="xml">
-                <form string="Account Journal" version="7.0">
+                <form string="Account Journal">
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -507,7 +507,7 @@
                     <filter string="Open" name="state_open" domain="[('state','=','open')]" icon="terp-check"/>
                     <filter string="Confirmed" name="state_confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                     <field name="journal_id" domain="[('type', '=', 'cash')]" />
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
                         <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                         <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
@@ -544,7 +544,7 @@
                     <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                     <field name="period_id"/>
                     <field name="journal_id" domain="[('type', '=', 'bank')]" />
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
                         <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                         <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
@@ -558,7 +558,7 @@
             <field name="model">account.bank.statement</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <form string="Bank Statement" version="7.0">
+                <form string="Bank Statement">
                 <header>
                     <field name="all_lines_reconciled" invisible="1" />
                     <span attrs="{'invisible':['|',('all_lines_reconciled','=',True),('line_ids','=',[])]}">
@@ -701,7 +701,7 @@
             <field name="name">account.statement.operation.template.form</field>
             <field name="model">account.statement.operation.template</field>
             <field name="arch" type="xml">
-                <form string="Statement Operation Templates" version="7.0">
+                <form string="Statement Operation Templates">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -791,7 +791,7 @@
             <field name="name">account.account.type.form</field>
             <field name="model">account.account.type</field>
             <field name="arch" type="xml">
-                <form string="Account Type" version="7.0">
+                <form string="Account Type">
                     <group>
                         <group>
                             <field name="name"/>
@@ -850,7 +850,7 @@
             <field name="name">account.move.reconcile.form</field>
             <field name="model">account.move.reconcile</field>
             <field name="arch" type="xml">
-                <form string="Journal Entry Reconcile" version="7.0">
+                <form string="Journal Entry Reconcile">
                     <group col="4">
                         <field name="name"/>
                         <field name="create_date"/>
@@ -895,7 +895,7 @@
             <field name="name">account.tax.code.form</field>
             <field name="model">account.tax.code</field>
             <field name="arch" type="xml">
-                <form string="Account Tax Code" version="7.0">
+                <form string="Account Tax Code">
                     <group>
                         <group col="4" colspan="2">
                             <field name="name"/>
@@ -979,7 +979,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <filter string="Sale" domain="[('type_tax_use','=','sale')]" />
                     <filter string="Purchase" domain="[('type_tax_use','=','purchase')]" />
-                    <group string="Group By...">
+                    <group string="Group By">
                         <filter string="Company" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Tax Application" domain="[]" context="{'group_by':'type_tax_use'}"/>
                     </group>
@@ -990,7 +990,7 @@
             <field name="name">account.tax.form</field>
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
-                <form string="Account Tax" version="7.0">
+                <form string="Account Tax">
                     <group>
                         <group>
                             <field name="name"/>
@@ -1087,7 +1087,7 @@
             <field name="model">account.move.line</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Journal Item" version="7.0">
+                <form string="Journal Item">
                     <sheet>
                         <group>
                             <group>
@@ -1156,7 +1156,7 @@
             <field name="model">account.move.line</field>
             <field eval="9" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Journal Item" version="7.0">
+                <form string="Journal Item">
                     <notebook colspan="4">
                         <page string="Information">
                             <group col="4">
@@ -1203,7 +1203,7 @@
             <field name="model">account.move.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" version="7.0" editable="top">
+                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" editable="top">
                     <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
                     <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
                     <field name="date"/>
@@ -1258,7 +1258,7 @@
                     <field name="partner_id"/>
                     <field name="journal_id" context="{'journal_id':self}" widget="selection"/> <!-- it's important to keep widget='selection' in this filter viewbecause without that the value passed in the context is not the ID but the textual value (name) of the selected journal -->
                     <field name="period_id" context="{'period_id':self}" widget="selection"/> <!-- it's important to keep the widget='selection' in this field, for the same reason as explained above -->
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Account"  icon="terp-folder-green" context="{'group_by':'account_id'}"/>
@@ -1304,7 +1304,7 @@
             <field eval="24" name="priority"/>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree_account_reconciliation colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false" version="7.0">
+                <tree_account_reconciliation colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="ref"/>
@@ -1360,7 +1360,7 @@
             <field name="name">account.move.form</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <form string="Account Entry" version="7.0">
+                <form string="Account Entry">
                     <header>
                         <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
                         <button name="button_cancel" states="posted" string="Cancel Entry" type="object" groups="account.group_account_invoice"/>
@@ -1388,7 +1388,7 @@
                         <page string="Journal Items">
                             <field name="line_id" widget="one2many_list"
                               context="{'line_id': line_id , 'journal_id': journal_id }">
-                                <form string="Journal Item" version="7.0">
+                                <form string="Journal Item">
                                     <group col="6" colspan="4">
                                         <field name="name"/>
                                         <field name="ref"/>
@@ -1491,7 +1491,7 @@
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <field name="period_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -1594,7 +1594,7 @@
             <field name="name">account.model.line.form</field>
             <field name="model">account.model.line</field>
             <field name="arch" type="xml">
-                <form string="Journal Entry Model Line" version="7.0">
+                <form string="Journal Entry Model Line">
                     <group col="4">
                         <field colspan="4" name="name"/>
                         <field name="sequence"/>
@@ -1613,7 +1613,7 @@
             <field name="name">account.model.form</field>
             <field name="model">account.model</field>
             <field name="arch" type="xml">
-                <form string="Journal Entry Model" version="7.0">
+                <form string="Journal Entry Model">
                     <group col="4">
                         <field name="name"/>
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)"/>
@@ -1648,7 +1648,7 @@
                     <filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
                     <field name="journal_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                     </group>
                 </search>
@@ -1683,7 +1683,7 @@
             <field name="name">account.payment.term.line.form</field>
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
-                <form string="Payment Term" version="7.0">
+                <form string="Payment Term">
                     <group>
                         <group string="Amount Computation">
                             <field name="value"/>
@@ -1714,7 +1714,7 @@
             <field name="name">account.payment.term.form</field>
             <field name="model">account.payment.term</field>
             <field name="arch" type="xml">
-                <form string="Payment Term" version="7.0">
+                <form string="Payment Term">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -1741,7 +1741,7 @@
             <field name="name">account.subscription.line.form</field>
             <field name="model">account.subscription.line</field>
             <field name="arch" type="xml">
-                <form string="Subscription lines" version="7.0">
+                <form string="Subscription lines">
                     <group>
                         <field name="date"/>
                         <field name="move_id"/>
@@ -1782,7 +1782,7 @@
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Subscription"/>
                     <filter icon="terp-camera_test" string="Running" domain="[('state','=','running')]" help="Running Subscription"/>
                     <field name="model_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Model" icon="terp-folder-orange" domain="[]" context="{'group_by':'model_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
@@ -1793,7 +1793,7 @@
             <field name="name">account.subscription.form</field>
             <field name="model">account.subscription</field>
             <field name="arch" type="xml">
-                <form string="Recurring" version="7.0">
+                <form string="Recurring">
                     <header>
                         <button name="state_draft" states="done" string="Set to Draft" type="object"  icon="gtk-convert" />
                         <button name="compute" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific" class="oe_highlight"/>
@@ -1864,7 +1864,7 @@
             <field name="model">account.subscription.line</field>
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Subscription lines" version="7.0">
+                <form string="Subscription lines">
                     <group col="4">
                         <field name="subscription_id"/>
                         <field name="date"/>
@@ -1895,7 +1895,7 @@
             <field name="name">account.account.template.form</field>
             <field name="model">account.account.template</field>
             <field name="arch" type="xml">
-                <form string="Account Template" version="7.0">
+                <form string="Account Template">
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
@@ -1939,7 +1939,7 @@
                     <field name="parent_id"/>
                     <field name="user_type"/>
                     <field name="type"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Internal Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Account Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'user_type'}"/>
                    </group>
@@ -1959,7 +1959,7 @@
             <field name="name">Create Account</field>
             <field name="model">account.addtmpl.wizard</field>
             <field name="arch" type="xml">
-                <form string="Create Account" version="7.0">
+                <form string="Create Account">
                     <header>
                         <button icon="gtk-ok" name="action_create" string="Add" type="object" class="oe_highlight"  />
                     </header>
@@ -1983,7 +1983,7 @@
             <field name="name">account.chart.template.form</field>
             <field name="model">account.chart.template</field>
             <field name="arch" type="xml">
-                <form string="Chart of Accounts Template" version="7.0">
+                <form string="Chart of Accounts Template">
                     <group col="4">
                         <field name="name"/>
                         <field name="account_root_id" attrs="{'required': [('parent_id', '=', False)]}"/>
@@ -2018,7 +2018,7 @@
                     <field name="name" string="Account Template"/>
                     <field name="account_root_id"/>
                     <field name="bank_account_view_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Root Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'account_root_id'}"/>
                         <filter string="Bank Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'bank_account_view_id'}"/>
                         <filter string="Receivable Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_receivable'}"/>
@@ -2058,7 +2058,7 @@
             <field name="name">account.tax.template.form</field>
             <field name="model">account.tax.template</field>
             <field name="arch" type="xml">
-                <form string="Account Tax Template" version="7.0">
+                <form string="Account Tax Template">
                     <group col="4">
                         <field name="name"/>
                         <field name="description"/>
@@ -2161,7 +2161,7 @@
                 <search string="Search tax template">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Tax Template"/>
                     <field name="parent_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Parent Code" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
                     </group>
                 </search>
@@ -2171,7 +2171,7 @@
             <field name="name">account.tax.code.template.form</field>
             <field name="model">account.tax.code.template</field>
             <field name="arch" type="xml">
-                <form string="Account Tax Code Template" version="7.0">
+                <form string="Account Tax Code Template">
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
@@ -2199,7 +2199,7 @@
             <field name="model">wizard.multi.charts.accounts</field>
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
-                <form position="attributes" version="7.0">
+                <form position="attributes">
                     <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
                 <group string="res_config_contents" position="replace">
@@ -2267,7 +2267,7 @@
             <field name="name">account.fiscal.position.template.form</field>
             <field name="model">account.fiscal.position.template</field>
             <field name="arch" type="xml">
-                <form string="Fiscal Position Template" version="7.0">
+                <form string="Fiscal Position Template">
                     <group col="4">
                         <field name="name"/>
                         <field name="chart_template_id"/>
@@ -2277,7 +2277,7 @@
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
                         </tree>
-                        <form string="Taxes Mapping" version="7.0">
+                        <form string="Taxes Mapping">
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
                         </form>
@@ -2287,7 +2287,7 @@
                             <field name="account_src_id"/>
                             <field name="account_dest_id"/>
                         </tree>
-                        <form string="Accounts Mapping" version="7.0">
+                        <form string="Accounts Mapping">
                             <field name="account_src_id"/>
                             <field name="account_dest_id"/>
                         </form>
@@ -2340,7 +2340,7 @@
             <field name="model">account.bank.statement</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form string="Statement" version="7.0">
+                <form string="Statement">
                 <header>
                     <field name="all_lines_reconciled" invisible="1" />
                     <span attrs="{'invisible':['|',('all_lines_reconciled','=',True),('line_ids','=',[])]}">
@@ -2381,7 +2381,7 @@
                                     <field name="partner_id"/>
                                     <field name="amount"/>
                                 </tree>
-                                <form string="Statement lines" version="7.0">
+                                <form string="Statement lines">
                                     <group col="4">
                                         <field name="date"/>
                                         <field name="name"/>
@@ -2526,7 +2526,7 @@
             <field name="name">account.financial.report.form</field>
             <field name="model">account.financial.report</field>
             <field name="arch" type="xml">
-                <form string="Account Report" version="7.0">
+                <form string="Account Report">
                     <group col="4">
                         <field name="name"/>
                         <field name="parent_id"/>
@@ -2568,7 +2568,7 @@
                     <field name="name" string="Account Report"/>
                     <field name="type"/>
                     <field name="account_report_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Parent Report" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
                         <filter string="Report Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>

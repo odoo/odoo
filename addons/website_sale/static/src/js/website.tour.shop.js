@@ -1,10 +1,9 @@
 (function () {
     'use strict';
 
-    var website = openerp.website;
     var _t = openerp._t;
 
-    website.Tour.register({
+    openerp.Tour.register({
         id: 'shop',
         name: _t("Create a product"),
         steps: [
@@ -48,16 +47,14 @@
                 popover:   { next: _t("Continue") },
             },
             {
-                element:   '.product_price .oe_currency_value',
+                element:   '.product_price .oe_currency_value:visible',
                 sampleText: '20.50',
                 placement: 'left',
                 title:     _t("Change the price"),
                 content:   _t("Edit the price of this product by clicking on the amount."),
             },
-
-
             {
-                waitNot:   '.product_price .oe_currency_value:containsExact(1.00)',
+                waitNot:   '.product_price .oe_currency_value:visible:containsExact(1.00)',
                 element:   '#wrap img.product_detail_img',
                 placement: 'top',
                 title:     _t("Update image"),
@@ -99,7 +96,7 @@
                 popover:   { fixed: true },
             },
             {
-                waitFor:   '#website-top-navbar button[data-action="edit"]:visible',
+                waitFor:   '#website-top-navbar:hidden',
                 element:   '.js_publish_management button.js_publish_btn.btn-danger',
                 placement: 'top',
                 title:     _t("Publish your product"),

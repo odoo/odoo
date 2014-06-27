@@ -64,7 +64,7 @@ class procurement_group(osv.osv):
     }
     _defaults = {
         'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or '',
-        'move_type': lambda self, cr, uid, c: 'one'
+        'move_type': lambda self, cr, uid, c: 'direct'
     }
 
 class procurement_rule(osv.osv):
@@ -109,7 +109,7 @@ class procurement_order(osv.osv):
     _columns = {
         'name': fields.text('Description', required=True),
 
-        'origin': fields.char('Source Document', size=64,
+        'origin': fields.char('Source Document',
             help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by OpenERP."),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -267,7 +267,7 @@ class procurement_order(osv.osv):
     #
     # Scheduler
     #
-    def run_scheduler(self, cr, uid, use_new_cursor=False, context=None):
+    def run_scheduler(self, cr, uid, use_new_cursor=False, company_id = False, context=None):
         '''
         Call the scheduler to check the procurement order. This is intented to be done for all existing companies at
         the same time, so we're running all the methods as SUPERUSER to avoid intercompany and access rights issues.
@@ -288,8 +288,11 @@ class procurement_order(osv.osv):
                 cr = openerp.registry(cr.dbname).cursor()
 
             # Run confirmed procurements
+            dom = [('state', '=', 'confirmed')]
+            if company_id:
+                dom += [('company_id', '=', company_id)]
             while True:
-                ids = self.search(cr, SUPERUSER_ID, [('state', '=', 'confirmed')], context=context)
+                ids = self.search(cr, SUPERUSER_ID, dom, context=context)
                 if not ids:
                     break
                 self.run(cr, SUPERUSER_ID, ids, context=context)
@@ -298,8 +301,11 @@ class procurement_order(osv.osv):
 
             # Check if running procurements are done
             offset = 0
+            dom = [('state', '=', 'running')]
+            if company_id:
+                dom += [('company_id', '=', company_id)]
             while True:
-                ids = self.search(cr, SUPERUSER_ID, [('state', '=', 'running')], offset=offset, context=context)
+                ids = self.search(cr, SUPERUSER_ID, dom, offset=offset, context=context)
                 if not ids:
                     break
                 done = self.check(cr, SUPERUSER_ID, ids, context=context)

@@ -1,0 +1,65 @@
+<templates id="template" xml:space="preserve">
+<t t-name="website.contentMenu.dialog.submenu">
+    <li t-att-data-menu-id="submenu.id">
+        <div class="input-group">
+            <span class="input-group-addon fa fa-bars"/>
+            <span class="form-control">
+                <span class="js_menu_label">
+                    <t t-esc="submenu.name"/>
+                </span>
+                <i class="pull-right fa fa-home" style="margin-top: 3px"/>
+            </span>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-primary js_edit_menu fa fa-edit"/>
+                <button type="button" class="btn btn-danger js_delete_menu fa fa-trash-o"/>
+            </span>
+        </div>
+        <t t-set="children" t-value="submenu.children"/>
+        <ul t-if="children">
+            <t t-foreach="children" t-as="submenu">
+                <t t-call="website.contentMenu.dialog.submenu"/>
+            </t>
+        </ul>
+    </li>
+</t>
+<t t-name="website.contentMenu.dialog.edit">
+    <t t-call="website.editor.dialog">
+        <t t-set="title">Edit Menu</t>
+        <ul class="oe_menu_editor list-unstyled">
+            <t t-foreach="widget.menu.children" t-as="submenu">
+                <t t-call="website.contentMenu.dialog.submenu"/>
+            </t>
+        </ul>
+        <div class="mt16">
+            <div class="pull-right text-muted">
+                Drag a menu to the right to create a sub-menu
+            </div>
+            <div>
+                <a href="#" class="js_add_menu">
+                    <i class="fa fa-plus-circle"/> Add Menu Entry
+                </a>
+            </div>
+        </div>
+    </t>
+</t>
+<t t-name="website.contentMenu.dialog.add" t-extend="website.editor.dialog.link">
+    <t t-jquery="t[t-set='title']" t-operation="inner">
+        <t t-if="!widget.update_mode">Add Menu Entry</t>
+        <t t-if="widget.update_mode">Edit Menu Entry</t>
+    </t>
+    <t t-jquery="form > div.form-horizontal" t-operation="replace"/>
+    <t t-jquery="ul.list-group" t-operation="before">
+        <div class="list-group">
+            <div class="form-group list-group-item active">
+                <h3 class="list-group-item-heading">
+                    <label for="link-new" class="control-label">
+                        Menu Label
+                    </label>
+                </h3>
+                <input type="text" class="form-control"
+                       id="link-text" required="required"/>
+            </div>
+        </div>
+    </t>
+</t>
+</templates>

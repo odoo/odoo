@@ -127,8 +127,8 @@ class account_move_line(osv.osv):
 
             if move_line.reconcile_id:
                 continue
-            if not move_line.account_id.type in ('payable', 'receivable'):
-                #this function does not suport to be used on move lines not related to payable or receivable accounts
+            if not move_line.account_id.reconcile:
+                #this function does not suport to be used on move lines not related to a reconcilable account
                 continue
 
             if move_line.currency_id:
@@ -445,7 +445,7 @@ class account_move_line(osv.osv):
 
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports."),
         'product_uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'product_id': fields.many2one('product.product', 'Product'),
@@ -454,7 +454,7 @@ class account_move_line(osv.osv):
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
         'move_id': fields.many2one('account.move', 'Journal Entry', ondelete="cascade", help="The move of this entry line.", select=2, required=True),
         'narration': fields.related('move_id','narration', type='text', relation='account.move', string='Internal Note'),
-        'ref': fields.related('move_id', 'ref', string='Reference', type='char', size=64, store=True),
+        'ref': fields.related('move_id', 'ref', string='Reference', type='char', store=True),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
@@ -579,6 +579,9 @@ class account_move_line(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_date_id_index',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX account_move_line_date_id_index ON account_move_line (date DESC, id desc)')
         return res
 
     def _check_no_view(self, cr, uid, ids, context=None):
@@ -738,6 +741,8 @@ class account_move_line(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
+        if context.get('fiscalyear'):
+            args.append(('period_id.fiscalyear_id', '=', context.get('fiscalyear', False)))
         if context and context.get('next_partner_only', False):
             if not context.get('partner_id', False):
                 partner = self.list_partners_to_reconcile(cr, uid, context=context)
@@ -820,7 +825,7 @@ class account_move_line(osv.osv):
             'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
         }, context=context)
         move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
-        return True
+        return r_id
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
         account_obj = self.pool.get('account.account')
