@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+<!--
+
+     Copyright (C) 2012-2012 南京盈通 ccdos@intoerp.com <small business chart>
+     
+会计科目表模板( 小企业会计准则2011)
+
+科目表依据：
+关于印发《小企业会计准则》的通知
+http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
+
+-->
+    <data noupdate="True">
+      
+        <!-- 科目表模板-->
+        <record id="cn_small_business_root" model="account.account.template">
+            <field name="name">会计科目</field>
+            <field name="code">0</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="user_type_all"/>
+        </record>
+
+        <!-- 资产类 -->
+        <record id="small_business_chart1001" model="account.account.template">
+            <field name="code">1001</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">liquidity</field>
+            <field name="name">现金</field>
+            <field name="user_type" ref="user_type_bs1"/>
+        </record>
+        <record id="small_business_chart1002" model="account.account.template">
+            <field name="code">1002</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="name">银行存款</field>
+            <field name="user_type" ref="user_type_bs1"/>
+        </record>
+        <record id="small_business_chart1012" model="account.account.template">
+            <field name="code">1012</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">其他货币资金</field>
+            <field name="user_type" ref="user_type_bs1"/>
+        </record>
+
+        <record id="small_business_chart1101" model="account.account.template">
+            <field name="code">1101</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">短期投资</field>
+            <field name="user_type" ref="user_type_bs2"/>
+        </record>
+
+        <record id="small_business_chart1121" model="account.account.template">
+            <field name="code">1121</field>
+            <field eval="True" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">应收票据</field>
+            <field name="user_type" ref="user_type_bs3"/>
+        </record>
+        <record id="small_business_chart1122" model="account.account.template">
+            <field name="code">1122</field>
+            <field eval="True" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">receivable</field>
+            <field name="name">应收账款</field>
+            <field name="user_type" ref="user_type_bs6"/>
+        </record>
+        <record id="small_business_chart1123" model="account.account.template">
+            <field name="code">1123</field>
+            <field eval="True" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">payable</field>
+            <field name="name">预付账款</field>
+            <field name="user_type" ref="user_type_bs6"/>
+        </record>
+        <record id="small_business_chart1131" model="account.account.template">
+            <field name="code">1131</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">应收股利</field>
+            <field name="user_type" ref="user_type_bs4"/>
+        </record>
+        <record id="small_business_chart1132" model="account.account.template">
+            <field name="code">1132</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">应收利息</field>
+            <field name="user_type" ref="user_type_bs5"/>
+        </record>
+        <record id="small_business_chart1221" model="account.account.template">
+            <field name="code">1221</field>
+            <field eval="True" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">其他应收款</field>
+            <field name="user_type" ref="user_type_bs7"/>
+        </record>
+
+        <record id="small_business_chart1401" model="account.account.template">
+            <field name="code">1401</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">材料采购</field>
+            <field name="user_type" ref="user_type_bs10"/>
+        </record>
+        <record id="small_business_chart1402" model="account.account.template">
+            <field name="code">1402</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">在途物资</field>
+            <field name="user_type" ref="user_type_bs10"/>
+        </record>
+        <record id="small_business_chart1403" model="account.account.template">
+            <field name="code">1403</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">原材料</field>
+            <field name="user_type" ref="user_type_bs10"/>
+        </record>
+        <record id="small_business_chart1404" model="account.account.template">
+            <field name="code">1404</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">材料成本差异</field>
+            <field name="user_type" ref="user_type_bs10"/>
+        </record>
+        <record id="small_business_chart1405" model="account.account.template">
+            <field name="code">1405</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">库存商品</field>
+            <field name="user_type" ref="user_type_bs10"/>
+        </record>
+
+        <record id="small_business_chart1407" model="account.account.template">
+            <field name="code">1407</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">商品进销差价</field>
+            <field name="user_type" ref="user_type_bs10"/>
+        </record>
+        <record id="small_business_chart1408" model="account.account.template">
+            <field name="code">1408</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">委托加工物资</field>
+            <field name="user_type" ref="user_type_bs10"/>
+        </record>
+
+        <record id="small_business_chart1411" model="account.account.template">
+            <field name="code">1411</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">周转材料</field>
+            <field name="user_type" ref="user_type_bs10"/>
+        </record>
+
+        <record id="small_business_chart1421" model="account.account.template">
+            <field name="code">1421</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">消耗性生物资产</field>
+            <field name="user_type" ref="user_type_bs10"/>
+        </record>
+
+        <record id="small_business_chart1501" model="account.account.template">
+            <field name="code">1501</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">长期债券投资</field>
+            <field name="user_type" ref="user_type_bs34"/>
+        </record>
+
+        <record id="small_business_chart1511" model="account.account.template">
+            <field name="code">1511</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">长期股权投资</field>
+            <field name="user_type" ref="user_type_bs32"/>
+        </record>
+
+        <record id="small_business_chart1601" model="account.account.template">
+            <field name="code">1601</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">固定资产</field>
+            <field name="user_type" ref="user_type_bs39"/>
+        </record>
+        <record id="small_business_chart1602" model="account.account.template">
+            <field name="code">1602</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">累计折旧</field>
+            <field name="user_type" ref="user_type_bs40"/>
+        </record>
+
+        <record id="small_business_chart1604" model="account.account.template">
+            <field name="code">1604</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">在建工程</field>
+            <field name="user_type" ref="user_type_bs45"/>
+        </record>
+        <record id="small_business_chart1605" model="account.account.template">
+            <field name="code">1605</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">工程物资</field>
+            <field name="user_type" ref="user_type_bs44"/>
+        </record>
+
+        <record id="small_business_chart1606" model="account.account.template">
+            <field name="code">1606</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">固定资产清理</field>
+            <field name="user_type" ref="user_type_bs39"/>
+        </record>
+
+        <record id="small_business_chart1621" model="account.account.template">
+            <field name="code">1621</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">生产性生物资产</field>
+            <field name="user_type" ref="user_type_bs39"/>
+        </record>
+
+        <record id="small_business_chart1602" model="account.account.template">
+            <field name="code">1622</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">生产性生物资产累计折旧</field>
+            <field name="user_type" ref="user_type_bs40"/>
+        </record>
+
+        <record id="small_business_chart1701" model="account.account.template">
+            <field name="code">1701</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">无形资产</field>
+            <field name="user_type" ref="user_type_bs51"/>
+        </record>
+
+        <record id="small_business_chart1702" model="account.account.template">
+            <field name="code">1702</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">累计摊销</field>
+            <field name="user_type" ref="user_type_bs51"/>
+        </record>
+
+        <record id="small_business_chart1801" model="account.account.template">
+            <field name="code">1801</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">长期待摊费用</field>
+            <field name="user_type" ref="user_type_bs52"/>
+        </record>
+
+
+        <record id="small_business_chart1901" model="account.account.template">
+            <field name="code">1901</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">待处理财产损溢</field>
+            <field name="user_type" ref="user_type_bs44"/>
+        </record>
+        
+        
+        <!-- 二、负债类 -->
+        <record id="small_business_chart2001" model="account.account.template">
+            <field name="code">2001</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">短期借款</field>
+            <field name="user_type" ref="user_type_bs68"/>
+        </record>
+
+        <record id="small_business_chart2201" model="account.account.template">
+            <field name="code">2201</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">应付票据</field>
+            <field name="user_type" ref="user_type_bs69"/>
+        </record>
+        <record id="small_business_chart2202" model="account.account.template">
+            <field name="code">2202</field>
+            <field eval="True" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">payable</field>
+            <field name="name">应付账款</field>
+            <field name="user_type" ref="user_type_bs70"/>
+        </record>
+        <record id="small_business_chart2203" model="account.account.template">
+            <field name="code">2203</field>
+            <field eval="True" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">receivable</field>
+            <field name="name">预收账款</field>
+            <field name="user_type" ref="user_type_bs71"/>
+        </record>
+        <record id="small_business_chart2211" model="account.account.template">
+            <field name="code">2211</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">应付职工薪酬</field>
+            <field name="user_type" ref="user_type_bs72"/>
+        </record>
+        <record id="small_business_chart2221" model="account.account.template">
+            <field name="code">2221</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>            
+            <field name="type">other</field>
+            <field name="name">应交税费</field>
+            <field name="user_type" ref="user_type_bs75"/>
+        </record>
+
+        <record id="small_business_chart2231" model="account.account.template">
+            <field name="code">2231</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">应付利息</field>
+            <field name="user_type" ref="user_type_bs74"/>
+        </record>
+        <record id="small_business_chart2232" model="account.account.template">
+            <field name="code">2232</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">应付利润</field>
+            <field name="user_type" ref="user_type_bs74"/>
+        </record>
+
+        <record id="small_business_chart2241" model="account.account.template">
+            <field name="code">2241</field>
+            <field eval="True" name="reconcile"/>
+            <field ref="cn_root" name="parent_id"/>
+            <field name="type">payable</field>
+            <field name="name">其他应付款</field>
+            <field name="user_type" ref="user_type_bs70"/>
+        </record>
+
+        <record id="small_business_chart2401" model="account.account.template">
+            <field name="code">2401</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">递延收益</field>
+            <field name="user_type" ref="user_type_all"/>
+        </record>
+        <record id="small_business_chart2501" model="account.account.template">
+            <field name="code">2501</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">长期借款</field>
+            <field name="user_type" ref="user_type_bs101"/>
+        </record>
+
+        <record id="small_business_chart2701" model="account.account.template">
+            <field name="code">2701</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">长期应付款</field>
+            <field name="user_type" ref="user_type_bs103"/>
+        </record>
+
+
+        <!-- 所有者权益类 -->
+        <record id="small_business_chart3001" model="account.account.template">
+            <field name="code">3001</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">实收资本</field>
+            <field name="user_type" ref="user_type_bs115"/>
+        </record>
+        <record id="small_business_chart3002" model="account.account.template">
+            <field name="code">3002</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">资本公积</field>
+            <field name="user_type" ref="user_type_bs118"/>
+        </record>
+        <record id="small_business_chart3101" model="account.account.template">
+            <field name="code">3101</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">盈余公积</field>
+            <field name="user_type" ref="user_type_bs119"/>
+        </record>
+        <record id="small_business_chart3103" model="account.account.template">
+            <field name="code">3103</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">本年利润</field>
+            <field name="user_type" ref="user_type_bs121"/>
+        </record>
+        <record id="small_business_chart3104" model="account.account.template">
+            <field name="code">3104</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">利润分配</field>
+            <field name="user_type" ref="user_type_bs121"/>
+        </record>
+
+        <!-- 成本类 -->
+        <record id="small_business_chart4001" model="account.account.template">
+            <field name="code">4001</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">生产成本</field>
+            <field name="user_type" ref="user_type_all"/>
+        </record>
+        <record id="small_business_chart4101" model="account.account.template">
+            <field name="code">4101</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">制造费用</field>
+            <field name="user_type" ref="user_type_all"/>
+        </record>
+
+        <record id="small_business_chart4301" model="account.account.template">
+            <field name="code">4301</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">研发支出</field>
+            <field name="user_type" ref="user_type_all"/>
+        </record>
+
+        <record id="small_business_chart4401" model="account.account.template">
+            <field name="code">4401</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">工程施工</field>
+            <field name="user_type" ref="user_type_all"/>
+        </record>
+
+        <record id="small_business_chart4403" model="account.account.template">
+            <field name="code">4403</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">机械作业</field>
+            <field name="user_type" ref="user_type_all"/>
+        </record>
+
+
+       <!-- 损益类 -->
+        <record id="small_business_chart5001" model="account.account.template">
+            <field name="code">5001</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">主营业务收入</field>
+            <field name="user_type" ref="user_type_pl1"/>
+        </record>
+        <record id="small_business_chart5051" model="account.account.template">
+            <field name="code">5051</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">其他业务收入</field>
+            <field name="user_type" ref="user_type_pl23"/>
+        </record>
+
+        <record id="small_business_chart5111" model="account.account.template">
+            <field name="code">5111</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">投资收益</field>
+            <field name="user_type" ref="user_type_pl19"/>
+        </record>
+        <record id="small_business_chart5301" model="account.account.template">
+            <field name="code">5301</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">营业外收入</field>
+            <field name="user_type" ref="user_type_pl23"/>
+        </record>
+
+        <record id="small_business_chart5401" model="account.account.template">
+            <field name="code">5401</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">主营业务成本</field>
+            <field name="user_type" ref="user_type_pl3"/>
+        </record>
+        <record id="small_business_chart5402" model="account.account.template">
+            <field name="code">5402</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">其他业务成本</field>
+            <field name="user_type" ref="user_type_pl3"/>
+        </record>
+
+        <record id="small_business_chart5403" model="account.account.template">
+            <field name="code">5403</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">营业税金及附加</field>
+            <field name="user_type" ref="user_type_pl5"/>
+        </record>
+        <record id="small_business_chart5601" model="account.account.template">
+            <field name="code">5601</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">销售费用</field>
+            <field name="user_type" ref="user_type_pl11"/>
+        </record>
+        <record id="small_business_chart5602" model="account.account.template">
+            <field name="code">5602</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">管理费用</field>
+            <field name="user_type" ref="user_type_pl13"/>
+        </record>
+        <record id="small_business_chart5603" model="account.account.template">
+            <field name="code">5603</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">财务费用</field>
+            <field name="user_type" ref="user_type_pl15"/>
+        </record>
+
+        <record id="small_business_chart5711" model="account.account.template">
+            <field name="code">5711</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">营业外支出</field>
+            <field name="user_type" ref="user_type_pl25"/>
+        </record>
+        <record id="small_business_chart5801" model="account.account.template">
+            <field name="code">5801</field>
+            <field eval="False" name="reconcile"/>
+            <field ref="cn_small_business_root" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="name">所得税</field>
+            <field name="user_type" ref="user_type_pl29"/>
+        </record>
+
+
+        <!-- Chart template -->
+        <record id="l10n_chart_china_small_business" model="account.chart.template">
+            <field name="name">小企业会计科目表（财会[2011]17号《小企业会计准则》）</field>
+            <field name="account_root_id" ref="cn_small_business_root"/>
+            <field name="code_digits" eval="4"/>
+            <field name="tax_code_root_id" ref="vat_cn_chart_root"/>
+            <field name="bank_account_view_id" ref="small_business_chart1002"/>
+            <field name="property_account_receivable" ref="small_business_chart1122"/>
+            <field name="property_account_payable" ref="small_business_chart2202"/>
+            <field name="property_account_expense_categ" ref="small_business_chart1401"/>
+            <field name="property_account_income_categ" ref="small_business_chart5001"/>
+        </record>
+
+        <record id="l10n_chart_china_small_business_value" model="ir.values">
+            <field name="name">小企业会计科目表（财会[2011]17号《小企业会计准则》）</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="l10n_chart_china_small_business"/>
+            <field name="value" ref="base.CNY"/>
+        </record>
+
+        <!-- 增值税 -->
+        <record id="vats_small_business" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
+            <field name="name">增值税17%销项税</field>
+            <field eval="0.17" name="amount"/>
+            <field name="type">percent</field>
+            <field name="account_collected_id" ref="small_business_chart2221"/>
+            <field name="account_paid_id" ref="small_business_chart2221"/>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <record id="vatp_small_business" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
+            <field name="name">增值税17%进项税</field>
+            <field eval="0.17" name="amount"/>
+            <field name="type">percent</field>
+            <field name="account_collected_id" ref="small_business_chart2221"/>
+            <field name="account_paid_id" ref="small_business_chart2221"/>
+            <field name="type_tax_use">purchase</field>
+        </record>
+
+
+
+    </data>
+</openerp>
