@@ -19,10 +19,6 @@
     </xpath>
     <!-- Remove conflicting style -->
     <xpath expr="//head/link[@href='/web/static/src/css/full.css']" position="replace"></xpath>
-    <!-- Correct view inheritance -->
-    <xpath expr="//t[@t-name='web.layout']" position="attributes">
-        <attribute name="t-name">report.layout</attribute>
-    </xpath>
 </template>
 
 <template id="html_container">
