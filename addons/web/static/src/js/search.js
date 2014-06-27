@@ -846,7 +846,9 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
             }
 
             switch (item.tag) {
-            case 'separator': case 'newline':
+            case 'separator': 
+            case 'newline':
+                filters.push(new instance.web.search.Separator(this))
                 break;
             case 'filter':
                 filters.push(new instance.web.search.Filter(item, group));
@@ -1311,6 +1313,13 @@ instance.web.search.Filter = instance.web.search.Input.extend(/** @lends instanc
     get_context: function () { },
     get_domain: function () { },
 });
+
+instance.web.search.Separator = instance.web.search.Input.extend({
+    complete: function () {
+        return {is_separator: true};
+    }
+});
+
 instance.web.search.Field = instance.web.search.Input.extend( /** @lends instance.web.search.Field# */ {
     template: 'SearchView.field',
     default_operator: '=',
@@ -2397,9 +2406,17 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         var self = this;
         var $list = this.$('ul');
         $list.empty();
+        var render_separator = false;
         results.forEach(function (result) {
-            var $item = self.make_list_item(result).appendTo($list);
-            result.$el = $item;
+            if (result.is_separator) {
+                if (render_separator)
+                    $list.append($('<li>').addClass('oe-separator'));
+                render_separator = false;
+            } else {
+                var $item = self.make_list_item(result).appendTo($list);
+                result.$el = $item;
+                render_separator = true;
+            }
         });
         this.show();
     },
