@@ -37,7 +37,7 @@ class mail_followers(osv.Model):
     _log_access = False
     _description = 'Document Followers'
     _columns = {
-        'res_model': fields.char('Related Document Model', size=128,
+        'res_model': fields.char('Related Document Model',
                         required=True, select=1,
                         help='Model of the followed resource'),
         'res_id': fields.integer('Related Document ID', select=1,
@@ -119,11 +119,10 @@ class mail_notification(osv.Model):
         # add user signature
         user = self.pool.get("res.users").browse(cr, SUPERUSER_ID, [user_id], context=context)[0]
         if user.signature:
-            signature = plaintext2html(user.signature)
+            signature = user.signature
         else:
             signature = "--<br />%s" % user.name
-        footer = tools.append_content_to_html(footer, signature, plaintext=False, container_tag='p')
-
+        footer = tools.append_content_to_html(footer, signature, plaintext=False)
         # add company signature
         if user.company_id.website:
             website_url = ('http://%s' % user.company_id.website) if not user.company_id.website.lower().startswith(('http:', 'https:')) \
@@ -175,6 +174,11 @@ class mail_notification(osv.Model):
         # compute email references
         references = message.parent_id.message_id if message.parent_id else False
 
+        # custom values
+        custom_values = dict()
+        if message.model and message.res_id and self.pool.get(message.model) and hasattr(self.pool[message.model], 'message_get_email_values'):
+            custom_values = self.pool[message.model].message_get_email_values(cr, uid, message.res_id, message, context=context)
+
         # create email values
         max_recipients = 50
         chunks = [email_pids[x:x + max_recipients] for x in xrange(0, len(email_pids), max_recipients)]
@@ -187,6 +191,7 @@ class mail_notification(osv.Model):
                 'recipient_ids': [(4, id) for id in chunk],
                 'references': references,
             }
+            mail_values.update(custom_values)
             email_ids.append(self.pool.get('mail.mail').create(cr, uid, mail_values, context=context))
         if force_send and len(chunks) < 2:  # for more than 50 followers, use the queue system
             self.pool.get('mail.mail').send(cr, uid, email_ids, context=context)

@@ -1,5 +1,6 @@
 import openerp.tests
 
+
 class TestUi(openerp.tests.HttpCase):
     def test_01_public_homepage(self):
         self.phantom_js("/", "console.log('ok')", "openerp.website.snippet")

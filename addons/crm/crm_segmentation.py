@@ -30,7 +30,7 @@ class crm_segmentation(osv.osv):
     _description = "Partner Segmentation"
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, help='The name of the segmentation.'),
+        'name': fields.char('Name', required=True, help='The name of the segmentation.'),
         'description': fields.text('Description'),
         'categ_id': fields.many2one('res.partner.category', 'Partner Category',\
                          required=True, help='The partner category that will be \
@@ -115,10 +115,10 @@ class crm_segmentation_line(osv.osv):
     _description = "Segmentation line"
 
     _columns = {
-        'name': fields.char('Rule Name', size=64, required=True),
+        'name': fields.char('Rule Name', required=True),
         'segmentation_id': fields.many2one('crm.segmentation', 'Segmentation'),
         'expr_name': fields.selection([('sale','Sale Amount'),
-                        ('purchase','Purchase Amount')], 'Control Variable', size=64, required=True),
+                        ('purchase','Purchase Amount')], 'Control Variable', required=True),
         'expr_operator': fields.selection([('<','<'),('=','='),('>','>')], 'Operator', required=True),
         'expr_value': fields.float('Value', required=True),
         'operator': fields.selection([('and','Mandatory Expression'),\

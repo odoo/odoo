@@ -54,9 +54,9 @@ class ir_model_fields_anonymization(osv.osv):
     _rec_name = 'field_id'
 
     _columns = {
-        'model_name': fields.char('Object Name', size=128, required=True),
+        'model_name': fields.char('Object Name', required=True),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
-        'field_name': fields.char('Field Name', size=128, required=True),
+        'field_name': fields.char('Field Name', required=True),
         'field_id': fields.many2one('ir.model.fields', 'Field', ondelete='set null'),
         'state': fields.selection(selection=FIELD_STATES, String='Status', required=True, readonly=True),
     }
@@ -226,9 +226,9 @@ class ir_model_fields_anonymization_history(osv.osv):
         'date': fields.datetime('Date', required=True, readonly=True),
         'field_ids': fields.many2many('ir.model.fields.anonymization', 'anonymized_field_to_history_rel', 'field_id', 'history_id', 'Fields', readonly=True),
         'state': fields.selection(selection=ANONYMIZATION_HISTORY_STATE, string='Status', required=True, readonly=True),
-        'direction': fields.selection(selection=ANONYMIZATION_DIRECTION, string='Direction', required=True, readonly=True),
+        'direction': fields.selection(selection=ANONYMIZATION_DIRECTION, string='Direction', size=20, required=True, readonly=True),
         'msg': fields.text('Message', readonly=True),
-        'filepath': fields.char(string='File path', size=256, readonly=True),
+        'filepath': fields.char(string='File path', readonly=True),
     }
 
 
@@ -253,7 +253,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         return res
 
     _columns = {
-        'name': fields.char(size=64, string='File Name'),
+        'name': fields.char(string='File Name'),
         'summary': fields.function(_get_summary, type='text', string='Summary'),
         'file_export': fields.binary(string='Export'),
         'file_import': fields.binary(string='Import', help="This is the file created by the anonymization process. It should have the '.pickle' extention."),

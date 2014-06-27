@@ -9,18 +9,17 @@ from openerp.addons.web.http import request
 class website_hr_recruitment(http.Controller):
     @http.route([
         '/jobs',
+        '/jobs/country/<model("res.country"):country>',
         '/jobs/department/<model("hr.department"):department>',
-        '/jobs/office/<string:office>',
-        '/jobs/country/<model("res.country"):country>'
+        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>',
+        '/jobs/office/<int:office_id>',
+        '/jobs/country/<model("res.country"):country>/office/<int:office_id>',
+        '/jobs/department/<model("hr.department"):department>/office/<int:office_id>',
+        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>',
         ], type='http', auth="public", website=True)
-    def jobs(self, department=None, office=None, country=None):
+    def jobs(self, country=None, department=None, office_id=None):
         context=dict(request.context, show_address=True, no_tag_br=True)
         cr, uid = request.cr, request.uid
-
-        # office is restriced, deslugify manually
-        office_id = 0
-        if office:
-            office_id = int(office.split('-')[-1])
 
         # Search all available jobs as uid
         JobsObj = request.registry['hr.job']
@@ -30,26 +29,37 @@ class website_hr_recruitment(http.Controller):
         jobs = JobsObj.browse(cr, 1, job_ids, context=context)
 
         # Deduce departments and offices of those jobs
+        countries = set(j.address_id.country_id for j in jobs if j.address_id and j.address_id.country_id)
         departments = set(j.department_id for j in jobs if j.department_id)
         offices = set(j.address_id for j in jobs if j.address_id)
         countries = set(o.country_id for o in offices if o.country_id)
 
+        # Default search by user country
+        if not country and not department and not office_id:
+            country_code = request.session['geoip'].get('country_code')
+            if country_code:
+                country_ids = request.registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
+                if country_ids:
+                    country = country_ids[0]
+
         # Filter the matching one
+        jobs = [j for j in jobs if country==None or j.address_id==None or j.address_id.country_id and j.address_id.country_id.id == country.id]
         jobs = [j for j in jobs if department==None or j.department_id and j.department_id.id == department.id]
-        jobs = [j for j in jobs if office==None or j.address_id and j.address_id.id == office_id]
-        jobs = [j for j in jobs if country==None or j.address_id and j.address_id.country_id and j.address_id.country_id.id == country.id]
+        jobs = [j for j in jobs if office_id==None or j.address_id and j.address_id.id == office_id]
 
         # Render page
         return request.website.render("website_hr_recruitment.index", {
             'jobs': jobs,
+            'countries': countries,
             'departments': departments,
             'offices': offices,
-            'department_id': department and department.id,
+            'country_id': country,
+            'department_id': department,
             'office_id': office_id,
             'countries': countries
         })
 
-    @http.route('/jobs/add', type='http', auth="user", methods=['POST'], website=True)
+    @http.route('/jobs/add', type='http', auth="user", website=True)
     def jobs_add(self, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         value = {

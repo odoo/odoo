@@ -2,16 +2,19 @@
 import datetime
 import hashlib
 import logging
+import os
 import re
 import traceback
+
 import werkzeug
 import werkzeug.routing
 
 import openerp
 from openerp.addons.base import ir
 from openerp.addons.base.ir import ir_qweb
-from openerp.addons.website.models.website import slug, url_for
+from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
+from openerp.tools import config
 from openerp.osv import orm
 
 logger = logging.getLogger(__name__)
@@ -24,6 +27,7 @@ class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
 
     rerouting_limit = 10
+    geo_ip_resolver = None
 
     def _get_converters(self):
         return dict(
@@ -53,6 +57,25 @@ class ir_http(orm.AbstractModel):
 
         request.website_multilang = request.website_enabled and func and func.routing.get('multilang', True)
 
+        if 'geoip' not in request.session:
+            record = {}
+            if self.geo_ip_resolver is None:
+                try:
+                    import GeoIP
+                    # updated database can be downloaded on MaxMind website
+                    # http://dev.maxmind.com/geoip/legacy/install/city/
+                    geofile = config.get('geoip_database', '/usr/share/GeoIP/GeoLiteCity.dat')
+                    if os.path.exists(geofile):
+                        self.geo_ip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
+                    else:
+                        self.geo_ip_resolver = False
+                        logger.warning('GeoIP database file %r does not exists', geofile)
+                except ImportError:
+                    self.geo_ip_resolver = False
+            if self.geo_ip_resolver and request.httprequest.remote_addr:
+                record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
+            request.session['geoip'] = record
+
         if request.website_enabled:
             if func:
                 self._authenticate(func.routing['auth'])
@@ -74,7 +97,6 @@ class ir_http(orm.AbstractModel):
                         # to url without language so google doesn't see duplicate content
                         return request.redirect(path + '?' + request.httprequest.query_string)
                     return self.reroute(path)
-                return self._handle_exception(code=404)
         return super(ir_http, self)._dispatch()
 
     def reroute(self, path):
@@ -102,8 +124,8 @@ class ir_http(orm.AbstractModel):
         try:
             _, path = rule.build(arguments)
             assert path is not None
-        except Exception:
-            return self._handle_exception(werkzeug.exceptions.NotFound())
+        except Exception, e:
+            return self._handle_exception(e, code=404)
 
         if getattr(request, 'website_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
             generated_path = werkzeug.url_unquote_plus(path)
@@ -135,61 +157,81 @@ class ir_http(orm.AbstractModel):
             if response.status_code == 304:
                 return response
 
-            response.mimetype = attach[0]['mimetype']
+            response.mimetype = attach[0]['mimetype'] or 'application/octet-stream'
             response.data = datas.decode('base64')
             return response
 
-    def _handle_exception(self, exception=None, code=500):
-        try:
+    def _handle_exception(self, exception, code=500):
+        # This is done first as the attachment path may
+        # not match any HTTP controller, so the request
+        # may not be website-enabled.
+        attach = self._serve_attachment()
+        if attach:
+            return attach
+
+        is_website_request = bool(getattr(request, 'website_enabled', False) and request.website)
+        if not is_website_request:
+            # Don't touch non website requests exception handling
             return super(ir_http, self)._handle_exception(exception)
-        except Exception:
+        else:
+            try:
+                response = super(ir_http, self)._handle_exception(exception)
+                if isinstance(response, Exception):
+                    exception = response
+                else:
+                    # if parent excplicitely returns a plain response, then we don't touch it
+                    return response
+            except Exception, e:
+                exception = e
 
-            attach = self._serve_attachment()
-            if attach:
-                return attach
+            values = dict(
+                exception=exception,
+                traceback=traceback.format_exc(exception),
+            )
+            code = getattr(exception, 'code', code)
 
-            if getattr(request, 'website_enabled', False) and request.website:
-                values = dict(
-                    exception=exception,
-                    traceback=traceback.format_exc(exception),
-                )
-                if exception:
-                    code = getattr(exception, 'code', code)
-                    if isinstance(exception, ir_qweb.QWebException):
-                        values.update(qweb_exception=exception)
-                        if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
-                            code = 403
-                if code == 500:
-                    logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
-                    if 'qweb_exception' in values:
-                        view = request.registry.get("ir.ui.view")
-                        views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
-                        to_reset = [v for v in views if v.model_data_id.noupdate is True]
-                        values['views'] = to_reset
-                elif code == 403:
-                    logger.warn("403 Forbidden:\n\n%s", values['traceback'])
+            if isinstance(exception, openerp.exceptions.AccessError):
+                code = 403
 
-                values.update(
-                    status_message=werkzeug.http.HTTP_STATUS_CODES[code],
-                    status_code=code,
-                )
+            if isinstance(exception, ir_qweb.QWebException):
+                values.update(qweb_exception=exception)
+                if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
+                    code = 403
 
-                if not request.uid:
-                    self._auth_method_public()
+            if isinstance(exception, werkzeug.exceptions.HTTPException) and code is None:
+                # Hand-crafted HTTPException likely coming from abort(),
+                # usually for a redirect response -> return it directly
+                return exception
 
-                try:
-                    html = request.website._render('website.%s' % code, values)
-                except Exception:
-                    html = request.website._render('website.http_error', values)
-                return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+            if code == 500:
+                logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
+                if 'qweb_exception' in values:
+                    view = request.registry.get("ir.ui.view")
+                    views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
+                    to_reset = [v for v in views if v.model_data_id.noupdate is True]
+                    values['views'] = to_reset
+            elif code == 403:
+                logger.warn("403 Forbidden:\n\n%s", values['traceback'])
 
-            raise
+            values.update(
+                status_message=werkzeug.http.HTTP_STATUS_CODES[code],
+                status_code=code,
+            )
+
+            if not request.uid:
+                self._auth_method_public()
+
+            try:
+                html = request.website._render('website.%s' % code, values)
+            except Exception:
+                html = request.website._render('website.http_error', values)
+            return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
 class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False, domain='[]'):
         super(ModelConverter, self).__init__(url_map, model)
         self.domain = domain
-        self.regex = r'(?:[A-Za-z0-9-_]+?-)?(\d+)(?=$|/)'
+        self.regex = _UNSLUG_RE.pattern
 
     def to_url(self, value):
         return slug(value)
@@ -198,7 +240,7 @@ class ModelConverter(ir.ir_http.ModelConverter):
         m = re.match(self.regex, value)
         _uid = RequestUID(value=value, match=m, converter=self)
         return request.registry[self.model].browse(
-            request.cr, _uid, int(m.group(1)), context=request.context)
+            request.cr, _uid, int(m.group(2)), context=request.context)
 
     def generate(self, cr, uid, query=None, args=None, context=None):
         obj = request.registry[self.model]

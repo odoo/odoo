@@ -118,10 +118,22 @@ def slug(value):
     else:
         # assume name_search result tuple
         id, name = value
-    slugname = slugify(name or '')
+    slugname = slugify(name or '').strip().strip('-')
     if not slugname:
         return str(id)
     return "%s-%d" % (slugname, id)
+
+
+_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[a-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)', re.I)
+
+def unslug(s):
+    """Extract slug and id from a string.
+        Always return un 2-tuple (str|None, int|None)
+    """
+    m = _UNSLUG_RE.match(s)
+    if not m:
+        return None, None
+    return m.group(1), int(m.group(2))
 
 def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
@@ -230,6 +242,9 @@ class website(osv.osv):
         Access = self.pool['ir.model.access']
         is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
         return is_website_publisher
+
+    def is_user(self, cr, uid, ids, context=None):
+        return self.pool['res.users'].has_group(cr, request.uid, 'base.group_user')
 
     def get_template(self, cr, uid, ids, template, context=None):
         if isinstance(template, (int, long)):
@@ -579,7 +594,7 @@ class website_menu(osv.osv):
     _name = "website.menu"
     _description = "Website Menu"
     _columns = {
-        'name': fields.char('Menu', size=64, required=True, translate=True),
+        'name': fields.char('Menu', required=True, translate=True),
         'url': fields.char('Url', translate=True),
         'new_window': fields.boolean('New Window'),
         'sequence': fields.integer('Sequence'),

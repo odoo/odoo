@@ -146,7 +146,7 @@ class question(osv.osv):
     _description= "Question"
 
     _columns={
-        'name': fields.char("Question",size=128, required=True),
+        'name': fields.char("Question", required=True),
         'answers_ids': fields.one2many("crm_profiling.answer","question_id","Avalaible Answers",),
         }
 
@@ -159,7 +159,7 @@ class questionnaire(osv.osv):
     _description= "Questionnaire"
 
     _columns = {
-        'name': fields.char("Questionnaire",size=128, required=True),
+        'name': fields.char("Questionnaire", required=True),
         'description':fields.text("Description", required=True),
         'questions_ids': fields.many2many('crm_profiling.question','profile_questionnaire_quest_rel',\
                                 'questionnaire', 'question', "Questions"),
@@ -171,7 +171,7 @@ class answer(osv.osv):
     _name="crm_profiling.answer"
     _description="Answer"
     _columns={
-        "name": fields.char("Answer",size=128, required=True),
+        "name": fields.char("Answer", required=True),
         "question_id": fields.many2one('crm_profiling.question',"Question"),
         }
 

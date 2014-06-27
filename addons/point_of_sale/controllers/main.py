@@ -46,6 +46,14 @@ html_template = """<!DOCTYPE html>
         </script>
     </head>
     <body>
+        <div class="openerp openerp_webclient_container">
+            <table class="oe_webclient">
+                <tr>
+                    <td class="oe_application"/>
+                </tr>
+            </table>
+        </div>
+
         <!--[if lte IE 8]>
         <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
         <script>CFInstall.check({mode: "overlay"});</script>
@@ -69,7 +77,8 @@ class PosController(http.Controller):
                      wc.show_application = function(){
                          wc.action_manager.do_action("pos.ui");
                      };
-                     wc.appendTo($(document.body));
+                     wc.setElement($(document.body));
+                     wc.start();
                      """
         }
         return r

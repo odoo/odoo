@@ -201,7 +201,7 @@ class crm_lead(format_address, osv.osv):
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Subject', size=64, required=True, select=1),
+        'name': fields.char('Subject', required=True, select=1),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -228,7 +228,7 @@ class crm_lead(format_address, osv.osv):
         'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange', select=True,
                         domain="['&', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
-        'referred': fields.char('Referred By', size=64),
+        'referred': fields.char('Referred By'),
         'date_open': fields.datetime('Assigned', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='day_open', type="float", store=True),
@@ -246,7 +246,7 @@ class crm_lead(format_address, osv.osv):
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         'date_action': fields.date('Next Action Date', select=True),
-        'title_action': fields.char('Next Action', size=64),
+        'title_action': fields.char('Next Action'),
         'color': fields.integer('Color Index'),
         'partner_address_name': fields.related('partner_id', 'name', type='char', string='Partner Contact Name', readonly=True),
         'partner_address_email': fields.related('partner_id', 'email', type='char', string='Partner Contact Email', readonly=True),
@@ -255,16 +255,16 @@ class crm_lead(format_address, osv.osv):
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
 
         # Fields for address, due to separation from crm and res.partner
-        'street': fields.char('Street', size=128),
-        'street2': fields.char('Street2', size=128),
+        'street': fields.char('Street'),
+        'street2': fields.char('Street2'),
         'zip': fields.char('Zip', change_default=True, size=24),
-        'city': fields.char('City', size=128),
+        'city': fields.char('City'),
         'state_id': fields.many2one("res.country.state", 'State'),
         'country_id': fields.many2one('res.country', 'Country'),
-        'phone': fields.char('Phone', size=64),
-        'fax': fields.char('Fax', size=64),
-        'mobile': fields.char('Mobile', size=64),
-        'function': fields.char('Function', size=128),
+        'phone': fields.char('Phone'),
+        'fax': fields.char('Fax'),
+        'mobile': fields.char('Mobile'),
+        'function': fields.char('Function'),
         'title': fields.many2one('res.partner.title', 'Title'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'payment_mode': fields.many2one('crm.payment.mode', 'Payment Mode', \
@@ -935,8 +935,10 @@ class crm_lead(format_address, osv.osv):
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
-        return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
-                    for lead in self.browse(cr, SUPERUSER_ID, ids, context=context)]
+        leads = self.browse(cr, SUPERUSER_ID, ids, context=context)
+        section_ids = set([lead.section_id.id for lead in leads if lead.section_id])
+        aliases = self.pool['crm.case.section'].message_get_reply_to(cr, uid, list(section_ids), context=context)
+        return dict((lead.id, aliases.get(lead.section_id and lead.section_id.id or 0, False)) for lead in leads)
 
     def get_formview_id(self, cr, uid, id, context=None):
         obj = self.browse(cr, uid, id, context=context)

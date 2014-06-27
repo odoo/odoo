@@ -100,13 +100,21 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
-                                <div t-attf-class="oe_attachment" t-if="record.file_type_icon.value != 'webimage'">
-                                    <img t-att-src="'/mail/static/src/img/mimetypes/' + record.file_type_icon.value + '.png'"></img>
-                                    <div class='oe_name'><t t-raw='record.name.value' />bb</div>
-                                </div>
-                                <div t-attf-class="oe_attachment oe_preview" t-if="record.file_type_icon.value == 'webimage'">
-                                    <img t-att-src="kanban_image('ir.attachment', 'datas', record.id.value)" class="oe_kanban_image"/>
-                                    <div class='oe_name'><t t-raw='record.name.value' />aa</div>
+                                <div class="oe_kanban_vignette">
+                                    <div class="oe_attachment">
+                                        <div t-if="record.file_type_icon.value != 'webimage'">
+                                            <img t-att-src="'/mail/static/src/img/mimetypes/' + record.file_type_icon.value + '.png'"></img>
+                                        </div>
+                                        <div t-if="record.file_type_icon.value == 'webimage' and !record.url.value">
+                                            <img t-att-src="kanban_image('ir.attachment', 'datas', record.id.value)"/>
+                                        </div>
+                                        <div t-if="record.file_type_icon.value and record.url.value">
+                                            <img t-att-src="record.url.value"/>
+                                        </div>
+                                        <div class="oe_name">
+                                            <field name="name"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </t>

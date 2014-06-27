@@ -25,7 +25,7 @@
                 im.appendTo(instance.client.$el);
                 var button = new instance.im.ImTopButton(this);
                 button.on("clicked", im, im.switch_display);
-                button.appendTo(instance.webclient.$el.find('.oe_systray'));
+                button.appendTo(window.$('.oe_systray'));
             });
             return this._super.apply(this, arguments);
         },
@@ -36,7 +36,8 @@
         events: {
             "click": "clicked",
         },
-        clicked: function() {
+        clicked: function(ev) {
+            ev.preventDefault();
             this.trigger("clicked");
         },
     });
@@ -80,7 +81,7 @@
             });
         },
         calc_box: function() {
-            var $topbar = instance.client.$(".navbar"); // .oe_topbar is replaced with .navbar of bootstrap3
+            var $topbar = window.$('#oe_main_menu_navbar'); // .oe_topbar is replaced with .navbar of bootstrap3
             var top = $topbar.offset().top + $topbar.height();
             top = Math.max(top - $(window).scrollTop(), 0);
             this.$el.css("top", top);

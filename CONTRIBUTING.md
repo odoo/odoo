@@ -5,6 +5,6 @@ Contributing to Odoo
 
 TL;DR
 
-* Use the [template structure](https://raw.githubusercontent.com/odoo/odoo/master/doc/_templates/issue_template.md)
-* Pull requests made against the [correct version](https://github.com/odoo/odoo/wiki/Contributing#against-which-version-should-i-submit-a-patch)
-* Read the restrictions for [changes in stable](https://github.com/odoo/odoo/wiki/Contributing#what-does-stable-mean)
+* Use this [template](https://raw.githubusercontent.com/odoo/odoo/master/doc/_templates/issue_template.md) when reporting issues, and please search for duplicates first!
+* Pull requests must be made against the [correct version](https://github.com/odoo/odoo/wiki/Contributing#against-which-version-should-i-submit-a-patch)
+* There are restrictions on the kind of [changes allowed in stable series](https://github.com/odoo/odoo/wiki/Contributing#what-does-stable-mean)

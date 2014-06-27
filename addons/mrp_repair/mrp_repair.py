@@ -113,7 +113,7 @@ class mrp_repair(osv.osv):
         return self.pool['mrp.repair'].search(cr, uid, [('fees_lines', 'in', ids)], context=context)
 
     _columns = {
-        'name': fields.char('Repair Reference', size=24, required=True, states={'confirmed': [('readonly', True)]}),
+        'name': fields.char('Repair Reference', required=True, states={'confirmed': [('readonly', True)]}),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
                                     required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -583,7 +583,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         return res
 
     _columns = {
-        'name': fields.char('Description', size=64, required=True),
+        'name': fields.char('Description', required=True),
         'repair_id': fields.many2one('mrp.repair', 'Repair Order Reference', ondelete='cascade', select=True),
         'type': fields.selection([('add', 'Add'), ('remove', 'Remove')], 'Type', required=True),
         'to_invoice': fields.boolean('To Invoice'),
@@ -681,7 +681,7 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
 
     _columns = {
         'repair_id': fields.many2one('mrp.repair', 'Repair Order Reference', required=True, ondelete='cascade', select=True),
-        'name': fields.char('Description', size=64, select=True, required=True),
+        'name': fields.char('Description', select=True, required=True),
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'price_unit': fields.float('Unit Price', required=True),

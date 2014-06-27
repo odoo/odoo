@@ -241,8 +241,10 @@ class rml_parse(object):
     def _get_lang_dict(self):
         pool_lang = self.pool['res.lang']
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
-        lang_ids = pool_lang.search(self.cr,self.uid,[('code','=',lang)])[0]
-        lang_obj = pool_lang.browse(self.cr,self.uid,lang_ids)
+        lang_ids = pool_lang.search(self.cr,self.uid,[('code','=',lang)])
+        if not lang_ids:
+            lang_ids = pool_lang.search(self.cr,self.uid,[('code','=','en_US')])
+        lang_obj = pool_lang.browse(self.cr,self.uid,lang_ids[0])
         self.lang_dict.update({'lang_obj':lang_obj,'date_format':lang_obj.date_format,'time_format':lang_obj.time_format})
         self.default_lang[lang] = self.lang_dict.copy()
         return True

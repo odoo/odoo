@@ -33,7 +33,7 @@
                         </div>
                     </group>
 	            </div>
-                <xpath expr="//group[@name='On Mail Client']" position="before">
+                <xpath expr="//p[@name='config_email_integration']" position="after">
                     <group name="default_alias">
                         <label for="id" string="Leads Email Alias"/>
                         <div attrs="{'invisible': [('alias_domain', '=', False)]}">

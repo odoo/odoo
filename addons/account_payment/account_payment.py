@@ -30,7 +30,7 @@ class payment_mode(osv.osv):
     _name= 'payment.mode'
     _description= 'Payment Mode'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, help='Mode of Payment'),
+        'name': fields.char('Name', required=True, help='Mode of Payment'),
         'bank_id': fields.many2one('res.partner.bank', "Bank account",
             required=True,help='Bank Account for the Payment Mode'),
         'journal': fields.many2one('account.journal', 'Journal', required=True,
@@ -87,7 +87,7 @@ class payment_order(osv.osv):
 
     _columns = {
         'date_scheduled': fields.date('Scheduled Date', states={'done':[('readonly', True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
-        'reference': fields.char('Reference', size=128, required=1, states={'done': [('readonly', True)]}),
+        'reference': fields.char('Reference', required=1, states={'done': [('readonly', True)]}),
         'mode': fields.many2one('payment.mode', 'Payment Mode', select=True, required=1, states={'done': [('readonly', True)]}, help='Select the Payment Mode to be applied.'),
         'state': fields.selection([
             ('draft', 'Draft'),
@@ -303,9 +303,9 @@ class payment_line(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Your Reference', size=64, required=True),
-        'communication': fields.char('Communication', size=64, required=True, help="Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"),
-        'communication2': fields.char('Communication 2', size=64, help='The successor message of Communication.'),
+        'name': fields.char('Your Reference', required=True),
+        'communication': fields.char('Communication', required=True, help="Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"),
+        'communication2': fields.char('Communication 2', help='The successor message of Communication.'),
         'move_line_id': fields.many2one('account.move.line', 'Entry line', domain=[('reconcile_id', '=', False), ('account_id.type', '=', 'payable')], help='This Entry Line will be referred for the information of the ordering customer.'),
         'amount_currency': fields.float('Amount in Partner Currency', digits=(16, 2),
             required=True, help='Payment amount in the partner currency'),

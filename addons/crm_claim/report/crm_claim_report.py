@@ -37,7 +37,7 @@ class crm_claim_report(osv.osv):
     _description = "CRM Claim Report"
 
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'name': fields.char('Year', required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),

@@ -109,7 +109,7 @@ class procurement_order(osv.osv):
     _columns = {
         'name': fields.text('Description', required=True),
 
-        'origin': fields.char('Source Document', size=64,
+        'origin': fields.char('Source Document',
             help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by OpenERP."),
         'company_id': fields.many2one('res.company', 'Company', required=True),
