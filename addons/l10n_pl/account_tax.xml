@@ -543,6 +543,7 @@
 # Leasing pojazdu
 #================================================
 
+<<<<<<< HEAD
 <record id="vp_leas" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT - leasing pojazdu</field>
@@ -553,6 +554,18 @@
                 <field eval="True" name="child_depend"/>
                 <field name="type_tax_use">all</field>
         </record>
+=======
+                <record id="vp_leas" model="account.tax.template">
+                        <field name="chart_template_id" ref="pl_chart_template"/>
+                        <field name="name">VAT - leasing pojazdu</field>
+                        <field name="description">VLP</field>
+                        <field name="amount">1.00</field>
+                        <field name="sequence" eval="1"/>
+                        <field name="type">percent</field>
+                        <field eval="True" name="child_depend"/>
+                        <field name="type_tax_use">all</field>
+                </record>
+>>>>>>> 8915883a43003a91fa5fcb87a1d3ed461fa74a58
 
                 <record id="vp_leas_1" model="account.tax.template">
                         <field name="chart_template_id" ref="pl_chart_template"/>
@@ -566,7 +579,11 @@
                         <field name="account_paid_id" ref="chart22020400"/>
                         <field name="base_code_id" ref="p_nab_tow_usluga"/>
                         <field name="tax_code_id" ref="v_nab_tow_usluga"/>
+<<<<<<< HEAD
                         <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>                        
+=======
+                        <field name="ref_base_code_id" ref="p_nab_tow_usluga"/>
+>>>>>>> 8915883a43003a91fa5fcb87a1d3ed461fa74a58
                         <field name="ref_tax_code_id" ref="v_nab_tow_usluga"/>
                         <field name="type_tax_use">all</field>
                 </record>
@@ -583,7 +600,10 @@
                         <field name="account_paid_id" ref="chart76140000"/>
                         <field name="type_tax_use">all</field>
                 </record>
+<<<<<<< HEAD
                 
+=======
+>>>>>>> 8915883a43003a91fa5fcb87a1d3ed461fa74a58
 
 </data>
 </openerp>

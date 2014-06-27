@@ -12,7 +12,11 @@
       <field name="code">settlement</field>
       <field name="close_method">balance</field>
     </record>
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 8915883a43003a91fa5fcb87a1d3ed461fa74a58
     <record model="account.account.type" id="account_type_nonbalance">
       <field name="name">Pozabilansowe</field>
       <field name="code">nonbalance</field>
@@ -2571,7 +2575,10 @@
                 <field name="type">other</field>
                 <field name="user_type" ref="account.data_account_type_expense"/>
                 <field name="name">Wartość w cenach zakupu sprzedanych opakowań</field>
+<<<<<<< HEAD
         
+=======
+>>>>>>> 8915883a43003a91fa5fcb87a1d3ed461fa74a58
         </record>
 
         <record id="chart74130000" model="account.account.template">
@@ -2653,7 +2660,10 @@
                 <field name="type">other</field>
                 <field name="user_type" ref="account.data_account_type_income"/>
                 <field name="name">Pozostałe przychody finansowe</field>
+<<<<<<< HEAD
         
+=======
+>>>>>>> 8915883a43003a91fa5fcb87a1d3ed461fa74a58
         </record>
 
         <record id="chart75100000" model="account.account.template">
@@ -2672,7 +2682,10 @@
                 <field name="type">other</field>
                 <field name="user_type" ref="account.data_account_type_expense"/>
                 <field name="name">Wartość sprzedanych inwestycji</field>
+<<<<<<< HEAD
         
+=======
+>>>>>>> 8915883a43003a91fa5fcb87a1d3ed461fa74a58
         </record>
 
         <record id="chart75120000" model="account.account.template">
@@ -2682,7 +2695,10 @@
                 <field name="type">other</field>
                 <field name="user_type" ref="account.data_account_type_expense"/>
                 <field name="name">Odpisy z tytułu utraty wartości inwestycji-koszty</field>
+<<<<<<< HEAD
         
+=======
+>>>>>>> 8915883a43003a91fa5fcb87a1d3ed461fa74a58
         </record>
 
         <record id="chart75130000" model="account.account.template">
@@ -3208,6 +3224,7 @@
         </record>
 
 <!-- Chart template -->
+<<<<<<< HEAD
     <record id="pl_chart_template" model="account.chart.template">
       <field name="name">Polska - Plan kont</field>
       <field name="account_root_id" ref="chart0"/>
@@ -3219,6 +3236,19 @@
       <field name="property_account_income_categ" ref="chart73010000"/>
       <field name="currency_id" ref="base.PLN"/>
     </record>
+=======
+        <record id="pl_chart_template" model="account.chart.template">
+                <field name="name">Polska - Plan kont</field>
+                <field name="account_root_id" ref="chart0"/>
+                <field name="tax_code_root_id" ref="tax_code"/>
+                <field name="bank_account_view_id" ref="chart11010000"/>
+                <field name="property_account_receivable" ref="chart20000000"/>
+                <field name="property_account_payable" ref="chart21000000"/>
+                <field name="property_account_expense_categ" ref="chart30020000"/>
+                <field name="property_account_income_categ" ref="chart73010000"/>
+                <field name="currency_id" ref="base.PLN"/>
+        </record>
+>>>>>>> 8915883a43003a91fa5fcb87a1d3ed461fa74a58
         
 </data>
 </openerp>

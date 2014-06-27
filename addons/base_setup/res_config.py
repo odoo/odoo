@@ -81,8 +81,7 @@ class base_config_settings(osv.osv_memory):
         return self.pool.get("res.font").font_scan(cr, uid, context=context)
 
 # Preferences wizard for Sales & CRM.
-# It is defined here because it is inherited independently in modules sale, crm,
-# plugin_outlook and plugin_thunderbird.
+# It is defined here because it is inherited independently in modules sale, crm.
 class sale_config_settings(osv.osv_memory):
     _name = 'sale.config.settings'
     _inherit = 'res.config.settings'
@@ -91,18 +90,6 @@ class sale_config_settings(osv.osv_memory):
             help="""When you create a new contact (person or company), you will be able to load all the data from LinkedIn (photos, address, etc)."""),
         'module_crm': fields.boolean('CRM'),
         'module_sale' : fields.boolean('SALE'),
-        'module_plugin_thunderbird': fields.boolean('Enable Thunderbird plug-in',
-            help='The plugin allows you archive email and its attachments to the selected '
-                 'OpenERP objects. You can select a partner, or a lead and '
-                 'attach the selected mail as a .eml file in '
-                 'the attachment of a selected record. You can create documents for CRM Lead, '
-                 'Partner from the selected emails.\n'
-                 '-This installs the module plugin_thunderbird.'),
-        'module_plugin_outlook': fields.boolean('Enable Outlook plug-in',
-            help='The Outlook plugin allows you to select an object that you would like to add '
-                 'to your email and its attachments from MS Outlook. You can select a partner, '
-                 'or a lead object and archive a selected email into an OpenERP mail message with attachments.\n'
-                 '-This installs the module plugin_outlook.'),
         'module_mass_mailing': fields.boolean(
             'Manage mass mailing campaigns',
             help='Get access to statistics with your mass mailing, manage campaigns.'),

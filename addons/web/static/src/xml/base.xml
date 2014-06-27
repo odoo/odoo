@@ -294,9 +294,9 @@
     </div>
 </t>
 <t t-name="DatabaseManager.user_menu">
-    <span class="oe_right">
-         <a id="back-to-login" href="#"><span class="oe_topbar_item oe_topbar_name">Back to Login</span></a>
-    </span>
+    <li>
+         <a id="back-to-login" href="#">Back to Login</a>
+    </li>
 </t>
 <t t-name="DatabaseManager.menu">
     <div class="oe_secondary_menu_section">Database Management</div>
@@ -341,52 +341,6 @@
     </form>
 </t>
 
-<t t-name="Menu">
-    <ul class="nav navbar-nav navbar-left" t-if="widget.data">
-        <li t-foreach="widget.data.data.children" t-as="menu">
-            <t t-call="Menu.link"/>
-        </li>
-        <li id="menu_more_container" class="dropdown" style="display: none;">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
-            <ul id="menu_more" class="dropdown-menu"></ul>
-        </li>
-    </ul>
-</t>
-<t t-name="Menu.secondary">
-    <div t-foreach="widget.data.data.children" t-as="menu" style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu.id">
-        <t t-foreach="menu.children" t-as="menu">
-            <div class="oe_secondary_menu_section">
-                <t t-esc="menu.name"/>
-                <!--
-                    Shall the section be still clickable ?
-                    <t t-call="Menu.link"/>
-                -->
-            </div>
-            <t t-call="Menu.secondary.submenu"/>
-        </t>
-    </div>
-</t>
-<t t-name="Menu.secondary.submenu">
-    <ul t-if="menu.children.length" class="oe_secondary_submenu nav nav-pills nav-stacked">
-        <li t-foreach="menu.children" t-as="menu">
-            <t t-call="Menu.link"/>
-            <!--<span class="oe_menu_label">8</span>-->
-            <t t-call="Menu.secondary.submenu"/>
-        </li>
-    </ul>
-</t>
-<t t-name="Menu.link">
-    <a t-attf-href="#menu_id=#{menu.id}&amp;action=#{menu.action ? menu.action.split(',')[1] : ''}"
-        t-att-class="menu.children.length ? 'oe_menu_toggler' : 'oe_menu_leaf'"
-        t-att-data-menu="menu.id"
-        t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
-        t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
-        <span class="oe_menu_text">
-            <t t-esc="menu.name"/>
-        </span>
-    </a>
-</t>
-
 <t t-name="Menu.needaction_counter">
     <div id="menu_counter" class="badge pull-right">
         <t t-if="widget.needaction_counter &gt; 99"> 99+ </t>
@@ -395,7 +349,6 @@
 </t>
 
 <t t-name="UserMenu">
-    <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
@@ -409,7 +362,6 @@
                 <li><a href="#" data-menu="logout">Log out</a></li>
             </ul>
         </li>
-    </ul>
 </t>
 <t t-name="UserMenu.about">
 
@@ -428,40 +380,6 @@
 
 </t>
 
-<t t-name="WebClient">
-    <div class="openerp openerp_webclient_container">
-    <table class="oe_webclient">
-        <tr>
-            <td colspan="2" class="navbar navbar-default navbar-static-top oe_navbar" role="navigation">
-                <div class="oe_menu_placeholder"/>
-                <div class="oe_user_menu_placeholder"/>
-                <div class="oe_systray"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="oe_leftbar" valign="top">
-                <div>
-                    <t t-set="debug" t-value="__debug__ ? '&amp;debug' : ''"/>
-                    <a class="oe_logo" t-attf-href="/web?#{debug}">
-                        <span class="oe_logo_edit">Edit Company data</span>
-                        <img t-att-src='widget.session.url("/web/binary/company_logo")'/>
-                    </a>
-                    <div>
-                        <div>
-                            <div class="oe_secondary_menus_container"/>
-                        </div>
-                    </div>
-                    <div class="oe_footer">
-                        Powered by <a href="http://www.odoo.com" target="_blank"><span>Odoo</span></a>
-                    </div>
-                </div>
-            </td>
-            <td class="oe_application">
-            </td>
-        </tr>
-    </table>
-    </div>
-</t>
 <t t-name="WebClient.timezone_notification">
     <div class="oe_webclient_timezone_notification">
         <p>Your user's preference timezone does not match your browser timezone:</p>
@@ -477,9 +395,9 @@
     </div>
 </t>
 <t t-name="WebClient.timezone_systray">
-    <div class="oe_topbar_item oe_timezone_systray" title="Timezone mismatch">
-        <span class="ui-icon ui-state-error ui-icon-alert"/>
-    </div>
+    <li class="oe_topbar_item oe_timezone_systray" title="Timezone mismatch">
+        <a href="#"><i class="fa fa-exclamation-triangle" style="color:red;"></i></a>
+    </li>
 </t>
 
 <t t-name="EmbedClient">

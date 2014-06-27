@@ -366,7 +366,6 @@
 
   // change - shortcut for .bind("change", handler) or .trigger("change")
   fn.change = function change(handler) {
-    console.log('change test');
     var $this = $(this);
     return handler ? $this.bind(CHANGE, handler) : $this.trigger(CHANGE);
   };

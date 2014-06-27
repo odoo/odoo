@@ -20,6 +20,25 @@
   font-style: normal;
 }
 
+#oe_main_menu_navbar {
+  min-height: 34px;
+  z-index: 1001;
+  border-radius: 0;
+}
+#oe_main_menu_navbar li a, #oe_main_menu_navbar li button {
+  padding: 4px 8px 4px 8px;
+  margin-top: 2px;
+  font-size: 13px;
+}
+#oe_main_menu_navbar .oe_topbar_avatar {
+  max-height: 18px;
+  width: auto;
+}
+
+#oe_main_menu_navbar.navbar {
+  margin-bottom: 0px;
+}
+
 .openerp {
   padding: 0;
   margin: 0;
@@ -32,7 +51,12 @@
    */
 }
 .openerp.openerp_webclient_container {
-  height: 100%;
+  height: calc(100% - 34px);
+}
+@media (max-width: 768px) {
+  .openerp.openerp_webclient_container {
+    height: calc(100% - 52px);
+  }
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
@@ -461,7 +485,7 @@
   background-image: -webkit-radial-gradient(circle, #eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
   background-image: -moz-radial-gradient(#eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
   background-image: -ms-radial-gradient(#eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
-  background-image: radial-gradient(#eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
+  background-image: radial-gradient(circle, #eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
 }
 .openerp .oe_kanban_status_green {
   background: green;
@@ -469,7 +493,7 @@
   background-image: -webkit-radial-gradient(circle, #55dd55 0%, #44aa44 40%, #339933 100%);
   background-image: -moz-radial-gradient(#55dd55 0%, #44aa44 40%, #339933 100%);
   background-image: -ms-radial-gradient(#55dd55 0%, #44aa44 40%, #339933 100%);
-  background-image: radial-gradient(#55dd55 0%, #44aa44 40%, #339933 100%);
+  background-image: radial-gradient(circle, #55dd55 0%, #44aa44 40%, #339933 100%);
 }
 .openerp .oe_kanban_status_red {
   background: red;
@@ -477,7 +501,7 @@
   background-image: -webkit-radial-gradient(circle, #ee7777 0%, #cc3333 40%, #bb0808 100%);
   background-image: -moz-radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%);
   background-image: -ms-radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%);
-  background-image: radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%);
+  background-image: radial-gradient(circle, #ee7777 0%, #cc3333 40%, #bb0808 100%);
 }
 .openerp .btn-group.kanban_state {
   padding-top: 8px;
@@ -751,7 +775,7 @@
 }
 .openerp .oe_loading {
   display: none;
-  z-index: 100;
+  z-index: 1001;
   position: fixed;
   top: 0;
   right: 50%;
@@ -822,7 +846,7 @@
   background-image: -moz-linear-gradient(top, #fc8787, maroon);
   background-image: -ms-linear-gradient(top, #fc8787, maroon);
   background-image: -o-linear-gradient(top, #fc8787, maroon);
-  background-image: linear-gradient(to bottom, #fc8787, maroon);
+  background-image: linear-gradient(to bottom, #fc8787, #800000);
 }
 .openerp .navbar .oe_topbar_anonymous_login a {
   display: block;
@@ -925,49 +949,8 @@
   white-space: nowrap;
   overflow: hidden;
 }
-.openerp .navbar-nav {
-  float: left;
-  padding: 0;
-  margin: 0;
-  font-size: 13px;
-}
-.openerp .navbar-nav > li {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  float: left;
-  display: block;
-  color: #eeeeee;
-}
-.openerp .navbar-nav > li > a {
-  display: block;
-  padding: 5px 10px 26px !important;
-  line-height: 20px;
-  height: 20px;
-  text-decoration: none;
-  color: #eeeeee !important;
-  vertical-align: top;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -ms-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
-}
-.openerp .navbar-nav > li > a:hover {
-  background: rgba(0, 0, 0, 0.2);
-  text-shadow: black 0px 0px 3px;
-  color: white;
-  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
-}
-.openerp .navbar-nav > li > .active {
-  background: rgba(0, 0, 0, 0.3);
-  text-shadow: black 0px 0px 3px;
-  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
+.openerp .nav li a {
+  padding: 6px 8px 4px 8px;
 }
 .openerp .oe_user_menu {
   float: right;
@@ -980,13 +963,6 @@
 }
 .openerp .oe_user_menu .oe_dropdown_menu {
   right: -1px;
-}
-.openerp .oe_systray > div {
-  float: left;
-  padding: 0 4px 0 4px;
-}
-.openerp .oe_systray {
-  float: right;
 }
 .openerp .oe_leftbar {
   display: none;
@@ -2978,34 +2954,6 @@
   font-size: 95%;
   line-height: 1.2em;
 }
-.openerp .navbar {
-  min-height: 32px;
-  margin-bottom: 0px;
-  border: none;
-  z-index: 1;
-  position: static;
-  background-color: #414141;
-  background-color: #454343;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#646060), to(#262626));
-  background-image: -webkit-linear-gradient(top, #646060, #262626);
-  background-image: -moz-linear-gradient(top, #646060, #262626);
-  background-image: -ms-linear-gradient(top, #646060, #262626);
-  background-image: -o-linear-gradient(top, #646060, #262626);
-  background-image: linear-gradient(to bottom, #646060, #262626);
-}
-.openerp .navbar-default .navbar-nav li a:hover, .openerp .navbar-default .navbar-nav li a:focus {
-  background: rgba(0, 0, 0, 0.3);
-}
-.openerp .navbar-default .navbar-nav .open > a, .openerp .navbar-default .navbar-nav a:hover, .openerp .navbar-default .navbar-nav a:focus {
-  background: rgba(0, 0, 0, 0.3) !important;
-}
-.openerp .navbar-default .navbar-nav .dropdown > a .caret {
-  border-top-color: #777777 !important;
-  border-bottom-color: #777777 !important;
-}
-.openerp .navbar-nav li a {
-  padding: 4px 32px 4px 12px;
-}
 .openerp .oe_navbar .dropdown-menu {
   font-size: 13px;
   padding: 4px 0;
@@ -3035,11 +2983,11 @@
 .openerp .oe_view_manager_new .oe_form_nosheet .oe_form_label {
   font-weight: normal;
 }
-.openerp .nav li > a {
-  padding: 3px 4px 2px 18px;
+.openerp .nav-pills li > a {
+  padding: 6px 4px 2px 18px;
   color: #4c4c4c;
 }
-.openerp .nav nav-pills.nav-stacked > li > ul {
+.openerp .nav-pills .nav-stacked > li > ul {
   padding-left: 16px;
 }
 .openerp .nav-pills > li.active > a, .openerp a.list-group-item.active > a {
@@ -3389,6 +3337,7 @@ body.oe_single_form .oe_single_form_container {
   background: white;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   background-color: transparent;
+  z-index: 1800;
 }
 .tooltip .tooltip-inner {
   text-align: left !important;

@@ -1,5 +1,5 @@
 
-.openerp .oe_im {
+.oe_im {
     position: fixed;
     background-color: #E8EBEF;
     width: 220px;
@@ -7,23 +7,21 @@
 }
 
 @media print {
-    .openerp .oe_im, .openerp .oe_im_chatview {
+    .oe_im, .oe_im_chatview {
         visibility: hidden;
     }
 }
-
 /* button */
-
-.openerp .oe_topbar_imbutton {
-    cursor: pointer;
+.oe_systray #oe_topbar_im_icon {
+    color: white;
 }
-.openerp .oe_topbar_item.oe_topbar_imbutton .oe_e {
+.oe_topbar_item.oe_topbar_imbutton .oe_e {
     position: relative;
     top: -8px;
 }
 
 /* search stuff */
-.openerp .oe_im_frame_header {
+.oe_im_frame_header {
     position: relative;
     background: #dedede;
     background: -moz-linear-gradient(#fcfcfc, #dedede);
@@ -31,7 +29,7 @@
     border-bottom: 1px solid border-color !important;
     padding: 5px;
 }
-.openerp .oe_im_frame_header .oe_im_searchbox {
+.oe_im_frame_header .oe_im_searchbox {
     width: 168px;
     padding: 1px 21px 1px 19px;
     font-size: 13px;
@@ -39,7 +37,7 @@
     -webkit-border-radius: 13px;
     border-radius: 13px;
 }
-.openerp .oe_im_frame_header .oe_im_search_icon {
+.oe_im_frame_header .oe_im_search_icon {
     position: absolute;
     color: #888;
     top: 2px;
@@ -48,7 +46,7 @@
     font-family: "entypoRegular" !important;
     font-weight: 300 !important;
 }
-.openerp .oe_im_frame_header .oe_im_search_clear {
+.oe_im_frame_header .oe_im_search_clear {
     display: none;
     position: absolute;
     right: 11px;
@@ -57,26 +55,26 @@
     color: #b6b6b6;
     cursor: pointer;
 }
-.openerp .oe_im_frame_header .oe_im_search_clear:hover {
+.oe_im_frame_header .oe_im_search_clear:hover {
     color: #888;
 }
 
 /* users */
 
-.openerp .oe_im_users {
+.oe_im_users {
     padding-bottom: 38px;
 }
-.openerp .oe_im_user {
+.oe_im_user {
     position: relative;
     padding: 2px 6px;
     cursor: pointer;
     font-size: 13px;
     margin-bottom: 3px;
 }
-.openerp .oe_im_user:hover {
+.oe_im_user:hover {
   background: lightGrey;
 }
-.openerp .oe_im_user_clip {
+.oe_im_user_clip {
     display: inline-block;
     width: 26px;
     height: 26px;
@@ -85,11 +83,11 @@
     -webkit-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.25);
     box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.25);
 }
-.openerp .oe_im_user_avatar {
+.oe_im_user_avatar {
     width: 26px;
     height: auto;
 }
-.openerp .oe_im_user_name {
+.oe_im_user_name {
     width: 162px;
     line-height: 26px;
     padding-right: 15px;
@@ -99,7 +97,7 @@
     position: relative;
 }
 
-.openerp .oe_im_user_online {
+.oe_im_user_online {
     display: none;
     position: absolute;
     top: 9.5px;

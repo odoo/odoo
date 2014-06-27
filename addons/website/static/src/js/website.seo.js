@@ -4,15 +4,6 @@
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.seo.xml');
 
-    website.EditorBar.include({
-        events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action=promote-current-page]': 'launchSeo',
-        }),
-        launchSeo: function () {
-            (new website.seo.Configurator(this)).appendTo($(document.body));
-        },
-    });
-
     website.seo = {};
 
     function analyzeKeyword(htmlPage, keyword) {
@@ -524,4 +515,11 @@
             this._super();
         },
     });
+
+    website.ready().done(function() {
+        $(document.body).on('click', 'a[data-action=promote-current-page]', function() {
+            new website.seo.Configurator(this).appendTo($(document.body));
+        });
+    });
+
 })();

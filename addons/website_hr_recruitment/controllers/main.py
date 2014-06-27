@@ -59,7 +59,7 @@ class website_hr_recruitment(http.Controller):
             'countries': countries
         })
 
-    @http.route('/jobs/add', type='http', auth="user", methods=['POST'], website=True)
+    @http.route('/jobs/add', type='http', auth="user", website=True)
     def jobs_add(self, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         value = {
