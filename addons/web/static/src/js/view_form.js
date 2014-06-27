@@ -2339,7 +2339,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
         var self = this;
         this.states = self.prepare_dropdown_selection();;
         this.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('ul li').click(self.do_action.bind(self));
     },
     do_action: function(e) {
         var self = this;
@@ -2389,7 +2389,7 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
         var self = this;
         this.priorities = self.prepare_priority();
         this.$el.html(QWeb.render("Priority", {'widget': this}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('ul li').click(self.do_action.bind(self));
     },
     do_action: function(e) {
         var self = this;
