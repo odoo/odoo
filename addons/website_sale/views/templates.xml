@@ -1187,5 +1187,12 @@
     </table>
 </template>
 
+<!-- User Navbar -->
+<template id="content_new_product" inherit_id="website.user_navbar" groups="base.group_sale_manager">
+    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
+        <li><a id="create-new-product" href="#" data-action="new_product">New Product</a></li>
+    </xpath>
+</template>
+
 </data>
 </openerp>

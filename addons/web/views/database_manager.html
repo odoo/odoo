@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html style="height: 100%">
+<html style="height: 100%;">
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -67,11 +67,51 @@
             $(function() {
                 var s = new openerp.init({{ modules|safe }});
                 var wc = new s.web.WebClient(null, { action: 'database_manager' });
-                wc.appendTo($(document.body));
+                wc.setElement($(document.body));
+                wc.start();
             });
         </script>
     </head>
     <body>
+        <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>    
+            </div>
+            <div class="navbar-collapse collapse" id="oe_main_menu_placeholder">              
+                <ul class="nav navbar-nav navbar-right oe_user_menu_placeholder"></ul>
+            </div>
+        </nav>
+        <div class="openerp openerp_webclient_container">
+        <table class="oe_webclient">
+            <tr>
+                <td class="oe_leftbar" valign="top">
+                    <div>
+                        <a class="oe_logo">
+                            <span class="oe_logo_edit">Edit Company data</span>
+                            <img src='/web/binary/company_logo'/>
+                        </a>
+
+                        <div>
+                            <div>
+                                <div class="oe_secondary_menus_container"></div>
+                            </div>
+                        </div>
+
+                        <div class="oe_footer">
+                            Powered by <a href="http://www.odoo.com" target="_blank"><span>Odoo</span></a>
+                        </div>
+                    </div>
+                </td>
+                <td class="oe_application">
+                </td>
+            </tr>
+        </table>
+        </div>
+
         <!--[if lte IE 8]>
         <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
         <script>CFInstall.check({mode: "overlay"});</script>

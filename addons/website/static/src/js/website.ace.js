@@ -7,19 +7,7 @@
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.ace.xml');
 
-    website.EditorBar.include({
-        events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action=ace]': 'launchAce',
-        }),
-        start: function () {
-            var self = this;
-            this.globalEditor = null;
-            return this._super.apply(this, arguments).then(function () {
-                if (window.location.hash.indexOf(hash) >= 0) {
-                    self.launchAce();
-                }
-            });
-        },
+    website.Ace = openerp.Widget.extend({
         launchAce: function (e) {
             if (e) {
                 e.preventDefault();
@@ -157,10 +145,10 @@
                self.close();
             });
             this.getParent().on('change:height', this, function (editor) {
-                resizeEditorHeight(editor.get('height'));
+                resizeEditorHeight(this.getParent().$el.outerHeight()+2);
             });
             resizeEditor(readEditorWidth());
-            resizeEditorHeight(this.getParent().get('height'));
+            resizeEditorHeight(this.getParent().$el.outerHeight()+2);
         },
         loadViews: function (views) {
             var $viewList = this.$('#ace-view-list');
@@ -366,6 +354,13 @@
             window.location.hash = "";
             this.$el.removeClass('oe_ace_open').addClass('oe_ace_closed');
         },
+    });
+
+    website.ready().done(function() {
+        var ace = new website.Ace();
+        $(document.body).on('click', 'a[data-action=ace]', function() {
+            ace.launchAce();
+        });
     });
 
 })();
