@@ -12,13 +12,13 @@
                 element:   '.oe_product_cart a:contains("iPod")',
             },
             {
-                title:     "select ipod 32Go",
+                title:     "select ipod 32GB",
                 waitFor:   '#product_detail',
-                element:   'label:contains(32 Go) input',
+                element:   'label:contains(32 GB) input',
             },
             {
                 title:     "click on add to cart",
-                waitFor:   'label:contains(32 Go) input[checked]',
+                waitFor:   'label:contains(32 GB) input[checked]',
                 element:   'form[action="/shop/cart/update"] .btn',
             },
             {
@@ -29,11 +29,11 @@
             {
                 title:     "add one more iPod",
                 waitFor:   '.my_cart_quantity:contains(2)',
-                element:   '#cart_products tr:contains("32 Go") a.js_add_cart_json:eq(1)',
+                element:   '#cart_products tr:contains("32 GB") a.js_add_cart_json:eq(1)',
             },
             {
                 title:     "remove Headphones",
-                waitFor:   '#cart_products tr:contains("32 Go") input.js_quantity[value=2]',
+                waitFor:   '#cart_products tr:contains("32 GB") input.js_quantity[value=2]',
                 element:   '#cart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
             },
             {

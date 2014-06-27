@@ -2,8 +2,10 @@
 import datetime
 import hashlib
 import logging
+import os
 import re
 import traceback
+
 import werkzeug
 import werkzeug.routing
 
@@ -12,6 +14,7 @@ from openerp.addons.base import ir
 from openerp.addons.base.ir import ir_qweb
 from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
+from openerp.tools import config
 from openerp.osv import orm
 
 logger = logging.getLogger(__name__)
@@ -54,12 +57,19 @@ class ir_http(orm.AbstractModel):
 
         request.website_multilang = request.website_enabled and func and func.routing.get('multilang', True)
 
-        if not request.session.has_key('geoip'):
+        if 'geoip' not in request.session:
             record = {}
             if self.geo_ip_resolver is None:
                 try:
                     import GeoIP
-                    self.geo_ip_resolver = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', GeoIP.GEOIP_STANDARD)
+                    # updated database can be downloaded on MaxMind website
+                    # http://dev.maxmind.com/geoip/legacy/install/city/
+                    geofile = config.get('geoip_database', '/usr/share/GeoIP/GeoLiteCity.dat')
+                    if os.path.exists(geofile):
+                        self.geo_ip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
+                    else:
+                        self.geo_ip_resolver = False
+                        logger.warning('GeoIP database file %r does not exists', geofile)
                 except ImportError:
                     self.geo_ip_resolver = False
             if self.geo_ip_resolver and request.httprequest.remote_addr:
@@ -187,6 +197,11 @@ class ir_http(orm.AbstractModel):
                 values.update(qweb_exception=exception)
                 if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
                     code = 403
+
+            if isinstance(exception, werkzeug.exceptions.HTTPException) and code is None:
+                # Hand-crafted HTTPException likely coming from abort(),
+                # usually for a redirect response -> return it directly
+                return exception
 
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])

@@ -7,6 +7,9 @@ openerp.hr_timesheet_sheet = function(instance) {
         events: {
             "click .oe_timesheet_weekly_account a": "go_to",
         },
+        ignore_fields: function() {
+            return ['line_id'];
+        },
         init: function() {
             this._super.apply(this, arguments);
             var self = this;
@@ -323,11 +326,8 @@ openerp.hr_timesheet_sheet = function(instance) {
         generate_o2m_value: function() {
             var self = this;
             var ops = [];
-            
+            var ignored_fields = self.ignore_fields();
             _.each(self.accounts, function(account) {
-                var auth_keys = _.extend(_.clone(account.account_defaults), {
-                    name: true, amount:true, unit_amount: true, date: true, account_id:true,
-                });
                 _.each(account.days, function(day) {
                     _.each(day.lines, function(line) {
                         if (line.unit_amount !== 0) {
@@ -338,12 +338,8 @@ openerp.hr_timesheet_sheet = function(instance) {
                                     tmp[k] = v[0];
                                 }
                             });
-                            // we have to remove some keys, because analytic lines are shitty
-                            _.each(_.keys(tmp), function(key) {
-                                if (auth_keys[key] === undefined) {
-                                    tmp[key] = undefined;
-                                }
-                            });
+                            // we remove line_id as the reference to the _inherits field will no longer exists
+                            tmp = _.omit(tmp, ignored_fields);
                             ops.push(tmp);
                         }
                     });

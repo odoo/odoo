@@ -183,6 +183,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     */
     close: function(reason) {
         if (this.dialog_inited && !this.__tmp_dialog_hiding) {
+            $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
             this.trigger("closing", reason);
             if (this.$el.is(":data(bs.modal)")) {     // may have been destroyed by closing signal
                 this.__tmp_dialog_hiding = true;
@@ -1150,7 +1151,7 @@ instance.web.Client = instance.web.Widget.extend({
         self.notification = new instance.web.Notification(this);
         self.notification.appendTo(self.$el);
         self.loading = new instance.web.Loading(self);
-        self.loading.appendTo(self.$el);
+        self.loading.appendTo(self.$('.openerp_webclient_container'));
         self.action_manager = new instance.web.ActionManager(self);
         self.action_manager.appendTo(self.$('.oe_application'));
     },
