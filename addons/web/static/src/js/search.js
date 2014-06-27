@@ -2493,10 +2493,10 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
     move: function (direction) {
         var $next;
         if (direction === 'down') {
-            $next = this.$('li.oe-selection-focus').next();
+            $next = this.$('li.oe-selection-focus').nextAll(':not(.oe-separator)').first();
             if (!$next.length) $next = this.$('li:first-child');
         } else {
-            $next = this.$('li.oe-selection-focus').prev();
+            $next = this.$('li.oe-selection-focus').prevAll(':not(.oe-separator)').first();
             if (!$next.length) $next = this.$('li:last-child');
         }
         this.focus_element($next);
