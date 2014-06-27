@@ -114,8 +114,9 @@ class Report(osv.Model):
         user = self.pool['res.users'].browse(cr, uid, uid)
         website = None
         if request and hasattr(request, 'website'):
-            website = request.website
-            context.update(translatable=context.get('lang') != request.website.default_lang_code)
+            if request.website is not None:
+                website = request.website
+                context.update(translatable=context.get('lang') != request.website.default_lang_code)
         values.update(
             time=time,
             translate_doc=translate_doc,
