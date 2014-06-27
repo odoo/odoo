@@ -1752,13 +1752,17 @@ class stock_move(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default['move_orig_ids'] = []
         default['quant_ids'] = []
-        default['move_dest_id'] = False
         default['reserved_quant_ids'] = []
         default['returned_move_ids'] = []
         default['linked_move_operation_ids'] = []
         default['partially_available'] = False
+        if not default.get('move_orig_ids'):
+            default['move_orig_ids'] = []
+        if not default.get('move_dest_id'): 
+            default['move_dest_id'] = False
+        if not default.get('procurement_id'):
+            default['procurement_id'] = False
         if not default.get('origin_returned_move_id'):
             default['origin_returned_move_id'] = False
         default['state'] = 'draft'
@@ -2403,6 +2407,7 @@ class stock_move(osv.osv):
             'restrict_lot_id': restrict_lot_id,
             'restrict_partner_id': restrict_partner_id,
             'split_from': move.id,
+            'procurement_id': move.procurement_id.id,
             'move_dest_id': move.move_dest_id.id,
         }
         if context.get('source_location_id'):

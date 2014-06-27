@@ -91,8 +91,9 @@ class StockMove(osv.osv):
                     'product_uos_qty': line['product_uos_qty'],
                     'state': state,
                     'name': line['name'],
+                    'procurement_id': move.procurement_id.id,
                 }
-                mid = move_obj.copy(cr, uid, move.id, default=valdef)
+                mid = move_obj.copy(cr, uid, move.id, default=valdef, context={'split': True})
                 to_explode_again_ids.append(mid)
 
             #delete the move with original product which is not relevant anymore
