@@ -832,43 +832,45 @@ openerp.web_calendar = function(instance) {
         open_event: function(id, title) {
             var self = this;
             var index = this.dataset.get_id_index(id);
-            if (! this.open_popup_action) {
-                this.dataset.index = index;
-                this.do_switch_view('form', null, { mode: "edit" });
-            }
-            else {
-                var pop = new instance.web.form.FormOpenPopup(this);
-                pop.show_element(this.dataset.model, this.dataset.ids[index], this.dataset.get_context(), {
-                    title: _.str.sprintf(_t("View: %s"),title),
-                    view_id: +this.open_popup_action,
-                    res_id: id,
-                    target: 'new',
-                    readonly:true
-                });
+            if (index !== null) {
+                if (! this.open_popup_action) {
+                    this.dataset.index = index;
+                    this.do_switch_view('form', null, { mode: "edit" });
+                }
+                else {
+                    var pop = new instance.web.form.FormOpenPopup(this);
+                    pop.show_element(this.dataset.model, this.dataset.ids[index], this.dataset.get_context(), {
+                        title: _.str.sprintf(_t("View: %s"),title),
+                        view_id: +this.open_popup_action,
+                        res_id: id,
+                        target: 'new',
+                        readonly:true
+                    });
 
-               var form_controller = pop.view_form;
-               form_controller.on("load_record", self, function(){
-                    button_delete = _.str.sprintf("<button class='oe_button oe_bold delme'><span> %s </span></button>",_t("Delete"));
-                    button_edit = _.str.sprintf("<button class='oe_button oe_bold editme oe_highlight'><span> %s </span></button>",_t("Edit Event"));
-                    
-                    
-                    pop.$el.closest(".ui-dialog").find(".ui-dialog-buttonpane").prepend(button_delete);
-                    pop.$el.closest(".ui-dialog").find(".ui-dialog-buttonpane").prepend(button_edit);
-                    
-                    $('.delme').click(
-                        function() {
-                            $('.oe_form_button_cancel').trigger('click');
-                            self.remove_event(id);
-                        }
-                    );
-                    $('.editme').click(
-                        function() {
-                            $('.oe_form_button_cancel').trigger('click');
-                            self.dataset.index = self.dataset.get_id_index(id);
-                            self.do_switch_view('form', null, { mode: "edit" });
-                        }
-                    );
-               });
+                   var form_controller = pop.view_form;
+                   form_controller.on("load_record", self, function(){
+                        button_delete = _.str.sprintf("<button class='oe_button oe_bold delme'><span> %s </span></button>",_t("Delete"));
+                        button_edit = _.str.sprintf("<button class='oe_button oe_bold editme oe_highlight'><span> %s </span></button>",_t("Edit Event"));
+                        
+                        
+                        pop.$el.closest(".ui-dialog").find(".ui-dialog-buttonpane").prepend(button_delete);
+                        pop.$el.closest(".ui-dialog").find(".ui-dialog-buttonpane").prepend(button_edit);
+                        
+                        $('.delme').click(
+                            function() {
+                                $('.oe_form_button_cancel').trigger('click');
+                                self.remove_event(id);
+                            }
+                        );
+                        $('.editme').click(
+                            function() {
+                                $('.oe_form_button_cancel').trigger('click');
+                                self.dataset.index = self.dataset.get_id_index(id);
+                                self.do_switch_view('form', null, { mode: "edit" });
+                            }
+                        );
+                   });
+                }
             }
             return false;
         },
