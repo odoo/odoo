@@ -494,7 +494,7 @@
             return;
         },
         calc_box: function() {
-            var $topbar = openerp.client.$(".navbar");
+            var $topbar = window.$('#oe_main_menu_navbar'); // .oe_topbar is replaced with .navbar of bootstrap3
             var top = $topbar.offset().top + $topbar.height();
             top = Math.max(top - $(window).scrollTop(), 0);
             this.$el.css("top", top);
@@ -567,7 +567,8 @@
         events: {
             "click": "clicked",
         },
-        clicked: function() {
+        clicked: function(ev) {
+            ev.preventDefault();
             this.trigger("clicked");
         },
     });
@@ -582,7 +583,7 @@
                     im.appendTo(openerp.client.$el);
                     var button = new openerp.im_chat.ImTopButton(this);
                     button.on("clicked", im, im.switch_display);
-                    button.appendTo(openerp.webclient.$el.find('.oe_systray'));
+                    button.appendTo(window.$('.oe_systray'));
                 });
                 return this._super.apply(this, arguments);
             },
