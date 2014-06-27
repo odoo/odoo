@@ -62,7 +62,7 @@ class ir_http(orm.AbstractModel):
                     self.geo_ip_resolver = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', GeoIP.GEOIP_STANDARD)
                 except ImportError:
                     self.geo_ip_resolver = False
-            if self.geo_ip_resolver:
+            if self.geo_ip_resolver and request.httprequest.remote_addr:
                 record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
 

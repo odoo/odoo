@@ -110,6 +110,21 @@ class website_sale(http.Controller):
             pricelist = partner.property_product_pricelist
         return pricelist
 
+    def get_attribute_value_ids(self, product):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        currency_obj = pool['res.currency']
+        attribute_value_ids = []
+        if request.website.pricelist_id.id != context['pricelist']:
+            website_currency_id = request.website.currency_id.id
+            currency_id = self.get_pricelist().currency_id.id
+            for p in product.product_variant_ids:
+                price = currency_obj.compute(cr, uid, website_currency_id, currency_id, p.lst_price)
+                attribute_value_ids.append([p.id, map(int, p.attribute_value_ids), p.price, price])
+        else:
+            attribute_value_ids = [[p.id, map(int, p.attribute_value_ids), p.price, p.lst_price] for p in product.product_variant_ids]
+
+        return attribute_value_ids
+
     @http.route(['/shop',
         '/shop/page/<int:page>',
         '/shop/category/<model("product.public.category"):category>',
@@ -125,7 +140,10 @@ class website_sale(http.Controller):
         if category:
             domain += [('product_variant_ids.public_categ_ids', 'child_of', int(category))]
 
-        attrib_values = [map(int,v.split(",")) for v in request.httprequest.args.getlist('attrib') if v]
+        attrib_list = request.httprequest.args.getlist('attrib')
+        attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
+        attrib_set = set([v[1] for v in attrib_values])
+
         if attrib_values:
             attrib = None
             ids = []
@@ -142,8 +160,7 @@ class website_sale(http.Controller):
             if attrib:
                 domain += [('attribute_line_ids.value_ids', 'in', ids)]
 
-        attrib_set = set([v[1] for v in attrib_values])
-        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_set)
+        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list)
 
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
@@ -191,16 +208,18 @@ class website_sale(http.Controller):
     def product(self, product, category='', search='', **kwargs):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         category_obj = pool['product.public.category']
+        template_obj = pool['product.template']
 
         context.update(active_id=product.id)
 
         if category:
-            category = category_obj.browse(request.cr, request.uid, int(category), context=request.context)
+            category = category_obj.browse(cr, uid, int(category), context=context)
 
-        attrib_values = [map(int,v.split(",")) for v in request.httprequest.args.getlist('attrib') if v]
+        attrib_list = request.httprequest.args.getlist('attrib')
+        attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
         attrib_set = set([v[1] for v in attrib_values])
 
-        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_set)
+        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_list)
 
         category_ids = category_obj.search(cr, uid, [], context=context)
         category_list = category_obj.name_get(cr, uid, category_ids, context=context)
@@ -208,9 +227,7 @@ class website_sale(http.Controller):
 
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
-            product = request.registry.get('product.template').browse(request.cr, request.uid, int(product), context=context)
-
-        variants = [[p.id, map(int, p.attribute_value_ids), p.price] for p in product.product_variant_ids]
+            product = template_obj.browse(cr, uid, int(product), context=context)
 
         values = {
             'search': search,
@@ -222,7 +239,7 @@ class website_sale(http.Controller):
             'category_list': category_list,
             'main_object': product,
             'product': product,
-            'variants': variants,
+            'get_attribute_value_ids': self.get_attribute_value_ids
         }
         return request.website.render("website_sale.product", values)
 
@@ -238,36 +255,45 @@ class website_sale(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
+    @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
+    def pricelist(self, promo, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        request.website.sale_get_order(code=promo, context=context)
+        return request.redirect("/shop/cart")
+
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         order = request.website.sale_get_order()
+
         values = {
             'order': order,
             'suggested_products': [],
         }
         if order:
-            if not request.context.get('pricelist'):
-                request.context['pricelist'] = order.pricelist_id.id
-            values['suggested_products'] = order._cart_accessories(context=request.context)
+            if not context.get('pricelist'):
+                context['pricelist'] = order.pricelist_id.id
+            values['suggested_products'] = order._cart_accessories(context=context)
+
         return request.website.render("website_sale.cart", values)
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
         cr, uid, context = request.cr, request.uid, request.context
-        request.website.sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=add_qty, set_qty=set_qty)
+        request.website.sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=float(add_qty), set_qty=float(set_qty))
         return request.redirect("/shop/cart")
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
-    def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None):
+    def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None, display=True):
         order = request.website.sale_get_order(force_create=1)
-        quantity = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
-        return {
-            'quantity': quantity,
-            'cart_quantity': order.cart_quantity,
-            'website_sale.total': request.website._render("website_sale.total", {
-                    'website_sale_order': request.website.sale_get_order()
-                })
-        }
+        value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
+        if not display:
+            return None
+        value['cart_quantity'] = order.cart_quantity
+        value['website_sale.total'] = request.website._render("website_sale.total", {
+                'website_sale_order': request.website.sale_get_order()
+            })
+        return value
 
     #------------------------------------------------------
     # Checkout
@@ -323,12 +349,20 @@ class website_sale(http.Controller):
                 checkout.update(self.checkout_parse('shipping', data))
                 checkout["shipping_different"] = True
 
+        # Default search by user country
+        country_code = request.session['geoip'].get('country_code')
+        if country_code:
+            country_ids = request.registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
+            if country_ids:
+                checkout['country_id'] = country_ids[0]
+
         values = {
             'countries': countries,
             'states': states,
             'checkout': checkout,
             'shipping_different': checkout.get('shipping_different'),
             'error': {},
+            'has_check_vat': hasattr(registry['res.partner'], 'check_vat')
         }
         return values
 
@@ -445,7 +479,7 @@ class website_sale(http.Controller):
 
     @http.route(['/shop/checkout'], type='http', auth="public", website=True)
     def checkout(self, **post):
-        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        cr, uid, context = request.cr, request.uid, request.context
 
         order = request.website.sale_get_order(force_create=1, context=context)
 

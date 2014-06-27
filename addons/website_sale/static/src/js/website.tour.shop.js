@@ -96,7 +96,7 @@
                 popover:   { fixed: true },
             },
             {
-                waitFor:   '#website-top-navbar button[data-action="edit"]:visible',
+                waitFor:   '#website-top-navbar:hidden',
                 element:   '.js_publish_management button.js_publish_btn.btn-danger',
                 placement: 'top',
                 title:     _t("Publish your product"),

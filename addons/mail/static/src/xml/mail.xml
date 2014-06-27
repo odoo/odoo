@@ -340,9 +340,11 @@
         render of the button on the user bar for open wizard compose message
         -->
     <t t-name="mail.ComposeMessageTopButton">
-        <div title='Compose new Message' class="oe_topbar_item oe_topbar_compose_full_email">
-            <button class="oe_e">%</button>
-        </div>
+        <li title='Compose new Message'>
+            <a href="#">
+                <i id="oe_topbar_compose_full_email_icon" class="fa fa-envelope-o"/>
+            </a>
+        </li>
     </t>
 
     <!-- mail.thread.message.vote

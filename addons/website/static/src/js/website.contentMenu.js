@@ -2,19 +2,22 @@
     'use strict';
 
     var website = openerp.website;
-    website.menu = {};
-    website.add_template_file('/website/static/src/xml/website.menu.xml');
+    website.contentMenu = {};
+    website.add_template_file('/website/static/src/xml/website.contentMenu.xml');
+    var _t = openerp._t;
 
-    website.EditorBar.include({
+    website.EditorBarContent = openerp.Widget.extend({
         start: function() {
-            var res = this._super();
-            this.$(".oe_content_menu a[data-action=edit-structure]").parents("li").removeClass("hidden");
-            return res;
+            var self = this;
+            self.$el.on('click', 'a', function(ev) {
+                ev.preventDefault();
+                var $content_item = $(this);
+                self[$content_item.data('action')]();
+            })
+            
+            return this._super();
         },
-        events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action="edit-structure"]': 'editStructure',
-        }),
-        editStructure: function () {
+        edit_menu: function() {
             var self = this;
             var context = website.get_context();
             openerp.jsonRpc('/web/dataset/call_kw', 'call', {
@@ -25,14 +28,40 @@
                     context: context
                 },
             }).then(function (menu) {
-                var result = new website.menu.EditMenuDialog(menu).appendTo(document.body);
+                var result = new website.contentMenu.EditMenuDialog(menu).appendTo(document.body);
                 return result;
             });
         },
+        new_page: function() {
+            website.prompt({
+                id: "editor_new_page",
+                window_title: _t("New Page"),
+                input: _t("Page Title"),
+                init: function () {
+                    var $group = this.$dialog.find("div.form-group");
+                    $group.removeClass("mb0");
+
+                    var $add = $(
+                        '<div class="form-group mb0">'+
+                            '<label class="col-sm-offset-3 col-sm-9 text-left">'+
+                            '    <input type="checkbox" checked="checked" required="required"/> '+
+                            '</label>'+
+                        '</div>');
+                    $add.find('label').append(_t("Add page in menu"));
+                    $group.after($add);
+                }
+            }).then(function (val, field, $dialog) {
+                if (val) {
+                    var url = '/website/add/' + encodeURIComponent(val);
+                    if ($dialog.find('input[type="checkbox"]').is(':checked')) url +="?add_menu=1";
+                    document.location = url;
+                }
+            });
+        }
     });
 
-    website.menu.EditMenuDialog = website.editor.Dialog.extend({
-        template: 'website.menu.dialog.edit',
+    website.contentMenu.EditMenuDialog = website.editor.Dialog.extend({
+        template: 'website.contentMenu.dialog.edit',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
             'click a.js_add_menu': 'add_menu',
             'click button.js_edit_menu': 'edit_menu',
@@ -73,7 +102,7 @@
         },
         add_menu: function () {
             var self = this;
-            var dialog = new website.menu.MenuEntryDialog();
+            var dialog = new website.contentMenu.MenuEntryDialog();
             dialog.on('add-menu', this, function (link) {
                 var new_menu = {
                     id: _.uniqueId('new-'),
@@ -86,7 +115,7 @@
                 };
                 self.flat[new_menu.id] = new_menu;
                 self.$('.oe_menu_editor').append(
-                    openerp.qweb.render('website.menu.dialog.submenu', { submenu: new_menu }));
+                    openerp.qweb.render('website.contentMenu.dialog.submenu', { submenu: new_menu }));
             });
             dialog.appendTo(document.body);
         },
@@ -95,7 +124,7 @@
             var menu_id = $(ev.currentTarget).closest('[data-menu-id]').data('menu-id');
             var menu = self.flat[menu_id];
             if (menu) {
-                var dialog = new website.menu.MenuEntryDialog(undefined, menu);
+                var dialog = new website.contentMenu.MenuEntryDialog(undefined, menu);
                 dialog.on('update-menu', this, function (link) {
                     var id = link.shift();
                     var menu_obj = self.flat[id];
@@ -152,8 +181,8 @@
         },
     });
 
-    website.menu.MenuEntryDialog = website.editor.LinkDialog.extend({
-        template: 'website.menu.dialog.add',
+    website.contentMenu.MenuEntryDialog = website.editor.LinkDialog.extend({
+        template: 'website.contentMenu.dialog.add',
         init: function (editor, data) {
             this.data = data;
             return this._super.apply(this, arguments);
@@ -194,6 +223,12 @@
         destroy: function () {
             this._super.apply(this, arguments);
         },
+    });
+
+    website.ready().done(function() {
+        var content = new website.EditorBarContent()
+        content.setElement($('.oe_content_menu'));
+        content.start();
     });
 
 })();

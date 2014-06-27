@@ -8,7 +8,7 @@
     </xpath>
 </template>
 
-<template id="editor_head" inherit_id="website.assets_editor" name="Event Editor" groups="event.group_event_manager">
+<template id="assets_editor" inherit_id="website.assets_editor" name="Event Editor" groups="event.group_event_manager">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js"></script>
         <script type="text/javascript" src="/website_event/static/src/js/website.tour.event.js"></script>
@@ -428,6 +428,13 @@
             </div>
         </t>
     </t>
+</template>
+
+<!-- User Navbar -->
+<template id="content_new_event" inherit_id="website.user_navbar" groups="event.group_event_manager">
+    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
+         <li><a href="#" data-action="new_event">New Event</a></li>
+    </xpath>
 </template>
 </data>
 </openerp>

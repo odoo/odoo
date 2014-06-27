@@ -14,9 +14,11 @@
         </div>
     </t>
     <t t-name="ImTopButton">
-        <div t-att-title='_t("Display Instant Messaging")' class="oe_topbar_item oe_topbar_imbutton">
-            <span class="oe_e">+</span>
-        </div>
+        <li t-att-title='_t("Display Instant Messaging")'>
+            <a href="#">
+                <i id="oe_topbar_imbutton_icon" class="fa fa-comments-o"/>
+            </a>
+        </li>
     </t>
     <t t-name="UserWidget">
         <div class="oe_im_user">

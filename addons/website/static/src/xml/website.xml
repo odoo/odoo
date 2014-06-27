@@ -2,53 +2,6 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
-
-    <t t-name="website.editorbar">
-        <div id="website-top-navbar" class="navbar navbar-inverse navbar-fixed-top">
-            <div id="website-top-view">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-edit-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <form class="navbar-form navbar-left">
-                        <button type="button" data-action="edit"
-                                class="btn btn-primary hidden">Edit</button>
-                    </form>
-                </div>
-                <div class="collapse navbar-collapse navbar-edit-collapse">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a data-action="show-mobile-preview" href="#"><span title="Mobile preview"><i class="fa fa-mobile"/></span></a></li>
-                        <li class="divider-vertical"></li>
-                        <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
-                        <li class="hidden dropdown js_hide_on_translate">
-                            <a id="content-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Content <span class="caret"></span></a>
-                            <ul class="dropdown-menu oe_content_menu" role="menu">
-                                <li class="hidden"><a data-action="edit-structure" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
-                                <li class="hidden divider"> </li>
-                                <li class="hidden"><a href="#" data-action="new_page">New Page</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown js_hide_on_translate">
-                            <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu" id="customize-menu">
-                                <!-- filled in JS -->
-                            </ul>
-                        </li>
-                        <li class="dropdown js_hide_on_translate">
-                            <a id="help-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Help <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu" id="help-menu">
-                                <!-- filled in JS -->
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="website.mobile_preview">
         <div class="modal fade oe_mobile_preview" tabindex="-1" role="dialog">
             <div class="modal-dialog">
@@ -124,5 +77,4 @@
             </div>
         </div>
     </t>
-
 </templates>
