@@ -31,6 +31,7 @@ class fiche_paye_parser(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(fiche_paye_parser, self).__init__(cr, uid, name, context)
         self.localcontext.update({
+            'lang': "fr_FR",
             'get_payslip_lines': self.get_payslip_lines,
             'get_total_by_rule_category': self.get_total_by_rule_category,
             'get_employer_line': self.get_employer_line,

@@ -16,6 +16,8 @@ import unittest2
 import urllib2
 import xmlrpclib
 from datetime import datetime, timedelta
+from shutil import rmtree
+from tempfile import mkdtemp
 
 import werkzeug
 
@@ -149,8 +151,10 @@ class HttpCase(TransactionCase):
         self.session_id = self.session.sid
         self.session.db = DB
         openerp.http.root.session_store.save(self.session)
+        self.localstorage_path = mkdtemp()
 
     def tearDown(self):
+        rmtree(self.localstorage_path)
         self.registry.leave_test_mode()
         super(HttpCase, self).tearDown()
 
@@ -259,7 +263,11 @@ class HttpCase(TransactionCase):
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
         # phantom.args[0] == phantomtest path
         # phantom.args[1] == options
-        cmd = ['phantomjs', jsfile, phantomtest, json.dumps(options)]
+        cmd = [
+            'phantomjs',
+            '--local-storage-path', self.localstorage_path,
+            jsfile, phantomtest, json.dumps(options)
+        ]
         self.phantom_run(cmd, timeout)
 
     def phantom_js(self, url_path, code, ready="window", login=None, timeout=60, **kw):
