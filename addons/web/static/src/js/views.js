@@ -579,7 +579,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var view_promise;
         var form = this.views['form'];
         if (!view || (form && form.controller && !form.controller.can_be_discarded())) {
-            self.trigger('switch_mode', view_type, no_store, view_options);
             return $.Deferred().reject();
         }
         if (!no_store) {
