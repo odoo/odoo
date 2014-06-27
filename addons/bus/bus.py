@@ -90,7 +90,10 @@ class ImDispatch(object):
         # attribute access because we dont know before starting the thread that
         # it will handle a longpolling request
         if not openerp.evented:
-            threading.current_thread()._Thread__daemonic = True
+            current = threading.current_thread()
+            current._Thread__daemonic = True
+            # rename the thread to avoid tests waiting for a longpolling
+            current.setName("openerp.longpolling.request.%s" % current.ident)
 
         registry = openerp.registry(dbname)
 
