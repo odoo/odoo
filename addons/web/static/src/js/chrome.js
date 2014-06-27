@@ -1150,7 +1150,7 @@ instance.web.Client = instance.web.Widget.extend({
         self.notification = new instance.web.Notification(this);
         self.notification.appendTo(self.$el);
         self.loading = new instance.web.Loading(self);
-        self.loading.appendTo(self.$el);
+        self.loading.appendTo(self.$('.openerp_webclient_container'));
         self.action_manager = new instance.web.ActionManager(self);
         self.action_manager.appendTo(self.$('.oe_application'));
     },
