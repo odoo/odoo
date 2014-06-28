@@ -104,7 +104,6 @@
                 this.manager.set("bottom_offset", $('.oe_chat_button').outerHeight()); // TODO correct the value (no hardcode damned !)
                 // override the notification default function
                 this.manager.notification = function(notif){
-                    $.achtung({message: notif, timeout: 10, showEffects: false, hideEffects: false});
                 }
             }
             return this.chat();
