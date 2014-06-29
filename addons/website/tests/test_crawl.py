@@ -52,6 +52,7 @@ class Crawler(openerp.tests.HttpCase):
                     not parts.path.startswith('/') or \
                     parts.path == '/web' or\
                     parts.path.startswith('/web/') or \
+                    parts.path.startswith('/en_US/') or \
                     (parts.scheme and parts.scheme not in ('http', 'https')):
                     continue
 
