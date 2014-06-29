@@ -116,7 +116,7 @@ class DBFormatter(logging.Formatter):
 
 class ColoredFormatter(DBFormatter):
     def format(self, record):
-        fg_color, bg_color = LEVEL_COLOR_MAPPING[record.levelno]
+        fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         return DBFormatter.format(self, record)
 
@@ -126,6 +126,8 @@ def init_logger():
     if _logger_init:
         return
     _logger_init = True
+
+    logging.addLevelName(25, "INFO")
 
     from tools.translate import resetlocale
     resetlocale()
@@ -180,7 +182,7 @@ def init_logger():
 
     if tools.config['log_db']:
         postgresqlHandler = PostgreSQLHandler()
-        postgresqlHandler.setLevel(logging.WARNING)
+        postgresqlHandler.setLevel(25)
         logging.getLogger().addHandler(postgresqlHandler)
 
     # Configure loggers levels
