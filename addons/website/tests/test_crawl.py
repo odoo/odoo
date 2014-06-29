@@ -68,17 +68,23 @@ class Crawler(openerp.tests.HttpCase):
     def test_10_crawl_public(self):
         t0 = time.time()
         seen = self.crawl('/', msg='Anonymous Coward')
-        _logger.log(25, "public crawled %s urls in %.2fs", len(seen) ,time.time() - t0)
+        count = len(seen)
+        duration = time.time() - t0
+        _logger.log(25, "public crawled %s urls in %.2fs, %.3fs per query", count, duration, duration/count)
 
     def test_20_crawl_demo(self):
         t0 = time.time()
         self.authenticate('demo', 'demo')
         seen = self.crawl('/', msg='demo')
-        _logger.log(25, "demo crawled %s urls in %.2fs", len(seen), time.time() - t0)
+        count = len(seen)
+        duration = time.time() - t0
+        _logger.log(25, "demo crawled %s urls in %.2fs, %.3fs per query", count, duration, duration/count)
 
     def test_30_crawl_admin(self):
         t0 = time.time()
         self.authenticate('admin', 'admin')
         seen = self.crawl('/', msg='admin')
-        _logger.log(25, "admin crawled %s urls in %.2fs", len(seen), time.time() - t0)
+        count = len(seen)
+        duration = time.time() - t0
+        _logger.log(25, "admin crawled %s urls in %.2fs, %.3fs per query", count, duration, duration/count)
 
