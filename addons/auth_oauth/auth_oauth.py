@@ -14,6 +14,7 @@ class auth_oauth_provider(osv.osv):
         'scope' : fields.char('Scope'),                                     # OAUth user data desired to access
         'validation_endpoint' : fields.char('Validation URL'),              # OAuth provider URL to validate tokens
         'data_endpoint' : fields.char('Data URL'),
+        'data_overwrite': fields.text('Data Overwrite', help='Overwrite the result of OAuth responses. The format must be python dict object, the key is standard parameter, and the value is value path evaluates by OAuth response dict'),
         'enabled' : fields.boolean('Allowed'),
         'css_class' : fields.char('CSS class'),
         'body' : fields.char('Body'),
