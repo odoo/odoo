@@ -9,6 +9,7 @@ import openerp
 from openerp.addons.auth_signup.res_users import SignupError
 from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
+from openerp.tools.safe_eval import expr_eval, safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -88,6 +89,14 @@ class res_users(osv.Model):
             except SignupError:
                 raise access_denied_exception
 
+    def _auth_oauth_overwrite(self, cr, uid, validation, provider, params, context=None):
+        data_overwrite = self.pool.get('auth.oauth.provider').read(cr, uid, provider,['data_overwrite'], context=context)['data_overwrite']
+        if data_overwrite:
+            overdict = expr_eval(data_overwrite)
+            assert isinstance(overdict, dict), 'the overwrite expression must be a dict object.'
+            for r in overdict.items():
+                validation[r[0]]=safe_eval(r[1], params, validation)
+
     def auth_oauth(self, cr, uid, provider, params, context=None):
         # Advice by Google (to avoid Confused Deputy Problem)
         # if validation.audience != OUR_CLIENT_ID:
@@ -96,6 +105,8 @@ class res_users(osv.Model):
         #   continue with the process
         access_token = params.get('access_token')
         validation = self._auth_oauth_validate(cr, uid, provider, access_token)
+        validation.update(params)  # merge the authentication response
+        self._auth_oauth_overwrite(cr,uid,validation,provider,params,context=context)
         # required check
         if not validation.get('user_id'):
             raise openerp.exceptions.AccessDenied()
