@@ -50,6 +50,38 @@
 
         <menuitem action="action_country" id="menu_country_partner" parent="menu_localisation" sequence="0" groups="base.group_no_one"/>
 
+        <record id="view_country_group_tree" model="ir.ui.view">
+            <field name="name">res.country.group.tree</field>
+            <field name="model">res.country.group</field>
+            <field name="arch" type="xml">
+                <tree string="Country Group">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_country_group_form" model="ir.ui.view">
+            <field name="name">res.country.group.form</field>
+            <field name="model">res.country.group</field>
+            <field name="arch" type="xml">
+                <form string="Country Group">
+                    <field name="name"/>
+                    <field name="country_ids" widget="many2many_tags"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_country_group" model="ir.actions.act_window">
+            <field name="name">Country Group</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.country.group</field>
+            <field name="view_type">form</field>
+            <field name="help">Display and manage the list of all countries group. You can create or delete country group to make sure the ones you are working on will be maintained.</field>
+        </record>
+
+
+        <menuitem action="action_country_group" id="menu_country_group" name="Country Group" parent="menu_localisation" sequence="1" groups="base.group_no_one"/>
+
         <!--
           State
         -->
