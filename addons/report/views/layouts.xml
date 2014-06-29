@@ -150,7 +150,9 @@
             <link href="/website/static/src/css/website.css" rel="stylesheet"/>
             <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
             <style type='text/css'><t t-raw="css"/></style>
-            <t t-raw="subst"/>
+            <t t-if="subst is True">
+                <script src='/report/static/src/js/subst.js'></script>
+            </t>
         </head>
         <body class="container" onload="subst()">
             <t t-raw="body"/>

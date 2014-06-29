@@ -174,7 +174,6 @@ class Report(osv.Model):
             paperformat = report.paperformat_id
 
         # Preparing the minimal html pages
-        subst = "<script src='/report/static/src/js/subst.js'></script> "
         css = ''  # Will contain local css
         headerhtml = []
         contenthtml = []
@@ -195,12 +194,12 @@ class Report(osv.Model):
 
             for node in root.xpath("//div[@class='header']"):
                 body = lxml.html.tostring(node)
-                header = render_minimal(dict(css=css, subst=subst, body=body, base_url=base_url))
+                header = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
                 headerhtml.append(header)
 
             for node in root.xpath("//div[@class='footer']"):
                 body = lxml.html.tostring(node)
-                footer = render_minimal(dict(css=css, subst=subst, body=body, base_url=base_url))
+                footer = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
                 footerhtml.append(footer)
 
             for node in root.xpath("//div[@class='page']"):
@@ -217,7 +216,7 @@ class Report(osv.Model):
                     reportid = False
 
                 body = lxml.html.tostring(node)
-                reportcontent = render_minimal(dict(css=css, subst='', body=body, base_url=base_url))
+                reportcontent = render_minimal(dict(css=css, subst=False, body=body, base_url=base_url))
 
                 # FIXME: imo the best way to extract record id from html reports is by using the
                 # qweb branding. As website editor is not yet splitted in a module independant from
@@ -241,11 +240,10 @@ class Report(osv.Model):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
         # Run wkhtmltopdf process
-        pdf = self._generate_wkhtml_pdf(
+        return self._run_wkhtmltopdf(
             cr, uid, headerhtml, footerhtml, contenthtml, context.get('landscape'),
             paperformat, specific_paperformat_args, save_in_attachment
         )
-        return pdf
 
     def get_action(self, cr, uid, ids, report_name, data=None, context=None):
         """Return an action of type ir.actions.report.xml.
@@ -316,7 +314,7 @@ class Report(osv.Model):
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
 
-    def _generate_wkhtml_pdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None):
+    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
