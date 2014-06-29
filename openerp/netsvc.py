@@ -68,6 +68,8 @@ def LocalService(name):
                 with registry.cursor() as cr:
                     return registry['ir.actions.report.xml']._lookup_report(cr, name[len('report.'):])
 
+path_prefix = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
+
 class PostgreSQLHandler(logging.Handler):
     """ PostgreSQL Loggin Handler will store logs in the database, by default
     the current database, can be set using --log-db=DBNAME
@@ -87,7 +89,8 @@ class PostgreSQLHandler(logging.Handler):
                 msg = "%s\n%s" % (msg, traceback)
             # we do not use record.levelname because it may have been changed by ColoredFormatter.
             levelname = logging.getLevelName(record.levelno)
-            val = ('server', ct_db, record.name, levelname, msg, record.pathname, record.lineno, record.funcName)
+
+            val = ('server', ct_db, record.name, levelname, msg, record.pathname[len(path_prefix)+1:], record.lineno, record.funcName)
             cr.execute("""
                 INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
