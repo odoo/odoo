@@ -124,7 +124,7 @@ class Report(osv.Model):
             user=user,
             res_company=user.company_id,
             website=website,
-            editable_no_editor=True,
+            editable_no_editor=_("The preferred way to edit a report is to use the HTML Editor"),
         )
         return view_obj.render(cr, uid, template, values, context=context)
 
