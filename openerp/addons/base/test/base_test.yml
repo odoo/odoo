@@ -137,7 +137,19 @@
         assert len(old_struct) == 4, "After duplication, previous record must have old childs records only"
         assert (not set(new_struct).intersection(old_struct)), "After duplication, nodes should not be mixed"
 -
-    6. Restore pool state after the test
+    6. Tests on _parent_order.
+-
+    !python {model: res.partner.category }: |
+        another_root = self.create(cr, uid, {'name':'Root categ'})
+        struct = self.search(cr, uid, [('id','in',(ref('test_categ_root'),another_root))])
+        assert struct[0]==another_root, "Root partner categories should be sorted."
+        struct = self.search(cr, uid, [('id','in',(ref('test_categ_1'),ref('test_categ_2')))])
+        assert struct[0]==ref('test_categ_1'), "Partner categories should be sorted."
+        self.write(cr, uid, ref('test_categ_1'), {'name':'Child 3'})
+        struct = self.search(cr, uid, [('id','in',(ref('test_categ_1'),ref('test_categ_2')))])
+        assert struct[0]==ref('test_categ_2'), "Partner categories should be re-sorted after name update."
+-
+    7. Restore pool state after the test
 -
     !python {model: res.partner.category}: |
         self.pool._init = True
