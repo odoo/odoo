@@ -5,10 +5,9 @@ from openerp import exceptions
 from openerp.tests import common
 
 def noid(d):
-    """ Removes `id` key from a dict so we don't have to keep these things
-    around when trying to match
-    """
-    if 'id' in d: del d['id']
+    """ Removes values that are not relevant for the test comparisons """
+    d.pop('id', None)
+    d.pop('action_id', None)
     return d
 
 class FiltersCase(common.TransactionCase):

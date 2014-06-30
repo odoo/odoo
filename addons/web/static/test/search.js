@@ -171,6 +171,7 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
             dummy: {type: 'char', string: 'Dummy'}
         };
     };
+    instance.client = { action_manager: { inner_action: undefined } };
 
     var dataset = new instance.web.DataSet(null, 'dummy.model');
     var mock_parent = {getParent: function () {return null;}};

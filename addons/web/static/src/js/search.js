@@ -1710,10 +1710,14 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 self.clear_selection();
             })
             .on('reset', this.proxy('clear_selection'));
-        return this.model.call('get_filters', [this.view.model])
+        return this.model.call('get_filters', [this.view.model, this.get_action_id()])
             .then(this.proxy('set_filters'))
             .done(function () { self.is_ready.resolve(); })
             .fail(function () { self.is_ready.reject.apply(self.is_ready, arguments); });
+    },
+    get_action_id: function(){
+        var action = instance.client.action_manager.inner_action;
+        if (action) return action.id;
     },
     /**
      * Special implementation delaying defaults until CustomFilters is loaded
@@ -1734,9 +1738,11 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
      * @return {String} mapping key corresponding to the filter
      */
     key_for: function (filter) {
-        var user_id = filter.user_id;
+        var user_id = filter.user_id,
+            action_id = filter.action_id;
         var uid = (user_id instanceof Array) ? user_id[0] : user_id;
-        return _.str.sprintf('(%s)%s', uid, filter.name);
+        var act_id = (action_id instanceof Array) ? action_id[0] : action_id;
+        return _.str.sprintf('(%s)(%s)%s', uid, act_id, filter.name);
     },
     /**
      * Generates a :js:class:`~instance.web.search.Facet` descriptor from a
