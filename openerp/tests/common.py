@@ -327,13 +327,7 @@ class HttpCase(TransactionCase):
         options.update(kw)
         options.setdefault('password', options.get('login'))
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
-        cmd = [
-            'phantomjs',
-            '--local-storage-path',
-            self.localstorage_path,
-            phantomtest,
-            json.dumps(options)
-        ]
+        cmd = [ 'phantomjs', phantomtest, json.dumps(options) ]
         self.phantom_run(cmd, timeout)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
