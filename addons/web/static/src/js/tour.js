@@ -366,6 +366,7 @@ var Tour = {
         clearTimeout(Tour.timer);
         clearTimeout(Tour.testtimer);
         Tour.closePopover();
+        console.log("Tour reset\n localStorage:" + JSON.stringify(localStorage));
     },
     running: function () {
         var state = Tour.getState();
