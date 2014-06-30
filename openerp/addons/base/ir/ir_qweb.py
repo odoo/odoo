@@ -1077,7 +1077,7 @@ class AssetsBundle(object):
             sep = '\n            '
         response = []
         if debug:
-            if css and self.stylesheet:
+            if css and self.stylesheets:
                 self.compile_sass()
                 for style in self.stylesheets:
                     response.append(style.to_html())
