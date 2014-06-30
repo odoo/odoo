@@ -57,7 +57,7 @@
 
 <template id="layout" name="Main layout">&lt;!DOCTYPE html&gt;
     <html t-att-lang="lang and lang.replace('_', '-')"
-          t-att-data-website-id="website.id if editable else None"
+          t-att-data-website-id="website.id if editable and website else None"
           t-att-data-editable="'1' if editable else None"
           t-att-data-editable-no-editor="editable_no_editor or None"
           t-att-data-translatable="'1' if translatable else None"
@@ -82,10 +82,10 @@
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <title><t t-esc="title"/></title>
 
-            <t t-set="languages" t-value="website.get_languages()"/>
-            <t t-if="request.website_multilang">
+            <t t-set="languages" t-value="website.get_languages() if website else None"/>
+            <t t-if="request and request.website_multilang">
                 <t t-foreach="languages" t-as="lg">
-                    <t t-set="force_lang" t-value="lg[0] if lg[0] != website.default_lang_code else None"/>
+                    <t t-set="force_lang" t-value="lg[0] if website and lg[0] != website.default_lang_code else None"/>
                     <link rel="alternate" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=force_lang)" t-att-hreflang="lg[0].replace('_', '-').lower()" />
                 </t>
             </t>
@@ -150,7 +150,7 @@
                     </div>
                 </footer>
             </div>
-            <t t-if="website.google_analytics_key">
+            <t t-if="website and website.google_analytics_key">
                 <script>
                     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
                     function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
