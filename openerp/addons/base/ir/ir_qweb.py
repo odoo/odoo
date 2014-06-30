@@ -1381,7 +1381,7 @@ class SassAsset(StylesheetAsset):
                 ira.write(self.cr, self.uid, [ira_id], {'datas': self.content}, context=self.context)
             else:
                 ira.create(self.cr, self.uid, dict(
-                    datas=self.content.encode('base64'),
+                    datas=self.content.encode('utf8').encode('base64'),
                     mimetype='text/css',
                     type='binary',
                     name=url,
