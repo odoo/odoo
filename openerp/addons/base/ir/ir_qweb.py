@@ -1363,6 +1363,9 @@ class StylesheetAsset(WebAsset):
 
 class SassAsset(StylesheetAsset):
     html_url = '%s.css'
+    rx_indent = re.compile(r'^( +|\t+)', re.M)
+    indent = None
+    reindent = '    '
 
     def minify(self):
         return self.with_header()
@@ -1387,8 +1390,22 @@ class SassAsset(StylesheetAsset):
         return super(SassAsset, self).to_html()
 
     def get_source(self):
-        # TODO: ensure same indentation level for all bundles
-        return "/*! %s */\n%s" % (self.id, textwrap.dedent(self.content))
+        content = textwrap.dedent(self.content)
+
+        def fix_indent(m):
+            ind = m.group()
+            if self.indent is None:
+                self.indent = ind
+                if self.indent == self.reindent:
+                    # Don't reindent the file if identation is the final one (reindent)
+                    raise StopIteration()
+            return ind.replace(self.indent, self.reindent)
+
+        try:
+            content = self.rx_indent.sub(fix_indent, content)
+        except StopIteration:
+            pass
+        return "/*! %s */\n%s" % (self.id, content)
 
 def rjsmin(script):
     """ Minify js with a clever regex.
