@@ -34,6 +34,7 @@ import time
 from dateutil.relativedelta import relativedelta
 from openerp import tools
 import werkzeug.urls
+from werkzeug.exceptions import NotFound
 
 try:
     import GeoIP
@@ -175,6 +176,16 @@ class website_event(http.Controller):
             'event': event,
             'main_object': event
         }
+
+        if '.' not in page:
+            page = 'website_event.%s' % page
+
+        try:
+            request.website.get_template(page)
+        except ValueError, e:
+            # page not found
+            raise NotFound
+
         return request.website.render(page, values)
 
     @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True, multilang=True)
