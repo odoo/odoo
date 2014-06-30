@@ -361,7 +361,8 @@ var Tour = {
                 state.tour.steps[k].busy = false;
             }
         }
-        localStorage.removeItem("tour");
+        localStorage.setItem("tour", 'false'); // force the state to false
+        localStorage.removeItem("tour"); // try to remove the tour state
         clearTimeout(Tour.timer);
         clearTimeout(Tour.testtimer);
         Tour.closePopover();
@@ -405,6 +406,8 @@ var Tour = {
         };
 
         function checkNext () {
+            if (!Tour.getState()) return;
+
             Tour.autoTogglePopover();
 
             clearTimeout(Tour.timer);
@@ -483,6 +486,8 @@ var Tour = {
         clearTimeout(Tour.testtimer);
 
         function autoStep () {
+            if (!Tour.getState()) return;
+
             if (!step) return;
 
             if (step.autoComplete) {
@@ -509,6 +514,7 @@ var Tour = {
 
                 // trigger after for step like: mouseenter, next step click on button display with mouseenter
                 setTimeout(function () {
+                    if (!Tour.getState()) return;
                     $element.trigger($.Event("mouseup", { srcElement: $element[0] }));
                     $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
                 }, 1000);
@@ -525,6 +531,7 @@ var Tour = {
                     $element.html(step.sampleText);
                 }
                 setTimeout(function () {
+                    if (!Tour.getState()) return;
                     $element.trigger($.Event("keyup", { srcElement: $element }));
                     $element.trigger($.Event("change", { srcElement: $element }));
                 }, self.defaultDelay<<1);
