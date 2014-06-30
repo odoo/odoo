@@ -430,6 +430,8 @@ class ConnectionPool(object):
             for i, (cnx, used) in enumerate(self._connections):
                 if not used:
                     self._connections.pop(i)
+                    if not cnx.closed:
+                        cnx.close()
                     self._debug('Removing old connection at index %d: %r', i, cnx.dsn)
                     break
             else:
