@@ -128,7 +128,7 @@ class website(orm.Model):
     def sale_product_domain(self, cr, uid, ids, context=None):
         return [("sale_ok", "=", True)]
 
-    def sale_get_order(self, cr, uid, ids, force_create=False, code=None, context=None):
+    def sale_get_order(self, cr, uid, ids, force_create=False, code=None, update_pricelist=None, context=None):
         sale_order_obj = self.pool['sale.order']
         sale_order_id = request.session.get('sale_order_id')
         sale_order = None
@@ -157,26 +157,20 @@ class website(orm.Model):
                 request.session['sale_order_id'] = None
                 return None
 
-            def update_pricelist(pricelist_id):
-                values = {'pricelist_id': pricelist_id}
-                values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
-                sale_order.write(values)
-                for line in sale_order.order_line:
-                    sale_order._cart_update(product_id=line.product_id.id, add_qty=0)
-
             # check for change of pricelist with a coupon
             if code and code != sale_order.pricelist_id.code:
                 pricelist_ids = self.pool['product.pricelist'].search(cr, SUPERUSER_ID, [('code', '=', code)], context=context)
                 if pricelist_ids:
                     pricelist_id = pricelist_ids[0]
                     request.session['sale_order_code_pricelist_id'] = pricelist_id
-                    update_pricelist(pricelist_id)
+                    update_pricelist = True
                 request.session['sale_order_code_pricelist_id'] = False
+
+            pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
 
             # check for change of partner_id ie after signup
             if sale_order.partner_id.id != partner.id and request.website.partner_id.id != partner.id:
                 flag_pricelist = False
-                pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
                 if pricelist_id != sale_order.pricelist_id.id:
                     flag_pricelist = True
                 fiscal_position = sale_order.fiscal_position and sale_order.fiscal_position.id or False
@@ -190,7 +184,15 @@ class website(orm.Model):
                 sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
 
                 if flag_pricelist or values.get('fiscal_position') != fiscal_position:
-                    update_pricelist(pricelist_id)
+                    update_pricelist = True
+
+            # update the pricelist
+            if update_pricelist:
+                values = {'pricelist_id': pricelist_id}
+                values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
+                sale_order.write(values)
+                for line in sale_order.order_line:
+                    sale_order._cart_update(product_id=line.product_id.id, add_qty=0)
 
             # update browse record
             if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id !=  partner.id:

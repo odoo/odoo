@@ -23,9 +23,9 @@
 
         <record id="message_rule_1" model="ir.rule">
             <field name="name">Live Support Managers can read messages from live support</field>
-            <field name="model_id" ref="im.model_im_message"/>
+            <field name="model_id" ref="im_chat.model_im_chat_message"/>
             <field name="groups" eval="[(6,0,[ref('im_livechat.group_im_livechat_manager')])]"/>
-            <field name="domain_force">[('session_id.channel_id', '!=', None)]</field>
+            <field name="domain_force">[('to_id.channel_id', '!=', None)]</field>
             <field name="perm_unlink" eval="0"/>
             <field name="perm_write" eval="0"/>
             <field name="perm_read" eval="1"/>

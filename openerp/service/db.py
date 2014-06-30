@@ -134,7 +134,7 @@ def exp_duplicate_database(db_original_name, db_name):
     from_fs = openerp.tools.config.filestore(db_original_name)
     to_fs = openerp.tools.config.filestore(db_name)
     if os.path.exists(from_fs) and not os.path.exists(to_fs):
-        shutil.copy(from_fs, to_fs)
+        shutil.copytree(from_fs, to_fs)
     return True
 
 def exp_get_progress(id):

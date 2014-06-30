@@ -27,13 +27,19 @@ from openerp.osv import fields, osv
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
+    _order = 'sequence'
     _columns = {
+        'sequence': fields.integer('Sequence'),
         'name': fields.char('Fiscal Position', required=True),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a fiscal position without deleting it."),
         'company_id': fields.many2one('res.company', 'Company'),
         'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Tax Mapping'),
         'note': fields.text('Notes'),
+        'auto_apply': fields.boolean('Automatic', help="Apply automatically this fiscal position."),
+        'vat_required': fields.boolean('VAT required', help="Apply only if partner has a VAT number."),
+        'country_id': fields.many2one('res.country', 'Countries', help="Apply only if delivery or invoicing country match."),
+        'country_group_id': fields.many2one('res.country.group', 'Country Group', help="Apply only if delivery or invocing country match the group."),
     }
 
     _defaults = {
@@ -66,6 +72,33 @@ class account_fiscal_position(osv.osv):
                 break
         return account_id
 
+    def get_fiscal_position(self, cr, uid, company_id, partner_id, delivery_id=None, context=None):
+        if not partner_id:
+            return False
+        # This can be easily overriden to apply more complex fiscal rules
+        part_obj = self.pool['res.partner']
+        partner = part_obj.browse(cr, uid, partner_id, context=context)
+
+        # partner manually set fiscal position always win
+        if partner.property_account_position:
+            return part.property_account_position.id
+
+        # if no delivery use invocing
+        if delivery_id:
+            delivery = part_obj.browse(cr, uid, delivery_id, context=context)
+        else:
+            delivery = partner
+
+        domain = [
+            ('auto_apply', '=', True),
+            '|', ('vat_required', '=', False), ('vat_required', '=', partner.vat_subjected),
+            '|', ('country_id', '=', None), ('country_id', '=', delivery.country_id.id),
+            '|', ('country_group_id', '=', None), ('country_group_id.country_ids', '=', delivery.country_id.id)
+        ]
+        fiscal_position_ids = self.search(cr, uid, domain, context=context)
+        if fiscal_position_ids:
+            return fiscal_position_ids[0]
+        return False
 
 class account_fiscal_position_tax(osv.osv):
     _name = 'account.fiscal.position.tax'
@@ -206,6 +239,7 @@ class res_partner(osv.osv):
         return self.write(cr, uid, ids, {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     _columns = {
+        'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement."),
         'credit': fields.function(_credit_debit_get,
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),

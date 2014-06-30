@@ -320,6 +320,16 @@ class sale_order(osv.osv):
             context_lang.update({'lang': partner_lang})
         return self.pool.get('res.users').browse(cr, uid, uid, context=context_lang).company_id.sale_note
 
+    def onchange_delivery_id(self, cr, uid, ids, company_id, partner_id, delivery_id, fiscal_position, context=None):
+        r = {'value': {}}
+        if not fiscal_position:
+            if not company_id:
+                company_id = self._get_default_company(cr, uid, context=context)
+            fiscal_position = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, delivery_id, context=context)
+            if fiscal_position:
+                r['value']['fiscal_position'] = fiscal_position
+        return r
+
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
@@ -328,15 +338,15 @@ class sale_order(osv.osv):
         addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
-        fiscal_position = part.property_account_position and part.property_account_position.id or False
         dedicated_salesman = part.user_id and part.user_id.id or uid
         val = {
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
             'payment_term': payment_term,
-            'fiscal_position': fiscal_position,
             'user_id': dedicated_salesman,
         }
+        delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False,  context=context)
+        val.update(delivery_onchange['value'])
         if pricelist:
             val['pricelist_id'] = pricelist
         sale_note = self.get_salenote(cr, uid, ids, part.id, context=context)
@@ -345,11 +355,14 @@ class sale_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
-            context = {}        
+            context = {}
         if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
-        if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id']):
-            defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context)['value']
+        if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id', 'fiscal_position']):
+            defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
+            if not vals.get('fiscal_position') and vals.get('partner_shipping_id'):
+                delivery_onchange = self.onchange_delivery_id(cr, uid, [], vals.get('company_id'), None, vals['partner_id'], vals.get('partner_shipping_id'), context=context)
+                defaults.update(delivery_onchange['value'])
             vals = dict(defaults, **vals)
         context.update({'mail_create_nolog': True})
         new_id = super(sale_order, self).create(cr, uid, vals, context=context)
