@@ -4545,8 +4545,9 @@ class BaseModel(object):
                     pleft_old = pleft
                 if not pleft_old and parent:
                     cr.execute('select parent_left from '+self._table+' where id=%s', (parent,))
-                    pleft_old = cr.fetchone()[0]
-                pleft = pleft_old or -1
+                    pleft = cr.fetchone()[0]
+                else:
+                    pleft = pleft_old or -1
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1, pleft+2, id_new))
