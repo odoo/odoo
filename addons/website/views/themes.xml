@@ -109,12 +109,13 @@
 
     Use input type 'checkbox' or 'radio'
     'data-xmlid' (optional) xml id of the template to add if the input is checked.
-        You can set a list of xml id separate by commat (all template is enable or 
+        You can set a list of xml id separate by comma (all template is enable or 
         disable in same time)
     'data-enable' (optional) to checked one or more HTML ids, or list separate by comma
     'data-disable' (optional) to unchecked one or more HTML ids, or list separate by comma
-    'data-reload="true"' (optional) force the reloading of the page otherwise, only the
-        '/web/css/website.assets_frontend' is reloaded
+    'data-reload="/"' (optional) force the reloading of the page if the url match with
+        the string ( = regexp).
+        Otherwise, only the '/web/css/website.assets_frontend' is reloaded
 
     For the sets (data-enable and/or data-disable without data-xmlid), the set is automatically
     checked if:

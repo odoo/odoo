@@ -111,7 +111,9 @@
                     }
                 });
 
-                if ($(this).data('reload')) reload = true;
+                if ($(this).data('reload') && document.location.href.match(new RegExp( $(this).data('reload') ))) {
+                    reload = true;
+                }
 
                 clearTimeout(time);
                 if (run) {
