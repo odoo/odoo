@@ -846,11 +846,11 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
                 filters.push(new instance.web.search.Filter(item, group));
                 break;
             case 'group':
-                self.inputs.push(new instance.web.search.Separator(this))
+                self.add_separator();
                 self.make_widgets(item.children, fields,
                     new instance.web.search.Group(group, 'w', item));
+                self.add_separator();
                 break;
-                self.inputs.push(new instance.web.search.Separator(this))
             case 'field':
                 var field = this.make_field(
                     item, fields[item['attrs'].name], group);
@@ -864,6 +864,11 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
         if (filters.length) {
             group.push(new instance.web.search.FilterGroup(filters, this));
         }
+    },
+
+    add_separator: function () {
+        if (!(_.last(this.inputs) instanceof instance.web.search.Separator))
+            new instance.web.search.Separator(this);
     },
     /**
      * Creates a field for the provided field descriptor item (which comes
