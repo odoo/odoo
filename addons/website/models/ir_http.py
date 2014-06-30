@@ -10,7 +10,7 @@ import werkzeug.routing
 import openerp
 from openerp.addons.base import ir
 from openerp.addons.base.ir import ir_qweb
-from openerp.addons.website.models.website import slug
+from openerp.addons.website.models.website import slug, _UNSLUG_RE
 from openerp.http import request
 from openerp.osv import orm
 
@@ -194,7 +194,7 @@ class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False, domain='[]'):
         super(ModelConverter, self).__init__(url_map, model)
         self.domain = domain
-        self.regex = r'(?:[A-Za-z0-9-_]+?-)?(\d+)(?=$|/)'
+        self.regex = _UNSLUG_RE.pattern
 
     def to_url(self, value):
         return slug(value)
@@ -203,7 +203,7 @@ class ModelConverter(ir.ir_http.ModelConverter):
         m = re.match(self.regex, value)
         _uid = RequestUID(value=value, match=m, converter=self)
         return request.registry[self.model].browse(
-            request.cr, _uid, int(m.group(1)), context=request.context)
+            request.cr, _uid, int(m.group(2)), context=request.context)
 
     def generate(self, cr, uid, query=None, args=None, context=None):
         obj = request.registry[self.model]
