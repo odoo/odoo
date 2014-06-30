@@ -12,7 +12,7 @@ window.openerp.website.EditorBar.include({
             }
             var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
             $menuItem.click(function () {
-                T.run(tour.id);
+                openerp.Tour.run(tour.id);
             });
             menu.append($menuItem);
         });
@@ -20,4 +20,4 @@ window.openerp.website.EditorBar.include({
     }
 });
 
-}());
+})();

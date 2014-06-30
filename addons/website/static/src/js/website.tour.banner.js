@@ -84,7 +84,7 @@
                 popover:   { fixed: true },
             },
             {
-                waitFor:   'button[data-action=edit]:visible',
+                waitFor:   'button[data-action=save]:not(:visible)',
                 title:     _t("Good Job!"),
                 content:   _t("Well done, you created your homepage."),
                 popover:   { next: _t("Continue") },

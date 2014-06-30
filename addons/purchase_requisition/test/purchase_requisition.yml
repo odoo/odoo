@@ -69,11 +69,11 @@
     purchase_requisition = self.pool.get("purchase.requisition")
     purchase_ids = self.search(cr, uid, [('requisition_id','=',ref("requisition1"))])
     assert purchase_ids, "RFQ is not created."
-    rfq = self.browse(cr, uid, purchase_ids[0], context=context)
-    requisition = rfq.requisition_id
-    supplier = rfq.partner_id
-    assert supplier.id == ref('base.res_partner_12'), "RFQ Partner is not correspond."
-    assert len(rfq.order_line) == len(requisition.line_ids), "Lines are not correspond."
+    for rfq in self.browse(cr, uid, purchase_ids, context=context):
+        if rfq.partner_id.id == ref('base.res_partner_12'):
+            break
+    else:
+        assert False, "No PO found for res_partner_12."
 -
   I confirmed RFQ which has best price.
 -

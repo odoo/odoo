@@ -29,7 +29,7 @@ def get_sys_logs(self, cr, uid):
     pool = openerp.registry(cr.dbname)
 
     dbuuid = pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-    db_create_date = pool.get('ir.config_parameter').get_param(cr, uid, 'database.create_date')
+    db_create_date = pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'database.create_date')
     limit_date = datetime.datetime.now()
     limit_date = limit_date - datetime.timedelta(15)
     limit_date_str = limit_date.strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)

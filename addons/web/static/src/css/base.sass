@@ -55,7 +55,7 @@ $sheet-padding: 16px
     background-image: -webkit-radial-gradient(circle, $gradient)
     background-image: -moz-radial-gradient($gradient)
     background-image: -ms-radial-gradient($gradient)
-    background-image: radial-gradient($gradient)
+    background-image: radial-gradient(circle, $gradient)
 
 @mixin radius($radius: 5px)
     -moz-border-radius: $radius
@@ -143,6 +143,21 @@ $sheet-padding: 16px
 
 // }}}
 
+#oe_main_menu_navbar
+    min-height: 34px
+    z-index: 1001
+    border-radius: 0
+    li a, li button
+        padding: 4px 8px 4px 8px
+        margin-top: 2px
+        font-size: 13px
+    .oe_topbar_avatar
+        max-height: 18px
+        width: auto
+        
+#oe_main_menu_navbar.navbar
+    margin-bottom: 0px
+
 .openerp
     // Global style {{{
     padding: 0
@@ -152,7 +167,10 @@ $sheet-padding: 16px
     font-size: 13px
     background: white
     &.openerp_webclient_container
-        height: 100%
+        height: calc(100% - 34px)
+    @media (max-width: 768px)
+        &.openerp_webclient_container
+            height: calc(100% - 52px)
     // }}}
     //Placeholder style{{{
     \:-moz-placeholder
@@ -649,7 +667,7 @@ $sheet-padding: 16px
     // Loading {{{
     .oe_loading
         display: none
-        z-index: 100
+        z-index: 1001
         position: fixed
         top: 0
         right: 50%
@@ -713,7 +731,6 @@ $sheet-padding: 16px
             display: none
     // }}}
     // Top Menu {{{
-
     .navbar
         .oe_topbar_anonymous_login
             background-color: #dc5f59
@@ -788,37 +805,8 @@ $sheet-padding: 16px
     // So why aren't the buttons oe_topbar_items ? This sad state of affairs
     // is a leftover from an uncomplete refactoring when the left and top menu
     // were merged. You are welcome to refactor and clean this up
-    .navbar-nav
-        float: left
-        padding: 0
-        margin: 0
-        font-size: 13px
-        > li
-            list-style-type: none
-            padding: 0
-            margin: 0
-            float: left
-            display: block
-            color: #eeeeee
-            > a
-                display: block
-                padding: 5px 10px 26px !important
-                line-height: 20px
-                height: 20px
-                text-decoration: none
-                color: #eee !important
-                vertical-align: top
-                text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-                @include transition(all 0.2s ease-out)
-                &:hover
-                    background: rgba(0,0,0,0.2)
-                    text-shadow: black 0px 0px 3px
-                    color: white
-                    @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
-            > .active
-                background: rgba(0,0,0,0.30)
-                text-shadow: black 0px 0px 3px
-                @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
+    .nav li a
+        padding: 6px 8px 4px 8px
 
     .oe_user_menu
         float: right
@@ -829,12 +817,6 @@ $sheet-padding: 16px
             float: left
         .oe_dropdown_menu
             right: -1px
-
-    .oe_systray > div
-        float: left
-        padding: 0 4px 0 4px
-    .oe_systray
-        float: right
 
     // }}}
     // Webclient.leftbar {{{
@@ -2396,28 +2378,6 @@ $sheet-padding: 16px
         line-height: 1.2em
     // }}}
     // Bootstrap HACKS {{{
-    .navbar
-        min-height: 32px
-        margin-bottom: 0px
-        border: none
-        z-index: 1
-        position: static
-        background-color: #414141
-        @include vertical-gradient(#646060, #262626)
-    .navbar-default
-        .navbar-nav
-            li
-                a:hover,a:focus
-                    background: rgba(0, 0, 0, 0.3)
-            .open > a,a:hover,a:focus
-                background: rgba(0, 0, 0, 0.3) !important
-            .dropdown > a .caret
-                border-top-color: #777 !important
-                border-bottom-color: #777 !important
-    .navbar-nav
-        li
-            a
-                padding: 4px 32px 4px 12px
     .oe_navbar .dropdown-menu
         font-size: 13px
         padding: 4px 0
@@ -2440,11 +2400,11 @@ $sheet-padding: 16px
             font-weight: normal
 
     // Customize bootstrap3 for leftbar
-    .nav
+    .nav-pills
         li > a
-            padding: 3px 4px 2px 18px
+            padding: 6px 4px 2px 18px
             color: #4c4c4c
-        nav-pills.nav-stacked > li > ul
+        .nav-stacked > li > ul
             padding-left: 16px
     .nav-pills > li.active,a.list-group-item.active
         > a
@@ -2751,6 +2711,7 @@ body.oe_single_form
     background: white
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5)
     background-color: transparent
+    z-index: 1800
     .tooltip-inner
         text-align: left !important
         max-width: 350px

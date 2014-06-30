@@ -240,7 +240,7 @@ class base_config_settings(osv.TransientModel):
     }
     _defaults = {
         'google_drive_uri': lambda s, cr, uid, c: s.pool['google.service']._get_google_token_uri(cr, uid, 'drive', scope=s.pool['google.drive.config'].get_google_scope(), context=c),
-        'google_drive_authorization_code': lambda s, cr, uid, c: s.pool['ir.config_parameter'].get_param(cr, uid, 'google_drive_authorization_code', context=c),
+        'google_drive_authorization_code': lambda s, cr, uid, c: s.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'google_drive_authorization_code', context=c),
     }
 
     def set_google_authorization_code(self, cr, uid, ids, context=None):
@@ -249,5 +249,5 @@ class base_config_settings(osv.TransientModel):
         auth_code = config.google_drive_authorization_code
         if auth_code and auth_code != ir_config_param.get_param(cr, uid, 'google_drive_authorization_code', context=context):
             refresh_token = self.pool['google.service'].generate_refresh_token(cr, uid, 'drive', config.google_drive_authorization_code, context=context)
-            ir_config_param.set_param(cr, uid, 'google_drive_authorization_code', auth_code)
-            ir_config_param.set_param(cr, uid, 'google_drive_refresh_token', refresh_token)
+            ir_config_param.set_param(cr, uid, 'google_drive_authorization_code', auth_code, groups=['base.group_system'])
+            ir_config_param.set_param(cr, uid, 'google_drive_refresh_token', refresh_token, groups=['base.group_system'])

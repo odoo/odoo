@@ -120,8 +120,27 @@ header a.navbar-brand img {
 }
 
 /* ----- EDITOR ----- */
+#oe_main_menu_navbar {
+  min-height: 34px;
+  z-index: 1001;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
+  margin-bottom: 0px;
+}
+#oe_main_menu_navbar li a, #oe_main_menu_navbar li button {
+  padding: 4px 8px 4px 8px;
+  margin-top: 2px;
+  font-size: 13px;
+}
+#oe_main_menu_navbar .navbar-nav.navbar-right:last-child {
+  margin-right: 0 !important;
+}
+
 .css_non_editable_mode_hidden {
-  display: none !important;
+  display: none;
 }
 
 /* ----- BOOTSTRAP FIX ----- */
