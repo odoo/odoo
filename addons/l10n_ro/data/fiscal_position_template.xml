@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    <!-- Fiscal Position Templates -->    
+    <record id="fiscal_position_template_1" model="account.fiscal.position.template">
+            <field name="name">Regim National</field>
+            <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>    
+    <record id="fiscal_position_template_2" model="account.fiscal.position.template">
+            <field name="name">Regim Intra-Comunitar</field>
+            <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+    <record id="fiscal_position_template_3" model="account.fiscal.position.template">
+            <field name="name">Regim Extra-Comunitar</field>
+            <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+        
+    </data>
+</openerp>    

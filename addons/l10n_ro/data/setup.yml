@@ -1,0 +1,11 @@
+-
+  Sets the 'RO' language fields.
+- 
+  !python {model: res.lang}: |
+    ro_lang = self.search(cr, uid,[('code','=','ro_RO')])
+    vals = {
+            'grouping':'[3,3,3,3]',
+            'date_format':'%d/%m/%Y',
+            'time_format':'%H:%M:%S'
+    }
+    self.write(cr, uid, ro_lang, vals)

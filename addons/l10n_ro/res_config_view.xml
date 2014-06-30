@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>                 
+        <data>
+        <record id="ro_config_view" model="ir.ui.view">
+            <field name="name">ro localization settings</field>
+            <field name="model">ro.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure Romanian Localization" class= "oe_form_configuration" >
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>                    
+                    <group string="Localization Data">
+                        <label for="id" string="Partner Identification"/>
+                        <div>
+                            <div>
+                                <field name="cnp_identify" class="oe_inline"/>
+                                <label for="cnp_identify"/>
+                            </div>
+                        </div>
+                    </group>                                   
+                </form>
+            </field>
+        </record>
+        <record id="action_ro_configuration" model="ir.actions.act_window">
+            <field name="name">Configure Ro Localization</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ro.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_ro_config" name="Romanian Localization" parent="base.menu_config"
+            sequence="99" action="action_ro_configuration"/>
+
+    </data>
+</openerp>
