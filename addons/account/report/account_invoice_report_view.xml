@@ -21,7 +21,7 @@
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
                 <field name="date"/>
-                <filter icon="terp-go-year" string="Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="year"/>
+                <filter icon="terp-go-year" string="Year" name="year" domain="['|',('date', '=', False),'&amp;',('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="year"/>
                 <separator/>
                 <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft Invoices"/>
                 <filter string="Pro-forma" icon="terp-gtk-media-pause" domain="['|', ('state','=','proforma'),('state','=','proforma2')]" help = "Pro-forma Invoices"/>
