@@ -1564,6 +1564,46 @@
   -webkit-border-radius: 2px;
   border-radius: 2px;
 }
+.openerp .oe_searchview .oe-autocomplete {
+  display: none;
+  position: absolute;
+  width: 300px;
+  background-color: white;
+  border: 1px solid black;
+  z-index: 666;
+  margin-top: 5px;
+  cursor: default;
+}
+.openerp .oe_searchview .oe-autocomplete ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 5px;
+}
+.openerp .oe_searchview .oe-autocomplete ul li {
+  padding-left: 20px;
+  text-shadow: 0 0 0 white;
+}
+.openerp .oe_searchview .oe-autocomplete ul li span:first-child {
+  margin-right: 5px;
+}
+.openerp .oe_searchview .oe-autocomplete ul li span.oe-expand {
+  cursor: pointer;
+}
+.openerp .oe_searchview .oe-autocomplete ul li.oe-indent {
+  margin-left: 20px;
+}
+.openerp .oe_searchview .oe-autocomplete ul li.oe-selection-focus {
+  background-color: #7c7bad;
+  color: white;
+}
+.openerp .oe_searchview .oe-autocomplete ul li.oe-separator {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border-top: 1px solid #afafb6;
+}
+.openerp .oe_searchview .oe-autocomplete ul li.oe-separator:last-child {
+  display: none;
+}
 .openerp .oe_searchview_drawer_container {
   overflow: auto;
 }

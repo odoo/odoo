@@ -1289,6 +1289,39 @@ $sheet-padding: 16px
                         text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
                         @include radius(2px)
 
+        .oe-autocomplete
+            display: none
+            position: absolute
+            width: 300px
+            background-color: white
+            border: 1px solid black
+            z-index: 666
+            margin-top: 5px
+            cursor: default
+            ul
+                list-style-type: none
+                padding-left: 0
+                margin: 5px
+                li
+                    padding-left: 20px
+                    text-shadow: 0 0 0 white
+                    span:first-child
+                        margin-right: 5px
+                    span.oe-expand
+                        cursor: pointer
+                li.oe-indent
+                    margin-left: 20px
+                li.oe-selection-focus
+                    background-color: #7c7bad
+                    color: white
+                li.oe-separator
+                    margin-top: 2px
+                    margin-bottom: 2px
+                    border-top: 1px solid #afafb6
+                li.oe-separator:last-child
+                    display: none
+
+
     .oe_searchview_drawer_container
         overflow: auto
     .oe_searchview_drawer
