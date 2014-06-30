@@ -23,11 +23,14 @@ import random
 import openerp
 import json
 import openerp.addons.im_chat.im_chat
+import datetime
 
 from openerp.osv import osv, fields
 from openerp import tools
 from openerp import http
 from openerp.http import request
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+
 
 class im_livechat_channel(osv.Model):
     _name = 'im_livechat.channel'
@@ -173,6 +176,7 @@ class im_livechat_channel(osv.Model):
         return True
 
 class im_chat_session(osv.Model):
+
     _inherit = 'im_chat.session'
 
     def _get_fullname(self, cr, uid, ids, fields, arg, context=None):
@@ -190,8 +194,11 @@ class im_chat_session(osv.Model):
 
     _columns = {
         'anonymous_name' : fields.char('Anonymous Name'),
+        'create_date': fields.datetime('Create Date', required=True, select=True),
         'channel_id': fields.many2one("im_livechat.channel", "Channel"),
         'fullname' : fields.function(_get_fullname, type="char", string="Complete name"),
+        'feedback_rating': fields.selection([('10','Good'),('5','Ok'),('1','Bad')], 'Grade', help='Feedback from user (Bad, Ok or Good)'),
+        'feedback_reason': fields.text('Reason', help="Reason explaining the rating."),
     }
 
     def is_in_session(self, cr, uid, uuid, user_id, context=None):
@@ -212,6 +219,18 @@ class im_chat_session(osv.Model):
                 users_infos.append({'id' : False, 'name' : session.anonymous_name, 'im_status' : 'online'})
             return users_infos
 
+    def quit_user(self, cr, uid, uuid, context=None):
+        """ action of leaving a given session """
+        sids = self.search(cr, uid, [('uuid', '=', uuid)], context=context, limit=1)
+        for session in self.browse(cr, openerp.SUPERUSER_ID, sids, context=context):
+            if session.anonymous_name:
+                # an identified user can leave an anonymous session if there is still another idenfied user in it
+                if uid and uid in [u.id for u in session.user_ids] and len(session.user_ids) > 1:
+                    self.remove_user(cr, uid, session.id, context=context)
+                    return True
+                return False
+            else:
+                return super(im_chat_session, self).quit_user(cr, uid, session.id, context=context)
 
 class LiveChatController(http.Controller):
 
@@ -248,4 +267,14 @@ class LiveChatController(http.Controller):
         reg = openerp.modules.registry.RegistryManager.get(db)
         with reg.cursor() as cr:
             return len(reg.get('im_livechat.channel').get_available_users(cr, uid, channel)) > 0
+
+
+    @http.route('/im_livechat/feedback', type='json', auth="none")
+    def feedback(self, uuid, rating, reason=None):
+        cr, uid, context, db = request.cr, request.uid or openerp.SUPERUSER_ID, request.context, request.db
+        registry = openerp.modules.registry.RegistryManager.get(db)
+        Session = registry['im_chat.session']
+        session_ids = Session.search(cr, uid, [('uuid','=',uuid)], context=context)
+        Session.write(cr, uid, session_ids, {'feedback_rating' : str(rating), 'feedback_reason' : reason}, context=context)
+
 
