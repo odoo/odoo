@@ -68,7 +68,7 @@ def cmd_setup_git():
         git_dir = os.getcwd()
     if git_dir:
         # push sane config for git < 2.0, and hooks
-        run('git','config','push.default','simple')
+        #run('git','config','push.default','simple')
         # alias
         run('git','config','alias.st','status')
         # merge bzr style

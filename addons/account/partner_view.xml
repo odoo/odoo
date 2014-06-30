@@ -12,6 +12,13 @@
                         <field name="active"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
+                    <group>
+                        <field name="auto_apply"/>
+                        <field name="sequence"/>
+                        <field name="vat_required" attrs="{'readonly': [('auto_apply', '=', False)]}"/>
+                        <field name="country_id" attrs="{'readonly': ['|', ('country_group_id','!=',False), ('auto_apply', '=', False)]}" />
+                        <field name="country_group_id" attrs="{'readonly': ['|', ('country_id','!=',False), ('auto_apply', '=', False)]}"/>
+                    </group>
                     <separator string="Taxes Mapping"/>
                     <field name="tax_ids" widget="one2many_list">
                         <tree string="Tax Mapping" editable="bottom">
@@ -44,6 +51,7 @@
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
                 <tree string="Fiscal Position">
+                    <field name="sequence"/>
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
