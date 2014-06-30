@@ -2389,8 +2389,7 @@ class BaseModel(object):
         if self._rec_name in self._all_columns:
             rec_name_column = self._all_columns[self._rec_name].column
             return [(r['id'], rec_name_column.as_display_name(cr, user, self, r[self._rec_name], context=context))
-                        for r in self.read(cr, user, ids, [self._rec_name],
-                                       load='_classic_write', context=context)]
+                        for r in self.read(cr, user, ids, [self._rec_name], context=context)]
         return [(id, "%s,%s" % (self._name, id)) for id in ids]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
