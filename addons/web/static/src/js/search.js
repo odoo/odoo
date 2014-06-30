@@ -802,13 +802,13 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
         var $first_col = this.$(".col-md-7"),
             $snd_col = this.$(".col-md-5");
 
-        var add_custom_reports = in_drawer[0].appendTo($first_col),
+        var add_custom_filters = in_drawer[0].appendTo($first_col),
             add_filters = in_drawer[1].appendTo($first_col),
             add_rest = $.when.apply(null, _(in_drawer.slice(2)).invoke('appendTo', $snd_col)),
             defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
                 'facet_for_defaults', this.searchview.defaults));
 
-        return $.when(defaults_fetched, add_custom_reports, add_filters, add_rest);
+        return $.when(defaults_fetched, add_custom_filters, add_filters, add_rest);
     },
     /**
      * Sets up thingie where all the mess is put?
@@ -900,7 +900,7 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
 
     add_common_inputs: function() {
         // add custom filters to this.inputs
-        this.custom_filters = new instance.web.search.CustomReports(this);
+        this.custom_filters = new instance.web.search.CustomFilters(this);
         // add Filters to this.inputs, need view.controls filled
         (new instance.web.search.Filters(this));
         (new instance.web.search.SaveFilter(this, this.custom_filters));
@@ -1690,8 +1690,8 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
     }
 });
 
-instance.web.search.CustomReports = instance.web.search.Input.extend({
-    template: 'SearchView.CustomReports',
+instance.web.search.CustomFilters = instance.web.search.Input.extend({
+    template: 'SearchView.Custom',
     _in_drawer: true,
     init: function () {
         this.is_ready = $.Deferred();
@@ -1837,9 +1837,9 @@ instance.web.search.CustomReports = instance.web.search.Input.extend({
 instance.web.search.SaveFilter = instance.web.search.Input.extend({
     template: 'SearchView.SaveFilter',
     _in_drawer: true,
-    init: function (parent, custom_reports) {
+    init: function (parent, custom_filters) {
         this._super(parent);
-        this.custom_reports = custom_reports;
+        this.custom_filters = custom_filters;
     },
     start: function () {
         var self = this;
@@ -1883,13 +1883,14 @@ instance.web.search.SaveFilter = instance.web.search.Input.extend({
                 model_id: self.view.model,
                 context: results.context,
                 domain: results.domain,
-                is_default: set_as_default
+                is_default: set_as_default,
+                action_id: self.custom_filters.get_action_id()
             };
             // FIXME: current context?
             return self.model.call('create_or_replace', [filter]).done(function (id) {
                 filter.id = id;
-                if (self.custom_reports) {
-                    self.custom_reports.append_filter(filter);
+                if (self.custom_filters) {
+                    self.custom_filters.append_filter(filter);
                 }
                 self.$el
                     .removeClass('oe_opened')
