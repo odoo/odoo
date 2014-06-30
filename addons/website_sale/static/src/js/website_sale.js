@@ -102,7 +102,11 @@ $('.oe_website_sale').each(function () {
             if (_.isEqual(variant_ids[k][1], values)) {
                 $price.html(price_to_str(variant_ids[k][2]));
                 $default_price.html(price_to_str(variant_ids[k][3]));
-                $default_price.parent().toggle(variant_ids[k][3]-variant_ids[k][2]>0.2);
+                if (variant_ids[k][3]-variant_ids[k][2]>0.2) {
+                    $default_price.closest('.oe_website_sale').addClass("discount");
+                } else {
+                    $default_price.closest('.oe_website_sale').removeClass("discount");
+                }
                 product_id = variant_ids[k][0];
                 break;
             }
