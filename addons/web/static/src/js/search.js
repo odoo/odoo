@@ -1710,10 +1710,14 @@ instance.web.search.CustomReports = instance.web.search.Input.extend({
                 self.clear_selection();
             })
             .on('reset', this.proxy('clear_selection'));
-        return this.model.call('get_filters', [this.view.model])
+        return this.model.call('get_filters', [this.view.model, this.get_action_id()])
             .then(this.proxy('set_filters'))
             .done(function () { self.is_ready.resolve(); })
             .fail(function () { self.is_ready.reject.apply(self.is_ready, arguments); });
+    },
+    get_action_id: function(){
+        return parseInt(openerp.webclient.menu.$secondary_menus.find('li.active a').attr('data-action-id') ||
+                $.bbq.getState('action'));
     },
     /**
      * Special implementation delaying defaults until CustomFilters is loaded
@@ -1883,7 +1887,8 @@ instance.web.search.SaveFilter = instance.web.search.Input.extend({
                 model_id: self.view.model,
                 context: results.context,
                 domain: results.domain,
-                is_default: set_as_default
+                is_default: set_as_default,
+                action_id: self.custom_reports.get_action_id()
             };
             // FIXME: current context?
             return self.model.call('create_or_replace', [filter]).done(function (id) {
