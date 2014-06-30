@@ -1000,12 +1000,10 @@ def get_field_type(column, options):
     """
     return options.get('widget', column._type)
 
-class AssetNotFound(Exception):
-    def __init__(self, message=None, url=None):
-        if not message and url:
-            message = "Could not find asset '%s'" % url
-        Exception.__init__(self, message)
-        self.url = url
+class AssetError(Exception):
+    pass
+class AssetNotFound(AssetError):
+    pass
 
 class AssetsBundle(object):
     # Sass installation:
@@ -1079,8 +1077,8 @@ class AssetsBundle(object):
             sep = '\n            '
         response = []
         if debug:
-            self.compile_css()
-            if css:
+            if css and self.stylesheet:
+                self.compile_sass()
                 for style in self.stylesheets:
                     response.append(style.to_html())
             if js:
@@ -1089,7 +1087,7 @@ class AssetsBundle(object):
         else:
             if css and self.stylesheets:
                 response.append('<link href="/web/css/%s/%s" rel="stylesheet"/>' % (self.xmlid, self.version))
-            if js and self.javascripts:
+            if js:
                 response.append('<script type="text/javascript" src="/web/js/%s/%s"></script>' % (self.xmlid, self.version))
         response.extend(self.remains)
         return sep + sep.join(response)
@@ -1131,7 +1129,7 @@ class AssetsBundle(object):
             # Invalidate cache on version mismach
             self.cache.pop(key)
         if key not in self.cache:
-            self.compile_css()
+            self.compile_sass()
             content = '\n'.join(asset.minify() for asset in self.stylesheets)
 
             if self.css_errors:
@@ -1166,8 +1164,12 @@ class AssetsBundle(object):
             }
         """ % message.replace('"', '\\"')
 
-    def compile_css(self):
-        # Css compilation is global because they are independant
+    def compile_sass(self):
+        """
+            Checks if the bundle contains any sass content, then compiles it to css.
+            Css compilation is done at the bundle level and not in the assets
+            because they are potentially interdependant.
+        """
         sass = [asset for asset in self.stylesheets if isinstance(asset, SassAsset)]
         if not sass:
             return
@@ -1188,22 +1190,31 @@ class AssetsBundle(object):
         try:
             compiler = Popen(self.cmd_sass, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         except Exception:
-            msg ="Could not find 'sass' program needed to compile sass/scss files" 
+            msg = "Could not find 'sass' program needed to compile sass/scss files"
             _logger.error(msg)
             self.css_errors.append(msg)
             return
-        result = compiler.communicate(input=source)
+        result = compiler.communicate(input=source.encode('utf-8'))
         if compiler.returncode:
-            error = (''. join(result)).split('Load paths')[0]
-            msg = "Error while compiling Sass for bundle '%s':\n\n%s" % (self.xmlid, error.strip())
-            _logger.warning(msg)
-            self.css_errors.append(msg)
+            error = self.get_sass_error(result[1], source=source)
+            _logger.warning(error)
+            self.css_errors.append(error)
             return
-        fragments = self.rx_css_split.split(result[0].strip())[1:]
+        compiled = result[0].strip().decode('utf8')
+        fragments = self.rx_css_split.split(compiled)[1:]
         while fragments:
             asset_id = fragments.pop(0)
             asset = next(asset for asset in sass if asset.id == asset_id)
             asset.content = fragments.pop(0)
+
+    def get_sass_error(self, stderr, source=None):
+        # TODO: try to find out which asset the error belongs to
+        error = stderr.split('Load paths')[0].replace('  Use --trace for backtrace.', '')
+        error += "This error occured while compiling the bundle '%s' containing:" % self.xmlid
+        for asset in self.stylesheets:
+            if isinstance(asset, SassAsset):
+                error += '\n    - %s' % (asset.url if asset.url else '<inline sass>')
+        return error
 
 class WebAsset(object):
     html_url = '%s'
@@ -1219,6 +1230,8 @@ class WebAsset(object):
         self.context = bundle.context
         self._filename = None
         self._ir_attach = None
+        name = '<inline asset>' if inline else url
+        self.name = "%s defined in bundle '%s'" % (name, bundle.xmlid)
         if not inline and not url:
             raise Exception("An asset should either be inlined or url linked")
 
@@ -1238,7 +1251,7 @@ class WebAsset(object):
                     attach = ira.search_read(self.cr, self.uid, domain, fields, context=self.context)
                     self._ir_attach = attach[0]
                 except Exception:
-                    raise AssetNotFound(url=self.url)
+                    raise AssetNotFound("Could not find %s" % self.name)
 
     def to_html():
         raise NotImplementedError()
@@ -1266,15 +1279,19 @@ class WebAsset(object):
 
     def _fetch_content(self):
         """ Fetch content from file or database"""
-        self.stat()
         try:
+            self.stat()
             if self._filename:
                 with open(self._filename, 'rb') as fp:
                     return fp.read().decode('utf-8')
             else:
                 return self._ir_attach['datas'].decode('base64')
-        except Exception:
-            raise AssetNotFound(url=self.url)
+        except UnicodeDecodeError:
+            raise AssetError('%s is not utf-8 encoded.' % self.name)
+        except IOError:
+            raise AssetNotFound('File %s does not exist.' % self.name)
+        except:
+            raise AssetError('Could not get content for %s.' % self.name)
 
     def minify(self):
         return self.content
@@ -1282,8 +1299,7 @@ class WebAsset(object):
     def with_header(self, content=None):
         if content is None:
             content = self.content
-        location = self.url or "Inline in bundle '%s'" % self.bundle.xmlid
-        return '\n/* %s */\n%s' % (location, content)
+        return '\n/* %s */\n%s' % (self.name, content)
 
 class JavascriptAsset(WebAsset):
     def minify(self):
@@ -1292,10 +1308,8 @@ class JavascriptAsset(WebAsset):
     def _fetch_content(self):
         try:
             return super(JavascriptAsset, self)._fetch_content()
-        except AssetNotFound, e:
-            return """
-                console.error("Could not find javascript '%s' defined in bundle '%s'");
-            """ % (e.url, self.bundle.xmlid)
+        except AssetError, e:
+            return "console.error(%s);" % json.dumps(e.message)
 
     def to_html(self):
         if self.url:
@@ -1326,9 +1340,8 @@ class StylesheetAsset(WebAsset):
 
             # remove charset declarations, we only support utf-8
             content = self.rx_charset.sub('', content)
-        except AssetNotFound, e:
-            error = "Could not find stylesheet '%s' in bundle '%s'" % (e.url, self.bundle.xmlid)
-            self.bundle.css_errors.append(error)
+        except AssetError, e:
+            self.bundle.css_errors.append(e.message)
             return ''
         return content
 
@@ -1374,6 +1387,7 @@ class SassAsset(StylesheetAsset):
         return super(SassAsset, self).to_html()
 
     def get_source(self):
+        # TODO: ensure same indentation level for all bundles
         return "/*! %s */\n%s" % (self.id, textwrap.dedent(self.content))
 
 def rjsmin(script):
