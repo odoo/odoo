@@ -34,9 +34,9 @@ class account_move_line_reconcile(osv.osv_memory):
     _description = 'Account move line reconcile'
     _columns = {
         'trans_nbr': fields.integer('# of Transaction', readonly=True),
-        'credit': fields.float('Credit amount', readonly=True, digits_compute=dp.get_precision('Account')),
-        'debit': fields.float('Debit amount', readonly=True, digits_compute=dp.get_precision('Account')),
-        'writeoff': fields.float('Write-Off amount', readonly=True, digits_compute=dp.get_precision('Account')),
+        'credit': fields.float('Credit amount', readonly=True, digits_compute=dp.get_precision('Amount')),
+        'debit': fields.float('Debit amount', readonly=True, digits_compute=dp.get_precision('Amount')),
+        'writeoff': fields.float('Write-Off amount', readonly=True, digits_compute=dp.get_precision('Amount')),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -65,7 +65,7 @@ class account_move_line_reconcile(osv.osv_memory):
                 credit += line.credit
                 debit += line.debit
                 account_id = line.account_id.id
-        precision = self.pool['decimal.precision'].precision_get(cr, uid, 'Account')
+        precision = self.pool['decimal.precision'].precision_get(cr, uid, 'Amount')
         writeoff = float_round(debit-credit, precision_digits=precision)
         credit = float_round(credit, precision_digits=precision)
         debit = float_round(debit, precision_digits=precision)

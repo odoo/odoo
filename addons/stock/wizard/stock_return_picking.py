@@ -29,7 +29,7 @@ class stock_return_picking_line(osv.osv_memory):
 
     _columns = {
         'product_id': fields.many2one('product.product', string="Product", required=True),
-        'quantity': fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'quantity': fields.float("Quantity", digits_compute=dp.get_precision('Quantity'), required=True),
         'wizard_id': fields.many2one('stock.return.picking', string="Wizard"),
         'move_id': fields.many2one('stock.move', "Move"),
         'lot_id': fields.many2one('stock.production.lot', 'Serial Number', help="Used to choose the lot/serial number of the product returned"),

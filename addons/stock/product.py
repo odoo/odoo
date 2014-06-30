@@ -179,7 +179,7 @@ class product_product(osv.osv):
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
         'qty_available_text': fields.function(_product_available_text, type='char'),
         'qty_available': fields.function(_product_available, multi='qty_available',
-            type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
+            type='float', digits_compute=dp.get_precision('Quantity'),
             string='Quantity On Hand',
             fnct_search=_search_product_quantity,
             help="Current quantity of products.\n"
@@ -193,7 +193,7 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
         'virtual_available': fields.function(_product_available, multi='qty_available',
-            type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
+            type='float', digits_compute=dp.get_precision('Quantity'),
             string='Forecast Quantity',
             fnct_search=_search_product_quantity,
             help="Forecast quantity (computed as Quantity On Hand "
@@ -206,7 +206,7 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
         'incoming_qty': fields.function(_product_available, multi='qty_available',
-            type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
+            type='float', digits_compute=dp.get_precision('Quantity'),
             string='Incoming',
             fnct_search=_search_product_quantity,
             help="Quantity of products that are planned to arrive.\n"
@@ -218,7 +218,7 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods arriving to any Stock "
                  "Location with 'internal' type."),
         'outgoing_qty': fields.function(_product_available, multi='qty_available',
-            type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
+            type='float', digits_compute=dp.get_precision('Quantity'),
             string='Outgoing',
             fnct_search=_search_product_quantity,
             help="Quantity of products that are planned to leave.\n"

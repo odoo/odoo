@@ -27,16 +27,16 @@ class hr_contract_be(osv.osv):
     _inherit = 'hr.contract'
 
     _columns = {
-        'travel_reimbursement_amount': fields.float('Reimbursement of travel expenses', digits_compute=dp.get_precision('Payroll')),
-        'car_company_amount': fields.float('Company car employer', digits_compute=dp.get_precision('Payroll')),
-        'car_employee_deduction': fields.float('Company Car Deduction for Worker', digits_compute=dp.get_precision('Payroll')),
-        'misc_onss_deduction': fields.float('Miscellaneous exempt ONSS ', digits_compute=dp.get_precision('Payroll')),
-        'meal_voucher_amount': fields.float('Check Value Meal ', digits_compute=dp.get_precision('Payroll')),
-        'meal_voucher_employee_deduction': fields.float('Check Value Meal - by worker ', digits_compute=dp.get_precision('Payroll')),
-        'insurance_employee_deduction': fields.float('Insurance Group - by worker ', digits_compute=dp.get_precision('Payroll')),
-        'misc_advantage_amount': fields.float('Benefits of various nature ', digits_compute=dp.get_precision('Payroll')),
-        'additional_net_amount': fields.float('Net supplements', digits_compute=dp.get_precision('Payroll')),
-        'retained_net_amount': fields.float('Net retained ', digits_compute=dp.get_precision('Payroll')),
+        'travel_reimbursement_amount': fields.float('Reimbursement of travel expenses', digits_compute=dp.get_precision('Price')),
+        'car_company_amount': fields.float('Company car employer', digits_compute=dp.get_precision('Price')),
+        'car_employee_deduction': fields.float('Company Car Deduction for Worker', digits_compute=dp.get_precision('Price')),
+        'misc_onss_deduction': fields.float('Miscellaneous exempt ONSS ', digits_compute=dp.get_precision('Price')),
+        'meal_voucher_amount': fields.float('Check Value Meal ', digits_compute=dp.get_precision('Price')),
+        'meal_voucher_employee_deduction': fields.float('Check Value Meal - by worker ', digits_compute=dp.get_precision('Price')),
+        'insurance_employee_deduction': fields.float('Insurance Group - by worker ', digits_compute=dp.get_precision('Price')),
+        'misc_advantage_amount': fields.float('Benefits of various nature ', digits_compute=dp.get_precision('Price')),
+        'additional_net_amount': fields.float('Net supplements', digits_compute=dp.get_precision('Price')),
+        'retained_net_amount': fields.float('Net retained ', digits_compute=dp.get_precision('Price')),
     }
 
 

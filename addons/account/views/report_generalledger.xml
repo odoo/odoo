@@ -87,16 +87,16 @@
                                         <span t-esc="childrenaccount['name']"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="formatLang(sum_debit_account(childrenaccount), digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                        <span t-esc="formatLang(sum_debit_account(childrenaccount), digits=get_digits(dp='Amount'), currency_obj=res_company.currency_id)"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="formatLang(sum_credit_account(childrenaccount), digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                        <span t-esc="formatLang(sum_credit_account(childrenaccount), digits=get_digits(dp='Amount'), currency_obj=res_company.currency_id)"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="formatLang(sum_balance_account(childrenaccount), digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                        <span t-esc="formatLang(sum_balance_account(childrenaccount), digits=get_digits(dp='Amount'), currency_obj=res_company.currency_id)"/>
                                     </td>
                                     <td class="text-right" t-if="data['form']['amount_currency']">
-                                        <span t-esc="formatLang(sum_currency_amount_account(childrenaccount), digits=get_digits(dp='Account'), currency_obj=res_company.currency_id) if sum_currency_amount_account(childrenaccount) > 0.00 else ''"/>
+                                        <span t-esc="formatLang(sum_currency_amount_account(childrenaccount), digits=get_digits(dp='Amount'), currency_obj=res_company.currency_id) if sum_currency_amount_account(childrenaccount) > 0.00 else ''"/>
                                     </td>
                                 </tr>
                                 <tr t-foreach="lines(childrenaccount)" t-as="line">
@@ -108,13 +108,13 @@
                                     <td><span t-esc="line['lname']"/></td>
                                     <td><span t-esc="line['line_corresp'].replace(',',', ')"/></td>
                                     <td class="text-right">
-                                        <span t-esc="formatLang(line['debit'], digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                        <span t-esc="formatLang(line['debit'], digits=get_digits(dp='Amount'), currency_obj=res_company.currency_id)"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="formatLang(line['credit'], digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                        <span t-esc="formatLang(line['credit'], digits=get_digits(dp='Amount'), currency_obj=res_company.currency_id)"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="formatLang(line['progress'], digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                        <span t-esc="formatLang(line['progress'], digits=get_digits(dp='Amount'), currency_obj=res_company.currency_id)"/>
                                     </td>
                                     <td class="text-right" t-if="data['form']['amount_currency']">
                                         <span t-esc="formatLang(line['amount_currency'], currency_obj=res_company.currency_id) if line['amount_currency'] > 0.00 else ''"/>

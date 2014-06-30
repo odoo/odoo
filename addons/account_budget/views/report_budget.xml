@@ -44,26 +44,26 @@
                                     <tr>
                                         <td><strong t-esc="line['name']"/></td>
                                         <td class="text-right">
-                                            <strong t-esc="formatLang(line['theo'], dp='Account', currency_obj = res_company.currency_id)"/>
+                                            <strong t-esc="formatLang(line['theo'], dp='Amount', currency_obj = res_company.currency_id)"/>
                                         </td>
-                                        <td class="text-right"><strong t-esc="formatLang(line['pln'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                        <td class="text-right"><strong t-esc="formatLang(line['prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
+                                        <td class="text-right"><strong t-esc="formatLang(line['pln'], dp='Amount', currency_obj=res_company.currency_id)"/></td>
+                                        <td class="text-right"><strong t-esc="formatLang(line['prac'], dp='Amount', currency_obj=res_company.currency_id)"/></td>
                                         <td class="text-right"><strong t-esc="formatLang(line['perc'],digits=2)"/> %</td>
                                     </tr>
                                 </t>
                                 <tr t-if="line['status'] != 1">
                                     <td><span style="color: white;" t-esc="'.....'*(line['status'] - 1)"/><span t-esc="line['name']"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['theo'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['pln'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span t-esc="formatLang(line['theo'], dp='Amount', currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span t-esc="formatLang(line['pln'], dp='Amount', currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span t-esc="formatLang(line['prac'], dp='Amount', currency_obj=res_company.currency_id)"/></td>
                                     <td class="text-right"><span t-esc="formatLang(line['perc'],digits=2)"/> % </td>
                                 </tr>
                             </t>
                             <tr t-foreach="funct_total(data['form'])" t-as="tot">
                                 <td><strong>Total:</strong></td>
-                                <td class="text-right"><strong t-esc="formatLang(tot['tot_theo'], dp='Account',  currency_obj = res_company.currency_id)"/></td>
-                                <td class="text-right"><strong t-esc="formatLang(tot['tot_pln'], dp='Account', currency_obj = res_company.currency_id)"/></td>
-                                <td class="text-right"><strong t-esc="formatLang(tot['tot_prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
+                                <td class="text-right"><strong t-esc="formatLang(tot['tot_theo'], dp='Amount',  currency_obj = res_company.currency_id)"/></td>
+                                <td class="text-right"><strong t-esc="formatLang(tot['tot_pln'], dp='Amount', currency_obj = res_company.currency_id)"/></td>
+                                <td class="text-right"><strong t-esc="formatLang(tot['tot_prac'], dp='Amount', currency_obj=res_company.currency_id)"/></td>
                                 <td class="text-right"><strong t-esc="formatLang(tot['tot_perc'], digits=2)"/> %</td>
                             </tr>
                         </tbody>

@@ -40,12 +40,12 @@ class hr_contract(osv.osv):
     _description = 'HR Contract'
 
     _columns = {
-        'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll'), help="Amount for Tax Deduction at Source"),
+        'tds': fields.float('TDS', digits_compute=dp.get_precision('Price'), help="Amount for Tax Deduction at Source"),
         'driver_salay': fields.boolean('Driver Salary', help="Check this box if you provide allowance for driver"),
-        'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance"),
-        'voluntary_provident_fund': fields.float('Voluntary Provident Fund (%)', digits_compute=dp.get_precision('Payroll'), help="VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government and VPF computed as percentage(%)"),
-        'house_rent_allowance_metro_nonmetro': fields.float('House Rent Allowance (%)', digits_compute=dp.get_precision('Payroll'), help="HRA is an allowance given by the employer to the employee for taking care of his rental or accommodation expenses for metro city it is 50% and for non metro 40%. \nHRA computed as percentage(%)"),
-        'supplementary_allowance': fields.float('Supplementary Allowance', digits_compute=dp.get_precision('Payroll')),
+        'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Price'), help="Deduction towards company provided medical insurance"),
+        'voluntary_provident_fund': fields.float('Voluntary Provident Fund (%)', digits_compute=dp.get_precision('Price'), help="VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government and VPF computed as percentage(%)"),
+        'house_rent_allowance_metro_nonmetro': fields.float('House Rent Allowance (%)', digits_compute=dp.get_precision('Price'), help="HRA is an allowance given by the employer to the employee for taking care of his rental or accommodation expenses for metro city it is 50% and for non metro 40%. \nHRA computed as percentage(%)"),
+        'supplementary_allowance': fields.float('Supplementary Allowance', digits_compute=dp.get_precision('Price')),
     }
 
 
@@ -235,7 +235,7 @@ class payroll_advice_line(osv.osv):
         'name': fields.char('Bank Account No.', size=25, required=True),
         'ifsc_code': fields.char('IFSC Code', size=16),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
-        'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
+        'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Price')),
         'debit_credit': fields.char('C/D', size=3, required=False),
         'company_id': fields.related('advice_id', 'company_id', type='many2one', required=False, relation='res.company', string='Company', store=True),
         'ifsc': fields.related('advice_id', 'neft', type='boolean', string='IFSC'),

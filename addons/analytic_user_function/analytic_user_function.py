@@ -32,7 +32,7 @@ class analytic_user_funct_grid(osv.osv):
         'product_id': fields.many2one("product.product", "Service", required=True,),
         'account_id': fields.many2one("account.analytic.account", "Analytic Account", required=True,),
         'uom_id': fields.related("product_id", "uom_id", relation="product.uom", string="Unit of Measure", type="many2one", readonly=True),
-        'price': fields.float('Price', digits_compute=dp.get_precision('Product Price'), help="Price per hour for this user.", required=True),
+        'price': fields.float('Price', digits_compute=dp.get_precision('Price'), help="Price per hour for this user.", required=True),
     }
     def onchange_user_product_id(self, cr, uid, ids, user_id, product_id, context=None):
         if not user_id:

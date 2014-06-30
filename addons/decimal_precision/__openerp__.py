@@ -33,6 +33,7 @@ The decimal precision is configured per company.
     'category' : 'Hidden/Dependency',
     'data': [
         'decimal_precision_view.xml',
+        'decimal_precision_data.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [],

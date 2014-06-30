@@ -41,7 +41,7 @@ class account_entries_report(osv.osv):
         'year': fields.char('Year', size=4, readonly=True),
         'date': fields.date('Date', size=128, readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'amount_currency': fields.float('Amount Currency', digits_compute=dp.get_precision('Account'), readonly=True),
+        'amount_currency': fields.float('Amount Currency', digits_compute=dp.get_precision('Amount'), readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
