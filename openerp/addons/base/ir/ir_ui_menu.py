@@ -349,6 +349,7 @@ class ir_ui_menu(osv.osv):
         menu_domain = [('parent_id', '=', False)]
         return self.search(cr, uid, menu_domain, context=context)
 
+    @tools.ormcache()
     def load_menus(self, cr, uid, context=None):
         """ Loads all menu items (all applications and their sub-menus).
 
