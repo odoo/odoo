@@ -1377,7 +1377,6 @@ instance.web.WebClient = instance.web.Client.extend({
             var state = event.getState(true);
             if(!state.action && state.menu_id) {
                 self.menu.is_bound.done(function() {
-                    self.menu.do_reload();
                     self.menu.menu_click(state.menu_id);
                 });
             } else {
