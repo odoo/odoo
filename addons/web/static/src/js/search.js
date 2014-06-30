@@ -513,12 +513,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             .value()).then(function () {
                 resp(_(arguments).chain()
                     .compact()
-                    .map(function (completion) {
-                        if (completion.length && completion[0].facet !== undefined) {
-                            completion[0].first = true;
-                        }
-                        return completion;
-                    })
                     .flatten(true)
                     .value());
                 });
