@@ -846,17 +846,17 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
             }
 
             switch (item.tag) {
-            case 'separator': 
-            case 'newline':
-                filters.push(new instance.web.search.Separator(this))
+            case 'separator': case 'newline':
                 break;
             case 'filter':
                 filters.push(new instance.web.search.Filter(item, group));
                 break;
             case 'group':
+                self.inputs.push(new instance.web.search.Separator(this))
                 self.make_widgets(item.children, fields,
                     new instance.web.search.Group(group, 'w', item));
                 break;
+                self.inputs.push(new instance.web.search.Separator(this))
             case 'field':
                 var field = this.make_field(
                     item, fields[item['attrs'].name], group);
@@ -1315,6 +1315,8 @@ instance.web.search.Filter = instance.web.search.Input.extend(/** @lends instanc
 });
 
 instance.web.search.Separator = instance.web.search.Input.extend({
+    _in_drawer: false,
+
     complete: function () {
         return {is_separator: true};
     }
