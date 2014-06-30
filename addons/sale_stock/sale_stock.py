@@ -147,9 +147,9 @@ class sale_order(osv.osv):
             result['res_id'] = pick_ids and pick_ids[0] or False
         return result
 
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_invoice = False, context=None):
-        move_obj = self.pool.get("stock.move")
-        res = super(sale_order,self).action_invoice_create(cr, uid, ids, grouped=grouped, states=states, date_invoice = date_invoice, context=context)
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_invoice = False, line_ids=False, context=None):
+        picking_obj = self.pool.get('stock.picking')
+        res = super(sale_order, self).action_invoice_create( cr, uid, ids, grouped=grouped, states=states, date_invoice=date_invoice, line_ids=line_ids, context=context)
         for order in self.browse(cr, uid, ids, context=context):
             if order.order_policy == 'picking':
                 for picking in order.picking_ids:

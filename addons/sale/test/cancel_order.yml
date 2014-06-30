@@ -23,7 +23,7 @@
 -
   I create an invoice for the first line
 -
-   !python {model: sale.order.line.make.invoice}: |
+   !python {model: sale.make.invoice}: |
 
     ctx = context.copy()
     ctx.update({"active_model": 'sale.order.line', "active_ids": [ref("sale_order_line_20")], "active_id":ref("sale_order_line_20")})

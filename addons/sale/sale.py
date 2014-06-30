@@ -509,7 +509,33 @@ class sale_order(osv.osv):
                 return False
         return True
 
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_invoice = False, context=None):
+    def _check_order_before_invoice_create(self, cr, uid, ids, grouped=False, line_ids=None, context=None):
+        partner_ids = []
+        if line_ids:
+            order_line_obj = self.pool.get('sale.order.line')
+            for order_line in order_line_obj.browse(cr, uid, line_ids, context=context):
+                if order_line.invoiced:
+                    raise osv.except_osv(_('Warning!'), _("You can not invoice already invoiced Sales Order %s") % (order_line.order_id.name))
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.state == 'draft':
+                raise osv.except_osv(_('Warning!'), _('You cannot create invoice when sales order is not confirmed.'))
+            if not line_ids and order.state != 'manual':
+                raise osv.except_osv(_('Warning!'), _("You shouldn't manually invoice the following Sales Order %s") % (order.name))
+            if grouped:
+                if not partner_ids:
+                    partner_ids.append(order.partner_id.id)
+                else:
+                    if order.partner_id.id not in(partner_ids):
+                        raise osv.except_osv(_('Warning!'), _('You cannot group invoices which have different customers.'))
+        return True
+
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_invoice=False, line_ids=None, context=None):
+        """
+        This function is used for creating account invoice from sale order lines 
+        :param grouped: sale order lines grouped or not
+        :param date_invoice : date of invoice
+        :return res: it returns new create account invoice id
+        """
         if states is None:
             states = ['confirmed', 'done', 'exception']
         res = False
@@ -524,54 +550,70 @@ class sale_order(osv.osv):
         # last day of the last month as invoice date
         if date_invoice:
             context['date_invoice'] = date_invoice
-        for o in self.browse(cr, uid, ids, context=context):
-            currency_id = o.pricelist_id.currency_id.id
-            if (o.partner_id.id in partner_currency) and (partner_currency[o.partner_id.id] <> currency_id):
+        for order in self.browse(cr, uid, ids, context=context):
+            currency_id = order.pricelist_id.currency_id.id
+            if (order.partner_id and order.partner_id.id in partner_currency) and (partner_currency[order.partner_id.id] <> currency_id) and grouped:
                 raise osv.except_osv(
                     _('Error!'),
-                    _('You cannot group sales having different currencies for the same partner.'))
-
-            partner_currency[o.partner_id.id] = currency_id
+                    _('You cannot group sales having different currencies for the same customer.'))
+            partner_currency[order.partner_id.id] = currency_id
             lines = []
-            for line in o.order_line:
+            for line in order.order_line:
                 if line.invoiced:
+                    continue
+                elif line_ids and line.id not in line_ids:
                     continue
                 elif (line.state in states):
                     lines.append(line.id)
             created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
             if created_lines:
-                invoices.setdefault(o.partner_invoice_id.id or o.partner_id.id, []).append((o, created_lines))
+                invoices.setdefault(order.partner_invoice_id.id or order.partner_id.id, []).append((order, created_lines))
         if not invoices:
-            for o in self.browse(cr, uid, ids, context=context):
-                for i in o.invoice_ids:
-                    if i.state == 'draft':
-                        return i.id
+            for order in self.browse(cr, uid, ids, context=context):
+                for invoice in order.invoice_ids:
+                    if invoice.state == 'draft':
+                        return invoice.id
         for val in invoices.values():
             if grouped:
                 res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x, y: x + y, [l for o, l in val], []), context=context)
                 invoice_ref = ''
-                origin_ref = ''
-                for o, l in val:
-                    invoice_ref += (o.client_order_ref or o.name) + '|'
-                    origin_ref += (o.origin or o.name) + '|'
-                    self.write(cr, uid, [o.id], {'state': 'progress'})
-                    cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
-                #remove last '|' in invoice_ref
-                if len(invoice_ref) >= 1:
+                client_ref = ''
+                for order, line in val:
+                    invoice_ref += order.name + '|'
+                    if order.client_order_ref:
+                        client_ref += order.client_order_ref + '|'
+                    cr.execute('INSERT INTO sale_order_invoice_rel (order_id,invoice_id) VALUES (%s,%s)', (order.id, res))
+                if len(invoice_ref) >= 1: 
                     invoice_ref = invoice_ref[:-1]
-                if len(origin_ref) >= 1:
-                    origin_ref = origin_ref[:-1]
-                invoice.write(cr, uid, [res], {'origin': origin_ref, 'name': invoice_ref})
+                if len(client_ref) >= 1: 
+                    client_ref = client_ref[:-1]
+                invoice.write(cr, uid, [res], {'origin': invoice_ref, 'name': client_ref, 'reference': invoice_ref})
             else:
                 for order, il in val:
                     res = self._make_invoice(cr, uid, order, il, context=context)
                     invoice_ids.append(res)
-                    self.write(cr, uid, [order.id], {'state': 'progress'})
-                    cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
-        return res
-
+                    cr.execute('INSERT INTO sale_order_invoice_rel (order_id,invoice_id) VALUES (%s,%s)', (order.id, res))
+        
+        orders = self.browse(cr, uid, ids, context=context)
+        for order in orders:
+            flag =True
+            for order_line in order.order_line:
+                if not order_line.invoiced:
+                    flag = False
+                    break
+                self.message_post(cr, uid, [order.id], body=_("Invoice created"), context=context)
+            if flag:
+                if order.order_policy == 'manual':
+                    self.signal_manual_invoice(cr, uid, [order.id])
+                self.write(cr, uid, [order.id], {'state': 'progress'})
+        # multiple invoice_ids return for multiple record display in tree view.
+        return invoice_ids if len(invoice_ids) > 1 else res
+    
     def action_invoice_cancel(self, cr, uid, ids, context=None):
+        sale_order_line_obj = self.pool.get('sale.order.line')
         self.write(cr, uid, ids, {'state': 'invoice_except'}, context=context)
+        for sale in self.browse(cr, uid, ids, context=context):
+            sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line], {'state': 'exception'})
         return True
 
     def action_invoice_end(self, cr, uid, ids, context=None):
@@ -922,6 +964,8 @@ class sale_order_line(osv.osv):
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', store=True, string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
+        'order_policy': fields.related('order_id', 'order_policy',  type='select', selection=[('manual', 'On Demand'),], string='Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+            help="""This field gives status of invoice creation controls from sales order"""),
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation and the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
         'procurement_ids': fields.one2many('procurement.order', 'sale_line_id', 'Procurements'),
     }
