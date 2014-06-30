@@ -349,7 +349,18 @@ class ir_ui_menu(osv.osv):
         menu_domain = [('parent_id', '=', False)]
         return self.search(cr, uid, menu_domain, context=context)
 
-    @tools.ormcache()
+    def load_menus_root(self, cr, uid, context=None):
+        fields = ['name', 'sequence', 'parent_id', 'action']
+        menu_root_ids = self.get_user_roots(cr, uid, context=context)
+        menu_roots = self.read(cr, uid, menu_root_ids, fields, context=context) if menu_root_ids else []
+        return {
+            'id': False,
+            'name': 'root',
+            'parent_id': [-1, ''],
+            'children': menu_roots,
+            'all_menu_ids': menu_root_ids,
+        }
+
     def load_menus(self, cr, uid, context=None):
         """ Loads all menu items (all applications and their sub-menus).
 
