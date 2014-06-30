@@ -690,6 +690,16 @@ class mail_thread(osv.AbstractModel):
                 if record.alias_domain and record.alias_name else False
                 for record in self.browse(cr, SUPERUSER_ID, ids, context=context)]
 
+    def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
+        """ Temporary method to create custom notification email values for a given
+        model and document. This should be better to have a headers field on
+        the mail.mail model, computed when creating the notification email, but
+        this cannot be done in a stable version.
+
+        TDE FIXME: rethink this ulgy thing. """
+        res = dict()
+        return res
+
     #------------------------------------------------------
     # Mail gateway
     #------------------------------------------------------
