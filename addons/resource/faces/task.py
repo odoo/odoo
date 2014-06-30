@@ -60,7 +60,7 @@ SMART = 1
 #@+node:Exceptions
 #@+node:class AttributeError
 class AttributeError(AttributeError):
-    #@	<< class AttributeError declarations >>
+    #@        << class AttributeError declarations >>
     #@+node:<< class AttributeError declarations >>
     is_frozen = False
 
@@ -72,7 +72,7 @@ class AttributeError(AttributeError):
 class RecursionError(Exception):
     """This exception is raised in cas of cirular dependencies
     within an project"""
-    #@	<< class RecursionError declarations >>
+    #@        << class RecursionError declarations >>
     #@+node:<< class RecursionError declarations >>
     pass
 
@@ -84,7 +84,7 @@ class RecursionError(Exception):
 class _IncompleteError(Exception):
     """This exception is raised, when there is not enough
     data specified to calculate as task"""
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, *args):
         if isinstance(args[0], (basestring)):
@@ -104,13 +104,13 @@ class _MeProxy(object):
     """
     A Proxy class for the me attribute of tasks in the compile case
     """
-    #@	<< declarations >>
+    #@        << declarations >>
     #@+node:<< declarations >>
     __slots__ = "task"
 
     #@-node:<< declarations >>
     #@nl
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, task):
         object.__setattr__(self, "task", task)
@@ -172,7 +172,7 @@ class _MeProxyRecalc(_MeProxy):
     """
     A Proxy class for the me attribute of tasks in the recalc case
     """
-    #@	@+others
+    #@        @+others
     #@+node:__setattr__
     def __setattr__(self, name, value):
         if self.task._properties.has_key(name):
@@ -182,13 +182,13 @@ class _MeProxyRecalc(_MeProxy):
 #@-node:class _MeProxyRecalc
 #@+node:class _MeProxyError
 class _MeProxyError(_MeProxy):
-    #@	<< declarations >>
+    #@        << declarations >>
     #@+node:<< declarations >>
     __slots__ = ("task", "attrib", "exc")
 
     #@-node:<< declarations >>
     #@nl
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, task, attrib, exc):
         _MeProxy.__init__(self, task)
@@ -204,13 +204,13 @@ class _MeProxyError(_MeProxy):
 #@-node:class _MeProxyError
 #@+node:class _MeProxyWarn
 class _MeProxyWarn(_MeProxy):
-    #@	<< declarations >>
+    #@        << declarations >>
     #@+node:<< declarations >>
     __slots__ = ("task", "attrib", "message")
 
     #@-node:<< declarations >>
     #@nl
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, task, attrib, message):
         _MeProxy.__init__(self, task)
@@ -474,7 +474,7 @@ class _Path(object):
     find out the source attribute (task and attribute name)
     of the value.
     """
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, task, path_str):
         self._task = task
@@ -537,7 +537,7 @@ class _ValueWrapper(object):
     a return value of a task method. It contains the value,
     and the supplier of that value
     """
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, value, ref):
         self._value = value
@@ -719,7 +719,7 @@ class _NEVER_USED_:
 class _StringConverter(object):
     """This class is a helper for the to_string mechanism
     of tasks"""
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, source, format=None):
         self.source = source
@@ -1012,7 +1012,7 @@ def _calc_maxload(task, resource):
 #@+node:class AllocationAlgorithm
 class AllocationAlgorithm(object):
     """This class is a base for resource allocation algorithms"""
-    #@	@+others
+    #@        @+others
     #@+node:test_allocation
     def test_allocation(self, task, resource):
         """This method simulates the allocation of a specific resource.
@@ -1033,7 +1033,7 @@ class AllocationAlgorithm(object):
 #@+node:class StrictAllocator
 class StrictAllocator(AllocationAlgorithm):
     """This class implements the STRICT resource allocation"""
-    #@	@+others
+    #@        @+others
     #@+node:_distribute_len_loads
     def _distribute_len_loads(self, task, resource, effort, length):
         # A special load calculation, if effort and length are given.
@@ -1226,7 +1226,7 @@ class StrictAllocator(AllocationAlgorithm):
 
 
 class SmartAllocator(StrictAllocator):
-    #@	@+others
+    #@        @+others
     #@+node:balance
     def balance(self, task, start, delta, adjust_date,
                 calc_load, resource):
@@ -1263,7 +1263,7 @@ class SmartAllocator(StrictAllocator):
 
 
 class SloppyAllocator(AllocationAlgorithm):
-    #@	@+others
+    #@        @+others
     #@+node:test_allocation
     def test_allocation(self, task, resource):
         if task.__dict__.has_key("effort"):
@@ -1560,7 +1560,7 @@ def DailyMax(value):
 #@+node:Task
 #@+node:class _TaskProperty
 class _TaskProperty(object):
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, method):
         self.method = method
@@ -1576,7 +1576,7 @@ class _TaskProperty(object):
 #@-node:class _TaskProperty
 #@+node:class _RoundingTaskProperty
 class _RoundingTaskProperty(object):
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, method, name):
         self.method = method
@@ -1811,7 +1811,7 @@ class Task(object):
     #@nonl
     #@-node:<< description >>
     #@nl
-    #@	<< declarations >>
+    #@        << declarations >>
     #@+node:<< declarations >>
     # Variables for the gui interface
     _date_completion = { "Date": 'Date("|")',
@@ -1925,7 +1925,7 @@ class Task(object):
     #@nonl
     #@-node:<< declarations >>
     #@nl
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, func, name, parent=None, index=1):
 
@@ -3349,7 +3349,7 @@ class _ProjectBase(Task):
     """
     Base class for all projects.
     """
-    #@	<< class _ProjectBase declarations >>
+    #@        << class _ProjectBase declarations >>
     #@+node:<< class _ProjectBase declarations >>
     __attrib_completions__ = { }
     __attrib_completions__.update(Task.__attrib_completions__)
@@ -3366,7 +3366,7 @@ class _ProjectBase(Task):
 
     #@-node:<< class _ProjectBase declarations >>
     #@nl
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, top_task, scenario="_default", id=""):
         self.calendar = pcalendar.Calendar()
@@ -3450,13 +3450,13 @@ class Project(_ProjectBase):
     other projects in the resource database. The default value for id
     is the name of top_task.
     """
-    #@	<< class Project declarations >>
+    #@        << class Project declarations >>
     #@+node:<< class Project declarations >>
     __call_completion__ = 'Project(|top_task, scenario="_default", id=None)'
 
     #@-node:<< class Project declarations >>
     #@nl
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, top_task, scenario="_default", id=None):
         _ProjectBase.__init__(self, top_task, scenario, id)
@@ -3474,7 +3474,7 @@ class Project(_ProjectBase):
 #@-node:class Project
 #@+node:class _AllocationPoject
 class _AllocationPoject(_ProjectBase):
-    #@	@+others
+    #@        @+others
     #@+node:unfreeze_parents
     def unfreeze_parents(self):
         if self.has_actual_data:
@@ -3490,14 +3490,14 @@ class BalancedProject(_AllocationPoject):
     Generates a project with allocated resources. The tasks are balanced
     to fit the resources load conditions.
     """
-    #@	<< class BalancedProject declarations >>
+    #@        << class BalancedProject declarations >>
     #@+node:<< class BalancedProject declarations >>
     __call_completion__ = """BalancedProject(|top_task, scenario="_default",
     id=None, balance=SMART, performed=None)"""
 
     #@-node:<< class BalancedProject declarations >>
     #@nl
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, top_task, scenario="_default",
                  id=None, balance=SMART, performed=None):
@@ -3650,13 +3650,13 @@ class AdjustedProject(_AllocationPoject):
     adjusted to the actual tracking data and balanced to fit the
     resources load conditions.
     """
-    #@	<< class AdjustedProject declarations >>
+    #@        << class AdjustedProject declarations >>
     #@+node:<< class AdjustedProject declarations >>
     __call_completion__ = 'AdjustedProject(|base_project)'
 
     #@-node:<< class AdjustedProject declarations >>
     #@nl
-    #@	@+others
+    #@        @+others
     #@+node:__init__
     def __init__(self, base_project):
         _AllocationPoject.__init__(self, base_project._function,
