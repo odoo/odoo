@@ -15,6 +15,16 @@
             <field name="name">Regim Extra-Comunitar</field>
             <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
+    <record id="fiscal_position_template_ti" model="account.fiscal.position.template">
+            <field name="name">Regim Taxare Inversa</field>
+            <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+    <!-- Fiscal Position Tax Templates -->    
+    <record id="fiscal_position_tax_ti" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ti"/>
+        <field name="tax_dest_id" ref="tva_ti_livr"/>
+        <field name="tax_src_id" ref="tvac_24"/>
+    </record>
         
     </data>
 </openerp>    

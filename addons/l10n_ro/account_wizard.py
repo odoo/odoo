@@ -1,10 +1,11 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#     Author: Tatár Attila <atta@nvm.ro>
-#    Copyright (C) 2011-2014 TOTAL PC SYSTEMS (http://www.erpsystems.ro). 
+#     Author: Tatár Attila <atta@nvm.ro>, Fekete Mihai <feketemihai@gmail.com>
+#    Copyright (C) 2011-2014 TOTAL PC SYSTEMS (http://www.erpsystems.ro).
+#    Copyright (C) 2014 Fekete Mihai
 #    Copyright (C) 2014 Tatár Attila
-#     Based on precedent versions developed by Fil System, Mihai Fekete
+#     Based on precedent versions developed by Fil System, Fekete Mihai
 #     
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -37,9 +38,17 @@ class wizard_multi_charts_accounts(osv.TransientModel):
         for j_o in jou_obj.browse(cr,uid,journal_ids):
             if j_o.type=='sale' and j_o.code=='SAJ':
                 crt = self.pool.get('account.account').search(
-                          cr, uid, [('code','like','4111')])[0]
+                          cr, uid, [('code','like','4111')])
+                if crt:
+                    crt = crt[0]
+                else:
+                    crt = False
                 dbt = self.pool.get('account.account').search(
-                          cr, uid, [('code','like','7070')])[0]
+                          cr, uid, [('code','like','7070')])
+                if dbt:
+                    dbt = dbt[0]
+                else:
+                    dbt = False          
                 jou_obj.write(cr, uid, j_o.id,{
                                     'code':'VMARF',
                                     'name':u'Vânzări marfă',
@@ -51,9 +60,17 @@ class wizard_multi_charts_accounts(osv.TransientModel):
                                         'name':u'Serie jurnal vânzări marfă'})
             if j_o.type=='purchase' and j_o.code=='EXJ':
                 crt = self.pool.get('account.account').search(
-                          cr, uid, [('code','like','371')])[0]
+                          cr, uid, [('code','like','371')])
+                if crt:
+                    crt = crt[0]
+                else:
+                    crt = False
                 dbt = self.pool.get('account.account').search(
-                          cr, uid, [('code','like','401')])[0]
+                          cr, uid, [('code','like','401')])
+                if dbt:
+                    dbt = dbt[0]
+                else:
+                    dbt = False
                 jou_obj.write(cr, uid, j_o.id,{
                                     'code':'AMARF',
                                     'name':u'Achiziţii marfă',
@@ -66,7 +83,11 @@ class wizard_multi_charts_accounts(osv.TransientModel):
                                     'name':u'Serie jurnal achiziţii marfă' })
             if j_o.type=='general' and j_o.code=='MISC':
                 dbt = self.pool.get('account.account').search(
-                          cr, uid, [('code','like','1210')])[0]
+                          cr, uid, [('code','like','1210')])
+                if dbt:
+                    dbt = dbt[0]
+                else:
+                    dbt = False
                 crt = dbt
                 jou_obj.write(cr, uid, j_o.id,{
                                     'code':'DIVER',
@@ -80,7 +101,11 @@ class wizard_multi_charts_accounts(osv.TransientModel):
                                     'name':'Serie jurnal diverse' })
             if j_o.type=='situation' and j_o.code=='OPEJ':
                 dbt = self.pool.get('account.account').search(
-                          cr, uid, [('code','like','4730')])[0]
+                          cr, uid, [('code','like','4730')])
+                if dbt:
+                    dbt = dbt[0]
+                else:
+                    dbt = False
                 crt = dbt
                 jou_obj.write(cr, uid, j_o.id,{
                                     'code':'DESCH',
@@ -94,7 +119,11 @@ class wizard_multi_charts_accounts(osv.TransientModel):
                                     'name':'Serie jurnal deschidere' })
             if j_o.type=='cash' and j_o.code=='BNK1':
                 dbt = self.pool.get('account.account').search(
-                          cr, uid, [('code','like','5311')])[0]
+                          cr, uid, [('code','like','5311')])
+                if dbt:
+                    dbt = dbt[0]
+                else:
+                    dbt = False
                 crt = dbt
                 jou_obj.write(cr, uid, j_o.id,{
                                     'code':'CASA1',
@@ -110,7 +139,11 @@ class wizard_multi_charts_accounts(osv.TransientModel):
                                     'name':'Serie jurnal numerar casa 1' })
             if j_o.type=='bank' and j_o.code=='BNK2':
                 dbt = self.pool.get('account.account').search(
-                          cr, uid, [('code','like','5121')])[0]
+                          cr, uid, [('code','like','5121')])
+                if dbt:
+                    dbt = dbt[0]
+                else:
+                    dbt = False
                 crt = dbt
                 jou_obj.write(cr, uid, j_o.id,{
                                     'code':'BNC1',

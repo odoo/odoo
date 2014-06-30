@@ -1,10 +1,11 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#     Author: Tatár Attila <atta@nvm.ro>
-#    Copyright (C) 2011-2014 TOTAL PC SYSTEMS (http://www.erpsystems.ro). 
+#     Author: Tatár Attila <atta@nvm.ro>, Fekete Mihai <feketemihai@gmail.com>
+#    Copyright (C) 2011-2014 TOTAL PC SYSTEMS (http://www.erpsystems.ro).
+#    Copyright (C) 2014 Fekete Mihai
 #    Copyright (C) 2014 Tatár Attila
-#     Based on precedent versions developed by Fil System, Mihai Fekete
+#     Based on precedent versions developed by Fil System, Fekete Mihai
 #     
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
