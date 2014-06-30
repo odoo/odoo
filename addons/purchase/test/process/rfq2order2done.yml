@@ -64,8 +64,21 @@
     for invoice in self.browse(cr, uid, ref('purchase_order_1'), context=context).invoice_ids:
       invoice.signal_workflow('invoice_open')
 -
-  I check that purchase order is invoiced.
+ I pay an invoice and check it's state.
+-
+ !python {model: purchase.order}: |
+    for invoice in self.browse(cr, uid, ref("purchase_order_1")).invoice_ids:
+        account_invoice_obj = self.pool.get('account.invoice')
+        pay = account_invoice_obj.pay_and_reconcile(cr, uid, [invoice.id],
+        3095.00, ref('account.cash'), ref('account.period_10'),
+        ref('account.bank_journal'), ref('account.cash'),
+        ref('account.period_10'), ref('account.bank_journal'),
+        name='Payment for test customer invoice')
+        assert invoice.state == 'paid', "Invoice should be in paid state"
+-
+  I check that purchase order is invoiced and paid and it's state is in done.
 -
   !python {model: purchase.order}: |
-     assert self.browse(cr, uid, ref("purchase_order_1")).invoiced == True,"Purchase Order should be invoiced"
-
+    purchase_order = self.browse(cr, uid, ref("purchase_order_1"))
+    assert purchase_order.invoiced == True,"Purchase Order should be invoiced"
+    assert purchase_order.state == 'done', "Purchase order should be in done state"
