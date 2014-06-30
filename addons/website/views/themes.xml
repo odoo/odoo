@@ -117,23 +117,27 @@
         the string ( = regexp).
         Otherwise, only the '/web/css/website.assets_frontend' is reloaded
 
-    For the sets (data-enable and/or data-disable without data-xmlid), the set is automatically
-    checked if:
+    For the sets (data-enable and/or data-disable without data-xmlid), the set is
+    automatically checked if:
     - all related fields are enabled for data-enable
     - all related fields are disabled for data-disable
     else unchecked
     
-    The HTML class 'checked' is apply to the parent label when input is checked
-    The HTML class 'loading' is apply to the modal when the new css is loading
+    HTML apply classes:
+    - 'checked': on the parent label when input is checked
+    - 'in': on the container (e.g.: bootstrap modal) after added in DOM (removed together 
+       out is added)
+    - 'out': on the container 1 second before removed from ths DOM
+    - 'loading': on the container/modal when the new css is loading
 -->
 
     <template id="website.theme_customize" name="Customize Theme">
-        <div id="theme_customize_modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="theme_customize_modal" class="modal fade bs-example-modal-sm">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="loading_backdrop"></div>
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close">×</button>
                 <h4 class="modal-title" id="mySmallModalLabel">Customize your theme</h4>
               </div>
               <div class="modal-body">

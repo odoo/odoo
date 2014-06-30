@@ -3,13 +3,16 @@
 
     function theme_customize () {
         openerp.jsonRpc('/website/theme_customize_modal', 'call').then(function (modal) {
-            $('#theme_customize_modal, style#theme_style_assets').remove();
+            if ($('.theme_customize_modal').size()) return false;
+
             var $modal = $(modal);
-            $modal.appendTo("body").modal({backdrop: false});
-            $modal.on('hidden.bs.modal', function () {
-                $(this).remove();
-            });
-            $("body").removeClass("modal-open");
+            $modal.addClass("theme_customize_modal")
+                .appendTo("body")
+                .on('click', '.close', function () {
+                    $modal.removeClass('in');
+                    $modal.addClass('out');
+                    setTimeout(function () {$modal.remove();}, 1000);
+                });
 
             function get_inputs (string) {
                 return $modal.find('#'+string.split(",").join(", #"));
@@ -138,6 +141,15 @@
                     });
                     run = true;
                 });
+
+            $('a').each(function () {
+                var href = $(this).attr("href") || "";
+                if (href.match(/^[^#]*\//) && href.indexOf('theme=true') === -1) {
+                    $(this).attr("href", href + (href.indexOf("#") === -1 ? '#' : '&' ) + 'theme=true');
+                }
+            });
+
+            setTimeout(function () {$modal.addClass('in');}, 0);
         });
     }
 
