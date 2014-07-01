@@ -999,10 +999,10 @@ class _rml_template(object):
         story_cnt = 0
         for node_story in node_stories:
             if story_cnt > 0:
+                # Reset Page Number with new story tag
+                fis.append(PageReset())
                 fis.append(platypus.PageBreak())
             fis += r.render(node_story)
-            # Reset Page Number with new story tag
-            fis.append(PageReset())
             story_cnt += 1
         try:
             if self.localcontext and self.localcontext.get('internal_header',False):
