@@ -481,7 +481,7 @@ $infobar_height: 20px
 
 /* ---- CUSTOMIZE THEME ---- {{{ */
 
-.theme_customize_modal_base
+#theme_customize_modal
     overflow: visible
     z-index: 1020
     background: transparent
@@ -516,6 +516,12 @@ $infobar_height: 20px
             opacity: 0.3
             position: absolute
             z-index: 1
+
+/* ---- force the browse to re-compute the stylesheets ---- */
+body.theme_customize_css_loading
+    magin-top: 1px
+    #wrapwrap
+        magin-top: -1px
 
 // }}}
 

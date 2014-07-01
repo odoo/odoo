@@ -5,14 +5,28 @@
         var uniqueID = 0;
         openerp.jsonRpc('/website/theme_customize_modal', 'call').then(function (modal) {
             if ($('.theme_customize_modal').size()) return false;
-
             var $modal = $(modal);
+
+            // force the browse to re-compute the stylesheets
+            var up, timer;
+            function compute_stylesheets () {
+                $modal.addClass("loading");
+                timer = setInterval(function () {
+                    $('body').toggleClass('theme_customize_css_loading');
+                },50);
+            }
+            openerp.website.theme_customize_css_loaded = function () {
+                clearInterval(timer);
+                $modal.removeClass("loading");
+            };
+
             $modal.addClass("theme_customize_modal")
                 .appendTo("body")
                 .on('click', '.close', function () {
+                    openerp.website.theme_customize_css_loaded();
                     $modal.removeClass('in');
                     $modal.addClass('out');
-                    setTimeout(function () {$modal.remove();}, 1000);
+                    setTimeout(function () {$modal.remove();}, 500);
                 });
 
             function get_inputs (string) {
@@ -27,31 +41,24 @@
                 });
                 return xml_ids;
             }
-            // force the browse to re-compute the stylesheets
-            function stylesheet() {
-                $('body').css("margin-top", "0.1px");
-                setTimeout(function () {
-                    $('body').css("margin-top", "0px");
-                }, 0);
-            }
 
             function update_style(enable, disable, reload) {
-                $modal.addClass("loading");
                 var req = openerp.jsonRpc('/website/theme_customize', 'call', {
                         'enable': enable,
                         'disable': disable
                     });
                 var $assets = $('link[href*=".assets_"]');
                 if (!reload && $assets.size()) {
+                    compute_stylesheets();
                     req.then(function () {
                         $assets.each(function () {
                             var href = $(this).attr("href").split("?")[0]+"?v="+new Date().getTime();
-                            var $asset = $('<link rel="stylesheet" href="'+href+'"/>');
-                            $asset.attr("onload", "$(this).prev().attr('disable', true).remove();");
+                            var $asset = $('<link rel="stylesheet" href="'+href+'" data-loading="true"/>');
+                            $asset.attr("onload", "$(this).prev().attr('disable', true).remove();"+
+                                "$(this).removeAttr('data-loading');"+
+                                "if (!$('link[data-loading]').size()) openerp.website.theme_customize_css_loaded();");
                             $(this).after($asset);
                         });
-                        $modal.removeClass("loading");
-                        stylesheet();
                     });
                 } else {
                     setTimeout(function () {
