@@ -993,6 +993,8 @@ class survey_user_input_line(osv.Model):
     def __get_mark(self, cr, uid, value_suggested, context=None):
         try:
             mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
+        except AttributeError:
+            mark = 0.0
         except KeyError:
             mark = 0.0
         except ValueError:
