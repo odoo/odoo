@@ -222,13 +222,13 @@
                     <field name="create_date"/>
                     <field name="name"/>
                     <field name="contact_name"/>
-                    <field name="country_id" invisible="context.get('invisible_country', True)"/>
+                    <field name="country_id"/>
                     <field name="email_from"/>
                     <field name="phone"/>
                     <field name="stage_id"/>
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
-                    <field name="section_id" invisible="context.get('invisible_section', True)" groups="base.group_multi_salesteams"/>
+                    <field name="section_id" groups="base.group_multi_salesteams"/>
                     <field name="probability" invisible="1"/>
                     <field name="type_id" invisible="1"/>
                     <field name="referred" invisible="1"/>
@@ -326,44 +326,31 @@
                 <search string="Search Leads">
                     <field name="name" string="Lead / Customer" filter_domain="['|','|','|',('partner_name','ilike',self),('email_from','ilike',self),('contact_name','ilike',self),('name','ilike',self)]"/>
                     <field name="categ_ids" string="Tag" filter_domain="[('categ_ids', 'ilike', self)]"/>
-                    <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
+                    <field name="section_id" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="create_date"/>
-                    <field name="country_id" context="{'invisible_country': False}"/>
+                    <field name="country_id"/>
                     <separator/>
+                    <filter string="My Leads"
+                            domain="[('user_id','=',uid)]"
+                            help="Leads that are assigned to me"/>
                     <filter string="Unassigned" name="unassigned"
                             domain="[('user_id','=', False)]"
                             help="No salesperson"/>
-                    <filter string="My Leads"
-                            domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
-                            help="Leads that are assigned to me"/>
-                    <filter string="My Team(s)" groups="base.group_multi_salesteams"
-                            domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
-                            help="Leads that are assigned to any sales teams I am member of"/>
-                    <filter string="Dead" name="dead"
-                            domain="[('probability', '=', '0'), ('stage_id.fold', '=', True)]"/>
-                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <separator />
+                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator />
                     <filter string="Available for mass mailing"
                             name='not_opt_out' domain="[('opt_out', '=', False)]"
                             help="Leads that did not ask not to be included in mass mailing campaigns"/>
-                    <separator />
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Sales Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>
-                        <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
-                        <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
-                        <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
-                        <filter string="Last Post (weekly)" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
-                    </group>
-                    <group string="Display">
-                        <filter string="Countries" context="{'invisible_country': False}" help="Countries"/>
-                        <filter string="Sales Team" context="{'invisible_section': False}" domain="[]" help="Sales Team" groups="base.group_multi_salesteams"/>
+                        <filter string="Expected Closing" domain="[]" context="{'group_by':'date_deadline:week'}"/>
+                        <filter string="Last Message" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
                     </group>
                 </search>
             </field>
@@ -523,7 +510,7 @@
                     <field name="create_date"/>
                     <field name="name" string="Opportunity"/>
                     <field name="partner_id" string="Customer"/>
-                    <field name="country_id" invisible="context.get('invisible_country', True)"/>
+                    <field name="country_id"/>
                     <field name="date_action"/>
                     <field name="title_action"/>
                     <field name="channel_id" invisible="1"/>
@@ -531,7 +518,7 @@
                     <field name="stage_id"/>
                     <field name="planned_revenue" sum="Expected Revenues"/>
                     <field name="probability" avg="Avg. of Probability"/>
-                    <field name="section_id" invisible="context.get('invisible_section', True)" groups="base.group_multi_salesteams"/>
+                    <field name="section_id" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="referred" invisible="1"/>
                     <field name="priority" invisible="1"/>
@@ -551,7 +538,7 @@
                 <search string="Search Opportunities">
                     <field name="name" string="Opportunity" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                     <field name="categ_ids" string="Tag" filter_domain="[('categ_ids', 'ilike', self)]"/>
-                    <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
+                    <field name="section_id" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="stage_id" domain="[]"/>
@@ -561,34 +548,21 @@
                             domain="[('probability', '=', 100), ('stage_id.fold', '=', True)]"/>
                     <filter string="Lost" name="lost"
                             domain="[('probability', '=', 0), ('stage_id.fold', '=', True)]"/>
+                    <separator/>
+                    <filter string="My Opportunities" name="assigned_to_me"
+                            domain="[('user_id', '=', uid)]"
+                            help="Opportunities that are assigned to me"/>
                     <filter string="Unassigned" name="unassigned"
                             domain="[('user_id','=', False)]" help="No salesperson"/>
-                    <filter string="My Opportunities" name="assigned_to_me"
-                            domain="[('user_id', '=', uid)]" context="{'invisible_section': False}"
-                            help="Opportunities that are assigned to me"/>
-                    <filter string="My Team(s)"
-                            domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
-                            help="Opportunities that are assigned to any sales teams I am member of" groups="base.group_multi_salesteams"/>
-                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
+                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>
-                        <filter string="Priority" domain="[]" context="{'group_by':'priority'}"/>
                         <filter string="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}"/>
-                        <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
-                        <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
-                        <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
-                        <filter string="Last Update Month" domain="[]" context="{'group_by':'write_date'}"/>
-                        <filter string="Last Post (weekly)" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
-                    </group>
-                    <group string="Display">
-                        <filter string="Sales Team" context="{'invisible_section': False}" domain="[]" help="Sales Team" groups="base.group_multi_salesteams"/>
-                        <filter string="Countries" context="{'invisible_country': False}" help="Countries"/>
+                        <filter string="Last Message" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
                     </group>
                 </search>
             </field>
