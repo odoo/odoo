@@ -296,12 +296,7 @@ class HttpCase(TransactionCase):
         }
         options.update(kw)
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
-        # phantom.args[0] == phantomtest path
-        # phantom.args[1] == options
-        cmd = [
-            'phantomjs',
-            jsfile, phantomtest, json.dumps(options)
-        ]
+        cmd = ['phantomjs', jsfile, phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)
 
     def phantom_js(self, url_path, code, ready="window", login=None, timeout=60, **kw):
@@ -332,8 +327,7 @@ class HttpCase(TransactionCase):
         options.update(kw)
         options.setdefault('password', options.get('login'))
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
-        cmd = ['phantomjs', phantomtest, json.dumps(options)]
+        cmd = [ 'phantomjs', phantomtest, json.dumps(options) ]
         self.phantom_run(cmd, timeout)
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
