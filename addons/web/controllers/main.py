@@ -556,9 +556,9 @@ class Home(http.Controller):
 
     @http.route([
         '/web/js/<xmlid>',
-        '/web/js/<xmlid>/<sha>',
+        '/web/js/<xmlid>/<version>',
     ], type='http', auth='public')
-    def js_bundle(self, xmlid, sha=None, **kw):
+    def js_bundle(self, xmlid, version=None, **kw):
         try:
             bundle = AssetsBundle(xmlid)
         except QWebTemplateNotFound:
@@ -569,9 +569,9 @@ class Home(http.Controller):
 
     @http.route([
         '/web/css/<xmlid>',
-        '/web/css/<xmlid>/<sha>',
+        '/web/css/<xmlid>/<version>',
     ], type='http', auth='public')
-    def css_bundle(self, xmlid, sha=None, **kw):
+    def css_bundle(self, xmlid, version=None, **kw):
         try:
             bundle = AssetsBundle(xmlid)
         except QWebTemplateNotFound:
