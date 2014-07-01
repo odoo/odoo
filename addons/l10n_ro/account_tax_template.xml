@@ -1,194 +1,248 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data noupdate="0">
-    <record id="tvac_00" model="account.tax.template">
+	
+	<record id="tvati" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA colectat 0%</field>
+        <field name="name">TVA Taxare Inversa Livrări</field>
+        <field name="description">Ti-livr</field>
         <field name="amount">0.000000</field>
         <field name="type">percent</field>
         <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4427"/>
-        <field name="account_paid_id" ref="pcg_4427"/>
-        <field name="base_code_id" ref="vat_code_tvac_baza00"/>
+        <field name="account_collected_id" ref="pcg_4426"/>
+        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
         <field name="base_sign">1.00</field>
-        <field name="tax_code_id" ref="vat_code_tvac_tva00"/>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
         <field name="tax_sign">1.00</field>
-        <field name="ref_base_code_id" ref="vat_code_tvac_baza00"/>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
         <field name="ref_base_sign">-1.00</field>
-        <field name="ref_tax_code_id" ref="vat_code_tvac_tva00"/>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
         <field name="ref_tax_sign">-1.00</field>
     </record>
     
-    <record id="tvac_05" model="account.tax.template">
+    <record id="tvatip00" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA colectat 5%</field>
-        <field name="amount">0.050000</field>
+        <field name="name">TVA Taxare Inversa Achizitii 0%</field>
+        <field name="description">Ti-ach-0</field>
+        <field name="amount">1.000000</field>
         <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4427"/>
-        <field name="account_paid_id" ref="pcg_4427"/>
-        <field name="base_code_id" ref="vat_code_tvac_baza05"/>
-        <field name="tax_code_id" ref="vat_code_tvac_tva05"/>
-        <field name="ref_base_code_id" ref="vat_code_tvac_baza05"/>
-        <field name="ref_tax_code_id" ref="vat_code_tvac_tva05"/>
-        <field name="ref_base_sign">-1.00</field>
-        <field name="ref_tax_sign">-1.00</field>
+        <field name="type_tax_use">purchase</field>    
+        <field name="child_depend">True</field>
+        <field name="account_collected_id" ref="pcg_4426"/>
+        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
         <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
         <field name="tax_sign">1.00</field>
-    </record>
-    
-    <record id="tvac_09" model="account.tax.template">
-        <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA colectat 9%</field>
-        <field name="amount">0.090000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4427"/>
-        <field name="account_paid_id" ref="pcg_4427"/>
-        <field name="base_code_id" ref="vat_code_tvac_baza09"/>
-        <field name="tax_code_id" ref="vat_code_tvac_tva09"/>
-        <field name="ref_base_code_id" ref="vat_code_tvac_baza09"/>
-        <field name="ref_tax_code_id" ref="vat_code_tvac_tva09"/>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
         <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
         <field name="ref_tax_sign">-1.00</field>
-        <field name="base_sign">1.00</field>
-        <field name="tax_sign">1.00</field>
     </record>
-    
-    <record id="tvac_19" model="account.tax.template">
+    <record id="tvatip00-d" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA colectat 19%</field>
-        <field name="amount">0.190000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4427"/>
-        <field name="account_paid_id" ref="pcg_4427"/>
-        <field name="base_code_id" ref="vat_code_tvac_baza19"/>
-        <field name="tax_code_id" ref="vat_code_tvac_tva19"/>
-        <field name="ref_base_code_id" ref="vat_code_tvac_baza19"/>
-        <field name="ref_tax_code_id" ref="vat_code_tvac_tva19"/>
-        <field name="ref_base_sign">-1.00</field>
-        <field name="ref_tax_sign">-1.00</field>
-        <field name="base_sign">1.00</field>
-        <field name="tax_sign">1.00</field>
-    </record>
-    
-    <record id="tvac_24" model="account.tax.template">
-        <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA colectat 24%</field>
-        <field name="amount">0.240000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4427"/>
-        <field name="account_paid_id" ref="pcg_4427"/>
-        <field name="base_code_id" ref="vat_code_tvac_baza24"/>
-        <field name="tax_code_id" ref="vat_code_tvac_tva24"/>
-        <field name="ref_base_code_id" ref="vat_code_tvac_baza24"/>
-        <field name="ref_tax_code_id" ref="vat_code_tvac_tva24"/>
-        <field name="ref_base_sign">-1.00</field>
-        <field name="ref_tax_sign">-1.00</field>
-        <field name="base_sign">1.00</field>
-        <field name="tax_sign">1.00</field>
-    </record>
-    
-    <record id="tvad_00" model="account.tax.template">
-        <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA deductibil 0%</field>
+        <field name="name">TVA Taxare Inversa Achizitii D 0%</field>
+        <field name="description">Ti-ach-d-0</field>
+        <field name="parent_id"  ref="tvatip00"/>
         <field name="amount">0.000000</field>
         <field name="type">percent</field>
         <field name="type_tax_use">purchase</field>            
         <field name="account_collected_id" ref="pcg_4426"/>
         <field name="account_paid_id" ref="pcg_4426"/>
-        <field name="base_code_id" ref="vat_code_tvad_baza00"/>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
         <field name="base_sign">1.00</field>
-        <field name="tax_code_id" ref="vat_code_tvad_tva00"/>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
         <field name="tax_sign">1.00</field>
-        <field name="ref_base_code_id" ref="vat_code_tvad_baza00"/>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
         <field name="ref_base_sign">-1.00</field>
-        <field name="ref_tax_code_id" ref="vat_code_tvad_tva00"/>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="ref_tax_sign">-1.00</field>
+    </record>
+    <record id="tvatip00-c" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA Taxare Inversa Achizitii C 0%</field>
+        <field name="description">Ti-ach-c-0</field>
+        <field name="parent_id"  ref="tvatip00"/>
+        <field name="amount">0.000000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>            
+        <field name="account_collected_id" ref="pcg_4427"/>
+        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="tax_sign">1.00</field>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
         <field name="ref_tax_sign">-1.00</field>
     </record>
     
-    <record id="tvad_05" model="account.tax.template">
+    <record id="tvatip05" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA deductibil 5%</field>
+        <field name="name">TVA Taxare Inversa Achizitii 5%</field>
+        <field name="description">Ti-ach-5</field>
+        <field name="amount">1.000000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>    
+        <field name="child_depend">True</field>
+        <field name="account_collected_id" ref="pcg_4426"/>
+        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="tax_sign">1.00</field>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="ref_tax_sign">-1.00</field>
+    </record>
+    <record id="tvatip05-d" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA Taxare Inversa Achizitii D 05%</field>
+        <field name="description">Ti-ach-d-05</field>
+        <field name="parent_id"  ref="tvatip05"/>
         <field name="amount">0.050000</field>
         <field name="type">percent</field>
         <field name="type_tax_use">purchase</field>            
         <field name="account_collected_id" ref="pcg_4426"/>
         <field name="account_paid_id" ref="pcg_4426"/>
-        <field name="base_code_id" ref="vat_code_tvad_baza05"/>
-        <field name="tax_code_id" ref="vat_code_tvad_tva05"/>
-        <field name="ref_base_code_id" ref="vat_code_tvad_baza05"/>
-        <field name="ref_tax_code_id" ref="vat_code_tvad_tva05"/>
-        <field name="ref_base_sign">-1.00</field>
-        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
         <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
         <field name="tax_sign">1.00</field>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="ref_tax_sign">-1.00</field>
     </record>
-    
-    <record id="tvad_09" model="account.tax.template">
+    <record id="tvatip05-c" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA deductibil 9%</field>
+        <field name="name">TVA Taxare Inversa Achizitii C 05%</field>
+        <field name="description">Ti-ach-c-05</field>
+        <field name="parent_id"  ref="tvatip05"/>
+        <field name="amount">-0.050000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>            
+        <field name="account_collected_id" ref="pcg_4427"/>
+        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="tax_sign">1.00</field>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="ref_tax_sign">-1.00</field>
+    </record>
+
+    <record id="tvatip09" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA Taxare Inversa Achizitii 9%</field>
+        <field name="description">Ti-ach-9</field>
+        <field name="amount">1.000000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>    
+        <field name="child_depend">True</field>
+        <field name="account_collected_id" ref="pcg_4426"/>
+        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="tax_sign">1.00</field>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="ref_tax_sign">-1.00</field>
+    </record>
+    <record id="tvatip09-d" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA Taxare Inversa Achizitii D 09%</field>
+        <field name="description">Ti-ach-d-09</field>
+        <field name="parent_id"  ref="tvatip09"/>
         <field name="amount">0.090000</field>
         <field name="type">percent</field>
         <field name="type_tax_use">purchase</field>            
         <field name="account_collected_id" ref="pcg_4426"/>
         <field name="account_paid_id" ref="pcg_4426"/>
-        <field name="base_code_id" ref="vat_code_tvad_baza09"/>
-        <field name="tax_code_id" ref="vat_code_tvad_tva09"/>
-        <field name="ref_base_code_id" ref="vat_code_tvad_baza09"/>
-        <field name="ref_tax_code_id" ref="vat_code_tvad_tva09"/>
-        <field name="ref_base_sign">-1.00</field>
-        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
         <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
         <field name="tax_sign">1.00</field>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="ref_tax_sign">-1.00</field>
     </record>
-    
-    <record id="tvad_19" model="account.tax.template">
+    <record id="tvatip09-c" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA deductibil 19%</field>
-        <field name="amount">0.190000</field>
+        <field name="name">TVA Taxare Inversa Achizitii C 09%</field>
+        <field name="description">Ti-ach-c-09</field>
+        <field name="parent_id"  ref="tvatip09"/>
+        <field name="amount">-0.090000</field>
         <field name="type">percent</field>
         <field name="type_tax_use">purchase</field>            
+        <field name="account_collected_id" ref="pcg_4427"/>
+        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="tax_sign">1.00</field>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="ref_tax_sign">-1.00</field>
+    </record>
+        
+    <record id="tvatip24" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA Taxare Inversa Achizitii 24%</field>
+        <field name="description">Ti-ach-24</field>
+        <field name="amount">1.000000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>    
+        <field name="child_depend">True</field>
         <field name="account_collected_id" ref="pcg_4426"/>
         <field name="account_paid_id" ref="pcg_4426"/>
-        <field name="base_code_id" ref="vat_code_tvad_baza19"/>
-        <field name="tax_code_id" ref="vat_code_tvad_tva19"/>
-        <field name="ref_base_code_id" ref="vat_code_tvad_baza19"/>
-        <field name="ref_tax_code_id" ref="vat_code_tvad_tva19"/>
-        <field name="ref_base_sign">-1.00</field>
-        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
         <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
         <field name="tax_sign">1.00</field>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="ref_tax_sign">-1.00</field>
     </record>
-    
-    <record id="tvad_24" model="account.tax.template">
+    <record id="tvatip24-d" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA deductibil 24%</field>
+        <field name="name">TVA Taxare Inversa Achizitii D 24%</field>
+        <field name="description">Ti-ach-d-24</field>
+        <field name="parent_id"  ref="tvatip24"/>
         <field name="amount">0.240000</field>
         <field name="type">percent</field>
         <field name="type_tax_use">purchase</field>            
         <field name="account_collected_id" ref="pcg_4426"/>
         <field name="account_paid_id" ref="pcg_4426"/>
-        <field name="base_code_id" ref="vat_code_tvad_baza24"/>
-        <field name="tax_code_id" ref="vat_code_tvad_tva24"/>
-        <field name="ref_base_code_id" ref="vat_code_tvad_baza24"/>
-        <field name="ref_tax_code_id" ref="vat_code_tvad_tva24"/>
-        <field name="ref_base_sign">-1.00</field>
-        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
         <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
         <field name="tax_sign">1.00</field>
+        <field name="ref_base_code_id" ref="vat_code_tvac_bazaTI"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTI"/>
+        <field name="ref_tax_sign">-1.00</field>
     </record>
-    
-    <record id="tvati" model="account.tax.template">
+    <record id="tvatip24-c" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA Taxare Inversa</field>
-        <field name="amount">0.000000</field>
+        <field name="name">TVA Taxare Inversa Achizitii C 24%</field>
+        <field name="description">Ti-ach-c-24</field>
+        <field name="parent_id"  ref="tvatip24"/>
+        <field name="amount">-0.240000</field>
         <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4426"/>
-        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="type_tax_use">purchase</field>            
+        <field name="account_collected_id" ref="pcg_4427"/>
+        <field name="account_paid_id" ref="pcg_4427"/>
         <field name="base_code_id" ref="vat_code_tvac_bazaTI"/>
         <field name="base_sign">1.00</field>
         <field name="tax_code_id" ref="vat_code_tvac_tvaTI"/>
@@ -233,6 +287,196 @@
         <field name="ref_base_sign">-1.00</field>
         <field name="ref_tax_code_id" ref="vat_code_tvac_tvaTINE"/>
         <field name="ref_tax_sign">-1.00</field>
+    </record>
+	
+    <record id="tvac_00" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA colectat 0%</field>
+        <field name="description">0In</field>
+        <field name="amount">0.000000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>            
+        <field name="account_collected_id" ref="pcg_4427"/>
+        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="base_code_id" ref="vat_code_tvac_baza00"/>
+        <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvac_tva00"/>
+        <field name="tax_sign">1.00</field>
+        <field name="ref_base_code_id" ref="vat_code_tvac_baza00"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tva00"/>
+        <field name="ref_tax_sign">-1.00</field>
+    </record>
+    
+    <record id="tvac_05" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA colectat 5%</field>
+        <field name="description">5In</field>
+        <field name="amount">0.050000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>            
+        <field name="account_collected_id" ref="pcg_4427"/>
+        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="base_code_id" ref="vat_code_tvac_baza05"/>
+        <field name="tax_code_id" ref="vat_code_tvac_tva05"/>
+        <field name="ref_base_code_id" ref="vat_code_tvac_baza05"/>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tva05"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_sign">1.00</field>
+        <field name="tax_sign">1.00</field>
+    </record>
+    
+    <record id="tvac_09" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA colectat 9%</field>
+        <field name="description">9In</field>
+        <field name="amount">0.090000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>            
+        <field name="account_collected_id" ref="pcg_4427"/>
+        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="base_code_id" ref="vat_code_tvac_baza09"/>
+        <field name="tax_code_id" ref="vat_code_tvac_tva09"/>
+        <field name="ref_base_code_id" ref="vat_code_tvac_baza09"/>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tva09"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_sign">1.00</field>
+        <field name="tax_sign">1.00</field>
+    </record>
+    
+    <record id="tvac_19" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA colectat 19%</field>
+        <field name="description">19In</field>
+        <field name="amount">0.190000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>            
+        <field name="account_collected_id" ref="pcg_4427"/>
+        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="base_code_id" ref="vat_code_tvac_baza19"/>
+        <field name="tax_code_id" ref="vat_code_tvac_tva19"/>
+        <field name="ref_base_code_id" ref="vat_code_tvac_baza19"/>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tva19"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_sign">1.00</field>
+        <field name="tax_sign">1.00</field>
+    </record>
+    
+    <record id="tvac_24" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA colectat 24%</field>
+        <field name="description">24In</field>
+        <field name="amount">0.240000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>            
+        <field name="account_collected_id" ref="pcg_4427"/>
+        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="base_code_id" ref="vat_code_tvac_baza24"/>
+        <field name="tax_code_id" ref="vat_code_tvac_tva24"/>
+        <field name="ref_base_code_id" ref="vat_code_tvac_baza24"/>
+        <field name="ref_tax_code_id" ref="vat_code_tvac_tva24"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_sign">1.00</field>
+        <field name="tax_sign">1.00</field>
+    </record>
+    
+    <record id="tvad_00" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA deductibil 0%</field>
+        <field name="description">0Out </field>
+        <field name="amount">0.000000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>            
+        <field name="account_collected_id" ref="pcg_4426"/>
+        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="base_code_id" ref="vat_code_tvad_baza00"/>
+        <field name="base_sign">1.00</field>
+        <field name="tax_code_id" ref="vat_code_tvad_tva00"/>
+        <field name="tax_sign">1.00</field>
+        <field name="ref_base_code_id" ref="vat_code_tvad_baza00"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_code_id" ref="vat_code_tvad_tva00"/>
+        <field name="ref_tax_sign">-1.00</field>
+    </record>
+    
+    <record id="tvad_05" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA deductibil 5%</field>
+        <field name="description">5Out </field>
+        <field name="amount">0.050000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>            
+        <field name="account_collected_id" ref="pcg_4426"/>
+        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="base_code_id" ref="vat_code_tvad_baza05"/>
+        <field name="tax_code_id" ref="vat_code_tvad_tva05"/>
+        <field name="ref_base_code_id" ref="vat_code_tvad_baza05"/>
+        <field name="ref_tax_code_id" ref="vat_code_tvad_tva05"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_sign">1.00</field>
+        <field name="tax_sign">1.00</field>
+    </record>
+    
+    <record id="tvad_09" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA deductibil 9%</field>
+        <field name="description">9Out </field>
+        <field name="amount">0.090000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>            
+        <field name="account_collected_id" ref="pcg_4426"/>
+        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="base_code_id" ref="vat_code_tvad_baza09"/>
+        <field name="tax_code_id" ref="vat_code_tvad_tva09"/>
+        <field name="ref_base_code_id" ref="vat_code_tvad_baza09"/>
+        <field name="ref_tax_code_id" ref="vat_code_tvad_tva09"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_sign">1.00</field>
+        <field name="tax_sign">1.00</field>
+    </record>
+    
+    <record id="tvad_19" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA deductibil 19%</field>
+        <field name="description">19Out </field>
+        <field name="amount">0.190000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>            
+        <field name="account_collected_id" ref="pcg_4426"/>
+        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="base_code_id" ref="vat_code_tvad_baza19"/>
+        <field name="tax_code_id" ref="vat_code_tvad_tva19"/>
+        <field name="ref_base_code_id" ref="vat_code_tvad_baza19"/>
+        <field name="ref_tax_code_id" ref="vat_code_tvad_tva19"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_sign">1.00</field>
+        <field name="tax_sign">1.00</field>
+    </record>
+    
+    <record id="tvad_24" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA deductibil 24%</field>
+        <field name="description">24Out </field>
+        <field name="amount">0.240000</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>            
+        <field name="account_collected_id" ref="pcg_4426"/>
+        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="base_code_id" ref="vat_code_tvad_baza24"/>
+        <field name="tax_code_id" ref="vat_code_tvad_tva24"/>
+        <field name="ref_base_code_id" ref="vat_code_tvad_baza24"/>
+        <field name="ref_tax_code_id" ref="vat_code_tvad_tva24"/>
+        <field name="ref_base_sign">-1.00</field>
+        <field name="ref_tax_sign">-1.00</field>
+        <field name="base_sign">1.00</field>
+        <field name="tax_sign">1.00</field>
     </record>
 
 </data>
