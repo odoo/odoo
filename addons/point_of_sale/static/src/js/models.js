@@ -427,14 +427,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // called from within a mutex. 
         // this method returns a deferred that always succeeds when all orders have been tried to be sent,
         // even if none of them could actually be sent. 
-        _flush_all_orders: function () {
+        _flush_all_orders: function ( order, options) {
             var self = this;
+            orders = order || self.db.get_orders()
             self.set('synch', {
                 state: 'connecting',
                 pending: self.get('synch').pending
             });
-            return self._save_to_server(self.db.get_orders()).done(function () {
-                var pending = self.db.get_orders().length;
+            return self._save_to_server( orders, options).done(function () {
+                var pending = orders.length;
                 self.set('synch', {
                     state: pending ? 'connecting' : 'connected',
                     pending: pending
