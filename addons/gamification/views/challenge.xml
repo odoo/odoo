@@ -149,14 +149,15 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-
-                                    <h4><field name="name"/></h4>
-                                    <div class="oe_kanban_project_list">
-                                        <a type="action" name="%(goals_from_challenge_act)d" style="margin-right: 10px"> 
-                                            <span t-if="record.line_ids.raw_value.length gt 1"><t t-esc="record.line_ids.raw_value.length"/> Goals</span>
-                                            <span t-if="record.line_ids.raw_value.length lt 2"><t t-esc="record.line_ids.raw_value.length"/> Goal</span>
-                                        </a>
-                                    </div>
+                                   <strong>
+                                       <h4 class="text-center"><field name="name"/></h4>
+                                       <div class="oe_kanban_project_list text-center">
+                                           <a type="action" name="%(goals_from_challenge_act)d" style="margin-right: 10px"> 
+                                               <span t-if="record.line_ids.raw_value.length gt 1"><t t-esc="record.line_ids.raw_value.length"/> Goals</span>
+                                               <span t-if="record.line_ids.raw_value.length lt 2"><t t-esc="record.line_ids.raw_value.length"/> Goal</span>
+                                           </a>
+                                       </div>
+                                   </strong>
                                     <div class="oe_kanban_badge_avatars">
                                         <t t-foreach="record.user_ids.raw_value.slice(0,11)" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>

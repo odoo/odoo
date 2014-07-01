@@ -427,25 +427,24 @@
                                         <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
                                     </t>
                                     <div class="oe_job_detail">
-                                        <div class="oe_job oe_name oe_kanban_ellipsis">
+                                        <div class="text-center oe_job oe_name oe_kanban_ellipsis">
                                             <field name="name"/>
                                         </div>
-                                        <div class="oe_job oe_department oe_kanban_ellipsis">
-                                            <field name="department_id"/>
+                                        <div class="text-center oe_job oe_department oe_kanban_ellipsis">
+                                            <strong><field name="department_id"/>
                                             <span t-if="record.manager_id.value" class="oe_manager_name">
                                                 (<t t-esc="record.manager_id.value"/>)
-                                            </span>
+                                            </span></strong>
                                         </div>
-                                        <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'">
-                                            <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                        <div class="text-center oe_job_alias oe_kanban_ellipsis" t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'">
+                                            <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
                                         </div>
 
                                     </div>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
                                             <a name="%(action_hr_job_applications)d" type="action">
-                                                <span t-if="record.application_ids.raw_value.length gt 1"><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
-                                                <span t-if="record.application_ids.raw_value.length lt 2"><t t-esc="record.application_ids.raw_value.length"/> Application</span>
+                                                <span><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
                                             </a>
                                             <br/>
                                             <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
@@ -455,7 +454,7 @@
                                         </div>
                                         <div class="oe_job_justgage">
                                             <field state="recruit" name="no_of_hired_employee" widget="gauge"
-                                                style="width:160px; height: 120px;"
+                                                style="margin-top:7px; width:160px; height: 120px;"
                                                 options="{
                                                     'max_field': 'no_of_recruitment',
                                                     'label': 'Hired Employees',
