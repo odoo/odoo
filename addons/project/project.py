@@ -226,7 +226,7 @@ class project(osv.osv):
 
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects in list view or in kanban view."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -739,7 +739,7 @@ class task(osv.osv):
         'name': fields.char('Task Summary', track_visibility='onchange', size=128, required=True, select=True),
         'description': fields.text('Description'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
-        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks in list view or in kanban view."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]"),
         'categ_ids': fields.many2many('project.category', string='Tags'),
