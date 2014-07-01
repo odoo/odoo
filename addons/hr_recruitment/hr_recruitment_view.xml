@@ -193,14 +193,13 @@
         <field name="arch" type="xml">
             <search string="Search Applicants">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-                <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="My" domain="[('user_id', '=', uid)]"/>
-                <separator/>
-                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>
                 <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
-
+                <separator/>
+                <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
@@ -210,15 +209,9 @@
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
-                    <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
                     <filter string="Degree" domain="[]" context="{'group_by':'type_id'}"/>
-                    <filter string="Availability" domain="[]" context="{'group_by':'availability'}"/>
-                    <filter string="Appreciation" domain="[]" context="{'group_by':'priority'}"/>
-                    <filter string="Last Stage" help="Match this group by with a specific stage filter in order to analyse the recruitment process" context="{'group_by':'last_stage_id'}"/>
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
-                    <filter string="Creation Month" domain="[]" context="{'group_by':'create_date'}"/>
                     <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}"/>
                 </group>
            </search>
