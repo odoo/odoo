@@ -34,7 +34,7 @@ class Binary(openerp.http.Controller):
         _scheme, _netloc, path, params, query, fragment = urlparse(url)
         # media.linkedin.com is the master domain for LinkedIn media (replicated to CDNs),
         # so forcing it should always work and prevents abusing this method to load arbitrary URLs
-        url = urlunparse(('http', 'media.linkedin.com', path, params, query, fragment))
+        url = urlunparse(('http', 'media.licdn.com', path, params, query, fragment))
         bfile = urllib2.urlopen(url)
         return base64.b64encode(bfile.read())
     
