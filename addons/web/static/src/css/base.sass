@@ -1294,14 +1294,16 @@ $sheet-padding: 16px
             position: absolute
             width: 300px
             background-color: white
-            border: 1px solid black
+            border: 1px solid #afafb6
             z-index: 666
-            margin-top: 5px
+            margin-top: 2px
             cursor: default
+            @include radius(3px)
+            @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3))
             ul
                 list-style-type: none
                 padding-left: 0
-                margin: 5px
+                margin: 5px 0px
                 li
                     padding-left: 20px
                     text-shadow: 0 0 0 white

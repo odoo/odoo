@@ -1569,15 +1569,21 @@
   position: absolute;
   width: 300px;
   background-color: white;
-  border: 1px solid black;
+  border: 1px solid #afafb6;
   z-index: 666;
-  margin-top: 5px;
+  margin-top: 2px;
   cursor: default;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 .openerp .oe_searchview .oe-autocomplete ul {
   list-style-type: none;
   padding-left: 0;
-  margin: 5px;
+  margin: 5px 0px;
 }
 .openerp .oe_searchview .oe-autocomplete ul li {
   padding-left: 20px;
