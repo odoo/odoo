@@ -361,12 +361,11 @@ var Tour = {
                 state.tour.steps[k].busy = false;
             }
         }
-        localStorage.setItem("tour", 'false'); // force the state to false
-        localStorage.removeItem("tour"); // try to remove the tour state
+        localStorage.removeItem("tour");
         clearTimeout(Tour.timer);
         clearTimeout(Tour.testtimer);
         Tour.closePopover();
-        console.log("Tour reset\n localStorage:" + JSON.stringify(localStorage));
+        console.log("Tour reset");
     },
     running: function () {
         var state = Tour.getState();
