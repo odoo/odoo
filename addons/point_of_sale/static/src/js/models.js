@@ -49,7 +49,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.units_by_id = {};
             this.pricelist = null;
             this.order_sequence = 1;
-            this.fidelity = null;
             window.posmodel = this;
 
             // these dynamic attributes can be watched for change by other models or widgets
@@ -161,7 +160,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(users){
                     self.users = users;
 
-                    return self.fetch('res.partner', ['name','street','city','country_id','phone','zip','mobile','email','ean13','fidpoints']);
+                    return self.fetch('res.partner', ['name','street','city','country_id','phone','zip','mobile','email','ean13']);
                 }).then(function(partners){
                     self.partners = partners;
                     self.db.add_partners(partners);
@@ -206,12 +205,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.pricelist.currency_id[0]]]);
                 }).then(function(currencies){
                     self.currency = currencies[0];
-
-                    return self.fetch('pos.fidelity',[],[['id','=',self.config.fidelity_id[0] || -1]]);
-                }).then(function(fidelity){
-                    if(fidelity.length){
-                        self.fidelity = fidelity[0];
-                    }
 
                     return self.fetch('product.packaging',['ean','product_id']);
                 }).then(function(packagings){
@@ -839,15 +832,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.get('orderLines').add(line);
             this.selectLine(this.getLastOrderline());
         },
-        getWonFidpoints: function(){
-            if(!this.pos.fidelity){
-                return 0;
-            }else{
-                return round_di(this.getTotalTaxIncluded() * this.pos.fidelity.fidpoints_currency  +
-                                this.get('orderLines').models.length * this.pos.fidelity.fidpoints_product +
-                                this.pos.fidelity.fidpoints_sale,0);
-            }
-        },
         addProduct: function(product, options){
             options = options || {};
             var attr = JSON.parse(JSON.stringify(product));
@@ -1038,7 +1022,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 cashier: cashier ? cashier.name : null,
                 header: this.pos.config.receipt_header || '',
                 footer: this.pos.config.receipt_footer || '',
-                fidpoints:   this.getWonFidpoints(),
                 precision: {
                     price: 2,
                     money: 2,
@@ -1093,7 +1076,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
                 uid: this.uid,
                 sequence_number: this.sequence_number,
-                fidpoints:   this.getWonFidpoints(),
             };
         },
         getSelectedLine: function(){

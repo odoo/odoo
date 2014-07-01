@@ -290,7 +290,6 @@
         <tr class='client-line' t-att-data-id='partner.id'>
             <td><t t-esc='partner.name' /></td>
             <td><t t-esc='partner.address' /></td>
-            <td><t t-esc='partner.fidpoints.toFixed(0)' /></td>
         </tr>
     </t>
 
@@ -323,10 +322,6 @@
                 </div>
                 <div class='client-details-right'>
                     <div class='client-detail'>
-                        <span class='label'>Points</span>
-                        <span class='detail client-points'><t t-esc='partner.fidpoints.toFixed(0)' /></span>
-                    </div>
-                    <div class='client-detail'>
                         <span class='label'>ID</span>
                         <t t-if='partner.ean13'>
                             <span class='detail client-id'><t t-esc='partner.ean13'/></span>
@@ -337,7 +332,7 @@
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Tax ID</span>
-                        <span class='detail client-vat'>123-45678-9101145</span>
+                        <span class='detail client-vat'>TODO</span>
                     </div>
                 </div>
             </div>
@@ -378,7 +373,6 @@
                                             <tr>
                                                 <th>Name</th>
                                                 <th>Address</th>
-                                                <th>Points</th>
                                             </tr>
                                         </thead>
                                         <tbody class='client-list-contents'>
@@ -737,17 +731,6 @@
         </li>
     </t>
 
-    <t t-name="FidelityPoints">
-        <div class='fidpoints'>
-            <span class="won">
-                <span class='value'><t t-esc='wonpoints'/></span> Points. 
-            </span>
-            <span class='total'>
-                Total: <span class='value'><t t-esc='totalpoints' /></span>
-            </span>
-        </div>
-    </t>
-
     <t t-name="OrderWidget">
         <div class="order-container">
             <div class="order-scroller touch-scrollable">
@@ -760,7 +743,6 @@
                         </t>
                     </ul>
                     <div class="summary clearfix">
-                        <div class='fidpoints oe_hidden'>.</div>
                         <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
                             <div class='entry total'>
                                 <span class="label">Total: </span> <span class="value">0.00 €</span>

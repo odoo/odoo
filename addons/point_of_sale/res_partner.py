@@ -10,7 +10,6 @@ class res_users(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'ean13' : fields.char('EAN13', size=13, help="BarCode"),
-        'fidpoints': fields.integer('Fidelity Points'),
     }
 
     def _check_ean(self, cr, uid, ids, context=None):

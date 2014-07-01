@@ -95,7 +95,6 @@ class pos_config(osv.osv):
         'barcode_price':    fields.char('Price Barcodes',   size=64, help='The pattern that identifies a product with a barcode encoded price'),
         'barcode_weight':   fields.char('Weight Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded weight'),
         'barcode_discount': fields.char('Discount Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded discount'),
-        'fidelity_id': fields.many2one('pos.fidelity','Fidelity Card', help='The type of fidelity card available for this point_of_sale'),
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -203,23 +202,6 @@ class pos_config(osv.osv):
             if obj.sequence_id:
                 obj.sequence_id.unlink()
         return super(pos_config, self).unlink(cr, uid, ids, context=context)
-
-class pos_fidelity(osv.osv):
-    _name = 'pos.fidelity'
-
-    _columns = {
-        'name' : fields.char('Fidelity Card Name', size=32, select=1,
-             required=True, help="An internal identification for the fidelity card configuration"),
-        'fidpoints_currency': fields.float('Points per paid currency',help="How many fidelity points are given to the customer by sold currency"),
-        'fidpoints_product':  fields.float('Points per sold product',help="How many fidelity points are given to the customer by product sold"),
-        'fidpoints_sale':     fields.float('Points per sale',help="How many fidelity points are given to the customer for each sale"),
-    }
-
-    _defaults = {
-        'fidpoints_currency': 0,
-        'fidpoints_product':  0,
-        'fidpoints_sale':     0,
-    }
 
 class pos_session(osv.osv):
     _name = 'pos.session'
@@ -564,7 +546,6 @@ class pos_order(osv.osv):
             'lines':        ui_order['lines'],
             'pos_reference':ui_order['name'],
             'partner_id':   ui_order['partner_id'] or False,
-            'fidpoints':    ui_order['fidpoints'],
         }
 
     def _payment_fields(self,ui_paymentline):
@@ -597,10 +578,6 @@ class pos_order(osv.osv):
             if session.sequence_number <= order['sequence_number']:
                 session.write({'sequence_number': order['sequence_number'] + 1})
                 session.refresh()
-
-            if order['fidpoints'] and order['partner_id']:
-                partner = self.pool.get('res.partner').browse(cr, uid, order['partner_id'], context=context)
-                partner.write({'fidpoints': partner['fidpoints'] + order['fidpoints']})
 
             if order['amount_return']:
                 cash_journal = session.cash_journal_id
@@ -710,7 +687,6 @@ class pos_order(osv.osv):
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
         'sequence_number': fields.integer('Sequence Number', help='A session-unique sequence number for the order'),
-        'fidpoints':    fields.integer('Won Fidelity Points ', help='The Fidelity Points the client won with this order'),
 
         'session_id' : fields.many2one('pos.session', 'Session', 
                                         #required=True,
@@ -760,7 +736,6 @@ class pos_order(osv.osv):
         'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'nb_print': 0,
         'sequence_number': 1,
-        'fidpoints': 0,
         'session_id': _default_session,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'pricelist_id': _default_pricelist,

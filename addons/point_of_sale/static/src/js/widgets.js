@@ -271,21 +271,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
             this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
 
-            var $fidpoints = $(this.el).find('.summary .fidpoints');
-
-            if(this.pos.fidelity && order.get_client()){
-                var points = order.getWonFidpoints();
-                var total  = order.get_client().fidpoints + points;
-                if( points ){
-                    points = points > 0 ? '+'+points : +points;
-                }
-                $fidpoints.replaceWith($(QWeb.render('FidelityPoints',{ widget:this, totalpoints:total, wonpoints: points })));
-                $fidpoints.removeClass('oe_hidden');
-            }else{
-                $fidpoints.empty();
-                $fidpoints.addClass('oe_hidden');
-            }
-
         },
     });
 
