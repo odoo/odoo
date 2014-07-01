@@ -2,6 +2,7 @@
     'use strict';
 
     function theme_customize () {
+        var uniqueID = 0;
         openerp.jsonRpc('/website/theme_customize_modal', 'call').then(function (modal) {
             if ($('.theme_customize_modal').size()) return false;
 
@@ -60,33 +61,34 @@
                 }
             }
 
+            function enable_disable (data, enable) {
+                if (!data) return;
+                $modal.find('#'+data.split(",").join(", #")).each(function () {
+                    var check = $(this).is(":checked");
+                    var $label = $(this).closest("label");
+                    $(this).attr("checked", enable);
+                    if (enable) $label.addClass("checked");
+                    else $label.removeClass("checked");
+                    if (check != enable) {
+                        $(this).change();
+                    }
+                });
+            }
+
             var run = false;
             var reload = false;
             var time;
             $modal.on('change', 'input[data-xmlid],input[data-enable],input[data-disable]', function () {
-                var $option = $(this), $group, checked = $(this).is(":checked");
+                var $option = $(this), checked = $(this).is(":checked");
+
                 if (checked) {
-                    if ($option.data('enable')) {
-                        $group = $modal.find('#'+$option.data('enable').split(",").join(", #"));
-                        $group.each(function () {
-                            var check = $(this).is(":checked");
-                            $(this).attr("checked", true).closest("label").addClass("checked");
-                            if (!check) $(this).change();
-                        });
-                    }
-                    if ($option.data('disable')) {
-                        $group = $modal.find('#'+$option.data('disable').split(",").join(", #"));
-                        $group.each(function () {
-                            var check = $(this).is(":checked");
-                            $(this).attr("checked", false).closest("label").removeClass("checked");
-                            if (check) $(this).change();
-                        });
-                    }
-                    $(this).closest("label").addClass("checked");
+                    enable_disable($option.data('enable'), true);
+                    enable_disable($option.data('disable'), false);
+                    $option.closest("label").addClass("checked");
                 } else {
-                    $(this).closest("label").removeClass("checked");
+                    $option.closest("label").removeClass("checked");
                 }
-                $(this).attr("checked", checked);
+                $option.attr("checked", checked);
 
                 var $enable = $modal.find('[data-xmlid]:checked');
                 $enable.closest("label").addClass("checked");
@@ -112,9 +114,10 @@
                     } else {
                         $set.attr("checked", false).closest("label").removeClass("checked");
                     }
+                    $set.trigger('update');
                 });
 
-                if ($(this).data('reload') && document.location.href.match(new RegExp( $(this).data('reload') ))) {
+                if (run && $(this).data('reload') && document.location.href.match(new RegExp( $(this).data('reload') ))) {
                     reload = true;
                 }
 
@@ -129,7 +132,36 @@
                 }
             });
 
-            // todo call with all data-xmlid
+            // feature to use select field
+            var $selects = $modal.find('select:has(option[data-xmlid],option[data-enable],option[data-disable])');
+            $selects.each(function () {
+                uniqueID++;
+                var $select = $(this);
+                var $options = $select.find('option[data-xmlid], option[data-enable], option[data-disable]');
+                $options.each(function () {
+                    var $option = $(this);
+                    var $input = $('<input style="display: none;" type="radio" name="theme_customize_modal-select-'+uniqueID+'"/>');
+                    $input.attr('id', $option.attr('id'));
+                    $input.attr('data-xmlid', $option.data('xmlid'));
+                    $input.attr('data-enable', $option.data('enable'));
+                    $input.attr('data-disable', $option.data('disable'));
+                    $option.removeAttr('id');
+                    $option.data('input', $input);
+                    $input.on('update', function () {
+                        $option.attr('selected', $(this).is(":checked"));
+                    });
+                    $modal.append($input);
+                });
+                $select.data("value", $options.first());
+                $options.first().attr("selected", true);
+            });
+            $selects.change(function () {
+                var $option = $(this).find('option:selected');
+                $(this).data("value").data("input").attr("checked", true).change();
+                $(this).data("value", $option);
+                $option.data("input").change();
+            });
+
             var $inputs = $("input[data-xmlid]");
             openerp.jsonRpc('/website/theme_customize_get', 'call', {
                     'xml_ids': get_xml_ids($inputs)
