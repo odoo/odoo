@@ -278,6 +278,7 @@ class Post(osv.Model):
         'closed_date': fields.datetime('Closed on', readonly=True),
         # karma
         'karma_ask': fields.function(_get_post_karma_rights, string='Karma to ask', type='integer', multi='_get_post_karma_rights'),
+        'karma_answer': fields.function(_get_post_karma_rights, string='Karma to answer', type='integer', multi='_get_post_karma_rights'),
         'karma_accept': fields.function(_get_post_karma_rights, string='Karma to accept this answer', type='integer', multi='_get_post_karma_rights'),
         'karma_edit': fields.function(_get_post_karma_rights, string='Karma to edit', type='integer', multi='_get_post_karma_rights'),
         'karma_close': fields.function(_get_post_karma_rights, string='Karma to close', type='integer', multi='_get_post_karma_rights'),
@@ -288,6 +289,7 @@ class Post(osv.Model):
         'karma_comment_convert': fields.function(_get_post_karma_rights, string='karma to convert as a comment', type='integer', multi='_get_post_karma_rights'),
         # access rights
         'can_ask': fields.function(_get_post_karma_rights, string='Can Ask', type='boolean', multi='_get_post_karma_rights'),
+        'can_answer': fields.function(_get_post_karma_rights, string='Can Answer', type='boolean', multi='_get_post_karma_rights'),
         'can_accept': fields.function(_get_post_karma_rights, string='Can Accept', type='boolean', multi='_get_post_karma_rights'),
         'can_edit': fields.function(_get_post_karma_rights, string='Can Edit', type='boolean', multi='_get_post_karma_rights'),
         'can_close': fields.function(_get_post_karma_rights, string='Can Close', type='boolean', multi='_get_post_karma_rights'),

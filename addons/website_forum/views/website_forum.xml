@@ -592,9 +592,12 @@
                                 </a>
                             </li>
                             <li>
-                                <a t-attf-class="fa fa-edit #{not answer.can_edit and 'karma_required text-muted' or ''}"
-                                    t-attf-data-karma="#{not answer.can_edit and answer.karma_edit or 0}"
-                                    t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/edit"> Edit</a>
+                                <t t-call="website_forum.link_button">
+                                    <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
+                                    <t t-set="label" t-value="'Edit'"/>
+                                    <t t-set="classes" t-value="'fa fa-edit'"/>
+                                    <t t-set="karma" t-value="not answer.can_edit and answer.karma_edit or 0"/>
+                                </t>
                             </li>
                             <li>
                                 <t t-call="website_forum.link_button">
