@@ -714,7 +714,7 @@ class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
     _columns = {
-        'with_last_closing_balance' : fields.boolean('Opening With Last Closing Balance'),
+        'with_last_closing_balance': fields.boolean('Opening With Last Closing Balance', help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents."),
         'name': fields.char('Journal Name', required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
@@ -745,7 +745,7 @@ class account_journal(osv.osv):
 
     _defaults = {
         'cash_control' : False,
-        'with_last_closing_balance' : False,
+        'with_last_closing_balance' : True,
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
