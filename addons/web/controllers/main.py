@@ -510,7 +510,11 @@ class Home(http.Controller):
         if request.session.uid:
             if kw.get('redirect'):
                 return werkzeug.utils.redirect(kw.get('redirect'), 303)
-            return request.render('web.webclient_bootstrap')
+            if not request.uid:
+                request.uid = request.session.uid
+
+            menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, context=request.context)
+            return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
         else:
             return login_redirect()
 
@@ -891,70 +895,6 @@ class Session(http.Controller):
         return werkzeug.utils.redirect(redirect, 303)
 
 class Menu(http.Controller):
-
-    @http.route('/web/menu/get_user_roots', type='json', auth="user")
-    def get_user_roots(self):
-        """ Return all root menu ids visible for the session user.
-
-        :return: the root menu ids
-        :rtype: list(int)
-        """
-        s = request.session
-        Menus = s.model('ir.ui.menu')
-        menu_domain = [('parent_id', '=', False)]
-
-        return Menus.search(menu_domain, 0, False, False, request.context)
-
-    @http.route('/web/menu/load', type='json', auth="user")
-    def load(self):
-        """ Loads all menu items (all applications and their sub-menus).
-
-        :return: the menu root
-        :rtype: dict('children': menu_nodes)
-        """
-        Menus = request.session.model('ir.ui.menu')
-
-        fields = ['name', 'sequence', 'parent_id', 'action']
-        menu_root_ids = self.get_user_roots()
-        menu_roots = Menus.read(menu_root_ids, fields, request.context) if menu_root_ids else []
-        menu_root = {
-            'id': False,
-            'name': 'root',
-            'parent_id': [-1, ''],
-            'children': menu_roots,
-            'all_menu_ids': menu_root_ids,
-        }
-        if not menu_roots:
-            return menu_root
-
-        # menus are loaded fully unlike a regular tree view, cause there are a
-        # limited number of items (752 when all 6.1 addons are installed)
-        menu_ids = Menus.search([('id', 'child_of', menu_root_ids)], 0, False, False, request.context)
-        menu_items = Menus.read(menu_ids, fields, request.context)
-        # adds roots at the end of the sequence, so that they will overwrite
-        # equivalent menu items from full menu read when put into id:item
-        # mapping, resulting in children being correctly set on the roots.
-        menu_items.extend(menu_roots)
-        menu_root['all_menu_ids'] = menu_ids # includes menu_root_ids!
-
-        # make a tree using parent_id
-        menu_items_map = dict(
-            (menu_item["id"], menu_item) for menu_item in menu_items)
-        for menu_item in menu_items:
-            if menu_item['parent_id']:
-                parent = menu_item['parent_id'][0]
-            else:
-                parent = False
-            if parent in menu_items_map:
-                menu_items_map[parent].setdefault(
-                    'children', []).append(menu_item)
-
-        # sort by sequence a tree using parent_id
-        for menu_item in menu_items:
-            menu_item.setdefault('children', []).sort(
-                key=operator.itemgetter('sequence'))
-
-        return menu_root
 
     @http.route('/web/menu/load_needaction', type='json', auth="user")
     def load_needaction(self, menu_ids):

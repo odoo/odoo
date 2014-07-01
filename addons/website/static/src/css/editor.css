@@ -29,6 +29,24 @@
   -ms-filter: "alpha(opacity=50)";
 }
 
+#cke_1_top {
+  padding: 0;
+}
+
+#cke_wrapwrap {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+#cke_wrapwrap .cke_button {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#cke_wrapwrap .cke_combo_button {
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
 /* ---- OpenERP Style ---- {{{ */
 .oe_website_editorbar {
   position: fixed;
@@ -113,6 +131,26 @@
 [data-oe-type=html].oe_no_empty:empty {
   background-image: none !important;
   height: 16px !important;
+}
+
+#website-top-edit {
+  width: 100%;
+}
+#website-top-edit > ul > li {
+  margin: 0;
+}
+
+#website-top-navbar {
+  min-height: 34px;
+  height: 34px;
+}
+#website-top-navbar form {
+  margin: 0;
+}
+#website-top-navbar form button, #website-top-navbar form a {
+  padding: 4px 8px 4px 8px;
+  margin-top: 2px;
+  font-size: 13px;
 }
 
 /* ---- EDITOR BAR ---- {{{ */
@@ -470,7 +508,7 @@ ul.oe_menu_editor .disclose {
 .oe_ace_view_editor {
   position: fixed;
   right: 0;
-  z-index: 1000;
+  z-index: 1001;
   height: 100%;
   background: #2f3129;
   color: white;

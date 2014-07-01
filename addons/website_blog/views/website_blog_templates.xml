@@ -461,5 +461,11 @@
     </xpath>
 </template>
 
+<!-- User Navbar -->
+<template id="content_new_blogpost" inherit_id="website.user_navbar" groups="base.group_document_user">
+    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
+         <li><a href="#" data-action="new_blog_post">New Blog Post</a></li>
+    </xpath>
+</template>
 </data>
 </openerp>

@@ -25,6 +25,20 @@
     +box-shadow(none)
     -ms-filter: "alpha(opacity=50)"
 
+#cke_1_top
+    padding: 0
+
+#cke_wrapwrap
+    -moz-box-shadow: none
+    -webkit-box-shadow: none
+    box-shadow: none
+    .cke_button
+        padding-top: 5px
+        padding-bottom: 5px
+    .cke_combo_button
+        padding-top: 1px
+        padding-bottom: 1px
+
 // }}}
  
 /* ---- OpenERP Style ---- {{{ */
@@ -92,6 +106,21 @@
 [data-oe-type=html].oe_no_empty:empty
     background-image: none !important
     height: 16px !important
+
+#website-top-edit
+    width: 100%
+    > ul > li
+        margin: 0
+
+#website-top-navbar
+    min-height: 34px
+    height: 34px
+    form
+        margin: 0
+        button, a
+            padding: 4px 8px 4px 8px
+            margin-top: 2px
+            font-size: 13px
 
 // }}}
 
@@ -415,7 +444,7 @@ $infobar_height: 20px
     position: fixed
     // top property is set programmatically
     right: 0
-    z-index: 1000
+    z-index: 1001
     height: 100%
     background: #2F3129
     color: white

@@ -134,7 +134,7 @@ def exp_duplicate_database(db_original_name, db_name):
     from_fs = openerp.tools.config.filestore(db_original_name)
     to_fs = openerp.tools.config.filestore(db_name)
     if os.path.exists(from_fs) and not os.path.exists(to_fs):
-        shutil.copy(from_fs, to_fs)
+        shutil.copytree(from_fs, to_fs)
     return True
 
 def exp_get_progress(id):
@@ -156,6 +156,24 @@ def exp_get_progress(id):
             exc, tb = a['exception'], a['traceback']
             raise Exception, exc, tb
 
+
+def _drop_conn(cr, db_name):
+    # Try to terminate all other connections that might prevent
+    # dropping the database
+    try:
+        # PostgreSQL 9.2 renamed pg_stat_activity.procpid to pid:
+        # http://www.postgresql.org/docs/9.2/static/release-9-2.html#AEN110389
+        pid_col = 'pid' if cr._cnx.server_version >= 90200 else 'procpid'
+
+        cr.execute("""SELECT pg_terminate_backend(%(pid_col)s)
+                      FROM pg_stat_activity
+                      WHERE datname = %%s AND
+                            %(pid_col)s != pg_backend_pid()""" % {'pid_col': pid_col},
+                   (db_name,))
+    except Exception:
+        pass
+
+
 def exp_drop(db_name):
     if db_name not in exp_list(True):
         return False
@@ -164,21 +182,8 @@ def exp_drop(db_name):
 
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
-        cr.autocommit(True)     # avoid transaction block
-        # Try to terminate all other connections that might prevent
-        # dropping the database
-        try:
-            # PostgreSQL 9.2 renamed pg_stat_activity.procpid to pid:
-            # http://www.postgresql.org/docs/9.2/static/release-9-2.html#AEN110389
-            pid_col = 'pid' if cr._cnx.server_version >= 90200 else 'procpid'
-
-            cr.execute("""SELECT pg_terminate_backend(%(pid_col)s)
-                          FROM pg_stat_activity
-                          WHERE datname = %%s AND
-                                %(pid_col)s != pg_backend_pid()""" % {'pid_col': pid_col},
-                       (db_name,))
-        except Exception:
-            pass
+        cr.autocommit(True) # avoid transaction block
+        _drop_conn(cr, db_name)
 
         try:
             cr.execute('DROP DATABASE "%s"' % db_name)
@@ -335,6 +340,7 @@ def exp_rename(old_name, new_name):
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         cr.autocommit(True)     # avoid transaction block
+        _drop_conn(cr, old_name)
         try:
             cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
             _logger.info('RENAME DB: %s -> %s', old_name, new_name)

@@ -1,18 +1,19 @@
 <templates id="template" xml:space="preserve">
-    <t t-extend="website.editorbar">
-        <t t-jquery="#website-top-view" t-operation="after">
-            <div class="navbar-inner" id="website-top-edit">
-                <form class="navbar-form pull-left text-muted">
-                    <button type="button" data-action="save"
-                            class="btn btn-primary">Save</button>
-                    or
-                    <a href="#" data-action="cancel" class="btn btn-link">Discard</a>
-                </form>
-                <ul class="nav navbar-nav pull-right">
+    <t t-name="website.editorbar">
+        <div id="website-top-navbar" class="navbar navbar-inverse navbar-fixed-top hidden-xs" style="display: none;">
+            <div class="navbar-header" id="website-top-edit">
+                <ul class="nav navbar-nav js_editor_placeholder pull-right">
                 </ul>
+                <form class="navbar-form text-muted">
+                    <button type="button" data-action="save"
+                            class="btn btn-primary btn-xs">Save</button>
+                    or
+                    <a href="#" data-action="cancel" class="btn btn-link btn-xs">Discard</a>
+                </form>
             </div>
-        </t>
+        </div>
     </t>
+
     <t t-name="website.editor.dialog">
         <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">

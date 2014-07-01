@@ -1,91 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-<template id="editor_head" inherit_id="report.html_container" name="Editor" groups="base.group_website_publisher">
+
+<template id="layout" inherit_id="website.layout" primary="True">
+    <!-- Add report attributes -->
     <xpath expr="//html" position="attributes">
-        <attribute name="t-att-data-website-id">website.id if editable and website else None</attribute>
-        <attribute name="t-att-data-translatable">'1' if translatable else None</attribute>
+        <attribute name="t-att-data-report-margin-top">data_report_margin_top if data_report_margin_top else None</attribute>
+        <attribute name="t-att-data-report-header-spacing">data_report_header_spacing if data_report_header_spacing else None</attribute>
+        <attribute name="t-att-data-report-dpi">data_report_dpi if data_report_dpi else None</attribute>
     </xpath>
-
+    <!-- Add report style -->
+    <xpath expr="//head" position="inside">
+        <style type="text/css">
+            <t t-call="report.style"/>
+        </style>
+    </xpath>
     <xpath expr="//body" position="attributes">
-        <attribute name="style">padding-top: 51px;</attribute>
+        <attribute name="class">container</attribute>
     </xpath>
-    <xpath expr="//body" position="inside">
-        <div id="website-top-navbar-placeholder" class="navbar navbar-inverse navbar-fixed-top hidden-xs">
-            <div class="navbar-header">
-                <form class="navbar-form navbar-left">
-                    <button type="button" class="btn btn-primary">Edit</button>
-                </form>
-            </div>
-            <div class="collapse navbar-collapse navbar-edit-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#" onclick="return false;"><i class="fa fa-mobile" title="Mobile preview"/></a></li>
-                    <li class="divider-vertical"/>
-                    <li><a href="#" onclick="return false;"><span title="Promote page on the web">Promote</span></a></li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Content <span class="caret"/></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Customize <span class="caret"/></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Help <span class="caret"/></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+    <xpath expr="//header" position="replace"/>
+    <xpath expr="//footer" position="replace">
+        <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and editable)">
+            <li t-foreach="languages" t-as="lg">
+                <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+                   t-att-data-default-lang="editable and 'true' if website and lg[0] == website.default_lang_code else None">
+                    <t t-esc="lg[1].split('/').pop()"/>
+                </a>
+            </li>
+            <li groups="base.group_website_publisher">
+                <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
+                <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
+                    <i class="fa fa-plus-circle"/>
+                    Add a language...
+                </a>
+            </li>
+        </ul>
     </xpath>
-    <xpath expr='//t[@name="layout_head"]' position="before">
-        <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
-        <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
+</template>
 
-
-        <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
-        <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
-        <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
-
-        <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
-        <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
-        <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
-        <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
-        <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
-        <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
-        <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
-        <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
-        <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
-        <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
-
-        <script type="text/javascript" src="/website/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
-
-        <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.editor.newpage.js"></script> <!-- groups="base.group_website_designer" -->
-        <script type="text/javascript" src="/website/static/src/js/website.menu.js"></script> <!-- groups="base.group_website_designer" -->
-        <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/jQuery.transfo.js"></script>
-    </xpath>
-
-    <xpath expr='//body[@class="container"]/div[@id="wrapwrap"]' position="before">
-        <t t-set="languages" t-value="website.get_languages() if website else None"/>
-        <t t-if="languages">
-            <ul class="list-inline js_language_selector mt16" t-if="(len(languages) &gt; 1 or editable)">
-                <li t-foreach="languages" t-as="lg">
-                    <a t-att-href="url_for('', lang=lg[0]) + '?' + keep_query()"
-                       t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
-                        <t t-esc="lg[1].split('/').pop()"/>
-                    </a>
-                </li>
-                <li groups="base.group_website_publisher">
-                    <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
-                    <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
-                        <i class="fa fa-plus-circle"/>
-                        Add a language...
-                    </a>
-                </li>
-            </ul>
+<template id="website_html_container" inherit_id="report.html_container">
+    <xpath expr="//t[@t-call='report.layout']" position="replace">
+        <t t-call="website_report.layout">          
+            <t t-raw="0"/>
         </t>
     </xpath>
 </template>

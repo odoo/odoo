@@ -29,6 +29,7 @@ import logging
 import os
 import sys
 import threading
+import time
 
 import openerp
 import openerp.modules.db
@@ -110,7 +111,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if kind in ('demo', 'test'):
                 threading.currentThread().testing = True
             for filename in _get_files_of_kind(kind):
-                _logger.info("module %s: loading %s", module_name, filename)
+                _logger.info("loading %s/%s", module_name, filename)
                 noupdate = False
                 if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
                     noupdate = True
@@ -137,6 +138,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         registry.fields_by_model.setdefault(field['model'], []).append(field)
 
     # register, instantiate and initialize models for each modules
+    ta0 = time.time()
+
     for index, package in enumerate(graph):
         module_name = package.name
         module_id = package.id
@@ -144,7 +147,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if skip_modules and module_name in skip_modules:
             continue
 
-        _logger.debug('module %s: loading objects', package.name)
+        tm0 = time.time()
+
         migrations.migrate_module(package, 'pre')
         load_openerp_module(package.name)
 
@@ -215,20 +219,24 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             # Set new modules and dependencies
             modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
             # Update translations for all installed languages
-            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None)
+            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
                 if hasattr(package, kind):
                     delattr(package, kind)
 
+            #_logger.log(25, "%s loaded in %.2fs", package.name, time.time() - tm0)
+
         registry._init_modules.add(package.name)
         cr.commit()
+
+    _logger.log(25, "%s modules loaded in %.2fs", len(graph), time.time() - ta0)
 
     # The query won't be valid for models created later (i.e. custom model
     # created after the registry has been loaded), so empty its result.
     registry.fields_by_model = None
-    
+
     cr.commit()
 
     return loaded_modules, processed_modules
@@ -451,10 +459,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 9: Run the post-install tests
         cr.commit()
+
+        ta0 = time.time()
         if openerp.tools.config['test_enable']:
             cr.execute("SELECT name FROM ir_module_module WHERE state='installed'")
             for module_name in cr.fetchall():
                 report.record_result(openerp.modules.module.run_unit_tests(module_name[0], cr.dbname, position=runs_post_install))
+            _logger.log(25, "All post-tested in %.2fs", time.time() - ta0)
     finally:
         cr.close()
 

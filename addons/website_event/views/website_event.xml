@@ -429,5 +429,12 @@
         </t>
     </t>
 </template>
+
+<!-- User Navbar -->
+<template id="content_new_event" inherit_id="website.user_navbar" groups="event.group_event_manager">
+    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
+         <li><a href="#" data-action="new_event">New Event</a></li>
+    </xpath>
+</template>
 </data>
 </openerp>
