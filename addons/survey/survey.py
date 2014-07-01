@@ -1140,7 +1140,7 @@ class survey_user_input_line(osv.Model):
 
         comment_answer = post.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer})
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False})
             self.create(cr, uid, vals, context=context)
 
         return True
