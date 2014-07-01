@@ -1396,9 +1396,9 @@ class SassAsset(StylesheetAsset):
             ira_id = ira.search(self.cr, self.uid, domain, context=self.context)
             if ira_id:
                 # TODO: update only if needed
-                ira.write(self.cr, self.uid, [ira_id], {'datas': self.content}, context=self.context)
+                ira.write(self.cr, openerp.SUPERUSER_ID, [ira_id], {'datas': self.content}, context=self.context)
             else:
-                ira.create(self.cr, self.uid, dict(
+                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
                     datas=self.content.encode('utf8').encode('base64'),
                     mimetype='text/css',
                     type='binary',
