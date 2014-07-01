@@ -41,11 +41,6 @@
             <field eval="account_payment_term_15days" name="payment_id"/>
         </record>
 
-        <record forcecreate="True" id="decimal_payment" model="decimal.precision">
-            <field name="name">Payment Term</field>
-            <field name="digits">6</field>
-        </record>
-
         <record id="account_payment_term_net" model="account.payment.term">
             <field name="name">30 Net Days</field>
             <field name="note">30 Net Days</field>

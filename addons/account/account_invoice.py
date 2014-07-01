@@ -264,11 +264,11 @@ class account_invoice(models.Model):
         readonly=True, index=True, ondelete='restrict', copy=False,
         help="Link to the automatically generated Journal Items.")
 
-    amount_untaxed = fields.Float(string='Subtotal', digits=dp.get_precision('Account'),
+    amount_untaxed = fields.Float(string='Subtotal', digits=dp.get_precision('Amount'),
         store=True, readonly=True, compute='_compute_amount', track_visibility='always')
-    amount_tax = fields.Float(string='Tax', digits=dp.get_precision('Account'),
+    amount_tax = fields.Float(string='Tax', digits=dp.get_precision('Amount'),
         store=True, readonly=True, compute='_compute_amount')
-    amount_total = fields.Float(string='Total', digits=dp.get_precision('Account'),
+    amount_total = fields.Float(string='Total', digits=dp.get_precision('Amount'),
         store=True, readonly=True, compute='_compute_amount')
 
     currency_id = fields.Many2one('res.currency', string='Currency',
@@ -281,7 +281,7 @@ class account_invoice(models.Model):
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env['res.company']._company_default_get('account.invoice'))
-    check_total = fields.Float(string='Verification Total', digits=dp.get_precision('Account'),
+    check_total = fields.Float(string='Verification Total', digits=dp.get_precision('Amount'),
         readonly=True, states={'draft': [('readonly', False)]}, default=0.0)
 
     reconciled = fields.Boolean(string='Paid/Reconciled',
@@ -293,7 +293,7 @@ class account_invoice(models.Model):
 
     move_lines = fields.Many2many('account.move.line', string='Entry Lines',
         compute='_compute_move_lines')
-    residual = fields.Float(string='Balance', digits=dp.get_precision('Account'),
+    residual = fields.Float(string='Balance', digits=dp.get_precision('Amount'),
         compute='_compute_residual', store=True,
         help="Remaining amount due.")
     payment_ids = fields.Many2many('account.move.line', string='Payments',
@@ -1175,7 +1175,7 @@ class account_invoice(models.Model):
                 total += (line.debit or 0.0) - (line.credit or 0.0)
 
         inv_id, name = self.name_get()[0]
-        if not round(total, self.env['decimal.precision'].precision_get('Account')) or writeoff_acc_id:
+        if not round(total, self.env['decimal.precision'].precision_get('Amount')) or writeoff_acc_id:
             lines2rec.reconcile('manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id)
         else:
             code = self.currency_id.symbol
@@ -1255,13 +1255,13 @@ class account_invoice_line(models.Model):
         default=_default_account,
         help="The income or expense account related to the selected product.")
     price_unit = fields.Float(string='Unit Price', required=True,
-        digits= dp.get_precision('Product Price'),
+        digits= dp.get_precision('Price'),
         default=_default_price_unit)
-    price_subtotal = fields.Float(string='Amount', digits= dp.get_precision('Account'),
+    price_subtotal = fields.Float(string='Amount', digits= dp.get_precision('Amount'),
         store=True, readonly=True, compute='_compute_price')
-    quantity = fields.Float(string='Quantity', digits= dp.get_precision('Product Unit of Measure'),
+    quantity = fields.Float(string='Quantity', digits= dp.get_precision('Quantity'),
         required=True, default=1)
-    discount = fields.Float(string='Discount (%)', digits= dp.get_precision('Discount'),
+    discount = fields.Float(string='Discount (%)', digits= dp.get_precision('Price'),
         default=0.0)
     invoice_line_tax_id = fields.Many2many('account.tax',
         'account_invoice_line_tax', 'invoice_line_id', 'tax_id',
@@ -1475,18 +1475,18 @@ class account_invoice_tax(models.Model):
     account_id = fields.Many2one('account.account', string='Tax Account',
         required=True, domain=[('type', 'not in', ['view', 'income', 'closed'])])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
-    base = fields.Float(string='Base', digits=dp.get_precision('Account'))
-    amount = fields.Float(string='Amount', digits=dp.get_precision('Account'))
+    base = fields.Float(string='Base', digits=dp.get_precision('Amount'))
+    amount = fields.Float(string='Amount', digits=dp.get_precision('Amount'))
     manual = fields.Boolean(string='Manual', default=True)
     sequence = fields.Integer(string='Sequence',
         help="Gives the sequence order when displaying a list of invoice tax.")
     base_code_id = fields.Many2one('account.tax.code', string='Base Code',
         help="The account basis of the tax declaration.")
-    base_amount = fields.Float(string='Base Code Amount', digits=dp.get_precision('Account'),
+    base_amount = fields.Float(string='Base Code Amount', digits=dp.get_precision('Amount'),
         default=0.0)
     tax_code_id = fields.Many2one('account.tax.code', string='Tax Code',
         help="The tax basis of the tax declaration.")
-    tax_amount = fields.Float(string='Tax Code Amount', digits=dp.get_precision('Account'),
+    tax_amount = fields.Float(string='Tax Code Amount', digits=dp.get_precision('Amount'),
         default=0.0)
 
     company_id = fields.Many2one('res.company', string='Company',

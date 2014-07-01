@@ -6,7 +6,7 @@
     Given the price accuracy for the account module is configured with two
     digits
 -  
-    !record {model: decimal.precision, id: product.decimal_account}:
+    !record {model: decimal.precision, id: product.decimal_amount}:
       digits: 2
 -  
     And we have a tax defined
@@ -61,7 +61,7 @@
 -  
     Then, I change the precision of numbers to 3 digits.
 -  
-    !record {model: decimal.precision, id: product.decimal_account}:
+    !record {model: decimal.precision, id: product.decimal_amount}:
       digits: 3
 -  
     And I create another invoice with the same content.

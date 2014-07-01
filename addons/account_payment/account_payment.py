@@ -23,6 +23,7 @@ import logging
 import time
 
 from openerp.osv import fields, osv
+from openerp.addons.decimal_precision import decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
@@ -96,7 +97,7 @@ class payment_order(osv.osv):
             ('done', 'Done')], 'Status', select=True, copy=False,
             help='When an order is placed the status is \'Draft\'.\n Once the bank is confirmed the status is set to \'Confirmed\'.\n Then the order is paid the status is \'Done\'.'),
         'line_ids': fields.one2many('payment.line', 'order_id', 'Payment lines', states={'done': [('readonly', True)]}),
-        'total': fields.function(_total, string="Total", type='float'),
+        'total': fields.function(_total, string="Total", type='float', digits_compute= dp.get_precision('Amount')),
         'user_id': fields.many2one('res.users', 'Responsible', required=True, states={'done': [('readonly', True)]}),
         'date_prefered': fields.selection([
             ('now', 'Directly'),
@@ -297,7 +298,7 @@ class payment_line(osv.osv):
         'communication': fields.char('Communication', required=True, help="Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"),
         'communication2': fields.char('Communication 2', help='The successor message of Communication.'),
         'move_line_id': fields.many2one('account.move.line', 'Entry line', domain=[('reconcile_id', '=', False), ('account_id.type', '=', 'payable')], help='This Entry Line will be referred for the information of the ordering customer.'),
-        'amount_currency': fields.float('Amount in Partner Currency', digits=(16, 2),
+        'amount_currency': fields.float('Amount in Partner Currency', digits_compute= dp.get_precision('Amount'),
             required=True, help='Payment amount in the partner currency'),
         'currency': fields.many2one('res.currency','Partner Currency', required=True),
         'company_currency': fields.many2one('res.currency', 'Company Currency', readonly=True),

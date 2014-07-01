@@ -737,7 +737,7 @@ class hr_payslip_input(osv.osv):
         'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade', select=True),
         'sequence': fields.integer('Sequence', required=True, select=True),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
-        'amount': fields.float('Amount', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SALEURO.amount * contract.wage*0.01."),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Amount'), help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SALEURO.amount * contract.wage*0.01."),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=True, help="The contract for which applied this input"),
     }
     _order = 'payslip_id, sequence'
@@ -770,8 +770,8 @@ class hr_salary_rule(osv.osv):
             ('fix','Fixed Amount'),
             ('code','Python Code'),
         ],'Amount Type', select=True, required=True, help="The computation method for the rule amount."),
-        'amount_fix': fields.float('Fixed Amount', digits_compute=dp.get_precision('Payroll'),),
-        'amount_percentage': fields.float('Percentage (%)', digits_compute=dp.get_precision('Payroll Rate'), help='For example, enter 50.0 to apply a percentage of 50%'),
+        'amount_fix': fields.float('Fixed Amount', digits_compute=dp.get_precision('Amount'),),
+        'amount_percentage': fields.float('Percentage (%)', digits_compute=dp.get_precision('Amount'), help='For example, enter 50.0 to apply a percentage of 50%'),
         'amount_python_compute':fields.text('Python Code'),
         'amount_percentage_base': fields.char('Percentage based on', required=False, readonly=False, help='result will be affected to a variable'),
         'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule', copy=True),
@@ -921,10 +921,10 @@ class hr_payslip_line(osv.osv):
         'salary_rule_id':fields.many2one('hr.salary.rule', 'Rule', required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
         'contract_id':fields.many2one('hr.contract', 'Contract', required=True, select=True),
-        'rate': fields.float('Rate (%)', digits_compute=dp.get_precision('Payroll Rate')),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Payroll')),
-        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Payroll')),
-        'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Payroll'),store=True ),
+        'rate': fields.float('Rate (%)', digits_compute=dp.get_precision('Price')),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Amount')),
+        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Quantity')),
+        'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Amount'),store=True ),
     }
 
     _defaults = {
@@ -969,7 +969,7 @@ class hr_employee(osv.osv):
 
     _columns = {
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
-        'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Payroll'), help="Sum of all current contract's wage of employee."),
+        'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Amount'), help="Sum of all current contract's wage of employee."),
         'payslip_count': fields.function(_payslip_count, type='integer', string='Payslips'),
     }
 

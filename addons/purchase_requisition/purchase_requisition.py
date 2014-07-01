@@ -301,7 +301,7 @@ class purchase_requisition_line(osv.osv):
     _columns = {
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Quantity')),
         'requisition_id': fields.many2one('purchase.requisition', 'Call for Bids', ondelete='cascade'),
         'company_id': fields.related('requisition_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account',),
@@ -361,7 +361,7 @@ class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
 
     _columns = {
-        'quantity_bid': fields.float('Quantity Bid', digits_compute=dp.get_precision('Product Unit of Measure'), help="Technical field for not loosing the initial information about the quantity proposed in the bid"),
+        'quantity_bid': fields.float('Quantity Bid', digits_compute=dp.get_precision('Quantity'), help="Technical field for not loosing the initial information about the quantity proposed in the bid"),
     }
 
     def action_draft(self, cr, uid, ids, context=None):

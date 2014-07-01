@@ -86,7 +86,7 @@ class stock_landed_cost(osv.osv):
         'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines', states={'done': [('readonly', True)]}, copy=True),
         'valuation_adjustment_lines': fields.one2many('stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments', states={'done': [('readonly', True)]}),
         'description': fields.text('Item Description', states={'done': [('readonly', True)]}),
-        'amount_total': fields.function(_total_amount, type='float', string='Total', digits_compute=dp.get_precision('Account'),
+        'amount_total': fields.function(_total_amount, type='float', string='Total', digits_compute=dp.get_precision('Amount'),
             store={
                 'stock.landed.cost': (lambda self, cr, uid, ids, c={}: ids, ['cost_lines'], 20),
                 'stock.landed.cost.lines': (_get_cost_line, ['price_unit', 'quantity', 'cost_id'], 20),
@@ -256,7 +256,7 @@ class stock_landed_cost_lines(osv.osv):
         'name': fields.char('Description'),
         'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Price')),
         'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method', required=True),
         'account_id': fields.many2one('account.account', 'Account', domain=[('type', '<>', 'view'), ('type', '<>', 'closed')]),
     }
@@ -290,13 +290,13 @@ class stock_valuation_adjustment_lines(osv.osv):
         'cost_line_id': fields.many2one('stock.landed.cost.lines', 'Cost Line', readonly=True),
         'move_id': fields.many2one('stock.move', 'Stock Move', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
-        'weight': fields.float('Weight', digits_compute=dp.get_precision('Product Unit of Measure')),
-        'volume': fields.float('Volume', digits_compute=dp.get_precision('Product Unit of Measure')),
-        'former_cost': fields.float('Former Cost', digits_compute=dp.get_precision('Product Price')),
-        'former_cost_per_unit': fields.function(_amount_final, multi='cost', string='Former Cost(Per Unit)', type='float', digits_compute=dp.get_precision('Account'), store=True),
-        'additional_landed_cost': fields.float('Additional Landed Cost', digits_compute=dp.get_precision('Product Price')),
-        'final_cost': fields.function(_amount_final, multi='cost', string='Final Cost', type='float', digits_compute=dp.get_precision('Account'), store=True),
+        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Quantity'), required=True),
+        'weight': fields.float('Weight', digits_compute=dp.get_precision('Quantity')),
+        'volume': fields.float('Volume', digits_compute=dp.get_precision('Quantity')),
+        'former_cost': fields.float('Former Cost', digits_compute=dp.get_precision('Price')),
+        'former_cost_per_unit': fields.function(_amount_final, multi='cost', string='Former Cost(Per Unit)', type='float', digits_compute=dp.get_precision('Amount'), store=True),
+        'additional_landed_cost': fields.float('Additional Landed Cost', digits_compute=dp.get_precision('Price')),
+        'final_cost': fields.function(_amount_final, multi='cost', string='Final Cost', type='float', digits_compute=dp.get_precision('Amount'), store=True),
         'flag': fields.selection([('original', 'Original'), ('duplicate', 'Duplicate')], 'Flag', readonly=True),
     }
 

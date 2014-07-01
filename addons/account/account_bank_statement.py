@@ -127,9 +127,9 @@ class account_bank_statement(osv.osv):
             readonly=True, states={'draft':[('readonly',False)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True,
             states={'confirm':[('readonly', True)]}),
-        'balance_start': fields.float('Starting Balance', digits_compute=dp.get_precision('Account'),
+        'balance_start': fields.float('Starting Balance', digits_compute=dp.get_precision('Amount'),
             states={'confirm':[('readonly',True)]}),
-        'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
+        'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Amount'),
             states={'confirm': [('readonly', True)]}, help="Computed using the cash control lines"),
         'balance_end': fields.function(_end_balance,
             store = {
@@ -807,7 +807,7 @@ class account_bank_statement_line(osv.osv):
     _columns = {
         'name': fields.char('Description', required=True, copy=False),
         'date': fields.date('Date', required=True, copy=False),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Amount')),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'bank_account_id': fields.many2one('res.partner.bank','Bank Account'),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='cascade'),
@@ -817,7 +817,7 @@ class account_bank_statement_line(osv.osv):
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of bank statement lines."),
         'company_id': fields.related('statement_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'journal_entry_id': fields.many2one('account.move', 'Journal Entry'),
-        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
+        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Amount')),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
     }
     _defaults = {
@@ -834,7 +834,7 @@ class account_statement_operation_template(osv.osv):
         'label': fields.char('Label'),
         'amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')],
                                    'Amount type', required=True),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account'), help="Leave to 0 to ignore."),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Amount'), help="Leave to 0 to ignore."),
         'tax_id': fields.many2one('account.tax', 'Tax', ondelete='cascade'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='cascade'),
     }

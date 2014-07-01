@@ -141,7 +141,7 @@ class product_uom(osv.osv):
             string='Bigger Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
                     '1 * (this unit) = ratio * (reference unit)', required=True),
-        'rounding': fields.float('Rounding Precision', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
+        'rounding': fields.float('Rounding Precision', digits_compute=dp.get_precision('Quantity'), required=True,
             help="The computed quantity will be a multiple of this value. "\
                  "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."),
         'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
@@ -368,7 +368,7 @@ class product_attribute_value(osv.osv):
         'product_ids': fields.many2many('product.product', id1='att_id', id2='prod_id', string='Variants', readonly=True),
         'price_extra': fields.function(_get_price_extra, type='float', string='Attribute Price Extra',
             fnct_inv=_set_price_extra,
-            digits_compute=dp.get_precision('Product Price'),
+            digits_compute=dp.get_precision('Price'),
             help="Price Extra: Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."),
         'price_ids': fields.one2many('product.attribute.price', 'value_id', string='Attribute Prices', readonly=True),
     }
@@ -390,7 +390,7 @@ class product_attribute_price(osv.osv):
     _columns = {
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
         'value_id': fields.many2one('product.attribute.value', 'Product Attribute Value', required=True, ondelete='cascade'),
-        'price_extra': fields.float('Price Extra', digits_compute=dp.get_precision('Product Price')),
+        'price_extra': fields.float('Price Extra', digits_compute=dp.get_precision('Price')),
     }
 
 class product_attribute_line(osv.osv):
@@ -499,15 +499,15 @@ class product_template(osv.osv):
         'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),        
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
-        'price': fields.function(_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
-        'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
-        'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
-        'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'), 
+        'price': fields.function(_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Price')),
+        'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
+        'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Price')),
+        'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Price'), 
                                           help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders.", 
                                           groups="base.group_user", string="Cost Price"),
         'volume': fields.float('Volume', help="The volume in m3."),
-        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
-        'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
+        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Weight'), help="The gross weight in Kg."),
+        'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Weight'), help="The net weight in Kg."),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
@@ -520,7 +520,7 @@ class product_template(osv.osv):
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Specify a unit of measure here if invoicing is made in another unit of measure than inventory. Keep empty to use the default unit of measure.'),
-        'uos_coeff': fields.float('Unit of Measure -> UOS Coeff', digits_compute= dp.get_precision('Product UoS'),
+        'uos_coeff': fields.float('Unit of Measure -> UOS Coeff', digits_compute= dp.get_precision('Quantity'),
             help='Coefficient to convert default Unit of Measure to Unit of Sale\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
@@ -891,9 +891,9 @@ class product_product(osv.osv):
         return result
 
     _columns = {
-        'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
+        'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is le sum of the extra price of all attributes"),
-        'lst_price': fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
+        'lst_price': fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', select=True),
@@ -1159,8 +1159,8 @@ class product_supplierinfo(osv.osv):
         'product_code': fields.char('Supplier Product Code', help="This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Sequence', help="Assigns the priority to the list of product supplier."),
         'product_uom': fields.related('product_tmpl_id', 'uom_po_id', type='many2one', relation='product.uom', string="Supplier Unit of Measure", readonly="1", help="This comes from the product form."),
-        'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the supplier Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
-        'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Unit of Measure."),
+        'min_qty': fields.float('Minimal Quantity', required=True, digits_compute=dp.get_precision('Quantity'), help="The minimal quantity to purchase to this supplier, expressed in the supplier Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
+        'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", digits_compute=dp.get_precision('Quantity'), help="This is a quantity which is converted into Default Unit of Measure."),
         'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist', copy=True),
@@ -1220,7 +1220,7 @@ class pricelist_partnerinfo(osv.osv):
         'name': fields.char('Description'),
         'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade'),
         'min_quantity': fields.float('Quantity', required=True, help="The minimal quantity to trigger this rule, expressed in the supplier Unit of Measure if any or in the default Unit of Measure of the product otherrwise."),
-        'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), help="This price will be considered as a price for the supplier Unit of Measure if any or the default Unit of Measure of the product otherwise"),
+        'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Price'), help="This price will be considered as a price for the supplier Unit of Measure if any or the default Unit of Measure of the product otherwise"),
     }
     _order = 'min_quantity asc'
 
@@ -1228,7 +1228,7 @@ class res_currency(osv.osv):
     _inherit = 'res.currency'
 
     def _check_main_currency_rounding(self, cr, uid, ids, context=None):
-        cr.execute('SELECT digits FROM decimal_precision WHERE name like %s',('Account',))
+        cr.execute('SELECT digits FROM decimal_precision WHERE name like %s',('Amount',))
         digits = cr.fetchone()
         if digits and len(digits):
             digits = digits[0]
@@ -1247,7 +1247,7 @@ class decimal_precision(osv.osv):
     _inherit = 'decimal.precision'
 
     def _check_main_currency_rounding(self, cr, uid, ids, context=None):
-        cr.execute('SELECT id, digits FROM decimal_precision WHERE name like %s',('Account',))
+        cr.execute('SELECT id, digits FROM decimal_precision WHERE name like %s',('Amount',))
         res = cr.fetchone()
         if res and len(res):
             account_precision_id, digits = res
