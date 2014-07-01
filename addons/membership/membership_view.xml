@@ -9,9 +9,10 @@
         <record model="ir.ui.view" id="membership_product_search_form_view">
             <field name="name">membership.product.search.form</field>
             <field name="model">product.template</field>
+            <field name="priority">50</field>
             <field name="arch" type="xml">
                 <search string="Membership Products">
-                    <field name="name" filter_domain="['|',('name','ilike',self),('code','ilike',self)]" string="Membership Product"/>
+                    <field name="name" string="Membership Product"/>
                     <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',0)]"/>
                     <field name="categ_id" operator="child_of"/>
                     <group  expand='0' string='Group by...'>

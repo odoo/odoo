@@ -28,6 +28,7 @@ class PosController(http.Controller):
                      wc.action_manager.do_action("pos.ui");
                  };
                  wc.appendTo($(document.body));
+                 wc.start();
                  """
 
         html = request.registry.get('ir.ui.view').render(request.cr, request.session.uid,'point_of_sale.index',{
@@ -36,4 +37,3 @@ class PosController(http.Controller):
         })
 
         return html
-

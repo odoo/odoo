@@ -22,9 +22,8 @@
 from openerp.addons.mail.mail_mail import mail_mail
 from openerp.addons.mail.mail_thread import mail_thread
 from openerp.addons.mail.tests.common import TestMail
-from openerp.tools import mute_logger, email_split
+from openerp.tools import mute_logger, email_split, html2plaintext
 from openerp.tools.mail import html_sanitize
-
 
 class test_mail(TestMail):
 
@@ -474,7 +473,7 @@ class test_mail(TestMail):
                             'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
-            self.assertIn(user_raoul.signature, sent_email['body_alternative'],
+            self.assertIn(html2plaintext(user_raoul.signature), sent_email['body_alternative'],
                             'message_post: notification email body alternative should contain the sender signature')
             self.assertFalse(sent_email['references'],
                             'message_post: references should be False when sending a message that is not a reply')
@@ -545,7 +544,7 @@ class test_mail(TestMail):
                             'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
-            self.assertIn(user_raoul.signature, sent_email['body_alternative'],
+            self.assertIn(html2plaintext(user_raoul.signature), sent_email['body_alternative'],
                             'message_post: notification email body alternative should contain the sender signature')
             self.assertIn(msg_message_id, sent_email['references'],
                             'message_post: notification email references lacks parent message message_id')

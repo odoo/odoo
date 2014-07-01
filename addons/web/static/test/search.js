@@ -171,6 +171,7 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
             dummy: {type: 'char', string: 'Dummy'}
         };
     };
+    instance.client = { action_manager: { inner_action: undefined } };
 
     var dataset = new instance.web.DataSet(null, 'dummy.model');
     var mock_parent = {getParent: function () {return null;}};
@@ -558,7 +559,20 @@ openerp.testing.section('search.completions', {
                       new Date(2012, 4, 21, 21, 21, 21).getTime());
             });
     });
-    test("M2O", {asserts: 13}, function (instance, $s, mock) {
+    test("M2O complete", {asserts: 4}, function (instance, $s, mock) {
+        var view = {inputs: [], dataset: {get_context: function () {}}};
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
+        return f.complete("bob")
+            .done(function (c) {
+                equal(c.length, 1, "should return one line");
+                var bob = c[0];
+                ok(bob.expand, "should return an expand callback");
+                ok(bob.facet, "should have a facet");
+                ok(bob.label, "should have a label");
+            });
+    });
+    test("M2O expand", {asserts: 11}, function (instance, $s, mock) {
         mock('dummy.model:name_search', function (args, kwargs) {
             deepEqual(args, []);
             strictEqual(kwargs.name, 'bob');
@@ -568,21 +582,18 @@ openerp.testing.section('search.completions', {
         var view = {inputs: [], dataset: {get_context: function () {}}};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
-        return f.complete("bob")
+        return f.expand("bob")
             .done(function (c) {
-                equal(c.length, 3, "should return results + title");
-                var title = c[0];
-                equal(title.label, f.attrs.string, "title should match field name");
-                ok(!title.facet, "title should not have a facet");
+                equal(c.length, 2, "should return results");
 
-                var f1 = new instance.web.search.Facet(c[1].facet);
-                equal(c[1].label, "choice 1");
+                var f1 = new instance.web.search.Facet(c[0].facet);
+                equal(c[0].label, "choice 1");
                 equal(f1.get('category'), f.attrs.string);
                 equal(f1.get('field'), f);
                 deepEqual(f1.values.toJSON(), [{label: 'choice 1', value: 42}]);
 
-                var f2 = new instance.web.search.Facet(c[2].facet);
-                equal(c[2].label, "choice @");
+                var f2 = new instance.web.search.Facet(c[1].facet);
+                equal(c[1].label, "choice @");
                 equal(f2.get('category'), f.attrs.string);
                 equal(f2.get('field'), f);
                 deepEqual(f2.values.toJSON(), [{label: 'choice @', value: 43}]);
@@ -597,7 +608,7 @@ openerp.testing.section('search.completions', {
         var view = {inputs: [], dataset: {get_context: function () {}}};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
-        return f.complete("bob")
+        return f.expand("bob")
             .done(function (c) {
                 ok(!c, "no match should yield no completion");
             });
@@ -620,9 +631,9 @@ openerp.testing.section('search.completions', {
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy', domain: '[["foo", "=", "bar"]]'}},
             {relation: 'dummy.model'}, view);
-        return f.complete("bob");
+        return f.expand("bob");
     });
-    test("M2O custom operator", {asserts: 10}, function (instance, $s, mock) {
+    test("M2O custom operator", {asserts: 8}, function (instance, $s, mock) {
         mock('dummy.model:name_search', function (args, kwargs) {
             deepEqual(args, [], "should have no positional arguments");
             // the operator is meant for the final search term generation, not the autocompletion
@@ -635,15 +646,12 @@ openerp.testing.section('search.completions', {
             {attrs: {string: 'Dummy', operator: 'ilike'}},
             {relation: 'dummy.model'}, view);
 
-        return f.complete('bob')
+        return f.expand('bob')
             .done(function (c) {
-                equal(c.length, 2, "should return result + title");
-                var title = c[0];
-                equal(title.label, f.attrs.string, "title should match field name");
-                ok(!title.facet, "title should not have a facet");
+                equal(c.length, 1, "should return result");
 
-                var f1 = new instance.web.search.Facet(c[1].facet);
-                equal(c[1].label, "Match");
+                var f1 = new instance.web.search.Facet(c[0].facet);
+                equal(c[0].label, "Match");
                 equal(f1.get('category'), f.attrs.string);
                 equal(f1.get('field'), f);
                 deepEqual(f1.values.toJSON(), [{label: 'Match', value: 42}]);
@@ -1210,13 +1218,14 @@ openerp.testing.section('search.groupby', {
         var view = makeSearchView(instance);
         return view.appendTo($fix)
         .done(function () {
-            // 3 filters, 3 filtergroups, 1 custom filter, 1 advanced, 1 Filters
+            // 3 filters, 3 filtergroups, 1 custom filter, 1 advanced, 1 Filters,
             // and 1 SaveFilter widget
             equal(view.drawer.inputs.length, 10, "should have 10 inputs total");
 
             var groups = _.filter(view.drawer.inputs, function (f) {
                 return f instanceof instance.web.search.GroupbyGroup;
             });
+
             equal(groups.length, 3, "should have 3 GroupbyGroups");
 
             groups[0].toggle(groups[0].filters[0]);
@@ -1549,10 +1558,11 @@ openerp.testing.section('search.invisible', {
             var done = $.Deferred();
             view.complete_global_search({term: 'filter'}, function (compls) {
                 done.resolve();
-                strictEqual(compls.length, 2,
-                            "should have 2 completions");
+                console.log("completions", compls);
+                strictEqual(compls.length, 5,
+                            "should have 5 completions"); // 2 filters and 3 separators
                 deepEqual(_.pluck(compls, 'label'),
-                          ['Field 0', 'Filter on: Filter 0'],
+                          [undefined, 'Field 0', 'Filter on: Filter 0', undefined, undefined],
                           "should complete on field 0 and filter 0");
             });
             return done;

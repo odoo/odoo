@@ -57,7 +57,7 @@
 
 <template id="layout" name="Main layout">&lt;!DOCTYPE html&gt;
     <html t-att-lang="lang and lang.replace('_', '-')"
-          t-att-data-website-id="website.id if editable else None"
+          t-att-data-website-id="website.id if editable and website else None"
           t-att-data-editable="'1' if editable else None"
           t-att-data-editable-no-editor="editable_no_editor or None"
           t-att-data-translatable="'1' if translatable else None"
@@ -82,10 +82,10 @@
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <title><t t-esc="title"/></title>
 
-            <t t-set="languages" t-value="website.get_languages()"/>
-            <t t-if="request.website_multilang">
+            <t t-set="languages" t-value="website.get_languages() if website else None"/>
+            <t t-if="request and request.website_multilang">
                 <t t-foreach="languages" t-as="lg">
-                    <t t-set="force_lang" t-value="lg[0] if lg[0] != website.default_lang_code else None"/>
+                    <t t-set="force_lang" t-value="lg[0] if website and lg[0] != website.default_lang_code else None"/>
                     <link rel="alternate" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=force_lang)" t-att-hreflang="lg[0].replace('_', '-').lower()" />
                 </t>
             </t>
@@ -114,8 +114,8 @@
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu"/>
                                     </t>
-                                    <li class="divider" groups="base.group_user,base.group_portal" t-ignore="true"/>
-                                    <li class="dropdown" t-ignore="true" groups="base.group_user,base.group_portal">
+                                    <li class="divider" t-ignore="true" t-if="website.user_id != user_id"/>
+                                    <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
                                                 <span t-esc="user_id.name"/>
@@ -150,7 +150,7 @@
                     </div>
                 </footer>
             </div>
-            <t t-if="website.google_analytics_key">
+            <t t-if="website and website.google_analytics_key">
                 <script>
                     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
                     function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
@@ -174,36 +174,6 @@
 </template>
 
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
-    <xpath expr="//body" position="attributes">
-        <attribute name="style">padding-top: 51px;</attribute>
-    </xpath>
-    <xpath expr="//body" position="inside">
-        <div id="website-top-navbar-placeholder" class="navbar navbar-inverse navbar-fixed-top hidden-xs">
-            <div class="navbar-header">
-                <form class="navbar-form navbar-left" title="editable_no_editor or None">
-                    <button type="button" class="btn btn-primary"
-                            disabled="'disabled' if editable_no_editor else None"
-                        >Edit</button>
-                </form>
-            </div>
-            <div class="collapse navbar-collapse navbar-edit-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#" onclick="return false;"><i class="fa fa-mobile" title="Mobile preview"/></a></li>
-                    <li class="divider-vertical"/>
-                    <li><a href="#" onclick="return false;"><span title="Promote page on the web">Promote</span></a></li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Content <span class="caret"/></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Customize <span class="caret"/></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Help <span class="caret"/></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </xpath>
     <xpath expr='//t[@t-call-assets="website.assets_frontend"]' position="after">
         <t t-call-assets="website.assets_editor"/>
     </xpath>
@@ -215,22 +185,21 @@
     </script>
     <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
     <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
-
     <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
-
     <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
     <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
 
     <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
-
     <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/theme-monokai.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/mode-xml.js"></script>
     <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
+    <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"></script>
     <t t-call="web.jqueryui_conflict">
         <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
     </t>
+
     <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
     <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
     <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
@@ -238,8 +207,7 @@
     <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
 
     <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.editor.newpage.js"></script> <!-- groups="base.group_website_designer" -->
-    <script type="text/javascript" src="/website/static/src/js/website.menu.js"></script> <!-- groups="base.group_website_designer" -->
+    <script type="text/javascript" src="/website/static/src/js/website.contentMenu.js"></script> <!-- groups="base.group_website_designer" -->
     <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
@@ -248,13 +216,6 @@
     <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
 
-    <script type="text/javascript" src="/website/static/src/js/jQuery.transfo.js"></script>
-</template>
-
-<template id="debugger" inherit_id="website.layout" optional="disabled" name="Debugger &amp; Tests">
-    <xpath expr='//t[@name="layout_head"]' position="after">
-        <t t-set="debugger_hook" t-value="1" />
-    </xpath>
 </template>
 
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">

@@ -116,6 +116,8 @@ function PhantomTest() {
                 phantom.exit(1);
             } else {
                 console.log('loaded', url, status);
+                // clear localstorage leftovers
+                self.page.evaluate(function () { localStorage.clear() });
                 // process ready
                 waitFor(function() {
                     console.log("PhantomTest.run: wait for condition:", ready);

@@ -12,21 +12,20 @@
 
     website.EditorBar.include({
         do_not_translate : ['-','*','!'],
-        events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action=edit_master]': 'edit_master',
-        }),
         start: function () {
             var self = this;
             this.initial_content = {};
             return this._super.apply(this, arguments).then(function () {
-                self.$("button[data-action=edit]").removeClass("hidden");
-                self.$('button[data-action=edit]')
+                $("button[data-action=edit]").removeClass("hidden");
+                $('button[data-action=edit]')
                     .text("Translate");
-                if (website.is_editable_button) {
-                    self.$('button[data-action=edit]')
-                        .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
-                }
-                self.$('.js_hide_on_translate').hide();
+                $('button[data-action=edit]')
+                    .parent()
+                    .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
+                $('a[data-action=edit_master]').on('click', self, function(ev) {
+                    self.edit_master(ev);
+                });
+                $('.js_hide_on_translate').hide();
             });
         },
         edit: function () {

@@ -50,7 +50,12 @@ class ReportController(Controller):
         if data.get('options'):
             options_data = simplejson.loads(data['options'])
         if data.get('context'):
-            context.update(simplejson.loads(data['context']))
+            # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
+            # the user explicitely wants to change the lang, this mechanism overwrites it. 
+            data_context = simplejson.loads(data['context'])
+            if data_context.get('lang'):
+                del data_context['lang']
+            context.update(data_context)
 
         if converter == 'html':
             html = report_obj.get_html(cr, uid, docids, reportname, data=options_data, context=context)

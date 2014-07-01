@@ -538,7 +538,7 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "id desc"
 
-    def _order_fields(self,ui_order):
+    def _order_fields(self, cr, uid, ui_order, context=None):
         return {
             'name':         ui_order['name'],
             'user_id':      ui_order['user_id'] or False,
@@ -548,7 +548,7 @@ class pos_order(osv.osv):
             'partner_id':   ui_order['partner_id'] or False,
         }
 
-    def _payment_fields(self,ui_paymentline):
+    def _payment_fields(self, cr, uid, ui_paymentline, context=None):
         return {
             'amount':       ui_paymentline['amount'] or 0.0,
             'payment_date': ui_paymentline['name'],
@@ -569,10 +569,10 @@ class pos_order(osv.osv):
         for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
-            order_id = self.create(cr, uid, self._order_fields(order),context)
+            order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
 
             for payments in order['statement_ids']:
-                self.add_payment(cr, uid, order_id, self._payment_fields(payments[2]), context=context)
+                self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
 
             session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
             if session.sequence_number <= order['sequence_number']:

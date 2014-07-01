@@ -243,6 +243,9 @@ class website(osv.osv):
         is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
         return is_website_publisher
 
+    def is_user(self, cr, uid, ids, context=None):
+        return self.pool['res.users'].has_group(cr, uid, 'base.group_user')
+
     def get_template(self, cr, uid, ids, template, context=None):
         if isinstance(template, (int, long)):
             view_id = template

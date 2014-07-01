@@ -283,15 +283,30 @@
         <record id="product_kanban_view" model="ir.ui.view">
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="product.product_template_kanban_view"/>
             <field name="arch" type="xml">
-                <field name="name" position="after">
-                    <field name="attribute_value_ids"/>
-                </field>
-                <xpath expr="//img[@class='oe_kanban_image']" position="replace">
-                    <img t-att-src="kanban_image('product.product', 'image_small', record.id.value)" class="oe_kanban_image"/>
-                </xpath>
+                <kanban>
+                    <field name="image_small"/>
+                    <field name="lst_price"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open"><img t-att-src="kanban_image('product.product', 'image_small', record.id.value)" class="oe_kanban_image"/></a>
+                                <div class="oe_kanban_details">
+                                    <h4>
+                                        <a type="open">
+                                            <field name="name"/>
+                                            <field name="attribute_value_ids"/>
+                                        </a>
+                                    </h4>
+                                    <div name="tags"/>
+                                    <ul>
+                                        <li>Price: <field name="lst_price"></field></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -343,7 +358,7 @@
                     <div class="oe_right">
                         <button class="oe_inline oe_stat_button" string="Variant Prices"  name="%(product.variants_template_action)d" type="action" icon="fa-strikethrough"/>
                         <button class="oe_inline oe_stat_button" name="%(product.product_variant_action)d" type="action" icon="fa-sitemap">
-                            <field string="List of Variants" name="product_variant_count" widget="statinfo" />
+                            <field string="Variants" name="product_variant_count" widget="statinfo" />
                         </button>
                     </div>
                 </field>
@@ -361,7 +376,7 @@
                     <field name="product_variant_ids"/>
                 </field>
                 <h4 position="after">
-                    <a name="%(product.product_variant_action)d" type="action" t-if="!record.is_product_variant.raw_value &amp; record.product_variant_count.raw_value&gt;1">
+                    <a name="%(product.product_variant_action)d" type="action">
                         <t t-esc="record.product_variant_count.value"/> Variants
                     </a>
                 </h4>
