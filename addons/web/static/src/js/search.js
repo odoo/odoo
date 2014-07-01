@@ -2505,7 +2505,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             if (!$next.length) $next = this.$('li:first-child');
         } else {
             $next = this.$('li.oe-selection-focus').prevAll(':not(.oe-separator)').first();
-            if (!$next.length) $next = this.$('li:last-child');
+            if (!$next.length) $next = this.$('li:not(.oe-separator)').last();
         }
         this.focus_element($next);
     },
