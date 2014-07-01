@@ -47,16 +47,16 @@ class BlogPost(osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Title', required=True, translate=True),
-        'subtitle': fields.char('Sub Title', translate=True),
+        'name': fields.char('Title', required=True, translate=True, readonly=True),
+        'subtitle': fields.char('Sub Title', translate=True, readonly=True),
         'author_id': fields.many2one('res.partner', 'Author'),
-        'background_image': fields.binary('Background Image', oldname='content_image'),
+        'background_image': fields.binary('Background Image', oldname='content_image', readonly=True),
         'blog_id': fields.many2one(
             'blog.blog', 'Blog',
-            required=True, ondelete='cascade',
+            required=True, ondelete='cascade', readonly=True
         ),
         'tag_ids': fields.many2many(
-            'blog.tag', string='Tags',
+            'blog.tag', string='Tags', readonly=True
         ),
         'content': fields.html('Content', translate=True),
         # website control
@@ -92,7 +92,7 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
-        'visits': fields.integer('No of Views'),
+        'visits': fields.integer('No of Views', readonly=True),
         'ranking': fields.function(_compute_ranking, string='Ranking', type='float'),
     }
 
