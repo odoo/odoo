@@ -75,15 +75,22 @@ var Tour = {
         if (!tour) {
             Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
         }
+        console.log("Tour '"+tour_id+"' Begin from run method");
+        var state = Tour.getState();
+        if (state) {
+             if (state.mode === "test") {
+                Tour.error(false, "An other running tour has been detected all tours are now killed.");
+            } else {
+                Tour.endTour();
+            }
+        }
         this.time = new Date().getTime();
         if (tour.path && !window.location.href.match(new RegExp("("+Tour.getLang()+")?"+tour.path+"#?$", "i"))) {
             var href = Tour.getLang()+tour.path;
-            console.log("Tour '"+tour_id+"' Begin from run method (redirection to "+href+")");
             Tour.saveState(tour.id, mode || tour.mode, -1, 0);
             $(document).one("ajaxStop", Tour.running);
             window.location.href = href;
         } else {
-            console.log("Tour '"+tour_id+"' Begin from run method");
             Tour.saveState(tour.id, mode || tour.mode, 0, 0);
             Tour.running();
         }
@@ -358,6 +365,7 @@ var Tour = {
         clearTimeout(Tour.timer);
         clearTimeout(Tour.testtimer);
         Tour.closePopover();
+        console.log("Tour reset");
     },
     running: function () {
         var state = Tour.getState();
@@ -398,6 +406,8 @@ var Tour = {
         };
 
         function checkNext () {
+            if (!Tour.getState()) return;
+
             Tour.autoTogglePopover();
 
             clearTimeout(Tour.timer);
@@ -476,6 +486,8 @@ var Tour = {
         clearTimeout(Tour.testtimer);
 
         function autoStep () {
+            if (!Tour.getState()) return;
+
             if (!step) return;
 
             if (step.autoComplete) {
@@ -502,6 +514,7 @@ var Tour = {
 
                 // trigger after for step like: mouseenter, next step click on button display with mouseenter
                 setTimeout(function () {
+                    if (!Tour.getState()) return;
                     $element.trigger($.Event("mouseup", { srcElement: $element[0] }));
                     $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
                 }, 1000);
@@ -518,6 +531,7 @@ var Tour = {
                     $element.html(step.sampleText);
                 }
                 setTimeout(function () {
+                    if (!Tour.getState()) return;
                     $element.trigger($.Event("keyup", { srcElement: $element }));
                     $element.trigger($.Event("change", { srcElement: $element }));
                 }, self.defaultDelay<<1);

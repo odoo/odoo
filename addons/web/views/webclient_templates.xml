@@ -23,9 +23,6 @@
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
             <script type="text/javascript" src="/web/static/src/js/tour.js"></script>
-            <script type="text/javascript" charset="utf-8">
-                openerp._modules = <t t-raw="modules"/>;
-            </script>
 
             <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
         </template>
@@ -85,6 +82,9 @@
             <script type="text/javascript" src="/web/static/lib/backbone/backbone.js"></script>
 
             <!-- Internals -->
+            <script type="text/javascript" charset="utf-8">
+                openerp._modules = <t t-raw="get_modules_order()"/>;
+            </script>
             <link rel="stylesheet" href="/web/static/src/css/base.css"/>
             <link rel="stylesheet" href="/web/static/src/css/data_export.css"/>
             <link rel="stylesheet" href="/base/static/src/css/modules.css"/>
