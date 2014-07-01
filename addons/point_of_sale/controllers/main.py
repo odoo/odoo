@@ -27,7 +27,7 @@ class PosController(http.Controller):
                  wc.show_application = function(){
                      wc.action_manager.do_action("pos.ui");
                  };
-                 wc.appendTo($(document.body));
+                 wc.setElement($(document.body));
                  wc.start();
                  """
 
