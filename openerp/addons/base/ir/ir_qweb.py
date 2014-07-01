@@ -1044,8 +1044,8 @@ class AssetsBundle(object):
             if isinstance(el, basestring):
                 self.remains.append(el)
             elif isinstance(el, lxml.html.HtmlElement):
-                src = el.get('src')
-                href = el.get('href')
+                src = el.get('src', '')
+                href = el.get('href', '')
                 atype = el.get('type')
                 media = el.get('media')
                 if el.tag == 'style':
