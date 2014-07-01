@@ -131,7 +131,7 @@
 
             // todo call with all data-xmlid
             var $inputs = $("input[data-xmlid]");
-            openerp.jsonRpc('/website/get_theme_customize', 'call', {
+            openerp.jsonRpc('/website/theme_customize_get', 'call', {
                     'xml_ids': get_xml_ids($inputs)
                 }).then(function (data) {
                     $inputs.each(function () {
@@ -153,13 +153,12 @@
         });
     }
 
-    $(document).on('click', "#theme_customize a",theme_customize);
-
-    setTimeout(function () {
+    openerp.website.ready().done(function() {
+        $(document).on('click', "#theme_customize a",theme_customize);
         if ((window.location.hash || "").indexOf("theme=true") !== -1) {
             theme_customize();
             window.location.hash = "";
         }
-    },0);
+    });
 
 })();

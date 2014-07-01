@@ -344,8 +344,8 @@ class Website(openerp.addons.web.controllers.main.Home):
             ids.append(id)
         return ids
 
-    @http.route(['/website/get_theme_customize'], type='json', auth="public", website=True)
-    def get_theme_customize(self, xml_ids):
+    @http.route(['/website/theme_customize_get'], type='json', auth="public", website=True)
+    def theme_customize_get(self, xml_ids):
         view = request.registry["ir.ui.view"]
         enable = []
         disable = []
