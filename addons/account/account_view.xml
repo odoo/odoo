@@ -439,7 +439,7 @@
                                     <field name="internal_account_id" domain="[('type','!=','view')]"/>
                                 </group>
                                 <group string="Miscellaneous">
-                                    <field name="with_last_closing_balance"/>
+                                    <field name="with_last_closing_balance" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                                     <field name="cash_control" attrs="{'invisible':[('type','not in', ('cash',))]}"/>
                                 </group>
                             </group>

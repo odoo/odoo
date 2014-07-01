@@ -49,6 +49,9 @@ else:
 env = jinja2.Environment(loader=loader, autoescape=True)
 env.filters["json"] = simplejson.dumps
 
+# 1 week cache for asset bundles as advised by Google Page Speed
+BUNDLE_MAXAGE = 60 * 60 * 24 * 7
+
 #----------------------------------------------------------
 # OpenERP Web helpers
 #----------------------------------------------------------
@@ -551,37 +554,31 @@ class Home(http.Controller):
     def login(self, db, login, key, redirect="/web", **kw):
         return login_and_redirect(db, login, key, redirect_url=redirect)
 
-    @http.route('/web/js/<xmlid>', type='http', auth="public")
-    def js_bundle(self, xmlid, **kw):
-        # manifest backward compatible mode, to be removed
-        values = {'manifest_list': manifest_list}
+    @http.route([
+        '/web/js/<xmlid>',
+        '/web/js/<xmlid>/<version>',
+    ], type='http', auth='public')
+    def js_bundle(self, xmlid, version=None, **kw):
         try:
-            assets_html = request.render(xmlid, lazy=False, qcontext=values)
+            bundle = AssetsBundle(xmlid)
         except QWebTemplateNotFound:
             return request.not_found()
-        bundle = AssetsBundle(xmlid, assets_html, debug=request.debug)
 
-        response = request.make_response(
-            bundle.js(), [('Content-Type', 'application/javascript')])
+        response = request.make_response(bundle.js(), [('Content-Type', 'application/javascript')])
+        return make_conditional(response, bundle.last_modified, max_age=BUNDLE_MAXAGE)
 
-        # TODO: check that we don't do weird lazy overriding of __call__ which break body-removal
-        return make_conditional(
-            response, bundle.last_modified, bundle.checksum, max_age=60*60*24)
-
-    @http.route('/web/css/<xmlid>', type='http', auth='public')
-    def css_bundle(self, xmlid, **kw):
-        values = {'manifest_list': manifest_list} # manifest backward compatible mode, to be removed
+    @http.route([
+        '/web/css/<xmlid>',
+        '/web/css/<xmlid>/<version>',
+    ], type='http', auth='public')
+    def css_bundle(self, xmlid, version=None, **kw):
         try:
-            assets_html = request.render(xmlid, lazy=False, qcontext=values)
+            bundle = AssetsBundle(xmlid)
         except QWebTemplateNotFound:
             return request.not_found()
-        bundle = AssetsBundle(xmlid, assets_html, debug=request.debug)
 
-        response = request.make_response(
-            bundle.css(), [('Content-Type', 'text/css')])
-
-        return make_conditional(
-            response, bundle.last_modified, bundle.checksum, max_age=60*60*24)
+        response = request.make_response(bundle.css(), [('Content-Type', 'text/css')])
+        return make_conditional(response, bundle.last_modified, max_age=BUNDLE_MAXAGE)
 
 class WebClient(http.Controller):
 
