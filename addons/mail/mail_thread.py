@@ -477,9 +477,9 @@ class mail_thread(osv.AbstractModel):
         partner_ids = []
         s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
         for email_address in tools.email_split(s):
-            related_partners = partner_obj.search(cr, uid, [('email', 'ilike', email_address), ('user_ids', '!=', False)], limit=1, context=context)
+            related_partners = partner_obj.search(cr, uid, [('email', '=ilike', email_address), ('user_ids', '!=', False)], limit=1, context=context)
             if not related_partners:
-                related_partners = partner_obj.search(cr, uid, [('email', 'ilike', email_address)], limit=1, context=context)
+                related_partners = partner_obj.search(cr, uid, [('email', '=ilike', email_address)], limit=1, context=context)
             partner_ids += related_partners
         return partner_ids
 
