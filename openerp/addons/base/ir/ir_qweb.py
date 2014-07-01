@@ -1198,7 +1198,7 @@ class AssetsBundle(object):
             return
         result = compiler.communicate(input=source.encode('utf-8'))
         if compiler.returncode:
-            error = self.get_sass_error(result[1], source=source)
+            error = self.get_sass_error(''.join(result), source=source)
             _logger.warning(error)
             self.css_errors.append(error)
             return
