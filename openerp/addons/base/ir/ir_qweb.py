@@ -14,6 +14,7 @@ import uuid
 import xml  # FIXME use lxml and etree
 import itertools
 import lxml.html
+import werkzeug
 from subprocess import Popen, PIPE
 from urlparse import urlparse
 
@@ -1046,16 +1047,17 @@ class AssetsBundle(object):
                 src = el.get('src')
                 href = el.get('href')
                 atype = el.get('type')
+                media = el.get('media')
                 if el.tag == 'style':
                     if atype == 'text/sass' or src.endswith('.sass'):
-                        self.stylesheets.append(SassAsset(self, inline=el.text))
+                        self.stylesheets.append(SassAsset(self, inline=el.text, media=media))
                     else:
-                        self.stylesheets.append(StylesheetAsset(self, inline=el.text))
+                        self.stylesheets.append(StylesheetAsset(self, inline=el.text, media=media))
                 elif el.tag == 'link' and el.get('rel') == 'stylesheet' and self.can_aggregate(href):
                     if href.endswith('.sass') or atype == 'text/sass':
-                        self.stylesheets.append(SassAsset(self, url=href))
+                        self.stylesheets.append(SassAsset(self, url=href, media=media))
                     else:
-                        self.stylesheets.append(StylesheetAsset(self, url=href))
+                        self.stylesheets.append(StylesheetAsset(self, url=href, media=media))
                 elif el.tag == 'script' and not src:
                     self.javascripts.append(JavascriptAsset(self, inline=el.text))
                 elif el.tag == 'script' and self.can_aggregate(src):
@@ -1205,7 +1207,7 @@ class AssetsBundle(object):
         while fragments:
             asset_id = fragments.pop(0)
             asset = next(asset for asset in sass if asset.id == asset_id)
-            asset.content = fragments.pop(0)
+            asset._content = fragments.pop(0)
 
     def get_sass_error(self, stderr, source=None):
         # TODO: try to find out which asset the error belongs to
@@ -1228,6 +1230,7 @@ class WebAsset(object):
         self.uid = bundle.uid
         self.registry = bundle.registry
         self.context = bundle.context
+        self._content = None
         self._filename = None
         self._ir_attach = None
         name = '<inline asset>' if inline else url
@@ -1273,9 +1276,11 @@ class WebAsset(object):
             pass
         return datetime.datetime(1970, 1, 1)
 
-    @lazy_property
+    @property
     def content(self):
-        return self.inline or self._fetch_content()
+        if not self._content:
+            self._content = self.inline or self._fetch_content()
+        return self._content
 
     def _fetch_content(self):
         """ Fetch content from file or database"""
@@ -1323,6 +1328,17 @@ class StylesheetAsset(WebAsset):
     rx_sourceMap = re.compile(r'(/\*# sourceMappingURL=.*)', re.U)
     rx_charset = re.compile(r'(@charset "[^"]+";)', re.U)
 
+    def __init__(self, *args, **kw):
+        self.media = kw.pop('media', None)
+        super(StylesheetAsset, self).__init__(*args, **kw)
+
+    @property
+    def content(self):
+        content = super(StylesheetAsset, self).content
+        if self.media:
+            content = '@media %s { %s }' % (self.media, content)
+        return content
+
     def _fetch_content(self):
         try:
             content = super(StylesheetAsset, self)._fetch_content()
@@ -1356,10 +1372,12 @@ class StylesheetAsset(WebAsset):
         return self.with_header(content)
 
     def to_html(self):
+        media = (' media="%s"' % werkzeug.utils.escape(self.media)) if self.media else ''
         if self.url:
-            return '<link rel="stylesheet" href="%s" type="text/css"/>' % (self.html_url % self.url)
+            href = self.html_url % self.url
+            return '<link rel="stylesheet" href="%s" type="text/css"%s/>' % (href, media)
         else:
-            return '<style type="text/css">%s</style>' % self.with_header()
+            return '<style type="text/css"%s>%s</style>' % (media, self.with_header())
 
 class SassAsset(StylesheetAsset):
     html_url = '%s.css'
@@ -1390,7 +1408,7 @@ class SassAsset(StylesheetAsset):
         return super(SassAsset, self).to_html()
 
     def get_source(self):
-        content = textwrap.dedent(self.content)
+        content = textwrap.dedent(self.inline or self._fetch_content())
 
         def fix_indent(m):
             ind = m.group()
