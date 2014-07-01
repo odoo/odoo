@@ -20,6 +20,10 @@
 #
 ##############################################################################
 
+import time
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+from openerp.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 import base64
 import re
 import threading
@@ -333,7 +337,22 @@ class ir_ui_menu(osv.osv):
                 obj = self.pool.get(menu.action.res_model)
                 if obj and obj._needaction:
                     if menu.action.type == 'ir.actions.act_window':
-                        dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
+                        #if menu.action.domain is not there set dom blank
+                        dom = []
+                        #evaluate the action domain if menu.action.domain is there
+                        if menu.action.domain:
+                            try:
+                                dom = eval(menu.action.domain, {
+                                                                'uid': uid,
+                                                                'context_today': fields.date.context_today,
+                                                                'datetime': datetime,
+                                                                'time': time,
+                                                                'relativedelta': relativedelta,
+                                                                'current_date': time.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                                                                })
+                            except Exception:
+                                _logger.warning("Action domain '%s' could not be processed to filter need-action data, ignoring it.", dom, exc_info=True)
+                                dom = []
                     else:
                         dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
                     res[menu.id]['needaction_enabled'] = obj._needaction
