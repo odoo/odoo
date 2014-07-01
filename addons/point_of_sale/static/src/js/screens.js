@@ -526,12 +526,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 },
                 product_list: this.pos.db.get_product_by_category(0)
             });
-            this.product_list_widget.replace($('.placeholder-ProductListWidget'));
+            this.product_list_widget.replace(this.$('.placeholder-ProductListWidget'));
 
             this.product_categories_widget = new module.ProductCategoriesWidget(this,{
                 product_list_widget: this.product_list_widget,
             });
-            this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
+            this.product_categories_widget.replace(this.$('.placeholder-ProductCategoriesWidget'));
         },
 
         show: function(){
