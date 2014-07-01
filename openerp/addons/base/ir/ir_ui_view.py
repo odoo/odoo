@@ -986,10 +986,15 @@ class view(osv.osv):
         )
         qcontext.update(values)
 
-        # TODO: remove this as soon as the following branch is merged
-        #       lp:~openerp-dev/openerp-web/trunk-module-closure-style-msh
-        from openerp.addons.web.controllers.main import module_boot
-        qcontext['modules'] = simplejson.dumps(module_boot()) if request else None
+        # TODO: This helper can be used by any template that wants to embedd the backend.
+        #       It is currently necessary because the ir.ui.view bundle inheritance does not
+        #       match the module dependency graph.
+        def get_modules_order():
+            if request:
+                from openerp.addons.web.controllers.main import module_boot
+                return simplejson.dumps(module_boot())
+            return '[]'
+        qcontext['get_modules_order'] = get_modules_order
 
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
