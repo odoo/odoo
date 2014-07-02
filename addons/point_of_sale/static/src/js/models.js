@@ -213,7 +213,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         self.fidelity = fidelity[0];
                     }
 
-                    return self.fetch('product.packaging',['ean','product_id']);
+                    return self.fetch('product.packaging',['ean','product_tmpl_id']);
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
 
