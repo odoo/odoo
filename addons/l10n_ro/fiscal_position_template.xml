@@ -28,8 +28,9 @@
     </record>
     
     <record id="fiscal_position_template_5" model="account.fiscal.position.template">
-        <field name="name">Regim Intra-Comunitar Scutite</field>
+        <field name="name">Regim Scutite</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="note">Pozitia se refera atat la livrari / achizitii intracomunitare cat si extracomunitare care beneficiaza de scutire</field>
     </record>
     
     <record id="fiscal_position_template_6" model="account.fiscal.position.template">
@@ -40,6 +41,7 @@
     <record id="fiscal_position_template_7" model="account.fiscal.position.template">
         <field name="name">Regim Extra-Comunitar</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="note">Pozitia se refera la livrari extracomunitare care sunt taxabile.</field>
     </record>
     
     <!-- account.fiscal.position.tax.template -->
@@ -191,7 +193,7 @@
         <field name="tax_dest_id" ref="tvati_intrap24"/>
     </record>    
     
-    <!-- Intracomunitar Scutite -->
+    <!-- Scutite -->
     <!-- Sales -->
     <record id="afptt_intracomsc_1" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_template_5"/>
