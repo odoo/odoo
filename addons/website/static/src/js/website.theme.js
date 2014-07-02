@@ -1,43 +1,9 @@
 (function () {
     'use strict';
 
-    openerp.Widget.include({
-        templateServerSide: false,
-        __widgetRenderAndInsert: function (insertion, target) {
-            var self = this;
-            var def = new $.Deferred();
-            this.renderElement().then(function () {
-                insertion(target);
-                $.when(self.start()).then(function () {
-                    def.resolve.apply(def, arguments);
-                });
-            });
-            return def;
-        },
-        renderElement: function() {
-            var $el, self = this;
-            if (this.template && this.templateServerSide) {
-                return openerp.jsonRpc('/web/dataset/call', 'call', {
-                    model: 'ir.ui.view',
-                    method: 'render',
-                    args: [this.template, this.__getterSetterInternalMap, 'ir.qweb', openerp.website.get_context()]
-                }).then(function (el) {
-                    self.replaceElement($(el));
-                });
-            }
-            if (this.template) {
-                $el = $(openerp.qweb.render(this.template, {widget: this}).trim());
-            } else {
-                $el = this._make_descriptive();
-            }
-            this.replaceElement($el);
-            return $.when();
-        },
-    });
-
+    openerp.website.add_template_file('/website/static/src/xml/website.theme.xml');
 
     openerp.website.Theme = openerp.Widget.extend({
-        templateServerSide: true,
         template: 'website.theme_customize',
         events: {
             'change input[data-xmlid],input[data-enable],input[data-disable]': 'change_selection',
