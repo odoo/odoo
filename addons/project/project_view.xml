@@ -257,9 +257,9 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <h4><field name="name"/></h4>
-                                    <div class="oe_kanban_alias" t-if="record.alias_name.value and record.alias_domain.value">
-                                        <span class="oe_e oe_e_alias">%%</span><small><field name="alias_id"/></small>
+                                    <h4 class="text-center"><strong><field name="name"/></strong></h4>
+                                    <div class="text-center oe_kanban_alias" t-if="record.alias_name.value and record.alias_domain.value">
+                                        <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px">
