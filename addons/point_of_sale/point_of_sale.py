@@ -88,7 +88,13 @@ class pos_config(osv.osv):
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
         'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True), 
+        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'barcode_product':  fields.char('Product Barcodes', size=64, help='The pattern that identifies product barcodes'),
+        'barcode_cashier':  fields.char('Cashier Barcodes', size=64, help='The pattern that identifies cashier login barcodes'),
+        'barcode_customer': fields.char('Customer Barcodes',size=64, help='The pattern that identifies customer\'s client card barcodes'),
+        'barcode_price':    fields.char('Price Barcodes',   size=64, help='The pattern that identifies a product with a barcode encoded price'),
+        'barcode_weight':   fields.char('Weight Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded weight'),
+        'barcode_discount': fields.char('Discount Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded discount'),
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -156,6 +162,12 @@ class pos_config(osv.osv):
         'iface_invoicing': True,
         'stock_location_id': _get_default_location,
         'company_id': _get_default_company,
+        'barcode_product': '*', 
+        'barcode_cashier': '041*', 
+        'barcode_customer':'042*', 
+        'barcode_weight':  '21xxxxxNNDDD', 
+        'barcode_discount':'22xxxxxxxxNN', 
+        'barcode_price':   '23xxxxxNNNDD', 
     }
 
     def onchange_picking_type_id(self, cr, uid, ids, picking_type_id, context=None):
@@ -241,6 +253,8 @@ class pos_session(osv.osv):
         'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
                 select=1),
+        
+        'sequence_number': fields.integer('Order Sequence Number'),
 
         'cash_control' : fields.function(_compute_cash_all,
                                          multi='cash',
@@ -303,6 +317,7 @@ class pos_session(osv.osv):
         'name' : '/',
         'user_id' : lambda obj, cr, uid, context: uid,
         'state' : 'opening_control',
+        'sequence_number': 1,
     }
 
     _sql_constraints = [
@@ -554,13 +569,17 @@ class pos_order(osv.osv):
         for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
-
             order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
+
             for payments in order['statement_ids']:
                 self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
 
+            session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+            if session.sequence_number <= order['sequence_number']:
+                session.write({'sequence_number': order['sequence_number'] + 1})
+                session.refresh()
+
             if order['amount_return']:
-                session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
                 cash_journal = session.cash_journal_id
                 if not cash_journal:
                     cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
@@ -667,6 +686,7 @@ class pos_order(osv.osv):
         'statement_ids': fields.one2many('account.bank.statement.line', 'pos_statement_id', 'Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
+        'sequence_number': fields.integer('Sequence Number', help='A session-unique sequence number for the order'),
 
         'session_id' : fields.many2one('pos.session', 'Session', 
                                         #required=True,
@@ -715,6 +735,7 @@ class pos_order(osv.osv):
         'name': '/', 
         'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'nb_print': 0,
+        'sequence_number': 1,
         'session_id': _default_session,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'pricelist_id': _default_pricelist,

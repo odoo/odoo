@@ -24,7 +24,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.pos_widget = attributes.pos_widget;
 
             this.proxy = new module.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
-            this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});  // used to read barcodes
+            this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy, patterns: {}});  // used to read barcodes
             this.proxy_queue = new module.JobQueue();           // used to prevent parallels communications to the proxy
             this.db = new module.PosDB();                       // a local database used to search trough products and categories & store pending orders
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
@@ -34,6 +34,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.company_logo = null;
             this.company_logo_base64 = '';
             this.currency = null;
+            this.shop = null;
             this.company = null;
             this.user = null;
             this.users = [];
@@ -47,6 +48,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.units = [];
             this.units_by_id = {};
             this.pricelist = null;
+            this.order_sequence = 1;
             window.posmodel = this;
 
             // these dynamic attributes can be watched for change by other models or widgets
@@ -118,6 +120,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.pos_widget.loading_message(_t('Loading')+' '+model,this._load_progress);
             return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
         },
+
         // loads all the needed data on the sever. returns a deferred indicating when all the data has loaded. 
         load_server_data: function(){
             var self = this;
@@ -148,6 +151,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     var units_by_id = {};
                     for(var i = 0, len = units.length; i < len; i++){
                         units_by_id[units[i].id] = units[i];
+                        units[i].groupable = ( units[i].category_id[0] === 1 );
+                        units[i].is_unit   = ( units[i].id === 1 );
                     }
                     self.units_by_id = units_by_id;
                     
@@ -155,9 +160,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(users){
                     self.users = users;
 
-                    return self.fetch('res.partner', ['name','ean13'], [['ean13', '!=', false]]);
+                    return self.fetch('res.partner', ['name','street','city','country_id','phone','zip','mobile','email','ean13']);
                 }).then(function(partners){
                     self.partners = partners;
+                    self.db.add_partners(partners);
 
                     return self.fetch('account.tax', ['name','amount', 'price_include', 'type']);
                 }).then(function(taxes){
@@ -165,23 +171,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                     return self.fetch(
                         'pos.session', 
-                        ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at'],
+                        ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number'],
                         [['state', '=', 'opened'], ['user_id', '=', self.session.uid]]
                     );
                 }).then(function(pos_sessions){
                     self.pos_session = pos_sessions[0];
 
-                    return self.fetch(
-                        'pos.config',
-                        ['name','journal_ids','journal_id','pricelist_id',
-                         'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
-                         'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 
-                         'iface_vkeyboard','iface_print_via_proxy','iface_scan_via_proxy',
-                         'iface_cashdrawer','iface_invoicing','iface_big_scrollbars',
-                         'receipt_header','receipt_footer','proxy_ip',
-                         'state','sequence_id','session_ids'],
-                        [['id','=', self.pos_session.config_id[0]]]
-                    );
+                    return self.fetch('pos.config',[],[['id','=', self.pos_session.config_id[0]]]);
                 }).then(function(configs){
                     self.config = configs[0];
                     self.config.use_proxy = self.config.iface_payment_terminal || 
@@ -189,6 +185,18 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                             self.config.iface_print_via_proxy  ||
                                             self.config.iface_scan_via_proxy   ||
                                             self.config.iface_cashdrawer;
+                    
+                    self.barcode_reader.add_barcode_patterns({
+                        'product':  self.config.barcode_product,
+                        'cashier':  self.config.barcode_cashier,
+                        'client':   self.config.barcode_customer,
+                        'weight':   self.config.barcode_weight,
+                        'discount': self.config.barcode_discount,
+                        'price':    self.config.barcode_price,
+                    });
+                    return self.fetch('stock.location',[],[['id','=', self.config.stock_location_id[0]]]);
+                }).then(function(shops){
+                    self.shop = shops[0];
 
                     return self.fetch('product.pricelist',['currency_id'],[['id','=',self.config.pricelist_id[0]]]);
                 }).then(function(pricelists){
@@ -198,12 +206,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(currencies){
                     self.currency = currencies[0];
 
-                    /*
-                    return (new instance.web.Model('decimal.precision')).call('get_precision',[['Account']]);
-                }).then(function(precision){
-                    self.accounting_precision = precision;
-                    console.log("PRECISION",precision);
-*/
                     return self.fetch('product.packaging',['ean','product_tmpl_id']);
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
@@ -292,7 +294,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // this is called when an order is removed from the order collection. It ensures that there is always an existing
         // order and a valid selected order
         on_removed_order: function(removed_order,index,reason){
-            if(reason === 'abandon' && this.get('orders').size() > 0){
+            if( (reason === 'abandon' || removed_order.temporary) && this.get('orders').size() > 0){
                 // when we intentionally remove an unfinished order, and there is another existing one
                 this.set({'selectedOrder' : this.get('orders').at(index) || this.get('orders').last()});
             }else{
@@ -307,6 +309,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var order = new module.Order({pos:this});
             this.get('orders').add(order);
             this.set('selectedOrder', order);
+        },
+
+        get_order: function(){
+            return this.get('selectedOrder');
         },
 
         //removes the current order
@@ -497,12 +503,16 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 selectedOrder.addProduct(product, {price:parsed_code.value});
             }else if(parsed_code.type === 'weight'){
                 selectedOrder.addProduct(product, {quantity:parsed_code.value, merge:false});
+            }else if(parsed_code.type === 'discount'){
+                selectedOrder.addProduct(product, {discount:parsed_code.value, merge:false});
             }else{
                 selectedOrder.addProduct(product);
             }
             return true;
         },
     });
+
+    var orderline_id = 1;
 
     // An orderline represent one element of the content of a client's shopping cart.
     // An orderline contains a product, its quantity, its price, discount. etc. 
@@ -519,6 +529,21 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.discountStr = '0';
             this.type = 'unit';
             this.selected = false;
+            this.id       = orderline_id++; 
+        },
+        clone: function(){
+            var orderline = new module.Orderline({},{
+                pos: this.pos,
+                order: null,
+                product: this.product,
+                price: this.price,
+            });
+            orderline.quantity = this.quantity;
+            orderline.quantityStr = this.quantityStr;
+            orderline.discount = this.discount;
+            orderline.type = this.type;
+            orderline.selected = false;
+            return orderline;
         },
         // sets a discount [0,100]%
         set_discount: function(discount){
@@ -566,7 +591,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         get_quantity_str_with_unit: function(){
             var unit = this.get_unit();
-            if(unit && unit.name !== 'Unit(s)'){
+            if(unit && !unit.is_unit){
                 return this.quantityStr + ' ' + unit.name;
             }else{
                 return this.quantityStr;
@@ -601,6 +626,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // in the orderline. This returns true if it makes sense to merge the two
         can_be_merged_with: function(orderline){
             if( this.get_product().id !== orderline.get_product().id){    //only orderline of the same product can be merged
+                return false;
+            }else if(!this.get_unit() || !this.get_unit().groupable){
                 return false;
             }else if(this.get_product_type() !== orderline.get_product_type()){
                 return false;
@@ -787,10 +814,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.selected_paymentline = undefined;
             this.screen_data = {};  // see ScreenSelector
             this.receipt_type = 'receipt';  // 'receipt' || 'invoice'
+            this.temporary = attributes.temporary || false;
+            this.sequence_number = this.pos.pos_session.sequence_number++;
             return this;
+        },
+        is_empty: function(){
+            return (this.get('orderLines').models.length === 0);
         },
         generateUniqueId: function() {
             return new Date().getTime();
+        },
+        addOrderline: function(line){
+            if(line.order){
+                order.removeOrderline(line);
+            }
+            line.order = this;
+            this.get('orderLines').add(line);
+            this.selectLine(this.getLastOrderline());
         },
         addProduct: function(product, options){
             options = options || {};
@@ -805,6 +845,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             if(options.price !== undefined){
                 line.set_unit_price(options.price);
             }
+            if(options.discount !== undefined){
+                line.set_discount(options.discount);
+            }
 
             var last_orderline = this.getLastOrderline();
             if( last_orderline && last_orderline.can_be_merged_with(line) && options.merge !== false){
@@ -817,6 +860,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         removeOrderline: function( line ){
             this.get('orderLines').remove(line);
             this.selectLine(this.getLastOrderline());
+        },
+        getOrderline: function(id){
+            var orderlines = this.get('orderLines').models;
+            for(var i = 0; i < orderlines.length; i++){
+                if(orderlines[i].id === id){
+                    return orderlines[i];
+                }
+            }
+            return null;
         },
         getLastOrderline: function(){
             return this.get('orderLines').at(this.get('orderLines').length -1);
@@ -950,6 +1002,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var client  = this.get('client');
             var cashier = this.pos.cashier || this.pos.user;
             var company = this.pos.company;
+            var shop    = this.pos.shop;
             var date = new Date();
 
             return {
@@ -994,6 +1047,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     phone: company.phone,
                     logo:  this.pos.company_logo_base64,
                 },
+                shop:{
+                    name: shop.name,
+                },
                 currency: this.pos.currency,
             };
         },
@@ -1019,6 +1075,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 partner_id: this.get_client() ? this.get_client().id : false,
                 user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
                 uid: this.uid,
+                sequence_number: this.sequence_number,
             };
         },
         getSelectedLine: function(){
@@ -1102,7 +1159,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
         },
         switchSign: function() {
-            console.log('switchsing');
             var oldBuffer;
             oldBuffer = this.get('buffer');
             this.set({
