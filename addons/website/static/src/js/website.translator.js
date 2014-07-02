@@ -16,15 +16,19 @@
             var self = this;
             this.initial_content = {};
             return this._super.apply(this, arguments).then(function () {
-                $("button[data-action=edit]").removeClass("hidden");
-                $('button[data-action=edit]')
-                    .text("Translate");
-                $('button[data-action=edit]')
-                    .parent()
-                    .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
-                $('a[data-action=edit_master]').on('click', self, function(ev) {
-                    self.edit_master(ev);
-                });
+                var $edit_button = $("button[data-action=edit]");
+                $edit_button.removeClass("hidden");
+                $edit_button.text("Translate");
+
+                if(website.no_editor) {
+                    $edit_button.removeProp('disabled');
+                } else {
+                    $edit_button.parent().after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
+                    $('a[data-action=edit_master]').on('click', self, function(ev) {
+                        self.edit_master(ev);
+                    });
+                }
+
                 $('.js_hide_on_translate').hide();
             });
         },
