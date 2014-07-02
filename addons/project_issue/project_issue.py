@@ -502,6 +502,11 @@ class account_analytic_account(osv.Model):
 
     _columns = {
         'use_issues': fields.boolean('Issues', help="Check this field if this project manages issues"),
+        'issue_label': fields.char('Use Issues as', help="Gives label to issues on project's kanaban view.", required=True),
+    }
+
+    _defaults = {
+        'issue_label': 'Issues',
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):

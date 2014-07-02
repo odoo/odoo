@@ -42,4 +42,14 @@ openerp.project = function(openerp) {
             }
         },
     });
+
+    openerp.web.list.TooltipHtml = openerp.web.list.Column.extend({
+        format: function (row_data, options) {
+            if (row_data.kanban_column_tooltip !== undefined){
+                return row_data.kanban_column_tooltip.value.tooltip
+            }
+        }
+    });
+
+    openerp.web.list.columns.add('field.tooltiphtml', 'openerp.web.list.TooltipHtml');
 };

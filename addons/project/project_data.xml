@@ -31,32 +31,44 @@
             <field name="sequence">1</field>
             <field name="name">Analysis</field>
             <field name="case_default" eval="True"/>
+            <field name="legend_blocked">There is a problem in analysis.</field>
+            <field name="legend_done">Ready for the next stage.</field>
         </record>
         <record id="project_tt_specification" model="project.task.type">
             <field name="sequence">10</field>
             <field name="name">Specification</field>
             <field name="case_default" eval="True"/>
+            <field name="legend_blocked">Need more info about customer’s needs.</field>
+            <field name="legend_done">Ready for the next stage.</field>
         </record>
         <record id="project_tt_design" model="project.task.type">
             <field name="sequence">11</field>
             <field name="name">Design</field>
             <field name="case_default" eval="True"/>
+            <field name="legend_blocked">Design is not valid.</field>
+            <field name="legend_done">Ready for the next stage.</field>
         </record>
         <record id="project_tt_development" model="project.task.type">
             <field name="sequence">12</field>
             <field name="name">Development</field>
             <field name="case_default" eval="True"/>
+            <field name="legend_blocked">Need help from the specification team.</field>
+            <field name="legend_done">Ready for the next stage.</field>
         </record>
         <record id="project_tt_testing" model="project.task.type">
             <field name="sequence">13</field>
             <field name="name">Testing</field>
             <field name="case_default" eval="True"/>
+            <field name="legend_blocked">Test is failed.</field>
+            <field name="legend_done">Test result is achieved.</field>
         </record>
         <record id="project_tt_merge" model="project.task.type">
             <field name="sequence">14</field>
             <field name="name">Merge</field>
             <field name="case_default" eval="False"/>
             <field name="fold" eval="True"/>
+            <field name="legend_blocked">Conflict in any file.</field>
+            <field name="legend_done">Ready for the next stage.</field>
         </record>
         <record id="project_tt_deployment" model="project.task.type">
             <field name="sequence">20</field>
@@ -69,6 +81,7 @@
             <field name="name">Cancelled</field>
             <field name="case_default" eval="True"/>
             <field name="fold" eval="True"/>
+            <field name="legend_done">Ready to reopen.</field>
         </record>
     </data>
 

@@ -25,7 +25,7 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="options_active"]' position='inside'>
+                <xpath expr='//div[@name="options_active"]' position='before'>
                     <field name="use_timesheets" class="oe_inline"/>
                     <label for="use_timesheets"/>
                 </xpath>

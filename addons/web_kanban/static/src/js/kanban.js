@@ -658,7 +658,10 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         }
         this.$el.data('widget', this);
         this.$records.data('widget', this);
-        this.$has_been_started.resolve();
+        var def_tooltip = this.fetch_tooltip();
+        $.when(def_tooltip).done(function (){
+            self.$has_been_started.resolve();
+        });
         var add_btn = this.$el.find('.oe_kanban_add');
         add_btn.tooltip({delay: { show: 500, hide:1000 }});
         this.$records.find(".oe_kanban_column_cards").click(function (ev) {
@@ -669,8 +672,6 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             }
         });
         this.is_started = true;
-        var def_tooltip = this.fetch_tooltip();
-        return $.when(def_tooltip);
     },
     fetch_tooltip: function() {
         if (! this.group)
@@ -700,7 +701,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             return (new instance.web.Model(field.relation)).query([options.tooltip_on_group_by])
                     .filter([["id", "=", this.value]]).first().then(function(res) {
                 self.tooltip = res[options.tooltip_on_group_by];
-                self.$(".oe_kanban_group_title_text").attr("title", self.tooltip || self.title || "").tooltip();
+                self.$(".oe_kanban_group_title_text").attr("title", self.tooltip.tooltip || self.title || "").tooltip();
             });
         }
     },
@@ -1318,11 +1319,12 @@ instance.web_kanban.KanbanSelection = instance.web_kanban.AbstractField.extend({
         this.parent = parent;
     },
     prepare_dropdown_selection: function() {
+        var self = this;
         var data = [];
         _.map(this.field.selection || [], function(res) {
             var value = {
                 'name': res[0],
-                'tooltip': res[1],
+                'tooltip':  self.parent.group.tooltip['legend_'+res[0]] || res[1],
                 'state_name': res[1],
             }
             if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
