@@ -808,6 +808,7 @@ class mrp_production(osv.osv):
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
 
+        production.refresh()
         for raw_product in production.move_lines2:
             new_parent_ids = []
             parent_move_ids = [x.id for x in raw_product.move_history_ids]
