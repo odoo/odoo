@@ -970,6 +970,18 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         getDueLeft: function() {
             return this.getTotalTaxIncluded() - this.getPaidTotal();
         },
+        isPaid: function(){
+            var delta = 0.000001;
+            var total = this.getTotalTaxIncluded();
+            return total < delta || this.getPaidTotal() + delta >= total;
+        },
+        validate: function(){
+            var client = this.get('client');
+            if( client ){
+                client.fidpoints += this.getWonFidpoints();
+            }
+            this.destroy();
+        },
         // sets the type of receipt 'receipt'(default) or 'invoice'
         set_receipt_type: function(type){
             this.receipt_type = type;

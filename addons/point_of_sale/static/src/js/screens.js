@@ -779,7 +779,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             window.print();
         },
         finishOrder: function() {
-            this.pos.get('selectedOrder').destroy();
+            this.pos.get('selectedOrder').validate();
         },
         refresh: function() {
             var order = this.pos.get('selectedOrder');
@@ -1031,25 +1031,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var dueTotal = currentOrder.getTotalTaxIncluded();
             var remaining = dueTotal > paidTotal ? dueTotal - paidTotal : 0;
             var change = paidTotal > dueTotal ? paidTotal - dueTotal : 0;
+            var isPaid = currentOrder.isPaid();
 
             this.$('.payment-due-total').html(this.format_currency(dueTotal));
             this.$('.payment-paid-total').html(this.format_currency(paidTotal));
             this.$('.payment-remaining').html(this.format_currency(remaining));
             this.$('.payment-change').html(this.format_currency(change));
-            if(currentOrder.selected_orderline === undefined){
-                remaining = 1;  // What is this ? 
-            }
                 
             if(this.pos_widget.action_bar){
-                this.pos_widget.action_bar.set_button_disabled('validation', !this.is_paid());
-                this.pos_widget.action_bar.set_button_disabled('invoice', !this.is_paid());
+                this.pos_widget.action_bar.set_button_disabled('validation', !isPaid);
+                this.pos_widget.action_bar.set_button_disabled('invoice', !isPaid);
             }
-        },
-        is_paid: function(){
-            var currentOrder = this.pos.get('selectedOrder');
-            return (currentOrder.getTotalTaxIncluded() < 0.000001 
-                   || currentOrder.getPaidTotal() + 0.000001 >= currentOrder.getTotalTaxIncluded());
-
         },
         validate_order: function(options) {
             var self = this;
@@ -1057,7 +1049,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             var currentOrder = this.pos.get('selectedOrder');
 
-            if(!this.is_paid()){
+            if(!currentOrder.isPaid()){
                 return;
             }
 
@@ -1088,7 +1080,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 invoiced.done(function(){
                     self.pos_widget.action_bar.set_button_disabled('validation',false);
                     self.pos_widget.action_bar.set_button_disabled('invoice',false);
-                    self.pos.get('selectedOrder').destroy();
+                    self.pos.get('selectedOrder').validate();
                 });
 
             }else{
@@ -1098,7 +1090,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     this.pos.proxy.print_receipt(QWeb.render('XmlReceipt',{
                         receipt: receipt, widget: self,
                     }));
-                    this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
+                    this.pos.get('selectedOrder').validate();    //finish order and go back to scan screen
                 }else{
                     this.pos_widget.screen_selector.set_current_screen(this.next_screen);
                 }
