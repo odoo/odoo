@@ -243,8 +243,6 @@ class QWeb(orm.AbstractModel):
         return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext)
 
     def render_node(self, element, qwebcontext):
-        result = ""
-
         generated_attributes = ""
         t_render = None
         template_attributes = {}
@@ -303,7 +301,7 @@ class QWeb(orm.AbstractModel):
             g_inner = inner
         else:
             g_inner = [] if element.text is None else [element.text]
-            for current_node in element:
+            for current_node in element.iterchildren(tag=etree.Element):
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
                 except (QWebException, openerp.http.Retry):
