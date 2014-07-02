@@ -4,6 +4,54 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
     var round_di = instance.web.round_decimals;
     var round_pr = instance.web.round_precision
+
+    //PosModelFields is the first approach to make object fields inheritable. We had some issues with these so many times.
+    //For example: If you want to get user email on the final receipt. If you want to get another partner field. And many other cases.
+    //This is the first approach so it can be coded better.
+    //Right now if someone wants to add some fields to res.partner data. They can do this on their module.
+    //module.PosModelFields = module.PosModelFields.extend({
+    //    get_model_fields: function(model){
+    //        var result = this._super(model);
+    //        if (model==="res.partner"){
+    //            $.merge(result,['ci','nit','razon','razon_invoice']);
+    //        }
+    //        return result;
+    //    },
+    //});
+    module.PosModelFields = instance.web.Class.extend({
+        init: function(options){
+            options = options || {};
+            this.model_fields = {
+                'res.users':            ['name','company_id'],
+                'res.company':          ['currency_id','email','website','company_registry','vat','name','phone','partner_id',],
+                'product.uom':          [],
+                'res.users2':           ['name','ean13'],
+                'res.partner':          ['name','street','city','country_id','phone','zip','mobile','email','ean13'],
+                'account.tax':          ['name','amount', 'price_include', 'type'],
+                'pos.session':          ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number'],
+                'pos.config':           [],
+                'stock.location':       [],
+                'product.pricelist':    ['currency_id'],
+                'res.currency':         ['symbol','position','rounding','accuracy'],
+                'product.packaging':    ['ean','product_tmpl_id'],
+                'pos.category':         ['id','name','parent_id','child_id','image'],
+                'product.product':      ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 'variants',
+                                        'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
+                                        'product_tmpl_id'],
+                'account.bank.statement': ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
+                'account.journal':      [],
+            };
+        },
+        get_model_fields: function(model){
+            if (this.model_fields[model]){
+                return this.model_fields[model];
+            }
+            else
+            {
+                return [];
+            }
+        },
+    });
     
     // The PosModel contains the Point Of Sale's representation of the backend.
     // Since the PoS must work in standalone ( Without connection to the server ) 
@@ -26,6 +74,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.proxy = new module.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
             this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy, patterns: {}});  // used to read barcodes
             this.proxy_queue = new module.JobQueue();           // used to prevent parallels communications to the proxy
+            this.model_fields = new module.PosModelFields();    // used to allow users to get more fields from data.
             this.db = new module.PosDB();                       // a local database used to search trough products and categories & store pending orders
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
             
@@ -125,27 +174,17 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         load_server_data: function(){
             var self = this;
 
-            var loaded = self.fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
+            var loaded = self.fetch('res.users',self.model_fields.get_model_fields('res.users'),[['id','=',this.session.uid]])
                 .then(function(users){
                     self.user = users[0];
 
-                    return self.fetch('res.company',
-                    [
-                        'currency_id',
-                        'email',
-                        'website',
-                        'company_registry',
-                        'vat',
-                        'name',
-                        'phone',
-                        'partner_id',
-                    ],
+                    return self.fetch('res.company',self.model_fields.get_model_fields('res.company'),
                     [['id','=',users[0].company_id[0]]],
                     {show_address_only: true});
                 }).then(function(companies){
                     self.company = companies[0];
 
-                    return self.fetch('product.uom', null, null);
+                    return self.fetch('product.uom', self.model_fields.get_model_fields('product.uom'), null);
                 }).then(function(units){
                     self.units = units;
                     var units_by_id = {};
@@ -156,28 +195,28 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     }
                     self.units_by_id = units_by_id;
                     
-                    return self.fetch('res.users', ['name','ean13'], [['ean13', '!=', false]]);
+                    return self.fetch('res.users', self.model_fields.get_model_fields('res.users2'), [['ean13', '!=', false]]);
                 }).then(function(users){
                     self.users = users;
 
-                    return self.fetch('res.partner', ['name','street','city','country_id','phone','zip','mobile','email','ean13']);
+                    return self.fetch('res.partner', self.model_fields.get_model_fields('res.partner'));
                 }).then(function(partners){
                     self.partners = partners;
                     self.db.add_partners(partners);
 
-                    return self.fetch('account.tax', ['name','amount', 'price_include', 'type']);
+                    return self.fetch('account.tax', self.model_fields.get_model_fields('account.tax'));
                 }).then(function(taxes){
                     self.taxes = taxes;
 
                     return self.fetch(
                         'pos.session', 
-                        ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number'],
+                        self.model_fields.get_model_fields('pos.session'),
                         [['state', '=', 'opened'], ['user_id', '=', self.session.uid]]
                     );
                 }).then(function(pos_sessions){
                     self.pos_session = pos_sessions[0];
 
-                    return self.fetch('pos.config',[],[['id','=', self.pos_session.config_id[0]]]);
+                    return self.fetch('pos.config',self.model_fields.get_model_fields('pos.config'),[['id','=', self.pos_session.config_id[0]]]);
                 }).then(function(configs){
                     self.config = configs[0];
                     self.config.use_proxy = self.config.iface_payment_terminal || 
@@ -194,31 +233,28 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'discount': self.config.barcode_discount,
                         'price':    self.config.barcode_price,
                     });
-                    return self.fetch('stock.location',[],[['id','=', self.config.stock_location_id[0]]]);
+                    return self.fetch('stock.location',self.model_fields.get_model_fields('stock.location'),[['id','=', self.config.stock_location_id[0]]]);
                 }).then(function(shops){
                     self.shop = shops[0];
 
-                    return self.fetch('product.pricelist',['currency_id'],[['id','=',self.config.pricelist_id[0]]]);
+                    return self.fetch('product.pricelist',self.model_fields.get_model_fields('product.pricelist'),[['id','=',self.config.pricelist_id[0]]]);
                 }).then(function(pricelists){
                     self.pricelist = pricelists[0];
 
-                    return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.pricelist.currency_id[0]]]);
+                    return self.fetch('res.currency',self.model_fields.get_model_fields('res.currency'),[['id','=',self.pricelist.currency_id[0]]]);
                 }).then(function(currencies){
                     self.currency = currencies[0];
 
-                    return self.fetch('product.packaging',['ean','product_tmpl_id']);
+                    return self.fetch('product.packaging',self.model_fields.get_model_fields('product.packaging'));
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
 
-                    return self.fetch('pos.category', ['id','name','parent_id','child_id','image']);
+                    return self.fetch('pos.category', self.model_fields.get_model_fields('pos.category'));
                 }).then(function(categories){
                     self.db.add_categories(categories);
 
                     return self.fetch(
-                        'product.product',
-                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 'variants',
-                         'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
-                         'product_tmpl_id'],
+                        'product.product',self.model_fields.get_model_fields('product.product'),
                         [['sale_ok','=',true],['available_in_pos','=',true]],
                         {pricelist: self.pricelist.id} // context for price
                     );
@@ -227,7 +263,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                     return self.fetch(
                         'account.bank.statement',
-                        ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
+                        self.model_fields.get_model_fields('account.bank.statement'),
                         [['state','=','open'],['pos_session_id', '=', self.pos_session.id]]
                     );
                 }).then(function(bankstatements){
@@ -236,7 +272,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         journals.push(statement.journal_id[0]);
                     });
                     self.bankstatements = bankstatements;
-                    return self.fetch('account.journal', undefined, [['id','in', journals]]);
+                    return self.fetch('account.journal', self.model_fields.get_model_fields('account.journal'), [['id','in', journals]]);
                 }).then(function(journals){
                     self.journals = journals; 
 
