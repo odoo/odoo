@@ -242,6 +242,8 @@
                     <field name="task_count"/>
                     <field name="task_ids"/>
                     <field name="alias_id"/>
+                    <field name="alias_name"/>
+                    <field name="alias_domain"/>
                     <field name="doc_count"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -256,7 +258,7 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
-                                    <div class="oe_kanban_alias" t-if="record.alias_id.value">
+                                    <div class="oe_kanban_alias" t-if="record.alias_name.value and record.alias_domain.value">
                                         <span class="oe_e oe_e_alias">%%</span><small><field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_kanban_project_list">
