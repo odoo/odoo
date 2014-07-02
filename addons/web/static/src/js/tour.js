@@ -334,6 +334,7 @@ var Tour = {
             + '\n\n' + $("body").html();
         Tour.reset();
         if (state.mode === "test") {
+            console.log(message);
             throw new Error(message);
         }
     },
