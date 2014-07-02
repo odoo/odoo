@@ -163,7 +163,11 @@ class website_sale(http.Controller):
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list)
 
         if not context.get('pricelist'):
-            context['pricelist'] = int(self.get_pricelist())
+            pricelist = self.get_pricelist()
+            context['pricelist'] = int(pricelist)
+        else:
+            pricelist = pool.get('product.pricelist').browse(cr, uid, context['pricelist'], context)
+
         product_obj = pool.get('product.template')
 
         product_count = product_obj.search_count(cr, uid, domain, context=context)
@@ -181,8 +185,12 @@ class website_sale(http.Controller):
         categs = filter(lambda x: not x.parent_id, categories)
 
         attributes_obj = request.registry['product.attribute']
-        attributes_ids = attributes_obj.search(cr, uid, [], context=request.context)
-        attributes = attributes_obj.browse(cr, uid, attributes_ids, context=request.context)
+        attributes_ids = attributes_obj.search(cr, uid, [], context=context)
+        attributes = attributes_obj.browse(cr, uid, attributes_ids, context=context)
+
+        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+        to_currency = pricelist.currency_id
+        compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
 
         values = {
             'search': search,
@@ -190,18 +198,18 @@ class website_sale(http.Controller):
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'pager': pager,
-            'pricelist': self.get_pricelist(),
+            'pricelist': pricelist,
             'products': products,
             'bins': table_compute().process(products),
             'rows': PPR,
             'styles': styles,
             'categories': categs,
             'attributes': attributes,
+            'compute_currency': compute_currency,
             'keep': keep,
             'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
             'attrib_encode': lambda attribs: werkzeug.url_encode([('attrib',i) for i in attribs]),
         }
-
         return request.website.render("website_sale.products", values)
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
@@ -225,6 +233,12 @@ class website_sale(http.Controller):
         category_list = category_obj.name_get(cr, uid, category_ids, context=context)
         category_list = sorted(category_list, key=lambda category: category[1])
 
+        pricelist = self.get_pricelist()
+
+        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+        to_currency = pricelist.currency_id
+        compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
+
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
             product = template_obj.browse(cr, uid, int(product), context=context)
@@ -232,8 +246,9 @@ class website_sale(http.Controller):
         values = {
             'search': search,
             'category': category,
-            'pricelist': self.get_pricelist(),
+            'pricelist': pricelist,
             'attrib_values': attrib_values,
+            'compute_currency': compute_currency,
             'attrib_set': attrib_set,
             'keep': keep,
             'category_list': category_list,
@@ -265,9 +280,16 @@ class website_sale(http.Controller):
     def cart(self, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         order = request.website.sale_get_order()
+        if order:
+            from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+            to_currency = order.pricelist_id.currency_id
+            compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
+        else:
+            compute_currency = lambda price: price
 
         values = {
             'order': order,
+            'compute_currency': compute_currency,
             'suggested_products': [],
         }
         if order:
