@@ -30,9 +30,9 @@
         <link rel="stylesheet" href="/point_of_sale/static/src/css/pos.css" id="pos-stylesheet"/>
         <link rel="stylesheet" href="/point_of_sale/static/src/css/keyboard.css" />
 
-        <t t-call-assets="web.assets_common" css="false" />
-        <t t-call-assets="web.assets_backend" css="false" />
-        
+        <t t-call-assets="web.assets_common" t-css="false" />
+        <t t-call-assets="web.assets_backend" t-css="false" />
+
         <script type="text/javascript" id="loading-script">
             $(function() {
             var s = new openerp.init(<t t-raw='modules' />);
