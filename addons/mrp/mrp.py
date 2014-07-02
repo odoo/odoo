@@ -795,6 +795,7 @@ class mrp_production(osv.osv):
                         continue
 
                     raw_product[0].action_consume(qty, raw_product[0].location_id.id, context=context)
+                    production.refresh()
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
@@ -820,6 +821,7 @@ class mrp_production(osv.osv):
                     raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can only produce up to total %s quantities.') % ((subproduct_factor * production_qty), prod_name, rest_qty))
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
+                    production.refresh()
 
         for raw_product in production.move_lines2:
             new_parent_ids = []
