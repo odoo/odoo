@@ -291,9 +291,30 @@ class Website(openerp.addons.web.controllers.main.Home):
                         new_trans['gengo_comment'] = t.get('gengo_comment')
                     irt.create(request.cr, request.uid, new_trans)
         return True
+    
+    def compress_image(self, image, quality):
+        image_format = image.format
+        optimized = True
+        img = cStringIO.StringIO()
+        if image.format == 'PNG' :
+           im = Image.new("RGB", image.size, (255,255,255))
+           if image.mode in ('RGBA', 'LA','RGB'):
+               image_format = 'JPEG'
+               if image.mode == 'LA':
+                   im.paste(image, im.convert('RGBA').split()[-1])
+               if image.mode == 'RGBA':
+                   im.paste(image, image.split()[3])
+               image = im
+           image.save(img, image_format, quality=quality, optimize = optimized)
+        elif image.format == 'JPEG':
+            image.save(img, image_format, quality=quality, optimize = optimized)
+        else:
+           image.save(img, image_format, quality=quality)
+        image_data = img.getvalue()
+        return image_data
 
     @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
-    def attach(self, func, upload=None, url=None):
+    def attach(self, func, upload=None, url=None, quality=None):
         # the upload argument doesn't allow us to access the files if more than
         # one file is uploaded, as upload references the first file
         # therefore we have to recover the files from the request object
@@ -320,7 +341,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                         raise ValueError(
                             u"Image size excessive, uploaded images must be smaller "
                             u"than 42 million pixel")
-    
+                    if quality != '0':
+                        image_data = Website.compress_image(self,image,int(quality))
+                        
                     attachment_id = Attachments.create(request.cr, request.uid, {
                         'name': c_file.filename,
                         'datas': image_data.encode('base64'),

@@ -45,7 +45,7 @@
             }
         });
     });
-
+    
     /**
      * An editing host is an HTML element with @contenteditable=true, or the
      * child of a document in designMode=on (but that one's not supported)
@@ -1500,15 +1500,14 @@
             'click .existing-attachments img': 'select_existing',
             'click .existing-attachment-remove': 'try_remove',
         }),
-
         init: function (parent, editor, media) {
             this.page = 0;
+            this.quality = 0;
             this._super(parent, editor, media);
         },
         start: function () {
             var self = this;
             var res = this._super();
-
             var o = { url: null };
             // avoid typos, prevent addition of new properties to the object
             Object.preventExtensions(o);
@@ -1523,9 +1522,8 @@
                 self.page += $target.hasClass('previous') ? -1 : 1;
                 self.display_attachments();
             });
-
+            
             this.set_image(o.url);
-
             return res;
         },
         save: function () {
@@ -1571,10 +1569,12 @@
                 self.selected_existing(url);
             });
         },
-
+        
         form_submit: function (event) {
             var self = this;
-            var $form = this.$('form[action="/website/attach"]');
+            self.quality = $(".compress option:selected").val();
+            var $form = this.$('form[target="fileframe"]');
+            $form.prop("action","/website/attach?quality="+self.quality)
             if (!$form.find('input[name="upload"]').val().length) {
                 var url = $form.find('input[name="url"]').val();
                 if (this.selected_existing(url).size()) {
