@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+	<!-- Tax Codes -->
+
+        <record id="view_tax_code_search_inherit_l10n_lv" model="ir.ui.view">
+            <field name="name">account.tax.code.search.inherit.l10n.lv</field>
+            <field name="model">account.tax.code</field>
+            <field name="inherit_id" ref="account.view_tax_code_search"/>
+            <field name="arch" type="xml">
+                <data>
+          	    <xpath expr="/search/field[@name='name']" position="attributes">
+			<attribute name="filter_domain">['|', ('tax_code','ilike',self), ('name','ilike',self), ('code','ilike',self)]</attribute>
+		    </xpath>
+		</data>
+	    </field>
+	</record>
+
+        <record id="view_tax_code_tree_inherit_l10n_lv" model="ir.ui.view">
+            <field name="name">account.tax.code.tree.inherit.l10n.lv</field>
+            <field name="model">account.tax.code</field>
+            <field name="inherit_id" ref="account.view_tax_code_tree"/>
+            <field name="arch" type="xml">
+                <data>
+          	    <xpath expr="/tree/field[@name='name']" position="before">
+			<field name="tax_code"/>
+		    </xpath>
+		</data>
+	    </field>
+	</record>
+
+        <record id="view_tax_code_form_inherit_l10n_lv" model="ir.ui.view">
+            <field name="name">account.tax.code.form.inherit.l10n.lv</field>
+            <field name="model">account.tax.code</field>
+            <field name="inherit_id" ref="account.view_tax_code_form"/>
+            <field name="arch" type="xml">
+                <data>
+          	    <xpath expr="/form/group[1]/group[1]/field[@name='company_id']" position="after">
+			<field name="tax_code"/>
+		    </xpath>
+		</data>
+	    </field>
+	</record>
+
+	<!-- Tax Code Templates -->
+
+        <record id="view_tax_code_template_tree_inherit_l10n_lv" model="ir.ui.view">
+            <field name="name">account.tax.code.template.tree.inherit.l10n.lv</field>
+            <field name="model">account.tax.code.template</field>
+            <field name="inherit_id" ref="account.view_tax_code_template_tree"/>
+            <field name="arch" type="xml">
+                <data>
+          	    <xpath expr="/tree/field[@name='name']" position="before">
+			<field name="tax_code"/>
+		    </xpath>
+		</data>
+	    </field>
+	</record>
+
+        <record id="view_tax_code_template_search_inherit_l10n_lv" model="ir.ui.view">
+            <field name="name">account.tax.code.template.search.inherit.l10n.lv</field>
+            <field name="model">account.tax.code.template</field>
+            <field name="inherit_id" ref="account.view_tax_code_template_search"/>
+            <field name="arch" type="xml">
+                <data>
+          	    <xpath expr="/search/field[@name='name']" position="before">
+			<field name="tax_code"/>
+		    </xpath>
+		</data>
+	    </field>
+	</record>
+
+        <record id="view_tax_code_template_form_inherit_l10n_lv" model="ir.ui.view">
+            <field name="name">account.tax.code.template.form.inherit.l10n.lv</field>
+            <field name="model">account.tax.code.template</field>
+            <field name="inherit_id" ref="account.view_tax_code_template_form"/>
+            <field name="arch" type="xml">
+                <data>
+          	    <xpath expr="/form/group/field[@name='name']" position="before">
+			<field name="tax_code"/>
+		    </xpath>
+		</data>
+	    </field>
+	</record>
+
+    </data>
+</openerp>
