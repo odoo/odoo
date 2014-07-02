@@ -28,7 +28,7 @@ import re
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import pooler, tools
-from openerp.osv import osv, fields
+from openerp.osv import osv, fields, orm
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
 from openerp.tools.yaml_import import is_comment
@@ -696,6 +696,7 @@ class res_partner(osv.osv, format_address):
             adr_pref.add('default')
         result = {}
         visited = set()
+        partner = orm.browse_null()
         for partner in self.browse(cr, uid, filter(None, ids), context=context):
             current_partner = partner
             while current_partner:

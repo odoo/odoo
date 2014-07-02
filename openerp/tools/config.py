@@ -154,7 +154,7 @@ class configmanager(object):
         # WEB
         # TODO move to web addons after MetaOption merge
         group = optparse.OptionGroup(parser, "Web interface Configuration")
-        group.add_option("--db-filter", dest="dbfilter", default='.*',
+        group.add_option("--db-filter", dest="dbfilter", my_default='.*',
                          help="Filter listed database", metavar="REGEXP")
         parser.add_option_group(group)
 
