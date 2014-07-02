@@ -2,9 +2,9 @@
 <openerp>
 <data>
 
-<template id="assets_frontend" inherit_id="website.assets_frontend" name="Sponsors stylesheets">
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Event Track Assets">
     <xpath expr="." position="inside">
-        <link rel='stylesheet' href='/website_event_track/static/src/css/website_event_track.css'/>
+        <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
     </xpath>
 </template>
 
@@ -42,10 +42,6 @@
 
 <template id="agenda">
     <t t-call="website_event.layout">
-        <t t-set="head">
-          <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
-          <t t-raw="head or ''"/>
-        </t>
         <section class="container">
             <h1 class="text-center" t-field="event.name"/>
             <div class="form-inline pull-right">
