@@ -513,57 +513,9 @@
         <field name="parent_id" ref="vat_code_tvad_baza"/>
     </record>
     
-    <record model="account.tax.code.template" id="vat_code_tvati_baza">
-        <field name="name">BAZA TVA TAXARE INVERSA</field>
-        <field name="code">e)</field>
-        <field name="parent_id" ref="vat_code_tax"/>
-    </record>
-    
-    <record model="account.tax.code.template" id="vat_code_tvac_bazaTI">
-        <field name="name">Baza TVA Taxare inversa</field>
-        <field name="code">Baza TVA Taxare inversa</field>
-        <field name="parent_id" ref="vat_code_tvati_baza"/>
-    </record>
-    
-    <record model="account.tax.code.template" id="vat_code_tvati">
-        <field name="name">TVA TAXARE INVERSA</field>
-        <field name="code">f)</field>
-        <field name="parent_id" ref="vat_code_tax"/>
-    </record>
-    
-    <record model="account.tax.code.template" id="vat_code_tvac_tvaTI">
-        <field name="name">TVA Taxare inversa</field>
-        <field name="code">TVA Taxare inversa</field>
-        <field name="parent_id" ref="vat_code_tvati"/>
-    </record>
-
-    <record model="account.tax.code.template" id="vat_code_tvati_baza">
-        <field name="name">BAZA TVA TAXARE INVERSA</field>
-        <field name="code">e)</field>
-        <field name="parent_id" ref="vat_code_tax"/>
-    </record>
-    
-    <record model="account.tax.code.template" id="vat_code_tvac_bazaTI">
-        <field name="name">Baza TVA Taxare inversa</field>
-        <field name="code">Baza TVA Taxare inversa</field>
-        <field name="parent_id" ref="vat_code_tvati_baza"/>
-    </record>
-    
-    <record model="account.tax.code.template" id="vat_code_tvati">
-        <field name="name">TVA TAXARE INVERSA</field>
-        <field name="code">f)</field>
-        <field name="parent_id" ref="vat_code_tax"/>
-    </record>
-    
-    <record model="account.tax.code.template" id="vat_code_tvac_tvaTI">
-        <field name="name">TVA Taxare inversa</field>
-        <field name="code">TVA Taxare inversa</field>
-        <field name="parent_id" ref="vat_code_tvati"/>
-    </record>
-    
     <record model="account.tax.code.template" id="vat_code_tvanex_baza">
         <field name="name">BAZA TVA NEEXIGIBILA</field>
-        <field name="code">g)</field>
+        <field name="code">e)</field>
         <field name="parent_id" ref="vat_code_tax"/>
     </record>
     
@@ -581,7 +533,7 @@
     
     <record model="account.tax.code.template" id="vat_code_tvanex">
         <field name="name">TVA NEEXIGIBILA</field>
-        <field name="code">h)</field>
+        <field name="code">f)</field>
         <field name="parent_id" ref="vat_code_tax"/>
     </record>
     
@@ -597,9 +549,21 @@
         <field name="parent_id" ref="vat_code_tvanex"/>
     </record>
     
+    <record model="account.tax.code.template" id="vat_code_tvati_baza">
+        <field name="name">BAZA TVA TAXARE INVERSA</field>
+        <field name="code">g)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+    
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaTI">
+        <field name="name">Baza TVA Taxare inversa</field>
+        <field name="code">Baza TVA Taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvati_baza"/>
+    </record>
+    
     <record model="account.tax.code.template" id="vat_code_tvatisc_baza">
         <field name="name">BAZA TVA TAXARE INTRACOMUNITARA SCUTITA</field>
-        <field name="code">i)</field>
+        <field name="code">h)</field>
         <field name="parent_id" ref="vat_code_tax"/>
     </record>
     
@@ -617,7 +581,7 @@
     
     <record model="account.tax.code.template" id="vat_code_tvatine_baza">
         <field name="name">BAZA TVA TAXARE INTRACOMUNITARA NEIMPOZABILA</field>
-        <field name="code">k)</field>
+        <field name="code">i)</field>
         <field name="parent_id" ref="vat_code_tax"/>
     </record>
     
