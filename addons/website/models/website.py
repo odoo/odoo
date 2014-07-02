@@ -244,7 +244,8 @@ class website(osv.osv):
         return is_website_publisher
 
     def is_user(self, cr, uid, ids, context=None):
-        return self.pool['res.users'].has_group(cr, uid, 'base.group_user')
+        Access = self.pool['ir.model.access']
+        return Access.check(cr, uid, 'ir.ui.menu', 'read', False, context=context)
 
     def get_template(self, cr, uid, ids, template, context=None):
         if isinstance(template, (int, long)):

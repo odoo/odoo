@@ -233,6 +233,12 @@ class website_sale(http.Controller):
         category_list = category_obj.name_get(cr, uid, category_ids, context=context)
         category_list = sorted(category_list, key=lambda category: category[1])
 
+        pricelist = self.get_pricelist()
+
+        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+        to_currency = pricelist.currency_id
+        compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
+
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
             product = template_obj.browse(cr, uid, int(product), context=context)
@@ -240,8 +246,9 @@ class website_sale(http.Controller):
         values = {
             'search': search,
             'category': category,
-            'pricelist': self.get_pricelist(),
+            'pricelist': pricelist,
             'attrib_values': attrib_values,
+            'compute_currency': compute_currency,
             'attrib_set': attrib_set,
             'keep': keep,
             'category_list': category_list,
