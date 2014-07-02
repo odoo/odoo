@@ -1,26 +1,47 @@
 (function () {
     'use strict';
 
-    openerp.website.Theme = openerp.Widget.extend({
-        events: {
-            'change input[data-xmlid],input[data-enable],input[data-disable]': 'change_selection',
-            'click .close': 'close',
-        },
-        init: function (parent) {
-            this.rpc_modal = openerp.jsonRpc('/website/theme_customize_modal', 'call');
-            return this._super.apply(this, arguments);
-        },
+    openerp.Widget.include({
+        templateServerSide: false,
         __widgetRenderAndInsert: function (insertion, target) {
             var self = this;
             var def = new $.Deferred();
-            this.rpc_modal.then(function (modal) {
-                self.replaceElement($(modal));
+            this.renderElement().then(function () {
                 insertion(target);
                 $.when(self.start()).then(function () {
                     def.resolve.apply(def, arguments);
                 });
             });
             return def;
+        },
+        renderElement: function() {
+            var $el, self = this;
+            if (this.template && this.templateServerSide) {
+                return openerp.jsonRpc('/web/dataset/call', 'call', {
+                    model: 'ir.ui.view',
+                    method: 'render',
+                    args: [this.template, this.__getterSetterInternalMap, 'ir.qweb', openerp.website.get_context()]
+                }).then(function (el) {
+                    self.replaceElement($(el));
+                });
+            }
+            if (this.template) {
+                $el = $(openerp.qweb.render(this.template, {widget: this}).trim());
+            } else {
+                $el = this._make_descriptive();
+            }
+            this.replaceElement($el);
+            return $.when();
+        },
+    });
+
+
+    openerp.website.Theme = openerp.Widget.extend({
+        templateServerSide: true,
+        template: 'website.theme_customize',
+        events: {
+            'change input[data-xmlid],input[data-enable],input[data-disable]': 'change_selection',
+            'click .close': 'close',
         },
         start: function () {
             var self = this;
@@ -93,8 +114,7 @@
         },
         compute_stylesheets: function () {
             var self = this;
-            if (this.$el.hasClass("loading")) return;
-            this.$el.addClass("loading");
+            $('link[href*=".assets_"]').attr('data-loading', true);
             function theme_customize_css_onload() {
                 if ($('link[data-loading]').size()) {
                     $('body').toggleClass('theme_customize_css_loading');
@@ -107,15 +127,17 @@
             theme_customize_css_onload();
         },
         update_style: function (enable, disable, reload) {
-            var req = openerp.jsonRpc('/website/theme_customize', 'call', {
-                    'enable': enable,
-                    'disable': disable
-                });
+            if (this.$el.hasClass("loading")) return;
+            this.$el.addClass("loading");
+
             var $assets = $('link[href*=".assets_"]');
             if (!reload && $assets.size()) {
-                $assets.attr('data-loading', true);
                 this.compute_stylesheets();
-                req.then(function () {
+
+                return openerp.jsonRpc('/website/theme_customize', 'call', {
+                        'enable': enable,
+                        'disable': disable
+                    }).then(function () {
                     $assets.each(function () {
                         var href = $(this).attr("href").replace(/[^\/]+$/, new Date().getTime());
                         var $asset = $('<link rel="stylesheet" href="'+href+'"/>');
@@ -125,12 +147,12 @@
                         $(this).after($asset);
                     });
                 });
-                return req;
             } else {
-                setTimeout(function () {
-                    window.location.hash = "theme=true";
-                    window.location.reload();
-                },25);
+                var href = '/website/theme_customize_reload'+
+                    '?href='+encodeURIComponent(window.location.href)+
+                    '&enable='+encodeURIComponent(enable.join(","))+
+                    '&disable='+encodeURIComponent(disable.join(","));
+                window.location.href = href;
                 return $.Deferred();
             }
         },

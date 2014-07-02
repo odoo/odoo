@@ -328,10 +328,6 @@ class Website(openerp.addons.web.controllers.main.Home):
     # Themes
     #------------------------------------------------------
 
-    @http.route(['/website/theme_customize_modal'], type='json', auth="public", website=True)
-    def theme_customize_modal(self):
-        return request.website._render('website.theme_customize')
-
     def get_view_ids(self, xml_ids):
         ids = []
         imd = request.registry['ir.model.data']
@@ -379,6 +375,11 @@ class Website(openerp.addons.web.controllers.main.Home):
         set_application(enable, 'enabled')
 
         return True
+
+    @http.route(['/website/theme_customize_reload'], type='http', auth="public", website=True)
+    def theme_customize_reload(self, href, enable, disable):
+        self.theme_customize(enable and enable.split(",") or [],disable and disable.split(",") or [])
+        return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true"))
 
     #------------------------------------------------------
     # Helpers
