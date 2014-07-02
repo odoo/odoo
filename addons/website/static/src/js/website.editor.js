@@ -754,7 +754,7 @@
         },
     });
 
-    website.ready().done(function() {
+    $(document).ready(function() {
         var editorBarCustomize = new website.EditorBarCustomize();
         editorBarCustomize.setElement($('li[id=customize-menu]'));
         editorBarCustomize.start();
