@@ -335,7 +335,7 @@ var Tour = {
         Tour.reset();
         if (state.mode === "test") {
             console.log(message);
-            throw new Error(message);
+            Tour.endTour();
         }
     },
     lists: function () {
