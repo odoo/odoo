@@ -280,10 +280,12 @@ class website_sale(http.Controller):
     def cart(self, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         order = request.website.sale_get_order()
-
-        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
-        to_currency = order.pricelist_id.currency_id
-        compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
+        if order:
+            from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+            to_currency = order.pricelist_id.currency_id
+            compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
+        else:
+            compute_currency = lambda price: price
 
         values = {
             'order': order,
