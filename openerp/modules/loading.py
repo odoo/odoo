@@ -138,7 +138,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         registry.fields_by_model.setdefault(field['model'], []).append(field)
 
     # register, instantiate and initialize models for each modules
-    ta0 = time.time()
+    t0 = time.time()
+    t0_sql = openerp.sql_db.sql_counter
 
     for index, package in enumerate(graph):
         module_name = package.name
@@ -146,8 +147,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         if skip_modules and module_name in skip_modules:
             continue
-
-        tm0 = time.time()
 
         migrations.migrate_module(package, 'pre')
         load_openerp_module(package.name)
@@ -226,12 +225,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 if hasattr(package, kind):
                     delattr(package, kind)
 
-            #_logger.log(25, "%s loaded in %.2fs", package.name, time.time() - tm0)
-
         registry._init_modules.add(package.name)
         cr.commit()
 
-    _logger.log(25, "%s modules loaded in %.2fs", len(graph), time.time() - ta0)
+    _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
     # The query won't be valid for models created later (i.e. custom model
     # created after the registry has been loaded), so empty its result.
@@ -460,12 +457,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # STEP 9: Run the post-install tests
         cr.commit()
 
-        ta0 = time.time()
+        t0 = time.time()
+        t0_sql = openerp.sql_db.sql_counter
         if openerp.tools.config['test_enable']:
             cr.execute("SELECT name FROM ir_module_module WHERE state='installed'")
             for module_name in cr.fetchall():
                 report.record_result(openerp.modules.module.run_unit_tests(module_name[0], cr.dbname, position=runs_post_install))
-            _logger.log(25, "All post-tested in %.2fs", time.time() - ta0)
+            _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
     finally:
         cr.close()
 

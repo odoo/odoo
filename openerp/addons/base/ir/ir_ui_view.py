@@ -519,7 +519,7 @@ class view(osv.osv):
         if context is None: context = {}
         if root_id is None:
             root_id = source_id
-        sql_inherit = self.pool['ir.ui.view'].get_inheriting_views_arch(cr, uid, source_id, model, context=context)
+        sql_inherit = self.get_inheriting_views_arch(cr, uid, source_id, model, context=context)
         for (specs, view_id) in sql_inherit:
             specs_tree = etree.fromstring(specs.encode('utf-8'))
             if context.get('inherit_branding'):
