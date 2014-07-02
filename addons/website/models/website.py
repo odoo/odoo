@@ -240,7 +240,7 @@ class website(osv.osv):
 
     def is_publisher(self, cr, uid, ids, context=None):
         Access = self.pool['ir.model.access']
-        is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
+        is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context=context)
         return is_website_publisher
 
     def is_user(self, cr, uid, ids, context=None):
