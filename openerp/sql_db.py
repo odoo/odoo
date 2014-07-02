@@ -237,12 +237,15 @@ class Cursor(object):
                 _logger.exception("bad query: %s", self._obj.query or query)
             raise
 
+        # simple query count is always computed
+        self.sql_log_count += 1
+
+        # advanced stats only if sql_log is enabled
         if self.sql_log:
             delay = mdt.now() - now
             delay = delay.seconds * 1E6 + delay.microseconds
 
             _logger.debug("query: %s", self._obj.query)
-            self.sql_log_count+=1
             res_from = re_from.match(query.lower())
             if res_from:
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
@@ -263,7 +266,7 @@ class Cursor(object):
 
     def print_log(self):
         global sql_counter
-        sql_counter += self.sql_log_count
+
         if not self.sql_log:
             return
         def process(type):
@@ -294,6 +297,8 @@ class Cursor(object):
         return self._close(False)
 
     def _close(self, leak=False):
+        global sql_counter
+
         if not self._obj:
             return
 
@@ -301,6 +306,11 @@ class Cursor(object):
 
         if self.sql_log:
             self.__closer = frame_codeinfo(currentframe(),3)
+
+        # simple query count is always computed
+        sql_counter += self.sql_log_count
+
+        # advanced stats only if sql_log is enabled
         self.print_log()
 
         self._obj.close()

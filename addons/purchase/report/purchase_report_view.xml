@@ -36,22 +36,6 @@
                     <field name="date_approve"/>
                     <field name="expected_date"/>
                 </group>
-                <newline/>
-                <group expand="1" string="Group By">
-                    <filter string="Supplier" name="group_partner_id" icon="terp-personal" context="{'group_by':'partner_id'}"/>
-                    <filter string="Responsible" name="Responsible" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <filter string="Validated by" icon="terp-personal" context="{'group_by':'validator'}"/>
-                    <filter string="Product" name="group_product_id" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                    <filter string="Category" name="group_category_id" icon="terp-stock_symbol-selection" context="{'group_by':'category_id'}"/>
-                    <filter string="Warehouse" icon="terp-go-home" context="{'group_by':'picking_type_id'}"/>
-                    <filter string="Reference UOM" name="group_product_uom" icon="terp-mrp" context="{'group_by':'product_uom'}"/>
-                    <filter string="Destination" icon="terp-gtk-jump-to-ltr" context="{'group_by':'location_id'}"/>
-                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Order Date (day)" icon="terp-go-today" context="{'group_by':'date:day'}" help="Order of Day"/>
-                    <filter string="Order Date (month)" icon="terp-go-month" context="{'group_by':'date:month'}" help="Order of Day"/>
-                    <filter string="Order Date (year)" icon="terp-go-year" context="{'group_by':'date:year'}" help="Order of Day"/>
-                </group>
             </search>
         </field>
     </record>

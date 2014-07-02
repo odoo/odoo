@@ -31,6 +31,7 @@ import openerp.exceptions
 from openerp.osv import fields,osv, expression
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
+from openerp.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -321,6 +322,10 @@ class res_users(osv.osv):
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
         self.context_get.clear_cache(self)
+        if request:
+            if uid in ids and 'lang' in values:
+                request.session.get_context()
+                request.session.modified = True
         return res
 
     def unlink(self, cr, uid, ids, context=None):
