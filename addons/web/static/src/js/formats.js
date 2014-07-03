@@ -361,4 +361,52 @@ instance.web.round_decimals = function(value, decimals){
     return instance.web.round_precision(value, Math.pow(10,-decimals));
 };
 
+/**
++ * 
++ * convert python.strftime format into moment.js format
++ * inspired from : https://github.com/uruz/moment-datetime/blob/master/moment-datetime.js
++*/
+instance.web.convert_to_moment_format = function(format){
+    if (!format)
+        return false;
+    var replacements = {
+            'a': 'ddd',
+            'A': 'dddd',
+            'b': 'MMM',
+            'B': 'MMMM',
+            //'c': //%c is defined too vaguely
+            'd': 'DD',
+            //'f': JS have no support for microseconds and moment.js have no support for milliseconds
+            'H': 'HH',
+            'I': 'hh',
+            'j': 'DDDD',
+            'm': 'MM',
+            'M': 'mm',
+            'p': 'A',
+            'S': 'ss',
+            'U': 'ww',//ww is for Sunday-based week
+            'w': 'd',
+            //'W': 'ww',//%W is weeknumber for weeks starting from Monday and it is not implemented in moment.js
+            //'x':
+            //'X': //%x and %X are defined too vaguely to be implemented 
+            'y': 'YY',
+            'Y': 'YYYY',
+            'z': 'ZZ',
+            //'Z': 'z', - moment.js does not support timezone names
+            '%': '%'
+    }
+    var moment_format = '', directive_index = 0, replacement, unformatted;
+    while (format.indexOf('%') !== -1){
+        directive_index = format.indexOf('%') + 1;
+        replacement = replacements[format[directive_index]];
+        unformatted = format.substr(0, directive_index-1);
+        if (unformatted.length){
+                unformatted = '[' + unformatted.replace(/(\[|\])/g, '\\$&') +']';
+        }
+        moment_format += unformatted + (replacement ? replacement : format[directive_index]);
+        format = format.substr(directive_index+1);
+    }
+    return moment_format;
+};
+
 })();
