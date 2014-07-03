@@ -64,5 +64,5 @@
    ram_sn_4 = [line for line in ram_lines if line.prodlot_id.name == 'ram_sn_4']
    ram_sn_3_qty = ram_sn_3 and ram_sn_3[0].product_qty or None
    ram_sn_4_qty = ram_sn_4 and ram_sn_4[0].product_qty or None
-   assert ram_sn_3_qty == 5, 'should have consumed 5 ram_sn_3, not %d' % ram_sn_3_qty
-   assert ram_sn_4_qty == 5, 'should have consumed 5 ram_sn+4. not %d' % ram_sn_4_qty
+   assert ram_sn_3_qty == 5, 'should have consumed 5 ram_sn_3, not %s' % ram_sn_3_qty
+   assert ram_sn_4_qty == 5, 'should have consumed 5 ram_sn+4. not %s' % ram_sn_4_qty
