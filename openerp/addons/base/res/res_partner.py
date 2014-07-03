@@ -344,6 +344,7 @@ class res_partner(osv.osv, format_address):
         value = {}
         value['title'] = False
         if is_company:
+            value['use_parent_address'] = False
             domain = {'title': [('domain', '=', 'partner')]}
         else:
             domain = {'title': [('domain', '=', 'contact')]}
@@ -363,9 +364,10 @@ class res_partner(osv.osv, format_address):
                                                       'was never correctly set. If an existing contact starts working for a new '
                                                       'company then a new contact should be created under that new '
                                                       'company. You can use the "Discard" button to abandon this change.')}
-            parent = self.browse(cr, uid, parent_id, context=context)
-            address_fields = self._address_fields(cr, uid, context=context)
-            result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
+            if use_parent_address:
+                parent = self.browse(cr, uid, parent_id, context=context)
+                address_fields = self._address_fields(cr, uid, context=context)
+                result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
         else:
             result['value'] = {'use_parent_address': False}
         return result
