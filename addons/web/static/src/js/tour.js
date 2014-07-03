@@ -335,7 +335,8 @@ var Tour = {
         Tour.reset();
         if (state.mode === "test") {
             console.log(message);
-            Tour.endTour();
+            console.log("Tour '"+state.id+"' finish: error");
+            console.log('error');
         }
     },
     lists: function () {
@@ -398,7 +399,7 @@ var Tour = {
         var state = Tour.getState();
         var time = new Date().getTime();
         var timer;
-        var next = state.tour.steps[state.step.id+1];
+        var next = state.step.next ? Tour.search_step(state.step.next) : state.tour.steps[state.step.id+1];
         var overlaps = state.mode === "test" ? Tour.errorDelay : 0;
 
         window.onbeforeunload = function () {
@@ -417,6 +418,9 @@ var Tour = {
                 // use an other timeout for cke dom loading
                 Tour.saveState(state.id, state.mode, state.step.id, 0);
                 setTimeout(function () {
+                    if (state.step.onend && Tour._goto(state.step.onend())) {
+                        return;
+                    }
                     Tour.nextStep(next);
                 }, Tour.defaultDelay);
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
@@ -427,6 +431,30 @@ var Tour = {
         }
         checkNext();
     },
+    search_step: function (id_or_title) {
+        var state = Tour.getState();
+        if (id_or_title !== undefined) {
+            if (isNaN(id_or_title)) {
+                for (var k=0; k<state.tour.steps.length; k++) {
+                    if (state.tour.steps[k].title === id_or_title || state.tour.steps[k]._title === id_or_title) {
+                        return state.tour.steps[k];
+                    }
+                }
+            } else {
+                return state.tour.steps[id_or_title];
+            }
+        }
+        return undefined;
+    },
+    _goto: function (id_or_title) {
+        var state = Tour.getState();
+        if (!state) return true;
+        if (id_or_title === undefined) return false;
+        var step = Tour.search_step(id_or_title);
+        Tour.saveState(state.id, state.mode, step.id, 0);
+        Tour.nextStep(Tour.getState().step);
+        return true;
+    },
     nextStep: function (step) {
         var state = Tour.getState();
 
@@ -435,7 +463,7 @@ var Tour = {
         }
 
         step = step || state.step;
-        var next = state.tour.steps[step.id+1];
+        var next = state.step.next ? Tour.search_step(state.step.next) : state.tour.steps[step.id+1];
 
         if (state.mode === "test" && state.number > 3) {
             return Tour.error(next, "Cycling. Can't reach the next step");
@@ -443,14 +471,15 @@ var Tour = {
         
         Tour.saveState(state.id, state.mode, step.id, state.number);
 
-        if (step.id !== state.step_id) {
+        if (state.number === 1) {
             console.log("Tour '"+state.id+"' Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
         }
 
         Tour.autoTogglePopover(true);
 
-        if (step.onload) {
-            step.onload();
+        // onload a step you can fallback to an other step
+        if (step.onload && Tour._goto(step.onload())) {
+            return;
         }
 
         if (next) {
