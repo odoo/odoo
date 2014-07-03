@@ -35,21 +35,21 @@ class inter_company_rules_configuration(osv.TransientModel):
             company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
             set_type = False
             if company.so_from_po or company.po_from_so or company.auto_validation:
-                set_type =  'so_and_po'
+                set_type = 'so_and_po'
             elif company.auto_generate_invoices:
                 set_type = 'invoice_and_refunds'
             values.update({
                 'set_type': set_type,
                 'so_from_po': company.so_from_po,
                 'po_from_so': company.po_from_so,
-                'auto_validation' : company.auto_validation,
-                'warehouse_id' : company.warehouse_id.id,
+                'auto_validation': company.auto_validation,
+                'warehouse_id': company.warehouse_id.id,
             })
         return {'value': values}
 
     def set_inter_company_configuration(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context=context)
-        if config.company_id.id:
+        if config.company_id:
             vals = {
                 'so_from_po': config.so_from_po,
                 'po_from_so': config.po_from_so,
@@ -57,6 +57,7 @@ class inter_company_rules_configuration(osv.TransientModel):
                 'auto_generate_invoices': True if config.set_type == 'invoice_and_refunds' else False,
                 'warehouse_id': config.warehouse_id.id
             }
-        return self.pool.get('res.company').write(cr, uid, [config.company_id.id], vals, context=context)
+            self.pool.get('res.company').write(cr, uid, [config.company_id.id], vals, context=context)
+        return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

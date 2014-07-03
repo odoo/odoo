@@ -82,7 +82,8 @@ class account_invoice(osv.osv):
 
     def _prepare_inv(self, cr, uid, invoice, inv_lines, inv_type, jrnl_type, company, context=None):
         """ Generate invoice dictionary """
-        context = context or {}
+        if context is None:
+            context = {}
         journal_obj = self.pool.get('account.journal')
         period_obj = self.pool.get('account.period')
 
@@ -99,21 +100,21 @@ class account_invoice(osv.osv):
         partner_data = self.onchange_partner_id(cr, uid, [invoice.id], inv_type, invoice.company_id.partner_id.id, company_id=company.id)
 
         return {
-                'name': invoice.name,
-                'origin': invoice.company_id.name + _(' Invoice: ') + str(invoice.number),
-                'type': inv_type,
-                'date_invoice': invoice.date_invoice,
-                'reference': invoice.reference,
-                'account_id': partner_data['value'].get('account_id', False),
-                'partner_id': invoice.company_id.partner_id.id,
-                'journal_id': journal_ids[0],
-                'invoice_line': [(6, 0, inv_lines)],
-                'currency_id': invoice.currency_id and invoice.currency_id.id,
-                'fiscal_position': partner_data['value'].get('fiscal_position', False),
-                'payment_term': partner_data['value'].get('payment_term', False),
-                'company_id': company.id,
-                'period_id': period_ids and period_ids[0] or False,
-                'partner_bank_id': partner_data['value'].get('partner_bank_id', False),
-                'auto_generated': True,
-                'auto_invoice_id': invoice.id,
+            'name': invoice.name,
+            'origin': invoice.company_id.name + _(' Invoice: ') + str(invoice.number),
+            'type': inv_type,
+            'date_invoice': invoice.date_invoice,
+            'reference': invoice.reference,
+            'account_id': partner_data['value'].get('account_id', False),
+            'partner_id': invoice.company_id.partner_id.id,
+            'journal_id': journal_ids[0],
+            'invoice_line': [(6, 0, inv_lines)],
+            'currency_id': invoice.currency_id and invoice.currency_id.id,
+            'fiscal_position': partner_data['value'].get('fiscal_position', False),
+            'payment_term': partner_data['value'].get('payment_term', False),
+            'company_id': company.id,
+            'period_id': period_ids and period_ids[0] or False,
+            'partner_bank_id': partner_data['value'].get('partner_bank_id', False),
+            'auto_generated': True,
+            'auto_invoice_id': invoice.id,
         }
