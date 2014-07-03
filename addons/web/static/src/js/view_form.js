@@ -2578,10 +2578,10 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
 
 instance.web.DateTimeWidget = instance.web.Widget.extend({
     template: "web.datepicker",
-    jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
     events: {
-        'change .oe_datepicker_master': 'change_datetime',
+        'dp.change .oe_datepicker_main': 'change_datetime',
+        'dp.show .oe_datepicker_main': 'change_datetime',
         'keypress .oe_datepicker_master': 'change_datetime',
     },
     init: function(parent) {
@@ -2590,81 +2590,31 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
+        var l10n = _t.database.parameters;
+        var options = {
+            pickTime: true,
+            useSeconds: true,
+            startDate: new moment({ y: 1900 }),
+            endDate: new moment().add(200, "y"),
+            calendarWeeks: true,
+            icons : {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down'
+               },
+            language: this.session.match_locale(),
+            format : instance.web.convert_to_moment_format(l10n.date_format +' '+ l10n.time_format),
+        };
         this.$input = this.$el.find('input.oe_datepicker_master');
-        this.$input_picker = this.$el.find('input.oe_datepicker_container');
-
-        $.datepicker.setDefaults({
-            clearText: _t('Clear'),
-            clearStatus: _t('Erase the current date'),
-            closeText: _t('Done'),
-            closeStatus: _t('Close without change'),
-            prevText: _t('<Prev'),
-            prevStatus: _t('Show the previous month'),
-            nextText: _t('Next>'),
-            nextStatus: _t('Show the next month'),
-            currentText: _t('Today'),
-            currentStatus: _t('Show the current month'),
-            monthNames: Date.CultureInfo.monthNames,
-            monthNamesShort: Date.CultureInfo.abbreviatedMonthNames,
-            monthStatus: _t('Show a different month'),
-            yearStatus: _t('Show a different year'),
-            weekHeader: _t('Wk'),
-            weekStatus: _t('Week of the year'),
-            dayNames: Date.CultureInfo.dayNames,
-            dayNamesShort: Date.CultureInfo.abbreviatedDayNames,
-            dayNamesMin: Date.CultureInfo.shortestDayNames,
-            dayStatus: _t('Set DD as first week day'),
-            dateStatus: _t('Select D, M d'),
-            firstDay: Date.CultureInfo.firstDayOfWeek,
-            initStatus: _t('Select a date'),
-            isRTL: false
-        });
-        $.timepicker.setDefaults({
-            timeOnlyTitle: _t('Choose Time'),
-            timeText: _t('Time'),
-            hourText: _t('Hour'),
-            minuteText: _t('Minute'),
-            secondText: _t('Second'),
-            currentText: _t('Now'),
-            closeText: _t('Done')
-        });
-
-        this.picker({
-            onClose: this.on_picker_select,
-            onSelect: this.on_picker_select,
-            changeMonth: true,
-            changeYear: true,
-            showWeek: true,
-            showButtonPanel: true,
-            firstDay: Date.CultureInfo.firstDayOfWeek
-        });
-        // Some clicks in the datepicker dialog are not stopped by the
-        // datepicker and "bubble through", unexpectedly triggering the bus's
-        // click event. Prevent that.
-        this.picker('widget').click(function (e) { e.stopPropagation(); });
-
-        this.$el.find('img.oe_datepicker_trigger').click(function() {
-            if (self.get("effective_readonly") || self.picker('widget').is(':visible')) {
-                self.$input.focus();
-                return;
-            }
-            self.picker('setDate', self.get('value') ? instance.web.auto_str_to_date(self.get('value')) : new Date());
-            self.$input_picker.show();
-            self.picker('show');
-            self.$input_picker.hide();
-        });
+        if (this.type_of_date === 'date') {
+            options['pickTime'] = false;
+            options['useSeconds'] = false;
+            options['format'] = instance.web.convert_to_moment_format(l10n.date_format);
+        }
+        this.picker = this.$('.oe_datepicker_main').datetimepicker(options);
         this.set_readonly(false);
         this.set({'value': false});
-    },
-    picker: function() {
-        return $.fn[this.jqueryui_object].apply(this.$input_picker, arguments);
-    },
-    on_picker_select: function(text, instance_) {
-        var date = this.picker('getDate');
-        this.$input
-            .val(date ? this.format_client(date) : '')
-            .change()
-            .focus();
     },
     set_value: function(value_) {
         this.set({'value': value_});
@@ -2680,7 +2630,6 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     set_readonly: function(readonly) {
         this.readonly = readonly;
         this.$input.prop('readonly', this.readonly);
-        this.$el.find('img.oe_datepicker_trigger').toggleClass('oe_input_icon_disabled', readonly);
     },
     is_valid_: function() {
         var value_ = this.$input.val();
@@ -2704,7 +2653,17 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     change_datetime: function(e) {
         if ((e.type !== "keypress" || e.which === 13) && this.is_valid_()) {
             this.set_value_from_ui_();
+            this.set_value(this.get('value')); //reformat date and show it correctly
             this.trigger("datetime_changed");
+            //when opening datetimepicker the date and time by default should be the one from
+            //the input field if any or the current day otherwise
+            if (this.type_of_date === 'datetime') {
+                value = new moment().second(0);
+                if (this.$input.val().length !== 0 && this.is_valid_()){
+                    var value = this.$input.val();
+                }
+                this.$('.oe_datepicker_main').data('DateTimePicker').setValue(value);
+            }
         }
     },
     commit_value: function () {
@@ -2713,7 +2672,6 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
 });
 
 instance.web.DateWidget = instance.web.DateTimeWidget.extend({
-    jqueryui_object: 'datepicker',
     type_of_date: "date"
 });
 
