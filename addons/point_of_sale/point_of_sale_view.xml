@@ -535,6 +535,10 @@
                         <field name="income_pdt"/>
                         <field name="expense_pdt"/>
                     </group>
+                    <group name="pos" string="Fidelity">
+                        <field name="fidpoints_override"/>
+                        <field name="fidpoints"/>
+                    </group>
                 </group>
                 <field name="ean13" position="after">
                     <button colspan="2" name="edit_ean" type="object" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
@@ -724,9 +728,10 @@
 
                     <group col="2">
                         <field name="name" />
-                        <field name="fidpoints_currency" />
-                        <field name="fidpoints_product" />
-                        <field name="fidpoints_sale" />
+                        <field name="currency" />
+                        <field name="product" />
+                        <field name="order" />
+                        <field name="rounding" />
                     </group>
 
                 </form>

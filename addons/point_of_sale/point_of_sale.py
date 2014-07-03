@@ -205,20 +205,29 @@ class pos_config(osv.osv):
         return super(pos_config, self).unlink(cr, uid, ids, context=context)
 
 class pos_fidelity(osv.osv):
+    """
+    This model represents a fidelity card system, and contains the rules used to compute
+    how fidelity points are won by clients. It is activated when it is linked in the pos
+    configuration. It is likely that there will only be one fidelity card system per shop
+    and it is a separate object mainly to prevent having to duplicate the rules on each pos
+    configuration.
+    """
     _name = 'pos.fidelity'
 
     _columns = {
         'name' : fields.char('Fidelity Card Name', size=32, select=1,
              required=True, help="An internal identification for the fidelity card configuration"),
-        'fidpoints_currency': fields.float('Points per paid currency',help="How many fidelity points are given to the customer by sold currency"),
-        'fidpoints_product':  fields.float('Points per sold product',help="How many fidelity points are given to the customer by product sold"),
-        'fidpoints_sale':     fields.float('Points per sale',help="How many fidelity points are given to the customer for each sale"),
+        'currency': fields.float('Points per paid currency',help="How many fidelity points are given to the customer by sold currency"),
+        'product':  fields.float('Points per sold product',help="How many fidelity points are given to the customer by product sold"),
+        'order':     fields.float('Points per order',help="How many fidelity points are given to the customer for each sale or order"),
+        'rounding': fields.float('Rounding', help="The Fidelity Points amount are rounded to multiples of this value.")
     }
 
     _defaults = {
-        'fidpoints_currency': 0,
-        'fidpoints_product':  0,
-        'fidpoints_sale':     0,
+        'currency': 0,
+        'product':  0,
+        'order':     0,
+        'rounding': 1,
     }
 
 class pos_session(osv.osv):
@@ -1423,11 +1432,16 @@ class product_template(osv.osv):
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
         'to_weight' : fields.boolean('To Weigh', help="Check if the product should be weighted (mainly used with self check-out interface)."),
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category', help="Those categories are used to group similar products for point of sale."),
+        'fidpoints_override': fields.boolean('Ignore Fidelity Rules', help='This product will not be counted in the rules used to compute fidelity points such a number of product sold, or total sale amount. But extra fidelity points are taken into account'),
+        'fidpoints': fields.float('Extra Fidelity Points', help='This product will win an extra amount of Fidelity Point. This amount can also be set negative to make the product cost fidelity points'),
+
     }
 
     _defaults = {
         'to_weight' : False,
         'available_in_pos': True,
+        'fidpoints_override': False,
+        'fidpoints': 0,
     }
 
     def edit_ean(self, cr, uid, ids, context):

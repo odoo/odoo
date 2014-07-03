@@ -290,7 +290,7 @@
         <tr class='client-line' t-att-data-id='partner.id'>
             <td><t t-esc='partner.name' /></td>
             <td><t t-esc='partner.address' /></td>
-            <td><t t-esc='partner.fidpoints.toFixed(0)' /></td>
+            <td><t t-esc='fidpoints' /></td>
         </tr>
     </t>
 
@@ -739,7 +739,7 @@
                 <span class='value'><t t-esc='wonpoints'/></span> Points. 
             </span>
             <span class='total'>
-                Total: <span class='value'><t t-esc='totalpoints' /></span>
+                Total:&amp;nbsp;<span class='value'><t t-esc='totalpoints' /></span>
             </span>
         </div>
     </t>

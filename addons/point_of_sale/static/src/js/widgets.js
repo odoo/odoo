@@ -275,11 +275,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             if(this.pos.fidelity && order.get_client()){
                 var points = order.getWonFidpoints();
-                var total  = order.get_client().fidpoints + points;
-                if( points ){
-                    points = points > 0 ? '+'+points : +points;
+                var total_str  = this.format_pr(order.get_client().fidpoints + points, this.pos.fidelity.rounding);
+                var points_str = this.format_pr(points,this.pos.fidelity.rounding); 
+                if( points && points > 0 ){
+                    points_str = '+' + points_str;
                 }
-                $fidpoints.replaceWith($(QWeb.render('FidelityPoints',{ widget:this, totalpoints:total, wonpoints: points })));
+                $fidpoints.replaceWith($(QWeb.render('FidelityPoints',{ 
+                    widget: this, 
+                    totalpoints: total_str, 
+                    wonpoints: points_str 
+                })));
                 $fidpoints.removeClass('oe_hidden');
             }else{
                 $fidpoints.empty();
