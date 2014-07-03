@@ -4,6 +4,7 @@ import cStringIO
 import datetime
 import hashlib
 import json
+import itertools
 import logging
 import math
 import os
@@ -11,15 +12,13 @@ import re
 import sys
 import textwrap
 import uuid
-import xml  # FIXME use lxml and etree
-import itertools
-import lxml.html
-import werkzeug
 from subprocess import Popen, PIPE
 from urlparse import urlparse
 
 import babel
 import babel.dates
+import werkzeug
+from lxml import etree, html
 from PIL import Image
 
 import openerp.http
@@ -116,7 +115,6 @@ class QWeb(orm.AbstractModel):
 
     _name = 'ir.qweb'
 
-    node = xml.dom.Node
     _void_elements = frozenset([
         'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
         'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
@@ -164,18 +162,17 @@ class QWeb(orm.AbstractModel):
         if hasattr(document, 'documentElement'):
             dom = document
         elif document.startswith("<?xml"):
-            dom = xml.dom.minidom.parseString(document)
+            dom = etree.fromstring(document)
         else:
-            dom = xml.dom.minidom.parse(document)
+            dom = etree.parse(document)
 
-        for node in dom.documentElement.childNodes:
-            if node.nodeType == self.node.ELEMENT_NODE:
-                if node.getAttribute('t-name'):
-                    name = str(node.getAttribute("t-name"))
-                    self.add_template(qwebcontext, name, node)
-                if res_id and node.tagName == "t":
-                    self.add_template(qwebcontext, res_id, node)
-                    res_id = None
+        for node in dom:
+            if node.get('t-name'):
+                name = str(node.get("t-name"))
+                self.add_template(qwebcontext, name, node)
+            if res_id and node.tag == "t":
+                self.add_template(qwebcontext, res_id, node)
+                res_id = None
 
     def get_template(self, name, qwebcontext):
         origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
@@ -246,53 +243,50 @@ class QWeb(orm.AbstractModel):
         return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext)
 
     def render_node(self, element, qwebcontext):
-        result = ""
-        if element.nodeType == self.node.TEXT_NODE or element.nodeType == self.node.CDATA_SECTION_NODE:
-            result = element.data.encode("utf8")
-        elif element.nodeType == self.node.ELEMENT_NODE:
-            generated_attributes = ""
-            t_render = None
-            template_attributes = {}
-            for (attribute_name, attribute_value) in element.attributes.items():
-                attribute_name = str(attribute_name)
-                if attribute_name == "groups":
-                    cr = qwebcontext.get('request') and qwebcontext['request'].cr or None
-                    uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
-                    can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
-                    if not can_see:
-                        if qwebcontext.get('editable') and not qwebcontext.get('editable_no_editor'):
-                            errmsg = _("Editor disabled because some content can not be seen by a user who does not belong to the groups %s")
-                            raise openerp.http.Retry(
-                                _("User does not belong to groups %s") % attribute_value, {
-                                    'editable_no_editor': errmsg % attribute_value
-                                })
-                        return ''
+        generated_attributes = ""
+        t_render = None
+        template_attributes = {}
+        for (attribute_name, attribute_value) in element.attrib.iteritems():
+            attribute_name = str(attribute_name)
+            if attribute_name == "groups":
+                cr = qwebcontext.get('request') and qwebcontext['request'].cr or None
+                uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
+                can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
+                if not can_see:
+                    if qwebcontext.get('editable') and not qwebcontext.get('editable_no_editor'):
+                        errmsg = _("Editor disabled because some content can not be seen by a user who does not belong to the groups %s")
+                        raise openerp.http.Retry(
+                            _("User does not belong to groups %s") % attribute_value, {
+                                'editable_no_editor': errmsg % attribute_value
+                            })
+                    return ''
 
-                if isinstance(attribute_value, unicode):
-                    attribute_value = attribute_value.encode("utf8")
+            attribute_value = attribute_value.encode("utf8")
+
+            if attribute_name.startswith("t-"):
+                for attribute in self._render_att:
+                    if attribute_name[2:].startswith(attribute):
+                        att, val = self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
+                        generated_attributes += val and ' %s="%s"' % (att, escape(val)) or " "
+                        break
                 else:
-                    attribute_value = attribute_value.nodeValue.encode("utf8")
-
-                if attribute_name.startswith("t-"):
-                    for attribute in self._render_att:
-                        if attribute_name[2:].startswith(attribute):
-                            att, val = self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
-                            generated_attributes += val and ' %s="%s"' % (att, escape(val)) or " "
-                            break
-                    else:
-                        if attribute_name[2:] in self._render_tag:
-                            t_render = attribute_name[2:]
-                        template_attributes[attribute_name[2:]] = attribute_value
-                else:
-                    generated_attributes += ' %s="%s"' % (attribute_name, escape(attribute_value))
-
-            if 'debug' in template_attributes:
-                debugger = template_attributes.get('debug', 'pdb')
-                __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
-            if t_render:
-                result = self._render_tag[t_render](self, element, template_attributes, generated_attributes, qwebcontext)
+                    if attribute_name[2:] in self._render_tag:
+                        t_render = attribute_name[2:]
+                    template_attributes[attribute_name[2:]] = attribute_value
             else:
-                result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
+                generated_attributes += ' %s="%s"' % (attribute_name, escape(attribute_value))
+
+        if 'debug' in template_attributes:
+            debugger = template_attributes.get('debug', 'pdb')
+            __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
+        if t_render:
+            result = self._render_tag[t_render](self, element, template_attributes, generated_attributes, qwebcontext)
+        else:
+            result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
+
+        if element.tail:
+            result += element.tail
+
         if isinstance(result, unicode):
             return result.encode('utf-8')
         return result
@@ -306,16 +300,16 @@ class QWeb(orm.AbstractModel):
         if inner:
             g_inner = inner
         else:
-            g_inner = []
-            for current_node in element.childNodes:
+            g_inner = [] if element.text is None else [element.text]
+            for current_node in element.iterchildren(tag=etree.Element):
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
                 except (QWebException, openerp.http.Retry):
                     raise
                 except Exception:
                     template = qwebcontext.get('__template__')
-                    raise_qweb_exception(message="Could not render element %r" % element.nodeName, node=element, template=template)
-        name = str(element.nodeName)
+                    raise_qweb_exception(message="Could not render element %r" % element.tag, node=element, template=template)
+        name = str(element.tag)
         inner = "".join(g_inner)
         trim = template_attributes.get("trim", 0)
         if trim == 0:
@@ -417,7 +411,7 @@ class QWeb(orm.AbstractModel):
 
     def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
         """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
-        if element.childNodes:
+        if len(element):
             # An asset bundle is rendered in two differents contexts (when genereting html and
             # when generating the bundle itself) so they must be qwebcontext free
             # even '0' variable is forbidden
@@ -441,7 +435,7 @@ class QWeb(orm.AbstractModel):
 
     def render_tag_field(self, element, template_attributes, generated_attributes, qwebcontext):
         """ eg: <span t-record="browse_record(res.partner, 1)" t-field="phone">+1 555 555 8069</span>"""
-        node_name = element.nodeName
+        node_name = element.tag
         assert node_name not in ("table", "tbody", "thead", "tfoot", "tr", "td",
                                  "li", "ul", "ol", "dl", "dt", "dd"),\
             "RTE widgets do not work correctly on %r elements" % node_name
@@ -1039,11 +1033,11 @@ class AssetsBundle(object):
         self.parse()
 
     def parse(self):
-        fragments = lxml.html.fragments_fromstring(self.html)
+        fragments = html.fragments_fromstring(self.html)
         for el in fragments:
             if isinstance(el, basestring):
                 self.remains.append(el)
-            elif isinstance(el, lxml.html.HtmlElement):
+            elif isinstance(el, html.HtmlElement):
                 src = el.get('src', '')
                 href = el.get('href', '')
                 atype = el.get('type')
@@ -1063,10 +1057,10 @@ class AssetsBundle(object):
                 elif el.tag == 'script' and self.can_aggregate(src):
                     self.javascripts.append(JavascriptAsset(self, url=src))
                 else:
-                    self.remains.append(lxml.html.tostring(el))
+                    self.remains.append(html.tostring(el))
             else:
                 try:
-                    self.remains.append(lxml.html.tostring(el))
+                    self.remains.append(html.tostring(el))
                 except Exception:
                     # notYETimplementederror
                     raise NotImplementedError
@@ -1256,7 +1250,7 @@ class WebAsset(object):
                 except Exception:
                     raise AssetNotFound("Could not find %s" % self.name)
 
-    def to_html():
+    def to_html(self):
         raise NotImplementedError()
 
     @lazy_property

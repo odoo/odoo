@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 20123TODAY OpenERP S.A. <http://www.openerp.com>
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2014 Tech Receptives (<http://techreceptives.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,6 +19,24 @@
 #
 ##############################################################################
 
-import test_ui
+{
+    'name': 'U.A.E. - Accounting',
+    'version': '1.0',
+    'author': 'Tech Receptives',
+    'website': 'http://www.techreceptives.com',
+    'category': 'Localization/Account Charts',
+    'description': """
+United Arab Emirates accounting chart and localization.
+=======================================================
+
+    """,
+    'depends': ['base', 'account', 'account_chart'],
+    'demo': [ ],
+    'data': [
+             'l10n_ae_chart.xml',
+             'l10n_ae_wizard.xml',
+    ],
+    'installable': True,
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

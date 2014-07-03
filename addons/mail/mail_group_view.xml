@@ -30,6 +30,8 @@
                     <field name="message_summary"/>
                     <field name="description"/>
                     <field name="alias_id"/>
+                    <field name="alias_name"/>
+                    <field name="alias_domain"/>
                     <templates>
                         <t t-name="kanban-description">
                             <div class="oe_group_description" t-if="record.description.raw_value">
@@ -43,8 +45,8 @@
                                 </div>
                                 <div class="oe_group_details">
                                     <h4><a type="open"><field name="name"/></a></h4>
-                                    <div class="oe_kanban_alias" t-if="record.alias_id.value">
-                                        <span class="oe_e oe_e_alias">%%</span><small><field name="alias_id"/></small>
+                                    <div class="oe_kanban_alias" t-if="record.alias_name.value and record.alias_domain.value">
+                                        <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_grey">
                                         <field name="description"/>
@@ -80,7 +82,7 @@
                             <h1><field name="name" readonly="0"/></h1>
                             <group colspan="2" name="group_alias"
                                     attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                <label for="alias_id" string="%%" class="oe_e oe_e_alias" style="min-width: 20px;"/>
+                                <label for="alias_id" string=" " class="fa fa-envelope-o" style="min-width: 20px;"/>
                                 <div name="alias_def">
                                     <field name="alias_id" class="oe_read_only oe_inline"
                                             string="Email Alias" required="0"/>
@@ -88,7 +90,7 @@
                                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                     </div>
                                 </div>
-                                <label for="alias_contact" string="V" class="oe_e oe_e_alias" style="min-width: 20px;"/>
+                                <label for="alias_contact" string=" " class="fa fa-lock" style="min-width: 20px;"/>
                                 <field name="alias_contact" class="oe_inline" nolabel="1"/>
                             </group>
                         </div>

@@ -680,6 +680,19 @@ instance.web.Reload = function(parent, action) {
 instance.web.client_actions.add("reload", "instance.web.Reload");
 
 /**
+ * Client action to refresh the session context (making sure
+ * HTTP requests will have the right one) then reload the
+ * whole interface.
+ */
+instance.web.ReloadContext = function(parent, action) {
+    // side-effect of get_session_info is to refresh the session context
+    instance.session.rpc("/web/session/get_session_info", {}).then(function() {
+        instance.web.Reload(parent, action);
+    });
+}
+instance.web.client_actions.add("reload_context", "instance.web.ReloadContext");
+
+/**
  * Client action to go back in breadcrumb history.
  * If can't go back in history stack, will go back to home.
  */

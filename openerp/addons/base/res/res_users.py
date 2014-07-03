@@ -322,10 +322,6 @@ class res_users(osv.osv):
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
         self.context_get.clear_cache(self)
-        if request:
-            if uid in ids and 'lang' in values:
-                request.session.get_context()
-                request.session.modified = True
         return res
 
     def unlink(self, cr, uid, ids, context=None):
@@ -497,7 +493,7 @@ class res_users(osv.osv):
     def preference_save(self, cr, uid, ids, context=None):
         return {
             'type': 'ir.actions.client',
-            'tag': 'reload',
+            'tag': 'reload_context',
         }
 
     def preference_change_password(self, cr, uid, ids, context=None):

@@ -144,7 +144,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_gamification_goal oe_kanban_goal #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
                                 <div class="oe_kanban_content">
-                                    <p><h4 class="oe_goal_name" tooltip="kanban-tooltip"><field name="definition_id" /></h4></p>
+                                    <p><strong><h4 class="oe_goal_name text-center" tooltip="kanban-tooltip"><field name="definition_id" /></h4></strong></p>
                                     <div class="oe_kanban_left">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
                                     </div>
