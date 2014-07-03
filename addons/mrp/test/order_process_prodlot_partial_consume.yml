@@ -55,12 +55,14 @@
                             'mode': 'consume_produce'}, ctxt)
    self.do_produce(cr, uid, [wizard_id], ctxt)
 -
-  I expect 10 RAM-SR3 to be consumed, takling 5 ram_sn3 and 5 ram_sn4
+  I expect 10 RAM-SR3 to be consumed, taking 5 ram_sn3 and 5 ram_sn4
 -
  !python {model: mrp.production}: |
    order = self.browse(cr, uid, ref('test_mo_pcsc349_2'), context=context)
    ram_lines = [line for line in order.move_lines2 if line.product_id.default_code == 'RAM-SR3']
    ram_sn_3 = [line for line in ram_lines if line.prodlot_id.name == 'ram_sn_3']
    ram_sn_4 = [line for line in ram_lines if line.prodlot_id.name == 'ram_sn_4']
-   assert ram_sn_3 and ram_sn_3[0].product_qty == 5, 'should have consumed 5 ram_sn3, not %d' % ram_sn_3[0].product_qty
-   assert ram_sn_4 and ram_sn_4[0].product_qty == 5, 'should have consumed 5 ram_sn4. not %d' % ram_sn_4[0].product_qty
+   ram_sn_3_qty = ram_sn_3 and ram_sn_3[0].product_qty or None
+   ram_sn_4_qty = ram_sn_4 and ram_sn_4[0].product_qty or None
+   assert ram_sn_3_qty == 5, 'should have consumed 5 ram_sn_3, not %d' % ram_sn_3_qty
+   assert ram_sn_4_qty == 5, 'should have consumed 5 ram_sn+4. not %d' % ram_sn_4_qty
