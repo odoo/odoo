@@ -1,5 +1,3 @@
-import os
-
 import openerp.tests
 
 @openerp.tests.common.at_install(False)

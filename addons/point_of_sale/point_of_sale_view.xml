@@ -672,6 +672,14 @@
                             <field name="receipt_header" placeholder="A custom receipt header message"/>
                             <field name="receipt_footer" placeholder="A custom receipt header footage"/>
                         </group>
+                        <group string="Barcode Types" col="4">
+                            <field name="barcode_product" />
+                            <field name="barcode_cashier" />
+                            <field name="barcode_customer" />
+                            <field name="barcode_weight" />
+                            <field name="barcode_discount" />
+                            <field name="barcode_price" />
+                        </group>
                     </sheet>
 
                 </form>
@@ -703,6 +711,7 @@
             </field>
         </record>
 
+        <!-- Sessions -->
 
         <act_window
             id="act_pos_config_sessions"

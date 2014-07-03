@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import base64
 
+from openerp.tools.translate import _
+
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp import SUPERUSER_ID
@@ -26,47 +28,61 @@ class contactus(http.Controller):
         return request.website.render("website.contactus", values)
 
     @http.route(['/crm/contactus'], type='http', auth="public", website=True)
-    def contactus(self, description=None, partner_name=None, phone=None, contact_name=None, email_from=None, name=None, **kwargs):
-        post = {
-            'description': description,
-            'partner_name': partner_name,
-            'phone': phone,
-            'contact_name': contact_name,
-            'email_from': email_from,
-            'name': name or contact_name,
-        }
+    def contactus(self, **kwargs):
+        def dict_to_str(title, dictvar):
+            ret = "\n\n%s" % title
+            for field in dictvar:
+                ret += "\n%s" % field
+            return ret
 
-        # fields validation
-        error = set(field for field in ['contact_name', 'email_from', 'description']
-                    if not post.get(field))
+        _TECHNICAL = ['show_info']  # Only use for behavior, don't stock it
+        _BLACKLIST = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date', 'user_id', 'active']  # Allow in description
+        _REQUIRED = ['name', 'contact_name', 'email_from', 'description']  # Could be improved including required from model
 
-        values = dict(post, error=error)
+        post_file = []  # List of file to add to ir_attachment once we have the ID
+        post_description = []  # Info to add after the message
+        values = {'user_id': False}
+
+        lead_model = request.registry['crm.lead']
+
+        for field_name, field_value in kwargs.items():
+            if hasattr(field_value, 'filename'):
+                post_file.append(field_value)
+            elif field_name in lead_model._all_columns and field_name not in _BLACKLIST:
+                values[field_name] = field_value
+            elif field_name not in _TECHNICAL:  # allow to add some free fields or blacklisted field like ID
+                post_description.append("%s: %s" % (field_name, field_value))
+
+        # fields validation : Check that required field from model crm_lead exists
+        error = set(field for field in _REQUIRED if not kwargs.get(field))
+
+        values = dict(values, error=error)
         if error:
             values.update(kwargs=kwargs.items())
             return request.website.render("website.contactus", values)
 
         try:
-            post['channel_id'] = request.registry['ir.model.data'].get_object_reference(request.cr, SUPERUSER_ID, 'crm', 'crm_case_channel_website')[1]
+            values['channel_id'] = request.registry['ir.model.data'].get_object_reference(request.cr, SUPERUSER_ID, 'crm', 'crm_case_channel_website')[1]
+            values['section_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
         except ValueError:
             pass
 
-        post['user_id'] = False
-        environ = request.httprequest.headers.environ
-        post['description'] = "%s\n-----------------------------\nIP: %s\nUSER_AGENT: %s\nACCEPT_LANGUAGE: %s\nREFERER: %s" % (
-            post['description'],
-            environ.get("REMOTE_ADDR"),
-            environ.get("HTTP_USER_AGENT"),
-            environ.get("HTTP_ACCEPT_LANGUAGE"),
-            environ.get("HTTP_REFERER"))
-        for field_name, field_value in kwargs.items():
-            if not hasattr(field_value, 'filename'):
-                post['description'] = "%s\n%s: %s" % (post['description'], field_name, field_value)
+        # description is required, so it is always already initialized
+        if post_description:
+            values['description'] += dict_to_str(_("Custom Fields: "), post_description)
 
-        post['section_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
-        lead_id = request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, post, request.context)
+        if kwargs.get("show_info"):
+            post_description = []
+            environ = request.httprequest.headers.environ
+            post_description.append("%s: %s" % ("IP", environ.get("REMOTE_ADDR")))
+            post_description.append("%s: %s" % ("USER_AGENT", environ.get("HTTP_USER_AGENT")))
+            post_description.append("%s: %s" % ("ACCEPT_LANGUAGE", environ.get("HTTP_ACCEPT_LANGUAGE")))
+            post_description.append("%s: %s" % ("REFERER", environ.get("HTTP_REFERER")))
+            values['description'] += dict_to_str(_("Environ Fields: "), post_description)
 
-        for field_name, field_value in kwargs.items():
-            if hasattr(field_value, 'filename'):
+        lead_id = lead_model.create(request.cr, SUPERUSER_ID, values, request.context)
+        if lead_id:
+            for field_value in post_file:
                 attachment_value = {
                     'name': field_value.filename,
                     'res_name': field_value.filename,
