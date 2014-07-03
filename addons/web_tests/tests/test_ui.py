@@ -17,6 +17,6 @@ class TestUi(openerp.tests.HttpCase):
 @openerp.tests.common.post_install(True)
 class TestMenuItems(openerp.tests.HttpCase):
     def test_01_menuitems(self):
-        self.phantom_js("/", "openerp.Tour.run('test_menu', 'test')", "openerp.Tour.tours.test_menu", login="admin")
+        self.phantom_js("/web", "openerp.Tour.run('test_menu', 'test')", "openerp.Tour.tours.test_menu", login="admin")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
