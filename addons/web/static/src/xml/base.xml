@@ -1963,4 +1963,12 @@
     <img t-attf-src="#{_s}/web/static/src/img/icons/#{widget.icon}" t-att-alt="widget.string"/>
 </button>
 
+<t t-name="BooleanButton">
+    <div class="oe_boolean_button">
+        <button class="btn btn-success oe_stat_button">
+            <strong class="oe_deactivated text-success"><t t-esc="widget.active_string"></t></strong>
+            <strong class="oe_activated text-danger"><t t-esc="widget.inactive_string"></t></strong>
+        </button>
+    </div>
+</t>
 </templates>
