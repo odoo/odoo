@@ -37,27 +37,24 @@ class MassMailingCampaign(osv.Model):
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing campaign """
-        results = dict.fromkeys(ids, {
-                'sent': 0,
-                'delivered': 0,
-                'opened': 0,
-                'replied': 0,
-                'bounced': 0,
-            })
+        results = {}
         cr.execute("""
             SELECT
-                mass_mailing_campaign_id,
-                COUNT(id) AS sent,
-                COUNT(CASE WHEN bounced is null THEN 1 ELSE null END) AS delivered,
-                COUNT(CASE WHEN opened is not null THEN 1 ELSE null END) AS opened,
-                COUNT(CASE WHEN replied is not null THEN 1 ELSE null END) AS replied ,
-                COUNT(CASE WHEN bounced is not null THEN 1 ELSE null END) AS bounced
+                c.id,
+                COUNT(s.id) AS sent,
+                COUNT(CASE WHEN s.id is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
+                COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
+                COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied ,
+                COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced
             FROM
-                mail_mail_statistics
+                mail_mail_statistics s
+            RIGHT JOIN
+                mail_mass_mailing_campaign c
+                ON (c.id = s.mass_mailing_campaign_id)
             WHERE
-                mass_mailing_campaign_id IN %s
+                c.id IN %s
             GROUP BY
-                 mass_mailing_campaign_id
+                c.id
         """, (tuple(ids), ))
         for (campaign_id, sent, delivered, opened, replied, bounced) in cr.fetchall():
             results[campaign_id] = {
@@ -217,27 +214,24 @@ class MassMailing(osv.Model):
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing """
-        results = dict.fromkeys(ids, {
-                'sent': 0,
-                'delivered': 0,
-                'opened': 0,
-                'replied': 0,
-                'bounced': 0,
-            })
+        results = {}
         cr.execute("""
             SELECT
-                mass_mailing_id,
-                COUNT(id) AS sent,
-                COUNT(CASE WHEN bounced is null THEN 1 ELSE null END) AS delivered,
-                COUNT(CASE WHEN opened is not null THEN 1 ELSE null END) AS opened,
-                COUNT(CASE WHEN replied is not null THEN 1 ELSE null END) AS replied ,
-                COUNT(CASE WHEN bounced is not null THEN 1 ELSE null END) AS bounced
+                m.id,
+                COUNT(s.id) AS sent,
+                COUNT(CASE WHEN s.id is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
+                COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
+                COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied ,
+                COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced
             FROM
-                mail_mail_statistics
+                mail_mail_statistics s
+            RIGHT JOIN
+                mail_mass_mailing m
+                ON (m.id = s.mass_mailing_id)
             WHERE
-                mass_mailing_id IN %s
+                m.id IN %s
             GROUP BY
-                 mass_mailing_id
+                m.id
         """, (tuple(ids), ))
         for (mass_mailing_id, sent, delivered, opened, replied, bounced) in cr.fetchall():
             results[mass_mailing_id] = {
