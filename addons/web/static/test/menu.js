@@ -1,6 +1,14 @@
 (function () {
     'use strict';
 
+
+    function openmenu () {
+        setTimeout(function () {
+            $(".collapse:not(.in)").addClass("in");
+            $(".dropdown:not(.open)").addClass("open");
+        },500);
+    }
+
     openerp.Tour.register({
         id:   'test_menu',
         name: "Test all menu items",
@@ -29,12 +37,7 @@
                 waitFor:   ".oe_view_manager_body",
                 onload: function () {
                     localStorage.setItem('active_step', (+localStorage.getItem('active_step'))+1 );
-
-                    clearInterval(openerp.Tour.tours.test_menu.timer);
-                    openerp.Tour.tours.test_menu.timer = setInterval(function () {
-                        $(".collapse:not(.in)").addClass("in");
-                        $(".dropdown:not(.open)").addClass("open");
-                    },500);
+                    openmenu();
                 },
             },
             {
@@ -46,7 +49,7 @@
             //  add technical features to admin user
 
             {
-                title:     "click on User 1",
+                title:     "click on User form Admin",
                 element:   '.oe_secondary_menu a:visible:contains(Users)',
                 waitNot:   ".oe_loading:visible",
             },
@@ -113,6 +116,9 @@
                 title:     "click on Save User",
                 waitFor:   'td:contains(Technical Features) + td input:checked:not(:disabled):visible',
                 element:   'button.oe_form_button_save',
+                onload: function () {
+                    openmenu();
+                },
             },
 
             // log out
@@ -136,11 +142,7 @@
                 title:     "load web demo",
                 waitFor:   ".oe_view_manager_body",
                 onload: function () {
-                    clearInterval(openerp.Tour.tours.test_menu.timer);
-                    openerp.Tour.tours.test_menu.timer = setInterval(function () {
-                        $(".collapse:not(.in)").addClass("in");
-                        $(".dropdown:not(.open)").addClass("open");
-                    },500);
+                    openmenu();
                 },
                 next:       "check",
             },
@@ -251,7 +253,9 @@
                             return step.id;
                         }
                     }
-                }
+                    
+                    openmenu();
+                },
             },
 
             // log out and re try
@@ -270,7 +274,6 @@
                 title:     "finish",
                 waitFor:   "form.oe_login_form",
                 onload: function () {
-                    clearInterval(openerp.Tour.tours.test_menu.timer);
                     localStorage.removeItem('active_step');
                     localStorage.removeItem('menu_tested');
                 },
