@@ -115,7 +115,7 @@ class account_invoice_line(osv.osv):
                         diff_res = []
                         # calculate and write down the possible price difference between invoice price and product price
                         for line in res:
-                            if line.get('invl_id', False) != i_line.id:
+                            if line.get('invl_id') != i_line.id:
                                 continue
                             if a == line['account_id'] and i_line.product_id.id == line['product_id']:
                                 uom = i_line.product_id.uos_id or i_line.product_id.uom_id
