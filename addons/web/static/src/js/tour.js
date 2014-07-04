@@ -323,20 +323,20 @@ var Tour = {
     },
     logError: function (step, message, all) {
         var state = Tour.getState();
-        message += '\n tour: ' + state.id
-            + (step ? '\n step: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
-            + (all ? '\n href: ' + window.location.href : '' )
-            + (all ? '\n referrer: ' + document.referrer : '' )
-            + (step ? '\n element: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) : '' )
-            + (step ? '\n waitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size()) : '' )
-            + (step ? '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' );
-            + (all ? "\n localStorage: " + JSON.stringify(localStorage) : '' )
+        message += '\ntour: ' + state.id
+            + (step ? '\nstep: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
+            + (all ? '\nhref: ' + window.location.href : '' )
+            + (all ? '\nreferrer: ' + document.referrer : '' )
+            + (step ? '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) : '' )
+            + (step ? '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size()) : '' )
+            + (step ? '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' );
+            + (all ? "\nlocalStorage: " + JSON.stringify(localStorage) : '' )
             + (all ? '\n\n' + $("body").html() : '' );
         (console.error || console.log).call(console, message);
     },
     error: function (step, message) {
         var state = Tour.getState();
-        Tour.logError(step, message, true);
+        Tour.logError(step, "Error: " + message, true);
         Tour.reset();
         if (state.mode === "test") {
             console.log("Tour '"+state.id+"' finish: error");
@@ -435,7 +435,7 @@ var Tour = {
 
             } else if(next.onerror) {
                 
-                Tour.logError(next, "Can't reach the next step (call next step onerror)", false);
+                Tour.logError(next, "Error: Can't reach the next step (call next step onerror)", false);
                 var id = next.onerror();
                 if (id) {
                     if (Tour._goto(id)) return;
