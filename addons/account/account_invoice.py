@@ -471,7 +471,7 @@ class account_invoice(osv.osv):
         return True
 
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
-            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
+            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False, context=None):
         partner_payment_term = False
         acc_id = False
         bank_id = False
@@ -496,8 +496,9 @@ class account_invoice(osv.osv):
                     rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
                     pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
-                        raise osv.except_osv(_('Configuration Error!'),
-                            _('Cannot find a chart of accounts for this company, you should create one.'))
+                        model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_config')
+                        msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
+                        raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
                     account_obj = self.pool.get('account.account')
                     rec_obj_acc = account_obj.browse(cr, uid, [rec_res_id])
                     pay_obj_acc = account_obj.browse(cr, uid, [pay_res_id])
@@ -607,8 +608,9 @@ class account_invoice(osv.osv):
                     pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
 
                     if not rec_res_id and not pay_res_id:
-                        raise self.pool.get('res.config.settings').get_config_warning(cr, _('Cannot find any chart of account: you can create a new one from %(menu:account.menu_account_config)s.'), context=context)
-
+                        model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_config')
+                        msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
+                        raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
                     if type in ('out_invoice', 'out_refund'):
                         acc_id = rec_res_id
                     else:
@@ -623,8 +625,9 @@ class account_invoice(osv.osv):
                             if line.account_id.company_id.id != company_id:
                                 result_id = account_obj.search(cr, uid, [('name','=',line.account_id.name),('company_id','=',company_id)])
                                 if not result_id:
-                                    raise osv.except_osv(_('Configuration Error!'),
-                                        _('Cannot find a chart of account, you should create one from Settings\Configuration\Accounting menu.'))
+                                    model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_config')
+                                    msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
+                                    raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
                                 inv_line_obj.write(cr, uid, [line.id], {'account_id': result_id[-1]})
             else:
                 if invoice_line:
@@ -656,8 +659,9 @@ class account_invoice(osv.osv):
                 journal_type_label = self.pool['ir.translation']._get_source(cr, uid, None, ('code','selection'),
                                                                              context.get('lang'),
                                                                              journal_type_map.get(journal_type))
-                raise osv.except_osv(_('Configuration Error!'),
-                                     _('Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.') % ('"%s"' % journal_type_label))
+                model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_journal_form')
+                msg = _("""Cannot find any account journal of type "%s" for this company, You should create one.\n Please go to Journal Configuration""") % journal_type_label
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
             journal_ids = obj_journal.search(cr, uid, [])

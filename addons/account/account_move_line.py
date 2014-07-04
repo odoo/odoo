@@ -31,6 +31,7 @@ from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp import tools
+import openerp
 
 class account_move_line(osv.osv):
     _name = "account.move.line"
@@ -548,7 +549,9 @@ class account_move_line(osv.osv):
         if context.get('journal_type', False):
             jids = journal_pool.search(cr, uid, [('type','=', context.get('journal_type'))])
             if not jids:
-                raise osv.except_osv(_('Configuration Error!'), _('Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration/Journals/Journals.') % context.get('journal_type'))
+                model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_journal_form')
+                msg = _("""Cannot find any account journal of "%s" type for this company, You should create one.\n Please go to Journal Configuration""") % context.get('journal_type').replace('_', ' ').title()
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             journal_id = jids[0]
         return journal_id
 
