@@ -19,8 +19,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from functools import partial
+import itertools
 import logging
+from functools import partial
+
 from lxml import etree
 from lxml.builder import E
 
@@ -548,12 +550,7 @@ class cset(object):
     def __iter__(self):
         return iter(self.elements)
 
-def concat(ls):
-    """ return the concatenation of a list of iterables """
-    res = []
-    for l in ls: res.extend(l)
-    return res
-
+concat = itertools.chain.from_iterable
 
 class groups_implied(osv.osv):
     _inherit = 'res.groups'
@@ -617,7 +614,7 @@ class users_implied(osv.osv):
         if values.get('groups_id'):
             # add implied groups for all users
             for user in self.browse(cr, uid, ids):
-                gs = set(concat([g.trans_implied_ids for g in user.groups_id]))
+                gs = set(concat(g.trans_implied_ids for g in user.groups_id))
                 vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(users_implied, self).write(cr, uid, [user.id], vals, context)
             self.pool['ir.ui.view'].clear_cache()
