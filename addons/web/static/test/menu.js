@@ -201,10 +201,15 @@
 
             {
                 title:    "check",
-                waitNot:  ".oe_loading:visible, body:has("+
-                          ".oe_view_manager_body > *:visible:not(:empty).already_loaded:not(.oe_searchview_drawer_container), "+
-                          ".oe_form_sheetbg.already_loaded"+
+                waitNot:  "body:has("+
+                              ".oe_view_manager_body > *:visible:not(:empty).already_loaded:not(.oe_searchview_drawer_container), "+
+                              ".oe_form_sheetbg.already_loaded"+
                           "):not(:has(.modal))",
+                wait: 50,
+            },
+            {
+                title:    "add class already tested",
+                waitNot:  "body.oe_wait",
                 onload: function () {
 
                     var tested = JSON.parse(localStorage.getItem('menu_tested') || "[]");
@@ -232,7 +237,6 @@
                     $(".oe_view_manager_body > *:visible:not(:empty), .oe_form_sheet").addClass("already_loaded");
                     $('.oe_view_manager_switch li.active a').addClass('already_tested');
                 },
-                wait: 100,
                 onerror: function () {
                     return "Select next action";
                 }
@@ -253,7 +257,7 @@
                             return step.id;
                         }
                     }
-                    
+
                     openmenu();
                 },
             },
