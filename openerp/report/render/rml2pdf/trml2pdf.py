@@ -379,7 +379,11 @@ class _rml_canvas(object):
         v = utils.attr_get(node, ['x','y'])
         text=self._textual(node, **v)
         text = utils.xml2str(text)
-        self.canvas.drawString(text=text, **v)
+        try:
+            self.canvas.drawString(text=text, **v)
+        except TypeError:
+            _logger.error("Bad RML: <drawString> tag requires attributes 'x' and 'y'!")
+            raise
 
     def _drawCenteredString(self, node):
         v = utils.attr_get(node, ['x','y'])
@@ -1005,10 +1009,10 @@ class _rml_template(object):
         story_cnt = 0
         for node_story in node_stories:
             if story_cnt > 0:
+                # Reset Page Number with new story tag
+                fis.append(PageReset())
                 fis.append(platypus.PageBreak())
             fis += r.render(node_story)
-            # Reset Page Number with new story tag
-            fis.append(PageReset())
             story_cnt += 1
         try:
             if self.localcontext and self.localcontext.get('internal_header',False):
