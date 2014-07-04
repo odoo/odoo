@@ -16,6 +16,7 @@
                 title:     "load web",
                 onload: function () {
                     $(".collapse").addClass("in");
+                    $(".dropdown").addClass("open");
                 },
             },
             {
@@ -23,7 +24,6 @@
                 waitFor:   ".oe_view_manager_body > *:not(:empty):visible:not(.already_loaded):first",
                 element:   '.oe_application_menu_placeholder a[data-menu]:contains(Settings)',
                 waitNot:   ".oe_loading:visible, .oe_error_detail",
-                wait: 1000
             },
             {
                 title:     "click on Accounting",
@@ -41,6 +41,7 @@
                 onload: function () {
                     $('button.oe_form_button:contains(Apply)').addClass('already_tested');
                     $(".collapse").addClass("in");
+                    $(".dropdown").addClass("open");
                 }
             },
             {
@@ -161,6 +162,7 @@
 
                     $('.modal').modal('hide');
                     $(".collapse").addClass("in");
+                    $(".dropdown").addClass("open");
 
                     var steps = ["Click on switch view", "Click on sub menu", "Click on need action", "Click on top menu"];
                     for (var k in steps) {
