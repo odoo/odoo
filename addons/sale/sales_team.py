@@ -37,7 +37,7 @@ class crm_case_section(osv.osv):
         return res
 
     _columns = {
-        'use_quotations': fields.boolean('Opportunities', help="Check this box to manage quotations in this sales team."),
+        'use_quotations': fields.boolean('Quotations', help="Check this box to manage quotations in this sales team."),
         'invoiced_forecast': fields.integer(string='Invoice Forecast',
             help="Forecast of the invoice revenue for the current month. This is the amount the sales \n"
                     "team should invoice this month. It is used to compute the progression ratio \n"
