@@ -53,9 +53,23 @@
                 <field name="partner_id"/>
                 <field name="product_id"/>
                 <field name="user_id"/>
-                <group expand="0" string="Extended Filters...">
+                <group expand="0" string="Extended Filters">
                     <field name="categ_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Salesperson" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                    <filter string="Partner" icon="terp-partner"  name="Customer" context="{'group_by':'partner_id'}"/>
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
+                    <filter string="Reference Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom'}"/>
+                    <filter string="Category of Product" icon="terp-stock_symbol-selection" name="Category" context="{'group_by':'categ_id'}"/>
+                    <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Company" icon="terp-go-home" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <filter string="Order Date (day)" icon="terp-go-today" context="{'group_by':'date:day'}" help="Ordered date of the sales order"/>
+                    <filter string="Order Date (month)" icon="terp-go-today" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
+                    <filter string="Order Date (year)" icon="terp-go-today" context="{'group_by':'date:year'}" help="Ordered date of the sales order"/>
                 </group>
             </search>
         </field>
