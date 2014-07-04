@@ -223,8 +223,10 @@ class report_custom(report_rml):
         elif data['model']=='ir.ui.menu':
             for id in data['form']['depts']:
                 dept = obj_dept.browse(cr, uid, id, context=context)
-                cr.execute("""SELECT id FROM hr_employee \
-                WHERE department_id = %s""", (id,))
+                cr.execute("""SELECT hr_employee.id FROM hr_employee \                 
+                LEFT JOIN resource_resource ON                             
+                           (hr_employee.resource_id = resource_resource.id)                            
+                           WHERE department_id = %s AND resource_resource.active = true""", (id,))
                 emp_ids = [x[0] for x in cr.fetchall()]
                 if emp_ids==[]:
                     continue
