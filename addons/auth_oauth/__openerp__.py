@@ -34,6 +34,7 @@ Allow users to login through OAuth2 Provider.
     'depends': ['base', 'web', 'base_setup', 'auth_signup'],
     'data': [
         'res_users.xml',
+        'res_config.xml',
         'auth_oauth_data.xml',
         'auth_oauth_data.yml',
         'auth_oauth_view.xml',
