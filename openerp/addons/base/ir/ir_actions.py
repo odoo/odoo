@@ -591,6 +591,7 @@ class ir_actions_server(osv.osv):
 #  - context: current context
 #  - time: Python time module
 #  - workflow: Workflow engine
+#  - log : log(message), function to log debug information in logging table
 # If you plan to return an action, assign: action = {...}""",
         'use_relational_model': 'base',
         'use_create': 'new',
@@ -952,6 +953,12 @@ class ir_actions_server(osv.osv):
         :param action: the current server action
         :type action: browse record
         :returns: dict -- evaluation context given to (safe_)eval """
+        def log(message, level="info"):
+            val = (uid, 'server', cr.dbname, __name__, level, message, "action", action.id, action.name)
+            cr.execute("""
+                INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
+                VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, val)
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         obj_pool = self.pool[action.model_id.model]
         obj = None
@@ -971,6 +978,7 @@ class ir_actions_server(osv.osv):
             'context': context,
             'workflow': workflow,
             'Warning': openerp.exceptions.Warning,
+            'log': log,
         }
 
     def run(self, cr, uid, ids, context=None):
