@@ -393,7 +393,7 @@
     <table class="table js_kanban">
         <thead>
             <tr>
-                <t t-set="width" t-valuef="{{ round(100.0 / len(objects), 2) }}%"/>
+                <t t-set="width" t-valuef="{{ round(100.0 / (len(objects) if objects else 1), 2) }}%"/>
                 <t t-foreach="objects" t-as="obj">
                     <th t-att-width="width">
                         <div t-field="obj['column_id'].name" class="text-center"></div>

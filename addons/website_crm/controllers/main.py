@@ -2,7 +2,6 @@
 import base64
 
 from openerp.tools.translate import _
-
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp import SUPERUSER_ID
@@ -53,6 +52,8 @@ class contactus(http.Controller):
             elif field_name not in _TECHNICAL:  # allow to add some free fields or blacklisted field like ID
                 post_description.append("%s: %s" % (field_name, field_value))
 
+        if "name" not in kwargs and values.get("contact_name"):  # if kwarg.name is empty, it's an error, we cannot copy the contact_name
+            values["name"] = values.get("contact_name")
         # fields validation : Check that required field from model crm_lead exists
         error = set(field for field in _REQUIRED if not kwargs.get(field))
 

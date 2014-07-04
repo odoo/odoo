@@ -365,7 +365,7 @@ class survey_survey(osv.Model):
             for cell in product(rows.keys(), answers.keys()):
                 res[cell] = 0
             for input_line in question.user_input_line_ids:
-                if input_line.answer_type == 'suggestion' and not(current_filters) or input_line.user_input_id.id in current_filters:
+                if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
             result_summary = {'answers': answers, 'rows': rows, 'result': res}
 
@@ -998,6 +998,8 @@ class survey_user_input_line(osv.Model):
     def __get_mark(self, cr, uid, value_suggested, context=None):
         try:
             mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
+        except AttributeError:
+            mark = 0.0
         except KeyError:
             mark = 0.0
         except ValueError:
@@ -1145,7 +1147,7 @@ class survey_user_input_line(osv.Model):
 
         comment_answer = post.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer})
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False})
             self.create(cr, uid, vals, context=context)
 
         return True

@@ -21,7 +21,7 @@
 
 from datetime import date, datetime
 from dateutil import relativedelta
-
+import json
 import time
 
 from openerp.osv import fields, osv
@@ -1930,7 +1930,6 @@ class stock_move(osv.osv):
         result = {
             'product_uom_qty': 0.00
         }
-        warning = {}
 
         if (not product_id) or (product_uos_qty <= 0.0):
             result['product_uos_qty'] = 0.0
@@ -1939,21 +1938,14 @@ class stock_move(osv.osv):
         product_obj = self.pool.get('product.product')
         uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
 
-        # Warn if the quantity was decreased
-        for move in self.read(cr, uid, ids, ['product_uos_qty']):
-            if product_uos_qty < move['product_uos_qty']:
-                warning.update({
-                    'title': _('Warning: No Back Order'),
-                    'message': _("By changing the quantity here, you accept the "
-                                "new quantity as complete: OpenERP will not "
-                                "automatically generate a Back Order.")})
-                break
+        # No warning if the quantity was decreased to avoid double warnings:
+        # The clients should call onchange_quantity too anyway
 
         if product_uos and product_uom and (product_uom != product_uos):
             result['product_uom_qty'] = product_uos_qty / uos_coeff['uos_coeff']
         else:
             result['product_uom_qty'] = product_uos_qty
-        return {'value': result, 'warning': warning}
+        return {'value': result}
 
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False, partner_id=False):
         """ On change of product id, if finds UoM, UoS, quantity and UoS quantity.
@@ -4102,12 +4094,12 @@ class stock_picking_type(osv.osv):
             tristates = []
             for picking in picking_obj.browse(cr, uid, picking_ids, context=context):
                 if picking.date_done > picking.date:
-                    tristates.insert(0, {'tooltip': picking.name or '' + _(': Late'), 'value': -1})
+                    tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('Late'), 'value': -1})
                 elif picking.backorder_id:
-                    tristates.insert(0, {'tooltip': picking.name or '' + _(': Backorder exists'), 'value': 0})
+                    tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('Backorder exists'), 'value': 0})
                 else:
-                    tristates.insert(0, {'tooltip': picking.name or '' + _(': OK'), 'value': 1})
-            res[picking_type_id] = tristates
+                    tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('OK'), 'value': 1})
+            res[picking_type_id] = json.dumps(tristates)
         return res
 
     def _get_picking_count(self, cr, uid, ids, field_names, arg, context=None):

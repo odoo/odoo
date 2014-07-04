@@ -269,7 +269,7 @@ class website(osv.osv):
         # Compute Pager
         page_count = int(math.ceil(float(total) / step))
 
-        page = max(1, min(int(page), page_count))
+        page = max(1, min(int(page if str(page).isdigit() else 1), page_count))
         scope -= 1
 
         pmin = max(page - int(math.floor(scope/2)), 1)
