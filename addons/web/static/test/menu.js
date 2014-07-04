@@ -206,6 +206,9 @@
                               ".oe_form_sheetbg.already_loaded"+
                           "):not(:has(.modal))",
                 wait: 50,
+                onerror: function () {
+                    return "Select next action";
+                }
             },
             {
                 title:    "add class already tested",
