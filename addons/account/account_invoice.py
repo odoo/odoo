@@ -470,8 +470,10 @@ class account_invoice(osv.osv):
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
-    def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
-            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False, context=None):
+    def onchange_partner_id(self, cr, uid, ids, type, partner_id,
+                            date_invoice=False, payment_term=False,
+                            partner_bank_id=False, company_id=False,
+                            context=None):
         partner_payment_term = False
         acc_id = False
         bank_id = False
@@ -481,7 +483,8 @@ class account_invoice(osv.osv):
         if partner_id:
 
             opt.insert(0, ('id', partner_id))
-            p = self.pool.get('res.partner').browse(cr, uid, partner_id)
+            p = self.pool.get('res.partner').browse(cr, uid, partner_id,
+                                                    context=context)
             if company_id:
                 if (p.property_account_receivable.company_id and (p.property_account_receivable.company_id.id != company_id)) and (p.property_account_payable.company_id and (p.property_account_payable.company_id.id != company_id)):
                     property_obj = self.pool.get('ir.property')
@@ -500,8 +503,10 @@ class account_invoice(osv.osv):
                         msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
                         raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
                     account_obj = self.pool.get('account.account')
-                    rec_obj_acc = account_obj.browse(cr, uid, [rec_res_id])
-                    pay_obj_acc = account_obj.browse(cr, uid, [pay_res_id])
+                    rec_obj_acc = account_obj.browse(cr, uid, [rec_res_id],
+                                                     context=context)
+                    pay_obj_acc = account_obj.browse(cr, uid, [pay_res_id],
+                                                     context=context)
                     p.property_account_receivable = rec_obj_acc[0]
                     p.property_account_payable = pay_obj_acc[0]
 
