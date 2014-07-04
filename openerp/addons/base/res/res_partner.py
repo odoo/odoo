@@ -592,7 +592,7 @@ class res_partner(osv.osv, format_address):
         """ Supported syntax:
             - 'Raoul <raoul@grosbedon.fr>': will find name and email address
             - otherwise: default, everything is set as the name """
-        emails = tools.email_split(text)
+        emails = tools.email_split(text.replace(' ',','))
         if emails:
             email = emails[0]
             name = text[:text.index(email)].replace('"', '').replace('<', '').strip()

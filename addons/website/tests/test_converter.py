@@ -9,9 +9,31 @@ from lxml.builder import E
 from openerp.tests import common
 from openerp.addons.base.ir import ir_qweb
 from openerp.addons.website.models.ir_qweb import html_to_text
+from openerp.addons.website.models.website import unslug
 
 impl = getDOMImplementation()
 document = impl.createDocument(None, None, None)
+
+class TestUnslug(unittest2.TestCase):
+    def test_unslug(self):
+        tests = {
+            '': (None, None),
+            'foo': (None, None),
+            'foo-': (None, None),
+            '-': (None, None),
+            'foo-1': ('foo', 1),
+            'foo-bar-1': ('foo-bar', 1),
+            'foo--1': ('foo', -1),
+            '1': (None, 1),
+            '1-1': ('1', 1),
+            '--1': (None, None),
+            'foo---1': (None, None),
+            'foo1': (None, None),
+        }
+
+        for slug, expected in tests.iteritems():
+            self.assertEqual(unslug(slug), expected)
+
 
 class TestHTMLToText(unittest2.TestCase):
     def test_rawstring(self):

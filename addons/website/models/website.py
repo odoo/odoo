@@ -102,10 +102,22 @@ def slug(value):
     else:
         # assume name_search result tuple
         id, name = value
-    slugname = slugify(name or '')
+    slugname = slugify(name or '').strip().strip('-')
     if not slugname:
         return str(id)
     return "%s-%d" % (slugname, id)
+
+
+_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[a-zA-Z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
+
+def unslug(s):
+    """Extract slug and id from a string.
+        Always return un 2-tuple (str|None, int|None)
+    """
+    m = _UNSLUG_RE.match(s)
+    if not m:
+        return None, None
+    return m.group(1), int(m.group(2))
 
 def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
@@ -237,7 +249,7 @@ class website(osv.osv):
         # Compute Pager
         page_count = int(math.ceil(float(total) / step))
 
-        page = max(1, min(int(page), page_count))
+        page = max(1, min(int(page if str(page).isdigit() else 1), page_count))
         scope -= 1
 
         pmin = max(page - int(math.floor(scope/2)), 1)
