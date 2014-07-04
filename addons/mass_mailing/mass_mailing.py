@@ -46,7 +46,7 @@ class MassMailingCampaign(osv.Model):
             })
         cr.execute("""
             SELECT
-                mass_mailing_id,
+                mass_mailing_campaign_id,
                 COUNT(id) AS sent,
                 COUNT(CASE WHEN bounced is null THEN 1 ELSE null END) AS delivered,
                 COUNT(CASE WHEN opened is not null THEN 1 ELSE null END) AS opened,
@@ -55,9 +55,9 @@ class MassMailingCampaign(osv.Model):
             FROM
                 mail_mail_statistics
             WHERE
-                mass_mailing_id IN %s
+                mass_mailing_campaign_id IN %s
             GROUP BY
-                 mass_mailing_id
+                 mass_mailing_campaign_id
         """, (tuple(ids), ))
         for (campaign_id, sent, delivered, opened, replied, bounced) in cr.fetchall():
             results[campaign_id] = {
@@ -239,8 +239,8 @@ class MassMailing(osv.Model):
             GROUP BY
                  mass_mailing_id
         """, (tuple(ids), ))
-        for (campaign_id, sent, delivered, opened, replied, bounced) in cr.fetchall():
-            results[campaign_id] = {
+        for (mass_mailing_id, sent, delivered, opened, replied, bounced) in cr.fetchall():
+            results[mass_mailing_id] = {
                 'sent': sent,
                 # delivered: shouldn't be: all mails - (failed + bounced) ?
                 'delivered': delivered,
