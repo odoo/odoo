@@ -38,6 +38,9 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
         var title = this.$node.html() || this.field.string;
         // current gauge value
         var val = this.field.value;
+        if (_.isArray(JSON.parse(val))) {
+            val = JSON.parse(val);
+        }
         var value = _.isArray(val) && val.length ? val[val.length-1]['value'] : val;
         // displayed value under gauge
         var gauge_value = value;

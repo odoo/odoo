@@ -21,7 +21,7 @@
 
 from datetime import date, datetime
 from dateutil import relativedelta
-
+import json
 import time
 
 from openerp.osv import fields, osv
@@ -4100,7 +4100,7 @@ class stock_picking_type(osv.osv):
                     tristates.insert(0, {'tooltip': picking.name or '' + _(': Backorder exists'), 'value': 0})
                 else:
                     tristates.insert(0, {'tooltip': picking.name or '' + _(': OK'), 'value': 1})
-            res[picking_type_id] = tristates
+            res[picking_type_id] = json.dumps(tristates)
         return res
 
     def _get_picking_count(self, cr, uid, ids, field_names, arg, context=None):
