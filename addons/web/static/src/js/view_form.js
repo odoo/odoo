@@ -2693,11 +2693,13 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
             this.trigger("datetime_changed");
             //when opening datetimepicker the date and time by default should be the one from
             //the input field if any or the current day otherwise
-            value = new moment().second(0);
-            if (this.$input.val().length !== 0 && this.is_valid_()){
-                var value = this.$input.val();
+            if (this.type_of_date === 'datetime') {
+                value = new moment().second(0);
+                if (this.$input.val().length !== 0 && this.is_valid_()){
+                    var value = this.$input.val();
+                }
+                this.$('.oe_datepicker_main').data('DateTimePicker').setValue(value);
             }
-            this.$('.oe_datepicker_main').data('DateTimePicker').setValue(value);
         }
     },
     commit_value: function () {
