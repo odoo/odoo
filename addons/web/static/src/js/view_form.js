@@ -2643,13 +2643,12 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
         };
 
         this.$input = this.$el.find('input.oe_datepicker_master');
-        if (this.type_of_date == 'date') {
+        if (this.type_of_date === 'date') {
             options['pickTime'] = false;
             options['useSeconds'] = false;
             options['format'] = instance.web.convert_to_moment_format(l10n.date_format);
         }
-
-        this.picker = this.$el.find('.oe_datepicker_main').datetimepicker(options);
+        this.picker = this.$('.oe_datepicker_main').datetimepicker(options);
         this.set_readonly(false);
         this.set({'value': false});
     },
@@ -2698,7 +2697,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
             if (this.$input.val().length !== 0 && this.is_valid_()){
                 var value = this.$input.val();
             }
-            this.$el.find('.oe_datepicker_main').data('DateTimePicker').setValue(value);
+            this.$('.oe_datepicker_main').data('DateTimePicker').setValue(value);
         }
     },
     commit_value: function () {
