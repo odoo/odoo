@@ -321,20 +321,24 @@ var Tour = {
         state.step = state.tour && state.tour.steps[state.step_id === -1 ? 0 : state.step_id];
         return state;
     },
-    error: function (step, message) {
+    logError: function (step, message, all) {
         var state = Tour.getState();
         message += '\n tour: ' + state.id
             + (step ? '\n step: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
-            + '\n href: ' + window.location.href
-            + '\n referrer: ' + document.referrer
+            + (all ? '\n href: ' + window.location.href : '' )
+            + (all ? '\n referrer: ' + document.referrer : '' )
             + (step ? '\n element: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) : '' )
             + (step ? '\n waitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size()) : '' )
-            + (step ? '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' )
-            + "\n localStorage: " + JSON.stringify(localStorage)
-            + '\n\n' + $("body").html();
+            + (step ? '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' );
+            + (all ? "\n localStorage: " + JSON.stringify(localStorage) : '' )
+            + (all ? '\n\n' + $("body").html() : '' );
+        (console.error || console.log).call(console, message);
+    },
+    error: function (step, message) {
+        var state = Tour.getState();
+        Tour.logError(step, message, true);
         Tour.reset();
         if (state.mode === "test") {
-            console.log(message);
             console.log("Tour '"+state.id+"' finish: error");
             console.log('error');
         }
@@ -414,20 +418,38 @@ var Tour = {
 
             clearTimeout(Tour.timer);
             if (Tour.check(next)) {
+
                 clearTimeout(Tour.currentTimer);
                 // use an other timeout for cke dom loading
                 Tour.saveState(state.id, state.mode, state.step.id, 0);
                 setTimeout(function () {
-                    if (state.step.onend && Tour._goto(state.step.onend())) {
-                        return;
-                    }
+                    if (state.step.onend && Tour._goto(state.step.onend())) return;
                     Tour.nextStep(next);
                 }, Tour.defaultDelay);
+                return;
+
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
+
                 Tour.timer = setTimeout(checkNext, Tour.defaultDelay);
-            } else {
-                return Tour.error(next, "Can't reach the next step");
+                return;
+
+            } else if(next.onerror) {
+                
+                Tour.logError(next, "Can't reach the next step (call next step onerror)", false);
+                var id = next.onerror();
+                if (id) {
+                    if (Tour._goto(id)) return;
+                    if (id === true) {
+                        Tour.nextStep(next);
+                        return;
+                    }
+                }
+
             }
+            
+            Tour.error(next, "Can't reach the next step");
+            return;
+
         }
         checkNext();
     },

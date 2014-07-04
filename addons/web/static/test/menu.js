@@ -230,6 +230,10 @@
                     $(".oe_view_manager_body > *:visible:not(:empty), .oe_form_sheet").addClass("already_loaded");
                     $('.oe_view_manager_switch li.active a').addClass('already_tested');
                 },
+                wait: 100,
+                onerror: function () {
+                    return "Select next action";
+                }
             },
             {
                 title:    "Select next action",
