@@ -327,13 +327,13 @@ class purchase_order(osv.osv):
             return {}
         return {'value': {'currency_id': self.pool.get('product.pricelist').browse(cr, uid, pricelist_id, context=context).currency_id.id}}
 
-   #Destination address is used when dropshipping 
-    def onchange_dest_address_id(self, cr, uid, ids, address_id):
+    #Destination address is used when dropshipping
+    def onchange_dest_address_id(self, cr, uid, ids, address_id, context=None):
         if not address_id:
             return {}
         address = self.pool.get('res.partner')
         values = {}
-        supplier = address.browse(cr, uid, address_id)
+        supplier = address.browse(cr, uid, address_id, context=context)
         if supplier:
             location_id = supplier.property_stock_customer.id
             values.update({'location_id': location_id})
@@ -348,15 +348,15 @@ class purchase_order(osv.osv):
             value.update({'related_location_id': picktype.default_location_dest_id and picktype.default_location_dest_id.id or False})
         return {'value': value}
 
-    def onchange_partner_id(self, cr, uid, ids, partner_id):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         partner = self.pool.get('res.partner')
         if not partner_id:
             return {'value': {
                 'fiscal_position': False,
                 'payment_term_id': False,
                 }}
-        supplier_address = partner.address_get(cr, uid, [partner_id], ['default'])
-        supplier = partner.browse(cr, uid, partner_id)
+        supplier_address = partner.address_get(cr, uid, [partner_id], ['default'], context=context)
+        supplier = partner.browse(cr, uid, partner_id, context=context)
         return {'value': {
             'pricelist_id': supplier.property_product_pricelist_purchase.id,
             'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,

@@ -214,7 +214,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
                             <field name="partner_ref"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="product.group_purchase_pricelist" on_change="onchange_pricelist(pricelist_id, context)"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
@@ -226,7 +226,7 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code','=','incoming')]" widget="selection" context="{'special_shortened_wh_name': True}" groups="stock.group_locations"/>
                             <field name="related_location_id" invisible="1"/>
-                            <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"
+                            <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id, context)"
                                 attrs="{'invisible':['|', ('picking_type_id','=',False), ('related_location_id','!=', False)], 
                                 'required': [('picking_type_id','!=',False), ('related_location_id','=', False)]}" 
                                 groups="stock.group_locations"/>
