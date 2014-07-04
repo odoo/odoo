@@ -575,6 +575,10 @@
                         <button class="oe_inline oe_stat_button" name="%(action_view_account_statement_from_invoice_lines)d"
                             string="Import Invoice" type="action"
                             attrs="{'invisible':[('state','=','confirm')]}" widget="statinfo" icon="fa-pencil-square-o"/>
+                        <button class="oe_inline oe_stat_button" name="button_journal_entries"
+                                string="Journal Items" type="object"
+                                attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
+                        <field name="move_line_ids" invisible="1"/>
                     </div>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
@@ -627,19 +631,6 @@
                     <div class="oe_clear"/>
                 </sheet>
                 </form>
-            </field>
-        </record>
-
-        <record id="view_bank_statement_form_journal_items" model="ir.ui.view">
-            <field name="name">account.bank.statement.journal.items.form.inherit</field>
-            <field name="model">account.bank.statement</field>
-            <field name="inherit_id" ref="view_bank_statement_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='import_buttons']" position="inside">
-                    <button name="button_journal_entries"
-                            string="Journal Items" type="object"
-                            attrs="{'invisible':[('state','!=','confirm')]}"/>
-                </xpath>
             </field>
         </record>
 
