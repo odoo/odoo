@@ -330,27 +330,13 @@ class account_bank_statement(osv.osv):
             self.pool.get('account.move').post(cr, uid, move_ids, context=context)
             self.message_post(cr, uid, [st.id], body=_('Statement %s confirmed, journal items were created.') % (st.name,), context=context)
         self.link_bank_to_partner(cr, uid, ids, context=context)
-        return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
+        return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
-        account_move_obj = self.pool.get('account.move')
-        reconcile_pool = self.pool.get('account.move.reconcile')
-        move_line_pool = self.pool.get('account.move.line')
-        move_ids = []
+        bnk_st_line_ids = []
         for st in self.browse(cr, uid, ids, context=context):
-            for line in st.line_ids:
-                if line.journal_entry_id:
-                    move_ids.append(line.journal_entry_id.id)
-                    for aml in line.journal_entry_id.line_id:
-                        if aml.reconcile_id:
-                            move_lines = [l.id for l in aml.reconcile_id.line_id]
-                            move_lines.remove(aml.id)
-                            reconcile_pool.unlink(cr, uid, [aml.reconcile_id.id], context=context)
-                            if len(move_lines) >= 2:
-                                move_line_pool.reconcile_partial(cr, uid, move_lines, 'auto', context=context)
-        if move_ids:
-            account_move_obj.button_cancel(cr, uid, move_ids, context=context)
-            account_move_obj.unlink(cr, uid, move_ids, context)
+            bnk_st_line_ids += [line.id for line in st.line_ids]
+        self.pool.get('account.bank.statement.line').cancel(cr, uid, bnk_st_line_ids, context=context)
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
@@ -443,6 +429,23 @@ class account_bank_statement(osv.osv):
                     self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
 
 class account_bank_statement_line(osv.osv):
+
+    def cancel(self, cr, uid, ids, context=None):
+        account_move_obj = self.pool.get('account.move')
+        move_ids = []
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.journal_entry_id:
+                move_ids.append(line.journal_entry_id.id)
+                for aml in line.journal_entry_id.line_id:
+                    if aml.reconcile_id:
+                        move_lines = [l.id for l in aml.reconcile_id.line_id]
+                        move_lines.remove(aml.id)
+                        self.pool.get('account.move.reconcile').unlink(cr, uid, [aml.reconcile_id.id], context=context)
+                        if len(move_lines) >= 2:
+                            self.pool.get('account.move.line').reconcile_partial(cr, uid, move_lines, 'auto', context=context)
+        if move_ids:
+            account_move_obj.button_cancel(cr, uid, move_ids, context=context)
+            account_move_obj.unlink(cr, uid, move_ids, context)
 
     def get_data_for_reconciliations(self, cr, uid, ids, context=None):
         """ Used to instanciate a batch of reconciliations in a single request """
