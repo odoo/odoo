@@ -250,6 +250,9 @@
                     if ($(".oe_error_detail").size()) {
                         console.log("Tour 'test_menu' has detected an error.");
                     }
+                    if ($(".oe_dialog_warning").size()) {
+                        console.log("Tour 'test_menu' has detected a warning.");
+                    }
 
                     $('.modal').modal('hide').remove();
 
