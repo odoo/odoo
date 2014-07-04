@@ -1462,7 +1462,7 @@ instance.web.View = instance.web.Widget.extend({
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', {
                 action_id: action_data.name,
-                context: _.extend({'active_model': dataset.model, 'active_ids': dataset.ids, 'active_id': record_id}, instance.web.pyeval.eval('context', context)),
+                context: _.extend(instance.web.pyeval.eval('context', context), {'active_model': dataset.model, 'active_ids': dataset.ids, 'active_id': record_id}),
                 do_not_eval: true
             }).then(handler);
         } else  {
