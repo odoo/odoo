@@ -6,7 +6,7 @@
         setTimeout(function () {
             $(".collapse:not(.in)").addClass("in");
             $(".dropdown:not(.open)").addClass("open");
-        },500);
+        },3000);
     }
 
     openerp.Tour.register({
@@ -205,7 +205,7 @@
                               ".oe_view_manager_body > *:visible:not(:empty).already_loaded:not(.oe_searchview_drawer_container), "+
                               ".oe_form_sheetbg.already_loaded"+
                           "):not(:has(.modal))",
-                wait: 50,
+                wait: 100,
                 onerror: function () {
                     return "Select next action";
                 }
@@ -240,6 +240,7 @@
                     $(".oe_view_manager_body > *:visible:not(:empty), .oe_form_sheet").addClass("already_loaded");
                     $('.oe_view_manager_switch li.active a').addClass('already_tested');
                 },
+                wait: 250, // delay to remove wrong-positive
                 onerror: function () {
                     return "Select next action";
                 }
