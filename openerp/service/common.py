@@ -4,8 +4,8 @@ import logging
 
 import openerp.release
 import openerp.tools
-
-import security
+from openerp.tools.translate import _
+from openerp.service import security
 
 _logger = logging.getLogger(__name__)
 
