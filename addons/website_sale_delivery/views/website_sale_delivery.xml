@@ -5,7 +5,7 @@
     <template id="cart_delivery" name="Delivery Costs" inherit_id="website_sale.total">
         <xpath expr="//tr[@id='order_total_taxes']" position="after">
             <tr class="text-muted" id="order_delivery">
-                <td><abbr title="Delivery will be updated after choosing a new delivery method">Delivery:</abbr></td>
+                <td><abbr title="ry will be updated after choosing a new delivery method">Delivery:</abbr></td>
                 <td class="text-right">
                     <span t-field="website_sale_order.amount_delivery" t-field-options='{
                         "widget": "monetary",
