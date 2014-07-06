@@ -670,11 +670,18 @@ class mrp_production(osv.osv):
         uom_obj = self.pool.get('product.uom')
         prod_line_obj = self.pool.get('mrp.production.product.line')
         workcenter_line_obj = self.pool.get('mrp.production.workcenter.line')
+        proc_obj=self.pool.get('procurement.order')
         for production in self.browse(cr, uid, ids, context=context):
             #unlink product_lines
             prod_line_obj.unlink(cr, SUPERUSER_ID, [line.id for line in production.product_lines], context=context)
             #unlink workcenter_lines
             workcenter_line_obj.unlink(cr, SUPERUSER_ID, [line.id for line in production.workcenter_lines], context=context)
+            #Get bom properties from related procurement order
+            if not properties:
+                proc_id = proc_obj.search(cr, uid, [('production_id', '=', production.id)], context=context)
+                if proc_id:
+                    proc = proc_obj.browse(cr, uid, proc_id[0], context=context)
+                    properties = [prop.id for prop in proc.property_ids or []]
             # search BoM structure and route
             bom_point = production.bom_id
             bom_id = production.bom_id.id
