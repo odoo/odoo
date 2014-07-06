@@ -37,7 +37,7 @@ class purchase_requisition(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Call for Bids Reference', required=True),
+        'name': fields.char('Call for Bids Reference', required=True, copy=False),
         'origin': fields.char('Source Document'),
         'ordering_date': fields.date('Scheduled Ordering Date'),
         'date_end': fields.datetime('Bid Submission Deadline'),
@@ -48,11 +48,14 @@ class purchase_requisition(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids': fields.one2many('purchase.order', 'requisition_id', 'Purchase Orders', states={'done': [('readonly', True)]}),
         'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by supplier'),
-        'line_ids': fields.one2many('purchase.requisition.line', 'requisition_id', 'Products to Purchase', states={'done': [('readonly', True)]}),
-        'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null'),
+        'line_ids': fields.one2many('purchase.requisition.line', 'requisition_id', 'Products to Purchase', states={'done': [('readonly', True)]}, copy=True),
+        'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null', copy=False),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
-        'state': fields.selection([('draft', 'Draft'), ('in_progress', 'Confirmed'), ('open', 'Bid Selection'), ('done', 'PO Created'), ('cancel', 'Cancelled')],
-                                  'Status', track_visibility='onchange', required=True),
+        'state': fields.selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
+                                   ('open', 'Bid Selection'), ('done', 'PO Created'),
+                                   ('cancel', 'Cancelled')],
+                                  'Status', track_visibility='onchange', required=True,
+                                  copy=False),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
@@ -70,15 +73,6 @@ class purchase_requisition(osv.osv):
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
         'picking_type_id': _get_picking_in,
     }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = default or {}
-        default.update({
-            'state': 'draft',
-            'purchase_ids': [],
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
-        })
-        return super(purchase_requisition, self).copy(cr, uid, id, default, context)
 
     def tender_cancel(self, cr, uid, ids, context=None):
         purchase_order_obj = self.pool.get('purchase.order')
@@ -176,8 +170,7 @@ class purchase_requisition(osv.osv):
         """
         Create New RFQ for Supplier
         """
-        if context is None:
-            context = {}
+        context = dict(context or {})
         assert partner_id, 'Supplier should be specified'
         purchase_order = self.pool.get('purchase.order')
         purchase_order_line = self.pool.get('purchase.order.line')
@@ -269,7 +262,7 @@ class purchase_requisition(osv.osv):
                 #copy a quotation for this supplier and change order_line then validate it
                 quotation_id = po.search(cr, uid, [('requisition_id', '=', tender.id), ('partner_id', '=', supplier)], limit=1)[0]
                 vals = self._prepare_po_from_tender(cr, uid, tender, context=context)
-                new_po = po.copy(cr, uid, quotation_id, default=vals, context=ctx)
+                new_po = po.copy(cr, uid, quotation_id, default=vals, context=context)
                 #duplicate po_line and change product_qty if needed and associate them to newly created PO
                 for line in product_line:
                     vals = self._prepare_po_line_from_tender(cr, uid, tender, line, new_po, context=context)
@@ -333,7 +326,7 @@ class purchase_order(osv.osv):
     _inherit = "purchase.order"
 
     _columns = {
-        'requisition_id': fields.many2one('purchase.requisition', 'Call for Bids'),
+        'requisition_id': fields.many2one('purchase.requisition', 'Call for Bids', copy=False),
     }
 
     def wkf_confirm_order(self, cr, uid, ids, context=None):
@@ -346,17 +339,9 @@ class purchase_order(osv.osv):
                         proc_ids = proc_obj.search(cr, uid, [('purchase_id', '=', order.id)])
                         if proc_ids and po.state == 'confirmed':
                             proc_obj.write(cr, uid, proc_ids, {'purchase_id': po.id})
-                        self.signal_purchase_cancel(cr, uid, [order.id])
+                        order.signal_workflow('purchase_cancel')
                     po.requisition_id.tender_done(context=context)
         return res
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-        if not context.get('force_requisition_id'):
-            default = default or {}
-            default.update({'requisition_id': False})
-        return super(purchase_order, self).copy(cr, uid, id, default=default, context=context)
 
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, group_id, context=None):
         stock_move_lines = super(purchase_order, self)._prepare_order_line_move(cr, uid, order, order_line, picking_id, group_id, context=context)

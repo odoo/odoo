@@ -18,403 +18,365 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pytz
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from datetime import datetime, timedelta
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp import SUPERUSER_ID
+from datetime import timedelta
 
-class event_type(osv.osv):
+import pytz
+
+from openerp import models, fields, api, _
+from openerp.exceptions import Warning
+
+class event_type(models.Model):
     """ Event Type """
     _name = 'event.type'
-    _description = __doc__
-    _columns = {
-        'name': fields.char('Event Type', required=True),
-        'default_reply_to': fields.char('Default Reply-To', size=64, help="The email address of the organizer which is put in the 'Reply-To' of all emails sent automatically at event or registrations confirmation. You can also put your email address of your mail gateway if you use one." ),
-        'default_email_event': fields.many2one('email.template','Event Confirmation Email', help="It will select this default confirmation event mail value when you choose this event"),
-        'default_email_registration': fields.many2one('email.template','Registration Confirmation Email', help="It will select this default confirmation registration mail value when you choose this event"),
-        'default_registration_min': fields.integer('Default Minimum Registration', help="It will select this default minimum value when you choose this event"),
-        'default_registration_max': fields.integer('Default Maximum Registration', help="It will select this default maximum value when you choose this event"),
-    }
-    _defaults = {
-        'default_registration_min': 0,
-        'default_registration_max': 0,
-    }
 
-class event_event(osv.osv):
+    name = fields.Char(string='Event Type', required=True)
+    default_reply_to = fields.Char(string='Default Reply-To',
+        help="The email address of the organizer which is put in the 'Reply-To' of all emails sent automatically at event or registrations confirmation. You can also put your email address of your mail gateway if you use one.")
+    default_email_event = fields.Many2one('email.template', string='Event Confirmation Email',
+        help="It will select this default confirmation event mail value when you choose this event")
+    default_email_registration = fields.Many2one('email.template', string='Registration Confirmation Email',
+        help="It will select this default confirmation registration mail value when you choose this event")
+    default_registration_min = fields.Integer(string='Default Minimum Registration', default=0,
+        help="It will select this default minimum value when you choose this event")
+    default_registration_max = fields.Integer(string='Default Maximum Registration', default=0,
+        help="It will select this default maximum value when you choose this event")
+
+
+class event_event(models.Model):
     """Event"""
     _name = 'event.event'
-    _description = __doc__
-    _order = 'date_begin'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = 'date_begin'
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
+    name = fields.Char(string='Event Name', translate=True, required=True,
+        readonly=False, states={'done': [('readonly', True)]})
+    user_id = fields.Many2one('res.users', string='Responsible User',
+        default=lambda self: self.env.user,
+        readonly=False, states={'done': [('readonly', True)]})
+    type = fields.Many2one('event.type', string='Type of Event',
+        readonly=False, states={'done': [('readonly', True)]})
+    seats_max = fields.Integer(string='Maximum Avalaible Seats', oldname='register_max',
+        readonly=True, states={'draft': [('readonly', False)]},
+        help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )")
+    seats_min = fields.Integer(string='Minimum Reserved Seats', oldname='register_min',
+        readonly=True, states={'draft': [('readonly', False)]},
+        help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )")
 
-        if isinstance(ids, (long, int)):
-            ids = [ids]
+    seats_reserved = fields.Integer(oldname='register_current', string='Reserved Seats',
+        store=True, readonly=True, compute='_compute_seats')
+    seats_available = fields.Integer(oldname='register_avail', string='Available Seats',
+        store=True, readonly=True, compute='_compute_seats')
+    seats_unconfirmed = fields.Integer(oldname='register_prospect', string='Unconfirmed Seat Reservations',
+        store=True, readonly=True, compute='_compute_seats')
+    seats_used = fields.Integer(oldname='register_attended', string='Number of Participations',
+        store=True, readonly=True, compute='_compute_seats')
 
-        res = []
-        for record in self.browse(cr, uid, ids, context=context):
-            date = record.date_begin.split(" ")[0]
-            date_end = record.date_end.split(" ")[0]
-            if date != date_end:
-                date += ' - ' + date_end
-            display_name = record.name + ' (' + date + ')'
-            res.append((record['id'], display_name))
-        return res
+    @api.multi
+    @api.depends('seats_max', 'registration_ids.state', 'registration_ids.nb_register')
+    def _compute_seats(self):
+        """ Determine reserved, available, reserved but unconfirmed and used seats. """
+        # initialize fields to 0
+        for event in self:
+            event.seats_unconfirmed = event.seats_reserved = event.seats_used = 0
+        # aggregate registrations by event and by state
+        if self.ids:
+            state_field = {
+                'draft': 'seats_unconfirmed',
+                'open':'seats_reserved',
+                'done': 'seats_used',
+            }
+            query = """ SELECT event_id, state, sum(nb_register)
+                        FROM event_registration
+                        WHERE event_id IN %s AND state IN ('draft', 'open', 'done')
+                        GROUP BY event_id, state
+                    """
+            self._cr.execute(query, (tuple(self.ids),))
+            for event_id, state, num in self._cr.fetchall():
+                event = self.browse(event_id)
+                event[state_field[state]] += num
+        # compute seats_available
+        for event in self:
+            event.seats_available = \
+                event.seats_max - (event.seats_reserved + event.seats_used) \
+                if event.seats_max > 0 else 0
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        """ Reset the state and the registrations while copying an event
-        """
-        if not default:
-            default = {}
-        default.update({
-            'state': 'draft',
-            'registration_ids': False,
-        })
-        return super(event_event, self).copy(cr, uid, id, default=default, context=context)
+    registration_ids = fields.One2many('event.registration', 'event_id', string='Registrations',
+        readonly=False, states={'done': [('readonly', True)]})
+    count_registrations = fields.Integer(string='Registrations',
+        compute='_count_registrations')
 
-    def button_draft(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+    date_begin = fields.Datetime(string='Start Date', required=True,
+        readonly=True, states={'draft': [('readonly', False)]})
+    date_end = fields.Datetime(string='End Date', required=True,
+        readonly=True, states={'draft': [('readonly', False)]})
 
-    def button_cancel(self, cr, uid, ids, context=None):
-        registration = self.pool.get('event.registration')
-        reg_ids = registration.search(cr, uid, [('event_id','in',ids)], context=context)
-        for event_reg in registration.browse(cr,uid,reg_ids,context=context):
-            if event_reg.state == 'done':
-                raise osv.except_osv(_('Error!'),_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event.") )
-        registration.write(cr, uid, reg_ids, {'state': 'cancel'}, context=context)
-        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
-
-    def button_done(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'done'}, context=context)
-
-    def confirm_event(self, cr, uid, ids, context=None):
-        register_pool = self.pool.get('event.registration')
-        for event in self.browse(cr, uid, ids, context=context):
-            if event.email_confirmation_id:
-            #send reminder that will confirm the event for all the people that were already confirmed
-                reg_ids = register_pool.search(cr, uid, [
-                                   ('event_id', '=', event.id),
-                                   ('state', 'not in', ['draft', 'cancel'])], context=context)
-                register_pool.mail_user_confirm(cr, uid, reg_ids)
-        return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
-
-    def button_confirm(self, cr, uid, ids, context=None):
-        """ Confirm Event and send confirmation email to all register peoples
-        """
-        return self.confirm_event(cr, uid, isinstance(ids, (int, long)) and [ids] or ids, context=context)
-
-    def _get_seats(self, cr, uid, ids, fields, args, context=None):
-        """Get reserved, available, reserved but unconfirmed and used seats.
-        @return: Dictionary of function field values.
-        """
-        keys = {'draft': 'seats_unconfirmed', 'open':'seats_reserved', 'done': 'seats_used'}
-        res = {}
-        for event_id in ids:
-            res[event_id] = {key:0 for key in keys.values()}
-        query = "SELECT state, sum(nb_register) FROM event_registration WHERE event_id = %s AND state IN ('draft','open','done') GROUP BY state"
-        for event in self.pool.get('event.event').browse(cr, uid, ids, context=context):
-            cr.execute(query, (event.id,))
-            reg_states = cr.fetchall()
-            for reg_state in reg_states:
-                res[event.id][keys[reg_state[0]]] = reg_state[1]
-            res[event.id]['seats_available'] = event.seats_max - \
-                (res[event.id]['seats_reserved'] + res[event.id]['seats_used']) \
-                if event.seats_max > 0 else None
-        return res
-
-    def _get_events_from_registrations(self, cr, uid, ids, context=None):
-        """Get reserved, available, reserved but unconfirmed and used seats, of the event related to a registration.
-        @return: Dictionary of function field values.
-        """
-        event_ids=set()
-        for registration in self.pool['event.registration'].browse(cr, uid, ids, context=context):
-            event_ids.add(registration.event_id.id)
-        return list(event_ids)
-
-    def _subscribe_fnc(self, cr, uid, ids, fields, args, context=None):
-        """This functional fields compute if the current user (uid) is already subscribed or not to the event passed in parameter (ids)
-        """
-        register_pool = self.pool.get('event.registration')
-        res = {}
-        for event in self.browse(cr, uid, ids, context=context):
-            res[event.id] = False
-            curr_reg_id = register_pool.search(cr, uid, [('user_id', '=', uid), ('event_id', '=' ,event.id)])
-            if curr_reg_id:
-                for reg in register_pool.browse(cr, uid, curr_reg_id, context=context):
-                    if reg.state in ('open','done'):
-                        res[event.id]= True
-                        continue
-        return res
-    
-    def _count_registrations(self, cr, uid, ids, field_name, arg, context=None):
-        return {
-            event.id: len(event.registration_ids)
-            for event in self.browse(cr, uid, ids, context=context)
-        }
-
-    def _compute_date_tz(self, cr, uid, ids, fld, arg, context=None):
-        if context is None:
-            context = {}
-        res = {}
-        for event in self.browse(cr, uid, ids, context=context):
-            ctx = dict(context, tz=(event.date_tz or 'UTC'))
-            if fld == 'date_begin_located':
-                date_to_convert = event.date_begin
-            elif fld == 'date_end_located':
-                date_to_convert = event.date_end
-            res[event.id] = fields.datetime.context_timestamp(cr, uid, datetime.strptime(date_to_convert, DEFAULT_SERVER_DATETIME_FORMAT), context=ctx)
-        return res
-
-    def _tz_get(self, cr, uid, context=None):
+    @api.model
+    def _tz_get(self):
         return [(x, x) for x in pytz.all_timezones]
 
-    _columns = {
-        'name': fields.char('Event Name', required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
-        'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
-        'type': fields.many2one('event.type', 'Type of Event', readonly=False, states={'done': [('readonly', True)]}),
-        'seats_max': fields.integer('Maximum Avalaible Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
-        'seats_min': fields.integer('Minimum Reserved Seats', oldname='register_min', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
-        'seats_reserved': fields.function(_get_seats, oldname='register_current', string='Reserved Seats', type='integer', multi='seats_reserved',
-            store={'event.registration': (_get_events_from_registrations, ['state'], 10),
-                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
-        'seats_available': fields.function(_get_seats, oldname='register_avail', string='Available Seats', type='integer', multi='seats_reserved',
-            store={'event.registration': (_get_events_from_registrations, ['state'], 10),
-                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
-        'seats_unconfirmed': fields.function(_get_seats, oldname='register_prospect', string='Unconfirmed Seat Reservations', type='integer', multi='seats_reserved',
-            store={'event.registration': (_get_events_from_registrations, ['state'], 10),
-                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
-        'seats_used': fields.function(_get_seats, oldname='register_attended', string='Number of Participations', type='integer', multi='seats_reserved',
-            store={'event.registration': (_get_events_from_registrations, ['state'], 10),
-                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
-        'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
-        'date_tz': fields.selection(_tz_get, string='Timezone'),
-        'date_begin': fields.datetime('Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'date_begin_located': fields.function(_compute_date_tz, string='Start Date Located', type="datetime"),
-        'date_end_located': fields.function(_compute_date_tz, string='End Date Located', type="datetime"),
-        'state': fields.selection([
+    date_tz = fields.Selection('_tz_get', string='Timezone',
+                        default=lambda self: self._context.get('tz', 'UTC'))
+
+    @api.one
+    @api.depends('date_tz', 'date_begin')
+    def _compute_date_begin_tz(self):
+        if self.date_begin:
+            self_in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
+            date_begin = fields.Datetime.from_string(self.date_begin)
+            self.date_begin_located = fields.Datetime.to_string(fields.Datetime.context_timestamp(self_in_tz, date_begin))
+        else:
+            self.date_begin_located = False
+
+    @api.one
+    @api.depends('date_tz', 'date_end')
+    def _compute_date_end_tz(self):
+        if self.date_end:
+            self_in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
+            date_end = fields.Datetime.from_string(self.date_end)
+            self.date_end_located = fields.Datetime.to_string(fields.Datetime.context_timestamp(self_in_tz, date_end))
+        else:
+            self.date_end_located = False
+
+    date_begin_located = fields.Datetime(string='Start Date Located', compute='_compute_date_begin_tz')
+    date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
+
+    state = fields.Selection([
             ('draft', 'Unconfirmed'),
             ('cancel', 'Cancelled'),
             ('confirm', 'Confirmed'),
-            ('done', 'Done')],
-            'Status', readonly=True, required=True,
-            help='If event is created, the status is \'Draft\'.If event is confirmed for the particular dates the status is set to \'Confirmed\'. If the event is over, the status is set to \'Done\'.If event is cancelled the status is set to \'Cancelled\'.'),
-        'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
-        'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
-        'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
-        'address_id': fields.many2one('res.partner','Location', readonly=False, states={'done': [('readonly', True)]}),
-        'country_id': fields.related('address_id', 'country_id',
-                    type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}, store=True),
-        'description': fields.html(
-            'Description', readonly=False, translate=True,
-            states={'done': [('readonly', True)]},
-            oldname='note'),
-        'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
-        'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
-        'organizer_id': fields.many2one('res.partner', "Organizer"),
-        'count_registrations': fields.function(_count_registrations, type="integer", string="Registrations"),
-    }
-    _defaults = {
-        'state': 'draft',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
-        'user_id': lambda obj, cr, uid, context: uid,
-        'organizer_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, context=c).company_id.partner_id.id,
-        'address_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, context=c).company_id.partner_id.id,
-        'date_tz': lambda self, cr, uid, ctx: ctx.get('tz', "UTC"),
-    }
+            ('done', 'Done')
+        ], string='Status', default='draft', readonly=True, required=True, copy=False,
+        help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
+    email_registration_id = fields.Many2one('email.template', string='Registration Confirmation Email',
+        help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.')
+    email_confirmation_id = fields.Many2one('email.template', string='Event Confirmation Email',
+        help="If you set an email template, each participant will receive this email announcing the confirmation of the event.")
+    reply_to = fields.Char(string='Reply-To Email',
+        readonly=False, states={'done': [('readonly', True)]},
+        help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one.")
+    address_id = fields.Many2one('res.partner', string='Location',
+        default=lambda self: self.env.user.company_id.partner_id,
+        readonly=False, states={'done': [('readonly', True)]})
+    country_id = fields.Many2one('res.country', string='Country', related='address_id.country_id',
+        store=True, readonly=False, states={'done': [('readonly', True)]})
+    description = fields.Html(string='Description', oldname='note', translate=True,
+        readonly=False, states={'done': [('readonly', True)]})
+    company_id = fields.Many2one('res.company', string='Company', change_default=True,
+        default=lambda self: self.env['res.company']._company_default_get('event.event'),
+        required=False, readonly=False, states={'done': [('readonly', True)]})
+    organizer_id = fields.Many2one('res.partner', string='Organizer',
+        default=lambda self: self.env.user.company_id.partner_id)
 
-    def _check_seats_limit(self, cr, uid, ids, context=None):
-        for event in self.browse(cr, uid, ids, context=context):
-            if event.seats_max and event.seats_available < 0:
-                return False
-        return True
+    is_subscribed = fields.Boolean(string='Subscribed',
+        compute='_compute_subscribe')
 
-    _constraints = [
-        (_check_seats_limit, 'No more available seats.', ['registration_ids','seats_max']),
-    ]
+    @api.one
+    @api.depends('registration_ids')
+    def _count_registrations(self):
+        self.count_registrations = len(self.registration_ids)
 
-    def subscribe_to_event(self, cr, uid, ids, context=None):
-        register_pool = self.pool.get('event.registration')
-        user_pool = self.pool.get('res.users')
-        num_of_seats = int(context.get('ticket', 1))
-        user = user_pool.browse(cr, uid, uid, context=context)
-        curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
-        #the subscription is done with SUPERUSER_ID because in case we share the kanban view, we want anyone to be able to subscribe
-        if not curr_reg_ids:
-            curr_reg_ids = [register_pool.create(cr, SUPERUSER_ID, {'event_id': ids[0] ,'email': user.email, 'name':user.name, 'user_id': user.id, 'nb_register': num_of_seats})]
+    @api.one
+    @api.depends('registration_ids.user_id', 'registration_ids.state')
+    def _compute_subscribe(self):
+        """ Determine whether the current user is already subscribed to any event in `self` """
+        user = self.env.user
+        self.is_subscribed = any(
+            reg.user_id == user and reg.state in ('open', 'done')
+            for reg in self.registration_ids
+        )
+
+    @api.one
+    @api.depends('name', 'date_begin', 'date_end')
+    def _compute_display_name(self):
+        dates = [dt.split(' ')[0] for dt in [self.date_begin, self.date_end] if dt]
+        dates = sorted(set(dates))
+        self.display_name = '%s (%s)' % (self.name, ' - '.join(dates))
+
+    @api.one
+    @api.constrains('seats_max', 'seats_available')
+    def _check_seats_limit(self):
+        if self.seats_max and self.seats_available < 0:
+            raise Warning(_('No more available seats.'))
+
+    @api.one
+    @api.constrains('date_begin', 'date_end')
+    def _check_closing_date(self):
+        if self.date_end < self.date_begin:
+            raise Warning(_('Closing Date cannot be set before Beginning Date.'))
+
+    @api.one
+    def button_draft(self):
+        self.state = 'draft'
+
+    @api.one
+    def button_cancel(self):
+        for event_reg in self.registration_ids:
+            if event_reg.state == 'done':
+                raise Warning(_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event."))
+        self.registration_ids.write({'state': 'cancel'})
+        self.state = 'cancel'                
+
+    @api.one
+    def button_done(self):
+        self.state = 'done'
+
+    @api.one
+    def confirm_event(self):
+        if self.email_confirmation_id:
+            # send reminder that will confirm the event for all the people that were already confirmed
+            regs = self.registration_ids.filtered(lambda reg: reg.state not in ('draft', 'cancel'))
+            regs.mail_user_confirm()
+        self.state = 'confirm'
+
+    @api.one
+    def button_confirm(self):
+        """ Confirm Event and send confirmation email to all register peoples """
+        self.confirm_event()
+
+    @api.one
+    def subscribe_to_event(self):
+        """ Subscribe the current user to a given event """
+        user = self.env.user
+        num_of_seats = int(self._context.get('ticket', 1))
+        regs = self.registration_ids.filtered(lambda reg: reg.user_id == user)
+        # the subscription is done as SUPERUSER_ID because in case we share the
+        # kanban view, we want anyone to be able to subscribe
+        if not regs:
+            regs = regs.sudo().create({
+                'event_id': self.id,
+                'email': user.email,
+                'name':user.name,
+                'user_id': user.id,
+                'nb_register': num_of_seats,
+            })
         else:
-            register_pool.write(cr, uid, curr_reg_ids, {'nb_register': num_of_seats}, context=context)
-        return register_pool.confirm_registration(cr, SUPERUSER_ID, curr_reg_ids, context=context)
+            regs.write({'nb_register': num_of_seats})
+        regs.sudo().confirm_registration()
 
-    def unsubscribe_to_event(self, cr, uid, ids, context=None):
-        register_pool = self.pool.get('event.registration')
-        #the unsubscription is done with SUPERUSER_ID because in case we share the kanban view, we want anyone to be able to unsubscribe
-        curr_reg_ids = register_pool.search(cr, SUPERUSER_ID, [('user_id', '=', uid), ('event_id', '=', ids[0])])
-        return register_pool.button_reg_cancel(cr, SUPERUSER_ID, curr_reg_ids, context=context)
+    @api.one
+    def unsubscribe_to_event(self):
+        """ Unsubscribe the current user from a given event """
+        # the unsubscription is done as SUPERUSER_ID because in case we share
+        # the kanban view, we want anyone to be able to unsubscribe
+        user = self.env.user
+        regs = self.sudo().registration_ids.filtered(lambda reg: reg.user_id == user)
+        regs.button_reg_cancel()
 
-    def _check_closing_date(self, cr, uid, ids, context=None):
-        for event in self.browse(cr, uid, ids, context=context):
-            if event.date_end < event.date_begin:
-                return False
-        return True
+    @api.onchange('type')
+    def _onchange_type(self):
+        if self.type:
+            self.reply_to = self.type.default_reply_to
+            self.email_registration_id = self.type.default_email_registration
+            self.email_confirmation_id = self.type.default_email_event
+            self.seats_min = self.type.default_registration_min
+            self.seats_max = self.type.default_registration_max
 
-    _constraints = [
-        (_check_closing_date, 'Error ! Closing Date cannot be set before Beginning Date.', ['date_end']),
-    ]
-
-    def onchange_event_type(self, cr, uid, ids, type_event, context=None):
-        values = {}
-        if type_event:
-            type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)
-            dic ={
-              'reply_to': type_info.default_reply_to,
-              'email_registration_id': type_info.default_email_registration.id,
-              'email_confirmation_id': type_info.default_email_event.id,
-              'seats_min': type_info.default_registration_min,
-              'seats_max': type_info.default_registration_max,
-            }
-            values.update(dic)
-        return values
-
-    def onchange_start_date(self, cr, uid, ids, date_begin=False, date_end=False, context=None):
-        res = {'value':{}}
-        if date_end:
-            return res
-        if date_begin and isinstance(date_begin, str):
-            date_begin = datetime.strptime(date_begin, "%Y-%m-%d %H:%M:%S")
-            date_end = date_begin + timedelta(hours=1)
-            res['value'] = {'date_end': date_end.strftime("%Y-%m-%d %H:%M:%S")}
-        return res
+    @api.onchange('date_begin')
+    def _onchange_date_begin(self):
+        if self.date_begin and not self.date_end:
+            date_begin = fields.Datetime.from_string(self.date_begin)
+            self.date_end = fields.Datetime.to_string(date_begin + timedelta(hours=1))
 
 
-class event_registration(osv.osv):
+class event_registration(models.Model):
     """Event Registration"""
     _name= 'event.registration'
-    _description = __doc__
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _columns = {
-        'id': fields.integer('ID'),
-        'origin': fields.char('Source Document', readonly=True,help="Reference of the sales order which created the registration"),
-        'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
-        'create_date': fields.datetime('Creation Date' , readonly=True),
-        'date_closed': fields.datetime('Attended Date', readonly=True),
-        'date_open': fields.datetime('Registration Date', readonly=True),
-        'reply_to': fields.related('event_id','reply_to',string='Reply-to Email', type='char', readonly=True,),
-        'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('model','=',_name)]),
-        'event_end_date': fields.related('event_id','date_end', type='datetime', string="Event End Date", readonly=True),
-        'event_begin_date': fields.related('event_id', 'date_begin', type='datetime', string="Event Start Date", readonly=True),
-        'user_id': fields.many2one('res.users', 'User', states={'done': [('readonly', True)]}),
-        'company_id': fields.related('event_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft', 'Unconfirmed'),
-                                    ('cancel', 'Cancelled'),
-                                    ('open', 'Confirmed'),
-                                    ('done', 'Attended')], 'Status',
-                                    readonly=True),
-        'email': fields.char('Email', size=64),
-        'phone': fields.char('Phone', size=64),
-        'name': fields.char('Name', select=True),
-    }
-    _defaults = {
-        'nb_register': 1,
-        'state': 'draft',
-    }
     _order = 'name, create_date desc'
 
+    origin = fields.Char(string='Source Document', readonly=True,
+        help="Reference of the sales order which created the registration")
+    nb_register = fields.Integer(string='Number of Participants', required=True, default=1,
+        readonly=True, states={'draft': [('readonly', False)]})
+    event_id = fields.Many2one('event.event', string='Event', required=True,
+        readonly=True, states={'draft': [('readonly', False)]})
+    partner_id = fields.Many2one('res.partner', string='Partner',
+        states={'done': [('readonly', True)]})
+    date_open = fields.Datetime(string='Registration Date', readonly=True)
+    date_closed = fields.Datetime(string='Attended Date', readonly=True)
+    reply_to = fields.Char(string='Reply-to Email', related='event_id.reply_to',
+        readonly=True)
+    log_ids = fields.One2many('mail.message', 'res_id', string='Logs',
+        domain=[('model', '=', _name)])
+    event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin',
+        readonly=True)
+    event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end',
+        readonly=True)
+    user_id = fields.Many2one('res.users', string='User', states={'done': [('readonly', True)]})
+    company_id = fields.Many2one('res.company', string='Company', related='event_id.company_id',
+        store=True, readonly=True, states={'draft':[('readonly', False)]})
+    state = fields.Selection([
+            ('draft', 'Unconfirmed'),
+            ('cancel', 'Cancelled'),
+            ('open', 'Confirmed'),
+            ('done', 'Attended'),
+        ], string='Status', default='draft', readonly=True, copy=False)
+    email = fields.Char(string='Email')
+    phone = fields.Char(string='Phone')
+    name = fields.Char(string='Name', select=True)
 
-    def _check_seats_limit(self, cr, uid, ids, context=None):
-        for registration in self.browse(cr, uid, ids, context=context):
-            if registration.event_id.seats_max and \
-                registration.event_id.seats_available < (registration.state == 'draft' and registration.nb_register or 0):
-                return False
-        return True
+    @api.one
+    @api.constrains('event_id', 'state', 'nb_register')
+    def _check_seats_limit(self):
+        if self.event_id.seats_max and \
+            self.event_id.seats_available < (self.nb_register if self.state == 'draft' else 0):
+                raise Warning(_('No more available seats.'))
 
-    _constraints = [
-        (_check_seats_limit, 'No more available seats.', ['event_id','nb_register','state']),
-    ]
+    @api.one
+    def do_draft(self):
+        self.state = 'draft'
 
-    def do_draft(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+    @api.one
+    def confirm_registration(self):
+        self.event_id.message_post(
+            body=_('New registration confirmed: %s.') % (self.name or ''),
+            subtype="event.mt_event_registration")
+        self.message_post(body=_('Event Registration confirmed.'))
+        self.state = 'open'
 
-    def confirm_registration(self, cr, uid, ids, context=None):
-        for reg in self.browse(cr, uid, ids, context=context or {}):
-            self.pool.get('event.event').message_post(cr, uid, [reg.event_id.id], body=_('New registration confirmed: %s.') % (reg.name or '', ),subtype="event.mt_event_registration", context=context)
-            self.message_post(cr, uid, reg.id, body=_('Event Registration confirmed.'), context=context)
-        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
+    @api.one
+    def registration_open(self):
+        """ Open Registration """
+        self.confirm_registration()
+        self.mail_user()
 
-    def registration_open(self, cr, uid, ids, context=None):
-        """ Open Registration
-        """
-        res = self.confirm_registration(cr, uid, ids, context=context)
-        self.mail_user(cr, uid, ids, context=context)
-        return res
+    @api.one
+    def button_reg_close(self):
+        """ Close Registration """
+        today = fields.Datetime.now()
+        if self.event_id.date_begin <= today:
+            self.write({'state': 'done', 'date_closed': today})
+        else:
+            raise Warning(_("You must wait for the starting day of the event to do this action."))
 
-    def button_reg_close(self, cr, uid, ids, context=None):
-        """ Close Registration
-        """
-        if context is None:
-            context = {}
-        today = fields.datetime.now()
-        for registration in self.browse(cr, uid, ids, context=context):
-            if today >= registration.event_id.date_begin:
-                values = {'state': 'done', 'date_closed': today}
-                self.write(cr, uid, ids, values)
-            else:
-                raise osv.except_osv(_('Error!'), _("You must wait for the starting day of the event to do this action."))
-        return True
+    @api.one
+    def button_reg_cancel(self):
+        self.state = 'cancel'
 
-    def button_reg_cancel(self, cr, uid, ids, context=None, *args):
-        return self.write(cr, uid, ids, {'state': 'cancel'})
+    @api.one
+    def mail_user(self):
+        """Send email to user with email_template when registration is done """
+        if self.event_id.state == 'confirm' and self.event_id.email_confirmation_id:
+            self.mail_user_confirm()
+        else:
+            template = self.event_id.email_registration_id
+            if template:
+                mail_message = template.send_mail(self.id)
 
-    def mail_user(self, cr, uid, ids, context=None):
-        """
-        Send email to user with email_template when registration is done
-        """
-        for registration in self.browse(cr, uid, ids, context=context):
-            if registration.event_id.state == 'confirm' and registration.event_id.email_confirmation_id.id:
-                self.mail_user_confirm(cr, uid, ids, context=context)
-            else:
-                template_id = registration.event_id.email_registration_id.id
-                if template_id:
-                    mail_message = self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id)
-        return True
+    @api.one
+    def mail_user_confirm(self):
+        """Send email to user when the event is confirmed """
+        template = self.event_id.email_confirmation_id
+        if template:
+            mail_message = template.send_mail(self.id)
 
-    def mail_user_confirm(self, cr, uid, ids, context=None):
-        """
-        Send email to user when the event is confirmed
-        """
-        for registration in self.browse(cr, uid, ids, context=context):
-            template_id = registration.event_id.email_confirmation_id.id
-            if template_id:
-                mail_message = self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id)
-        return True
-
-    def onchange_contact_id(self, cr, uid, ids, contact, partner, context=None):
-        if not contact:
-            return {}
-        addr_obj = self.pool.get('res.partner')
-        contact_id =  addr_obj.browse(cr, uid, contact, context=context)
-        return {'value': {
-            'email':contact_id.email,
-            'name':contact_id.name,
-            'phone':contact_id.phone,
-            }}
-
-    def onchange_partner_id(self, cr, uid, ids, part, context=None):
-        res_obj = self.pool.get('res.partner')
-        data = {}
-        if not part:
-            return {'value': data}
-        addr = res_obj.address_get(cr, uid, [part]).get('default', False)
-        if addr:
-            d = self.onchange_contact_id(cr, uid, ids, addr, part, context)
-            data.update(d['value'])
-        return {'value': data}
+    @api.onchange('partner_id')
+    def _onchange_partner(self):
+        if self.partner_id:
+            contact = self.partner_id.address_get().get('default', False)
+            if contact:
+                self.name = contact.name
+                self.email = contact.email
+                self.phone = contact.phone
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

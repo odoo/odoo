@@ -35,6 +35,7 @@ import werkzeug.wrappers
 import werkzeug.wsgi
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
 
@@ -180,12 +181,18 @@ class WebRequest(object):
     .. attribute:: db
 
         ``str``, the name of the database linked to the current request. Can
-        be ``None`` if the current request uses the ``none`` authentication.
+        be ``None`` if the current request uses the ``none`` authentication
+        in ``web`` module's controllers.
 
     .. attribute:: uid
 
         ``int``, the id of the user related to the current request. Can be
         ``None`` if the current request uses the ``none`` authentication.
+
+    .. attribute:: env
+
+        an :class:`openerp.api.Environment` bound to the current
+        request's ``cr``, ``uid`` and ``context``
     """
     def __init__(self, httprequest):
         self.httprequest = httprequest
@@ -223,7 +230,7 @@ class WebRequest(object):
     @property
     def db(self):
         """
-        The registry to the database linked to this request. Can be ``None``
+        The database linked to this request. Can be ``None``
         if the current request uses the ``none`` authentication.
         """
         return self.session.db if not self.disable_db else None
@@ -239,6 +246,13 @@ class WebRequest(object):
         if not self._cr:
             self._cr = self.registry.cursor()
         return self._cr
+
+    @lazy_property
+    def env(self):
+        """
+        The Environment bound to current request.
+        """
+        return openerp.api.Environment(self.cr, self.uid, self.context)
 
     def __enter__(self):
         _request_stack.push(self)

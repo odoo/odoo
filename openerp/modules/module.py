@@ -278,7 +278,7 @@ def init_module_models(cr, module_name, obj_list):
     for obj in obj_list:
         obj._auto_end(cr, {'module': module_name})
         cr.commit()
-    todo.sort()
+    todo.sort(key=lambda x: x[0])
     for t in todo:
         t[1](cr, *t[2])
     cr.commit()

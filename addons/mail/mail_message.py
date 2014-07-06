@@ -24,7 +24,7 @@ import logging
 from openerp import tools
 
 from email.header import decode_header
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
@@ -88,7 +88,7 @@ class mail_message(osv.Model):
         notif_ids = notif_obj.search(cr, uid, [
             ('partner_id', 'in', [partner_id]),
             ('message_id', 'in', ids),
-            ('read', '=', False),
+            ('is_read', '=', False),
         ], context=context)
         for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
             res[notif.message_id.id] = True
@@ -96,8 +96,8 @@ class mail_message(osv.Model):
 
     def _search_to_read(self, cr, uid, obj, name, domain, context=None):
         """ Search for messages to read by the current user. Condition is
-            inversed because we search unread message on a read column. """
-        return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.read', '=', not domain[0][2])]
+            inversed because we search unread message on a is_read column. """
+        return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.is_read', '=', not domain[0][2])]
 
     def _get_starred(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
@@ -114,8 +114,7 @@ class mail_message(osv.Model):
         return res
 
     def _search_starred(self, cr, uid, obj, name, domain, context=None):
-        """ Search for messages to read by the current user. Condition is
-            inversed because we search unread message on a read column. """
+        """ Search for starred messages by the current user."""
         return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.starred', '=', domain[0][2])]
 
     _columns = {
@@ -153,7 +152,7 @@ class mail_message(osv.Model):
             help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.'),
         'subject': fields.char('Subject'),
         'date': fields.datetime('Date'),
-        'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1),
+        'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1, copy=False),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
         'to_read': fields.function(_get_to_read, fnct_search=_search_to_read,
             type='boolean', string='To read',
@@ -213,8 +212,9 @@ class mail_message(osv.Model):
 
     def download_attachment(self, cr, uid, id_message, attachment_id, context=None):
         """ Return the content of linked attachments. """
-        message = self.browse(cr, uid, id_message, context=context)
-        if attachment_id in [attachment.id for attachment in message.attachment_ids]:
+        # this will fail if you cannot read the message
+        message_values = self.read(cr, uid, [id_message], ['attachment_ids'], context=context)[0]
+        if attachment_id in message_values['attachment_ids']:
             attachment = self.pool.get('ir.attachment').browse(cr, SUPERUSER_ID, attachment_id, context=context)
             if attachment.datas and attachment.datas_fname:
                 return {
@@ -227,6 +227,7 @@ class mail_message(osv.Model):
     # Notification API
     #------------------------------------------------------
 
+    @api.cr_uid_ids_context
     def set_message_read(self, cr, uid, msg_ids, read, create_missing=True, context=None):
         """ Set messages as (un)read. Technically, the notifications related
             to uid are set to (un)read. If for some msg_ids there are missing
@@ -243,22 +244,23 @@ class mail_message(osv.Model):
         user_pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
         domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
         if not create_missing:
-            domain += [('read', '=', not read)]
+            domain += [('is_read', '=', not read)]
         notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)read
         if len(notif_ids) == len(msg_ids) or not create_missing:
-            notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+            notification_obj.write(cr, uid, notif_ids, {'is_read': read}, context=context)
             return len(notif_ids)
 
         # some messages do not have notifications: find which one, create notification, update read status
         notified_msg_ids = [notification.message_id.id for notification in notification_obj.browse(cr, uid, notif_ids, context=context)]
         to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
         for msg_id in to_create_msg_ids:
-            notification_obj.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
-        notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+            notification_obj.create(cr, uid, {'partner_id': user_pid, 'is_read': read, 'message_id': msg_id}, context=context)
+        notification_obj.write(cr, uid, notif_ids, {'is_read': read}, context=context)
         return len(notif_ids)
 
+    @api.cr_uid_ids_context
     def set_message_starred(self, cr, uid, msg_ids, starred, create_missing=True, context=None):
         """ Set messages as (un)starred. Technically, the notifications related
             to uid are set to (un)starred.
@@ -276,7 +278,7 @@ class mail_message(osv.Model):
             'starred': starred
         }
         if starred:
-            values['read'] = False
+            values['is_read'] = False
 
         notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
@@ -502,6 +504,7 @@ class mail_message(osv.Model):
 
         return True
 
+    @api.cr_uid_context
     def message_read(self, cr, uid, ids=None, domain=None, message_unload_ids=None,
                         thread_level=0, context=None, parent_id=False, limit=None):
         """ Read messages from mail.message, and get back a list of structured
@@ -671,7 +674,7 @@ class mail_message(osv.Model):
                 - uid has write or create access on the related document if model, res_id
                 - otherwise: raise
         """
-        def _generate_model_record_ids(msg_val, msg_ids=[]):
+        def _generate_model_record_ids(msg_val, msg_ids):
             """ :param model_record_ids: {'model': {'res_id': (msg_id, msg_id)}, ... }
                 :param message_values: {'msg_id': {'model': .., 'res_id': .., 'author_id': ..}}
             """
@@ -782,8 +785,7 @@ class mail_message(osv.Model):
         return message_id
 
     def create(self, cr, uid, values, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         default_starred = context.pop('default_starred', False)
 
         if 'email_from' not in values:  # needed to compute reply_to
@@ -829,13 +831,6 @@ class mail_message(osv.Model):
         if attachments_to_delete:
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context=context)
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        """ Overridden to avoid duplicating fields that are unique to each email """
-        if default is None:
-            default = {}
-        default.update(message_id=False, headers=False)
-        return super(mail_message, self).copy(cr, uid, id, default=default, context=context)
 
     #------------------------------------------------------
     # Messaging API
@@ -888,5 +883,5 @@ class mail_message(osv.Model):
                 notification_obj.create(cr, uid, {
                         'message_id': message.parent_id.id,
                         'partner_id': partner.id,
-                        'read': True,
+                        'is_read': True,
                     }, context=context)

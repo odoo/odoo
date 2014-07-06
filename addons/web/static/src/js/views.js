@@ -954,12 +954,12 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     url: '/web/tests?mod=*'
                 });
                 break;
-            case 'perm_read':
+            case 'get_metadata':
                 var ids = current_view.get_selected_ids();
                 if (ids.length === 1) {
-                    this.dataset.call('perm_read', [ids]).done(function(result) {
+                    this.dataset.call('get_metadata', [ids]).done(function(result) {
                         var dialog = new instance.web.Dialog(this, {
-                            title: _.str.sprintf(_t("View Log (%s)"), self.dataset.model),
+                            title: _.str.sprintf(_t("Metadata (%s)"), self.dataset.model),
                             size: 'medium',
                         }, QWeb.render('ViewManagerDebugViewLog', {
                             perm : result[0],

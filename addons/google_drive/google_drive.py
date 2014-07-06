@@ -40,7 +40,7 @@ class config(osv.Model):
         config = self.browse(cr, SUPERUSER_ID, config_id, context=context)
         model = config.model_id
         filter_name = config.filter_id and config.filter_id.name or False
-        record = self.pool.get(model.model).read(cr, uid, res_id, [], context=context)
+        record = self.pool.get(model.model).read(cr, uid, [res_id], context=context)[0]
         record.update({'model': model.name, 'filter': filter_name})
         name_gdocs = config.name_template
         try:

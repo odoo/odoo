@@ -106,8 +106,8 @@ class stock_move(osv.osv):
             context = {}
         if type in ('in_invoice', 'in_refund'):
             # Take the user company and pricetype
-            context['currency_id'] = move_line.company_id.currency_id.id
-            amount_unit = move_line.product_id.price_get('standard_price', context=context)[move_line.product_id.id]
+            product = move_line.product_id.with_context(currency_id=move_line.company_id.currency_id.id)
+            amount_unit = product.price_get('standard_price')[move_line.product_id.id]
             return amount_unit
         return move_line.product_id.list_price
 

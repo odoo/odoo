@@ -22,6 +22,7 @@
 import threading
 
 from openerp.osv import osv
+from openerp.api import Environment
 
 class procurement_compute_all(osv.osv_memory):
     _name = 'procurement.order.compute.all'
@@ -35,17 +36,18 @@ class procurement_compute_all(osv.osv_memory):
         @param ids: List of IDs selected
         @param context: A standard dictionary
         """
-        proc_obj = self.pool.get('procurement.order')
-        #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
-        
-        new_cr = self.pool.cursor()
-        user = self.pool.get('res.users').browse(new_cr, uid, uid, context=context)
-        comps = [x.id for x in user.company_ids]
-        for comp in comps:
-            proc_obj.run_scheduler(new_cr, uid, use_new_cursor=new_cr.dbname, company_id = comp, context=context)
-        #close the new cursor
-        new_cr.close()
-        return {}
+        with Environment.manage():
+            proc_obj = self.pool.get('procurement.order')
+            #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
+            
+            new_cr = self.pool.cursor()
+            user = self.pool.get('res.users').browse(new_cr, uid, uid, context=context)
+            comps = [x.id for x in user.company_ids]
+            for comp in comps:
+                proc_obj.run_scheduler(new_cr, uid, use_new_cursor=new_cr.dbname, company_id = comp, context=context)
+            #close the new cursor
+            new_cr.close()
+            return {}
 
     def procure_calculation(self, cr, uid, ids, context=None):
         """

@@ -1,0 +1,30 @@
+<openerp>
+    <data>
+        <record id="category_0" model="test_new_api.category">
+            <field name="name">Chat</field>
+        </record>
+        <record id="category_0_0" model="test_new_api.category">
+            <field name="name">Foolish</field>
+            <field name="parent" ref="category_0"/>
+        </record>
+
+        <record id="discussion_0" model="test_new_api.discussion">
+            <field name="name">Stuff</field>
+            <field name="participants" eval="[(4, ref('base.user_root')), (4, ref('base.user_demo'))]"/>
+        </record>
+
+        <record id="message_0_0" model="test_new_api.message">
+            <field name="discussion" ref="discussion_0"/>
+            <field name="body">Hey dude!</field>
+        </record>
+        <record id="message_0_1" model="test_new_api.message">
+            <field name="discussion" ref="discussion_0"/>
+            <field name="author" ref="base.user_demo"/>
+            <field name="body">What's up?</field>
+        </record>
+        <record id="message_0_2" model="test_new_api.message">
+            <field name="discussion" ref="discussion_0"/>
+            <field name="body">This is a much longer message</field>
+        </record>
+    </data>
+</openerp>

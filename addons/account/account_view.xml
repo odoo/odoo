@@ -1209,7 +1209,7 @@
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
                     <field name="date_maturity" invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund']"/>
-                    <field name="reconcile"/>
+                    <field name="reconcile_ref"/>
                     <field name="invoice" invisible="1"/>
                     <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
                     <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />

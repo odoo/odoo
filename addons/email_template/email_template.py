@@ -30,7 +30,7 @@ import urlparse
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
-from openerp import tools
+from openerp import tools, api
 from openerp.tools.translate import _
 from urllib import urlencode, quote as quote
 
@@ -151,6 +151,7 @@ class email_template(osv.osv):
         """
         if context is None:
             context = {}
+        res_ids = filter(None, res_ids)         # to avoid browsing [None] below
         results = dict.fromkeys(res_ids, u"")
 
         # try to load the template
@@ -250,10 +251,10 @@ class email_template(osv.osv):
                                    help="Name to use for the generated report file (may contain placeholders)\n"
                                         "The extension can be omitted and will then come from the report type."),
         'report_template': fields.many2one('ir.actions.report.xml', 'Optional report to print and attach'),
-        'ref_ir_act_window': fields.many2one('ir.actions.act_window', 'Sidebar action', readonly=True,
+        'ref_ir_act_window': fields.many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                             help="Sidebar action to make this template available on records "
                                                  "of the related document model"),
-        'ref_ir_value': fields.many2one('ir.values', 'Sidebar Button', readonly=True,
+        'ref_ir_value': fields.many2one('ir.values', 'Sidebar Button', readonly=True, copy=False,
                                        help="Sidebar button to open the sidebar action"),
         'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                            'attachment_id', 'Attachments',
@@ -334,13 +335,8 @@ class email_template(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         template = self.browse(cr, uid, id, context=context)
-        if default is None:
-            default = {}
-        default = default.copy()
-        default.update(
-            name=_("%s (copy)") % (template.name),
-            ref_ir_act_window=False,
-            ref_ir_value=False)
+        default = dict(default or {},
+                       name=_("%s (copy)") % template.name)
         return super(email_template, self).copy(cr, uid, id, default, context)
 
     def build_expression(self, field_name, sub_field_name, null_value):
@@ -505,6 +501,7 @@ class email_template(osv.osv):
 
         return results
 
+    @api.cr_uid_id_context
     def send_mail(self, cr, uid, template_id, res_id, force_send=False, raise_exception=False, context=None):
         """Generates a new mail message for the given template and record,
            and schedules it for delivery through the ``mail`` module's scheduler.
@@ -541,6 +538,7 @@ class email_template(osv.osv):
                 'res_model': 'mail.message',
                 'res_id': mail.mail_message_id.id,
             }
+            context = dict(context)
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
         if attachment_ids:

@@ -28,7 +28,7 @@ class l10n_ma_report(osv.osv):
     _columns = {
         'code': fields.char('Code', size=64),
         'name': fields.char('Name'),
-        'line_ids': fields.one2many('l10n.ma.line', 'report_id', 'Lines'),
+        'line_ids': fields.one2many('l10n.ma.line', 'report_id', 'Lines', copy=True),
     }
     _sql_constraints = [
                 ('code_uniq', 'unique (code)','The code report must be unique !')

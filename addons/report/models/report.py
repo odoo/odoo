@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import api
 from openerp.osv import osv
 from openerp.tools import config
 from openerp.tools.translate import _
@@ -116,7 +117,7 @@ class Report(osv.Model):
         if request and hasattr(request, 'website'):
             if request.website is not None:
                 website = request.website
-                context.update(translatable=context.get('lang') != request.website.default_lang_code)
+                context = dict(context, translatable=context.get('lang') != request.website.default_lang_code)
         values.update(
             time=time,
             translate_doc=translate_doc,
@@ -131,6 +132,7 @@ class Report(osv.Model):
     #--------------------------------------------------------------------------
     # Main report methods
     #--------------------------------------------------------------------------
+    @api.v7
     def get_html(self, cr, uid, ids, report_name, data=None, context=None):
         """This method generates and returns html version of a report.
         """
@@ -151,6 +153,12 @@ class Report(osv.Model):
             }
             return self.render(cr, uid, [], report.report_name, docargs, context=context)
 
+    @api.v8
+    def get_html(self, records, report_name, data=None):
+        return self._model.get_html(self._cr, self._uid, records.ids, report_name,
+                                    data=data, context=self._context)
+
+    @api.v7
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
         """This method generates and returns pdf version of a report.
         """
@@ -245,6 +253,12 @@ class Report(osv.Model):
             paperformat, specific_paperformat_args, save_in_attachment
         )
 
+    @api.v8
+    def get_pdf(self, records, report_name, html=None, data=None):
+        return self._model.get_pdf(self._cr, self._uid, records.ids, report_name,
+                                   html=html, data=data, context=self._context)
+
+    @api.v7
     def get_action(self, cr, uid, ids, report_name, data=None, context=None):
         """Return an action of type ir.actions.report.xml.
 
@@ -254,7 +268,7 @@ class Report(osv.Model):
         if ids:
             if not isinstance(ids, list):
                 ids = [ids]
-            context['active_ids'] = ids
+            context = dict(context or {}, active_ids=ids)
 
         report_obj = self.pool['ir.actions.report.xml']
         idreport = report_obj.search(cr, uid, [('report_name', '=', report_name)], context=context)
@@ -276,9 +290,15 @@ class Report(osv.Model):
             'context': context,
         }
 
+    @api.v8
+    def get_action(self, records, report_name, data=None):
+        return self._model.get_action(self._cr, self._uid, records.ids, report_name,
+                                      data=data, context=self._context)
+
     #--------------------------------------------------------------------------
     # Report generation helpers
     #--------------------------------------------------------------------------
+    @api.v7
     def _check_attachment_use(self, cr, uid, ids, report):
         """ Check attachment_use field. If set to true and an existing pdf is already saved, load
         this one now. Else, mark save it.
@@ -310,6 +330,11 @@ class Report(osv.Model):
                         # Mark current document to be saved
                         save_in_attachment[record_id] = filename
         return save_in_attachment
+
+    @api.v8
+    def _check_attachment_use(self, records, report):
+        return self._model._check_attachment_use(
+            self._cr, self._uid, records.ids, report, context=self._context)
 
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state

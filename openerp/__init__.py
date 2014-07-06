@@ -67,9 +67,7 @@ def registry(database_name):
 # Imports
 #----------------------------------------------------------
 import addons
-import cli
 import conf
-import http
 import loglevels
 import modules
 import netsvc
@@ -82,5 +80,18 @@ import sql_db
 import tools
 import workflow
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+#----------------------------------------------------------
+# Model classes, fields, api decorators, and translations
+#----------------------------------------------------------
+from . import models
+from . import fields
+from . import api
+from openerp.tools.translate import _
 
+#----------------------------------------------------------
+# Other imports, which may require stuff from above
+#----------------------------------------------------------
+import cli
+import http
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

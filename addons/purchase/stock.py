@@ -50,9 +50,7 @@ class stock_move(osv.osv):
             default = {}
         if not default.get('split_from'):
             #we don't want to propagate the link to the purchase order line except in case of move split
-            default.update({
-                'purchase_line_id': False,
-            })
+            default['purchase_line_id'] = False
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
 

@@ -73,7 +73,7 @@ class WebsiteMembership(http.Controller):
         # displayed membership lines
         membership_line_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
         membership_lines = membership_line_obj.browse(cr, uid, membership_line_ids, context=context)
-        membership_lines.sort(key=lambda x: x.membership_id.website_sequence)
+        membership_lines = sorted(membership_lines, key=lambda x: x.membership_id.website_sequence)
         partner_ids = [m.partner.id for m in membership_lines]
         google_map_partner_ids = ",".join(map(str, partner_ids))
 

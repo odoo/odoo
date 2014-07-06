@@ -179,7 +179,7 @@ class account_cash_statement(osv.osv):
             },
             help="Total of cash transaction lines."),
         'closing_date': fields.datetime("Closed On"),
-        'details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines'),
+        'details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines', copy=True),
         'opening_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Opening Cashbox Lines'),
         'closing_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Closing Cashbox Lines'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
@@ -337,7 +337,7 @@ class account_journal(osv.osv):
         return result
 
     _columns = {
-        'cashbox_line_ids' : fields.one2many('account.journal.cashbox.line', 'journal_id', 'CashBox'),
+        'cashbox_line_ids' : fields.one2many('account.journal.cashbox.line', 'journal_id', 'CashBox', copy=True),
     }
 
     _defaults = {

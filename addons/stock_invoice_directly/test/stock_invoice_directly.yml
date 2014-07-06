@@ -51,7 +51,7 @@
 -
   !python {model: account.invoice}: |
     picking_obj = self.pool.get('stock.picking')
-    picking = picking_obj.browse(cr, uid, [ref('stock_picking_out0')])
+    picking = picking_obj.browse(cr, uid, [ref('stock_picking_out0')], context=context)
     partner = picking[0].partner_id.id
-    inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner)])
+    inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner)], context=context)
     assert inv_ids, 'No Invoice is generated!'

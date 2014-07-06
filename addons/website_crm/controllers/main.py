@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import base64
 
-from openerp.tools.translate import _
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp import SUPERUSER_ID
-
+import werkzeug
 import werkzeug.urls
 
+from openerp import http, SUPERUSER_ID
+from openerp.http import request
+from openerp.tools.translate import _
 
 class contactus(http.Controller):
 
