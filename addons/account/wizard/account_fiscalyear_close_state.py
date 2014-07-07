@@ -41,6 +41,10 @@ class account_fiscalyear_close_state(osv.osv_memory):
         @param ids: List of Account fiscalyear close state’s IDs
 
         """
+        journal_period_obj = self.pool.get('account.journal.period')
+        period_obj = self.pool.get('account.period')
+        fiscalyear_obj = self.pool.get('account.fiscalyear')
+
         for data in  self.read(cr, uid, ids, context=context):
             fy_id = data['fy_id'][0]
 
@@ -53,6 +57,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
                     'WHERE fiscalyear_id = %s', ('done', fy_id))
             cr.execute('UPDATE account_fiscalyear ' \
                     'SET state = %s WHERE id = %s', ('done', fy_id))
+            self.invalidate_cache(cr, uid, context=context)
 
             return {'type': 'ir.actions.act_window_close'}
 

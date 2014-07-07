@@ -397,10 +397,19 @@
         <field name="company_id" ref="res_company_oerp_be"/>
         <field name="currency_id" ref="base.EUR"/>
         </record>
+
+        <!-- due to the ways the new API works we need to unset the company (automatically setted
+             to the default conpany during module install) before changing the currency to avoid
+             missmatch against currently set company currency and new one
+         -->
+        <record id="project.project_project_3" model="project.project">
+          <field name="company_id" eval="False"/>
+        </record>
         <record id="project.project_project_3" model="project.project">
         <field name="company_id" ref="res_company_oerp_us"/>
         <field name="currency_id" ref="base.USD"/>
         </record>
+
         <record id="project.project_project_4" model="project.project">
         <field name="company_id" ref="res_company_oerp_be"/>
         <field name="currency_id" ref="base.EUR"/>

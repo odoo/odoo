@@ -134,7 +134,7 @@ class procurement_order(osv.osv):
             ('exception', 'Exception'),
             ('running', 'Running'),
             ('done', 'Done')
-        ], 'Status', required=True, track_visibility='onchange'),
+        ], 'Status', required=True, track_visibility='onchange', copy=False),
     }
 
     _defaults = {

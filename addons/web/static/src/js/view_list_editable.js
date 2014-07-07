@@ -783,7 +783,7 @@
             this.record = null;
             this.form.do_hide();
             return $.when(record);
-        }
+        },
     });
 
     instance.web.ListView.Groups.include(/** @lends instance.web.ListView.Groups# */{

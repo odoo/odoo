@@ -19,14 +19,9 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from decimal import Decimal
 import logging
-import pdb
 import time
 
-import openerp
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -81,10 +76,10 @@ class pos_config(osv.osv):
         'receipt_footer': fields.text('Receipt Footer',help="A short text that will be inserted as a footer in the printed receipt"),
         'proxy_ip':       fields.char('IP Address', help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty', size=45),
 
-        'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True),
+        'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True, copy=False),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
             help="This sequence is automatically created by OpenERP but you can change it "\
-                "to customize the reference numbers of your orders."),
+                "to customize the reference numbers of your orders.", copy=False),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
         'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True),
@@ -106,16 +101,6 @@ class pos_config(osv.osv):
     _constraints = [
         (_check_cash_control, "You cannot have two cash controls in one Point Of Sale !", ['journal_ids']),
     ]
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        d = {
-            'sequence_id' : False,
-        }
-        d.update(default)
-        return super(pos_config, self).copy(cr, uid, id, d, context=context)
-
 
     def name_get(self, cr, uid, ids, context=None):
         result = []
@@ -252,7 +237,7 @@ class pos_session(osv.osv):
 
         'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
-                select=1),
+                select=1, copy=False),
         
         'sequence_number': fields.integer('Order Sequence Number'),
 
@@ -353,7 +338,7 @@ class pos_session(osv.osv):
     ]
 
     def create(self, cr, uid, values, context=None):
-        context = context or {}
+        context = dict(context or {})
         config_id = values.get('config_id', False) or context.get('default_config_id', False)
         if not config_id:
             raise osv.except_osv( _('Error!'),
@@ -440,9 +425,9 @@ class pos_session(osv.osv):
             if not record.start_at:
                 values['start_at'] = time.strftime('%Y-%m-%d %H:%M:%S')
             values['state'] = 'opened'
-            record.write(values, context=context)
+            record.write(values)
             for st in record.statement_ids:
-                st.button_open(context=context)
+                st.button_open()
 
         return self.open_frontend_cb(cr, uid, ids, context=context)
 
@@ -658,23 +643,8 @@ class pos_order(osv.osv):
             res[order.id]['amount_total'] = cur_obj.round(cr, uid, cur, val1)
         return res
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        d = {
-            'state': 'draft',
-            'invoice_id': False,
-            'account_move': False,
-            'picking_id': False,
-            'statement_ids': [],
-            'nb_print': 0,
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'pos.order'),
-        }
-        d.update(default)
-        return super(pos_order, self).copy(cr, uid, id, d, context=context)
-
     _columns = {
-        'name': fields.char('Order Ref', required=True, readonly=True),
+        'name': fields.char('Order Ref', required=True, readonly=True, copy=False),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
@@ -682,7 +652,7 @@ class pos_order(osv.osv):
         'amount_total': fields.function(_amount_all, string='Total', multi='all'),
         'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits_compute=dp.get_precision('Account'), multi='all'),
         'amount_return': fields.function(_amount_all, 'Returned', digits_compute=dp.get_precision('Account'), multi='all'),
-        'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True),
+        'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True),
         'statement_ids': fields.one2many('account.bank.statement.line', 'pos_statement_id', 'Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
@@ -700,16 +670,16 @@ class pos_order(osv.osv):
                                    ('paid', 'Paid'),
                                    ('done', 'Posted'),
                                    ('invoiced', 'Invoiced')],
-                                  'Status', readonly=True),
+                                  'Status', readonly=True, copy=False),
 
-        'invoice_id': fields.many2one('account.invoice', 'Invoice'),
-        'account_move': fields.many2one('account.move', 'Journal Entry', readonly=True),
-        'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice', copy=False),
+        'account_move': fields.many2one('account.move', 'Journal Entry', readonly=True, copy=False),
+        'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True, copy=False),
         'picking_type_id': fields.related('session_id', 'config_id', 'picking_type_id', string="Picking Type", type='many2one', relation='stock.picking.type'),
         'location_id': fields.related('session_id', 'config_id', 'stock_location_id', string="Location", type='many2one', store=True, relation='stock.location'),
         'note': fields.text('Internal Notes'),
-        'nb_print': fields.integer('Number of Print', readonly=True),
-        'pos_reference': fields.char('Receipt Ref', readonly=True),
+        'nb_print': fields.integer('Number of Print', readonly=True, copy=False),
+        'pos_reference': fields.char('Receipt Ref', readonly=True, copy=False),
         'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='account.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
     }
 
@@ -831,8 +801,7 @@ class pos_order(osv.osv):
 
     def add_payment(self, cr, uid, order_id, data, context=None):
         """Create a new payment for the order"""
-        if not context:
-            context = {}
+        context = dict(context or {})
         statement_line_obj = self.pool.get('account.bank.statement.line')
         property_obj = self.pool.get('ir.property')
         order = self.browse(cr, uid, order_id, context=context)
@@ -1282,7 +1251,7 @@ class pos_order_line(osv.osv):
 
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'name': fields.char('Line No', required=True),
+        'name': fields.char('Line No', required=True, copy=False),
         'notice': fields.char('Discount Notice'),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
         'price_unit': fields.float(string='Unit Price', digits_compute=dp.get_precision('Account')),
@@ -1300,16 +1269,6 @@ class pos_order_line(osv.osv):
         'discount': lambda *a: 0.0,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'pos.order.line')
-        })
-        return super(pos_order_line, self).copy_data(cr, uid, id, default, context=context)
-
-import io, StringIO
 
 class ean_wizard(osv.osv_memory):
     _name = 'pos.ean_wizard'

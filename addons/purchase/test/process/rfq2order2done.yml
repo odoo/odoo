@@ -46,8 +46,8 @@
   Reception is ready for process so now done the reception.
 -
   !python {model: stock.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_1")).picking_ids[0]
-    pick_ids.do_transfer(context=context)
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_1"), context=context).picking_ids[0]
+    pick_ids.do_transfer()
 -
   I check that purchase order is shipped.
 -
@@ -58,8 +58,8 @@
   I Validate Invoice of Purchase Order.
 -
   !python {model: purchase.order}: |
-    invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_1")).invoice_ids]
-    self.pool.get('account.invoice').signal_invoice_open(cr, uid, invoice_ids)
+    for invoice in self.browse(cr, uid, ref('purchase_order_1'), context=context).invoice_ids:
+      invoice.signal_workflow('invoice_open')
 -
   I check that purchase order is invoiced.
 -

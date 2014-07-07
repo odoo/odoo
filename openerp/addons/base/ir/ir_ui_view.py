@@ -35,7 +35,7 @@ import HTMLParser
 from lxml import etree
 
 import openerp
-from openerp import tools
+from openerp import tools, api
 from openerp.http import request
 from openerp.osv import fields, osv, orm
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
@@ -301,15 +301,6 @@ class view(osv.osv):
                     view.id,
                     view.application,
                 ))
-
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'model_ids': [],
-        })
-        return super(view, self).copy(cr, uid, id, default, context=context)
 
     # default view selection
     def default_view(self, cr, uid, model, view_type, context=None):
@@ -603,7 +594,7 @@ class view(osv.osv):
 
         modifiers = {}
         Model = self.pool.get(model)
-        if not Model:
+        if Model is None:
             self.raise_view_error(cr, user, _('Model not found: %(model)s') % dict(model=model),
                                   view_id, context)
 
@@ -622,10 +613,10 @@ class view(osv.osv):
 
                :return: True if field should be included in the result of fields_view_get
             """
-            if node.tag == 'field' and node.get('name') in Model._all_columns:
-                column = Model._all_columns[node.get('name')].column
-                if column.groups and not self.user_has_groups(
-                        cr, user, groups=column.groups, context=context):
+            if node.tag == 'field' and node.get('name') in Model._fields:
+                field = Model._fields[node.get('name')]
+                if field.groups and not self.user_has_groups(
+                        cr, user, groups=field.groups, context=context):
                     node.getparent().remove(node)
                     fields.pop(node.get('name'), None)
                     # no point processing view-level ``groups`` anymore, return
@@ -662,15 +653,8 @@ class view(osv.osv):
                 fields = xfields
             if node.get('name'):
                 attrs = {}
-                try:
-                    if node.get('name') in Model._columns:
-                        column = Model._columns[node.get('name')]
-                    else:
-                        column = Model._inherit_fields[node.get('name')][2]
-                except Exception:
-                    column = False
-
-                if column:
+                field = Model._fields.get(node.get('name'))
+                if field:
                     children = False
                     views = {}
                     for f in node:
@@ -678,7 +662,7 @@ class view(osv.osv):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = model
-                            xarch, xfields = self.postprocess_and_fields(cr, user, column._obj or None, f, view_id, ctx)
+                            xarch, xfields = self.postprocess_and_fields(cr, user, field.comodel_name, f, view_id, ctx)
                             views[str(f.tag)] = {
                                 'arch': xarch,
                                 'fields': xfields
@@ -746,6 +730,36 @@ class view(osv.osv):
         orm.transfer_modifiers_to_node(modifiers, node)
         return fields
 
+    def add_on_change(self, cr, user, model_name, arch):
+        """ Add attribute on_change="1" on fields that are dependencies of
+            computed fields on the same view.
+        """
+        # map each field object to its corresponding nodes in arch
+        field_nodes = collections.defaultdict(list)
+
+        def collect(node, model):
+            if node.tag == 'field':
+                field = model._fields.get(node.get('name'))
+                if field:
+                    field_nodes[field].append(node)
+                    if field.relational:
+                        model = self.pool.get(field.comodel_name)
+            for child in node:
+                collect(child, model)
+
+        collect(arch, self.pool[model_name])
+
+        for field, nodes in field_nodes.iteritems():
+            # if field should trigger an onchange, add on_change="1" on the
+            # nodes referring to field
+            model = self.pool[field.model_name]
+            if model._has_onchange(field, field_nodes):
+                for node in nodes:
+                    if not node.get('on_change'):
+                        node.set('on_change', '1')
+
+        return arch
+
     def _disable_workflow_buttons(self, cr, user, model, node):
         """ Set the buttons in node to readonly if the user can't activate them. """
         if model is None or user == 1:
@@ -784,7 +798,7 @@ class view(osv.osv):
         """
         fields = {}
         Model = self.pool.get(model)
-        if not Model:
+        if Model is None:
             self.raise_view_error(cr, user, _('Model not found: %(model)s') % dict(model=model), view_id, context)
 
         if node.tag == 'diagram':
@@ -800,6 +814,7 @@ class view(osv.osv):
         else:
             fields = Model.fields_get(cr, user, None, context)
 
+        node = self.add_on_change(cr, user, model, node)
         fields_def = self.postprocess(cr, user, model, node, view_id, False, fields, context=context)
         node = self._disable_workflow_buttons(cr, user, model, node)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):
@@ -965,6 +980,7 @@ class view(osv.osv):
         xmlid = imd.search_read(cr, uid, domain, ['module', 'name'])[0]
         return '%s.%s' % (xmlid['module'], xmlid['name'])
 
+    @api.cr_uid_ids_context
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if isinstance(id_or_xml_id, list):
             id_or_xml_id = id_or_xml_id[0]

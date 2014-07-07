@@ -51,12 +51,11 @@ class Environment(dict):
         self.id = record.id
         self.ids = [record.id]
         self.obj = openerp.registry(self.cr.dbname)[self.model]
-        self.columns = self.obj._columns.keys() + self.obj._inherit_fields.keys()
 
     def __getitem__(self, key):
-        if (key in self.columns) or (key in dir(self.obj)):
-            res = self.obj.browse(self.cr, self.uid, self.id)
-            return res[key]
+        records = self.obj.browse(self.cr, self.uid, self.ids)
+        if hasattr(records, key):
+            return getattr(records, key)
         else:
             return super(Environment, self).__getitem__(key)
 

@@ -424,8 +424,7 @@ class gamification_goal(osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         """Overwrite the create method to add a 'no_remind_goal' field to True"""
-        if context is None:
-            context = {}
+        context = dict(context or {})
         context['no_remind_goal'] = True
         return super(gamification_goal, self).create(cr, uid, vals, context=context)
 

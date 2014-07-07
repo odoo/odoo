@@ -16,14 +16,14 @@
 -
   !record {model: res.currency.rate, id: nov_usd}:
     currency_id: base.USD
-    name: !eval "'%s-11-01' %(datetime.now().year)"
+    name: !eval "'%s-11-01 00:00:00' %(datetime.now().year)"
     rate: 1.8
 -
   I create currency USD in OpenERP for December of 1.5 Rate
 -
   !record {model: res.currency.rate, id: dec_usd}:
     currency_id: base.USD
-    name: !eval "'%s-12-01' %(datetime.now().year)"
+    name: !eval "'%s-12-01 00:00:00' %(datetime.now().year)"
     rate: 1.5
 -
   I set the income and expense currency accounts on the main company
@@ -92,13 +92,16 @@
   I check that first invoice move is correct for creditor account(debit - credit == -555.56)
 -
   !python {model: account.invoice}: |
+    from openerp.tools import float_compare
     invoice_id = self.browse(cr, uid, ref("account_supplier_invoice_november"))
     assert invoice_id.move_id, "Move not created for open invoice"
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (move_line.debit - move_line.credit == -555.56), "Invoice move is incorrect for creditor account"
-    assert (move_line.amount_currency == -1000), "Amount currency is incorrect for creditor account"
+    assert float_compare(move_line.debit - move_line.credit, -555.56, 2) == 0, \
+           "Invoice move is incorrect for creditor account"
+    assert float_compare(move_line.amount_currency, -1000, 2) == 0, \
+           "Amount currency is incorrect for creditor account"
 -
   I set the context that will be used for the encoding of all the vouchers of this file
 -

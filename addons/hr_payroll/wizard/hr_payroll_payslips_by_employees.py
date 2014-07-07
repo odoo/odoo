@@ -44,7 +44,7 @@ class hr_payslip_employees(osv.osv_memory):
         data = self.read(cr, uid, ids, context=context)[0]
         run_data = {}
         if context and context.get('active_id', False):
-            run_data = run_pool.read(cr, uid, context['active_id'], ['date_start', 'date_end', 'credit_note'])
+            run_data = run_pool.read(cr, uid, [context['active_id']], ['date_start', 'date_end', 'credit_note'])[0]
         from_date =  run_data.get('date_start', False)
         to_date = run_data.get('date_end', False)
         credit_note = run_data.get('credit_note', False)

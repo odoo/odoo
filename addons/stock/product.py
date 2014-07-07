@@ -408,7 +408,7 @@ class product_putaway_strategy(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True),
         'method': fields.selection(_get_putaway_options, "Method", required=True),
-        'fixed_location_ids': fields.one2many('stock.fixed.putaway.strat', 'putaway_id', 'Fixed Locations Per Product Category', help="When the method is fixed, this location will be used to store the products"),
+        'fixed_location_ids': fields.one2many('stock.fixed.putaway.strat', 'putaway_id', 'Fixed Locations Per Product Category', help="When the method is fixed, this location will be used to store the products", copy=True),
     }
 
     _defaults = {

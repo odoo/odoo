@@ -445,7 +445,7 @@ class QWeb(orm.AbstractModel):
         record, field_name = template_attributes["field"].rsplit('.', 1)
         record = self.eval_object(record, qwebcontext)
 
-        column = record._model._all_columns[field_name].column
+        column = record._all_columns[field_name].column
         options = json.loads(template_attributes.get('field-options') or '{}')
         field_type = get_field_type(column, options)
 
@@ -506,10 +506,10 @@ class FieldConverter(osv.AbstractModel):
 
         :returns: iterable of (attribute name, attribute value) pairs.
         """
-        column = record._model._all_columns[field_name].column
+        column = record._all_columns[field_name].column
         field_type = get_field_type(column, options)
         return [
-            ('data-oe-model', record._model._name),
+            ('data-oe-model', record._name),
             ('data-oe-id', record.id),
             ('data-oe-field', field_name),
             ('data-oe-type', field_type),
@@ -541,7 +541,7 @@ class FieldConverter(osv.AbstractModel):
         try:
             content = self.record_to_html(
                 cr, uid, field_name, record,
-                record._model._all_columns[field_name].column,
+                record._all_columns[field_name].column,
                 options, context=context)
             if options.get('html-escape', True):
                 content = escape(content)
@@ -549,7 +549,7 @@ class FieldConverter(osv.AbstractModel):
                 content = content.__html__()
         except Exception:
             _logger.warning("Could not get field %s for model %s",
-                            field_name, record._model._name, exc_info=True)
+                            field_name, record._name, exc_info=True)
             content = None
 
         if context and context.get('inherit_branding'):
@@ -879,7 +879,7 @@ class Contact(orm.AbstractModel):
 
         id = getattr(record, field_name).id
         field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
-        value = field_browse.name_get()[0][1]
+        value = field_browse.display_name
 
         val = {
             'name': value.split("\n")[0],
@@ -888,7 +888,7 @@ class Contact(orm.AbstractModel):
             'mobile': field_browse.mobile,
             'fax': field_browse.fax,
             'city': field_browse.city,
-            'country_id': field_browse.country_id and field_browse.country_id.name_get()[0][1],
+            'country_id': field_browse.country_id.display_name,
             'website': field_browse.website,
             'email': field_browse.email,
             'fields': opf,
