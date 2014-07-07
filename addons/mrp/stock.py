@@ -159,7 +159,7 @@ class StockMove(osv.osv):
                                                     'consumed_for': consumed_for}, context=context)
             self.action_done(cr, uid, res, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
-            production_obj.signal_button_produce(cr, uid, production_ids)
+            production_obj.signal_workflow(cr, uid, production_ids, 'button_produce')
             for new_move in res:
                 if new_move != move.id:
                     #This move is not already there in move lines of production order
@@ -181,7 +181,7 @@ class StockMove(osv.osv):
             #If we are not scrapping our whole move, tracking and lot references must not be removed
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
-                production_obj.signal_button_produce(cr, uid, [prod_id])
+                production_obj.signal_workflow(cr, uid, [prod_id], 'button_produce')
             for new_move in new_moves:
                 production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
                 res.append(new_move)
