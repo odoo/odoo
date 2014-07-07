@@ -46,7 +46,7 @@ class resource_calendar(osv.osv):
     _columns = {
         'name': fields.char("Name", required=True),
         'company_id': fields.many2one('res.company', 'Company', required=False),
-        'attendance_ids': fields.one2many('resource.calendar.attendance', 'calendar_id', 'Working Time'),
+        'attendance_ids': fields.one2many('resource.calendar.attendance', 'calendar_id', 'Working Time', copy=True),
         'manager': fields.many2one('res.users', 'Workgroup Manager'),
         'leave_ids': fields.one2many(
             'resource.calendar.leaves', 'calendar_id', 'Leaves',
@@ -654,8 +654,8 @@ class resource_resource(osv.osv):
     _name = "resource.resource"
     _description = "Resource Detail"
     _columns = {
-        'name' : fields.char("Name", required=True),
-        'code': fields.char('Code', size=16),
+        'name': fields.char("Name", required=True),
+        'code': fields.char('Code', size=16, copy=False),
         'active' : fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the resource record without removing it."),
         'company_id' : fields.many2one('res.company', 'Company'),
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
@@ -801,11 +801,10 @@ class resource_calendar_leaves(osv.osv):
     }
 
     def check_dates(self, cr, uid, ids, context=None):
-         leave = self.read(cr, uid, ids[0], ['date_from', 'date_to'])
-         if leave['date_from'] and leave['date_to']:
-             if leave['date_from'] > leave['date_to']:
-                 return False
-         return True
+        for leave in self.browse(cr, uid, ids, context=context):
+            if leave.date_from and leave.date_to and leave.date_from > leave.date_to:
+                return False
+        return True
 
     _constraints = [
         (check_dates, 'Error! leave start-date must be lower then leave end-date.', ['date_from', 'date_to'])

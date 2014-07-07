@@ -1,26 +1,35 @@
 $(document).ready(function () {
 
-    $('.vote_up ,.vote_down').on('click', function (ev) {
+    $('.karma_required').on('click', function (ev) {
+        var karma = $(ev.currentTarget).data('karma');
+        if (karma) {
+            ev.preventDefault();
+            var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="karma_alert">'+
+                '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                karma + ' karma is required to perform this action. You can earn karma by answering questions or having '+
+                'your answers upvoted by the community.</div>');
+            var vote_alert = $(ev.currentTarget).parent().find("#vote_alert");
+            if (vote_alert.length == 0) {
+                $(ev.currentTarget).parent().append($warning);
+            }
+        }
+    });
+
+    $('.vote_up,.vote_down').not('.karma_required').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         openerp.jsonRpc($link.data('href'), 'call', {})
             .then(function (data) {
                 if (data['error']){
                     if (data['error'] == 'own_post'){
-                        var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
+                        var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="vote_alert">'+
                             '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                             'Sorry, you cannot vote for your own posts'+
                             '</div>');
                     } else if (data['error'] == 'anonymous_user'){
-                        var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
+                        var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="vote_alert">'+
                             '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                             'Sorry you must be logged to vote'+
-                            '</div>');
-                    }
-                    else if (data['error'] == 'not_enough_karma') {
-                        var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="max-width: 500px; position:absolute; margin-top: -30px; margin-left: 90px;">'+
-                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                            'Sorry, at least ' + data['karma'] + ' karma is required to vote. You can gain karma by answering questions and receiving votes.'+
                             '</div>');
                     }
                     vote_alert = $link.parent().find("#vote_alert");
@@ -44,20 +53,15 @@ $(document).ready(function () {
         return true;
     });
 
-    $('.accept_answer').on('click', function (ev) {
+    $('.accept_answer').not('.karma_required').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         openerp.jsonRpc($link.data('href'), 'call', {}).then(function (data) {
             if (data['error']) {
-                if (data['error'] == 'anonymous_user'){
+                if (data['error'] == 'anonymous_user') {
                     var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
                         '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                         'Sorry, anonymous users cannot choose correct answer.'+
-                        '</div>');
-                } else if (data['error'] == 'not_enough_karma') {
-                    var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="max-width: 500px; position:absolute; margin-top: -30px; margin-left: 90px;">'+
-                        '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                        'Sorry, at least ' + data['karma'] + ' karma is required to accept this answer. You can gain karma by answering questions and receiving votes.'+
                         '</div>');
                 }
                 correct_answer_alert = $link.parent().find("#correct_answer_alert");

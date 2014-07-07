@@ -104,7 +104,7 @@
 -
   !python {model: hr.payslip}: |
     self.cancel_sheet(cr, uid, [ref("hr_payslip_0")], None)
-    self.signal_draft(cr, uid, [ref("hr_payslip_0")])
+    self.signal_workflow(cr, uid, [ref("hr_payslip_0")], 'draft')
 -
   Then I click on the "Confirm" button.
 -

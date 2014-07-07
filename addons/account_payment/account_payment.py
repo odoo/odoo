@@ -87,13 +87,13 @@ class payment_order(osv.osv):
 
     _columns = {
         'date_scheduled': fields.date('Scheduled Date', states={'done':[('readonly', True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
-        'reference': fields.char('Reference', required=1, states={'done': [('readonly', True)]}),
+        'reference': fields.char('Reference', required=1, states={'done': [('readonly', True)]}, copy=False),
         'mode': fields.many2one('payment.mode', 'Payment Mode', select=True, required=1, states={'done': [('readonly', True)]}, help='Select the Payment Mode to be applied.'),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('cancel', 'Cancelled'),
             ('open', 'Confirmed'),
-            ('done', 'Done')], 'Status', select=True,
+            ('done', 'Done')], 'Status', select=True, copy=False,
             help='When an order is placed the status is \'Draft\'.\n Once the bank is confirmed the status is set to \'Confirmed\'.\n Then the order is paid the status is \'Done\'.'),
         'line_ids': fields.one2many('payment.line', 'order_id', 'Payment lines', states={'done': [('readonly', True)]}),
         'total': fields.function(_total, string="Total", type='float'),
@@ -132,18 +132,8 @@ class payment_order(osv.osv):
 
     def set_done(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'date_done': time.strftime('%Y-%m-%d')})
-        self.signal_done(cr, uid, [ids[0]])
+        self.signal_workflow(cr, uid, ids, 'done')
         return True
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({
-            'state': 'draft',
-            'line_ids': [],
-            'reference': self.pool.get('ir.sequence').get(cr, uid, 'payment.order')
-        })
-        return super(payment_order, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
@@ -179,7 +169,7 @@ class payment_line(osv.osv):
                 "due_date": "date_maturity",
                 "reference": "ref"}.get(orig, orig)
 
-    def info_owner(self, cr, uid, ids, name=None, args=None, context=None):
+    def _info_owner(self, cr, uid, ids, name=None, args=None, context=None):
         result = {}
         for line in self.browse(cr, uid, ids, context=context):
             owner = line.order_id.mode.bank_id.partner_id
@@ -197,7 +187,7 @@ class payment_line(osv.osv):
         cntry = partner_record.country_id and partner_record.country_id.name or ''
         return partner_record.name + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
 
-    def info_partner(self, cr, uid, ids, name=None, args=None, context=None):
+    def _info_partner(self, cr, uid, ids, name=None, args=None, context=None):
         result = {}
         for line in self.browse(cr, uid, ids, context=context):
             result[line.id] = False
@@ -322,8 +312,8 @@ class payment_line(osv.osv):
             type='date', help="Invoice Effective Date"),
         'ml_maturity_date': fields.function(_get_ml_maturity_date, type='date', string='Due Date'),
         'ml_inv_ref': fields.function(_get_ml_inv_ref, type='many2one', relation='account.invoice', string='Invoice Ref.'),
-        'info_owner': fields.function(info_owner, string="Owner Account", type="text", help='Address of the Main Partner'),
-        'info_partner': fields.function(info_partner, string="Destination Account", type="text", help='Address of the Ordering Customer.'),
+        'info_owner': fields.function(_info_owner, string="Owner Account", type="text", help='Address of the Main Partner'),
+        'info_partner': fields.function(_info_partner, string="Destination Account", type="text", help='Address of the Ordering Customer.'),
         'date': fields.date('Payment Date', help="If no payment date is specified, the bank will treat this payment line directly"),
         'create_date': fields.datetime('Created', readonly=True),
         'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True),

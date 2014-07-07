@@ -31,6 +31,10 @@ LINK_TO = lambda id: (4, id, False)
 DELETE_ALL = lambda: (5, False, False)
 REPLACE_WITH = lambda ids: (6, False, ids)
 
+class ImportWarning(Warning):
+    """ Used to send warnings upwards the stack during the import process """
+    pass
+
 class ConversionNotFound(ValueError): pass
 
 class ColumnWrapper(object):
@@ -124,7 +128,7 @@ class ir_fields_converter(orm.Model):
 
         If a converter can perform its function but has to make assumptions
         about the data, it can send a warning to the user through adding an
-        instance of :class:`~openerp.osv.orm.ImportWarning` to the second value
+        instance of :class:`~.ImportWarning` to the second value
         it returns. The handling of a warning at the upper levels is the same
         as ``ValueError`` above.
 
@@ -165,7 +169,7 @@ class ir_fields_converter(orm.Model):
         ))
         if value.lower() in falses: return False, []
 
-        return True, [orm.ImportWarning(
+        return True, [ImportWarning(
             _(u"Unknown value '%s' for boolean field '%%(field)s', assuming '%s'")
                 % (value, yes), {
                 'moreinfo': _(u"Use '1' for yes and '0' for no")
@@ -334,7 +338,7 @@ class ir_fields_converter(orm.Model):
                 cr, uid, name=value, operator='=', context=context)
             if ids:
                 if len(ids) > 1:
-                    warnings.append(orm.ImportWarning(
+                    warnings.append(ImportWarning(
                         _(u"Found multiple matches for field '%%(field)s' (%d matches)")
                         % (len(ids))))
                 id, _name = ids[0]

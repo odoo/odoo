@@ -74,6 +74,7 @@ class ir_import(orm.TransientModel):
         :param str model: name of the model to get fields form
         :param int landing: depth of recursion into o2m fields
         """
+        model_obj = self.pool[model]
         fields = [{
             'id': 'id',
             'name': 'id',
@@ -81,8 +82,11 @@ class ir_import(orm.TransientModel):
             'required': False,
             'fields': [],
         }]
-        fields_got = self.pool[model].fields_get(cr, uid, context=context)
+        fields_got = model_obj.fields_get(cr, uid, context=context)
+        blacklist = orm.MAGIC_COLUMNS + [model_obj.CONCURRENCY_CHECK_FIELD]
         for name, field in fields_got.iteritems():
+            if name in blacklist:
+                continue
             # an empty string means the field is deprecated, @deprecated must
             # be absent or False to mean not-deprecated
             if field.get('deprecated', False) is not False:

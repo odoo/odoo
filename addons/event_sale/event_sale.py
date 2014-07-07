@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from openerp.addons.event.event import event_event as Event
+from openerp import api
+from openerp.fields import Integer, One2many, Html
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -89,8 +90,7 @@ class sale_order_line(osv.osv):
         '''
         create registration with sales order
         '''
-        if context is None:
-            context = {}
+        context = dict(context or {})
         registration_obj = self.pool.get('event.registration')
         for order_line in self.browse(cr, uid, ids, context=context):
             if order_line.event_id:
@@ -123,62 +123,33 @@ class sale_order_line(osv.osv):
 class event_event(osv.osv):
     _inherit = 'event.event'
 
-    def _get_seats_max(self, cr, uid, ids, field_name, arg, context=None):
-        result = dict.fromkeys(ids, 0)
-        for rec in self.browse(cr, uid, ids, context=context):
-            result[rec.id] = sum([ticket.seats_max for ticket in rec.event_ticket_ids])
-        return result
+    event_ticket_ids = One2many('event.event.ticket', 'event_id', string='Event Ticket',
+        default=lambda rec: rec._default_tickets())
+    seats_max = Integer(string='Maximum Available Seats',
+        help="The maximum registration level is equal to the sum of the maximum registration of event ticket. " +
+            "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
+        store=True, readonly=True, compute='_compute_seats_max')
 
-    def _get_tickets(self, cr, uid, context={}):
+    badge_back = Html('Badge Back', translate=True, states={'done': [('readonly', True)]})
+    badge_innerleft = Html('Badge Innner Left', translate=True, states={'done': [('readonly', True)]})
+    badge_innerright = Html('Badge Inner Right', translate=True, states={'done': [('readonly', True)]})
+
+    @api.model
+    def _default_tickets(self):
         try:
-            product = self.pool.get('ir.model.data').get_object(cr, uid, 'event_sale', 'product_product_event')
+            product = self.env.ref('event_sale.product_product_event')
             return [{
                 'name': _('Subscription'),
                 'product_id': product.id,
                 'price': 0,
             }]
         except ValueError:
-            pass
-        return []
+            return self.env['event.event.ticket']
 
-    def _get_ticket_events(self, cr, uid, ids, context=None):
-        # `self` is the event.event.ticket model when called by ORM! 
-        return list(set(ticket.event_id.id
-                            for ticket in self.browse(cr, uid, ids, context)))
-
-    # proxy method, can't import parent method directly as unbound_method: it would receive
-    # an invalid `self` <event_registration> when called by ORM
-    def _events_from_registrations(self, cr, uid, ids, context=None):
-        # `self` is the event.registration model when called by ORM
-        return self.pool['event.event']._get_events_from_registrations(cr, uid, ids, context=context)
-
-    _columns = {
-        'event_ticket_ids': fields.one2many('event.event.ticket', "event_id", "Event Ticket"),
-        'seats_max': fields.function(_get_seats_max,
-            string='Maximum Avalaible Seats',
-            help="The maximum registration level is equal to the sum of the maximum registration of event ticket." +
-            "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
-            type='integer',
-            readonly=True,
-            store={
-              'event.event': (lambda self, cr, uid, ids, c = {}: ids, ['event_ticket_ids'], 20),
-              'event.event.ticket': (_get_ticket_events, ['seats_max'], 10),
-            }),
-        'seats_available': fields.function(Event._get_seats, oldname='register_avail', string='Available Seats',
-                                           type='integer', multi='seats_reserved',
-                                           store={
-                                              'event.registration': (_events_from_registrations, ['state'], 10),
-                                              'event.event': (lambda self, cr, uid, ids, c = {}: ids,
-                                                              ['seats_max', 'registration_ids'], 20),
-                                              'event.event.ticket': (_get_ticket_events, ['seats_max'], 10),
-                                           }),
-        'badge_back': fields.html('Badge Back', readonly=False, translate=True, states={'done': [('readonly', True)]}),
-        'badge_innerleft': fields.html('Badge Innner Left', readonly=False, translate=True, states={'done': [('readonly', True)]}),
-        'badge_innerright': fields.html('Badge Inner Right', readonly=False, translate=True, states={'done': [('readonly', True)]}),
-    }
-    _defaults = {
-        'event_ticket_ids': _get_tickets
-    }
+    @api.one
+    @api.depends('event_ticket_ids.seats_max')
+    def _compute_seats_max(self):
+        self.seats_max = sum(ticket.seats_max for ticket in self.event_ticket_ids)
 
 class event_ticket(osv.osv):
     _name = 'event.event.ticket'

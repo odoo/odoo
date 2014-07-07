@@ -5,6 +5,7 @@ helpers and classes to write tests.
 
 """
 import errno
+import glob
 import json
 import logging
 import os
@@ -16,10 +17,13 @@ import unittest2
 import urllib2
 import xmlrpclib
 from datetime import datetime, timedelta
+from shutil import rmtree
+from tempfile import mkdtemp
 
 import werkzeug
 
 import openerp
+from openerp import api
 from openerp.modules.registry import RegistryManager
 
 _logger = logging.getLogger(__name__)
@@ -105,6 +109,7 @@ class TransactionCase(BaseCase):
         self.registry = RegistryManager.get(DB)
         self.cr = self.cursor()
         self.uid = openerp.SUPERUSER_ID
+        self.env = api.Environment(self.cr, self.uid, {})
 
     def tearDown(self):
         self.cr.rollback()
@@ -122,12 +127,32 @@ class SingleTransactionCase(BaseCase):
         cls.registry = RegistryManager.get(DB)
         cls.cr = cls.registry.cursor()
         cls.uid = openerp.SUPERUSER_ID
+        cls.env = api.Environment(cls.cr, cls.uid, {})
 
     @classmethod
     def tearDownClass(cls):
         cls.cr.rollback()
         cls.cr.close()
 
+class RedirectHandler(urllib2.HTTPRedirectHandler):
+    """
+    HTTPRedirectHandler is predicated upon HTTPErrorProcessor being used and
+    works by intercepting 3xy "errors".
+
+    Inherit from it to handle 3xy non-error responses instead, as we're not
+    using the error processor
+    """
+
+    def http_response(self, request, response):
+        code, msg, hdrs = response.code, response.msg, response.info()
+
+        if 300 <= code < 400:
+            return self.parent.error(
+                'http', request, response, code, msg, hdrs)
+
+        return response
+
+    https_response = http_response
 
 class HttpCase(TransactionCase):
     """ Transactionnal HTTP TestCase with url_open and phantomjs helpers.
@@ -149,17 +174,29 @@ class HttpCase(TransactionCase):
         self.session_id = self.session.sid
         self.session.db = DB
         openerp.http.root.session_store.save(self.session)
+        # setup an url opener helper
+        self.opener = urllib2.OpenerDirector()
+        self.opener.add_handler(urllib2.UnknownHandler())
+        self.opener.add_handler(urllib2.HTTPHandler())
+        self.opener.add_handler(urllib2.HTTPSHandler())
+        self.opener.add_handler(urllib2.HTTPCookieProcessor())
+        self.opener.add_handler(RedirectHandler())
+        self.opener.addheaders.append(('Cookie', 'session_id=%s' % self.session_id))
 
     def tearDown(self):
         self.registry.leave_test_mode()
         super(HttpCase, self).tearDown()
 
     def url_open(self, url, data=None, timeout=10):
-        opener = urllib2.build_opener()
-        opener.addheaders.append(('Cookie', 'session_id=%s' % self.session_id))
         if url.startswith('/'):
             url = "http://localhost:%s%s" % (PORT, url)
-        return opener.open(url, data, timeout)
+        return self.opener.open(url, data, timeout)
+
+    def authenticate(self, user, password):
+        if user is not None:
+            url = '/login?%s' % werkzeug.urls.url_encode({'db': DB,'login': user, 'key': password})
+            auth = self.url_open(url)
+            assert auth.getcode() < 400, "Auth failure %d" % auth.getcode()
 
     def phantom_poll(self, phantom, timeout):
         """ Phantomjs Test protocol.
@@ -219,6 +256,11 @@ class HttpCase(TransactionCase):
 
     def phantom_run(self, cmd, timeout):
         _logger.info('phantom_run executing %s', ' '.join(cmd))
+
+        ls_glob = os.path.expanduser('~/.qws/share/data/Ofi Labs/PhantomJS/http_localhost_%s.*'%PORT)
+        for i in glob.glob(ls_glob):
+            _logger.info('phantomjs unlink localstorage %s', i)
+            os.unlink(i)
         try:
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         except OSError:
@@ -259,7 +301,10 @@ class HttpCase(TransactionCase):
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
         # phantom.args[0] == phantomtest path
         # phantom.args[1] == options
-        cmd = ['phantomjs', jsfile, phantomtest, json.dumps(options)]
+        cmd = [
+            'phantomjs',
+            jsfile, phantomtest, json.dumps(options)
+        ]
         self.phantom_run(cmd, timeout)
 
     def phantom_js(self, url_path, code, ready="window", login=None, timeout=60, **kw):

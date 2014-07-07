@@ -73,17 +73,24 @@ var Tour = {
     run: function (tour_id, mode) {
         var tour = Tour.tours[tour_id];
         if (!tour) {
-            Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
+            return Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
+        }
+        console.log("Tour '"+tour_id+"' Begin from run method");
+        var state = Tour.getState();
+        if (state) {
+             if (state.mode === "test") {
+                return Tour.error(false, "An other running tour has been detected all tours are now killed.");
+            } else {
+                Tour.endTour();
+            }
         }
         this.time = new Date().getTime();
         if (tour.path && !window.location.href.match(new RegExp("("+Tour.getLang()+")?"+tour.path+"#?$", "i"))) {
             var href = Tour.getLang()+tour.path;
-            console.log("Tour '"+tour_id+"' Begin from run method (redirection to "+href+")");
             Tour.saveState(tour.id, mode || tour.mode, -1, 0);
             $(document).one("ajaxStop", Tour.running);
             window.location.href = href;
         } else {
-            console.log("Tour '"+tour_id+"' Begin from run method");
             Tour.saveState(tour.id, mode || tour.mode, 0, 0);
             Tour.running();
         }
@@ -327,7 +334,8 @@ var Tour = {
             + '\n\n' + $("body").html();
         Tour.reset();
         if (state.mode === "test") {
-            throw new Error(message);
+            console.log(message);
+            Tour.endTour();
         }
     },
     lists: function () {
@@ -358,6 +366,7 @@ var Tour = {
         clearTimeout(Tour.timer);
         clearTimeout(Tour.testtimer);
         Tour.closePopover();
+        console.log("Tour reset");
     },
     running: function () {
         var state = Tour.getState();
@@ -372,7 +381,7 @@ var Tour = {
             Tour.nextStep();
         } else {
             if (state.mode === "test" && state.wait >= 10) {
-                Tour.error(state.step, "Tour '"+state.id+"' undefined");
+                return Tour.error(state.step, "Tour '"+state.id+"' undefined");
             }
             Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
             console.log("Tour '"+state.id+"' wait for running (tour undefined)");
@@ -398,6 +407,8 @@ var Tour = {
         };
 
         function checkNext () {
+            if (!Tour.getState()) return;
+
             Tour.autoTogglePopover();
 
             clearTimeout(Tour.timer);
@@ -411,7 +422,7 @@ var Tour = {
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
                 Tour.timer = setTimeout(checkNext, Tour.defaultDelay);
             } else {
-                Tour.error(next, "Can't reach the next step");
+                return Tour.error(next, "Can't reach the next step");
             }
         }
         checkNext();
@@ -427,7 +438,7 @@ var Tour = {
         var next = state.tour.steps[step.id+1];
 
         if (state.mode === "test" && state.number > 3) {
-            Tour.error(next, "Cycling. Can't reach the next step");
+            return Tour.error(next, "Cycling. Can't reach the next step");
         }
         
         Tour.saveState(state.id, state.mode, step.id, state.number);
@@ -476,6 +487,8 @@ var Tour = {
         clearTimeout(Tour.testtimer);
 
         function autoStep () {
+            if (!Tour.getState()) return;
+
             if (!step) return;
 
             if (step.autoComplete) {
@@ -502,6 +515,7 @@ var Tour = {
 
                 // trigger after for step like: mouseenter, next step click on button display with mouseenter
                 setTimeout(function () {
+                    if (!Tour.getState()) return;
                     $element.trigger($.Event("mouseup", { srcElement: $element[0] }));
                     $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
                 }, 1000);
@@ -518,6 +532,7 @@ var Tour = {
                     $element.html(step.sampleText);
                 }
                 setTimeout(function () {
+                    if (!Tour.getState()) return;
                     $element.trigger($.Event("keyup", { srcElement: $element }));
                     $element.trigger($.Event("change", { srcElement: $element }));
                 }, self.defaultDelay<<1);

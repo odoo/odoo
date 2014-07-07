@@ -240,8 +240,12 @@ class website(osv.osv):
 
     def is_publisher(self, cr, uid, ids, context=None):
         Access = self.pool['ir.model.access']
-        is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
+        is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context=context)
         return is_website_publisher
+
+    def is_user(self, cr, uid, ids, context=None):
+        Access = self.pool['ir.model.access']
+        return Access.check(cr, uid, 'ir.ui.menu', 'read', False, context=context)
 
     def get_template(self, cr, uid, ids, template, context=None):
         if isinstance(template, (int, long)):
@@ -265,7 +269,7 @@ class website(osv.osv):
         # Compute Pager
         page_count = int(math.ceil(float(total) / step))
 
-        page = max(1, min(int(page), page_count))
+        page = max(1, min(int(page if str(page).isdigit() else 1), page_count))
         scope -= 1
 
         pmin = max(page - int(math.floor(scope/2)), 1)

@@ -11,8 +11,9 @@ instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.exten
         var self = this;
         var title = this.$node.html() || this.field.string;
         setTimeout(function () {
-            var value = _.pluck(self.field.value, 'value');
-            var tooltips = _.pluck(self.field.value, 'tooltip');
+            var field_value = JSON.parse(self.field.value);
+            var value = _.pluck(field_value, 'value');
+            var tooltips = _.pluck(field_value, 'tooltip');
             var suffix = self.options.tooltip_suffix || "";
             var tooltipFormat = self.options.type == 'tristate' && '{{offset:offset}}' + suffix || '{{offset:offset}} {{value:value}}' + suffix
             var sparkline_options = _.extend({

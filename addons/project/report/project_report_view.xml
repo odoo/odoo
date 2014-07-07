@@ -21,6 +21,22 @@
              </field>
         </record>
 
+        <!-- Custom reports (aka filters) -->
+        <record id="filter_task_report_responsible" model="ir.filters">
+            <field name="name">By Responsible</field>
+            <field name="model_id">report.project.task.user</field>
+            <field name="domain">[]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['project_id', 'user_id']}</field>
+        </record>
+        <record id="filter_task_report_reviewer" model="ir.filters">
+            <field name="name">By Reviewer</field>
+            <field name="model_id">report.project.task.user</field>
+            <field name="domain">[]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['project_id', 'reviewer_id']}</field>
+        </record>
+
         <record id="view_task_project_user_search" model="ir.ui.view">
             <field name="name">report.project.task.user.search</field>
             <field name="model">report.project.task.user</field>
@@ -34,11 +50,11 @@
                     <field name="user_id"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="stage_id"/>
-                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=',False)]"/>
-                    <filter string="New" name="new" domain="[('stage_id.sequence', '=', 1)]"/>
-                    <separator/>
                     <filter string="My Task" domain="[('user_id','=',uid)]" />
-                    <group expand="0" string="Extended Filters...">
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=',False)]"/>
+                    <separator/>
+                    <filter string="New" name="new" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
+                    <group expand="0" string="Extended Filters">
                         <field name="priority"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>

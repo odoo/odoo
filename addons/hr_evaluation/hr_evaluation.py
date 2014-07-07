@@ -35,7 +35,7 @@ class hr_evaluation_plan(osv.Model):
     _columns = {
         'name': fields.char("Appraisal Plan", required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'phase_ids': fields.one2many('hr_evaluation.plan.phase', 'plan_id', 'Appraisal Phases'),
+        'phase_ids': fields.one2many('hr_evaluation.plan.phase', 'plan_id', 'Appraisal Phases', copy=True),
         'month_first': fields.integer('First Appraisal in (months)', help="This number of months will be used to schedule the first evaluation date of the employee when selecting an evaluation plan. "),
         'month_next': fields.integer('Periodicity of Appraisal (months)', help="The number of month that depicts the delay between each evaluation of this plan (after the first one)."),
         'active': fields.boolean('Active')
@@ -157,7 +157,7 @@ class hr_evaluation(osv.Model):
             ('wait', 'Plan In Progress'),
             ('progress', 'Waiting Appreciation'),
             ('done', 'Done'),
-        ], 'Status', required=True, readonly=True),
+        ], 'Status', required=True, readonly=True, copy=False),
         'date_close': fields.date('Ending Date', select=True),
     }
     _defaults = {
@@ -254,15 +254,6 @@ class hr_evaluation(osv.Model):
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         return True
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        if context is None:
-            context = {}
-        default = default.copy()
-        default['survey_request_ids'] = []
-        return super(hr_evaluation, self).copy(cr, uid, id, default, context=context)
-
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('employee_id'):
             employee_id = self.pool.get('hr.employee').browse(cr, uid, vals.get('employee_id'), context=context)
@@ -292,7 +283,7 @@ class hr_evaluation_interview(osv.Model):
                                    ('waiting_answer', "In progress"),
                                    ('done', "Done"),
                                    ('cancel', "Cancelled")],
-                                  string="State", required=True),
+                                  string="State", required=True, copy=False),
         'survey_id': fields.related('phase_id', 'survey_id', string="Appraisal Form", type="many2one", relation="survey.survey"),
         'deadline': fields.related('request_id', 'deadline', type="datetime", string="Deadline"),
     }
@@ -363,7 +354,7 @@ class hr_evaluation_interview(osv.Model):
 
     def action_print_survey(self, cr, uid, ids, context=None):
         """ If response is available then print this response otherwise print survey form (print template of the survey) """
-        context = context if context else {}
+        context = dict(context or {})
         interview = self.browse(cr, uid, ids, context=context)[0]
         survey_obj = self.pool.get('survey.survey')
         response_obj = self.pool.get('survey.user_input')
@@ -372,7 +363,7 @@ class hr_evaluation_interview(osv.Model):
         return survey_obj.action_print_survey(cr, uid, [interview.survey_id.id], context=context)
 
     def action_start_survey(self, cr, uid, ids, context=None):
-        context = context if context else {}
+        context = dict(context or {})
         interview = self.browse(cr, uid, ids, context=context)[0]
         survey_obj = self.pool.get('survey.survey')
         response_obj = self.pool.get('survey.user_input')

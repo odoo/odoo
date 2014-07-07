@@ -73,7 +73,7 @@ class PaymentAcquirer(osv.Model):
             [('test', 'Test'), ('prod', 'Production')],
             string='Environment', oldname='env'),
         'website_published': fields.boolean(
-            'Visible in Portal / Website',
+            'Visible in Portal / Website', copy=False,
             help="Make this payment acquirer available (Customer invoices, etc.)"),
         # Fees
         'fees_active': fields.boolean('Compute fees'),
@@ -338,7 +338,7 @@ class PaymentTransaction(osv.Model):
              ('done', 'Done'), ('error', 'Error'),
              ('cancel', 'Canceled')
              ], 'Status', required=True,
-            track_visiblity='onchange'),
+            track_visiblity='onchange', copy=False),
         'state_message': fields.text('Message',
                                      help='Field used to store error and/or validation messages for information'),
         # payment

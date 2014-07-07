@@ -108,7 +108,7 @@ class mrp_routing(osv.osv):
         'code': fields.char('Code', size=8),
 
         'note': fields.text('Description'),
-        'workcenter_lines': fields.one2many('mrp.routing.workcenter', 'routing_id', 'Work Centers'),
+        'workcenter_lines': fields.one2many('mrp.routing.workcenter', 'routing_id', 'Work Centers', copy=True),
 
         'location_id': fields.many2one('stock.location', 'Production Location',
             help="Keep empty if you produce at the location where the finished products are needed." \
@@ -202,7 +202,7 @@ class mrp_bom(osv.osv):
         'product_id': fields.many2one('product.product', 'Product Variant',
             domain="[('product_tmpl_id','=',product_tmpl_id)]",
             help="If a product variant is defined the BOM is available only for this product."),
-        'bom_line_ids': fields.one2many('mrp.bom.line', 'bom_id', 'BoM Lines'),        
+        'bom_line_ids': fields.one2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True),
         'product_qty': fields.float('Product Quantity', required=True, digits_compute=dp.get_precision('Product Unit of Measure')),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control"),
         'date_start': fields.date('Valid From', help="Validity of this BoM. Keep empty if it's always valid."),
@@ -510,9 +510,9 @@ class mrp_production(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Reference', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.char('Reference', required=True, readonly=True, states={'draft': [('readonly', False)]}, copy=False),
         'origin': fields.char('Source Document', readonly=True, states={'draft': [('readonly', False)]},
-            help="Reference of the document that generated this production order request."),
+            help="Reference of the document that generated this production order request.", copy=False),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
             select=True, readonly=True, states=dict.fromkeys(['draft', 'confirmed'], [('readonly', False)])),
 
@@ -530,14 +530,14 @@ class mrp_production(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Finished Products Location', required=True,
             readonly=True, states={'draft': [('readonly', False)]},
             help="Location where the system will stock the finished products."),
-        'date_planned': fields.datetime('Scheduled Date', required=True, select=1, readonly=True, states={'draft': [('readonly', False)]}),
-        'date_start': fields.datetime('Start Date', select=True, readonly=True),
-        'date_finished': fields.datetime('End Date', select=True, readonly=True),
+        'date_planned': fields.datetime('Scheduled Date', required=True, select=1, readonly=True, states={'draft': [('readonly', False)]}, copy=False),
+        'date_start': fields.datetime('Start Date', select=True, readonly=True, copy=False),
+        'date_finished': fields.datetime('End Date', select=True, readonly=True, copy=False),
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', readonly=True, states={'draft': [('readonly', False)]},
             help="Bill of Materials allow you to define the list of required raw materials to make a finished product."),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft': [('readonly', False)]},
             help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
-        'move_prod_id': fields.many2one('stock.move', 'Product Move', readonly=True),
+        'move_prod_id': fields.many2one('stock.move', 'Product Move', readonly=True, copy=False),
         'move_lines': fields.one2many('stock.move', 'raw_material_production_id', 'Products to Consume',
             domain=[('state', 'not in', ('done', 'cancel'))], readonly=True, states={'draft': [('readonly', False)]}),
         'move_lines2': fields.one2many('stock.move', 'raw_material_production_id', 'Consumed Products',
@@ -554,7 +554,7 @@ class mrp_production(osv.osv):
             [('draft', 'New'), ('cancel', 'Cancelled'), ('confirmed', 'Awaiting Raw Materials'),
                 ('ready', 'Ready to Produce'), ('in_production', 'Production Started'), ('done', 'Done')],
             string='Status', readonly=True,
-            track_visibility='onchange',
+            track_visibility='onchange', copy=False,
             help="When the production order is created the status is set to 'Draft'.\n\
                 If the order is confirmed the status is set to 'Waiting Goods'.\n\
                 If any exceptions are there, the status is set to 'Picking Exception'.\n\
@@ -601,20 +601,6 @@ class mrp_production(osv.osv):
             if production.state not in ('draft', 'cancel'):
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a manufacturing order in state \'%s\'.') % production.state)
         return super(mrp_production, self).unlink(cr, uid, ids, context=context)
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.production'),
-            'move_lines': [],
-            'move_lines2': [],
-            'move_created_ids': [],
-            'move_created_ids2': [],
-            'product_lines': [],
-            'move_prod_id': False,
-        })
-        return super(mrp_production, self).copy(cr, uid, id, default, context)
 
     def location_id_change(self, cr, uid, ids, src, dest, context=None):
         """ Changes destination location if source location is changed.

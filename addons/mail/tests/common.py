@@ -24,30 +24,28 @@ from openerp.tests import common
 
 class TestMail(common.TransactionCase):
 
-    def _mock_smtp_gateway(self, *args, **kwargs):
-        return args[2]['Message-Id']
-
     def _init_mock_build_email(self):
         self._build_email_args_list = []
         self._build_email_kwargs_list = []
-
-    def _mock_build_email(self, *args, **kwargs):
-        """ Mock build_email to be able to test its values. Store them into
-            some internal variable for latter processing. """
-        self._build_email_args_list.append(args)
-        self._build_email_kwargs_list.append(kwargs)
-        return self._build_email(*args, **kwargs)
 
     def setUp(self):
         super(TestMail, self).setUp()
         cr, uid = self.cr, self.uid
 
         # Install mock SMTP gateway
+        test = self
+
+        def build_email(self, *args, **kwargs):
+            test._build_email_args_list.append(args)
+            test._build_email_kwargs_list.append(kwargs)
+            return build_email.origin(self, *args, **kwargs)
+
+        def send_email(self, cr, uid, message, *args, **kwargs):
+            return message['Message-Id']
+
         self._init_mock_build_email()
-        self._build_email = self.registry('ir.mail_server').build_email
-        self.registry('ir.mail_server').build_email = self._mock_build_email
-        self._send_email = self.registry('ir.mail_server').send_email
-        self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
+        self.registry('ir.mail_server')._patch_method('build_email', build_email)
+        self.registry('ir.mail_server')._patch_method('send_email', send_email)
 
         # Usefull models
         self.ir_model = self.registry('ir.model')
@@ -129,6 +127,6 @@ class TestMail(common.TransactionCase):
 
     def tearDown(self):
         # Remove mocks
-        self.registry('ir.mail_server').build_email = self._build_email
-        self.registry('ir.mail_server').send_email = self._send_email
+        self.registry('ir.mail_server')._revert_method('build_email')
+        self.registry('ir.mail_server')._revert_method('send_email')
         super(TestMail, self).tearDown()

@@ -4,8 +4,6 @@
         <menuitem id="menu_res_company_global" parent="base.menu_administration" name="Companies" sequence="2"
             groups="base.group_no_one"/>
 
-        <menuitem id="menu_custom_multicompany" parent="base.menu_custom" name="Multi-Companies" sequence="50"/>
-
         <report id="preview_report" model="res.company" name="preview.report" multi="True" rml="base/report/preview_report.rml" string="Preview Report"/>
         <record id="bank_account_update" model="ir.actions.act_window">
             <field name="name">Company Bank Accounts</field>
@@ -207,13 +205,13 @@
             </field>
         </record>
         <record id="action_inventory_form" model="ir.actions.act_window">
-            <field name="name">Default Company per Object</field>
+            <field name="name">Company Defaults</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">multi_company.default</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_inventory_search"/>
         </record>
-        <menuitem id="menu_action_inventory_form"  parent="menu_custom_multicompany" action="action_inventory_form"/>
+        <menuitem id="menu_action_inventory_form"  parent="base.menu_ir_property" action="action_inventory_form"/>
 
     </data>
 </openerp>

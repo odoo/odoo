@@ -2,16 +2,20 @@
 import datetime
 import hashlib
 import logging
+import os
 import re
 import traceback
+
 import werkzeug
 import werkzeug.routing
+import werkzeug.utils
 
 import openerp
 from openerp.addons.base import ir
 from openerp.addons.base.ir import ir_qweb
 from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
+from openerp.tools import config
 from openerp.osv import orm
 
 logger = logging.getLogger(__name__)
@@ -54,15 +58,22 @@ class ir_http(orm.AbstractModel):
 
         request.website_multilang = request.website_enabled and func and func.routing.get('multilang', True)
 
-        if not request.session.has_key('geoip'):
+        if 'geoip' not in request.session:
             record = {}
             if self.geo_ip_resolver is None:
                 try:
                     import GeoIP
-                    self.geo_ip_resolver = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', GeoIP.GEOIP_STANDARD)
+                    # updated database can be downloaded on MaxMind website
+                    # http://dev.maxmind.com/geoip/legacy/install/city/
+                    geofile = config.get('geoip_database', '/usr/share/GeoIP/GeoLiteCity.dat')
+                    if os.path.exists(geofile):
+                        self.geo_ip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
+                    else:
+                        self.geo_ip_resolver = False
+                        logger.warning('GeoIP database file %r does not exists', geofile)
                 except ImportError:
                     self.geo_ip_resolver = False
-            if self.geo_ip_resolver:
+            if self.geo_ip_resolver and request.httprequest.remote_addr:
                 record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
 
@@ -107,10 +118,11 @@ class ir_http(orm.AbstractModel):
     def _postprocess_args(self, arguments, rule):
         super(ir_http, self)._postprocess_args(arguments, rule)
 
-        for arg, val in arguments.items():
+        for key, val in arguments.items():
             # Replace uid placeholder by the current request.uid
-            if isinstance(val, orm.browse_record) and isinstance(val._uid, RequestUID):
-                val._uid = request.uid
+            if isinstance(val, orm.BaseModel) and isinstance(val._uid, RequestUID):
+                arguments[key] = val.sudo(request.uid)
+
         try:
             _, path = rule.build(arguments)
             assert path is not None
@@ -187,6 +199,11 @@ class ir_http(orm.AbstractModel):
                 values.update(qweb_exception=exception)
                 if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
                     code = 403
+
+            if isinstance(exception, werkzeug.exceptions.HTTPException) and code is None:
+                # Hand-crafted HTTPException likely coming from abort(),
+                # usually for a redirect response -> return it directly
+                return exception
 
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])

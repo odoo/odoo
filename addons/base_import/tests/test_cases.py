@@ -4,48 +4,72 @@ from openerp.tests.common import TransactionCase
 
 from .. import models
 
-ID_FIELD = {'id': 'id', 'name': 'id', 'string': "External ID", 'required': False, 'fields': []}
+ID_FIELD = {
+    'id': 'id',
+    'name': 'id',
+    'string': "External ID",
+    'required': False,
+    'fields': [],
+}
+DISPLAY_NAME_FIELD = {
+    'id': 'display_name',
+    'name': 'display_name',
+    'string': "Name",
+    'required': False,
+    'fields': [],
+}
+
 def make_field(name='value', string='unknown', required=False, fields=[]):
     return [
         ID_FIELD,
+        DISPLAY_NAME_FIELD,
         {'id': name, 'name': name, 'string': string, 'required': required, 'fields': fields},
     ]
 
-class test_basic_fields(TransactionCase):
+def sorted_fields(fields):
+    """ recursively sort field lists to ease comparison """
+    recursed = [dict(field, fields=sorted_fields(field['fields'])) for field in fields]
+    return sorted(recursed, key=lambda field: field['id'])
+
+class BaseImportCase(TransactionCase):
+    def assertEqualFields(self, fields1, fields2):
+        self.assertEqual(sorted_fields(fields1), sorted_fields(fields2))
+
+class test_basic_fields(BaseImportCase):
     def get_fields(self, field):
         return self.registry('base_import.import')\
             .get_fields(self.cr, self.uid, 'base_import.tests.models.' + field)
 
     def test_base(self):
         """ A basic field is not required """
-        self.assertEqual(self.get_fields('char'), make_field())
+        self.assertEqualFields(self.get_fields('char'), make_field())
 
     def test_required(self):
         """ Required fields should be flagged (so they can be fill-required) """
-        self.assertEqual(self.get_fields('char.required'), make_field(required=True))
+        self.assertEqualFields(self.get_fields('char.required'), make_field(required=True))
 
     def test_readonly(self):
         """ Readonly fields should be filtered out"""
-        self.assertEqual(self.get_fields('char.readonly'), [ID_FIELD])
+        self.assertEqualFields(self.get_fields('char.readonly'), [ID_FIELD, DISPLAY_NAME_FIELD])
 
     def test_readonly_states(self):
         """ Readonly fields with states should not be filtered out"""
-        self.assertEqual(self.get_fields('char.states'), make_field())
+        self.assertEqualFields(self.get_fields('char.states'), make_field())
 
     def test_readonly_states_noreadonly(self):
         """ Readonly fields with states having nothing to do with
         readonly should still be filtered out"""
-        self.assertEqual(self.get_fields('char.noreadonly'), [ID_FIELD])
+        self.assertEqualFields(self.get_fields('char.noreadonly'), [ID_FIELD, DISPLAY_NAME_FIELD])
 
     def test_readonly_states_stillreadonly(self):
         """ Readonly fields with readonly states leaving them readonly
         always... filtered out"""
-        self.assertEqual(self.get_fields('char.stillreadonly'), [ID_FIELD])
+        self.assertEqualFields(self.get_fields('char.stillreadonly'), [ID_FIELD, DISPLAY_NAME_FIELD])
 
     def test_m2o(self):
         """ M2O fields should allow import of themselves (name_get),
         their id and their xid"""
-        self.assertEqual(self.get_fields('m2o'), make_field(fields=[
+        self.assertEqualFields(self.get_fields('m2o'), make_field(fields=[
             {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': []},
             {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': []},
         ]))
@@ -55,19 +79,20 @@ class test_basic_fields(TransactionCase):
         required as well (the client has to handle that: requiredness
         is id-based)
         """
-        self.assertEqual(self.get_fields('m2o.required'), make_field(required=True, fields=[
+        self.assertEqualFields(self.get_fields('m2o.required'), make_field(required=True, fields=[
             {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': True, 'fields': []},
             {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'fields': []},
         ]))
 
-class test_o2m(TransactionCase):
+class test_o2m(BaseImportCase):
     def get_fields(self, field):
         return self.registry('base_import.import')\
             .get_fields(self.cr, self.uid, 'base_import.tests.models.' + field)
 
     def test_shallow(self):
-        self.assertEqual(self.get_fields('o2m'), make_field(fields=[
-            {'id': 'id', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': []},
+        self.assertEqualFields(self.get_fields('o2m'), make_field(fields=[
+            ID_FIELD,
+            DISPLAY_NAME_FIELD,
             # FIXME: should reverse field be ignored?
             {'id': 'parent_id', 'name': 'parent_id', 'string': 'unknown', 'required': False, 'fields': [
                 {'id': 'parent_id', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': []},
@@ -224,7 +249,8 @@ class test_preview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         # Order depends on iteration order of fields_get
         self.assertItemsEqual(result['fields'], [
-            {'id': 'id', 'name': 'id', 'string': 'External ID', 'required':False, 'fields': []},
+            ID_FIELD,
+            DISPLAY_NAME_FIELD,
             {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': []},
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': []},
             {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': []},

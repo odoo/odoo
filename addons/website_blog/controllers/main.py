@@ -187,7 +187,7 @@ class WebsiteBlog(http.Controller):
         )
         pager_begin = (page - 1) * self._post_comment_per_page
         pager_end = page * self._post_comment_per_page
-        blog_post.website_message_ids = blog_post.website_message_ids[pager_begin:pager_end]
+        comments = blog_post.website_message_ids[pager_begin:pager_end]
 
         tag = None
         if tag_id:
@@ -226,6 +226,7 @@ class WebsiteBlog(http.Controller):
             'post_url': post_url,
             'blog_url': blog_url,
             'pager': pager,
+            'comments': comments,
         }
         response = request.website.render("website_blog.blog_post_complete", values)
         response.set_cookie('visited_blogs', ','.join(map(str, visited_ids)))

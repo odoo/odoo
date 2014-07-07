@@ -43,16 +43,12 @@ class sale_order(osv.Model):
             'order': order
         }
 
-    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None):
+    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None, **kwargs):
         for so in self.browse(cr, uid, ids, context=context):
-            order_line_id = None
             domain = [('order_id', '=', so.id), ('product_id', '=', product_id)]
             if line_id:
                 domain += [('id', '=', line_id)]
-            order_line_ids = self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
-            if order_line_ids:
-                order_line_id = order_line_ids[0]
-            return order_line_id
+            return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
 
     def _website_product_id_change(self, cr, uid, ids, order_id, product_id, line_id=None, context=None):
         so = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
@@ -69,7 +65,7 @@ class sale_order(osv.Model):
             values['name'] = line.name
         else:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            values['name'] = product.name_get()[0][1]
+            values['name'] = product.description_sale or product.name
 
         values['product_id'] = product_id
         values['order_id'] = order_id
@@ -77,13 +73,16 @@ class sale_order(osv.Model):
             values['tax_id'] = [(6, 0, values['tax_id'])]
         return values
 
-    def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None):
+    def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         sol = self.pool.get('sale.order.line')
 
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
-            line_id = so._cart_find_product_line(product_id, line_id, context=context)
+            if line_id != False:
+                line_ids = so._cart_find_product_line(product_id, line_id, context=context, **kwargs)
+                if line_ids:
+                    line_id = line_ids[0]
 
             # Create line if no line with product_id can be located
             if not line_id:
@@ -107,7 +106,7 @@ class sale_order(osv.Model):
                 values['product_uom_qty'] = quantity
                 sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
 
-        return quantity
+        return {'line_id': line_id, 'quantity': quantity}
 
     def _cart_accessories(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids, context=context):
@@ -121,13 +120,15 @@ class website(orm.Model):
 
     _columns = {
         'pricelist_id': fields.related('user_id','partner_id','property_product_pricelist',
-            type='many2one', relation='product.pricelist', string='Default pricelist')
+            type='many2one', relation='product.pricelist', string='Default Pricelist'),
+        'currency_id': fields.related('pricelist_id','currency_id',
+            type='many2one', relation='res.currency', string='Default Currency'),
     }
 
     def sale_product_domain(self, cr, uid, ids, context=None):
         return [("sale_ok", "=", True)]
 
-    def sale_get_order(self, cr, uid, ids, force_create=False, code=None, context=None):
+    def sale_get_order(self, cr, uid, ids, force_create=False, code=None, update_pricelist=None, context=None):
         sale_order_obj = self.pool['sale.order']
         sale_order_id = request.session.get('sale_order_id')
         sale_order = None
@@ -156,26 +157,20 @@ class website(orm.Model):
                 request.session['sale_order_id'] = None
                 return None
 
-            def update_pricelist(pricelist_id):
-                values = {'pricelist_id': pricelist_id}
-                values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
-                sale_order.write(values)
-                for line in sale_order.order_line:
-                    sale_order._cart_update(product_id=line.product_id.id, add_qty=0)
-
             # check for change of pricelist with a coupon
             if code and code != sale_order.pricelist_id.code:
                 pricelist_ids = self.pool['product.pricelist'].search(cr, SUPERUSER_ID, [('code', '=', code)], context=context)
                 if pricelist_ids:
                     pricelist_id = pricelist_ids[0]
                     request.session['sale_order_code_pricelist_id'] = pricelist_id
-                    update_pricelist(pricelist_id)
+                    update_pricelist = True
                 request.session['sale_order_code_pricelist_id'] = False
+
+            pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
 
             # check for change of partner_id ie after signup
             if sale_order.partner_id.id != partner.id and request.website.partner_id.id != partner.id:
                 flag_pricelist = False
-                pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
                 if pricelist_id != sale_order.pricelist_id.id:
                     flag_pricelist = True
                 fiscal_position = sale_order.fiscal_position and sale_order.fiscal_position.id or False
@@ -189,7 +184,15 @@ class website(orm.Model):
                 sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
 
                 if flag_pricelist or values.get('fiscal_position') != fiscal_position:
-                    update_pricelist(pricelist_id)
+                    update_pricelist = True
+
+            # update the pricelist
+            if update_pricelist:
+                values = {'pricelist_id': pricelist_id}
+                values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
+                sale_order.write(values)
+                for line in sale_order.order_line:
+                    sale_order._cart_update(product_id=line.product_id.id, add_qty=0)
 
             # update browse record
             if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id !=  partner.id:
@@ -215,4 +218,4 @@ class website(orm.Model):
             'sale_order_code_pricelist_id': False,
         })
 
-# vim:et:
+

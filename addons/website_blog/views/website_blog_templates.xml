@@ -222,7 +222,7 @@
     <section id="comments" class="read_width">
         <hr/>
         <ul class="media-list" id="comments-list">
-            <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
+            <li t-foreach="comments" t-as="message" class="media">
                 <span class="pull-left">
                     <img class="media-object img img-circle" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width: 30px"/>
                 </span>
@@ -461,5 +461,11 @@
     </xpath>
 </template>
 
+<!-- User Navbar -->
+<template id="content_new_blogpost" inherit_id="website.user_navbar" groups="base.group_document_user">
+    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
+         <li><a href="#" data-action="new_blog_post">New Blog Post</a></li>
+    </xpath>
+</template>
 </data>
 </openerp>

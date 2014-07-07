@@ -12,8 +12,14 @@
         if (!is_smartphone) {
             website.ready().then(website.init_editor);
         } else {
-            // remove padding of fake editor bar
-            document.body.style.padding = 0;
+            var resize_smartphone = function () {
+                is_smartphone = $(document.body)[0].clientWidth < 767;
+                if (!is_smartphone) {
+                    $(window).off("resize", resize_smartphone);
+                    website.init_editor();
+                }
+            };
+            $(window).on("resize", resize_smartphone);
         }
 
         $(document).on('click', 'a.js_link2post', function (ev) {
@@ -78,6 +84,7 @@
     // Disable removal of empty elements on CKEDITOR activation. Empty
     // elements are used for e.g. support of FontAwesome icons
     CKEDITOR.dtd.$removeEmpty = {};
+
 
     website.init_editor = function () {
         CKEDITOR.plugins.add('customdialogs', {
@@ -435,69 +442,24 @@
     website.EditorBar = openerp.Widget.extend({
         template: 'website.editorbar',
         events: {
-            'click button[data-action=edit]': 'edit',
             'click button[data-action=save]': 'save',
             'click a[data-action=cancel]': 'cancel',
         },
-        container: 'body',
-        customize_setup: function() {
-            var self = this;
-            var view_name = $(document.documentElement).data('view-xmlid');
-            if (!view_name) {
-                this.$('#customize-menu-button').addClass("hidden");
-            }
-            var menu = $('#customize-menu');
-            this.$('#customize-menu-button').click(function(event) {
-                menu.empty();
-                openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': view_name }).then(
-                    function(result) {
-                        _.each(result, function (item) {
-                            if (item.xml_id === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
-                            if (item.header) {
-                                menu.append('<li class="dropdown-header">' + item.name + '</li>');
-                            } else {
-                                menu.append(_.str.sprintf('<li role="presentation"><a href="#" data-view-id="%s" role="menuitem"><strong class="fa fa%s-square-o"></strong> %s</a></li>',
-                                    item.id, item.active ? '-check' : '', item.name));
-                            }
-                        });
-                        // Adding Static Menus
-                        menu.append('<li class="divider"></li>');
-                        menu.append('<li><a data-action="ace" href="#">HTML Editor</a></li>');
-                        menu.append('<li class="js_change_theme"><a href="/page/website.themes">Change Theme</a></li>');
-                        menu.append('<li><a href="/web#return_label=Website&action=website.action_module_website">Install Apps</a></li>');
-                        self.trigger('rte:customize_menu_ready');
-                    }
-                );
-            });
-            menu.on('click', 'a[data-view-id]', function (event) {
-                var view_id = $(event.currentTarget).data('view-id');
-                return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
-                    model: 'ir.ui.view',
-                    method: 'toggle',
-                    args: [],
-                    kwargs: {
-                        ids: [parseInt(view_id, 10)],
-                        context: website.get_context()
-                    }
-                }).then( function() {
-                    window.location.reload();
-                });
-            });
-        },
         start: function() {
-            // remove placeholder editor bar
-            var fakebar = document.getElementById('website-top-navbar-placeholder');
-            if (fakebar) {
-                fakebar.parentNode.removeChild(fakebar);
-            }
-
             var self = this;
             this.saving_mutex = new openerp.Mutex();
 
+            this.$buttons = {
+                edit: this.$el.parents().find('button[data-action=edit]'),
+                save: this.$('button[data-action=save]'),
+                cancel: this.$('button[data-action=cancel]'),
+            };
+
             this.$('#website-top-edit').hide();
             this.$('#website-top-view').show();
+            this.$buttons.edit.show();
 
-            var $edit_button = this.$('button[data-action=edit]')
+            var $edit_button = this.$buttons.edit
                     .prop('disabled', website.no_editor);
             if (website.no_editor) {
                 var help_text = $(document.documentElement).data('editable-no-editor');
@@ -507,52 +469,31 @@
                     .attr('title', help_text);
             }
 
-
             $('.dropdown-toggle').dropdown();
-            this.customize_setup();
 
-            this.$buttons = {
-                edit: this.$('button[data-action=edit]'),
-                save: this.$('button[data-action=save]'),
-                cancel: this.$('button[data-action=cancel]'),
-            };
+            this.$buttons.edit.click(function(ev) {
+                self.edit();
+            });
 
             this.rte = new website.RTE(this);
             this.rte.on('change', this, this.proxy('rte_changed'));
             this.rte.on('rte:ready', this, function () {
                 self.setup_hover_buttons();
                 self.trigger('rte:ready');
-                self.check_height();
             });
 
-            $(window).on('resize', _.debounce(this.check_height.bind(this), 50));
-            this.check_height();
-
-            if (website.is_editable_button) {
-                this.$("button[data-action=edit]").removeClass("hidden");
-            }
-
-            return $.when(
-                this._super.apply(this, arguments),
-                this.rte.appendTo(this.$('#website-top-edit .nav.pull-right'))
-            ).then(function () {
-                self.check_height();
-            });
-        },
-        check_height: function () {
-            var editor_height = this.$el.outerHeight();
-            if (this.get('height') != editor_height) {
-                $(document.body).css('padding-top', editor_height);
-                this.set('height', editor_height);
-            }
+            this.rte.appendTo(this.$('#website-top-edit .nav.js_editor_placeholder'));
+            return this._super.apply(this, arguments);
+            
         },
         edit: function () {
             this.$buttons.edit.prop('disabled', true);
             this.$('#website-top-view').hide();
+            this.$el.show();
             this.$('#website-top-edit').show();
             $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
 
-            this.rte.start_edition().then(this.check_height.bind(this));
+            this.rte.start_edition();
             this.trigger('rte:called');
         },
         rte_changed: function () {
@@ -761,6 +702,62 @@
                 previous = null;
             });
         }
+    });
+    
+    website.EditorBarCustomize = openerp.Widget.extend({
+        events: {
+            'mousedown a.dropdown-toggle': 'load_menu',
+            'click ul a[data-action!=ace]': 'do_customize',
+        },
+        start: function() {
+            var self = this;
+            this.$menu = self.$el.find('ul');
+            this.view_name = $(document.documentElement).data('view-xmlid');
+            if (!this.view_name) {
+                this.$el.hide();
+            }
+            this.loaded = false;
+        },
+        load_menu: function () {
+            var self = this;
+            if(this.loaded) {
+                return;
+            }
+            openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': this.view_name }).then(
+                function(result) {
+                    _.each(result, function (item) {
+                        if (item.xml_id === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
+                        if (item.header) {
+                            self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
+                        } else {
+                            self.$menu.append(_.str.sprintf('<li role="presentation"><a href="#" data-view-id="%s" role="menuitem"><strong class="fa fa%s-square-o"></strong> %s</a></li>',
+                                item.id, item.active ? '-check' : '', item.name));
+                        }
+                    });
+                    self.loaded = true;
+                }
+            );
+        },
+        do_customize: function (event) {
+            var view_id = $(event.currentTarget).data('view-id');
+            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'ir.ui.view',
+                method: 'toggle',
+                args: [],
+                kwargs: {
+                    ids: [parseInt(view_id, 10)],
+                    context: website.get_context()
+                }
+            }).then( function() {
+                window.location.reload();
+            });
+        },
+    });
+
+    $(document).ready(function() {
+        var editorBarCustomize = new website.EditorBarCustomize();
+        editorBarCustomize.setElement($('li[id=customize-menu]'));
+        editorBarCustomize.start();
     });
 
     var blocks_selector = _.keys(CKEDITOR.dtd.$block).join(',');

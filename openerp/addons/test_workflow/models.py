@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import openerp
+import openerp.osv.orm
 
 class m(openerp.osv.orm.Model):
     """ A model for which we will define a workflow (see data.xml). """
@@ -56,12 +56,13 @@ class e(openerp.osv.orm.Model):
     _inherit = 'test.workflow.model.a'
 
 for name in 'bcdefghijkl':
-    type(
-        name,
-        (openerp.osv.orm.Model,),
-        {
-            '_name': 'test.workflow.model.%s' % name,
-            '_inherit': 'test.workflow.model.a',
-        })
+    #
+    # Do not use type() to create the class here, but use the class construct.
+    # This is because the __module__ of the new class would be the one of the
+    # metaclass that provides method __new__!
+    #
+    class NewModel(openerp.osv.orm.Model):
+        _name = 'test.workflow.model.%s' % name
+        _inherit = 'test.workflow.model.a'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
