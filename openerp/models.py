@@ -3013,7 +3013,7 @@ class BaseModel(object):
         if not fields:
             fields = filter(valid, self._fields)
         else:
-            invalid_fields = list(set(filter(lambda name: not valid(name), fields)))
+            invalid_fields = set(filter(lambda name: not valid(name), fields))
             if invalid_fields:
                 _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
                     operation, user, self._name, ', '.join(invalid_fields))
@@ -3281,7 +3281,7 @@ class BaseModel(object):
         self._cr.execute(query, (self._name, tuple(self.ids)))
         res = self._cr.dictfetchall()
 
-        uids = list(set(r[k] for r in res for k in ['write_uid', 'create_uid'] if r.get(k)))
+        uids = set(r[k] for r in res for k in ['write_uid', 'create_uid'] if r.get(k))
         names = dict(self.env['res.users'].browse(uids).name_get())
 
         for r in res:
@@ -3504,7 +3504,7 @@ class BaseModel(object):
 
         for order, obj_name, store_ids, fields in result_store:
             if obj_name == self._name:
-                effective_store_ids = list(set(store_ids) - set(ids))
+                effective_store_ids = set(store_ids) - set(ids)
             else:
                 effective_store_ids = store_ids
             if effective_store_ids:
