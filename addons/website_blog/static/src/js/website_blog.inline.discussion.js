@@ -5,6 +5,7 @@
     
     var website = openerp.website,
     qweb = openerp.qweb;
+    // TODO: bundlify qweb templates
     website.add_template_file('/website_blog/static/src/xml/website_blog.inline.discussion.xml');
     website.blog_discussion = openerp.Class.extend({
         init: function(options) {
