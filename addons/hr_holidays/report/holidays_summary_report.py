@@ -223,7 +223,7 @@ class report_custom(report_rml):
         elif data['model']=='ir.ui.menu':
             for id in data['form']['depts']:
                 dept = obj_dept.browse(cr, uid, id, context=context)
-                emp_ids = obj_emp.search(cr, uid, [('department_id', '=', id)])
+                emp_ids = obj_emp.search(cr, uid, [('department_id', '=', id)], context)
                 if emp_ids==[]:
                     continue
                 dept_done=0
