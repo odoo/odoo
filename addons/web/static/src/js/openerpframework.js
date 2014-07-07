@@ -1517,6 +1517,13 @@ openerp.time_to_str = function(obj) {
          + lpad(obj.getSeconds(),2);
 };
 
+// jQuery custom plugins
+jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+});
+
 openerp.declare = declare;
 
 return openerp;

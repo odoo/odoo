@@ -884,7 +884,7 @@ class mrp_production(osv.osv):
         production = self.browse(cr, uid, production_id, context=context)
         if not production.move_lines and production.state == 'ready':
             # trigger workflow if not products to consume (eg: services)
-            self.signal_button_produce(cr, uid, [production_id])
+            self.signal_workflow(cr, uid, [production_id], 'button_produce')
 
         produced_qty = self._get_produced_qty(cr, uid, production, context=context)
 
@@ -944,7 +944,7 @@ class mrp_production(osv.osv):
                         stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
-        self.signal_button_produce_done(cr, uid, [production_id])
+        self.signal_workflow(cr, uid, [production_id], 'button_produce_done')
         return True
 
     def _costs_generate(self, cr, uid, production):

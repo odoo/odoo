@@ -3231,8 +3231,16 @@ class BaseModel(object):
             record._cache.update(record._convert_to_cache(vals))
 
         # store failed values in cache for the records that could not be read
-        missing = self - self.browse(ids)
+        fetched = self.browse(ids)
+        missing = self - fetched
         if missing:
+            extras = fetched - self
+            if extras:
+                raise AccessError(
+                    _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(
+                        ', '.join(map(repr, missing._ids)),
+                        ', '.join(map(repr, extras._ids)),
+                    ))
             # store an access error exception in existing records
             exc = AccessError(
                 _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
@@ -4936,19 +4944,6 @@ class BaseModel(object):
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """
         pass
-
-    def __getattr__(self, name):
-        if name.startswith('signal_'):
-            # self.signal_XXX() sends signal XXX to the record's workflow
-            signal_name = name[7:]
-            assert signal_name
-            return (lambda *args, **kwargs:
-                    self.signal_workflow(*args, signal=signal_name, **kwargs))
-
-        get = getattr(super(BaseModel, self), '__getattr__', None)
-        if get is None:
-            raise AttributeError("%r has no attribute %r" % (type(self).__name__, name))
-        return get(name)
 
     def _patch_method(self, name, method):
         """ Monkey-patch a method for all instances of this model. This replaces
