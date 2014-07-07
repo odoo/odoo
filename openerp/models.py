@@ -5402,7 +5402,7 @@ class BaseModel(object):
         """ If `field` must be recomputed on some record in `self`, return the
             corresponding records that must be recomputed.
         """
-        for env in [self.env] + list(self.env.all):
+        for env in [self.env] + list(iter(self.env.all)):
             if env.todo.get(field) and env.todo[field] & self:
                 return env.todo[field]
 
@@ -5424,7 +5424,7 @@ class BaseModel(object):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
-        for env in list(self.env.all):
+        for env in list(iter(self.env.all)):
             while env.todo:
                 field, recs = next(env.todo.iteritems())
                 # evaluate the fields to recompute, and save them to database
