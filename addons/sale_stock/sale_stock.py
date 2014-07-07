@@ -374,8 +374,14 @@ class stock_move(osv.osv):
             sale_line = move.procurement_id.sale_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in sale_line.tax_id])]
             res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
-            res['price_unit'] = sale_line.price_unit
             res['discount'] = sale_line.discount
+            if move.product_id.id != sale_line.product_id.id:
+                res['price_unit'] = self.pool['product.pricelist'].price_get(
+                    cr, uid, [sale_line.order_id.pricelist_id.id],
+                    move.product_id.id, move.product_uom_qty or 1.0,
+                    sale_line.order_id.partner_id, context=context)[sale_line.order_id.pricelist_id.id]
+            else:
+                res['price_unit'] = sale_line.price_unit
         return res
 
 
