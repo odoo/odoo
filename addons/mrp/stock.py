@@ -159,7 +159,7 @@ class StockMove(osv.osv):
                                                     'consumed_for': consumed_for}, context=context)
             self.action_done(cr, uid, res, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
-            production_obj.signal_workflow(cr, uid, production_ids, button_produce)
+            production_obj.signal_workflow(cr, uid, production_ids, 'button_produce')
             for new_move in res:
                 if new_move != move.id:
                     #This move is not already there in move lines of production order
