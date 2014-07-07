@@ -127,7 +127,7 @@
                     </group>
                 </group>
                 <group name="status" position="before">
-                    <group name="lot" groups="stock.group_production_lot" string="Lots">
+                    <group name="lot" groups="stock.group_production_lot" string="Lots" attrs="{'invisible':[('type','=','service')]}">
                         <field name="track_all" groups="stock.group_production_lot"/>
                         <field name="track_incoming" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
                         <field name="track_outgoing" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
@@ -143,9 +143,6 @@
                 <field name="product_manager" position="attributes">
                     <attribute name="context">{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}</attribute>
                 </field>
-                <xpath expr="//div[@name='buttons']" position="inside">
-                    <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs"/>
-                </xpath>
                 <group name="procurement_uom" position="after" >
                    <group string="Supply Chain Information" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
                        <field name="route_ids" widget="many2many_checkboxes"/>
@@ -153,6 +150,8 @@
                 </group>
             </field>
         </record>
+
+
 
         <record model="ir.ui.view" id="product_template_kanban_stock_view">
             <field name="name">Product Template Kanban Stock</field>
@@ -224,6 +223,27 @@
                    <button class="oe_inline oe_stat_button" string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
                    <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
                         attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh" string="Reordering Rules"/>
+                   <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
+                </xpath>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="product_template_form_view_procurement_button">
+            <field name="name">product.template_procurement</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view_only"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button class="oe_stat_button"
+                           name="action_open_quants"
+                           icon="fa-building-o"
+                           type="object"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
+                   <div><field name="qty_available_text"/></div>
+                   </button>
+                   <button class="oe_inline oe_stat_button" string="Moves" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
+                   <button class="oe_inline oe_stat_button" name="action_view_orderpoints" type="object" 
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh" string="Reordering Rules"/>
+                   <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
                 </xpath>
             </field>
         </record>

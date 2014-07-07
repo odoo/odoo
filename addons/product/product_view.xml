@@ -43,6 +43,7 @@
         <record id="product_template_form_view" model="ir.ui.view">
             <field name="name">product.template.product.form</field>
             <field name="model">product.template</field>
+            <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <form string="Product">
                     <field name="is_product_variant" invisible="1"/>
@@ -109,7 +110,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}">
+                            <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
                                 <group name="sale">
                                     <group name="sale_condition" string="Sale Conditions" colspan="3">
                                         <label for="warranty"/>
@@ -127,14 +128,6 @@
                                 </group>
                                 <separator string="Description for Quotations"/>
                                 <field name="description_sale" placeholder="note to be displayed on quotations..."/>
-                            </page>
-                            <page name="variants" string="Variants">
-                                <field name="attribute_line_ids" widget="one2many_list">
-                                    <tree string="Variants" editable="bottom">
-                                        <field name="attribute_id"/>
-                                        <field name="value_ids" widget="many2many_tags" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
-                                    </tree>
-                                </field>
                             </page>
                         </notebook>
                     </sheet>
@@ -254,7 +247,6 @@
                     <field name="state" invisible="1"/>
                     <field name="product_tmpl_id" invisible="1"/>
                 </tree>
-
             </field>
         </record>
 
@@ -275,8 +267,6 @@
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags"/>
                 </xpath>
-                <page name="variants" position="replace">
-                </page>
             </field>
         </record>
 
@@ -349,19 +339,28 @@
             </field>
         </record>
 
-        <record id="product_template_form_view_variant_button" model="ir.ui.view">
-            <field name="name">product.template.form</field>
+        <record id="product_template_form_view_only" model="ir.ui.view">
+            <field name="name">product.template.form.buttons</field>
+            <field name="mode">primary</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="attribute_line_ids" position="before">
-                    <div class="oe_right">
-                        <button class="oe_inline oe_stat_button" string="Variant Prices"  name="%(product.variants_template_action)d" type="action" icon="fa-strikethrough"/>
-                        <button class="oe_inline oe_stat_button" name="%(product.product_variant_action)d" type="action" icon="fa-sitemap">
-                            <field string="Variants" name="product_variant_count" widget="statinfo" />
-                        </button>
-                    </div>
-                </field>
+                <page name="sales" position="after">
+                    <page name="variants" string="Variants">
+                        <div class="oe_right">
+                            <button class="oe_inline oe_stat_button" string="Variant Prices"  name="%(product.variants_template_action)d" type="action" icon="fa-strikethrough"/>
+                            <button class="oe_inline oe_stat_button" name="%(product.product_variant_action)d" type="action" icon="fa-sitemap">
+                                <field string="Variants" name="product_variant_count" widget="statinfo" />
+                            </button>
+                        </div>
+                        <field name="attribute_line_ids" widget="one2many_list">
+                            <tree string="Variants" editable="bottom">
+                                <field name="attribute_id"/>
+                                <field name="value_ids" widget="many2many_tags" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
             </field>
         </record>
 

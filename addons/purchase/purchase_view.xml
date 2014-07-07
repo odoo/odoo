@@ -620,18 +620,40 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
-                   <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
-                       groups="purchase.group_purchase_user" icon="fa-shopping-cart">
-                       <field string="Purchases" name="purchase_count" widget="statinfo" />
-                   </button>
-                </xpath>
                 <field name="property_account_expense" position="replace" >
                      <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>
                 </field>
                 <field name='supplier_taxes_id' position="replace" >
                      <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
                 </field>
+            </field>
+        </record>
+        
+        <record id="view_product_template_purchase_buttons_from" model="ir.ui.view">
+            <field name="name">product.template.purchase.button.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view_only"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button class="oe_inline oe_stat_button" name="action_view_purchases" type="object" 
+                       groups="purchase.group_purchase_user" icon="fa-shopping-cart">
+                       <field string="Purchases" name="purchase_count" widget="statinfo"/>
+                   </button>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="view_product_normal_purchase_buttons_from" model="ir.ui.view">
+            <field name="name">product.product.purchase.button.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
+                       groups="purchase.group_purchase_user" icon="fa-shopping-cart">
+                       <field string="Purchases" name="purchase_count" widget="statinfo"/>
+                   </button>
+                </xpath>
             </field>
         </record>
     </data>

@@ -323,8 +323,18 @@ class product_template(osv.osv):
             res.append(('product_variant_ids', 'in', ids))
         return res
 
+
+    def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = str(product.qty_available) +  _(" On Hand")
+        return res
+
+
+
     _columns = {
         'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
+        'qty_available_text': fields.function(_product_available_text, type='char'),
         'property_stock_procurement': fields.property(
             type='many2one',
             relation='stock.location',
@@ -387,6 +397,42 @@ class product_template(osv.osv):
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
         return result
+
+
+    def _get_products(self, cr, uid, ids, context=None):
+        products = []
+        for prodtmpl in self.browse(cr, uid, ids, context=None):
+            products += [x.id for x in prodtmpl.product_variant_ids]
+        return products
+    
+    def _get_act_window_dict(self, cr, uid, module, name, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+        result = mod_obj.get_object_reference(cr, uid, module, name)
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        return result
+    
+    def action_open_quants(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock','product_open_quants', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        print "Result open quants:", result
+        return result
+    
+    def action_view_orderpoints(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock','product_open_orderpoint', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        return result
+
+
+    def action_view_stock_moves(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock','act_product_stock_move_open', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        return result
+
 
 class product_removal_strategy(osv.osv):
     _name = 'product.removal'

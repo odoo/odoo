@@ -1390,14 +1390,22 @@ class product_template(osv.Model):
         for template in self.browse(cr, uid, ids, context=context):
             res[template.id] = sum([p.purchase_count for p in template.product_variant_ids])
         return res
+
     _columns = {
         'purchase_ok': fields.boolean('Can be Purchased', help="Specify if the product can be selected in a purchase order line."),
         'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
     }
+
     _defaults = {
         'purchase_ok': 1,
         'route_ids': _get_buy_route,
     }
+
+    def action_view_purchases(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'purchase','action_purchase_line_product_tree', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        return result
 
 class product_product(osv.Model):
     _name = 'product.product'

@@ -1278,10 +1278,37 @@ class product_product(osv.Model):
             product_id: SaleOrderLine.search_count(cr,uid, [('product_id', '=', product_id)], context=context)
             for product_id in ids
         }
+
     _columns = {
         'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
 
     }
 
+class product_template(osv.Model):
+    _inherit = 'product.template'
+
+    def _sales_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        for template in self.browse(cr, uid, ids, context=context):
+            res[template.id] = sum([p.sales_count for p in template.product_variant_ids])
+        return res
+    
+    def action_view_sales(self, cr, uid, ids, context=None):
+        act_obj = self.pool.get('ir.actions.act_window')
+        mod_obj = self.pool.get('ir.model.data')
+        product_ids = []
+        for template in self.browse(cr, uid, ids, context=context):
+            product_ids += [x.id for x in template.product_variant_ids]
+        result = mod_obj.get_object_reference(cr, uid, 'sale', 'action_order_line_product_tree')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, product_ids)) + "])]"
+        return result
+    
+    
+    _columns = {
+        'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
+
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
