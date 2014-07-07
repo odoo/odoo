@@ -159,7 +159,7 @@ class sale_order(osv.osv):
                     raise osv.except_osv(
                         _('Cannot cancel sales order!'),
                         _('You must first cancel all delivery order(s) attached to this sales order.'))
-            stock_obj.signal_button_cancel(cr, uid, [p.id for p in sale.picking_ids])
+            stock_obj.signal_workflow(cr, uid, [p.id for p in sale.picking_ids], 'button_cancel')
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
     def action_wait(self, cr, uid, ids, context=None):
@@ -356,7 +356,7 @@ class stock_move(osv.osv):
             if move.procurement_id and move.procurement_id.sale_line_id:
                 sale_ids.append(move.procurement_id.sale_line_id.order_id.id)
         if sale_ids:
-            self.pool.get('sale.order').signal_ship_except(cr, uid, sale_ids)
+            self.pool.get('sale.order').signal_workflow(cr, uid, sale_ids, 'ship_except')
         return super(stock_move, self).action_cancel(cr, uid, ids, context=context)
 
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
