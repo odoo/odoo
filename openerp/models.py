@@ -4937,19 +4937,6 @@ class BaseModel(object):
         """ stuff to do right after the registry is built """
         pass
 
-    def __getattr__(self, name):
-        if name.startswith('signal_'):
-            # self.signal_XXX() sends signal XXX to the record's workflow
-            signal_name = name[7:]
-            assert signal_name
-            return (lambda *args, **kwargs:
-                    self.signal_workflow(*args, signal=signal_name, **kwargs))
-
-        get = getattr(super(BaseModel, self), '__getattr__', None)
-        if get is None:
-            raise AttributeError("%r has no attribute %r" % (type(self).__name__, name))
-        return get(name)
-
     def _patch_method(self, name, method):
         """ Monkey-patch a method for all instances of this model. This replaces
             the method called `name` by `method` in `self`'s class.
