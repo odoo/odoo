@@ -3231,8 +3231,16 @@ class BaseModel(object):
             record._cache.update(record._convert_to_cache(vals))
 
         # store failed values in cache for the records that could not be read
-        missing = self - self.browse(ids)
+        fetched = self.browse(ids)
+        missing = self - fetched
         if missing:
+            extras = fetched - self
+            if extras:
+                raise AccessError(
+                    _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(
+                        ', '.join(map(repr, missing._ids)),
+                        ', '.join(map(repr, extras._ids)),
+                    ))
             # store an access error exception in existing records
             exc = AccessError(
                 _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \

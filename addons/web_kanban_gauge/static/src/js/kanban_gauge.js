@@ -86,14 +86,14 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
 
                 // add input
                 if (!self.$el.find(".oe_justgage_edit").size()) {
-                    $div = $('<div class="oe_justgage_edit" style="z-index:1"/>');
+                    var $div = $('<div class="oe_justgage_edit" style="z-index:1"/>');
                     $div.css({
                         'text-align': 'center',
                         'position': 'absolute',
                         'width': self.$el.outerWidth() + 'px',
                         'top': (self.$el.outerHeight()/2-5) + 'px'
                     });
-                    $input = $('<input/>').val(gauge_value);
+                    var $input = $('<input/>').val(gauge_value);
                     $input.css({
                         'text-align': 'center',
                         'margin': 'auto',
@@ -101,10 +101,10 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                     });
                     $div.append($input);
                     if (self.options.on_click_label) {
-                        $post_input = $('<span style="color: #000000;">' + self.options.on_click_label + '</span>');
+                        var $post_input = $('<span style="color: #000000;">' + self.options.on_click_label + '</span>');
                         $div.append($post_input);
                     }
-                    self.$el.prepend($div)
+                    self.$el.prepend($div);
 
                     $input.focus()
                         .keydown(function (event) {
@@ -148,7 +148,7 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
 
             if (this.options.force_set && !+input_value) {
                 $svg.fadeTo(0, 0.3);
-                $div = $('<div/>').text(_t("Click to change value"));
+                var $div = $('<div/>').text(_t("Click to change value"));
                 $div.css(css);
                 this.$el.append($div);
             }
