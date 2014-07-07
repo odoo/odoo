@@ -852,12 +852,6 @@ class Field(object):
         return spec
 
 
-class Any(Field):
-    """ Field for arbitrary Python values. """
-    # Warning: no storage is defined for this type of field!
-    type = 'any'
-
-
 class Boolean(Field):
     """ Boolean field. """
     type = 'boolean'
