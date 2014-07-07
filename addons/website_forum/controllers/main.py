@@ -4,6 +4,7 @@ from datetime import datetime
 import werkzeug.urls
 import werkzeug.wrappers
 import simplejson
+import re
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -12,6 +13,7 @@ from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
 from openerp.addons.website.models.website import slug
+from openerp.tools.translate import _
 
 controllers = controllers()
 
@@ -45,6 +47,16 @@ class WebsiteForum(http.Controller):
             values['forum'] = request.registry['forum.forum'].browse(request.cr, request.uid, kwargs.pop('forum_id'), context=request.context)
         values.update(kwargs)
         return values
+
+    def _ckeditor_content_filter(self, forum, content):
+        cr, uid, context = request.cr, request.uid, request.context
+        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
+        forum = request.registry['forum.forum'].browse(cr, uid, forum.id, context=context)
+        if user.karma < forum.karma_post_image:
+            content = re.search(r'(<img.*?>)|(</?a[^>]*?>|<[a-z|A-Z]+[^>]*style\s*=\s*\"[^"]*\b(background|background-image)\s*:\s*[^"]*">)', content, re.I)
+            return False if content else True
+        else:
+            return True
 
     # Forum
     # --------------------------------------------------
@@ -171,6 +183,18 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/<model("forum.forum"):forum>/question/new', type='http', auth="user", methods=['POST'], website=True)
     def question_create(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
+        validate_karma_content = self._ckeditor_content_filter(forum, post.get('content'))
+        if not validate_karma_content:
+            tags = post.get('question_tags').strip('[]').replace('"', '')
+            values = self._prepare_forum_values(forum=forum, searches={},  header={'ask_hide': True})
+            values.update({
+               "content_error" : _("Sorry, you haven't enough karma to post Image or Link."), 
+               "question_name" : post.get('question_name'), 
+               "content" : post.get('content'),
+               "question_tags" : tags
+            });
+            return request.website.render("website_forum.ask_question", values)
+
         Tag = request.registry['forum.tag']
         question_tag_ids = []
         if post.get('question_tags').strip('[]'):
@@ -274,8 +298,31 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/new', type='http', auth="public", methods=['POST'], website=True)
     def post_new(self, forum, post, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
         if not request.session.uid:
             return login_redirect()
+        
+        values = self._prepare_forum_values(forum=forum, searches=post)
+        validate_karma_content = self._ckeditor_content_filter(forum, kwargs.get('content'))
+        if not validate_karma_content:
+            request.registry['forum.post'].set_viewed(cr, SUPERUSER_ID, [post.id], context=context)
+            if post.parent_id:
+                redirect_url = "/forum/%s/question/%s" % (slug(forum), slug(post.parent_id))
+                return werkzeug.utils.redirect(redirect_url, 301)
+            values = self._prepare_forum_values(forum=forum)
+            values.update({
+                "main_object": post,
+                "question": post,
+                "header": {'question_data': True},
+                "filters": 'question',
+                "reversed": reversed,
+                "content_error" : _("Sorry, you haven't enough karma to post Image or Link."), 
+                "forum_id": forum.id,
+                "parent_id": post.id,
+                "content": kwargs.get('content')
+            });
+            return request.website.render("website_forum.post_description_full", values)
+
         request.registry['forum.post'].create(
             request.cr, request.uid, {
                 'forum_id': forum.id,
@@ -338,6 +385,20 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
+        
+        validate_karma_content = self._ckeditor_content_filter(forum, kwargs.get('content'))
+        if not validate_karma_content:
+            values = self._prepare_forum_values(forum=forum)
+            if kwargs.get('question_tag'):
+                tags = kwargs.get('question_tag').strip('[]').replace('"', '')
+                values.update({"tags" : tags})
+            values.update({
+                "content_error" : _("Sorry, you haven't enough karma to post Image or Link."), 
+                "post" : post,
+                "is_answer": bool(post.parent_id)
+            });
+            return request.website.render("website_forum.edit_post", values)
+
         question_tags = []
         if kwargs.get('question_tag') and kwargs.get('question_tag').strip('[]'):
             Tag = request.registry['forum.tag']

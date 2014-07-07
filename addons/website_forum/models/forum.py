@@ -58,6 +58,7 @@ class Forum(osv.Model):
         'karma_comment_unlink_all': fields.integer('Karma to unlinnk all comments'),
         'karma_retag': fields.integer('Karma to change question tags'),
         'karma_flag': fields.integer('Karma to flag a post as offensive'),
+        'karma_post_image': fields.integer('Karma to post either an image or link (question, answer, edit).')
     }
 
     def _get_default_faq(self, cr, uid, context=None):
@@ -99,6 +100,7 @@ class Forum(osv.Model):
         'karma_comment_unlink_all': 500,
         'karma_retag': 75,
         'karma_flag': 500,
+        'karma_post_image': 30
     }
 
     def create(self, cr, uid, values, context=None):

@@ -19,9 +19,10 @@
     <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
     <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
     <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
+    <script type="text/javascript" src="/website_forum/static/src/js/insertpre/plugin.js"/>
     <script type="text/javascript">
         CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
-        ,['Outdent','Indent','Link','Unlink','Image'],] ;
+        ,['Outdent','Indent','Link','Unlink','Image'],['InsertPre']] ;
     </script>
 </template>
 
@@ -334,12 +335,17 @@
         <form t-attf-action="/forum/#{ slug(forum) }/question/new" method="post" role="form" class="tag_text">
             <input type="text" name="question_name" required="True" t-attf-value="#{question_name}"
                 class="form-control mb16" placeholder="Your Question Title..."/>
+                <div t-if="content_error" class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -40px; margin-left: 370px;">
+                <button type="button" class="close" data-dismiss="alert">x</button>
+                <t t-esc="content_error" />
+            </div>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <textarea name="content" required="True" class="form-control load_editor">
+                <t t-if="content"> <t t-esc="content" /> </t>
                 <t t-esc="question_content"/>
             </textarea>
             <br/>
-            <input type="text" name="question_tags" placeholder="Tags" class="form-control load_tags"/>
+            <input type="text" name="question_tags" t-attf-value="#{question_tags}" placeholder="Tags" class="form-control load_tags"/>
             <br/>
             <button class="btn btn-primary" id="btn_ask_your_question">Post Your Question</button>
         </form>
@@ -359,6 +365,10 @@
                 <input type="text" name="question_name" id="question_name" required="True"
                     t-attf-value="#{post.name}" class="form-control" placeholder="Edit your Question"/>
                 <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
+            </div>
+            <div t-if="content_error" class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -40px; margin-left: 370px;">
+                <button type="button" class="close" data-dismiss="alert">x</button>
+                <t t-esc="content_error" />
             </div>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <textarea name="content" required="True" class="form-control load_editor">
@@ -425,8 +435,14 @@
         - it really helps to select the best questions and answers!
     </p>
     <form t-attf-action="/forum/#{ slug(forum) }/post/#{slug(question)}/new" method="post" role="form">
+        <div t-if="content_error" class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -40px; margin-left: 370px;">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <t t-esc="content_error" />
+        </div>
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
-        <textarea name="content" class="form-control load_editor" required="True"/>
+        <textarea name="content" class="form-control load_editor" required="True">
+            <t t-if="content"> <t t-esc="content" /> </t>
+        </textarea>
         <button class="btn btn-primary" id="btn_ask_your_question">Post Your Answer</button>
     </form>
     <script type="text/javascript">
