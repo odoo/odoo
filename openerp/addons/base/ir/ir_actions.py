@@ -848,9 +848,9 @@ class ir_actions_server(osv.osv):
     def run_action_trigger(self, cr, uid, action, eval_context=None, context=None):
         """ Trigger a workflow signal, depending on the use_relational_model:
 
-         - `base`: base_model_pool.signal_<TRIGGER_NAME>(cr, uid, context.get('active_id'))
+         - `base`: base_model_pool.signal_workflow(cr, uid, context.get('active_id'), <TRIGGER_NAME>)
          - `relational`: find the related model and object, using the relational
-           field, then target_model_pool.signal_<TRIGGER_NAME>(cr, uid, target_id)
+           field, then target_model_pool.signal_workflow(cr, uid, target_id, <TRIGGER_NAME>)
         """
         obj_pool = self.pool[action.model_id.model]
         if action.use_relational_model == 'base':

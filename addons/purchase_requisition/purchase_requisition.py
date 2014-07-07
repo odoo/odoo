@@ -245,7 +245,7 @@ class purchase_requisition(osv.osv):
             for quotation in tender.purchase_ids:
                 if (self.check_valid_quotation(cr, uid, quotation, context=context)):
                     #use workflow to set PO state to confirm
-                    po.signal_purchase_confirm(cr, uid, [quotation.id])
+                    po.signal_workflow(cr, uid, [quotation.id], 'purchase_confirm')
 
             #get other confirmed lines per supplier
             for po_line in tender.po_line_ids:
@@ -268,13 +268,13 @@ class purchase_requisition(osv.osv):
                     vals = self._prepare_po_line_from_tender(cr, uid, tender, line, new_po, context=context)
                     poline.copy(cr, uid, line.id, default=vals, context=context)
                 #use workflow to set new PO state to confirm
-                po.signal_purchase_confirm(cr, uid, [new_po])
+                po.signal_workflow(cr, uid, [new_po], 'purchase_confirm')
 
             #cancel other orders
             self.cancel_unconfirmed_quotations(cr, uid, tender, context=context)
 
             #set tender to state done
-            self.signal_done(cr, uid, [tender.id])
+            self.signal_workflow(cr, uid, [tender.id], 'done')
         return True
 
     def cancel_unconfirmed_quotations(self, cr, uid, tender, context=None):
@@ -282,7 +282,7 @@ class purchase_requisition(osv.osv):
         po = self.pool.get('purchase.order')
         for quotation in tender.purchase_ids:
             if quotation.state in ['draft', 'sent', 'bid']:
-                self.pool.get('purchase.order').signal_purchase_cancel(cr, uid, [quotation.id])
+                self.pool.get('purchase.order').signal_workflow(cr, uid, [quotation.id], 'purchase_cancel')
                 po.message_post(cr, uid, [quotation.id], body=_('Cancelled by the call for bids associated to this request for quotation.'), context=context)
         return True
 
