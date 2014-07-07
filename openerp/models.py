@@ -629,76 +629,8 @@ class BaseModel(object):
             if col._type == 'float':
                 cls._columns[key] = copy.copy(col)
 
-        # link the class to the registry, and update the registry
-        cls.pool = pool
-        # Note: we have to insert an instance into the registry now, because it
-        # can trigger some stuff on other models which expect this new instance
-        # (like method _inherits_reload_src())
+        # instantiate the model, and initialize it
         model = object.__new__(cls)
-        cls._model = model              # backward compatibility
-        pool.add(name, model)
-
-        # determine description, table, sequence and log_access
-        if not cls._description:
-            cls._description = cls._name
-        if not cls._table:
-            cls._table = cls._name.replace('.', '_')
-        if not cls._sequence:
-            cls._sequence = cls._table + '_id_seq'
-        if not hasattr(cls, '_log_access'):
-            # If _log_access is not specified, it is the same value as _auto.
-            cls._log_access = cls._auto
-
-        # Transience
-        if cls.is_transient():
-            cls._transient_check_count = 0
-            cls._transient_max_count = config.get('osv_memory_count_limit')
-            cls._transient_max_hours = config.get('osv_memory_age_limit')
-            assert cls._log_access, \
-                "TransientModels must have log_access turned on, " \
-                "in order to implement their access rights policy"
-
-        # retrieve new-style fields and duplicate them (to avoid clashes with
-        # inheritance between different models)
-        cls._fields = {}
-        for attr, field in getmembers(cls, Field.__instancecheck__):
-            if not field._origin:
-                cls._add_field(attr, field.copy())
-
-        # introduce magic fields
-        cls._add_magic_fields()
-
-        # register stuff about low-level function fields and custom fields
-        cls._init_function_fields(pool, cr)
-        cls._init_manual_fields(pool, cr)
-
-        # process _inherits
-        cls._inherits_check()
-        cls._inherits_reload()
-
-        # register constraints and onchange methods
-        cls._init_constraints_onchanges()
-
-        # check defaults
-        for k in cls._defaults:
-            assert k in cls._fields, \
-                "Model %s has a default for nonexiting field %s" % (cls._name, k)
-
-        # restart columns
-        for column in cls._columns.itervalues():
-            column.restart()
-
-        # validate rec_name
-        if cls._rec_name:
-            assert cls._rec_name in cls._fields, \
-                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
-        elif 'name' in cls._fields:
-            cls._rec_name = 'name'
-
-        # prepare ormcache, which must be shared by all instances of the model
-        cls._ormcache = {}
-
-        # complete the initialization of model
         model.__init__(pool, cr)
         return model
 
@@ -818,8 +750,81 @@ class BaseModel(object):
         return None
 
     def __init__(self, pool, cr):
-        # this method no longer does anything; kept for backward compatibility
-        pass
+        """ Initialize a model and make it part of the given registry.
+
+        - copy the stored fields' functions in the registry,
+        - retrieve custom fields and add them in the model,
+        - ensure there is a many2one for each _inherits'd parent,
+        - update the children's _columns,
+        - give a chance to each field to initialize itself.
+
+        """
+        cls = type(self)
+
+        # link the class to the registry, and update the registry
+        cls.pool = pool
+        cls._model = self              # backward compatibility
+        pool.add(cls._name, self)
+
+        # determine description, table, sequence and log_access
+        if not cls._description:
+            cls._description = cls._name
+        if not cls._table:
+            cls._table = cls._name.replace('.', '_')
+        if not cls._sequence:
+            cls._sequence = cls._table + '_id_seq'
+        if not hasattr(cls, '_log_access'):
+            # If _log_access is not specified, it is the same value as _auto.
+            cls._log_access = cls._auto
+
+        # Transience
+        if cls.is_transient():
+            cls._transient_check_count = 0
+            cls._transient_max_count = config.get('osv_memory_count_limit')
+            cls._transient_max_hours = config.get('osv_memory_age_limit')
+            assert cls._log_access, \
+                "TransientModels must have log_access turned on, " \
+                "in order to implement their access rights policy"
+
+        # retrieve new-style fields and duplicate them (to avoid clashes with
+        # inheritance between different models)
+        cls._fields = {}
+        for attr, field in getmembers(cls, Field.__instancecheck__):
+            if not field._origin:
+                cls._add_field(attr, field.copy())
+
+        # introduce magic fields
+        cls._add_magic_fields()
+
+        # register stuff about low-level function fields and custom fields
+        cls._init_function_fields(pool, cr)
+        cls._init_manual_fields(pool, cr)
+
+        # process _inherits
+        cls._inherits_check()
+        cls._inherits_reload()
+
+        # register constraints and onchange methods
+        cls._init_constraints_onchanges()
+
+        # check defaults
+        for k in cls._defaults:
+            assert k in cls._fields, \
+                "Model %s has a default for nonexiting field %s" % (cls._name, k)
+
+        # restart columns
+        for column in cls._columns.itervalues():
+            column.restart()
+
+        # validate rec_name
+        if cls._rec_name:
+            assert cls._rec_name in cls._fields, \
+                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
+        elif 'name' in cls._fields:
+            cls._rec_name = 'name'
+
+        # prepare ormcache, which must be shared by all instances of the model
+        cls._ormcache = {}
 
     def __export_xml_id(self):
         """ Return a valid xml_id for the record `self`. """
