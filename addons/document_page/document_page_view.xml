@@ -42,7 +42,7 @@
                     <h1><field name="name" placeholder="Name"/></h1>
                     <group class="oe_edit_only">
                         <group>
-                            <field name="parent_id" on_change="onchange_parent_id(parent_id,content)" string="Category"/>
+                            <field name="parent_id" on_change="onchange_parent_id(parent_id,content)" string="Category" context="{'default_type':'category'}"/>
                         </group>
                         <group>
                             <field name="write_uid" groups="base.group_no_one"/>
