@@ -76,7 +76,7 @@ class make_procurement(osv.osv_memory):
                 'location_id': wh.lot_stock_id.id,
                 'company_id': wh.company_id.id,
             })
-            procurement_obj.signal_button_confirm(cr, uid, [procure_id])
+            procurement_obj.signal_workflow(cr, uid, [procure_id], 'button_confirm')
 
         id2 = data_obj._get_id(cr, uid, 'procurement', 'procurement_tree_view')
         id3 = data_obj._get_id(cr, uid, 'procurement', 'procurement_form_view')

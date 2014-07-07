@@ -1145,11 +1145,14 @@ class Root(object):
     """Root WSGI application for the OpenERP Web Client.
     """
     def __init__(self):
+        self._loaded = False
+
+    @lazy_property
+    def session_store(self):
         # Setup http sessions
         path = openerp.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
-        self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
-        self._loaded = False
+        return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
 
     @lazy_property
     def nodb_routing_map(self):

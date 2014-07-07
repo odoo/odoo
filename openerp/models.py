@@ -629,76 +629,8 @@ class BaseModel(object):
             if col._type == 'float':
                 cls._columns[key] = copy.copy(col)
 
-        # link the class to the registry, and update the registry
-        cls.pool = pool
-        # Note: we have to insert an instance into the registry now, because it
-        # can trigger some stuff on other models which expect this new instance
-        # (like method _inherits_reload_src())
+        # instantiate the model, and initialize it
         model = object.__new__(cls)
-        cls._model = model              # backward compatibility
-        pool.add(name, model)
-
-        # determine description, table, sequence and log_access
-        if not cls._description:
-            cls._description = cls._name
-        if not cls._table:
-            cls._table = cls._name.replace('.', '_')
-        if not cls._sequence:
-            cls._sequence = cls._table + '_id_seq'
-        if not hasattr(cls, '_log_access'):
-            # If _log_access is not specified, it is the same value as _auto.
-            cls._log_access = cls._auto
-
-        # Transience
-        if cls.is_transient():
-            cls._transient_check_count = 0
-            cls._transient_max_count = config.get('osv_memory_count_limit')
-            cls._transient_max_hours = config.get('osv_memory_age_limit')
-            assert cls._log_access, \
-                "TransientModels must have log_access turned on, " \
-                "in order to implement their access rights policy"
-
-        # retrieve new-style fields and duplicate them (to avoid clashes with
-        # inheritance between different models)
-        cls._fields = {}
-        for attr, field in getmembers(cls, Field.__instancecheck__):
-            if not field._origin:
-                cls._add_field(attr, field.copy())
-
-        # introduce magic fields
-        cls._add_magic_fields()
-
-        # register stuff about low-level function fields and custom fields
-        cls._init_function_fields(pool, cr)
-        cls._init_manual_fields(pool, cr)
-
-        # process _inherits
-        cls._inherits_check()
-        cls._inherits_reload()
-
-        # register constraints and onchange methods
-        cls._init_constraints_onchanges()
-
-        # check defaults
-        for k in cls._defaults:
-            assert k in cls._fields, \
-                "Model %s has a default for nonexiting field %s" % (cls._name, k)
-
-        # restart columns
-        for column in cls._columns.itervalues():
-            column.restart()
-
-        # validate rec_name
-        if cls._rec_name:
-            assert cls._rec_name in cls._fields, \
-                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
-        elif 'name' in cls._fields:
-            cls._rec_name = 'name'
-
-        # prepare ormcache, which must be shared by all instances of the model
-        cls._ormcache = {}
-
-        # complete the initialization of model
         model.__init__(pool, cr)
         return model
 
@@ -818,8 +750,81 @@ class BaseModel(object):
         return None
 
     def __init__(self, pool, cr):
-        # this method no longer does anything; kept for backward compatibility
-        pass
+        """ Initialize a model and make it part of the given registry.
+
+        - copy the stored fields' functions in the registry,
+        - retrieve custom fields and add them in the model,
+        - ensure there is a many2one for each _inherits'd parent,
+        - update the children's _columns,
+        - give a chance to each field to initialize itself.
+
+        """
+        cls = type(self)
+
+        # link the class to the registry, and update the registry
+        cls.pool = pool
+        cls._model = self              # backward compatibility
+        pool.add(cls._name, self)
+
+        # determine description, table, sequence and log_access
+        if not cls._description:
+            cls._description = cls._name
+        if not cls._table:
+            cls._table = cls._name.replace('.', '_')
+        if not cls._sequence:
+            cls._sequence = cls._table + '_id_seq'
+        if not hasattr(cls, '_log_access'):
+            # If _log_access is not specified, it is the same value as _auto.
+            cls._log_access = cls._auto
+
+        # Transience
+        if cls.is_transient():
+            cls._transient_check_count = 0
+            cls._transient_max_count = config.get('osv_memory_count_limit')
+            cls._transient_max_hours = config.get('osv_memory_age_limit')
+            assert cls._log_access, \
+                "TransientModels must have log_access turned on, " \
+                "in order to implement their access rights policy"
+
+        # retrieve new-style fields and duplicate them (to avoid clashes with
+        # inheritance between different models)
+        cls._fields = {}
+        for attr, field in getmembers(cls, Field.__instancecheck__):
+            if not field._origin:
+                cls._add_field(attr, field.copy())
+
+        # introduce magic fields
+        cls._add_magic_fields()
+
+        # register stuff about low-level function fields and custom fields
+        cls._init_function_fields(pool, cr)
+        cls._init_manual_fields(pool, cr)
+
+        # process _inherits
+        cls._inherits_check()
+        cls._inherits_reload()
+
+        # register constraints and onchange methods
+        cls._init_constraints_onchanges()
+
+        # check defaults
+        for k in cls._defaults:
+            assert k in cls._fields, \
+                "Model %s has a default for nonexiting field %s" % (cls._name, k)
+
+        # restart columns
+        for column in cls._columns.itervalues():
+            column.restart()
+
+        # validate rec_name
+        if cls._rec_name:
+            assert cls._rec_name in cls._fields, \
+                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
+        elif 'name' in cls._fields:
+            cls._rec_name = 'name'
+
+        # prepare ormcache, which must be shared by all instances of the model
+        cls._ormcache = {}
 
     def __export_xml_id(self):
         """ Return a valid xml_id for the record `self`. """
@@ -3013,7 +3018,7 @@ class BaseModel(object):
         if not fields:
             fields = filter(valid, self._fields)
         else:
-            invalid_fields = list(set(filter(lambda name: not valid(name), fields)))
+            invalid_fields = set(filter(lambda name: not valid(name), fields))
             if invalid_fields:
                 _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
                     operation, user, self._name, ', '.join(invalid_fields))
@@ -3231,8 +3236,16 @@ class BaseModel(object):
             record._cache.update(record._convert_to_cache(vals))
 
         # store failed values in cache for the records that could not be read
-        missing = self - self.browse(ids)
+        fetched = self.browse(ids)
+        missing = self - fetched
         if missing:
+            extras = fetched - self
+            if extras:
+                raise AccessError(
+                    _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(
+                        ', '.join(map(repr, missing._ids)),
+                        ', '.join(map(repr, extras._ids)),
+                    ))
             # store an access error exception in existing records
             exc = AccessError(
                 _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
@@ -3273,7 +3286,7 @@ class BaseModel(object):
         self._cr.execute(query, (self._name, tuple(self.ids)))
         res = self._cr.dictfetchall()
 
-        uids = list(set(r[k] for r in res for k in ['write_uid', 'create_uid'] if r.get(k)))
+        uids = set(r[k] for r in res for k in ['write_uid', 'create_uid'] if r.get(k))
         names = dict(self.env['res.users'].browse(uids).name_get())
 
         for r in res:
@@ -3496,7 +3509,7 @@ class BaseModel(object):
 
         for order, obj_name, store_ids, fields in result_store:
             if obj_name == self._name:
-                effective_store_ids = list(set(store_ids) - set(ids))
+                effective_store_ids = set(store_ids) - set(ids)
             else:
                 effective_store_ids = store_ids
             if effective_store_ids:
@@ -4937,19 +4950,6 @@ class BaseModel(object):
         """ stuff to do right after the registry is built """
         pass
 
-    def __getattr__(self, name):
-        if name.startswith('signal_'):
-            # self.signal_XXX() sends signal XXX to the record's workflow
-            signal_name = name[7:]
-            assert signal_name
-            return (lambda *args, **kwargs:
-                    self.signal_workflow(*args, signal=signal_name, **kwargs))
-
-        get = getattr(super(BaseModel, self), '__getattr__', None)
-        if get is None:
-            raise AttributeError("%r has no attribute %r" % (type(self).__name__, name))
-        return get(name)
-
     def _patch_method(self, name, method):
         """ Monkey-patch a method for all instances of this model. This replaces
             the method called `name` by `method` in `self`'s class.
@@ -5407,7 +5407,7 @@ class BaseModel(object):
         """ If `field` must be recomputed on some record in `self`, return the
             corresponding records that must be recomputed.
         """
-        for env in [self.env] + list(self.env.all):
+        for env in [self.env] + list(iter(self.env.all)):
             if env.todo.get(field) and env.todo[field] & self:
                 return env.todo[field]
 
@@ -5429,7 +5429,7 @@ class BaseModel(object):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
-        for env in list(self.env.all):
+        for env in list(iter(self.env.all)):
             while env.todo:
                 field, recs = next(env.todo.iteritems())
                 # evaluate the fields to recompute, and save them to database
