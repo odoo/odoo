@@ -46,8 +46,8 @@ class stock_move(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
+        default = default or {}
+        context = context or {}
         if not default.get('split_from') and not context.get('split'):
             #we don't want to propagate the link to the purchase order line except in case of move split
             default['purchase_line_id'] = False

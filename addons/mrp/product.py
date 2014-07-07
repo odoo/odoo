@@ -51,7 +51,16 @@ class product_template(osv.osv):
     _defaults = {
         'produce_delay': 1,
     }
+    
+    
+    def action_view_mos(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'mrp','act_product_mrp_production', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        result['context'] = "{}"
+        return result
 
+    
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -65,6 +74,15 @@ class product_product(osv.osv):
     _columns = {
         'mo_count': fields.function(_bom_orders_count, string='# Manufacturing Orders', type='integer'),
     }
-
+    
+    def action_view_bom(self, cr, uid, ids, context=None):
+        tmpl_obj = self.pool.get("product.template")
+        products = set()
+        for product in self.browse(cr, uid, ids, context=context):
+            products.add(product.product_tmpl_id.id)
+        result = tmpl_obj._get_act_window_dict(cr, uid, 'mrp','product_open_bom', context=context)
+        result['context'] = "{}"
+        result['domain'] = "[('product_tmpl_id','in',[" + ','.join(map(str, list(products))) + "])]"
+        return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
