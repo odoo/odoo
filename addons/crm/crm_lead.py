@@ -888,6 +888,7 @@ class crm_lead(format_address, osv.osv):
         if vals.get('section_id') and not context.get('default_section_id'):
             context['default_section_id'] = vals.get('section_id')
 
+        vals.update({'date_open': fields.datetime.now() if vals.get('user_id') else False})
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
         return super(crm_lead, self).create(cr, uid, vals, context=create_context)
@@ -900,6 +901,7 @@ class crm_lead(format_address, osv.osv):
         if vals.get('stage_id') and not vals.get('probability'):
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)
+        if vals.get('user_id'): vals.update({'date_open': fields.datetime.now()})
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):

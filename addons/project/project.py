@@ -1006,9 +1006,8 @@ class task(osv.osv):
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
         # user_id change: update date_start
-        if vals.get('user_id') and not vals.get('start_date'):
-            vals['date_start'] = fields.datetime.now()
 
+        vals.update({'date_start': vals.get('date_start') if vals.get('user_id') and vals.get('start_date') else fields.datetime.now() if vals.get('user_id') and not vals.get('start_date') else False})
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
         task_id = super(task, self).create(cr, uid, vals, context=create_context)
@@ -1022,10 +1021,15 @@ class task(osv.osv):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
+            #SET 'date_end' IF STAGE IS LAST(done)
+            project_id = self.browse(cr, uid, ids, context=context)[0].project_id
+            if project_id:
+                task_type_ids = self.pool['project.project'].browse(cr, uid, project_id.id, context = context).type_ids
+                if task_type_ids[-1:].id == vals['stage_id'] :
+                   vals.update({'date_end': fields.datetime.now()})
         # user_id change: update date_start
-        if vals.get('user_id') and 'date_start' not in vals:
-            vals['date_start'] = fields.datetime.now()
 
+        if vals.get('user_id'): vals.update({'date_start': fields.datetime.now()})
         # Overridden to reset the kanban_state to normal whenever
         # the stage (stage_id) of the task changes.
         if vals and not 'kanban_state' in vals and 'stage_id' in vals:

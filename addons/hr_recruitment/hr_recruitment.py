@@ -402,6 +402,8 @@ class hr_applicant(osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         context = dict(context or {})
+        #set date_open if Responsible user_id selected
+        vals.update({'date_open': fields.datetime.now() if vals.get('user_id') else False})
         context['mail_create_nolog'] = True
         if vals.get('department_id') and not context.get('default_department_id'):
             context['default_department_id'] = vals.get('department_id')
@@ -424,11 +426,14 @@ class hr_applicant(osv.Model):
         res = True
 
         # user_id change: update date_open
-        if vals.get('user_id'):
-            vals['date_open'] = fields.datetime.now()
+        if vals.get('user_id'): vals.update({'date_open': fields.datetime.now()})
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
+            #SET 'date_end' IF STAGE IS LAST(Contract Signed)
+            applicant_type_ids = self.pool.get('hr.recruitment.stage').search_read(cr, uid, [], ['sequence'], context=context)
+            if applicant_type_ids[-1:][0]['id'] == vals['stage_id']:
+               vals.update({'date_closed': fields.datetime.now()})
             for applicant in self.browse(cr, uid, ids, context=None):
                 vals['last_stage_id'] = applicant.stage_id.id
                 res = super(hr_applicant, self).write(cr, uid, [applicant.id], vals, context=context)
