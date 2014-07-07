@@ -104,7 +104,7 @@ class account_fiscal_position(osv.osv):
 
         # partner manually set fiscal position always win
         if partner.property_account_position:
-            return part.property_account_position.id
+            return partner.property_account_position.id
 
         # if no delivery use invocing
         if delivery_id:
