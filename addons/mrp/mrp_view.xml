@@ -546,20 +546,6 @@
                  </xpath>
              </field>
         </record>
-        
-        <record id="product_template_form_view_inherit" model="ir.ui.view">
-             <field name="name">product.product.form.view.inherited</field>
-             <field name="model">product.product</field>
-             <field name="inherit_id" ref="product.product_normal_form_view"/>
-             <field name="arch" type="xml">
-                <group name="sale_condition" position="inside">
-                    <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
-                    <div attrs="{'invisible':[('type','=','service')]}">
-                        <field name="produce_delay" class="oe_inline"/> days
-                    </div>
-                </group>
-             </field>
-        </record>
 
         <record id="view_mrp_product_template_form_inherited" model="ir.ui.view">
             <field name="name">product.form.mrp.inherited</field>
@@ -569,6 +555,12 @@
                  <xpath expr="//group[@name='lot']" position="inside">
                     <field name="track_production" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
                 </xpath>
+                <group name="sale_condition" position="inside">
+                    <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
+                    <div attrs="{'invisible':[('type','=','service')]}">
+                        <field name="produce_delay" class="oe_inline"/> days
+                    </div>
+                </group>
             </field>
         </record>
         
