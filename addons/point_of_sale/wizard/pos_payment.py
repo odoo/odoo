@@ -65,7 +65,7 @@ class pos_make_payment(osv.osv_memory):
             order_obj.add_payment(cr, uid, active_id, data, context=context)
 
         if order_obj.test_paid(cr, uid, [active_id]):
-            order_obj.signal_paid(cr, uid, [active_id])
+            order_obj.signal_workflow(cr, uid, [active_id], 'paid')
             return {'type' : 'ir.actions.act_window_close' }
 
         return self.launch_payment(cr, uid, ids, context=context)

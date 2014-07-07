@@ -58,7 +58,7 @@
   !python {model: sale.order}: |
     invoice_ids = self.browse(cr, uid, ref("sale_order_8")).invoice_ids
     for invoice in invoice_ids:
-      invoice.signal_invoice_cancel()
+      invoice.signal_workflow('invoice_cancel')
 -
   I check order status in "Invoice Exception" and related invoice is in cancel state.
 -
