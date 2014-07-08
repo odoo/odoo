@@ -22,6 +22,7 @@
 import json
 import logging
 import werkzeug
+import werkzeug.utils
 from datetime import datetime
 from math import ceil
 
@@ -46,7 +47,7 @@ class WebsiteSurvey(http.Controller):
 
         # In case of auth required, block public user
         if survey.auth_required and uid == request.website.user_id.id:
-            return request.website.render("website.403")
+            return request.website.render("survey.auth_required", {'survey': survey})
 
         # In case of non open surveys
         if survey.stage_id.closed:
@@ -318,8 +319,9 @@ class WebsiteSurvey(http.Controller):
                                        'filter_finish': filter_finish
                                        })
 
-    def prepare_result_dict(self,survey, current_filters=[]):
+    def prepare_result_dict(self,survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
+        current_filters = current_filters if current_filters else []
         survey_obj = request.registry['survey.survey']
         result = {'survey':survey, 'page_ids': []}
         for page in survey.page_ids:
@@ -347,8 +349,10 @@ class WebsiteSurvey(http.Controller):
         total = ceil(total_record / float(limit))
         return range(1, int(total + 1))
 
-    def get_graph_data(self, question, current_filters=[]):
+    def get_graph_data(self, question, current_filters=None):
         '''Returns formatted data required by graph library on basis of filter'''
+        # TODO refactor this terrible method and merge it with prepare_result_dict
+        current_filters = current_filters if current_filters else []
         survey_obj = request.registry['survey.survey']
         result = []
         if question.type == 'multiple_choice':
@@ -360,9 +364,8 @@ class WebsiteSurvey(http.Controller):
             data = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)
             for answer in data['answers']:
                 values = []
-                for res in data['result']:
-                    if res[1] == answer:
-                        values.append({'text': data['rows'][res[0]], 'count': data['result'][res]})
+                for row in data['rows']:
+                    values.append({'text': data['rows'].get(row), 'count': data['result'].get((row, answer))})
                 result.append({'key': data['answers'].get(answer), 'values': values})
         return json.dumps(result)
 

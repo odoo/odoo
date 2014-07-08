@@ -22,10 +22,8 @@ from dateutil.relativedelta import relativedelta
 import datetime
 import logging
 import time
-import traceback
 
 from openerp.osv import osv, fields
-from openerp.osv.orm import intersect, except_orm
 import openerp.tools
 from openerp.tools.translate import _
 
@@ -73,11 +71,12 @@ class account_analytic_invoice_line(osv.osv):
 
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=local_context)
+        price = False
         if price_unit is not False:
             price = price_unit
         elif pricelist_id:
             price = res.price
-        else:
+        if price is False:
             price = res.list_price
         if not name:
             name = self.pool.get('product.product').name_get(cr, uid, [res.id], context=local_context)[0][1]
@@ -518,7 +517,7 @@ class account_analytic_account(osv.osv):
         'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
         'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
-        'recurring_invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id', 'Invoice Lines'),
+        'recurring_invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id', 'Invoice Lines', copy=True),
         'recurring_invoices' : fields.boolean('Generate recurring invoices automatically'),
         'recurring_rule_type': fields.selection([
             ('daily', 'Day(s)'),
@@ -553,18 +552,17 @@ class account_analytic_account(osv.osv):
             'nodestroy': True,
         }
 
-    def on_change_template(self, cr, uid, ids, template_id, date_start=False, fix_price_invoices=False, invoice_on_timesheets=False, recurring_invoices=False, context=None):
+    def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
         if not template_id:
             return {}
-        obj_analytic_line = self.pool.get('account.analytic.invoice.line')
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
 
         template = self.browse(cr, uid, template_id, context=context)
         
-        if not fix_price_invoices:
+        if not ids:
             res['value']['fix_price_invoices'] = template.fix_price_invoices
             res['value']['amount_max'] = template.amount_max
-        if not invoice_on_timesheets:
+        if not ids:
             res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
             res['value']['hours_qtt_est'] = template.hours_qtt_est
         
@@ -572,7 +570,7 @@ class account_analytic_account(osv.osv):
             res['value']['to_invoice'] = template.to_invoice.id
         if template.pricelist_id.id:
             res['value']['pricelist_id'] = template.pricelist_id.id
-        if not recurring_invoices:
+        if not ids:
             invoice_line_ids = []
             for x in template.recurring_invoice_line_ids:
                 invoice_line_ids.append((0, 0, {
@@ -596,8 +594,7 @@ class account_analytic_account(osv.osv):
         return value
 
     def cron_account_analytic_account(self, cr, uid, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         remind = {}
 
         def fill_remind(key, domain, write_pending=False):
@@ -613,7 +610,7 @@ class account_analytic_account(osv.osv):
             accounts = self.browse(cr, uid, accounts_ids, context=context)
             for account in accounts:
                 if write_pending:
-                    account.write({'state' : 'pending'}, context=context)
+                    account.write({'state' : 'pending'})
                 remind_user = remind.setdefault(account.manager_id.id, {})
                 remind_type = remind_user.setdefault(key, {})
                 remind_partner = remind_type.setdefault(account.partner_id, []).append(account)
@@ -747,29 +744,32 @@ class account_analytic_account(osv.osv):
             contract_ids = ids
         else:
             contract_ids = self.search(cr, uid, [('recurring_next_date','<=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True), ('type', '=', 'contract')])
-        for contract in self.browse(cr, uid, contract_ids, context=context):
-            try:
-                invoice_values = self._prepare_invoice(cr, uid, contract, context=context)
-                invoice_ids.append(self.pool['account.invoice'].create(cr, uid, invoice_values, context=context))
-                next_date = datetime.datetime.strptime(contract.recurring_next_date or current_date, "%Y-%m-%d")
-                interval = contract.recurring_interval
-                if contract.recurring_rule_type == 'daily':
-                    new_date = next_date+relativedelta(days=+interval)
-                elif contract.recurring_rule_type == 'weekly':
-                    new_date = next_date+relativedelta(weeks=+interval)
-                elif contract.recurring_rule_type == 'monthly':
-                    new_date = next_date+relativedelta(months=+interval)
-                else:
-                    new_date = next_date+relativedelta(years=+interval)
-                self.write(cr, uid, [contract.id], {'recurring_next_date': new_date.strftime('%Y-%m-%d')}, context=context)
-                if automatic:
-                    cr.commit()
-            except Exception:
-                if automatic:
-                    cr.rollback()
-                    _logger.error(traceback.format_exc())
-                else:
-                    raise
+        if contract_ids:
+            cr.execute('SELECT company_id, array_agg(id) as ids FROM account_analytic_account WHERE id IN %s GROUP BY company_id', (tuple(contract_ids),))
+            for company_id, ids in cr.fetchall():
+                for contract in self.browse(cr, uid, ids, context=dict(context, company_id=company_id, force_company=company_id)):
+                    try:
+                        invoice_values = self._prepare_invoice(cr, uid, contract, context=context)
+                        invoice_ids.append(self.pool['account.invoice'].create(cr, uid, invoice_values, context=context))
+                        next_date = datetime.datetime.strptime(contract.recurring_next_date or current_date, "%Y-%m-%d")
+                        interval = contract.recurring_interval
+                        if contract.recurring_rule_type == 'daily':
+                            new_date = next_date+relativedelta(days=+interval)
+                        elif contract.recurring_rule_type == 'weekly':
+                            new_date = next_date+relativedelta(weeks=+interval)
+                        elif contract.recurring_rule_type == 'monthly':
+                            new_date = next_date+relativedelta(months=+interval)
+                        else:
+                            new_date = next_date+relativedelta(years=+interval)
+                        self.write(cr, uid, [contract.id], {'recurring_next_date': new_date.strftime('%Y-%m-%d')}, context=context)
+                        if automatic:
+                            cr.commit()
+                    except Exception:
+                        if automatic:
+                            cr.rollback()
+                            _logger.exception('Fail to create recurring invoice for contract %s', contract.code)
+                        else:
+                            raise
         return invoice_ids
 
 class account_analytic_account_summary_user(osv.osv):

@@ -12,7 +12,6 @@ from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
 from openerp.addons.website.models.website import slug
-from openerp.tools import html2plaintext
 
 controllers = controllers()
 
@@ -33,20 +32,12 @@ class WebsiteForum(http.Controller):
         return msg
 
     def _prepare_forum_values(self, forum=None, **kwargs):
-        Forum = request.registry['forum.forum']
         user = request.registry['res.users'].browse(request.cr, request.uid, request.uid, context=request.context)
         values = {'user': user,
                   'is_public_user': user.id == request.website.user_id.id,
                   'notifications': self._get_notifications(),
                   'header': kwargs.get('header', dict()),
                   'searches': kwargs.get('searches', dict()),
-                  'can_edit_own': True,
-                  'can_edit_all': user.karma > Forum._karma_modo_edit_all,
-                  'can_close_own': user.karma > Forum._karma_modo_close_own,
-                  'can_close_all': user.karma > Forum._karma_modo_close_all,
-                  'can_unlink_own': user.karma > Forum._karma_modo_unlink_own,
-                  'can_unlink_all': user.karma > Forum._karma_modo_unlink_all,
-                  'can_unlink_comment': user.karma > Forum._karma_modo_unlink_comment,
                   }
         if forum:
             values['forum'] = forum
@@ -54,14 +45,6 @@ class WebsiteForum(http.Controller):
             values['forum'] = request.registry['forum.forum'].browse(request.cr, request.uid, kwargs.pop('forum_id'), context=request.context)
         values.update(kwargs)
         return values
-
-    def _has_enough_karma(self, karma_name, uid=None):
-        Forum = request.registry['forum.forum']
-        karma = hasattr(Forum, karma_name) and getattr(Forum, karma_name) or 0
-        user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, uid or request.uid, context=request.context)
-        if user.karma < karma:
-            return False, {'error': 'not_enough_karma', 'karma': karma}
-        return True, {}
 
     # Forum
     # --------------------------------------------------
@@ -120,7 +103,7 @@ class WebsiteForum(http.Controller):
 
         question_count = Post.search(cr, uid, domain, count=True, context=context)
         if tag:
-            url = "/forum/%s/%s/questions" % (slug(forum), slug(tag))
+            url = "/forum/%s/tag/%s/questions" % (slug(forum), slug(tag))
         else:
             url = "/forum/%s" % slug(forum)
 
@@ -208,11 +191,15 @@ class WebsiteForum(http.Controller):
             }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), new_question_id))
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0])]"):question>'''], type='http', auth="public", website=True)
+    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
         cr, uid, context = request.cr, request.uid, request.context
         # increment view counter
         request.registry['forum.post'].set_viewed(cr, SUPERUSER_ID, [question.id], context=context)
+
+        if question.parent_id:
+            redirect_url = "/forum/%s/question/%s" % (slug(forum), slug(question.parent_id))
+            return werkzeug.utils.redirect(redirect_url, 301)
 
         filters = 'question'
         values = self._prepare_forum_values(forum=forum, searches=post)
@@ -240,10 +227,6 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", methods=['POST'], website=True)
     def question_ask_for_close(self, forum, question, **post):
-        check_res = self._has_enough_karma(question.create_uid.id == request.uid and '_karma_modo_close_own' or '_karma_modo_close_all')
-        if not check_res[0]:
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-
         cr, uid, context = request.cr, request.uid, request.context
         Reason = request.registry['forum.post.reason']
         reason_ids = Reason.search(cr, uid, [], context=context)
@@ -268,42 +251,21 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/close', type='http', auth="user", methods=['POST'], website=True)
     def question_close(self, forum, question, **post):
-        check_res = self._has_enough_karma(question.create_uid.id == request.uid and '_karma_modo_close_own' or '_karma_modo_close_all')
-        if not check_res[0]:
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-
-        request.registry['forum.post'].write(request.cr, request.uid, [question.id], {
-            'state': 'close',
-            'closed_uid': request.uid,
-            'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
-            'closed_reason_id': int(post.get('reason_id', False)),
-        }, context=request.context)
+        request.registry['forum.post'].close(request.cr, request.uid, [question.id], reason_id=int(post.get('reason_id', False)), context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen', type='http', auth="user", methods=['POST'], website=True)
     def question_reopen(self, forum, question, **kwarg):
-        check_res = self._has_enough_karma(question.create_uid.id == request.uid and '_karma_modo_close_own' or '_karma_modo_close_all')
-        if not check_res[0]:
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-
         request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'state': 'active'}, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/delete', type='http', auth="user", methods=['POST'], website=True)
     def question_delete(self, forum, question, **kwarg):
-        check_res = self._has_enough_karma(question.create_uid.id == request.uid and '_karma_modo_unlink_own' or '_karma_modo_unlink_all')
-        if not check_res[0]:
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-
         request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'active': False}, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/undelete', type='http', auth="user", methods=['POST'], website=True)
     def question_undelete(self, forum, question, **kwarg):
-        check_res = self._has_enough_karma(question.create_uid.id == request.uid and '_karma_modo_unlink_own' or '_karma_modo_unlink_all')
-        if not check_res[0]:
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-
         request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'active': True}, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
@@ -345,11 +307,6 @@ class WebsiteForum(http.Controller):
             return request.redirect('/')
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
-        if post.parent_id.create_uid.id != uid:
-            return {'error': 'own_post'}
-        if post.create_uid.id == user.id and user.karma < request.registry['forum.forum']._karma_answer_accept_own:
-            return {'error': 'not_enough_karma', 'karma': 20}
 
         # set all answers to False, only one can be accepted
         request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids], {'is_correct': False}, context=context)
@@ -358,10 +315,6 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/delete', type='http', auth="user", methods=['POST'], website=True)
     def post_delete(self, forum, post, **kwargs):
-        check_res = self._has_enough_karma(post.create_uid.id == request.uid and '_karma_modo_unlink_own' or '_karma_modo_unlink_all')
-        if not check_res[0]:
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-
         question = post.parent_id
         request.registry['forum.post'].unlink(request.cr, request.uid, [post.id], context=request.context)
         if question:
@@ -370,10 +323,6 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edit', type='http', auth="user", website=True)
     def post_edit(self, forum, post, **kwargs):
-        check_res = self._has_enough_karma(post.create_uid.id == request.uid and '_karma_modo_edit_own' or '_karma_modo_edit_all')
-        if not check_res[0]:
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-
         tags = ""
         for tag_name in post.tag_ids:
             tags += tag_name.name + ","
@@ -415,9 +364,6 @@ class WebsiteForum(http.Controller):
             return {'error': 'anonymous_user'}
         if request.uid == post.create_uid.id:
             return {'error': 'own_post'}
-        check_res = self._has_enough_karma('_karma_upvote')
-        if not check_res[0]:
-            return check_res[1]
         upvote = True if not post.user_vote > 0 else False
         return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=upvote, context=request.context)
 
@@ -427,9 +373,6 @@ class WebsiteForum(http.Controller):
             return {'error': 'anonymous_user'}
         if request.uid == post.create_uid.id:
             return {'error': 'own_post'}
-        check_res = self._has_enough_karma('_karma_downvote')
-        if not check_res[0]:
-            return check_res[1]
         upvote = True if post.user_vote < 0 else False
         return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=upvote, context=request.context)
 
@@ -444,10 +387,10 @@ class WebsiteForum(http.Controller):
         User = request.registry['res.users']
 
         step = 30
-        tag_count = User.search(cr, SUPERUSER_ID, [('karma', '>', 1)], count=True, context=context)
+        tag_count = User.search(cr, SUPERUSER_ID, [('karma', '>', 1), ('website_published', '=', True)], count=True, context=context)
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
 
-        obj_ids = User.search(cr, SUPERUSER_ID, [('karma', '>', 1)], limit=step, offset=pager['offset'], order='karma DESC', context=context)
+        obj_ids = User.search(cr, SUPERUSER_ID, [('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC', context=context)
         # put the users in block of 3 to display them as a table
         users = [[] for i in range(len(obj_ids)/3+1)]
         for index, user in enumerate(User.browse(cr, SUPERUSER_ID, obj_ids, context=context)):
@@ -496,9 +439,9 @@ class WebsiteForum(http.Controller):
         Data = request.registry["ir.model.data"]
 
         user = User.browse(cr, SUPERUSER_ID, user_id, context=context)
-        if not user.exists() or (user_id != request.session.uid and user.karma < 1): 
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-
+        values = self._prepare_forum_values(forum=forum, **post)
+        if not user.exists() or (user_id != request.session.uid and (not user.website_published or user.karma < 1)):
+            return request.website.render("website_forum.private_profile", values)
         # questions and answers by user
         user_questions, user_answers = [], []
         user_post_ids = Post.search(
@@ -549,13 +492,11 @@ class WebsiteForum(http.Controller):
 
         post['users'] = 'True'
 
-        values = self._prepare_forum_values(**post)
         values.update({
             'uid': uid,
             'user': user,
             'main_object': user,
             'searches': post,
-            'forum': forum,
             'questions': user_questions,
             'answers': user_answers,
             'followed': followed,
@@ -623,26 +564,25 @@ class WebsiteForum(http.Controller):
     # Messaging
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/convert_to_answer', type='http', auth="public", methods=['POST'], website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/convert_to_answer', type='http', auth="user", methods=['POST'], website=True)
     def convert_comment_to_answer(self, forum, post, comment, **kwarg):
-        body = comment.body
-        request.registry['mail.message'].unlink(request.cr, request.uid, [comment.id], context=request.context)
+        new_post_id = request.registry['forum.post'].convert_comment_to_answer(request.cr, request.uid, comment.id, context=request.context)
+        if not new_post_id:
+            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
+        post = request.registry['forum.post'].browse(request.cr, request.uid, new_post_id, context=request.context)
         question = post.parent_id if post.parent_id else post
-        for answer in question.child_ids:
-            if answer.create_uid.id == request.uid:
-                return self.post_comment(forum, answer, comment=html2plaintext(body))
-        return self.post_new(forum, question, content=body)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment', type='http', auth="user", methods=['POST'], website=True)
     def convert_answer_to_comment(self, forum, post, **kwarg):
-        values = {
-            'comment': html2plaintext(post.content),
-        }
         question = post.parent_id
-        request.registry['forum.post'].unlink(request.cr, SUPERUSER_ID, [post.id], context=request.context)
-        return self.post_comment(forum, question, **values)
+        new_msg_id = request.registry['forum.post'].convert_answer_to_comment(request.cr, request.uid, post.id, context=request.context)
+        if not new_msg_id:
+            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/delete', type='json', auth="user", website=True)
     def delete_comment(self, forum, post, comment, **kwarg):
-        request.registry['mail.message'].unlink(request.cr, SUPERUSER_ID, [comment.id], context=request.context)
-        return True
+        if not request.session.uid:
+            return {'error': 'anonymous_user'}
+        return request.registry['forum.post'].unlink(request.cr, request.uid, post.id, comment.id, context=request.context)

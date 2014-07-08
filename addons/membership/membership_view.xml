@@ -8,10 +8,11 @@
 
         <record model="ir.ui.view" id="membership_product_search_form_view">
             <field name="name">membership.product.search.form</field>
-            <field name="model">product.product</field>
+            <field name="model">product.template</field>
+            <field name="priority">50</field>
             <field name="arch" type="xml">
                 <search string="Membership Products">
-                    <field name="name" filter_domain="['|',('name','ilike',self),('code','ilike',self)]" string="Membership Product"/>
+                    <field name="name" string="Membership Product"/>
                     <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',0)]"/>
                     <field name="categ_id" operator="child_of"/>
                     <group  expand='0' string='Group by...'>
@@ -24,10 +25,10 @@
 
         <record model="ir.ui.view" id="membership_products_tree">
             <field name="name">Membership products</field>
-            <field name="model">product.product</field>
+            <field name="model">product.template</field>
+            <field name="priority">50</field>
             <field name="arch" type="xml">
                 <tree string="Membership products">
-                    <field name="code"/>
                     <field name="name"/>
                     <field name="membership_date_from"/>
                     <field name="membership_date_to"/>
@@ -41,9 +42,10 @@
 
         <record model="ir.ui.view" id="membership_products_form">
             <field name="name">Membership Products</field>
-            <field name="model">product.product</field>
+            <field name="model">product.template</field>
+            <field name="priority">50</field>
             <field name="arch" type="xml">
-                <form string="Membership products" version="7.0">
+                <form string="Membership products">
                     <sheet>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -81,31 +83,27 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="product_normal_form_view">
+        <record model="ir.ui.view" id="product_template_form_view">
             <field name="name">Membership Products</field>
-            <field name="model">product.product</field>
+            <field name="model">product.template</field>
             <field name="priority">6</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <page string="Accounting" position="after">
-                    <page string="Membership">
-                        <group col="1">
-                            <group>
-                                <field name="membership" readonly="0"/>
-                            </group>
-                            <group attrs="{'invisible':[('membership','=',False)]}">
-                                <field name="membership_date_from" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
-                                <field name="membership_date_to" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
-                            </group>
-                        </group>
-                    </page>
-                </page>
+                <field name="type" position="after">
+                    <field name="membership" readonly="0" attrs="{'invisible': [('type', '!=', 'service')]}"/>
+                </field>
+                <field name="description" position="before">
+                    <group attrs="{'invisible':[('membership','=',False)]}">
+                        <field name="membership_date_from" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
+                        <field name="membership_date_to" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
+                    </group>
+                </field>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_membership_products">
             <field name="name">Membership Products</field>
-            <field name="res_model">product.product</field>
+            <field name="res_model">product.template</field>
             <field name="domain">[('membership','=',True), ('type', '=', 'service')]</field>
             <field name="context">{'membership':True, 'type':'service', 'default_membership': True, 'default_type': 'service'}</field>
             <field name="search_view_id" ref="membership_product_search_form_view"/>
@@ -169,7 +167,7 @@
                     <separator/>
                     <filter icon="terp-personal" name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
                     <filter icon="terp-personal" name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
-                    <group expand="0" string="Group By..." colspan="10" col="8">
+                    <group expand="0" string="Group By" colspan="10" col="8">
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}"/>
                         <filter string="Associate Member" name = "associate" icon="terp-partner" domain="[]" context="{'group_by':'associate_member'}"/>
                         <filter string=" Membership State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>

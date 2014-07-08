@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+from dateutil import relativedelta
 
-from openerp import tools
+from openerp import tools, SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.website.models.website import slug
 from openerp.addons.web.http import request
@@ -28,12 +29,23 @@ class MailGroup(http.Controller):
     def view(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
+        mail_message_obj = request.registry.get('mail.message')
         group_ids = group_obj.search(cr, uid, [('alias_id', '!=', False), ('alias_id.alias_name', '!=', False)], context=context)
-        values = {'groups': group_obj.browse(cr, uid, group_ids, context)}
+        groups = group_obj.browse(cr, uid, group_ids, context)
+        # compute statistics
+        month_date = datetime.datetime.today() - relativedelta.relativedelta(months=1)
+        group_data = dict.fromkeys(group_ids, dict())
+        for group in groups:
+            group_data[group.id]['monthly_message_nbr'] = mail_message_obj.search(
+                cr, SUPERUSER_ID,
+                [('model', '=', 'mail.group'), ('res_id', '=', group.id), ('date', '>=', month_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))],
+                count=True, context=context)
+        values = {'groups': groups, 'group_data': group_data}
         return request.website.render('website_mail_group.mail_groups', values)
 
     @http.route(["/groups/subscription/"], type='json', auth="user")
     def subscription(self, group_id=0, action=False, **post):
+        """ TDE FIXME: seems dead code """
         cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
         if action:
@@ -129,3 +141,9 @@ class MailGroup(http.Controller):
             'replies_per_page': self._replies_per_page,
         }
         return request.registry['ir.ui.view'].render(request.cr, request.uid, 'website_mail_group.messages_short', values, engine='ir.qweb', context=request.context)
+
+    @http.route("/groups/<model('mail.group'):group>/get_alias_info", type='json', auth='public', website=True)
+    def get_alias_info(self, group, **post):
+        return {
+            'alias_name': group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain and '%s@%s' % (group.alias_id.alias_name, group.alias_id.alias_domain) or False
+        }

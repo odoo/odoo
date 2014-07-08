@@ -1,10 +1,9 @@
 (function () {
     'use strict';
 
-    var website = openerp.website;
     var _t = openerp._t;
 
-    website.Tour.register({
+    openerp.Tour.register({
         id:   'event',
         name: _t("Create an event"),
         steps: [

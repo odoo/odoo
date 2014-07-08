@@ -21,7 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -73,6 +73,7 @@ class stock_quant(osv.osv):
             return quant.cost * quant.qty
         return super(stock_quant, self)._get_inventory_value(cr, uid, quant, context=context)
 
+    @api.cr_uid_ids_context
     def _price_update(self, cr, uid, quant_ids, newprice, context=None):
         ''' This function is called at the end of negative quant reconciliation and does the accounting entries adjustemnts and the update of the product cost price if needed
         '''
@@ -281,8 +282,6 @@ class stock_move(osv.osv):
             #adapt standard price on incomming moves if the product cost_method is 'average'
             if (move.location_id.usage == 'supplier') and (move.product_id.cost_method == 'average'):
                 product = move.product_id
-                company_currency_id = move.company_id.currency_id.id
-                ctx = {'currency_id': company_currency_id}
                 product_avail = product.qty_available
                 if product.qty_available <= 0:
                     new_std_price = move.price_unit

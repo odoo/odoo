@@ -59,10 +59,8 @@ class report_xml(osv.osv):
         return True
 
     def report_get(self, cr, uid, report_id, context=None):
-        if context is None:
-            context = {}
         # skip osv.fields.sanitize_binary_value() because we want the raw bytes in all cases
-        context.update(bin_raw=True)
+        context = dict(context or {}, bin_raw=True)
         report = self.browse(cr, uid, report_id, context=context)
         sxw_data = report.report_sxw_content
         rml_data = report.report_rml_content

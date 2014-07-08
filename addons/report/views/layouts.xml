@@ -1,55 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+<template id="layout" inherit_id="web.layout" primary="True">
+    <!-- Add report attributes -->
+    <xpath expr="//html" position="attributes">
+        <attribute name="t-att-data-report-margin-top">data_report_margin_top if data_report_margin_top else None</attribute>
+        <attribute name="t-att-data-report-header-spacing">data_report_header_spacing if data_report_header_spacing else None</attribute>
+        <attribute name="t-att-data-report-dpi">data_report_dpi if data_report_dpi else None</attribute>
+    </xpath>
+    <!-- Add report style -->
+    <xpath expr="//head" position="inside">
+        <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+        <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+        <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+        <style type="text/css">
+            <t t-call="report.style"/>
+        </style>
+    </xpath>
+    <!-- Remove conflicting style -->
+    <xpath expr="//head/link[@href='/web/static/src/css/full.css']" position="replace"></xpath>
+</template>
+
 <template id="html_container">
-    &lt;!DOCTYPE html&gt;
-    <html t-att-lang="lang and lang.replace('_', '-')"
-          t-att-data-editable="'1' if editable else None"
-          t-att-data-view-xmlid="xmlid if editable else None"
-          t-att-data-main-object="repr(main_object) if editable else None"
-          t-att-data-report-margin-top="data_report_margin_top if data_report_margin_top else None"
-          t-att-data-report-header-spacing="data_report_header_spacing if data_report_header_spacing else None"
-          t-att-data-report-dpi="data_report_dpi if data_report_dpi else None"
-          t-att-data-oe-company-name="res_company.name">
-        <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
-            <t t-if="main_object and 'website_meta_title' in main_object">
-                <t t-set="title" t-value="main_object.website_meta_title"/>
-            </t>
-            <t t-if="not title and main_object and 'name' in main_object">
-                <t t-set="additional_title" t-value="main_object.name"/>
-            </t>
-            <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
-                and main_object.website_meta_description or website_meta_description"/>
-            <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
-                and main_object.website_meta_keywords or website_meta_keywords"/>
-
-            <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
-            <link rel="stylesheet" type="text/css"  href='/website/static/src/css/website.css'/>
-            <style type="text/css">
-                <t t-call="report.style"/>
-            </style>
-
-            <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-
-            <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
-            <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
-            <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
-            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
-            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
-            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
-            <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
-            <t t-raw="head or ''" name='layout_head'/>
-        </head>
-        <body class="container">
-            <div id="wrapwrap">
-                <t t-raw="0"/>
-            </div>
-        </body>
-    </html>
+    <t t-set="body_classname" t-value="'container'"/>
+    <t t-call="report.layout">
+        <t t-raw="0"/>
+    </t>
 </template>
 
 <template id="style">
@@ -162,6 +138,26 @@
         </div>
     </div>
     <t t-raw="0" />
+</template>
+
+<template id="minimal_layout">
+    <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
+    &lt;!DOCTYPE html&gt;
+    <html style="height: 0;">
+        <head>
+            <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
+            <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+            <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+            <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+            <style type='text/css'><t t-raw="css"/></style>
+            <t t-if="subst is True">
+                <script src='/report/static/src/js/subst.js'></script>
+            </t>
+        </head>
+        <body class="container" onload="subst()">
+            <t t-raw="body"/>
+        </body>
+    </html>
 </template>
 
 </data>

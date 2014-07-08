@@ -6,6 +6,7 @@ import werkzeug
 
 from lxml import etree, html
 
+from openerp import SUPERUSER_ID
 from openerp.addons.website.models import website
 from openerp.http import request
 from openerp.osv import osv, fields
@@ -150,6 +151,7 @@ class view(osv.osv):
                 user_id=self.pool.get("res.users").browse(cr, uid, uid),
                 translatable=context.get('lang') != request.website.default_lang_code,
                 editable=request.website.is_publisher(),
+                menu_data=self.pool['ir.ui.menu'].load_menus_root(cr, uid, context=context) if request.website.is_user() else None,
             )
 
             # add some values
@@ -157,7 +159,7 @@ class view(osv.osv):
                 qcontext.update(values)
 
             # in edit mode ir.ui.view will tag nodes
-            context['inherit_branding'] = qcontext.get('editable', False)
+            context = dict(context, inherit_branding=qcontext.get('editable', False))
 
             view_obj = request.website.get_template(id_or_xml_id)
             if 'main_object' not in qcontext:
@@ -206,3 +208,7 @@ class view(osv.osv):
         self.write(cr, uid, res_id, {
             'arch': self._pretty_arch(arch)
         }, context=context)
+
+        view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
+        if view.model_data_id:
+            view.model_data_id.write({'noupdate': True})

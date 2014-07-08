@@ -18,7 +18,7 @@
         <field name="name">view.certification.certification.form</field>
         <field name="model">certification.certification</field>
         <field name="arch" type="xml">
-            <form string="Granted Certification" version="7.0">
+            <form string="Granted Certification">
                 <sheet>
                     <group nolabel="1">
                         <field name="partner_id" />
@@ -38,7 +38,7 @@
             <search string="Search Certification">
                 <field name="partner_id" />
                 <field name="type_id" />
-                <group expand="0" string="Group By...">
+                <group expand="0" string="Group By">
                     <filter string="Partner" name="group_by_partner"  domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Type"    name="group_by_type"     domain="[]" context="{'group_by': 'type_id'}"/>
                 </group>

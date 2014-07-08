@@ -30,7 +30,7 @@
 
                     <h2>
                         <span t-if="o.state != 'draft'">Repair Order N°:</span>
-                        <span t-if="o.state == 'draft'">Repair Quotation N°:</span>                        
+                        <span t-if="o.state == 'draft'">Repair Quotation N°:</span>
                         <span t-field="o.name"/>
                     </h2>
 
@@ -41,7 +41,9 @@
                         </div>
                         <div class="col-xs-3" groups="stock.group_production_lot">
                             <strong>Lot Number</strong>
-                            <span t-field="o.prodlot_id.name"/>
+                            <t t-if="o.lot_id">
+                                <span t-field="o.lot_id.name"/>
+                            </t>
                         </div>
                         <div t-if="o.guarantee_limit" class="col-xs-3">
                             <strong>Guarantee Limit:</strong>

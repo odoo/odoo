@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -78,7 +78,7 @@ class Graph(dict):
                    )
 
         ## and we update the default values with values from the database
-        additional_data.update(dict([(x.pop('name'), x) for x in cr.dictfetchall()]))
+        additional_data.update((x['name'], x) for x in cr.dictfetchall())
 
         for package in self.values():
             for k, v in additional_data[package.name].items():
@@ -149,7 +149,14 @@ class Graph(dict):
             level += 1
 
 
-class Singleton(object):
+class Node(object):
+    """ One module in the modules dependency graph.
+
+    Node acts as a per-module singleton. A node is constructed via
+    Graph.add_module() or Graph.add_modules(). Some of its fields are from
+    ir_module_module (setted by Graph.update_from_db()).
+
+    """
     def __new__(cls, name, graph, info):
         if name in graph:
             inst = graph[name]
@@ -160,22 +167,13 @@ class Singleton(object):
             graph[name] = inst
         return inst
 
-
-class Node(Singleton):
-    """ One module in the modules dependency graph.
-
-    Node acts as a per-module singleton. A node is constructed via
-    Graph.add_module() or Graph.add_modules(). Some of its fields are from
-    ir_module_module (setted by Graph.update_from_db()).
-
-    """
-
     def __init__(self, name, graph, info):
         self.graph = graph
         if not hasattr(self, 'children'):
             self.children = []
         if not hasattr(self, 'depth'):
             self.depth = 0
+        self.info = info or {}
 
     def add_child(self, name, info):
         node = Node(name, self.graph, info)
@@ -189,7 +187,7 @@ class Node(Singleton):
         return node
 
     def __setattr__(self, name, value):
-        super(Singleton, self).__setattr__(name, value)
+        super(Node, self).__setattr__(name, value)
         if name in ('init', 'update', 'demo'):
             tools.config[name][self.name] = 1
             for child in self.children:

@@ -168,11 +168,11 @@ class ir_translation(osv.osv):
             else:
                 model_name, field = record.name.split(',')
                 model = self.pool.get(model_name)
-                if model and model.exists(cr, uid, record.res_id, context=context):
+                if model is not None:
                     # Pass context without lang, need to read real stored field, not translation
                     context_no_lang = dict(context, lang=None)
-                    result = model.read(cr, uid, record.res_id, [field], context=context_no_lang)
-                    res[record.id] = result[field] if result else False
+                    result = model.read(cr, uid, [record.res_id], [field], context=context_no_lang)
+                    res[record.id] = result[0][field] if result else False
         return res
 
     def _set_src(self, cr, uid, id, name, value, args, context=None):
@@ -288,6 +288,31 @@ class ir_translation(osv.osv):
                 })
         return len(ids)
 
+    def _get_source_query(self, cr, uid, name, types, lang, source, res_id):
+        if source:
+            query = """SELECT value
+                       FROM ir_translation
+                       WHERE lang=%s
+                        AND type in %s
+                        AND src=%s"""
+            params = (lang or '', types, tools.ustr(source))
+            if res_id:
+                query += "AND res_id=%s"
+                params += (res_id,)
+            if name:
+                query += " AND name=%s"
+                params += (tools.ustr(name),)
+        else:
+            query = """SELECT value
+                       FROM ir_translation
+                       WHERE lang=%s
+                        AND type in %s
+                        AND name=%s"""
+
+            params = (lang or '', types, tools.ustr(name))
+        
+        return (query, params)
+
     @tools.ormcache(skiparg=3)
     def _get_source(self, cr, uid, name, types, lang, source=None, res_id=None):
         """
@@ -310,27 +335,10 @@ class ir_translation(osv.osv):
             return tools.ustr(source or '')
         if isinstance(types, basestring):
             types = (types,)
-        if source:
-            query = """SELECT value
-                       FROM ir_translation
-                       WHERE lang=%s
-                        AND type in %s
-                        AND src=%s"""
-            params = (lang or '', types, tools.ustr(source))
-            if res_id:
-                query += "AND res_id=%s"
-                params += (res_id,)
-            if name:
-                query += " AND name=%s"
-                params += (tools.ustr(name),)
-            cr.execute(query, params)
-        else:
-            cr.execute("""SELECT value
-                          FROM ir_translation
-                          WHERE lang=%s
-                           AND type in %s
-                           AND name=%s""",
-                    (lang or '', types, tools.ustr(name)))
+        
+        query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)
+        
+        cr.execute(query, params)
         res = cr.fetchone()
         trad = res and res[0] or u''
         if source and not trad:

@@ -35,6 +35,7 @@ import werkzeug.wrappers
 import werkzeug.wsgi
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
 
@@ -180,12 +181,18 @@ class WebRequest(object):
     .. attribute:: db
 
         ``str``, the name of the database linked to the current request. Can
-        be ``None`` if the current request uses the ``none`` authentication.
+        be ``None`` if the current request uses the ``none`` authentication
+        in ``web`` module's controllers.
 
     .. attribute:: uid
 
         ``int``, the id of the user related to the current request. Can be
         ``None`` if the current request uses the ``none`` authentication.
+
+    .. attribute:: env
+
+        an :class:`openerp.api.Environment` bound to the current
+        request's ``cr``, ``uid`` and ``context``
     """
     def __init__(self, httprequest):
         self.httprequest = httprequest
@@ -223,7 +230,7 @@ class WebRequest(object):
     @property
     def db(self):
         """
-        The registry to the database linked to this request. Can be ``None``
+        The database linked to this request. Can be ``None``
         if the current request uses the ``none`` authentication.
         """
         return self.session.db if not self.disable_db else None
@@ -239,6 +246,13 @@ class WebRequest(object):
         if not self._cr:
             self._cr = self.registry.cursor()
         return self._cr
+
+    @lazy_property
+    def env(self):
+        """
+        The Environment bound to current request.
+        """
+        return openerp.api.Environment(self.cr, self.uid, self.context)
 
     def __enter__(self):
         _request_stack.push(self)
@@ -270,8 +284,6 @@ class WebRequest(object):
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
         self._failed = exception # prevent tx commit
-        if isinstance(exception, werkzeug.exceptions.HTTPException):
-            return exception
         raise
 
     def _call_function(self, *args, **kwargs):
@@ -538,6 +550,15 @@ class HttpRequest(WebRequest):
         params.pop('session_id', None)
         self.params = params
 
+    def _handle_exception(self, exception):
+        """Called within an except block to allow converting exceptions
+           to abitrary responses. Anything returned (except None) will
+           be used as response."""
+        try:
+            return super(HttpRequest, self)._handle_exception(exception)
+        except werkzeug.exceptions.HTTPException, e:
+            return e
+
     def dispatch(self):
         if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
             headers = {
@@ -665,35 +686,49 @@ class EndPoint(object):
 
 def routing_map(modules, nodb_only, converters=None):
     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
+
+    def get_subclasses(klass):
+        def valid(c):
+            return c.__module__.startswith('openerp.addons.') and c.__module__.split(".")[2] in modules
+        subclasses = klass.__subclasses__()
+        result = []
+        for subclass in subclasses:
+            if valid(subclass):
+                result.extend(get_subclasses(subclass))
+        if not result and valid(klass):
+            result = [klass]
+        return result
+
+    uniq = lambda it: collections.OrderedDict((id(x), x) for x in it).values()
+
     for module in modules:
         if module not in controllers_per_module:
             continue
 
         for _, cls in controllers_per_module[module]:
-            subclasses = cls.__subclasses__()
-            subclasses = [c for c in subclasses if c.__module__.startswith('openerp.addons.') and c.__module__.split(".")[2] in modules]
+            subclasses = uniq(c for c in get_subclasses(cls) if c is not cls)
             if subclasses:
                 name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
                 cls = type(name, tuple(reversed(subclasses)), {})
 
             o = cls()
-            members = inspect.getmembers(o)
-            for mk, mv in members:
-                if inspect.ismethod(mv) and hasattr(mv, 'routing'):
+            members = inspect.getmembers(o, inspect.ismethod)
+            for _, mv in members:
+                if hasattr(mv, 'routing'):
                     routing = dict(type='http', auth='user', methods=None, routes=None)
                     methods_done = list()
-                    routing_type = None
+                    # update routing attributes from subclasses(auth, methods...)
                     for claz in reversed(mv.im_class.mro()):
                         fn = getattr(claz, mv.func_name, None)
                         if fn and hasattr(fn, 'routing') and fn not in methods_done:
                             methods_done.append(fn)
                             routing.update(fn.routing)
-                    if not nodb_only or nodb_only == (routing['auth'] == "none"):
+                    if not nodb_only or routing['auth'] == "none":
                         assert routing['routes'], "Method %r has not route defined" % mv
                         endpoint = EndPoint(mv, routing)
                         for url in routing['routes']:
                             if routing.get("combine", False):
-                                # deprecated
+                                # deprecated v7 declaration
                                 url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
                                 if url.endswith("/") and len(url) > 1:
                                     url = url[: -1]
@@ -1023,6 +1058,15 @@ mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 
+class Retry(RuntimeError):
+    """ Exception raised during QWeb rendering to signal that the rendering
+    should be retried with the provided ``render_updates`` dict merged into
+    the previous rendering context
+    """
+    def __init__(self, name, render_updates=None):
+        super(Retry, self).__init__(name)
+        self.updates = render_updates or {}
+
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
 
@@ -1063,7 +1107,13 @@ class Response(werkzeug.wrappers.Response):
     def render(self):
         view_obj = request.registry["ir.ui.view"]
         uid = self.uid or request.uid or openerp.SUPERUSER_ID
-        return view_obj.render(request.cr, uid, self.template, self.qcontext, context=request.context)
+        while True:
+            try:
+                return view_obj.render(
+                    request.cr, uid, self.template, self.qcontext,
+                    context=request.context)
+            except Retry, e:
+                self.qcontext.update(e.updates)
 
     def flatten(self):
         self.response.append(self.render())
@@ -1230,7 +1280,10 @@ class Root(object):
             request = self.get_request(httprequest)
 
             def _dispatch_nodb():
-                func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
+                try:
+                    func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
+                except werkzeug.exceptions.HTTPException, e:
+                    return request._handle_exception(e)
                 request.set_handler(func, arguments, "none")
                 result = request.dispatch()
                 return result
@@ -1273,7 +1326,9 @@ def db_list(force=False, httprequest=None):
 def db_filter(dbs, httprequest=None):
     httprequest = httprequest or request.httprequest
     h = httprequest.environ.get('HTTP_HOST', '').split(':')[0]
-    d = h.split('.')[0]
+    d, _, r = h.partition('.')
+    if d == "www" and r:
+        d = r.partition('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs

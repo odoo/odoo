@@ -62,6 +62,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     load_kanban: function(data) {
         this.fields_view = data;
+
+        // use default order if defined in xml description
+        var default_order = this.fields_view.arch.attrs.default_order,
+            unsorted = !this.dataset._sort.length;
+        if (unsorted && default_order) {
+            this.dataset.set_sort(default_order.split(','));
+        }
+
         this.$el.addClass(this.fields_view.arch.attrs['class']);
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
         if (this.options.$buttons) {
@@ -348,10 +356,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_groups_started: function() {
         var self = this;
-        if (this.group_by) {
+        if (this.group_by || this.fields_keys.indexOf("sequence") !== -1) {
             // Kanban cards drag'n'drop
-            var prev_widget, is_folded, record;
-            var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards, .oe_kanban_column .oe_kanban_folded_column_cards');
+            var prev_widget, is_folded, record, $columns;
+            if (this.group_by) {
+                $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards, .oe_kanban_column .oe_kanban_folded_column_cards');
+            } else {
+                $columns = this.$el.find('.oe_kanban_column_cards');
+            }
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {
@@ -779,9 +791,9 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         });
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
-        form.on("on_button_cancel", am.dialog, am.dialog.close);
+        form.on("on_button_cancel", am.dialog, function() { return am.dialog.$dialog_box.modal('hide'); });
         form.on('record_saved', self, function() {
-            am.dialog.close();
+            am.dialog.$dialog_box.modal('hide');
             self.view.do_reload();
         });
     },
@@ -926,10 +938,6 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         var self = this;
         this.setup_color_picker();
         this.$el.find('[title]').each(function(){
-            //in case of kanban, attach tooltip to the element itself
-            //otherwise it might stay on screen when kanban view reload
-            //since default container is body.
-            //(when clicking on ready for next stage for example)
             $(this).tooltip({
                 delay: { show: 500, hide: 0},
                 container: $(this),

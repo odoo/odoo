@@ -133,10 +133,6 @@ class res_partner(osv.osv):
     def vat_change(self, cr, uid, ids, value, context=None):
         return {'value': {'vat_subjected': bool(value)}}
 
-    _columns = {
-        'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
-    }
-
     def _commercial_fields(self, cr, uid, context=None):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['vat_subjected']
 

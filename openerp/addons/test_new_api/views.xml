@@ -1,0 +1,127 @@
+<openerp>
+    <data>
+        <menuitem id="menu_main" name="Discussions" sequence="20"/>
+
+        <menuitem id="menu_sub" name="Discussions" parent="menu_main" sequence="10"/>
+
+        <record id="action_discussions" model="ir.actions.act_window">
+            <field name="name">Discussions</field>
+            <field name="res_model">test_new_api.discussion</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_discussions" action="action_discussions" parent="menu_sub" sequence="10"/>
+
+        <record id="action_messages" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">test_new_api.message</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_messages" action="action_messages" parent="menu_sub" sequence="20"/>
+
+        <menuitem id="menu_config" name="Configuration" parent="menu_main" sequence="20"/>
+
+        <record id="action_categories" model="ir.actions.act_window">
+            <field name="name">Categories</field>
+            <field name="res_model">test_new_api.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_categories" action="action_categories" parent="menu_config"/>
+
+        <!-- Discussion form view -->
+        <record id="discussion_form" model="ir.ui.view">
+            <field name="name">discussion form view</field>
+            <field name="model">test_new_api.discussion</field>
+            <field name="arch" type="xml">
+                <form string="Discussion" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="categories" widget="many2many_tags"/>
+                            <field name="moderator"/>
+                        </group>
+                        <notebook>
+                            <page string="Messages">
+                                <field name="messages">
+                                    <tree name="Messages">
+                                        <field name="name"/>
+                                        <field name="body"/>
+                                    </tree>
+                                    <form string="Message" version="7.0">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="author"/>
+                                            <field name="size"/>
+                                        </group>
+                                        <label for="body"/>
+                                        <field name="body"/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Participants">
+                                <field name="participants"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Message tree view -->
+        <record id="message_tree" model="ir.ui.view">
+            <field name="name">message tree view</field>
+            <field name="model">test_new_api.message</field>
+            <field name="arch" type="xml">
+                <tree string="Messages">
+                    <field name="display_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Message form view -->
+        <record id="message_form" model="ir.ui.view">
+            <field name="name">message form view</field>
+            <field name="model">test_new_api.message</field>
+            <field name="arch" type="xml">
+                <form string="Message" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="discussion"/>
+                            <field name="name"/>
+                            <field name="author"/>
+                            <field name="size"/>
+                        </group>
+                        <label for="body"/>
+                        <field name="body"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Category tree view -->
+        <record id="category_tree" model="ir.ui.view">
+            <field name="name">category tree view</field>
+            <field name="model">test_new_api.category</field>
+            <field name="arch" type="xml">
+                <tree string="Categories">
+                    <field name="display_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Category form view -->
+        <record id="category_form" model="ir.ui.view">
+            <field name="name">category form view</field>
+            <field name="model">test_new_api.category</field>
+            <field name="arch" type="xml">
+                <form string="Category" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

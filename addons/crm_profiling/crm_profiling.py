@@ -146,8 +146,8 @@ class question(osv.osv):
     _description= "Question"
 
     _columns={
-        'name': fields.char("Question",size=128, required=True),
-        'answers_ids': fields.one2many("crm_profiling.answer","question_id","Avalaible Answers",),
+        'name': fields.char("Question", required=True),
+        'answers_ids': fields.one2many("crm_profiling.answer", "question_id", "Available Answers", copy=True),
         }
 
 
@@ -159,7 +159,7 @@ class questionnaire(osv.osv):
     _description= "Questionnaire"
 
     _columns = {
-        'name': fields.char("Questionnaire",size=128, required=True),
+        'name': fields.char("Questionnaire", required=True),
         'description':fields.text("Description", required=True),
         'questions_ids': fields.many2many('crm_profiling.question','profile_questionnaire_quest_rel',\
                                 'questionnaire', 'question', "Questions"),
@@ -171,7 +171,7 @@ class answer(osv.osv):
     _name="crm_profiling.answer"
     _description="Answer"
     _columns={
-        "name": fields.char("Answer",size=128, required=True),
+        "name": fields.char("Answer", required=True),
         "question_id": fields.many2one('crm_profiling.question',"Question"),
         }
 
@@ -209,6 +209,7 @@ class partner(osv.osv):
 
         if 'answers_ids' in vals:
             vals['category_id']=[[6, 0, _recompute_categ(self, cr, uid, ids[0], vals['answers_ids'][0][2])]]
+
         return super(partner, self).write(cr, uid, ids, vals, context=context)
 
 
@@ -248,6 +249,7 @@ class crm_segmentation(osv.osv):
                 if categ['exclusif']:
                     cr.execute('delete from res_partner_res_partner_category_rel where \
                             category_id=%s', (categ['categ_id'][0],))
+                    partner_obj.invalidate_cache(cr, uid, ['category_id'])
 
             id = categ['id']
 
@@ -281,6 +283,7 @@ class crm_segmentation(osv.osv):
                 category_ids = [categ_id.id for categ_id in partner.category_id]
                 if categ['categ_id'][0] not in category_ids:
                     cr.execute('insert into res_partner_res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner.id))
+                    partner_obj.invalidate_cache(cr, uid, ['category_id'], [partner.id])
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
         return True

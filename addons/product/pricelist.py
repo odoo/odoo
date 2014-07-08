@@ -43,6 +43,10 @@ class price_type(osv.osv):
             res.append((field.name, field.field_description))
         return res
 
+    def _get_field_currency(self, cr, uid, fname, ctx):
+        ids = self.search(cr, uid, [('field','=',fname)], context=ctx)
+        return self.browse(cr, uid, ids, context=ctx)[0].currency_id
+
     def _get_currency(self, cr, uid, ctx):
         comp = self.pool.get('res.users').browse(cr,uid,uid).company_id
         if not comp:
@@ -53,7 +57,7 @@ class price_type(osv.osv):
     _name = "product.price.type"
     _description = "Price Type"
     _columns = {
-        "name" : fields.char("Price Name", size=32, required=True, translate=True, help="Name of this kind of price."),
+        "name" : fields.char("Price Name", required=True, translate=True, help="Name of this kind of price."),
         "active" : fields.boolean("Active"),
         "field" : fields.selection(_price_field_get, "Product Field", size=32, required=True, help="Associated field in the product form."),
         "currency_id" : fields.many2one('res.currency', "Currency", required=True, help="The currency the field is expressed in."),
@@ -72,8 +76,8 @@ class product_pricelist_type(osv.osv):
     _name = "product.pricelist.type"
     _description = "Pricelist Type"
     _columns = {
-        'name': fields.char('Name',size=64, required=True, translate=True),
-        'key': fields.char('Key', size=64, required=True, help="Used in the code to select specific prices based on the context. Keep unchanged."),
+        'name': fields.char('Name', required=True, translate=True),
+        'key': fields.char('Key', required=True, help="Used in the code to select specific prices based on the context. Keep unchanged."),
     }
 
 
@@ -94,10 +98,10 @@ class product_pricelist(osv.osv):
     _description = "Pricelist"
     _order = 'name'
     _columns = {
-        'name': fields.char('Pricelist Name',size=64, required=True, translate=True),
+        'name': fields.char('Pricelist Name', required=True, translate=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the pricelist without removing it."),
         'type': fields.selection(_pricelist_type_get, 'Pricelist Type', required=True),
-        'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions'),
+        'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions', copy=True),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
     }
@@ -163,19 +167,19 @@ class product_pricelist(osv.osv):
         "currency_id": _get_currency
     }
 
-    def price_get_multi(self, cr, uid, pricelist_ids, products_by_qty_by_partner, context=None):
+    def price_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
         """multi products 'price_get'.
-           @param pricelist_ids:
+           @param ids:
            @param products_by_qty:
            @param partner:
            @param context: {
              'date': Date of the pricelist (%Y-%m-%d),}
            @return: a dict of dict with product_id as key and a dict 'price by pricelist' as value
         """
-        if not pricelist_ids:
-            pricelist_ids = self.pool.get('product.pricelist').search(cr, uid, [], context=context)
+        if not ids:
+            ids = self.pool.get('product.pricelist').search(cr, uid, [], context=context)
         results = {}
-        for pricelist in self.browse(cr, uid, pricelist_ids, context=context):
+        for pricelist in self.browse(cr, uid, ids, context=context):
             subres = self._price_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context)
             for product_id,price in subres.items():
                 results.setdefault(product_id, {})
@@ -188,9 +192,12 @@ class product_pricelist(osv.osv):
 
         products = map(lambda x: x[0], products_by_qty_by_partner)
         currency_obj = self.pool.get('res.currency')
-        product_obj = self.pool.get('product.product')
+        product_obj = self.pool.get('product.template')
         product_uom_obj = self.pool.get('product.uom')
         price_type_obj = self.pool.get('product.price.type')
+
+        if not products:
+            return {}
 
         version = False
         for v in pricelist.version_id:
@@ -207,8 +214,13 @@ class product_pricelist(osv.osv):
                 categ = categ.parent_id
         categ_ids = categ_ids.keys()
 
-        prod_ids = [x.id for x in products]
-        prod_tmpl_ids = [x.product_tmpl_id.id for x in products]
+        is_product_template = products[0]._name == "product.template"
+        if is_product_template:
+            prod_tmpl_ids = [tmpl.id for tmpl in products]
+            prod_ids = [product.id for product in tmpl.product_variant_ids for tmpl in products]
+        else:
+            prod_ids = [product.id for product in products]
+            prod_tmpl_ids = [product.product_tmpl_id.id for product in products]
 
         # Load all rules
         cr.execute(
@@ -234,10 +246,17 @@ class product_pricelist(osv.osv):
             for rule in items:
                 if rule.min_quantity and qty<rule.min_quantity:
                     continue
-                if rule.product_tmpl_id and product.product_tmpl_id.id<>rule.product_tmpl_id.id:
-                    continue
-                if rule.product_id and product.id<>rule.product_id.id:
-                    continue
+                if is_product_template:
+                    if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
+                        continue
+                    if rule.product_id:
+                        continue
+                else:
+                    if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:
+                        continue
+                    if rule.product_id and product.id != rule.product_id.id:
+                        continue
+
                 if rule.categ_id:
                     cat = product.categ_id
                     while cat:
@@ -260,7 +279,7 @@ class product_pricelist(osv.osv):
                                 context=context)
                 elif rule.base == -2:
                     for seller in product.seller_ids:
-                        if (not partner) or (seller.name.id<>partner):
+                        if (not partner) or (seller.name.id != partner):
                             continue
                         qty_in_seller_uom = qty
                         from_uom = context.get('uom') or product.uom_id.id
@@ -306,7 +325,7 @@ class product_pricelist(osv.osv):
 
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
         product = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)
-        res_multi = self.price_get_multi(cr, uid, pricelist_ids=ids, products_by_qty_by_partner=[(product, qty, partner)], context=context)
+        res_multi = self.price_get_multi(cr, uid, ids, products_by_qty_by_partner=[(product, qty, partner)], context=context)
         res = res_multi[prod_id]
         return res
 
@@ -317,13 +336,13 @@ class product_pricelist_version(osv.osv):
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Price List',
             required=True, select=True, ondelete='cascade'),
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'active': fields.boolean('Active',
             help="When a version is duplicated it is set to non active, so that the " \
             "dates do not overlaps with original version. You should change the dates " \
-            "and reactivate the pricelist"),
+            "and reactivate the pricelist", copy=False),
         'items_id': fields.one2many('product.pricelist.item',
-            'price_version_id', 'Price List Items', required=True),
+            'price_version_id', 'Price List Items', required=True, copy=True),
         'date_start': fields.date('Start Date', help="First valid date for the version."),
         'date_end': fields.date('End Date', help="Last valid date for the version."),
         'company_id': fields.related('pricelist_id','company_id',type='many2one',
@@ -332,12 +351,6 @@ class product_pricelist_version(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
     }
-
-    # We desactivate duplicated pricelists, so that dates do not overlap
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default: default= {}
-        default['active'] = False
-        return super(product_pricelist_version, self).copy(cr, uid, id, default, context)
 
     def _check_date(self, cursor, user, ids, context=None):
         for pricelist_version in self.browse(cursor, user, ids, context=context):
@@ -420,7 +433,7 @@ class product_pricelist_item(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Rule Name', size=64, help="Explicit rule name for this pricelist line."),
+        'name': fields.char('Rule Name', help="Explicit rule name for this pricelist line."),
         'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True, ondelete='cascade'),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Specify a template if this rule only applies to one product template. Keep empty otherwise."),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Specify a product if this rule only applies to one product. Keep empty otherwise."),

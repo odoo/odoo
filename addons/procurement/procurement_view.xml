@@ -25,7 +25,7 @@
             <field name="name">procurement.order.form</field>
             <field name="model">procurement.order</field>
             <field name="arch" type="xml">
-                <form string="Procurement" version="7.0">
+                <form string="Procurement">
                     <header>
                         <button name="run" states="confirmed,exception" string="Run Procurement" class="oe_highlight" type="object"/>
                         <button name="check" states="running" string="Check Procurement" class="oe_highlight" type="object"/>
@@ -97,7 +97,7 @@
             <field name="name">procurement.group.form</field>
             <field name="model">procurement.group</field>
             <field name="arch" type="xml">
-                <form string="Procurement group" version="7.0">
+                <form string="Procurement group">
                     <sheet>
                         <div class="oe_right oe_button_box" name="button_box">
                             <button name="%(do_view_procurements)d" string="Procurements" type="action"/>
@@ -211,7 +211,7 @@
             <field name="model">procurement.rule</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Pull Rule" version="7.0">
+                <form string="Pull Rule">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>

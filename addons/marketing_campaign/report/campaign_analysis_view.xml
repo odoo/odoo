@@ -38,7 +38,7 @@
                 <field name="segment_id"/>
                 <field name="partner_id"/>
                 <field name="country_id"/>
-                <group expand="0" string="Group By...">
+                <group expand="0" string="Group By">
                     <filter string="Campaign" name="Campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" />
                     <filter string="Segment" name="Segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}"/>
                     <filter string="Activity" name="activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}"/>
@@ -62,8 +62,7 @@
         <field name="search_view_id" ref="view_campaign_analysis_search"/>
     </record>
 
-    <menuitem name="Marketing" id="base.menu_report_marketing" parent="base.menu_reporting" sequence="45"/>
-    <menuitem action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="base.menu_report_marketing" sequence="2"/>
+    <menuitem action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="base.marketing_reporting_menu" sequence="20"/>
 
     </data>
 </openerp>

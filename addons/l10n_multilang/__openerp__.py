@@ -32,7 +32,7 @@
           templates to target objects.
     """,
     'website': 'http://www.openerp.com',
-    'depends' : ['account_accountant'],
+    'depends' : ['account'],
     'data': [],
     'demo': [],
     'installable': True,

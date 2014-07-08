@@ -65,17 +65,21 @@ class hr_expense_expense(osv.osv):
     }
 
     _columns = {
-        'name': fields.char('Description', size=128, required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
+        'name': fields.char('Description', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'id': fields.integer('Sheet ID', readonly=True),
         'date': fields.date('Date', select=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is done."),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'User', required=True),
-        'date_confirm': fields.date('Confirmation Date', select=True, help="Date of the confirmation of the sheet expense. It's filled when the button Confirm is pressed."),
-        'date_valid': fields.date('Validation Date', select=True, help="Date of the acceptation of the sheet expense. It's filled when the button Accept is pressed."),
-        'user_valid': fields.many2one('res.users', 'Validation By', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
-        'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
-        'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
+        'date_confirm': fields.date('Confirmation Date', select=True, copy=False,
+                                    help="Date of the confirmation of the sheet expense. It's filled when the button Confirm is pressed."),
+        'date_valid': fields.date('Validation Date', select=True, copy=False,
+                                  help="Date of the acceptation of the sheet expense. It's filled when the button Accept is pressed."),
+        'user_valid': fields.many2one('res.users', 'Validation By', readonly=True, copy=False,
+                                      states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
+        'account_move_id': fields.many2one('account.move', 'Ledger Posting', copy=False),
+        'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', copy=True,
+                                    readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
         'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account'), 
             store={
@@ -92,7 +96,7 @@ class hr_expense_expense(osv.osv):
             ('done', 'Waiting Payment'),
             ('paid', 'Paid'),
             ],
-            'Status', readonly=True, track_visibility='onchange',
+            'Status', readonly=True, track_visibility='onchange', copy=False,
             help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
             \nIf the admin accepts it, the status is \'Accepted\'.\n If the accounting entries are made for the expense request, the status is \'Waiting Payment\'.'),
 
@@ -105,16 +109,6 @@ class hr_expense_expense(osv.osv):
         'user_id': lambda cr, uid, id, c={}: id,
         'currency_id': _get_currency,
     }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update(
-            account_move_id=False,
-            date_confirm=False,
-            date_valid=False,
-            user_valid=False)
-        return super(hr_expense_expense, self).copy(cr, uid, id, default=default, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
@@ -209,9 +203,7 @@ class hr_expense_expense(osv.osv):
             c: account_move_lines potentially modified
         '''
         cur_obj = self.pool.get('res.currency')
-        if context is None:
-            context={}
-        context.update({'date': exp.date_confirm or time.strftime('%Y-%m-%d')})
+        context = dict(context or {}, date=exp.date_confirm or time.strftime('%Y-%m-%d'))
         total = 0.0
         total_currency = 0.0
         for i in account_move_lines:
@@ -392,8 +384,8 @@ class hr_expense_expense(osv.osv):
         return result
 
 
-class product_product(osv.osv):
-    _inherit = "product.product"
+class product_template(osv.osv):
+    _inherit = "product.template"
     _columns = {
         'hr_expense_ok': fields.boolean('Can be Expensed', help="Specify if the product can be selected in an HR expense line."),
     }
@@ -415,7 +407,7 @@ class hr_expense_line(osv.osv):
         return result and result[1] or False
 
     _columns = {
-        'name': fields.char('Expense Note', size=128, required=True),
+        'name': fields.char('Expense Note', required=True),
         'date_value': fields.date('Date', required=True),
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
         'total_amount': fields.function(_amount, string='Total', digits_compute=dp.get_precision('Account')),
@@ -425,7 +417,7 @@ class hr_expense_line(osv.osv):
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
-        'ref': fields.char('Reference', size=32),
+        'ref': fields.char('Reference'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of expense lines."),
         }
     _defaults = {

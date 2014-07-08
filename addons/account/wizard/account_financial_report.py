@@ -30,7 +30,7 @@ class accounting_report(osv.osv_memory):
     _columns = {
         'enable_filter': fields.boolean('Enable Comparison'),
         'account_report_id': fields.many2one('account.financial.report', 'Account Reports', required=True),
-        'label_filter': fields.char('Column Label', size=32, help="This label will be displayed on report to show the balance computed for the given comparison filter."),
+        'label_filter': fields.char('Column Label', help="This label will be displayed on report to show the balance computed for the given comparison filter."),
         'fiscalyear_id_cmp': fields.many2one('account.fiscalyear', 'Fiscal Year', help='Keep empty for all open fiscal year'),
         'filter_cmp': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", required=True),
         'period_from_cmp': fields.many2one('account.period', 'Start Period'),

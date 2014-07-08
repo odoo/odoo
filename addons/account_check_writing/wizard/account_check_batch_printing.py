@@ -33,7 +33,7 @@ class account_check_write(osv.osv_memory):
 
     def _get_next_number(self, cr, uid, context=None):
         dummy, sequence_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_check_writing', 'sequence_check_number')
-        return self.pool.get('ir.sequence').read(cr, uid, sequence_id, ['number_next'])['number_next']
+        return self.pool.get('ir.sequence').read(cr, uid, [sequence_id], ['number_next'])[0]['number_next']
 
     _defaults = {
         'check_number': _get_next_number,
@@ -47,7 +47,7 @@ class account_check_write(osv.osv_memory):
 
         #update the sequence to number the checks from the value encoded in the wizard
         dummy, sequence_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_check_writing', 'sequence_check_number')
-        increment = ir_sequence_obj.read(cr, uid, sequence_id, ['number_increment'])['number_increment']
+        increment = ir_sequence_obj.read(cr, uid, [sequence_id], ['number_increment'])[0]['number_increment']
         new_value = self.browse(cr, uid, ids[0], context=context).check_number
         ir_sequence_obj.write(cr, uid, sequence_id, {'number_next': new_value})
 
