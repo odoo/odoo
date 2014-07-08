@@ -18,4 +18,11 @@
 #
 ##############################################################################
 
-import l10n_hu
+from openerp.osv import fields, osv
+
+class account_invoice(osv.osv):
+    _inherit = 'account.invoice'
+    
+    _columns = {
+        'date_issued': fields.date('Issue Date', readonly=True, states={'draft':[('readonly',False)]}, select=True),
+    }
