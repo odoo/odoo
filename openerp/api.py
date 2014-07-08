@@ -756,7 +756,7 @@ class Environment(object):
         """
         if not spec:
             return
-        for env in list(self.all):
+        for env in list(iter(self.all)):
             c = env.cache
             for field, ids in spec:
                 if ids is None:
@@ -769,7 +769,7 @@ class Environment(object):
 
     def invalidate_all(self):
         """ Clear the cache of all environments. """
-        for env in list(self.all):
+        for env in list(iter(self.all)):
             env.cache.clear()
             env.prefetch.clear()
             env.computed.clear()
