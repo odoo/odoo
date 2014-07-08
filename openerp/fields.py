@@ -1541,6 +1541,7 @@ class Id(Field):
     """ Special case for field 'id'. """
     store = True
     readonly = True
+    type = 'integer'
 
     def __init__(self, string=None, **kwargs):
         super(Id, self).__init__(type='integer', string=string, **kwargs)
