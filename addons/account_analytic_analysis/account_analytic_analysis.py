@@ -844,7 +844,7 @@ class account_analytic_account_summary_month(osv.osv):
     }
 
     _depends = {
-        'account.analytic.line': ['account_id', 'date', 'journal_id', 'month', 'unit_amount'],
+        'account.analytic.line': ['account_id', 'date', 'journal_id', 'unit_amount'],
         'account.analytic.journal': ['type'],
     }
 
