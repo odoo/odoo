@@ -326,6 +326,10 @@ class BaseModel(object):
     _log_create = False
     _sql_constraints = []
 
+    # model dependencies, for models backed up by sql views:
+    # {model_name: field_names, ...}
+    _depends = {}
+
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def log(self, cr, uid, id, message, secondary=False, context=None):

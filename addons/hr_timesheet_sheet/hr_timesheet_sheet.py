@@ -532,6 +532,11 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
         'total_attendance': fields.float('Attendance', readonly=True),
         'total_difference': fields.float('Difference', readonly=True),
     }
+    _depends = {
+        'hr.analytic.timesheet': ['line_id', 'sheet_id'],
+        'account.analytic.line': ['date', 'unit_amount'],
+        'hr.attendance': ['name', 'action', 'sheet_id'],
+    }
 
     def init(self, cr):
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_day as
