@@ -48,7 +48,8 @@ from openerp.modules.db import create_categories
 from openerp.modules import get_module_resource
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
-from openerp.osv import fields, osv, orm
+from openerp.osv import osv, orm, fields
+from openerp import api, fields as fields2
 
 _logger = logging.getLogger(__name__)
 
@@ -374,34 +375,41 @@ class module(osv.osv):
                 msg = _('Unable to process module "%s" because an external dependency is not met: %s')
             raise orm.except_orm(_('Error'), msg % (module_name, e.args[0]))
 
-    def state_update(self, cr, uid, ids, newstate, states_to_update, context=None, level=100):
+    @api.multi
+    def state_update(self, newstate, states_to_update, level=100):
         if level < 1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
+
+        # whether some modules are installed with demo data
         demo = False
-        for module in self.browse(cr, uid, ids, context=context):
-            mdemo = False
+
+        for module in self:
+            # determine dependency modules to update/others
+            update_mods, ready_mods = self.browse(), self.browse()
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
                     raise orm.except_orm(_('Error'), _("You try to install module '%s' that depends on module '%s'.\nBut the latter module is not available in your system.") % (module.name, dep.name,))
-                ids2 = self.search(cr, uid, [('name', '=', dep.name)])
-                if dep.state != newstate:
-                    mdemo = self.state_update(cr, uid, ids2, newstate, states_to_update, context, level - 1) or mdemo
+                if dep.depend_id.state == newstate:
+                    ready_mods += dep.depend_id
                 else:
-                    od = self.browse(cr, uid, ids2)[0]
-                    mdemo = od.demo or mdemo
+                    update_mods += dep.depend_id
 
+            # update dependency modules that require it, and determine demo for module
+            update_demo = update_mods.state_update(newstate, states_to_update, level=level-1)
+            module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
+            demo = demo or module_demo
+
+            # check dependencies and update module itself
             self.check_external_dependencies(module.name, newstate)
-            if not module.dependencies_id:
-                mdemo = module.demo
             if module.state in states_to_update:
-                self.write(cr, uid, [module.id], {'state': newstate, 'demo': mdemo})
-            demo = demo or mdemo
+                module.write({'state': newstate, 'demo': module_demo})
+
         return demo
 
     def button_install(self, cr, uid, ids, context=None):
 
         # Mark the given modules to be installed.
-        self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+        self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context=context)
 
         # Mark (recursively) the newly satisfied modules to also be installed
 
@@ -524,7 +532,7 @@ class module(osv.osv):
 
     def button_upgrade(self, cr, uid, ids, context=None):
         depobj = self.pool.get('ir.module.module.dependency')
-        todo = self.browse(cr, uid, ids, context=context)
+        todo = list(self.browse(cr, uid, ids, context=context))
         self.update_list(cr, uid)
 
         i = 0
@@ -598,7 +606,7 @@ class module(osv.osv):
                 for key in values:
                     old = getattr(mod, key)
                     updated = isinstance(values[key], basestring) and tools.ustr(values[key]) or values[key]
-                    if not old == updated:
+                    if (old or updated) and updated != old:
                         updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     updated_values['state'] = 'uninstalled'
@@ -726,6 +734,7 @@ class module(osv.osv):
             cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (mod_browse.id, dep))
         for dep in (existing - needed):
             cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (mod_browse.id, dep))
+        self.invalidate_cache(cr, uid, ['dependencies_id'], [mod_browse.id])
 
     def _update_category(self, cr, uid, mod_browse, category='Uncategorized'):
         current_category = mod_browse.category_id
@@ -754,37 +763,47 @@ class module(osv.osv):
             if not mod.description:
                 _logger.warning('module %s: description is empty !', mod.name)
 
-class module_dependency(osv.osv):
+
+DEP_STATES = [
+    ('uninstallable', 'Uninstallable'),
+    ('uninstalled', 'Not Installed'),
+    ('installed', 'Installed'),
+    ('to upgrade', 'To be upgraded'),
+    ('to remove', 'To be removed'),
+    ('to install', 'To be installed'),
+    ('unknown', 'Unknown'),
+]
+
+class module_dependency(osv.Model):
     _name = "ir.module.module.dependency"
     _description = "Module dependency"
 
-    def _state(self, cr, uid, ids, name, args, context=None):
-        result = {}
-        mod_obj = self.pool.get('ir.module.module')
-        for md in self.browse(cr, uid, ids):
-            ids = mod_obj.search(cr, uid, [('name', '=', md.name)])
-            if ids:
-                result[md.id] = mod_obj.read(cr, uid, [ids[0]], ['state'])[0]['state']
-            else:
-                result[md.id] = 'unknown'
-        return result
+    # the dependency name
+    name = fields2.Char(index=True)
 
-    _columns = {
-        # The dependency name
-        'name': fields.char('Name', select=True),
+    # the module that depends on it
+    module_id = fields2.Many2one('ir.module.module', 'Module', ondelete='cascade')
 
-        # The module that depends on it
-        'module_id': fields.many2one('ir.module.module', 'Module', select=True, ondelete='cascade'),
+    # the module corresponding to the dependency, and its status
+    depend_id = fields2.Many2one('ir.module.module', 'Dependency', compute='_compute_depend')
+    state = fields2.Selection(DEP_STATES, string='Status', compute='_compute_state')
 
-        'state': fields.function(_state, type='selection', selection=[
-            ('uninstallable', 'Uninstallable'),
-            ('uninstalled', 'Not Installed'),
-            ('installed', 'Installed'),
-            ('to upgrade', 'To be upgraded'),
-            ('to remove', 'To be removed'),
-            ('to install', 'To be installed'),
-            ('unknown', 'Unknown'),
-        ], string='Status', readonly=True, select=True),
-    }
+    @api.multi
+    @api.depends('name')
+    def _compute_depend(self):
+        # retrieve all modules corresponding to the dependency names
+        names = list(set(dep.name for dep in self))
+        mods = self.env['ir.module.module'].search([('name', 'in', names)])
+
+        # index modules by name, and assign dependencies
+        name_mod = dict((mod.name, mod) for mod in mods)
+        for dep in self:
+            dep.depend_id = name_mod.get(dep.name)
+
+    @api.one
+    @api.depends('depend_id.state')
+    def _compute_state(self):
+        self.state = self.depend_id.state or 'unknown'
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -196,8 +196,7 @@ class mail_compose_message(osv.TransientModel):
     def send_mail(self, cr, uid, ids, context=None):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         # clean the context (hint: mass mailing sets some default values that
         # could be wrongly interpreted by mail_mail)

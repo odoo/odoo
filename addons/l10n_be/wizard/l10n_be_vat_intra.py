@@ -253,6 +253,7 @@ class partner_vat_intra(osv.osv_memory):
         data_decl = '\n\t<ns2:IntraListing SequenceNumber="1" ClientsNbr="%(clientnbr)s" DeclarantReference="%(dnum)s" AmountSum="%(amountsum).2f">' % (xml_data)
 
         data_file += data_head + data_decl + data_comp_period + data_clientinfo + '\n\t\t<ns2:Comment>%(comments)s</ns2:Comment>\n\t</ns2:IntraListing>\n</ns2:IntraConsignment>' % (xml_data)
+        context = dict(context or {})
         context['file_save'] = data_file
 
         model_data_ids = mod_obj.search(cursor, user,[('model','=','ir.ui.view'),('name','=','view_vat_intra_save')], context=context)

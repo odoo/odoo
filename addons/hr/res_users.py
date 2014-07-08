@@ -46,6 +46,7 @@ class res_users(osv.Model):
     def _message_post_get_eid(self, cr, uid, thread_id, context=None):
         assert thread_id, "res.users does not support posting global messages"
         if context and 'thread_model' in context:
+            context = dict(context or {})
             context['thread_model'] = 'hr.employee'
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]

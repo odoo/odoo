@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 466d19929560c2a60c347990ea44730ae40ec36d
+# Parent 0d88c003a54e6501eee5f43b90db20d9b78c07c8
 
 diff --git a/controllers/academy.py b/controllers/academy.py
 --- a/controllers/academy.py
@@ -10,24 +10,15 @@ diff --git a/controllers/academy.py b/controllers/academy.py
  
 -    @http.route('/tas/<int:id>/', auth='public', website=True)
 -    def ta(self, id):
--        return http.request.website.render('academy.ta', teaching_assistants[id])
+-        return http.request.render('academy.ta', teaching_assistants[id])
 +    @http.route('/tas/<model("academy.tas"):ta>/', auth='public', website=True)
 +    def ta(self, ta):
-+        return http.request.website.render('academy.ta', {
++        return http.request.render('academy.ta', {
 +            'ta': ta,
 +        })
 diff --git a/views/templates.xml b/views/templates.xml
 --- a/views/templates.xml
 +++ b/views/templates.xml
-@@ -17,7 +17,7 @@
-                     <h2>Teaching Assistants</h2>
-                     <ul>
-                         <li t-foreach="tas" t-as="ta">
--                            <a t-att-href="url_for('/tas/%d/' % ta_index)">
-+                            <a t-att-href="url_for('/tas/%s/' % ta['id'])">
-                                 <t t-esc="ta['name']"/>
-                             </a>
-                         </li>
 @@ -35,7 +35,7 @@
              <div class="oe_structure"/>
              <div class="oe_structure">

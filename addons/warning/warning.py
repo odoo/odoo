@@ -81,13 +81,13 @@ class sale_order(osv.osv):
 
 class purchase_order(osv.osv):
     _inherit = 'purchase.order'
-    def onchange_partner_id(self, cr, uid, ids, part):
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
             return {'value':{'partner_address_id': False}}
         warning = {}
         title = False
         message = False
-        partner = self.pool.get('res.partner').browse(cr, uid, part)
+        partner = self.pool.get('res.partner').browse(cr, uid, part, context=context)
         if partner.purchase_warn != 'no-message':
             title = _("Warning for %s") % partner.name
             message = partner.purchase_warn_msg
@@ -98,7 +98,7 @@ class purchase_order(osv.osv):
             if partner.purchase_warn == 'block':
                 return {'value': {'partner_id': False}, 'warning': warning}
 
-        result =  super(purchase_order, self).onchange_partner_id(cr, uid, ids, part)
+        result =  super(purchase_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
@@ -111,7 +111,9 @@ class purchase_order(osv.osv):
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
+                            date_invoice=False, payment_term=False,
+                            partner_bank_id=False, company_id=False,
+                            context=None):
         if not partner_id:
             return {'value': {
             'account_id': False,
@@ -121,7 +123,7 @@ class account_invoice(osv.osv):
         warning = {}
         title = False
         message = False
-        partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         if partner.invoice_warn != 'no-message':
             title = _("Warning for %s") % partner.name
             message = partner.invoice_warn_msg
@@ -135,7 +137,7 @@ class account_invoice(osv.osv):
 
         result =  super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
             date_invoice=date_invoice, payment_term=payment_term, 
-            partner_bank_id=partner_bank_id, company_id=company_id)
+            partner_bank_id=partner_bank_id, company_id=company_id, context=context)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']

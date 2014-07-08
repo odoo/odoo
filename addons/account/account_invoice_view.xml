@@ -165,7 +165,7 @@
                     <group>
                         <group>
                             <field string="Supplier" name="partner_id"
-                              on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
+                              on_change="onchange_partner_id(type, partner_id, date_invoice, payment_term, partner_bank_id, company_id, context)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
                             <field name="fiscal_position" options="{'no_create': True}"/>
@@ -183,7 +183,7 @@
                             <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
                                 name="account_id" groups="account.group_account_user"/>
                             <field name="journal_id" groups="account.group_account_user"
-                                on_change="onchange_journal_id(journal_id, context)" options="{'no_create': True}"/>
+                                on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="check_total" groups="account.group_supplier_inv_check_total"/>
                         </group>
@@ -258,7 +258,7 @@
                                 <group>
                                     <field name="move_id" groups="account.group_account_user"/>
                                     <field name="period_id" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]" groups="account.group_account_user"/>
-                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id,context)" widget="selection" groups="base.group_multi_company"/>
+                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                                 </group>
                             </group>
                         </page>
@@ -320,7 +320,7 @@
                     <group>
                         <group>
                             <field string="Customer" name="partner_id"
-                                on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
+                                on_change="onchange_partner_id(type, partner_id, date_invoice, payment_term, partner_bank_id, company_id, context)"
                                 context="{'search_default_customer':1, 'show_address': 1}"
                                 options='{"always_reload": True}'
                                 domain="[('customer', '=', True)]"/>
@@ -329,7 +329,7 @@
                         <group>
                             <field name="date_invoice"/>
                             <field name="journal_id" groups="account.group_account_user"
-                                on_change="onchange_journal_id(journal_id, context)" options="{'no_create': True}"/>
+                                on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"/>
                             <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]"
                                 name="account_id" groups="account.group_account_user"/>
 
@@ -393,7 +393,7 @@
                         <page string="Other Info">
                             <group col="4">
                                 <group>
-                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id,context)" widget="selection" groups="base.group_multi_company"/>
+                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                                     <field name="user_id" groups="base.group_user" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
                                     <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"/>
                                     <field name="period_id" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]"

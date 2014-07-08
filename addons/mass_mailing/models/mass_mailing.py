@@ -113,25 +113,37 @@ class MassMailingCampaign(osv.Model):
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing campaign """
-        Statistics = self.pool['mail.mail.statistics']
-        results = dict.fromkeys(ids, False)
-        for cid in ids:
-            stat_ids = Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid)], context=context)
-            stats = Statistics.browse(cr, uid, stat_ids, context=context)
-            results[cid] = {
-                'total': len(stats),
-                'failed': len([s for s in stats if not s.scheduled is False and s.sent is False and not s.exception is False]),
-                'scheduled': len([s for s in stats if not s.scheduled is False and s.sent is False and s.exception is False]),
-                'sent': len([s for s in stats if not s.sent is False]),
-                'opened': len([s for s in stats if not s.opened is False]),
-                'replied': len([s for s in stats if not s.replied is False]),
-                'bounced': len([s for s in stats if not s.bounced is False]),
-            }
-            results[cid]['delivered'] = results[cid]['sent'] - results[cid]['bounced']
-            results[cid]['received_ratio'] = 100.0 * results[cid]['delivered'] / (results[cid]['total'] or 1)
-            results[cid]['opened_ratio'] = 100.0 * results[cid]['opened'] / (results[cid]['total'] or 1)
-            results[cid]['replied_ratio'] = 100.0 * results[cid]['replied'] / (results[cid]['total'] or 1)
+        results = {}
+        cr.execute("""
+            SELECT
+                c.id as campaign_id,
+                COUNT(s.id) AS total,
+                COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
+                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null THEN 1 ELSE null END) AS scheduled,
+                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is not null THEN 1 ELSE null END) AS failed,
+                COUNT(CASE WHEN s.id is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
+                COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
+                COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied ,
+                COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced
+            FROM
+                mail_mail_statistics s
+            RIGHT JOIN
+                mail_mass_mailing_campaign c
+                ON (c.id = s.mass_mailing_campaign_id)
+            WHERE
+                c.id IN %s
+            GROUP BY
+                c.id
+        """, (tuple(ids), ))
+        for row in cr.dictfetchall():
+            results[row.pop('campaign_id')] = row
+            total = row['total'] or 1
+            row['delivered'] = row['sent'] - row['bounced']
+            row['received_ratio'] = 100.0 * row['delivered'] / total
+            row['opened_ratio'] = 100.0 * row['opened'] / total
+            row['replied_ratio'] = 100.0 * row['replied'] / total
         return results
+
 
     _columns = {
         'name': fields.char('Name', required=True),
@@ -283,25 +295,37 @@ class MassMailing(osv.Model):
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing campaign """
-        Statistics = self.pool['mail.mail.statistics']
-        results = dict.fromkeys(ids, False)
-        for mid in ids:
-            stat_ids = Statistics.search(cr, uid, [('mass_mailing_id', '=', mid)], context=context)
-            stats = Statistics.browse(cr, uid, stat_ids, context=context)
-            results[mid] = {
-                'total': len(stats),
-                'failed': len([s for s in stats if not s.scheduled is False and s.sent is False and not s.exception is False]),
-                'scheduled': len([s for s in stats if not s.scheduled is False and s.sent is False and s.exception is False]),
-                'sent': len([s for s in stats if not s.sent is False]),
-                'opened': len([s for s in stats if not s.opened is False]),
-                'replied': len([s for s in stats if not s.replied is False]),
-                'bounced': len([s for s in stats if not s.bounced is False]),
-            }
-            results[mid]['delivered'] = results[mid]['sent'] - results[mid]['bounced']
-            results[mid]['received_ratio'] = 100.0 * results[mid]['delivered'] / (results[mid]['total'] or 1)
-            results[mid]['opened_ratio'] = 100.0 * results[mid]['opened'] / (results[mid]['total'] or 1)
-            results[mid]['replied_ratio'] = 100.0 * results[mid]['replied'] / (results[mid]['total'] or 1)
+        results = {}
+        cr.execute("""
+            SELECT
+                m.id as mailing_id,
+                COUNT(s.id) AS total,
+                COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
+                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null THEN 1 ELSE null END) AS scheduled,
+                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is not null THEN 1 ELSE null END) AS failed,
+                COUNT(CASE WHEN s.id is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
+                COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
+                COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied ,
+                COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced
+            FROM
+                mail_mail_statistics s
+            RIGHT JOIN
+                mail_mass_mailing m
+                ON (m.id = s.mass_mailing_id)
+            WHERE
+                m.id IN %s
+            GROUP BY
+                m.id
+        """, (tuple(ids), ))
+        for row in cr.dictfetchall():
+            results[row.pop('mailing_id')] = row
+            total = row['total'] or 1
+            row['delivered'] = row['sent'] - row['bounced']
+            row['received_ratio'] = 100.0 * row['delivered'] / total
+            row['opened_ratio'] = 100.0 * row['opened'] / total
+            row['replied_ratio'] = 100.0 * row['replied'] / total
         return results
+
 
     def _get_mailing_model(self, cr, uid, context=None):
         res = []
@@ -319,7 +343,7 @@ class MassMailing(osv.Model):
         'name': fields.char('Subject', required=True),
         'email_from': fields.char('From', required=True),
         'create_date': fields.datetime('Creation Date'),
-        'sent_date': fields.datetime('Sent Date', oldname='date'),
+        'sent_date': fields.datetime('Sent Date', oldname='date', copy=False),
         'body_html': fields.html('Body'),
         'attachment_ids': fields.many2many(
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
@@ -331,7 +355,7 @@ class MassMailing(osv.Model):
         ),
         'state': fields.selection(
             [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')],
-            string='Status', required=True,
+            string='Status', required=True, copy=False,
         ),
         'color': fields.related(
             'mass_mailing_campaign_id', 'color',
@@ -436,15 +460,9 @@ class MassMailing(osv.Model):
     #------------------------------------------------------
 
     def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
         mailing = self.browse(cr, uid, id, context=context)
-        default.update({
-            'state': 'draft',
-            'statistics_ids': [],
-            'name': _('%s (duplicate)') % mailing.name,
-            'sent_date': False,
-        })
+        default = dict(default or {},
+                       name=_('%s (copy)') % mailing.name)
         return super(MassMailing, self).copy_data(cr, uid, id, default, context=context)
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):

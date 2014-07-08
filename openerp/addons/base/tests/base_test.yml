@@ -58,6 +58,9 @@
     !python {model: res.partner.category}: |
         # pretend the pool has finished loading to avoid deferring parent_store computation
         self.pool._init = False
+
+        # Force partner_categ.copy() to copy children
+        self.pool['res.partner.category']._columns['child_ids'].copy = True
 -
     "1.0 Setup test partner categories: parent root"
 -
@@ -91,6 +94,7 @@
     2. Duplicate the parent category and verify that the children have been duplicated too and are below the new parent
 -
     !python {model: res.partner.category}: |
+        self._columns['child_ids'].copy = True # force copying children for test 
         new_id = self.copy(cr, uid, ref('test_categ_0'))
         new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
         assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
@@ -141,6 +145,7 @@
 -
     !python {model: res.partner.category}: |
         self.pool._init = True
+        self.pool['res.partner.category']._columns['child_ids'].copy = False
 
 -
     "Float precision tests: verify that float rounding methods are working correctly via res.currency"
@@ -277,7 +282,7 @@
             rate_id = res_currency_rate.create(cr, 1, {'name':'2000-01-01',
                                                        'rate': value,
                                                        'currency_id': currency.id})
-            rate = res_currency_rate.read(cr, 1, rate_id, ['rate'])['rate']
+            rate = res_currency_rate.read(cr, 1, [rate_id], ['rate'])[0]['rate']
             assert rate == expected, 'Roundtrip error: got %s back from db, expected %s' % (rate, expected)
         # res.currency.rate uses 6 digits of precision by default
         try_roundtrip(2.6748955, 2.674896)

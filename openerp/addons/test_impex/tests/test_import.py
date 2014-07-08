@@ -57,7 +57,7 @@ class ImporterCase(common.TransactionCase):
 
         ids = ModelData.search(
             self.cr, openerp.SUPERUSER_ID,
-            [('model', '=', record._table_name), ('res_id', '=', record.id)])
+            [('model', '=', record._name), ('res_id', '=', record.id)])
         if ids:
             d = ModelData.read(
                 self.cr, openerp.SUPERUSER_ID, ids, ['name', 'module'])[0]
@@ -65,12 +65,12 @@ class ImporterCase(common.TransactionCase):
                 return '%s.%s' % (d['module'], d['name'])
             return d['name']
 
-        name = dict(record.name_get())[record.id]
+        name = record.name_get()[0][1]
         # fix dotted name_get results, otherwise xid lookups blow up
         name = name.replace('.', '-')
         ModelData.create(self.cr, openerp.SUPERUSER_ID, {
             'name': name,
-            'model': record._table_name,
+            'model': record._name,
             'res_id': record.id,
             'module': '__test__'
         })
@@ -446,7 +446,7 @@ class test_selection_function(ImporterCase):
             ]),
             ok(2))
         self.assertEqual(
-            ['3', '1'],
+            [3, 1],
             values(self.read()))
 
     def test_translated(self):
@@ -661,7 +661,7 @@ class test_m2m(ImporterCase):
         id4 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
         records = M2O_o.browse(self.cr, openerp.SUPERUSER_ID, [id1, id2, id3, id4])
 
-        name = lambda record: dict(record.name_get())[record.id]
+        name = lambda record: record.name_get()[0][1]
 
         self.assertEqual(
             self.import_(['value'], [

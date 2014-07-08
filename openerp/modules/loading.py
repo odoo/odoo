@@ -162,6 +162,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+            registry.setup_models(cr)
             init_module_models(cr, package.name, models)
         status['progress'] = float(index) / len(graph)
 
@@ -188,6 +189,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 status['progress'] = (index + 0.75) / len(graph)
                 _load_data(cr, module_name, idref, mode, kind='demo')
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
+                modobj.invalidate_cache(cr, SUPERUSER_ID, ['demo'], [module_id])
 
             migrations.migrate_module(package, 'post')
 
@@ -227,6 +229,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         registry._init_modules.add(package.name)
         cr.commit()
+
+    registry.setup_models(cr)
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
@@ -332,6 +336,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     modobj.button_upgrade(cr, SUPERUSER_ID, ids)
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
+            modobj.invalidate_cache(cr, SUPERUSER_ID, ['state'])
 
 
         # STEP 3: Load marked modules (skipping base which was done in STEP 1)

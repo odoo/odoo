@@ -121,6 +121,7 @@ class YamlInterpreter(object):
                              'time': time,
                              'datetime': datetime,
                              'timedelta': timedelta}
+        self.env = openerp.api.Environment(self.cr, self.uid, self.context)
 
     def _log(self, *args, **kwargs):
         _logger.log(self.loglevel, *args, **kwargs)
@@ -169,6 +170,11 @@ class YamlInterpreter(object):
     tests that belong to a module's test suite and depend on each other.""" % (checked_xml_id, self.filename))
 
         return id
+
+    def get_record(self, xml_id):
+        if '.' not in xml_id:
+            xml_id = "%s.%s" % (self.module, xml_id)
+        return self.env.ref(xml_id)
 
     def get_context(self, node, eval_dict):
         context = self.context.copy()
@@ -388,6 +394,7 @@ class YamlInterpreter(object):
         fields = fields or {}
         if view is not False:
             fg = view_info['fields']
+            onchange_spec = model._onchange_spec(self.cr, SUPERUSER_ID, view_info, context=self.context)
             # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
             # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
             defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
@@ -424,27 +431,35 @@ class YamlInterpreter(object):
 
                     if not el.attrib.get('on_change', False):
                         continue
-                    match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
-                    assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
 
-                    # creating the context
-                    class parent2(object):
-                        def __init__(self, d):
-                            self.d = d
-                        def __getattr__(self, name):
-                            return self.d.get(name, False)
+                    if el.attrib['on_change'] in ('1', 'true'):
+                        # New-style on_change
+                        recs = model.browse(self.cr, SUPERUSER_ID, [], self.context)
+                        result = recs.onchange(record_dict, field_name, onchange_spec)
 
-                    ctx = record_dict.copy()
-                    ctx['context'] = self.context
-                    ctx['uid'] = SUPERUSER_ID
-                    ctx['parent'] = parent2(parent)
-                    for a in fg:
-                        if a not in ctx:
-                            ctx[a] = process_val(a, defaults.get(a, False))
+                    else:
+                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
+                        assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
 
-                    # Evaluation args
-                    args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                    result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
+                        # creating the context
+                        class parent2(object):
+                            def __init__(self, d):
+                                self.d = d
+                            def __getattr__(self, name):
+                                return self.d.get(name, False)
+
+                        ctx = record_dict.copy()
+                        ctx['context'] = self.context
+                        ctx['uid'] = SUPERUSER_ID
+                        ctx['parent'] = parent2(parent)
+                        for a in fg:
+                            if a not in ctx:
+                                ctx[a] = process_val(a, defaults.get(a, False))
+
+                        # Evaluation args
+                        args = map(lambda x: eval(x, ctx), match.group(2).split(','))
+                        result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
+
                     for key, val in (result or {}).get('value', {}).items():
                         assert key in fg, (
                             "The field %r returned from the onchange call %r "
@@ -541,25 +556,35 @@ class YamlInterpreter(object):
             self.uid = self.get_id(node.uid)
         if node.noupdate:
             self.noupdate = node.noupdate
+        self.env = openerp.api.Environment(self.cr, self.uid, self.context)
 
     def process_python(self, node):
         python, statements = node.items()[0]
-        model = self.get_model(python.model)
-        statements = statements.replace("\r\n", "\n")
+        assert python.model or python.id, "!python node must have attribute `model` or `id`"
+        if python.id is None:
+            record = self.pool[python.model]
+        elif isinstance(python.id, basestring):
+            record = self.get_record(python.id)
+        else:
+            record = self.env[python.model].browse(python.id)
+        if python.model:
+            assert record._name == python.model, "`id` is not consistent with `model`"
+        statements = "\n" * python.first_line + statements.replace("\r\n", "\n")
         code_context = {
-            'model': model,
+            'self': record,
+            'model': record._model,
             'cr': self.cr,
             'uid': self.uid,
             'log': self._log,
             'context': self.context,
             'openerp': openerp,
         }
-        code_context.update({'self': model}) # remove me when no !python block test uses 'self' anymore
         try:
             code_obj = compile(statements, self.filename, 'exec')
             unsafe_eval(code_obj, {'ref': self.get_id}, code_context)
         except AssertionError, e:
-            self._log_assert_failure('AssertionError in Python code %s: %s', python.name, e)
+            self._log_assert_failure('AssertionError in Python code %s (line %d): %s',
+                python.name, python.first_line, e)
             return
         except Exception, e:
             _logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)

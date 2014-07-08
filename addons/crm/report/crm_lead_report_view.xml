@@ -71,7 +71,7 @@
                     <field name="section_id" context="{'invisible_section': False}"
                             groups="base.group_multi_salesteams"/>
                     <field name="user_id" string="Salesperson"/>
-                    <group expand="0" string="Extended Filters...">
+                    <group expand="0" string="Extended Filters">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="stage_id" domain="[('section_ids', '=', 'section_id')]" />
                         <field name="type_id"/>
@@ -87,6 +87,23 @@
                         <field name="create_date"/>
                         <field name="opening_date"/>
                         <field name="date_closed"/>
+                    </group>
+                    <group expand="1" string="Group By">
+                        <filter string="Salesperson" name="user" icon="terp-personal"
+                            domain="[]" context="{'group_by':'user_id'}" />
+                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_assigned_id'}" />
+                        <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
+                        <filter string="Sales Team" icon="terp-personal+"
+                                domain="[]"
+                                context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Grade" name="group_grade" icon="terp-stock_symbol-selection"
+                                domain="[]" context="{'group_by':'grade_id'}" />
+                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" />
+                        <filter string="Assign Date (day)" icon="terp-go-today" domain="[]" context="{'group_by':'date_assign:day'}"/>
+                        <filter string="Assign Date (month)" icon="terp-go-month" domain="[]" context="{'group_by':'date_assign:month'}"/>
+                        <filter string="Assign Date (year)" icon="terp-go-year" domain="[]" context="{'group_by':'date_assign:year'}"/>
                     </group>
                 </search>
             </field>

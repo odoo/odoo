@@ -141,8 +141,7 @@ class survey_survey(osv.Model):
 
     def _get_print_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes a printing URL for the survey """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
-            'web.base.url')
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         res = {}
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/print/%s" % slug(survey))
@@ -162,8 +161,8 @@ class survey_survey(osv.Model):
     _columns = {
         'title': fields.char('Title', required=1, translate=True),
         'res_model': fields.char('Category'),
-        'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
-        'stage_id': fields.many2one('survey.stage', string="Stage", ondelete="set null"),
+        'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages', copy=True),
+        'stage_id': fields.many2one('survey.stage', string="Stage", ondelete="set null", copy=False),
         'auth_required': fields.boolean('Login required',
             help="Users with a public link will be requested to login before taking part to the survey",
             oldname="authenticate"),
@@ -236,12 +235,10 @@ class survey_survey(osv.Model):
     # Public methods #
 
     def copy_data(self, cr, uid, id, default=None, context=None):
-        vals = dict()
         current_rec = self.read(cr, uid, id, fields=['title'], context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
-        vals['title'] = title
-        vals['user_input_ids'] = []
-        return super(survey_survey, self).copy_data(cr, uid, id, default=vals,
+        default = dict(default or {}, title=title)
+        return super(survey_survey, self).copy_data(cr, uid, id, default,
             context=context)
 
     def next_page(self, cr, uid, user_input, page_id, go_back=False, context=None):
@@ -365,7 +362,7 @@ class survey_survey(osv.Model):
             for cell in product(rows.keys(), answers.keys()):
                 res[cell] = 0
             for input_line in question.user_input_line_ids:
-                if input_line.answer_type == 'suggestion' and not(current_filters) or input_line.user_input_id.id in current_filters:
+                if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
             result_summary = {'answers': answers, 'rows': rows, 'result': res}
 
@@ -512,7 +509,7 @@ class survey_page(osv.Model):
         'survey_id': fields.many2one('survey.survey', 'Survey',
             ondelete='cascade', required=True),
         'question_ids': fields.one2many('survey.question', 'page_id',
-            'Questions'),
+            'Questions', copy=True),
         'sequence': fields.integer('Page number'),
         'description': fields.html('Description',
             help="An introductory text to your page", translate=True,
@@ -525,11 +522,10 @@ class survey_page(osv.Model):
     # Public methods #
 
     def copy_data(self, cr, uid, ids, default=None, context=None):
-        vals = {}
         current_rec = self.read(cr, uid, ids, fields=['title'], context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
-        vals.update({'title': title})
-        return super(survey_page, self).copy_data(cr, uid, ids, default=vals,
+        default = dict(default or {}, title=title)
+        return super(survey_page, self).copy_data(cr, uid, ids, default,
             context=context)
 
 
@@ -570,9 +566,9 @@ class survey_question(osv.Model):
         'matrix_subtype': fields.selection([('simple', 'One choice per row'),
             ('multiple', 'Multiple choices per row')], 'Matrix Type'),
         'labels_ids': fields.one2many('survey.label',
-            'question_id', 'Types of answers', oldname='answer_choice_ids'),
+            'question_id', 'Types of answers', oldname='answer_choice_ids', copy=True),
         'labels_ids_2': fields.one2many('survey.label',
-            'question_id_2', 'Rows of the Matrix'),
+            'question_id_2', 'Rows of the Matrix', copy=True),
         # labels are used for proposed choices
         # if question.type == simple choice | multiple choice
         #                    -> only labels_ids is used
@@ -645,17 +641,10 @@ class survey_question(osv.Model):
     ]
 
     def copy_data(self, cr, uid, ids, default=None, context=None):
-        # This will prevent duplication of user input lines in case of question duplication
-        # (in cascade, this will also allow to duplicate surveys without duplicating bad user input
-        # lines)
-        vals = {'user_input_line_ids': []}
-
-        # Updating question title
         current_rec = self.read(cr, uid, ids, context=context)
         question = _("%s (copy)") % (current_rec.get('question'))
-        vals['question'] = question
-
-        return super(survey_question, self).copy_data(cr, uid, ids, default=vals,
+        default = dict(default or {}, question=question)
+        return super(survey_question, self).copy_data(cr, uid, ids, default,
             context=context)
 
     # Validation methods
@@ -868,8 +857,10 @@ class survey_user_input(osv.Model):
                                                'user_input_id', 'Answers'),
 
         # URLs used to display the answers
-        'result_url': fields.related('survey_id', 'result_url', string="Public link to the survey results"),
-        'print_url': fields.related('survey_id', 'print_url', string="Public link to the empty survey"),
+        'result_url': fields.related('survey_id', 'result_url', type='char',
+                                     string="Public link to the survey results"),
+        'print_url': fields.related('survey_id', 'print_url', type='char',
+                                    string="Public link to the empty survey"),
 
         'quizz_score': fields.function(_quizz_get_score, type="float", string="Score for the quiz")
     }
@@ -903,7 +894,7 @@ class survey_user_input(osv.Model):
     def action_survey_resent(self, cr, uid, ids, context=None):
         ''' Sent again the invitation '''
         record = self.browse(cr, uid, ids[0], context=context)
-        context = context or {}
+        context = dict(context or {})
         context.update({
             'survey_resent_token': True,
             'default_partner_ids': record.partner_id and [record.partner_id.id] or [],
@@ -998,6 +989,8 @@ class survey_user_input_line(osv.Model):
     def __get_mark(self, cr, uid, value_suggested, context=None):
         try:
             mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
+        except AttributeError:
+            mark = 0.0
         except KeyError:
             mark = 0.0
         except ValueError:
@@ -1145,7 +1138,7 @@ class survey_user_input_line(osv.Model):
 
         comment_answer = post.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer})
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False})
             self.create(cr, uid, vals, context=context)
 
         return True

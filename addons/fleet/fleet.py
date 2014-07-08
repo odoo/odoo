@@ -338,7 +338,7 @@ class fleet_vehicle(osv.Model):
         'name': fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'license_plate': fields.char('License Plate', required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
-        'vin_sn': fields.char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)'),
+        'vin_sn': fields.char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False),
         'driver_id': fields.many2one('res.partner', 'Driver', help='Driver of the vehicle'),
         'model_id': fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
         'log_fuel': fields.one2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs'),
@@ -355,7 +355,7 @@ class fleet_vehicle(osv.Model):
         'location': fields.char('Location', help='Location of the vehicle (garage, ...)'),
         'seats': fields.integer('Seats Number', help='Number of seats of the vehicle'),
         'doors': fields.integer('Doors Number', help='Number of doors of the vehicle'),
-        'tag_ids' :fields.many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id','tag_id', 'Tags'),
+        'tag_ids' :fields.many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id','tag_id', 'Tags', copy=False),
         'odometer': fields.function(_get_odometer, fnct_inv=_set_odometer, type='float', string='Last Odometer', help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the odometer ',required=True),
         'transmission': fields.selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle'),
@@ -380,18 +380,6 @@ class fleet_vehicle(osv.Model):
         'state_id': _get_default_state,
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'log_fuel':[],
-            'log_contracts':[],
-            'log_services':[],
-            'tag_ids':[],
-            'vin_sn':'',
-        })
-        return super(fleet_vehicle, self).copy(cr, uid, id, default, context=context)
-
     def on_change_model(self, cr, uid, ids, model_id, context=None):
         if not model_id:
             return {}
@@ -403,9 +391,7 @@ class fleet_vehicle(osv.Model):
         }
 
     def create(self, cr, uid, data, context=None):
-        if not context:
-            context = {}
-        context.update({'mail_create_nolog': True})
+        context = dict(context or {}, mail_create_nolog=True)
         vehicle_id = super(fleet_vehicle, self).create(cr, uid, data, context=context)
         vehicle = self.browse(cr, uid, vehicle_id, context=context)
         self.message_post(cr, uid, [vehicle_id], body=_('%s %s has been added to the fleet!') % (vehicle.model_id.name,vehicle.license_plate), context=context)
@@ -803,12 +789,14 @@ class fleet_vehicle_log_contract(osv.Model):
         'days_left': fields.function(get_days_left, type='integer', string='Warning Date'),
         'insurer_id' :fields.many2one('res.partner', 'Supplier'),
         'purchaser_id': fields.many2one('res.partner', 'Contractor', help='Person to which the contract is signed for'),
-        'ins_ref': fields.char('Contract Reference', size=64),
-        'state': fields.selection([('open', 'In Progress'), ('toclose','To Close'), ('closed', 'Terminated')], 'Status', readonly=True, help='Choose wheter the contract is still valid or not'),
-        'notes': fields.text('Terms and Conditions', help='Write here all supplementary informations relative to this contract'),
+        'ins_ref': fields.char('Contract Reference', size=64, copy=False),
+        'state': fields.selection([('open', 'In Progress'), ('toclose','To Close'), ('closed', 'Terminated')],
+                                  'Status', readonly=True, help='Choose wheter the contract is still valid or not',
+                                  copy=False),
+        'notes': fields.text('Terms and Conditions', help='Write here all supplementary informations relative to this contract', copy=False),
         'cost_generated': fields.float('Recurring Cost Amount', help="Costs paid at regular intervals, depending on the cost frequency. If the cost frequency is set to unique, the cost will be logged at the start date"),
         'cost_frequency': fields.selection([('no','No'), ('daily', 'Daily'), ('weekly','Weekly'), ('monthly','Monthly'), ('yearly','Yearly')], 'Recurring Cost Frequency', help='Frequency of the recuring cost', required=True),
-        'generated_cost_ids': fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs', ondelete='cascade'),
+        'generated_cost_ids': fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs'),
         'sum_cost': fields.function(_get_sum_cost, type='float', string='Indicative Costs Total'),
         'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
@@ -823,18 +811,6 @@ class fleet_vehicle_log_contract(osv.Model):
         'cost_subtype_id': _get_default_contract_type,
         'cost_type': 'contract',
     }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        today = fields.date.context_today(self, cr, uid, context=context)
-        default['date'] = today
-        default['start_date'] = today
-        default['expiration_date'] = self.compute_next_year_date(today)
-        default['ins_ref'] = ''
-        default['state'] = 'open'
-        default['notes'] = ''
-        return super(fleet_vehicle_log_contract, self).copy(cr, uid, id, default, context=context)
 
     def contract_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'closed'}, context=context)

@@ -630,8 +630,7 @@ class google_calendar(osv.AbstractModel):
         return new_ids
 
     def update_events(self, cr, uid, lastSync=False, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         calendar_event = self.pool['calendar.event']
         user_obj = self.pool['res.users']
@@ -937,7 +936,6 @@ class calendar_event(osv.Model):
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
-        default['attendee_ids'] = False
         if default.get('write_type', False):
             del default['write_type']
         elif default.get('recurrent_id', False):

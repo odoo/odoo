@@ -37,7 +37,7 @@ class mail_group(osv.Model):
     _inherits = {'mail.alias': 'alias_id'}
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
+        result = {}
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
@@ -163,15 +163,14 @@ class mail_group(osv.Model):
 
     def unlink(self, cr, uid, ids, context=None):
         groups = self.browse(cr, uid, ids, context=context)
-        # Cascade-delete mail aliases as well, as they should not exist without the mail group.
-        mail_alias = self.pool.get('mail.alias')
         alias_ids = [group.alias_id.id for group in groups if group.alias_id]
+        menu_ids = [group.menu_id.id for group in groups if group.menu_id]
         # Delete mail_group
         res = super(mail_group, self).unlink(cr, uid, ids, context=context)
-        # Delete alias
-        mail_alias.unlink(cr, SUPERUSER_ID, alias_ids, context=context)
+        # Cascade-delete mail aliases as well, as they should not exist without the mail group.
+        self.pool.get('mail.alias').unlink(cr, SUPERUSER_ID, alias_ids, context=context)
         # Cascade-delete menu entries as well
-        self.pool.get('ir.ui.menu').unlink(cr, SUPERUSER_ID, [group.menu_id.id for group in groups if group.menu_id], context=context)
+        self.pool.get('ir.ui.menu').unlink(cr, SUPERUSER_ID, menu_ids, context=context)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
