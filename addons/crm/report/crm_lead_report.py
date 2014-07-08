@@ -44,6 +44,7 @@ class crm_lead_report(osv.osv):
     _auto = False
     _description = "CRM Lead Analysis"
     _rec_name = 'date_deadline'
+    _inherit = ["crm.tracking.mixin"]
 
     _columns = {
         'date_deadline': fields.date('Exp. Closing', readonly=True, help="Expected Closing"),
@@ -58,10 +59,8 @@ class crm_lead_report(osv.osv):
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
 
         'user_id':fields.many2one('res.users', 'User', readonly=True),
+       'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
-        'channel_id':fields.many2one('crm.case.channel', 'Channel', readonly=True),
-        'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
@@ -101,8 +100,9 @@ class crm_lead_report(osv.osv):
                     c.company_id,
                     c.priority,
                     c.section_id,
-                    c.channel_id,
-                    c.type_id,
+                    c.campaign_id,
+                    c.source_id,
+                    c.medium_id,
                     c.partner_id,
                     c.country_id,
                     c.planned_revenue,
