@@ -16,7 +16,7 @@
             this.flag = false;
             this.$el.addClass("theme_customize_modal");
             this.active_select_tags();
-            this.$inputs = $("input[data-xmlid]");
+            this.$inputs = $("input[data-xmlid],input[data-enable],input[data-disable]");
             setTimeout(function () {self.$el.addClass('in');}, 0);
             return this.load_xml_data().then(function () {
                 self.flag = true;
@@ -59,7 +59,7 @@
             return openerp.jsonRpc('/website/theme_customize_get', 'call', {
                     'xml_ids': this.get_xml_ids(this.$inputs)
                 }).then(function (data) {
-                    self.$inputs.each(function () {
+                    self.$inputs.filter('[data-xmlid]').each(function () {
                         if (!_.difference(self.get_xml_ids($(this)), data[1]).length) {
                             $(this).attr("checked", false).change();
                         }
@@ -68,6 +68,9 @@
                         }
                     });
                 });
+        },
+        get_inputs: function (string) {
+            return this.$inputs.filter('#'+string.split(",").join(", #"));
         },
         get_xml_ids: function ($inputs) {
             var xml_ids = [];
@@ -151,22 +154,22 @@
             }
             $option.attr("checked", checked);
 
-            var $enable = this.$('[data-xmlid]:checked');
+            var $enable = this.$inputs.filter('[data-xmlid]:checked');
             $enable.closest("label").addClass("checked");
-            var $disable = this.$('[data-xmlid]:not(:checked)');
+            var $disable = this.$inputs.filter('[data-xmlid]:not(:checked)');
             $disable.closest("label").removeClass("checked");
 
-            var $sets = this.$('input[data-enable]:not([data-xmlid]), input[data-disable]:not([data-xmlid])');
+            var $sets = this.$inputs.filter('input[data-enable]:not([data-xmlid]), input[data-disable]:not([data-xmlid])');
             $sets.each(function () {
                 var $set = $(this);
                 var checked = true;
                 if ($set.data("enable")) {
-                    get_inputs($(this).data("enable")).each(function () {
+                    self.get_inputs($(this).data("enable")).each(function () {
                         if ($(this).is(":not(:checked)")) checked = false;
                     });
                 }
                 if ($set.data("disable")) {
-                    get_inputs($(this).data("disable")).each(function () {
+                    self.get_inputs($(this).data("disable")).each(function () {
                         if ($(this).is(":checked")) checked = false;
                     });
                 }
