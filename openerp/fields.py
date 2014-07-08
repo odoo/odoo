@@ -1541,6 +1541,7 @@ class Id(Field):
     """ Special case for field 'id'. """
     store = True
     readonly = True
+    type = 'integer'
 
     def to_column(self):
         return fields.integer('ID')
