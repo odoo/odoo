@@ -589,6 +589,10 @@ class BaseModel(object):
             inherits = dict(parent_class._inherits)
             inherits.update(cls._inherits)
 
+            depends = dict(parent_class._depends)
+            for m, fs in cls._depends.iteritems():
+                depends.setdefault(m, []).extend(fs)
+
             old_constraints = parent_class._constraints
             new_constraints = cls._constraints
             # filter out from old_constraints the ones overridden by a
@@ -608,6 +612,7 @@ class BaseModel(object):
                 '_columns': columns,
                 '_defaults': defaults,
                 '_inherits': inherits,
+                '_depends': depends,
                 '_constraints': constraints,
                 '_sql_constraints': sql_constraints,
             }
@@ -621,6 +626,7 @@ class BaseModel(object):
             '_columns': dict(cls._columns),
             '_defaults': dict(cls._defaults),
             '_inherits': dict(cls._inherits),
+            '_depends': dict(cls._depends),
             '_constraints': list(cls._constraints),
             '_sql_constraints': list(cls._sql_constraints),
             '_original_module': original_module,
