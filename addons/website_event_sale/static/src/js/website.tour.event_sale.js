@@ -9,10 +9,10 @@
         steps: [
             {
                 title:     "select event",
-                element:   'a[href*="/event"]:contains("Conference on Business Applications"):first',
+                element:   'a[href*="/event"]:contains("Conference on Business Apps"):first',
             },
             {
-                waitNot:   'a[href*="/event"]:contains("Conference on Business Applications")',
+                waitNot:   'a[href*="/event"]:contains("Conference on Business Apps")',
                 title:     "select 2 Standard tickets",
                 element:   'select:eq(0)',
                 sampleText: '2',

@@ -18,5 +18,18 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="view_event_kanban">
+        <field name="name">event.event.kanban</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//t[@t-name='kanban-box']/div" position="attributes">
+                    <attribute name="data-routing">event</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
  </data>
 </openerp>

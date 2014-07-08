@@ -115,6 +115,18 @@ class event_track(osv.osv):
         'stage_id': _read_group_stage_ids,
     }
 
+    def open_track_speakers_list(self, cr, uid, track_id, context=None):
+        track_id = self.browse(cr, uid, track_id, context=context)
+        return {
+            'name':_('Speakers'),
+            'domain': [('id', 'in',[partner.id for partner in track_id.speaker_ids])],
+            'view_type': 'form',
+            'view_mode': 'kanban,form',
+            'res_model': 'res.partner',
+            'view_id':False,
+            'type': 'ir.actions.act_window',
+        }
+
 #
 # Events
 #

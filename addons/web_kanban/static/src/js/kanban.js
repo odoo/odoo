@@ -159,7 +159,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             case 'button':
             case 'a':
                 var type = node.attrs.type || '';
-                if (_.indexOf('action,object,edit,open,delete'.split(','), type) !== -1) {
+                if (_.indexOf('action,object,edit,open,delete,url'.split(','), type) !== -1) {
                     _.each(node.attrs, function(v, k) {
                         if (_.indexOf('icon,type,name,args,string,context,states,kanban_states'.split(','), k) != -1) {
                             node.attrs['data-' + k] = v;
@@ -179,7 +179,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                             }
                         }];
                     }
-                    if (node.tag == 'a') {
+                    if (node.tag == 'a' && node.attrs['data-type'] != "url") {
                         node.attrs.href = '#';
                     } else {
                         node.attrs.type = 'button';
@@ -1026,7 +1026,10 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
      *  open on form/edit view : oe_kanban_global_click_edit
      */
     on_card_clicked: function(ev) {
-        if(this.$el.find('.oe_kanban_global_click_edit').size()>0)
+        if (this.$el.find('.oe_kanban_global_click').size() > 0 && this.$el.find('.oe_kanban_global_click').data('routing')) {
+            instance.web.redirect(this.$el.find('.oe_kanban_global_click').data('routing') + "/" + this.id);
+        }
+        else if (this.$el.find('.oe_kanban_global_click_edit').size()>0)
             this.do_action_edit();
         else
             this.do_action_open();
@@ -1075,6 +1078,9 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         var button_attrs = $action.data();
         this.view.do_execute_action(button_attrs, this.view.dataset, this.id, this.do_reload);
     },
+    do_action_url: function($action) {
+        return instance.web.redirect($action.attr("href"));
+     },
     do_reload: function() {
         var self = this;
         this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).done(function(records) {

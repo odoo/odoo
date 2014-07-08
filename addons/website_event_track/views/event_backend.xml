@@ -18,7 +18,6 @@
             </field>
         </record>
 
-
         <!-- EVENTS/CONFIGURATION/EVENT locations -->
         <record model="ir.ui.view" id="view_event_location_form">
             <field name="name">Event Locations</field>
@@ -254,8 +253,17 @@
                                            <img t-attf-src="/web/static/src/img/icons/star-#{priority == 0 ? 'on' : 'off'}.png" width="16" height="16"/>
                                         </a>
                                     </span>
-                                    <div t-foreach="record.speaker_ids.raw_value.slice(0,11)" t-as="speaker">
-                                        <img t-att-src="kanban_image('res.partner', 'image_small', speaker)" t-att-data-speaker_id="speaker" class="oe_kanban_avatar oe_left" width="24px" height="24px"/>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <t t-foreach="record.speaker_ids.raw_value.slice(0,11)" t-as="speaker">
+                                                <img t-att-src="kanban_image('res.partner', 'image_small', speaker)" t-att-data-speaker_id="speaker" width="30px" height="30px"/>
+                                            </t>
+                                            <t t-if="record.speaker_ids.raw_value.length > 11 ">
+                                                <a name="open_track_speakers_list" type="object">
+                                                    <t t-esc="record.speaker_ids.raw_value.length - 11"> More</t>
+                                                </a>
+                                            </t>
+                                        </div>
                                     </div>
                                     <div class="oe_clear"/>
                                 </div>
@@ -368,7 +376,7 @@
         <record model="ir.actions.act_window" id="action_event_track">
             <field name="name">Event Tracks</field>
             <field name="res_model">event.track</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">kanban,tree,form,calendar</field>
         </record>
         <menuitem name="Event Tracks" id="menu_event_track" action="action_event_track" parent="event.event_configuration" groups="base.group_no_one"/>
 

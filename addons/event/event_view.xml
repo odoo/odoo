@@ -50,7 +50,6 @@
         <menuitem name="Events Types" id="menu_event_type" action="action_event_type" parent="event.event_configuration" groups="base.group_no_one"/>
 
         <!-- Events Organisation/CONFIGURATION/EVENTS -->
-
         <record model="ir.ui.view" id="view_event_form">
             <field name="name">Events</field>
             <field name="model">event.event</field>
@@ -159,7 +158,6 @@
         </record>
 
         <!-- Event tree view -->
-
         <record model="ir.ui.view" id="view_event_tree">
             <field name="name">event.event.tree</field>
             <field name="model">event.event</field>
@@ -179,76 +177,76 @@
             </field>
         </record>
 
-
         <!-- Event Kanban View -->
-
         <record model="ir.ui.view" id="view_event_kanban">
             <field name="name">event.event.kanban</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="type"/>
                     <field name="user_id"/>
-                    <field name="is_subscribed"/>
                     <field name="country_id"/>
                     <field name="date_begin"/>
-                    <field name="state"/>
-                    <field name="seats_max"/>
+                    <field name="date_end"/>
+                    <field name="seats_unconfirmed"/>
                     <field name="seats_reserved"/>
-                    <field name="seats_available"/>
+                    <field name="color"/>
                     <templates>
-                    <t t-name="kanban-box">
-                      <div class="oe_module_vignette">
-                        <a type="open" class="oe_module_icon">
-                            <div class="oe_event_date "><t t-esc="record.date_begin.raw_value.getDate()"/></div>
-                            <div class="oe_event_month_year">
-                                <t t-esc="record.date_begin.raw_value.toString('MMM')"/>
-                                <t t-esc="record.date_begin.raw_value.getFullYear()"/>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_event_kanban_view" >
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                            <li><a type="edit">Event Settings</a></li>
+                                        </t>
+                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                            <li><a type="delete">Delete</a></li>
+                                        </t>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_module_vignette row">
+                                    <div class="col-md-3">
+                                        <div class="oe_module_icon">
+                                            <div class="oe_event_date_thumb oe_event_date"><t t-esc="record.date_begin.raw_value.getDate()"/></div>
+                                            <div class="oe_event_date_thumb oe_event_month_year">
+                                                <t t-esc="record.date_begin.raw_value.toString('MMM')"/>
+                                                <t t-esc="record.date_begin.raw_value.getFullYear()"/>
+                                            </div>
+                                            <div class="oe_event_date_thumb oe_event_time"><t t-esc="record.date_begin.raw_value.toString('hh:mm tt')"/></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h4><field name="name"/></h4>
+                                        <div>
+                                            <small>
+                                                <t t-if="record.country_id.raw_value"> <b> <field name="country_id"/> </b> <br/> </t>
+                                                <i class="fa fa-clock-o" t-att-title="record.date_begin.raw_value.toString('hh:mm tt')"/>
+                                                <b>From</b> <t t-esc="record.date_begin.raw_value.toString('MM/dd/yyyy')"/>
+                                                <b>To</b> <t t-esc="record.date_end.raw_value.toString('MM/dd/yyyy')"/>
+                                            </small>
+                                        </div>
+                                        <h4>
+                                            <a name="%(act_event_list_register_event)d" type="action">
+                                                <t t-esc="record.seats_reserved.raw_value" > Attendees</t>
+                                                <t t-if="(record.seats_reserved.raw_value + record.seats_unconfirmed.raw_value) > 0 ">&#47;
+                                                    <t t-esc="record.seats_reserved.raw_value + record.seats_unconfirmed.raw_value"/> Expected
+                                                </t>
+                                            </a>
+                                            <t t-if="record.seats_reserved.raw_value > 0">
+                                                <a name="action_event_registration_report" type="object" >&#40;Report&#41;</a>
+                                            </t>
+                                        </h4>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="oe_event_time"><t t-esc="record.date_begin.raw_value.toString('hh:mm tt')"/></div>
-                        </a>
-                        <div class="oe_module_desc">
-                            <h4><a type="open"><field name="name"/></a></h4>
-                            <p>
-                              <t t-if="record.country_id.raw_value">@<field name="country_id"/><br/></t>
-                              <t t-if="record.user_id.raw_value">Organized by <field name="user_id"/><br/></t>
-                              <t t-if="record.seats_available.raw_value lte 10 and record.seats_available.raw_value gt 0"><i>Only</i></t>
-                              <t t-if="!record.seats_max.raw_value"><i>No ticket available.</i></t>
-                              <t t-if="record.seats_max.raw_value">
-                                <i t-if="record.seats_available.raw_value">
-                                    <b><field name="seats_available"/></b>
-                                    <t t-if="record.seats_available.raw_value > 1">tickets </t>
-                                    <t t-if="record.seats_available.raw_value lte 1">ticket </t>
-                                    available.
-                                </i>
-                              </t>
-                            </p>
-                            <div groups="base.group_user,base.group_portal">
-                                <t t-if="record.seats_available.raw_value gt 0 and record.seats_max.raw_value">
-                                  <t t-if="!record.is_subscribed.raw_value">
-                                    <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" value="1" onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}))"/>
-                                    <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="oe_subscribe_button">
-                                        <span >Subscribe</span>
-                                    </button>
-                                  </t>
-                                </t>
-                                <t t-if="record.is_subscribed.raw_value">
-                                  <button type="object" name="unsubscribe_to_event" class="oe_unsubscribe_button ">
-                                    <span>Subscribed</span>
-                                    <span class="oe_unsubscribe">Unsubscribe</span>
-                                  </button>
-                                </t>
-                            </div>
-                        </div>
-                      </div>
-                    </t>
+                        </t>
                     </templates>
                 </kanban>
             </field>
         </record>
 
         <!-- Events  Calendar  View -->
-
         <record id="view_event_calendar" model="ir.ui.view">
             <field name="name">event.event.calendar</field>
             <field name="model">event.event</field>
@@ -262,7 +260,6 @@
         </record>
 
         <!-- Event Search View -->
-
         <record model="ir.ui.view" id="view_event_search">
             <field name="name">Events</field>
             <field name="model">event.event</field>

@@ -18,12 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from datetime import timedelta
 
+import datetime
 import pytz
 
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
+
 
 class event_type(models.Model):
     """ Event Type """
@@ -55,6 +56,7 @@ class event_event(models.Model):
         readonly=False, states={'done': [('readonly', True)]})
     type = fields.Many2one('event.type', string='Type of Event',
         readonly=False, states={'done': [('readonly', True)]})
+    color = fields.Integer('Kanban Color Index')
     seats_max = fields.Integer(string='Maximum Available Seats', oldname='register_max',
         readonly=True, states={'draft': [('readonly', False)]},
         help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )")
@@ -252,7 +254,7 @@ class event_event(models.Model):
             regs = regs.sudo().create({
                 'event_id': self.id,
                 'email': user.email,
-                'name':user.name,
+                'name': user.name,
                 'user_id': user.id,
                 'nb_register': num_of_seats,
             })
@@ -277,6 +279,16 @@ class event_event(models.Model):
             self.email_confirmation_id = self.type.default_email_event
             self.seats_min = self.type.default_registration_min
             self.seats_max = self.type.default_registration_max
+
+    @api.multi
+    def action_event_registration_report(self):
+        res = self.env['ir.actions.act_window'].for_xml_id('event', 'action_report_event_registration')
+        res['context'] = {
+            "search_default_event_id": self.id,
+            "group_by": ['event_date:day'],
+        }
+        return res
+
 
 class event_registration(models.Model):
     _name = 'event.registration'
@@ -373,8 +385,9 @@ class event_registration(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner(self):
         if self.partner_id:
-            contact = self.partner_id.address_get().get('default', False)
-            if contact:
+            contact_id = self.partner_id.address_get().get('default', False)
+            if contact_id:
+                contact = self.env['res.partner'].browse(contact_id)
                 self.name = contact.name
                 self.email = contact.email
                 self.phone = contact.phone

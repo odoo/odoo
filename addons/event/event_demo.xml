@@ -108,7 +108,7 @@
     </record>
     
     <record id="event_2" model="event.event">
-        <field name="name">Conference on Business Applications</field>
+        <field name="name">Conference on Business Apps</field>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 7:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
         <field name="type" ref="event_type_2"/>
@@ -116,7 +116,7 @@
         <field name="seats_max">200</field>
         <field name="description"><![CDATA[
 <div class="oe_structure">
-    <center><strong>Conference on Business Applications</strong></center>
+    <center><strong>Conference on Business Apps</strong></center>
     <p>&nbsp;</p>
     <p> During this conference, our team will give a detailed overview of our business applications. You’ll know all the benefits of using it.</p>
     <p>&nbsp;</p>
