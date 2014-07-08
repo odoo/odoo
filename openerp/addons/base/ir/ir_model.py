@@ -151,7 +151,7 @@ class ir_model(osv.osv):
             if result and result[0] == 'v':
                 cr.execute('DROP view %s' % (model_pool._table,))
             elif result and result[0] == 'r':
-                cr.execute('DROP TABLE %s' % (model_pool._table,))
+                cr.execute('DROP TABLE %s CASCADE' % (model_pool._table,))
         return True
 
     def unlink(self, cr, user, ids, context=None):
