@@ -832,10 +832,13 @@ class Field(object):
             computed = target.browse(env.computed[field])
             if path == 'id':
                 target = records - computed
+            elif path:
+                target = (target.browse(env.cache[field]) - computed).filtered(
+                    lambda rec: rec._mapped_cache(path) & records
+                )
             else:
                 target = target.browse(env.cache[field]) - computed
-                if path:
-                    target = target.filtered(lambda rec: rec._mapped_cache(path) & records)
+
             if target:
                 spec.append((field, target._ids))
 
