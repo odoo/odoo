@@ -193,6 +193,7 @@
         <record id="variants_template_tree_view" model="ir.ui.view">
             <field name="name">variants.template.tree</field>
             <field name="model">product.attribute.value</field>
+            <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <tree string="Variant Values" editable="top">
                     <field name="sequence" widget="handle"/>
@@ -214,7 +215,7 @@
 
         <!-- product product -->
 
-        <menuitem id="prod_config_main" name="Product Variants" parent="base.menu_base_config" sequence="70" groups="base.group_no_one"/>
+        <menuitem id="prod_config_main" name="Product Categories &amp; Attributes" parent="base.menu_base_config" sequence="70" groups="base.group_no_one"/>
 
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.product.search</field>
@@ -382,6 +383,54 @@
                 </h4>
             </field>
         </record>
+
+        <!--  -->
+
+        <record id="attribute_tree_view" model="ir.ui.view">
+            <field name="name">product.attribute.tree</field>
+            <field name="model">product.attribute</field>
+            <field name="arch" type="xml">
+                <tree string="Variant Values" editable="top">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="attribute_action" model="ir.actions.act_window">
+            <field name="name">Attributes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.attribute</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <menuitem action="attribute_action"
+            id="menu_attribute_action"
+            parent="product.prod_config_main" sequence="9" />
+
+        <record id="variants_tree_view" model="ir.ui.view">
+            <field name="name">product.attribute.value.tree</field>
+            <field name="model">product.attribute.value</field>
+            <field name="arch" type="xml">
+                <tree string="Variant Values" editable="top">
+                    <field name="sequence" widget="handle"/>
+                    <field name="attribute_id"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="variants_action" model="ir.actions.act_window">
+            <field name="name">Attribute Values</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.attribute.value</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <menuitem action="variants_action"
+            id="menu_variants_action"
+            parent="product.prod_config_main" sequence="10" />
 
         <!--  -->
 
