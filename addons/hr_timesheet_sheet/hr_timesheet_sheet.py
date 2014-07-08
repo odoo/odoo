@@ -532,6 +532,11 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
         'total_attendance': fields.float('Attendance', readonly=True),
         'total_difference': fields.float('Difference', readonly=True),
     }
+    _depends = {
+        'account.analytic.line': ['date', 'unit_amount'],
+        'hr.analytic.timesheet': ['line_id', 'sheet_id'],
+        'hr.attendance': ['action', 'name', 'sheet_id'],
+    }
 
     def init(self, cr):
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_day as
@@ -601,6 +606,12 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
         'total': fields.float('Total Time', digits=(16,2), readonly=True),
         'invoice_rate': fields.many2one('hr_timesheet_invoice.factor', 'Invoice rate', readonly=True),
         }
+
+    _depends = {
+        'account.analytic.line': ['account_id', 'date', 'to_invoice', 'unit_amount', 'user_id'],
+        'hr.analytic.timesheet': ['line_id'],
+        'hr_timesheet_sheet.sheet': ['date_from', 'date_to', 'user_id'],
+    }
 
     def init(self, cr):
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_account as (
