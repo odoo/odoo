@@ -209,9 +209,9 @@ class purchase_order(osv.osv):
                                         "It's mainly used to do the matching when you receive the "
                                         "products as this reference is usually written on the "
                                         "delivery order sent by your supplier."),
-        'date_order':fields.date('Order Date', required=True, states={'confirmed':[('readonly',True)],
+        'date_order':fields.datetime('Order Date', required=True, states={'confirmed':[('readonly',True)],
                                                                       'approved':[('readonly',True)]},
-                                 select=True, help="Date on which this document has been created.",
+                                 select=True, help="Depicts the date where the Quotation should be validated and converted into a Purchase Order, by default it's the creation date.",
                                  copy=False),
         'date_approve':fields.date('Date Approved', readonly=1, select=True, copy=False,
                                    help="Date on which purchase order has been approved"),
@@ -290,7 +290,7 @@ class purchase_order(osv.osv):
         'invoice_count': fields.function(_count_all, type='integer', string='Invoices', multi=True)
     }
     _defaults = {
-        'date_order': fields.date.context_today,
+        'date_order': fields.datetime.now,
         'state': 'draft',
         'name': lambda obj, cr, uid, context: '/',
         'shipped': 0,
@@ -710,7 +710,7 @@ class purchase_order(osv.osv):
             'product_id': order_line.product_id.id,
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
-            'date': fields.date.date_to_datetime(self, cr, uid, order.date_order, context),
+            'date': order.date_order,
             'date_expected': fields.date.date_to_datetime(self, cr, uid, order_line.date_planned, context),
             'location_id': order.partner_id.property_stock_supplier.id,
             'location_dest_id': order.location_id.id,
@@ -980,8 +980,8 @@ class purchase_order_line(osv.osv):
                                           'order_line_id', 'invoice_id', 'Invoice Lines',
                                           readonly=True, copy=False),
         'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),
-        'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
-        'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date"),
+        'partner_id': fields.related('order_id', 'partner_id', string='Partner', readonly=True, type="many2one", relation="res.partner", store=True),
+        'date_order': fields.related('order_id', 'date_order', string='Order Date', readonly=True, type="datetime"),
         'procurement_ids': fields.one2many('procurement.order', 'purchase_line_id', string='Associated procurements'),
     }
     _defaults = {
@@ -1026,13 +1026,13 @@ class purchase_order_line(osv.osv):
 
            :param browse_record | False supplier_info: product.supplierinfo, used to
                determine delivery delay (if False, default delay = 0)
-           :param str date_order_str: date of order, as a string in
-               DEFAULT_SERVER_DATE_FORMAT
+           :param str date_order_str: date of order field, as a string in
+               DEFAULT_SERVER_DATETIME_FORMAT
            :rtype: datetime
            :return: desired Schedule Date for the PO line
         """
         supplier_delay = int(supplier_info.delay) if supplier_info else 0
-        return datetime.strptime(date_order_str, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=supplier_delay)
+        return datetime.strptime(date_order_str, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=supplier_delay)
 
     def action_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
@@ -1101,7 +1101,7 @@ class purchase_order_line(osv.osv):
 
         # - determine product_qty and date_planned based on seller info
         if not date_order:
-            date_order = fields.date.context_today(self,cr,uid,context=context)
+            date_order = fields.datetime.now()
 
 
         supplierinfo = False
@@ -1125,8 +1125,9 @@ class purchase_order_line(osv.osv):
         if state not in ('sent','bid'):
             # - determine price_unit and taxes_id
             if pricelist_id:
+                date_order_str = datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT)
                 price = product_pricelist.price_get(cr, uid, [pricelist_id],
-                        product.id, qty or 1.0, partner_id or False, {'uom': uom_id, 'date': date_order})[pricelist_id]
+                        product.id, qty or 1.0, partner_id or False, {'uom': uom_id, 'date': date_order_str})[pricelist_id]
             else:
                 price = product.standard_price
 
@@ -1320,8 +1321,8 @@ class procurement_order(osv.osv):
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
                     #if the product has to be ordered earlier those in the existing PO, we replace the purchase date on the order to avoid ordering it too late
-                    if datetime.strptime(po_rec.date_order, DEFAULT_SERVER_DATE_FORMAT) > purchase_date:
-                        po_obj.write(cr, uid, [po_id], {'date_order': purchase_date}, context=context)
+                    if datetime.strptime(po_rec.date_order, DEFAULT_SERVER_DATETIME_FORMAT) > purchase_date:
+                        po_obj.write(cr, uid, [po_id], {'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
                     #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
                     available_po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', po_id), ('product_id', '=', line_vals['product_id']), ('product_uom', '=', line_vals['product_uom'])], context=context)
                     if available_po_line_ids:
