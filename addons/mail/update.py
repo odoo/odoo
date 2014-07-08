@@ -59,7 +59,7 @@ def get_sys_logs(self, cr, uid):
 
     add_arg = {"timeout":30} if sys.version_info >= (2,6) else {}
     arguments = {'arg0': msg, "action": "update",}
-    arguments_raw = werkzeug.url_encode(arguments)
+    arguments_raw = werkzeug.urls.url_encode(arguments)
 
     url = config.get("publisher_warranty_url")
 

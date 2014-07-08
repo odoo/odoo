@@ -67,24 +67,30 @@ class Crawler(openerp.tests.HttpCase):
 
     def test_10_crawl_public(self):
         t0 = time.time()
+        t0_sql = self.registry.test_cr.sql_log_count
         seen = self.crawl('/', msg='Anonymous Coward')
         count = len(seen)
         duration = time.time() - t0
-        _logger.log(25, "public crawled %s urls in %.2fs, %.3fs per query", count, duration, duration/count)
+        sql = self.registry.test_cr.sql_log_count - t0_sql
+        _logger.log(25, "public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration/count, float(sql)/count)
 
     def test_20_crawl_demo(self):
         t0 = time.time()
+        t0_sql = self.registry.test_cr.sql_log_count
         self.authenticate('demo', 'demo')
         seen = self.crawl('/', msg='demo')
         count = len(seen)
         duration = time.time() - t0
-        _logger.log(25, "demo crawled %s urls in %.2fs, %.3fs per query", count, duration, duration/count)
+        sql = self.registry.test_cr.sql_log_count - t0_sql
+        _logger.log(25, "demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration/count, float(sql)/count)
 
     def test_30_crawl_admin(self):
         t0 = time.time()
+        t0_sql = self.registry.test_cr.sql_log_count
         self.authenticate('admin', 'admin')
         seen = self.crawl('/', msg='admin')
         count = len(seen)
         duration = time.time() - t0
-        _logger.log(25, "admin crawled %s urls in %.2fs, %.3fs per query", count, duration, duration/count)
+        sql = self.registry.test_cr.sql_log_count - t0_sql
+        _logger.log(25, "admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration/count, float(sql)/count)
 

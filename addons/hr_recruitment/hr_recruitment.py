@@ -324,7 +324,7 @@ class hr_applicant(osv.Model):
         return res
 
     def action_start_survey(self, cr, uid, ids, context=None):
-        context = context if context else {}
+        context = dict(context or {})
         applicant = self.browse(cr, uid, ids, context=context)[0]
         survey_obj = self.pool.get('survey.survey')
         response_obj = self.pool.get('survey.user_input')
@@ -341,7 +341,7 @@ class hr_applicant(osv.Model):
 
     def action_print_survey(self, cr, uid, ids, context=None):
         """ If response is available then print this response otherwise print survey form (print template of the survey) """
-        context = context if context else {}
+        context = dict(context or {})
         applicant = self.browse(cr, uid, ids, context=context)[0]
         survey_obj = self.pool.get('survey.survey')
         response_obj = self.pool.get('survey.user_input')
@@ -397,8 +397,7 @@ class hr_applicant(osv.Model):
         return super(hr_applicant, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         context['mail_create_nolog'] = True
         if vals.get('department_id') and not context.get('default_department_id'):
             context['default_department_id'] = vals.get('department_id')
@@ -500,13 +499,14 @@ class hr_applicant(osv.Model):
                 raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
-        dict_act_window = act_window.read(cr, uid, action_id, [])
+        dict_act_window = act_window.read(cr, uid, [action_id], [])[0]
         if emp_id:
             dict_act_window['res_id'] = emp_id
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
 
     def get_empty_list_help(self, cr, uid, help, context=None):
+        context = dict(context or {})
         context['empty_list_help_model'] = 'hr.job'
         context['empty_list_help_id'] = context.get('default_job_id', None)
         context['empty_list_help_document_name'] = _("job applicants")

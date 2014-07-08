@@ -12,6 +12,29 @@
          </field>
     </record>
 
+    <!-- Custom reports (aka filters) -->
+    <record id="filter_recruitment_report_recruiter" model="ir.filters">
+        <field name="name">By Recruiter</field>
+        <field name="model_id">hr.recruitment.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date_create:month', 'user_id']}</field>
+    </record>
+    <record id="filter_recruitment_report_job" model="ir.filters">
+        <field name="name">By Job</field>
+        <field name="model_id">hr.recruitment.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date_create:month', 'job_id']}</field>
+    </record>
+    <record id="filter_recruitment_report_departmnet" model="ir.filters">
+        <field name="name">By Department</field>
+        <field name="model_id">hr.recruitment.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date_create:month', 'department_id']}</field>
+    </record>
+
     <record id="view_hr_recruitment_report_search" model="ir.ui.view">
         <field name="name">hr.recruitment.report.search</field>
         <field name="model">hr.recruitment.report</field>
@@ -20,19 +43,21 @@
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
-                <filter string="New" domain="[('sequence', '=', 1)]"/>
+                <filter string="This Year" name="year" domain="[('date_create','&lt;=', time.strftime('%%Y-12-31')),('date_create','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <separator/>
                 <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="My" domain="[('user_id', '=', uid)]"/>
                 <separator/>
-                <group expand="0" string="Extended Filters...">
+                <filter string="New" domain="[('sequence', '=', 1)]"/>
+                <separator/>
+                <group expand="0" string="Extended Filters">
                     <field name="priority"/>
                     <field name="stage_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="date_create"/>
                     <field name="date_closed"/>
                 </group>
-                <group expand="1" string="Group By ...">
+                <group expand="1" string="Group By">
                    <filter string="Responsible" name='User' context="{'group_by':'user_id'}"/>
                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                    <filter string="Partner" context="{'group_by':'partner_id'}" />
@@ -56,7 +81,7 @@
         <field name="res_model">hr.recruitment.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph</field>
-        <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_year': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
     <menuitem action="action_hr_recruitment_report_all" id="menu_hr_recruitment_report_all" parent="hr.menu_hr_reporting" sequence="0"/>

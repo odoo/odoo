@@ -17,7 +17,7 @@ class hr_job(osv.osv):
         return super(hr_job, self).job_open(cr, uid, ids, context)
 
     _columns = {
-        'website_published': fields.boolean('Published'),
+        'website_published': fields.boolean('Published', copy=False),
         'website_description': fields.html('Website description'),
         'website_url': fields.function(_website_url, string="Website URL", type="char"),
     }

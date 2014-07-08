@@ -79,7 +79,7 @@
 -
   !python {model: purchase.order}: |
     purchase = self.browse(cr, uid, ref('rfq2'), context=context)
-    self.signal_purchase_confirm(cr, uid, [purchase.id])
+    purchase.signal_workflow('purchase_confirm')
 
 -
   I check status of requisition after confirmed best RFQ.

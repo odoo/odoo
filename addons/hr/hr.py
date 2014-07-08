@@ -110,8 +110,10 @@ class hr_job(osv.Model):
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             }, type='integer',
             multi='_get_nbr_employees'),
-        'no_of_recruitment': fields.integer('Expected New Employees', help='Number of new employees you expect to recruit.'),
-        'no_of_hired_employee': fields.integer('Hired Employees', help='Number of hired employees for this job position during recruitment phase.'),
+        'no_of_recruitment': fields.integer('Expected New Employees', copy=False,
+                                            help='Number of new employees you expect to recruit.'),
+        'no_of_hired_employee': fields.integer('Hired Employees', copy=False,
+                                               help='Number of hired employees for this job position during recruitment phase.'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
@@ -119,7 +121,7 @@ class hr_job(osv.Model):
         'company_id': fields.many2one('res.company', 'Company'),
         'state': fields.selection([('open', 'Recruitment Closed'), ('recruit', 'Recruitment in Progress')],
                                   string='Status', readonly=True, required=True,
-                                  track_visibility='always',
+                                  track_visibility='always', copy=False,
                                   help="By default 'Closed', set it to 'In Recruitment' if recruitment process is going on for this job position."),
         'write_date': fields.datetime('Update Date', readonly=True),
     }
@@ -151,12 +153,7 @@ class hr_job(osv.Model):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default.update({
-            'employee_ids': [],
-            'no_of_recruitment': 0,
-            'no_of_hired_employee': 0,
-        })
-        if 'name' in default:
+        if 'name' not in default:
             job = self.browse(cr, uid, id, context=context)
             default['name'] = _("%s (copy)") % (job.name)
         return super(hr_job, self).copy(cr, uid, id, default=default, context=context)
@@ -248,13 +245,7 @@ class hr_employee(osv.osv):
         'image': _get_default_image,
         'color': 0,
     }
-    
-    def copy_data(self, cr, uid, ids, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({'child_ids': False})
-        return super(hr_employee, self).copy_data(cr, uid, ids, default, context=context)
-        
+
     def _broadcast_welcome(self, cr, uid, employee_id, context=None):
         """ Broadcast the welcome message to all users in the employee company. """
         employee = self.browse(cr, uid, employee_id, context=context)
@@ -286,8 +277,7 @@ class hr_employee(osv.osv):
         return True
 
     def create(self, cr, uid, data, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         if context.get("mail_broadcast"):
             context['mail_create_nolog'] = True
 
@@ -429,23 +419,10 @@ class hr_department(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def copy_data(self, cr, uid, ids, default=None, context=None):
-        if default is None:
-            default = {}
-        default['member_ids'] = []
-        return super(hr_department, self).copy_data(cr, uid, ids, default, context=context)
-
 
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
-
-    def copy_data(self, cr, uid, ids, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({'employee_ids': False})
-        return super(res_users, self).copy_data(cr, uid, ids, default, context=context)
-    
     _columns = {
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
     }

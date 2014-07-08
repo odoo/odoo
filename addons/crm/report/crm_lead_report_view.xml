@@ -2,8 +2,7 @@
 <openerp>
     <data>
 
-<!-- Leads by user and section Graph View -->
-
+        <!-- Leads by user and section Graph View -->
         <record id="view_report_crm_lead_graph" model="ir.ui.view">
             <field name="name">crm.lead.report.graph</field>
             <field name="model">crm.lead.report</field>
@@ -38,8 +37,23 @@
             </field>
         </record>
 
-<!-- Leads by user and section Search View -->
+        <!-- Custom reports (aka filters) -->
+        <record id="filter_leads_salesperson" model="ir.filters">
+            <field name="name">By Salespersons</field>
+            <field name="model_id">crm.lead.report</field>
+            <field name="domain">[]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['create_date:month', user_id']}</field>
+        </record>
+        <record id="filter_leads_country" model="ir.filters">
+            <field name="name">By Country</field>
+            <field name="model_id">crm.lead.report</field>
+            <field name="domain">[]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['create_date:month', 'country_id']}</field>
+        </record>
 
+        <!-- Leads by user and section Search View -->
         <record id="view_report_crm_lead_filter" model="ir.ui.view">
             <field name="name">crm.lead.report.select</field>
             <field name="model">crm.lead.report</field>
@@ -54,15 +68,10 @@
                             domain="[('probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
                     <filter string="Lost" name="lost"
                             domain="[('probability', '=', 0), ('stage_id.sequence', '!=', 1)]"/>
-                    <separator/>
-                    <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]"
-                            help="Leads/Opportunities that are assigned to one of the sale teams I manage" groups="base.group_multi_salesteams"/>
-                    <separator/>
-                    <filter icon="terp-personal" string="My Case(s)" help="Leads/Opportunities that are assigned to me" domain="[('user_id','=',uid)]"/>
                     <field name="section_id" context="{'invisible_section': False}"
                             groups="base.group_multi_salesteams"/>
                     <field name="user_id" string="Salesperson"/>
-                    <group expand="0" string="Extended Filters...">
+                    <group expand="0" string="Extended Filters">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="stage_id" domain="[('section_ids', '=', 'section_id')]" />
                         <field name="type_id"/>
@@ -80,24 +89,21 @@
                         <field name="date_closed"/>
                     </group>
                     <group expand="1" string="Group By">
-                        <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
-                        <filter string="Partner" context="{'group_by':'partner_id'}" />
-                        <filter string="Country" context="{'group_by':'country_id'}" />
-                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
-                        <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Priority" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}" />
-                        <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}" />
-                        <separator orientation="vertical" />
-                        <filter string="Creation date (day)" domain="[]" context="{'group_by':'create_date:day'}"/>
-                        <filter string="Creation date (week)" domain="[]" context="{'group_by':'create_date:week'}"/>
-                        <filter string="Creation date (month)" domain="[]" context="{'group_by':'create_date:month'}" name="month"/>
-                        <filter string="Creation date (year)" domain="[]" context="{'group_by':'create_date:year'}"/>
-                        <separator orientation="vertical" />
-                        <filter string="Exp. Closing" domain="[]" context="{'group_by':'date_deadline'}"/>
-                        <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}" />
+                        <filter string="Salesperson" name="user" icon="terp-personal"
+                            domain="[]" context="{'group_by':'user_id'}" />
+                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_assigned_id'}" />
+                        <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
+                        <filter string="Sales Team" icon="terp-personal+"
+                                domain="[]"
+                                context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Grade" name="group_grade" icon="terp-stock_symbol-selection"
+                                domain="[]" context="{'group_by':'grade_id'}" />
+                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" />
+                        <filter string="Assign Date (day)" icon="terp-go-today" domain="[]" context="{'group_by':'date_assign:day'}"/>
+                        <filter string="Assign Date (month)" icon="terp-go-month" domain="[]" context="{'group_by':'date_assign:month'}"/>
+                        <filter string="Assign Date (year)" icon="terp-go-year" domain="[]" context="{'group_by':'date_assign:year'}"/>
                     </group>
                 </search>
             </field>

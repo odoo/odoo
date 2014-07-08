@@ -61,7 +61,7 @@ class BlogPost(osv.Model):
         'content': fields.html('Content', translate=True),
         # website control
         'website_published': fields.boolean(
-            'Publish', help="Publish on the website"
+            'Publish', help="Publish on the website", copy=False,
         ),
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
@@ -183,17 +183,6 @@ class BlogPost(osv.Model):
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
         return result
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({
-            'website_message_ids': [],
-            'website_published': False,
-            'website_published_datetime': False,
-        })
-        return super(BlogPost, self).copy(cr, uid, id, default=default, context=context)
-
 
 class BlogPostHistory(osv.Model):
     _name = "blog.post.history"

@@ -26,7 +26,7 @@
                 <filter icon="terp-gtk-jump-to-rtl" string="Orders" name="orders" domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
-                <group expand="0" string="Extended Filters...">
+                <group expand="0" string="Extended Filters">
                     <field name="user_id"/>
                     <field name="validator"/>
                     <field name="location_id"/>
@@ -36,7 +36,6 @@
                     <field name="date_approve"/>
                     <field name="expected_date"/>
                 </group>
-                <newline/>
                 <group expand="1" string="Group By">
                     <filter string="Supplier" name="group_partner_id" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <filter string="Responsible" name="Responsible" icon="terp-personal" context="{'group_by':'user_id'}"/>

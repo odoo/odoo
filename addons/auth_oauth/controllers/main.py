@@ -49,7 +49,8 @@ class OAuthLogin(Home):
     def list_providers(self):
         try:
             provider_obj = request.registry.get('auth.oauth.provider')
-            providers = provider_obj.search_read(request.cr, SUPERUSER_ID, [('enabled', '=', True)])
+            providers = provider_obj.search_read(request.cr, SUPERUSER_ID, [('enabled', '=', True), ('auth_endpoint', '!=', False), ('validation_endpoint', '!=', False)])
+            # TODO in forwardport: remove conditions on 'auth_endpoint' and 'validation_endpoint' when these fields will be 'required' in model
         except Exception:
             providers = []
         for provider in providers:

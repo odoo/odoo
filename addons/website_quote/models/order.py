@@ -32,9 +32,9 @@ class sale_quote_template(osv.osv):
     _columns = {
         'name': fields.char('Quotation Template', required=True),
         'website_description': fields.html('Description', translate=True),
-        'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
+        'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines', copy=True),
         'note': fields.text('Terms and conditions'),
-        'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines'),
+        'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True),
         'number_of_days': fields.integer('Quote Duration', help='Number of days for the validaty date computation of the quotation'),
     }
     def open_template(self, cr, uid, quote_id, context=None):
@@ -110,7 +110,7 @@ class sale_order(osv.osv):
         return res
 
     _columns = {
-        'access_token': fields.char('Security Token', required=True),
+        'access_token': fields.char('Security Token', required=True, copy=False),
         'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
         'website_description': fields.html('Description'),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),

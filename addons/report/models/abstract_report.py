@@ -29,8 +29,7 @@ class AbstractReport(osv.AbstractModel):
     _wrapped_report_class = None
 
     def render_html(self, cr, uid, ids, data=None, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         # If the key 'landscape' is present in data['form'], passing it into the context
         if data and data.get('form', {}).get('landscape'):

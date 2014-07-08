@@ -142,24 +142,23 @@
                     <field name="name" string="Issue" filter_domain="['|', '|', '|', ('partner_id','child_of',self), ('description','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="id"/>
                     <field name="partner_id" operator="child_of"/>
-                    <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
-                    <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
-                    <separator/>
-                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
-                    <separator/>
                     <field name="user_id"/>
                     <field name="project_id"/>
                     <field name="categ_ids"/>
                     <field name="stage_id" domain="[]"/>
+                    <filter string="My Issues" domain="[('user_id','=',uid)]"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                    <separator/>
+                    <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
+                    <separator/>
+                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By" >
                         <filter string="Responsible" name="group_user_id" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Contact" name="group_partner_id" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Version" name="group_version" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'version_id'}"/>
-                        <filter string="Priority" name="group_priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}"/>
                         <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Creation Month" name="group_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
-                        <filter string="Last Post (weekly)" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
+                        <filter string="Last Message" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
                     </group>
                 </search>
             </field>
@@ -315,9 +314,7 @@
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
                     <a t-if="record.use_issues.raw_value" style="margin-right: 10px"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
-                        <t t-raw="record.issue_ids.raw_value.length"/>
-                        <span t-if="record.issue_ids.raw_value.length == 1">Issue</span>
-                        <span t-if="record.issue_ids.raw_value.length > 1">Issues</span>
+                        <t t-raw="record.issue_ids.raw_value.length"/> Issues
                     </a>
                 </xpath>
             </field>

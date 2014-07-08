@@ -193,14 +193,13 @@
         <field name="arch" type="xml">
             <search string="Search Applicants">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-                <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="My" domain="[('user_id', '=', uid)]"/>
-                <separator/>
-                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>
                 <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
-
+                <separator/>
+                <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
@@ -210,15 +209,9 @@
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
-                    <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
                     <filter string="Degree" domain="[]" context="{'group_by':'type_id'}"/>
-                    <filter string="Availability" domain="[]" context="{'group_by':'availability'}"/>
-                    <filter string="Appreciation" domain="[]" context="{'group_by':'priority'}"/>
-                    <filter string="Last Stage" help="Match this group by with a specific stage filter in order to analyse the recruitment process" context="{'group_by':'last_stage_id'}"/>
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
-                    <filter string="Creation Month" domain="[]" context="{'group_by':'create_date'}"/>
                     <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}"/>
                 </group>
            </search>
@@ -399,6 +392,8 @@
             <field name="arch" type="xml">
                 <kanban class="oe_background_grey">
                     <field name="name"/>
+                    <field name="alias_name"/>
+                    <field name="alias_domain"/>
                     <field name="department_id"/>
                     <field name="no_of_recruitment"/>
                     <field name="color"/>
@@ -424,7 +419,7 @@
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
-                                <div class = "oe_kanban_content">
+                                <div class="oe_kanban_content">
                                     <t t-if="record.user_id.raw_value">
                                         <img t-att-src="kanban_image('res.users', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar"/>
                                     </t>
@@ -432,25 +427,24 @@
                                         <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
                                     </t>
                                     <div class="oe_job_detail">
-                                        <div class="oe_job oe_name oe_kanban_ellipsis">
+                                        <div class="text-center oe_job oe_name oe_kanban_ellipsis">
                                             <field name="name"/>
                                         </div>
-                                        <div class="oe_job oe_department oe_kanban_ellipsis">
-                                            <field name="department_id"/>
+                                        <div class="text-center oe_job oe_department oe_kanban_ellipsis">
+                                            <strong><field name="department_id"/>
                                             <span t-if="record.manager_id.value" class="oe_manager_name">
                                                 (<t t-esc="record.manager_id.value"/>)
-                                            </span>
+                                            </span></strong>
                                         </div>
-                                        <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value and record.state.raw_value == 'recruit'">
-                                            <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                        <div class="text-center oe_job_alias oe_kanban_ellipsis" t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'">
+                                            <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
                                         </div>
 
                                     </div>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
                                             <a name="%(action_hr_job_applications)d" type="action">
-                                                <span t-if="record.application_ids.raw_value.length gt 1"><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
-                                                <span t-if="record.application_ids.raw_value.length lt 2"><t t-esc="record.application_ids.raw_value.length"/> Application</span>
+                                                <span><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
                                             </a>
                                             <br/>
                                             <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
@@ -460,7 +454,7 @@
                                         </div>
                                         <div class="oe_job_justgage">
                                             <field state="recruit" name="no_of_hired_employee" widget="gauge"
-                                                style="width:160px; height: 120px;"
+                                                style="margin-top:7px; width:160px; height: 120px;"
                                                 options="{
                                                     'max_field': 'no_of_recruitment',
                                                     'label': 'Hired Employees',

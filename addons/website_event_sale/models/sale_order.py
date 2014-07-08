@@ -30,7 +30,7 @@ class sale_order(osv.Model):
         else:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             if product.event_ticket_ids:
-                event_ticket_id = product.event_ticket_ids[0]
+                event_ticket_id = product.event_ticket_ids[0].id
 
         if event_ticket_id:
             ticket = self.pool.get('event.event.ticket').browse(cr, uid, event_ticket_id, context=context)

@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import cgi
-from xml.dom import minidom as dom
+
+from lxml import etree
 
 from openerp.tests import common
 from openerp.addons.base.ir import ir_qweb
-
-impl = dom.getDOMImplementation()
-document = impl.createDocument(None, None, None)
 
 class TestQWebTField(common.TransactionCase):
     def setUp(self):
@@ -18,8 +16,7 @@ class TestQWebTField(common.TransactionCase):
             self.cr, self.uid, values, context={'inherit_branding': True})
 
     def test_trivial(self):
-        field = document.createElement('span')
-        field.setAttribute('t-field', u'company.name')
+        field = etree.Element('span', {'t-field': u'company.name'})
 
         Companies = self.registry('res.company')
         company_id = Companies.create(self.cr, self.uid, {
@@ -38,8 +35,7 @@ class TestQWebTField(common.TransactionCase):
                 "My Test Company",))
 
     def test_i18n(self):
-        field = document.createElement('span')
-        field.setAttribute('t-field', u'company.name')
+        field = etree.Element('span', {'t-field': u'company.name'})
 
         Companies = self.registry('res.company')
         s = u"Testing «ταБЬℓσ»: 1<2 & 4+1>3, now 20% off!"
@@ -59,8 +55,7 @@ class TestQWebTField(common.TransactionCase):
                 cgi.escape(s.encode('utf-8')),))
 
     def test_reject_crummy_tags(self):
-        field = document.createElement('td')
-        field.setAttribute('t-field', u'company.name')
+        field = etree.Element('td', {'t-field': u'company.name'})
 
         with self.assertRaisesRegexp(
                 AssertionError,
@@ -70,8 +65,7 @@ class TestQWebTField(common.TransactionCase):
             }))
 
     def test_reject_t_tag(self):
-        field = document.createElement('t')
-        field.setAttribute('t-field', u'company.name')
+        field = etree.Element('t', {'t-field': u'company.name'})
 
         with self.assertRaisesRegexp(
                 AssertionError,

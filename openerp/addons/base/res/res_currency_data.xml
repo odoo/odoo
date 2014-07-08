@@ -1943,18 +1943,6 @@
             <field name="rate">39.6622695</field>
         </record>
 
-        <record id="ROL" model="res.currency">
-            <field name="name">ROL</field>
-            <field name="symbol">L</field>
-            <field name="rounding">0.01</field>
-            <field name="accuracy">4</field>
-        </record>
-        <record id="rateROL" model="res.currency.rate">
-            <field name="currency_id" ref="ROL" />
-            <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">45638.59</field>
-        </record>
-
         <record id="QAR" model="res.currency">
             <field name="name">QAR</field>
             <field name="symbol">QR</field>
