@@ -1542,6 +1542,9 @@ class Id(Field):
     store = True
     readonly = True
 
+    def __init__(self, string=None, **kwargs):
+        super(Id, self).__init__(type='integer', string=string, **kwargs)
+
     def to_column(self):
         return fields.integer('ID')
 
