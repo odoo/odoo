@@ -177,7 +177,12 @@ class module(osv.osv):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
                     res[module.id] = lxml.html.tostring(html)
             else:
-                overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
+                overrides = {
+                    'embed_stylesheet': False,
+                    'doctitle_xform': False,
+                    'output_encoding': 'unicode',
+                    'xml_declaration': False,
+                }
                 output = publish_string(source=module.description, settings_overrides=overrides, writer=MyWriter())
                 res[module.id] = output
         return res
