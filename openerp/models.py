@@ -1655,7 +1655,7 @@ class BaseModel(object):
                 record.display_name = convert(record[name])
         else:
             for record in self:
-                record.display_name = "%s,%s" % (self._name, self.id)
+                record.display_name = "%s,%s" % (record._name, record.id)
 
     def _inverse_display_name(self):
         name = self._rec_name
