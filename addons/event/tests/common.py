@@ -19,8 +19,8 @@ class TestEventCommon(common.TransactionCase):
 
         # User groups
         self.group_employee_id = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
-        self.group_event_user_id = self.env['ir.model.data'].xmlid_to_res_id('event.group_event_user')
-        self.group_event_manager_id = self.env['ir.model.data'].xmlid_to_res_id('event.group_event_manager')
+        self.group_marketing_user_id = self.env['ir.model.data'].xmlid_to_res_id('base.group_marketing_user')
+        self.group_marketing_manager_id = self.env['ir.model.data'].xmlid_to_res_id('base.group_marketing_manager')
 
         # Test users to use through the various tests
         self.user_eventuser = self.Users.with_context({'no_reset_password': True}).create({
@@ -28,12 +28,12 @@ class TestEventCommon(common.TransactionCase):
             'login': 'Armande',
             'alias_name': 'armande',
             'email': 'armande.eventuser@example.com',
-            'groups_id': [(6, 0, [self.group_employee_id, self.group_event_user_id])]
+            'groups_id': [(6, 0, [self.group_employee_id, self.group_marketing_user_id])]
         })
         self.user_eventmanager = self.Users.with_context({'no_reset_password': True}).create({
             'name': 'Bastien EventManager',
             'login': 'bastien',
             'alias_name': 'bastien',
             'email': 'bastien.eventmanager@example.com',
-            'groups_id': [(6, 0, [self.group_employee_id, self.group_event_manager_id])]
+            'groups_id': [(6, 0, [self.group_employee_id, self.group_marketing_manager_id])]
         })

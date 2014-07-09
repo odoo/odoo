@@ -4,7 +4,7 @@
 
     <!-- make Employee users Survey users -->
     <record id="base.group_user" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('base.group_survey_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <record id="survey.menu_surveys" model="ir.ui.menu">
