@@ -67,7 +67,7 @@ class account_entries_report(osv.osv):
             ('other', 'Regular'),
             ('closed', 'Closed'),
         ], 'Internal Type', readonly=True, help="This type is used to differentiate types with "\
-            "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
+            "special effects in Odoo: view can not have entries, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),

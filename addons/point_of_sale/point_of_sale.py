@@ -63,7 +63,7 @@ class pos_config(osv.osv):
              help="Accounting journal used to post sales entries."),
         'currency_id' : fields.function(_get_currency, type="many2one", string="Currency", relation="res.currency"),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode',
-             help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, OpenERP uses the normal cashier mode by default."),
+             help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, Odoo uses the normal cashier mode by default."),
         'iface_cashdrawer' : fields.boolean('Cashdrawer', help="Automatically open the cashdrawer"),
         'iface_payment_terminal' : fields.boolean('Payment Terminal', help="Enables Payment Terminal integration"),
         'iface_electronic_scale' : fields.boolean('Electronic Scale', help="Enables Electronic Scale integration"),
@@ -78,7 +78,7 @@ class pos_config(osv.osv):
 
         'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True, copy=False),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
-            help="This sequence is automatically created by OpenERP but you can change it "\
+            help="This sequence is automatically created by Odoo but you can change it "\
                 "to customize the reference numbers of your orders.", copy=False),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
