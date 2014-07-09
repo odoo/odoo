@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="1">
+	
+		<record model="account.account.template" id="skr03">
+			<field name="code">SKR03</field>
+			<field name="name">Deutscher Kontenrahmen SKR03</field>
+			<field name="reconcile" eval="False"/>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_view"/>
+		</record>
+		
+		<record model="account.account.template" id="skr03_b">
+			<field name="code">B</field>
+			<field name="name">Bilanzkonten</field>
+			<field name="parent_id" ref="skr03"/>
+			<field name="reconcile" eval="False"/>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_view"/>
+		</record>
+		
+			<record model="account.account.template" id="skr03_ba">
+				<field name="code">BA</field>
+				<field name="name">Bilanzkonten  Aktiva</field>
+				<field name="parent_id" ref="skr03_b"/>
+				<field name="reconcile" eval="False"/>
+				<field name="type">view</field>
+				<field name="user_type" ref="account.account_type_view"/>
+			</record>		
+			
+				<record model="account.account.template" id="skr03_baa">
+					<field name="code">BAA</field>
+					<field name="name">A. Anlagevermögen</field>
+					<field name="parent_id" ref="skr03_ba"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>			
+					
+					<record model="account.account.template" id="skr03_baai">
+						<field name="code">BAAI</field>
+						<field name="name">I. Immaterielle Vermögensgegenstände</field>
+						<field name="parent_id" ref="skr03_baa"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>			
+					
+						<record model="account.account.template" id="skr03_baai1">
+							<field name="code">BAAI1</field>
+							<field name="name">1. Selbst geschaffene gewerbliche Schutzrechte und ähnliche Rechte und Werte</field>
+							<field name="parent_id" ref="skr03_baai"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>			
+		
+						<record model="account.account.template" id="skr03_baai2">
+							<field name="code">BAAI2</field>
+							<field name="name">2. Konzessionen, Lizenzen und ähnliche Rechte und Werte</field>
+							<field name="parent_id" ref="skr03_baai"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>			
+		
+						<record model="account.account.template" id="skr03_baai3">
+							<field name="code">BAAI3</field>
+							<field name="name">3. Geschäfts oder Firmenwert</field>
+							<field name="parent_id" ref="skr03_baai"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>			
+		
+						<record model="account.account.template" id="skr03_baai4">
+							<field name="code">BAAI4</field>
+							<field name="name">4. geleistete Anzahlungen auf immat. Vermögensgegenstände</field>
+							<field name="parent_id" ref="skr03_baai"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>			
+			
+					<record model="account.account.template" id="skr03_baaii">
+						<field name="code">BAAII</field>
+						<field name="name">II. Sachanlagen</field>
+						<field name="parent_id" ref="skr03_baa"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>				
+						
+						<record model="account.account.template" id="skr03_baaii1">
+							<field name="code">BAAII1</field>
+							<field name="name">1. Grundstücke. grundstücksgleiche Rechte und Bauten</field>
+							<field name="parent_id" ref="skr03_baaii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>
+						
+						<record model="account.account.template" id="skr03_baaii2">
+							<field name="code">BAAII2</field>
+							<field name="name">2. technische  Anlagen und Maschinen</field>
+							<field name="parent_id" ref="skr03_baaii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>
+		
+						<record model="account.account.template" id="skr03_baaii3">
+							<field name="code">BAAII3</field>
+							<field name="name">3. andere Anlagen. Betriebs und Geschäftsausstattung</field>
+							<field name="parent_id" ref="skr03_baaii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+		
+						<record model="account.account.template" id="skr03_baaii4">
+							<field name="code">BAAII4</field>
+							<field name="name">4. geleistete Anzahlungen und Anlagen im Bau</field>
+							<field name="parent_id" ref="skr03_baaii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>
+			
+					<record model="account.account.template" id="skr03_baaiii">
+						<field name="code">BAAIII</field>
+						<field name="name">III. Finanzanlagen</field>
+						<field name="parent_id" ref="skr03_baa"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>				
+					
+						<record model="account.account.template" id="skr03_baaiii1">
+							<field name="code">BAAIII1</field>
+							<field name="name">1. Anteile an verbundenen Unternehmen Finanzanlagen</field>
+							<field name="parent_id" ref="skr03_baaiii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>
+		
+						<record model="account.account.template" id="skr03_baaiii2">
+							<field name="code">BAAIII2</field>
+							<field name="name">2. Ausleihungen an verbundene Unternehmen</field>
+							<field name="parent_id" ref="skr03_baaiii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+		
+						<record model="account.account.template" id="skr03_baaiii3">
+							<field name="code">BAAIII3</field>
+							<field name="name">3. Beteiligungen</field>
+							<field name="parent_id" ref="skr03_baaiii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>
+		
+						<record model="account.account.template" id="skr03_baaiii4">
+							<field name="code">BAAIII4</field>
+							<field name="name">4. Ausleihungen an Unternehmen. mit denen ein Beteil.verh. besteht</field>
+							<field name="parent_id" ref="skr03_baaiii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+						
+						<record model="account.account.template" id="skr03_baaiii5">
+							<field name="code">BAAIII5</field>
+							<field name="name">5. Wertpapiere des Anlagevermögens</field>
+							<field name="parent_id" ref="skr03_baaiii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+		
+						<record model="account.account.template" id="skr03_baaiii6">
+							<field name="code">BAAIII6</field>
+							<field name="name">6. sonstige Ausleihungen</field>
+							<field name="parent_id" ref="skr03_baaiii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+		
+				<record model="account.account.template" id="skr03_bab">
+					<field name="code">BAB</field>
+					<field name="name">B. Umlaufvermögen</field>
+					<field name="parent_id" ref="skr03_ba"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>			
+						
+					<record model="account.account.template" id="skr03_babi">
+						<field name="code">BABI</field>
+						<field name="name">I. Vorräte</field>
+						<field name="parent_id" ref="skr03_bab"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>			
+					
+						<record model="account.account.template" id="skr03_babi1">
+							<field name="code">BABI1</field>
+							<field name="name">1. Roh. Hilfs und Betriebsstoffe</field>
+							<field name="parent_id" ref="skr03_babi"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+		
+						<record model="account.account.template" id="skr03_babi2">
+							<field name="code">BABI2</field>
+							<field name="name">2. unfertige Erzeugnisse</field>
+							<field name="parent_id" ref="skr03_babi"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>
+		
+						<record model="account.account.template" id="skr03_babi3">
+							<field name="code">BABI3</field>
+							<field name="name">3. fertige Erzeugnisse und Waren</field>
+							<field name="parent_id" ref="skr03_babi"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+		
+						<record model="account.account.template" id="skr03_babi4">
+							<field name="code">BABI4</field>
+							<field name="name">4. geleistete Anzahlungen auf Vorräte</field>
+							<field name="parent_id" ref="skr03_babi"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>
+						
+					<record model="account.account.template" id="skr03_babii">
+						<field name="code">BABII</field>
+						<field name="name">II. Forderungen und sonstige Vermögensgegenstände</field>
+						<field name="parent_id" ref="skr03_bab"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>			
+						
+						<record model="account.account.template" id="skr03_babii1">
+							<field name="code">BABII1</field>
+							<field name="name">1. Forderungen aus Lieferungen und Leistungen</field>
+							<field name="parent_id" ref="skr03_babii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>
+		
+						<record model="account.account.template" id="skr03_babii2">
+							<field name="code">BABII2</field>
+							<field name="name">2. Forderungen gegen verbundene Unternehmen</field>
+							<field name="parent_id" ref="skr03_babii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>
+		
+						<record model="account.account.template" id="skr03_babii3">
+							<field name="code">BABII3</field>
+							<field name="name">3. Forderungen gegen Unternehmen. mit denen ein Beteil.verh. besteht</field>
+							<field name="parent_id" ref="skr03_babii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+						
+						<record model="account.account.template" id="skr03_babii4">
+							<field name="code">BABII4</field>
+							<field name="name">4. sonstige Vermögensgegenstände</field>
+							<field name="parent_id" ref="skr03_babii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+			
+					<record model="account.account.template" id="skr03_babiii">
+						<field name="code">BABIII</field>
+						<field name="name">III. Wertpapiere</field>
+						<field name="parent_id" ref="skr03_bab"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>			
+						
+						<record model="account.account.template" id="skr03_babiii1">
+							<field name="code">BABIII1</field>
+							<field name="name">1. Anteile an verbundenen Unternehmen Wertpapiere</field>
+							<field name="parent_id" ref="skr03_babiii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>
+						
+						<record model="account.account.template" id="skr03_babiii2">
+							<field name="code">BABIII2</field>
+							<field name="name">2. sonstige Wertpapiere</field>
+							<field name="parent_id" ref="skr03_babiii"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+							
+						<record model="account.account.template" id="skr03_babiv">
+							<field name="code">BABIV</field>
+							<field name="name">IV. Kassenbestand. Guthaben b. Kreditinstituten. Postgiro</field>
+							<field name="parent_id" ref="skr03_bab"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>
+		
+				<record model="account.account.template" id="skr03_bac">
+					<field name="code">BAC</field>
+					<field name="name">C. Rechnungsabgrenzungsposten</field>
+					<field name="parent_id" ref="skr03_ba"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+				
+				<record model="account.account.template" id="skr03_bad">
+					<field name="code">BAD</field>
+					<field name="name">D. Aktive latente Steuern</field>
+					<field name="parent_id" ref="skr03_ba"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>	
+		
+				<record model="account.account.template" id="skr03_bae">
+					<field name="code">BAE</field>
+					<field name="name">E. Aktiver Unterschiedsbetrag aus der Vermögensverrechnung</field>
+					<field name="parent_id" ref="skr03_ba"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+		
+			<record model="account.account.template" id="skr03_bp">
+				<field name="code">BP</field>
+				<field name="name">Bilanzkonten  Passiva</field>
+				<field name="parent_id" ref="skr03_b"/>
+				<field name="reconcile" eval="False"/>
+				<field name="type">view</field>
+				<field name="user_type" ref="account.account_type_view"/>
+			</record>
+		
+				<record model="account.account.template" id="skr03_bpa">
+					<field name="code">BPA</field>
+					<field name="name">A. Eigenkapital</field>
+					<field name="parent_id" ref="skr03_bp"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>				
+					
+					<record model="account.account.template" id="skr03_bpai">
+						<field name="code">BPAI</field>
+						<field name="name">I. Kapital</field>
+						<field name="parent_id" ref="skr03_bpa"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>			
+						
+						<record model="account.account.template" id="skr03_bpai1">
+							<field name="code">BPAI1</field>
+							<field name="name">1. Gezeichnetes Kapital</field>
+							<field name="parent_id" ref="skr03_bpai"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+								
+							<record model="account.account.template" id="skr03_bpai1a">
+								<field name="code">BPAI1a</field>
+								<field name="name">Ausstehende Einlagen auf das gezeichnete Kapital</field>
+								<field name="parent_id" ref="skr03_bpai1"/>
+								<field name="reconcile" eval="False"/>
+								<field name="type">view</field>
+								<field name="user_type" ref="account.account_type_view"/>
+							</record>
+			
+					<record model="account.account.template" id="skr03_bpai2">
+						<field name="code">BPAI2</field>
+						<field name="name">2. Variables Kapital</field>
+						<field name="parent_id" ref="skr03_bpai"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>
+							
+						<record model="account.account.template" id="skr03_bpai2a">
+							<field name="code">BPAI2a</field>
+							<field name="name">Einlagen/Entnahmen</field>
+							<field name="parent_id" ref="skr03_bpai1"/>
+							<field name="reconcile" eval="False"/>
+							<field name="type">view</field>
+							<field name="user_type" ref="account.account_type_view"/>
+						</record>	
+			
+				<record model="account.account.template" id="skr03_bpaii">
+					<field name="code">BPAII</field>
+					<field name="name">II. Kapitalrücklagen</field>
+					<field name="parent_id" ref="skr03_bpa"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+				
+				<record model="account.account.template" id="skr03_bpaiii">
+					<field name="code">BPAIII</field>
+					<field name="name">III. Gewinnrücklagen</field>
+					<field name="parent_id" ref="skr03_bpa"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>	
+						
+					<record model="account.account.template" id="skr03_bpaiii1">
+						<field name="code">BPAIII1</field>
+						<field name="name">1. gesetzliche Rücklagen</field>
+						<field name="parent_id" ref="skr03_bpaiii"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>
+				
+				<record model="account.account.template" id="skr03_bpaiii2">
+					<field name="code">BPAIII2</field>
+					<field name="name">2. Rücklagen für eigene Anteile</field>
+					<field name="parent_id" ref="skr03_bpaiii"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>			
+						
+				<record model="account.account.template" id="skr03_bpaiii3">
+					<field name="code">BPAIII3</field>
+					<field name="name">3. satzungsmäßige Rücklagen</field>
+					<field name="parent_id" ref="skr03_bpaiii"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>	
+				
+				<record model="account.account.template" id="skr03_bpaiii4">
+					<field name="code">BPAIII4</field>
+					<field name="name">4. andere Gewinnrücklagen</field>
+					<field name="parent_id" ref="skr03_bpaiii"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+				
+				<record model="account.account.template" id="skr03_bpaiv">
+					<field name="code">BPAIV</field>
+					<field name="name">IV. Gewinn und Verlustvortrag</field>
+					<field name="parent_id" ref="skr03_bpa"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+						
+				<record model="account.account.template" id="skr03_bpav">
+					<field name="code">BPAV</field>
+					<field name="name">V. Jahresüberschuss/Jahresfehlbetrag</field>
+					<field name="parent_id" ref="skr03_bpa"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>		
+				
+			<record model="account.account.template" id="skr03_bpb">
+				<field name="code">BPB</field>
+				<field name="name">B. Sonderposten mit Rücklageanteil</field>
+				<field name="parent_id" ref="skr03_bp"/>
+				<field name="reconcile" eval="False"/>
+				<field name="type">view</field>
+				<field name="user_type" ref="account.account_type_view"/>
+			</record>		
+				
+			<record model="account.account.template" id="skr03_bpc">
+				<field name="code">BPC</field>
+				<field name="name">C. Rückstellungen</field>
+				<field name="parent_id" ref="skr03_bp"/>
+				<field name="reconcile" eval="False"/>
+				<field name="type">view</field>
+				<field name="user_type" ref="account.account_type_view"/>
+			</record>			
+					
+				<record model="account.account.template" id="skr03_bpci">
+					<field name="code">BPCI</field>
+					<field name="name">I. Rückstellungen für Pensionen und ähnliche Verpflichtungen</field>
+					<field name="parent_id" ref="skr03_bpc"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+				
+				<record model="account.account.template" id="skr03_bpcii">
+					<field name="code">BPCII</field>
+					<field name="name">II. Steuerrückstellungen</field>
+					<field name="parent_id" ref="skr03_bpc"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+						
+				<record model="account.account.template" id="skr03_bpciii">
+					<field name="code">BPCIII</field>
+					<field name="name">III. sonstige Rückstellungen</field>
+					<field name="parent_id" ref="skr03_bpc"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+				
+			<record model="account.account.template" id="skr03_bpd">
+				<field name="code">BPD</field>
+				<field name="name">D. Verbindlichkeiten</field>
+				<field name="parent_id" ref="skr03_bp"/>
+				<field name="reconcile" eval="False"/>
+				<field name="type">view</field>
+				<field name="user_type" ref="account.account_type_view"/>
+			</record>			
+						
+				<record model="account.account.template" id="skr03_bpdi">
+					<field name="code">BPDI</field>
+					<field name="name">I. Anleihen</field>
+					<field name="parent_id" ref="skr03_bpd"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+				
+				<record model="account.account.template" id="skr03_bpdii">
+					<field name="code">BPDII</field>
+					<field name="name">II. Verbindlichkeiten gegenüber Kreditinstituten</field>
+					<field name="parent_id" ref="skr03_bpd"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+						
+				<record model="account.account.template" id="skr03_bpdiii">
+					<field name="code">BPDIII</field>
+					<field name="name">III. Erhaltene Anzahlungen auf Bestellungen</field>
+					<field name="parent_id" ref="skr03_bpd"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+				
+				<record model="account.account.template" id="skr03_bpdiv">
+					<field name="code">BPDIV</field>
+					<field name="name">IV. Verbindlichkeiten aus Lieferungen u. Leistungen</field>
+					<field name="parent_id" ref="skr03_bpd"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+				
+				<record model="account.account.template" id="skr03_bpdv">
+					<field name="code">BPDV</field>
+					<field name="name">V. Verb. aus Annahme gez. Wechsel und Ausstellung eig. Wechsel</field>
+					<field name="parent_id" ref="skr03_bpd"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+				
+				<record model="account.account.template" id="skr03_bpdvi">
+					<field name="code">BPDVI</field>
+					<field name="name">VI. Verbindlichkeiten gegenüber verbundenen Unternehmen</field>
+					<field name="parent_id" ref="skr03_bpd"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+						
+				<record model="account.account.template" id="skr03_bpdvii">
+					<field name="code">BPDVII</field>
+					<field name="name">VII. Verbindl. geg. Unternehmen. mit denen ein Beteili.verh. best</field>
+					<field name="parent_id" ref="skr03_bpd"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+						
+				<record model="account.account.template" id="skr03_bpdviii">
+					<field name="code">BPDVIII</field>
+					<field name="name">sonstige Verbindlichkeiten</field>
+					<field name="parent_id" ref="skr03_bpd"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+					
+			<record model="account.account.template" id="skr03_bpe">
+				<field name="code">BPE</field>
+				<field name="name">E. Rechnungsabgrenzungsposten</field>
+				<field name="parent_id" ref="skr03_bp"/>
+				<field name="reconcile" eval="False"/>
+				<field name="type">view</field>
+				<field name="user_type" ref="account.account_type_view"/>
+			</record>
+			
+			<record model="account.account.template" id="skr03_bpf">
+				<field name="code">BPF</field>
+				<field name="name">F. Passive latente Steuern</field>
+				<field name="parent_id" ref="skr03_bp"/>
+				<field name="reconcile" eval="False"/>
+				<field name="type">view</field>
+				<field name="user_type" ref="account.account_type_view"/>
+			</record>
+			
+		
+		<record model="account.account.template" id="skr03_stat">
+			<field name="code">STAT</field>
+			<field name="name">Vortrags- Kapital- und Statistische Konten</field>
+			<field name="parent_id" ref="skr03"/>
+			<field name="reconcile" eval="False"/>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_view"/>
+		</record>
+	
+		<record model="account.account.template" id="skr03_gv">
+			<field name="code">GUV</field>
+			<field name="name">Gewinn und Verlustrechnung</field>
+			<field name="parent_id" ref="skr03_bpav"/>
+			<field name="reconcile" eval="False"/>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_view"/>
+		</record>		
+		
+			<record model="account.account.template" id="skr03_guv">
+				<field name="code">GUVEG</field>
+				<field name="name">Ergebnis der gewöhnlichen Geschäftstätigkeit</field>
+				<field name="parent_id" ref="skr03_gv"/>
+				<field name="reconcile" eval="False"/>
+				<field name="type">view</field>
+				<field name="user_type" ref="account.account_type_view"/>
+			</record>		
+			
+				<record model="account.account.template" id="skr03_guvu">
+					<field name="code">GUVU</field>
+					<field name="name">Umsatzerlöse</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+			
+				<record model="account.account.template" id="skr03_guvbv">
+					<field name="code">GUVBV</field>
+					<field name="name">Bestandsveränderungen fertige/unfertige Erzeugnisse</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+			
+				<record model="account.account.template" id="skr03_guvae">
+					<field name="code">GUVAE</field>
+					<field name="name">Aktivierte Eigenleistungen</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+	
+				<record model="account.account.template" id="skr03_guvsbe">
+					<field name="code">GUVSBE</field>
+					<field name="name">Sonstige betriebliche Erträge</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+	
+				<record model="account.account.template" id="skr03_guvma">
+					<field name="code">GUVMA</field>
+					<field name="name">Materialaufwand</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+							
+				<record model="account.account.template" id="skr03_guvpa">
+					<field name="code">GUVPA</field>
+					<field name="name">Personalaufwand</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+							
+				<record model="account.account.template" id="skr03_guvas">
+					<field name="code">GUVAS</field>
+					<field name="name">Abschreibungen</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">other</field>
+					<field name="user_type" ref="account.data_account_type_expense"/>
+				</record>
+					
+				<record model="account.account.template" id="skr03_guvaba">
+					<field name="code">GUVABA</field>
+					<field name="name">Sonstige betriebl. Aufwendungen</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+							
+					<record model="account.account.template" id="skr03_guvabark">
+						<field name="code">GUVABARK</field>
+						<field name="name">Raumkosten</field>
+						<field name="parent_id" ref="skr03_guvaba"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>
+										
+					<record model="account.account.template" id="skr03_guvabari">
+						<field name="code">GUVABARI</field>
+						<field name="name">Reparaturen und Instandhaltungen</field>
+						<field name="parent_id" ref="skr03_guvaba"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>
+								
+					<record model="account.account.template" id="skr03_guvabavba">
+						<field name="code">GUVABAVBA</field>
+						<field name="name">Versicherungen, Beiträge und Abgaben</field>
+						<field name="parent_id" ref="skr03_guvaba"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>
+					
+					<record model="account.account.template" id="skr03_guvabafk">
+						<field name="code">GUVABAFK</field>
+						<field name="name">Fahrzeugkosten</field>
+						<field name="parent_id" ref="skr03_guvaba"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>
+								
+					<record model="account.account.template" id="skr03_guvabawr">
+						<field name="code">GUVABAWR</field>
+						<field name="name">Werbe und Reisekosten</field>
+						<field name="parent_id" ref="skr03_guvaba"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>
+								
+					<record model="account.account.template" id="skr03_guvabakw">
+						<field name="code">GUVABAKW</field>
+						<field name="name">Kosten der Warenabgabe</field>
+						<field name="parent_id" ref="skr03_guvaba"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>
+					
+					<record model="account.account.template" id="skr03_guvabavbk">
+						<field name="code">GUVABAVBK</field>
+						<field name="name">verschiedene betriebliche Kosten</field>
+						<field name="parent_id" ref="skr03_guvaba"/>
+						<field name="reconcile" eval="False"/>
+						<field name="type">view</field>
+						<field name="user_type" ref="account.account_type_view"/>
+					</record>
+					
+				<record model="account.account.template" id="skr03_guvsba">
+					<field name="code">GUVSBA</field>
+					<field name="name">Sonstige betriebliche Aufwendungen</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+	
+				<record model="account.account.template" id="skr03_guveab">
+					<field name="code">GUVEAB</field>
+					<field name="name">Erträge aus Beteiligungen</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+			
+				<record model="account.account.template" id="skr03_guvewa">
+					<field name="code">GUVEWA</field>
+					<field name="name">Erträge aus anderen Wertpapieren u. Ausleihungen</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+	
+				<record model="account.account.template" id="skr03_guvsze">
+					<field name="code">GUVSZE</field>
+					<field name="name">Sonstige Zinsen und ähnliche Erträge</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+				
+				<record model="account.account.template" id="skr03_guvawu">
+					<field name="code">GUVAWU</field>
+					<field name="name">Abschreibungen auf Finanzanlagen u. Wertpapiere des UV</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+			
+				<record model="account.account.template" id="skr03_guvzaw">
+					<field name="code">GUVZAW</field>
+					<field name="name">Zinsen und ähnliche Aufwendungen</field>
+					<field name="parent_id" ref="skr03_guv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+	
+			<record model="account.account.template" id="skr03_guvaoe">
+				<field name="code">GUVAOE</field>
+				<field name="name">Außerordentliches Ergebnis</field>
+				<field name="parent_id" ref="skr03_gv"/>
+				<field name="reconcile" eval="False"/>
+				<field name="type">view</field>
+				<field name="user_type" ref="account.account_type_view"/>
+			</record>
+			
+				<record model="account.account.template" id="skr03_guvaer">
+					<field name="code">GUVAER</field>
+					<field name="name">Außerordentliche Erträge</field>
+					<field name="parent_id" ref="skr03_guvaoe"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+	
+				<record model="account.account.template" id="skr03_guvaaw">
+					<field name="code">GUVAAW</field>
+					<field name="name">Außerordentliche Aufwendungen</field>
+					<field name="parent_id" ref="skr03_guvaoe"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+			
+				<record model="account.account.template" id="skr03_guvsea">
+					<field name="code">GUVSEA</field>
+					<field name="name">Steuern vom Einkommen und Ertrag</field>
+					<field name="parent_id" ref="skr03_gv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+			
+				<record model="account.account.template" id="skr03_guvsst">
+					<field name="code">GUVSST</field>
+					<field name="name">Sonstige Steuern</field>
+					<field name="parent_id" ref="skr03_gv"/>
+					<field name="reconcile" eval="False"/>
+					<field name="type">view</field>
+					<field name="user_type" ref="account.account_type_view"/>
+				</record>
+
+		
+	</data>
+</openerp>				
