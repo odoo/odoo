@@ -253,6 +253,7 @@ class hr_applicant(osv.Model):
 
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         department_id = False
+        user_id = False
         if job_id:
             job_record = self.pool.get('hr.job').browse(cr, uid, job_id, context=context)
             department_id = job_record and job_record.department_id and job_record.department_id.id or False
