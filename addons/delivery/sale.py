@@ -93,3 +93,4 @@ class sale_order(osv.Model):
                 'tax_id': [(6, 0, taxes_ids)],
                 'is_delivery': True
             })
+        return True
