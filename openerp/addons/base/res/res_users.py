@@ -335,7 +335,7 @@ class res_users(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         if 1 in ids:
-            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)'))
+            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         db = cr.dbname
         if db in self._uid_cache:
             for id in ids:

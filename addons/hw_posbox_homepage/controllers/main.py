@@ -15,7 +15,7 @@ index_template = """
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>OpenERP's PosBox</title>
+        <title>Odoo's PosBox</title>
         <style>
         body {
             width: 480px;
@@ -30,7 +30,7 @@ index_template = """
         <h1>Your PosBox is up and running</h1>
         <p>
         The PosBox is an hardware adapter that allows you to use 
-        receipt printers and barcode scanners with OpenERP's Point of
+        receipt printers and barcode scanners with Odoo's Point of
         Sale, <b>version 8.0 or later</b>. You can start an <a href='https://www.openerp.com/start'>online free trial</a>,
         or <a href='https://www.openerp.com/start?download'>download and install</a> it yourself.
         </p>
@@ -44,10 +44,10 @@ index_template = """
         </p>
         <p>
         The PosBox software installed on this posbox is <b>version 6</b>, 
-        the posbox version number is independent from OpenERP. You can upgrade
+        the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>
         </p>
-        <p>For any other question, please contact the OpenERP support at <a href='mailto:support@openerp.com'>support@openerp.com</a>
+        <p>For any other question, please contact the Odoo support at <a href='mailto:support@odoo.com'>support@odoo.com</a>
         </p>
     </body>
 </html>

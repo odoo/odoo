@@ -111,7 +111,7 @@ class procurement_order(osv.osv):
 
         'origin': fields.char('Source Document',
             help="Reference of the document that created this Procurement.\n"
-            "This is automatically completed by OpenERP."),
+            "This is automatically completed by Odoo."),
         'company_id': fields.many2one('res.company', 'Company', required=True),
 
         # These two fields are used for shceduling
