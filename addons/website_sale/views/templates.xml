@@ -335,6 +335,7 @@
 <template id="product" name="Product">
   <t t-call="website.layout">
       <t t-set="head">
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
           <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
           <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
           <link rel='stylesheet' href='/website_sale/static/src/css/website_mail.css'/>
@@ -606,6 +607,7 @@
   <t t-call="website.layout">
       <t t-set="head">
           <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
           <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
           <t t-raw="head or ''"/>
       </t>
@@ -793,6 +795,7 @@
   <t t-call="website.layout">
     <t t-set="head">
         <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+        <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
         <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
         <t t-raw="head or ''"/>
     </t>
@@ -959,6 +962,7 @@
   <t t-call="website.layout">
       <t t-set="head">
           <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
           <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
           <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
           <t t-raw="head or ''"/>
@@ -1084,6 +1088,7 @@
       <t t-set="head">
           <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
           <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
           <t t-raw="head or ''"/>
       </t>
       <t t-set="additional_title">Shop - Confirmed</t>
