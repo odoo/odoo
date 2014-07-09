@@ -183,7 +183,7 @@ class module(osv.osv):
                     'output_encoding': 'unicode',
                     'xml_declaration': False,
                 }
-                output = publish_string(source=module.description, settings_overrides=overrides, writer=MyWriter())
+                output = publish_string(source=module.description or '', settings_overrides=overrides, writer=MyWriter())
                 res[module.id] = output
         return res
 
