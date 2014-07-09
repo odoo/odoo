@@ -208,7 +208,7 @@ class ir_attachment(osv.osv):
         # or unlinking attachments can be seen as an update to the model
         for model, mids in res_ids.items():
             # ignore attachments that are not attached to a resource anymore when checking access rights
-            # (resource was deleted but attachment was not)a
+            # (resource was deleted but attachment was not)
             mids = self.pool.get(model).exists(cr, uid, mids)
             ima.check(cr, uid, model, 'write')
             self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
