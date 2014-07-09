@@ -371,7 +371,7 @@
           </div>
         </section>
 
-        <section class="container oe_website_sale" id="product_detail">
+        <section t-attf-class="container oe_website_sale #{(compute_currency(product.lst_price) - product.price) &gt; 0.1 and 'discount'}" id="product_detail">
           <div class="row">
             <div class="col-sm-7 col-md-7 col-lg-7">
                 <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
@@ -435,13 +435,13 @@
 <template id="product_price">
   <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
       <h4 class="oe_price_h4 css_editable_mode_hidden">
-          <span class="text-danger oe_default_price" t-att-style="'' if (compute_currency(product.lst_price) - product.price) &gt; 0.1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
+          <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
             t-field="product.lst_price"
             t-field-options='{
               "widget": "monetary",
               "from_currency": "website.currency_id",
               "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-           }'/><br/>
+           }'/>
           <b class="oe_price" style="white-space: nowrap;"
             t-field="product.price"
             t-field-options='{
