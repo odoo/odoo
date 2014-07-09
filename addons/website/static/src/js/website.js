@@ -233,8 +233,8 @@
        ---------------------------------------------------- */ 
     var templates_def = $.Deferred().resolve();
     website.add_template_file = function(template) {
+        var def = $.Deferred();
         templates_def = templates_def.then(function() {
-            var def = $.Deferred();
             openerp.qweb.add_template(template, function(err) {
                 if (err) {
                     def.reject(err);
@@ -244,6 +244,7 @@
             });
             return def;
         });
+        return def;
     };
 
     website.add_template_file('/website/static/src/xml/website.xml');
