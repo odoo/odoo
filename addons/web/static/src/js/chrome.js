@@ -124,11 +124,12 @@ instance.web.Dialog = instance.web.Widget.extend({
         var $customButons = this.$buttons.find('.oe_dialog_custom_buttons').empty();
         _.each(buttons, function(fn, text) {
             // buttons can be object or array
+            var oe_link_class = fn.oe_link_class;
             if (!_.isFunction(fn)) {
                 text = fn.text;
                 fn = fn.click;
             }
-            var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {} }}}));
+            var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': oe_link_class} }}}));
             $customButons.append($but);
             $but.on('click', function(ev) {
                 fn.call(self.$el, ev);
@@ -330,6 +331,7 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
         this.error = error;
     },
     display: function() {
+        var self = this;
         error = this.error;
         error.data.message = error.data.arguments[0];
 
@@ -337,14 +339,15 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
             size: 'medium',
             title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
-                {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }},
-                {text: error.data.arguments[2], click: function() {
+                {text: _t("Ok"), click: function() { self.$el.parents('.modal').modal('hide');  self.destroy();}},
+                {text: error.data.arguments[2],
+                 oe_link_class: 'oe_link',
+                 click: function() {
                     window.location.href='#action='+error.data.arguments[1];
-                    this.$el.parents('.modal').modal('hide');
+                    self.destroy();
                 }}
             ],
         }, QWeb.render('CrashManager.warning', {error: error})).open();
-        this.destroy();
     }
 });
 instance.web.crash_manager_registry.add('openerp.exceptions.RedirectWarning', 'instance.web.RedirectWarningHandler');
@@ -680,6 +683,19 @@ instance.web.Reload = function(parent, action) {
 instance.web.client_actions.add("reload", "instance.web.Reload");
 
 /**
+ * Client action to refresh the session context (making sure
+ * HTTP requests will have the right one) then reload the
+ * whole interface.
+ */
+instance.web.ReloadContext = function(parent, action) {
+    // side-effect of get_session_info is to refresh the session context
+    instance.session.rpc("/web/session/get_session_info", {}).then(function() {
+        instance.web.Reload(parent, action);
+    });
+}
+instance.web.client_actions.add("reload_context", "instance.web.ReloadContext");
+
+/**
  * Client action to go back in breadcrumb history.
  * If can't go back in history stack, will go back to home.
  */
@@ -942,6 +958,8 @@ instance.web.Menu =  instance.web.Widget.extend({
                 id: id,
                 previous_menu_id: this.current_menu // Here we don't know if action will fail (in which case we have to revert menu)
             }, $item);
+        } else {
+            console.log('Menu no action found web test 04 will fail');
         }
         this.open_menu(id);
     },
@@ -1362,8 +1380,7 @@ instance.web.WebClient = instance.web.Client.extend({
                         var first_menu_id = self.menu.$el.find("a:first").data("menu");
                         if(first_menu_id) {
                             self.menu.menu_click(first_menu_id);
-                        }
-                    }
+                        }                    }
                 });
             });
         } else {
@@ -1377,7 +1394,6 @@ instance.web.WebClient = instance.web.Client.extend({
             var state = event.getState(true);
             if(!state.action && state.menu_id) {
                 self.menu.is_bound.done(function() {
-                    self.menu.do_reload();
                     self.menu.menu_click(state.menu_id);
                 });
             } else {

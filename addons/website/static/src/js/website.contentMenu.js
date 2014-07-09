@@ -225,8 +225,8 @@
         },
     });
 
-    website.ready().done(function() {
-        var content = new website.EditorBarContent()
+    $(document).ready(function() {
+        var content = new website.EditorBarContent();
         content.setElement($('.oe_content_menu'));
         content.start();
     });

@@ -58,47 +58,47 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_start_working(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_start_working')
 -
   Now I pause first work operation due to technical fault of work center.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_pause(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_pause')
 -
   I resume first work operation.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_resume(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_resume')
     
 -
   I cancel first work operation.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_cancel(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_cancel')
 -
   I reset first work operation and start after resolving techninal fault of work center.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_draft(cr, uid, [order.workcenter_lines[0].id])
-    self.pool.get('mrp.production.workcenter.line').signal_button_start_working(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_draft')
+    order.workcenter_lines[0].signal_workflow('button_start_working')
 -
   I close first work operation as this work center completed its process.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_done(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_done')
 -
   Now I close other operations one by one which are in start state.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     for work_line in order.workcenter_lines[1:]:
-        self.pool.get('mrp.production.workcenter.line').signal_button_start_working(cr, uid, [work_line.id])
-        self.pool.get('mrp.production.workcenter.line').signal_button_done(cr, uid, [work_line.id])
+      work_line.signal_workflow('button_start_working')
+      work_line.signal_workflow('button_done')
 
 -
   I check that the production order is now done.

@@ -303,24 +303,65 @@ td {
 }
 
 .pos .order-button{
-    color: #273072;
-    height:27px;
-    margin:3px;
-    margin-right:0px;
-    border: 1px solid #353A7E;
-    background: #7f82ac;
-    text-shadow: none;
-    border-radius: 3px;
+    color: #f0f0f0;
+    display: inline-block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 32px;
+    padding: 4px 8px;
+    margin: 3px;
+    margin-bottom: 0px;
+    margin-right: 2px;
+    padding-top: 0px;
+    background: #8b8b8b;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    vertical-align: top;
+    line-height: 26px;
+    text-align: center;
+    box-shadow: 0px -5px 10px -6px rgb(82,82,82) inset;
+    cursor: pointer;
+    min-width: 34px;
 }
 .pos .order-button.selected{
     font-weight: 900;
-    background: #666997;
-    color: rgb(236, 237, 255);
+    background: #EEEEEE;
+    color: rgb(75,75,75);
+    height: 31px;
+    border-bottom: solid 1px rgb(196, 196, 196);
+    box-shadow: none;
+}
+
+.pos .order-button .order-sequence{
+    font-size: 16px;
+    font-weight: 800;
+    vertical-align: middle;
+}
+.pos .order-button.selected .order-sequence{
+    color: white;
+    background: black;
+    display: inline-block;
+    line-height: 24px;
+    min-width: 24px;
+    border-radius: 12px;
+    margin-right: 4px;
+    margin-left: -4px;
 }
 
 .pos .order-button.square{
-    width: 32px;
-    margin-left:4px;
+    width: 34px;
+    margin-left:1px;
+    background: #5c5c5c;
+    color: rgb(160,160,160);
+}
+.pos .order-button:not(.square) > .fa {
+    font-size: 16px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+.pos .order-button .order-sequence{
+    font-size: 16px;
+    font-weight: 800;
 }
 
 .pos .order-selector {
@@ -419,6 +460,46 @@ td {
 .pos .pos-leftpane .pads {
     background: #F0EEEE;
     white-space: nowrap;
+}
+/*  ********* The control buttons ********* */
+
+.pos .control-buttons {
+    padding-top: 8px;
+}
+.pos .control-button {
+    background: #e2e2e2;
+    border: solid 1px #BEBEBE;
+    display: inline-block;
+    line-height: 38px;
+    min-width: 38px;
+    text-align: center;
+    border-radius: 3px;
+    padding: 0px 10px;
+    font-size: 18px;
+    margin-left: 6px;
+    cursor: pointer;
+}
+.pos .control-button .fa{
+    margin-right: 4px;
+}
+
+.pos .control-button.highlight{
+    background: #6EC89B;
+    border: solid 1px #6EC89B;
+    color: white;
+}
+.pos .control-button:active {
+    background: #7F82AC;
+    border: solid 1px #7F82AC;
+    color: white;
+}
+.pos .control-button.disabled,
+.pos .control-button.disabled:active{
+    background: #e2e2e2;
+    border: solid 1px #BEBEBE;
+    opacity: 0.5;
+    cursor: default;
+    color: inherit;
 }
 
 /*  ********* The paypad contains the payment buttons ********* */
@@ -782,6 +863,78 @@ td {
     color: #5a5a5a;
 }
 
+/* a) Generic Screen Layout Constructs */
+
+.screen .screen-content{
+    margin: 0px auto;
+    max-width: 1024px;
+    text-align: left;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+.screen .top-content{
+    position: absolute;
+    left: 0px; top: 0px; right: 0px;
+    height: 64px;
+    border-bottom: dashed 1px rgb(215,215,215);
+    text-align: center;
+}
+.screen .top-content .button {
+    position: absolute;
+    top: 0px;
+    line-height: 32px;
+    padding: 3px 13px;
+    font-size: 20px;
+    background: rgb(230, 230, 230);
+    margin: 12px;
+    border-radius: 3px;
+    border: solid 1px rgb(209, 209, 209);
+    cursor: pointer;
+}
+.screen .top-content .button.highlight{
+    background: rgb(110,200,155);
+    color: white;
+    border: solid 1px rgb(110,200,155);
+}
+.screen .top-content .button.back {
+    left: 0px;
+    margin-left: 16px;
+}
+.screen .top-content .button.next{
+    right: 0px;
+    margin-right: 16px;
+}
+.screen .left-content{
+    position: absolute;
+    left:0px; top: 64px; bottom: 0px;
+    right:50%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: dashed 1px rgb(215,215,215);
+}
+.screen .right-content{
+    position: absolute;
+    right:0px; top: 64px; bottom: 0px;
+    left:50%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.screen .centered-content{
+    position: absolute;
+    right:25%; top: 64px; bottom: 0px;
+    left:25%;
+    border-right: dashed 1px rgb(215,215,215);
+    border-left: dashed 1px rgb(215,215,215);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.screen .full-content{
+    position: absolute;
+    right: 0%; top: 65px; bottom: 0px;
+    left: 0%;
+}
+
 /* a) Layout for the Product Screen */
 
 .pos .screen .layout-table {
@@ -995,116 +1148,144 @@ td {
 
 /* d) The Scale screen */
 
-.pos .scale-screen .display{
-    position:relative;
-    width: 550px;
-    height:190px;
-    margin-top: 100px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.pos .scale-screen .product-picture {
-    position: relative;
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-        -ms-box-sizing: border-box;
-            box-sizing: border-box;
-    display: float;
-    float: right;
-    margin: 5px;
-    width: 180px;
-    height:180px;
-    line-height:180px;
-    cursor:pointer;
-
-    background:#fff;
-    border: 1px solid #fff;
-    border-radius: 3px;
-    box-shadow: 0px 2px rgb(228, 228, 228);
-}
-
-.pos .scale-screen .product-picture img{
-    max-width:  178px;
-    max-height: 178px;
-    vertical-align: middle;
-    cursor:pointer;
-}
-
-.pos .scale-screen .product-picture .product-price{
-    position: absolute;
-    top:8px;
-    right:8px;
-    width:auto;
-    height:auto;
-    line-height:1;
-    color:white;
-    background: #7f82ac;
-    padding: 4px 5px;
-    border-radius: 3px;
-    cursor:pointer;
-}
-
-.pos .scale-screen .product-name {
-    position: absolute;
-    left: 0px;
-    right: 210px;
-    top: 10px;
-    height: 50px;
-    font-size: 36px;
-    line-height: 50px;
-    text-align: right;
-    color: #8d8d8d;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.pos .scale-screen .weight{
-   position: absolute;
-   left: 0;
-   top: 80px;
-   height: 90px;
-   bottom: 55px;
-   right: 210px;
-   padding: 6px;
-   padding-right: 33px;
-   padding-top: 11px;
-   background: white;
-   border-radius: 3px;
-   box-shadow: 0px 2px rgb(228, 228, 228) inset;
-}
-.pos .scale-screen .weight p{
+.pos .scale-screen .product-price{
+    font-size: 25px;
+    margin: 16px;
+    text-align: center;
     display: inline-block;
-    text-align:right;
-    line-height: 90px;
-    font-size: 56px;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    margin-right: 18px;
-    font-family: "Inconsolata";
-    color: #6c6c6c;
+    width: 40%;
+}
+.pos .scale-screen .computed-price{
+    font-size: 25px;
+    display: inline-block;
+    text-align: right;
+    margin: 16px;
+    margin-top: 0px;
+    padding: 16px;
+    background: white;
+    width: 40%;
+    border-radius: 3px;
+    font-family: Inconsolata;
+    font-weight: bold;
+    text-shadow: 0px 2px 0px rgb(210,210,210);
+    box-shadow: 0px 2px 0px rgb(225,225,225) inset;
+    float: right;
+}
+.pos .scale-screen .buy-product{
+    text-align: center;
+    font-size: 32px;
+    background: rgb(110,200,155);
+    color: white;
+    border-radius: 3px;
+    padding: 16px;
+    margin: 16px;
+    cursor: pointer;
 }
 
-/* e) The Welcome Screen */
-.pos .goodbye-message{
-    position: absolute;
-    left:50%;
-    top:40%;
-    width:500px;
-    height:400px;
-    margin-left: -250px;
-    margin-top: -200px;
-    padding:10px;
-    padding-top:20px;
-    text-align:center;
-    font-size:20px;
-    font-weight:bold;
-    background-color: #F0EEEE;
-    border: 1px solid #E0DDDD;
+.pos .scale-screen .weight{
+    text-align: right;
+    margin: 16px;
+    background: white;
+    padding: 20px;
+    padding-right: 30px;
+    font-size: 56px;
     border-radius: 3px;
-    box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
-    z-index:1150;
+    font-family: Inconsolata;
+    text-shadow: 0px 2px 0px rgb(210, 210, 210);
+    box-shadow: 0px 2px 0px rgb(225,225,225) inset;
 }
+
+
+/* e) The Client List Screen */
+
+.pos .clientlist-screen .client-list{
+    font-size: 16px;
+    width: 100%;
+    line-height: 40px;
+}
+.pos .clientlist-screen .client-list th,
+.pos .clientlist-screen .client-list td {
+    padding: 0px 8px;
+}
+.pos .clientlist-screen .client-list tr{
+    transition: all 150ms linear;
+    background: rgb(230,230,230);
+}
+.pos .clientlist-screen .client-list thead > tr,
+.pos .clientlist-screen .client-list tr:nth-child(even) {
+    background: rgb(247,247,247);
+}
+.pos .clientlist-screen .client-list tr.highlight{
+    transition: all 150ms linear;
+    background: rgb(110,200,155) !important;
+    color: white;
+}
+.pos .clientlist-screen .client-list tr.lowlight{
+    transition: all 150ms linear;
+    background: rgb(216, 238, 227);
+}
+.pos .clientlist-screen .client-list tr.lowlight:nth-child(even){
+    transition: all 150ms linear;
+    background: rgb(227, 246, 237);
+}
+.pos .clientlist-screen .client-details{
+    padding: 16px;
+    border-bottom: solid 5px rgb(110,200,155);
+}
+.pos .clientlist-screen .client-picture{
+    height: 64px;
+    width: 64px;
+    border-radius: 32px;
+    overflow: hidden;
+    text-align: center;
+    float: left;
+    margin-right: 16px;
+    background: white;
+}
+.pos .clientlist-screen .client-picture > img{
+    vertical-align: middle;
+    max-height: 64px;
+}
+.pos .clientlist-screen .client-name{
+    font-size: 32px;
+    line-height: 64px;
+    margin-bottom:16px;
+}
+.pos .clientlist-screen .client-details-box{
+    position: relative;
+    font-size: 16px;
+}
+.pos .clientlist-screen .client-details-left{
+    width: 50%;
+    float: left;
+}
+.pos .clientlist-screen .client-details-right{
+    width: 50%;
+    float: right;
+}
+.pos .clientlist-screen .client-detail{
+    line-height: 24px;
+}
+.pos .clientlist-screen .client-detail > .label{
+    font-weight: bold;
+    display: inline-block;
+    width: 64px;
+    text-align: right;
+    margin-right: 8px;
+}
+.pos .clientlist-screen .client-detail > .empty{
+    opacity: 0.3;
+}
+.pos .clientlist-screen .searchbox{
+    right: auto;
+    margin-left: -90px;
+    margin-top:8px;
+    left: 50%;
+}
+.pos .clientlist-screen .searchbox input{
+    width: 120px;
+}
+
 
 /*  ********* The OrderWidget  ********* */
 
@@ -1119,9 +1300,15 @@ td {
 .pos .order-scroller{
     width:100%;
     height:100%;
-    overflow:hidden;
+    overflow: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+}
+
+.pos .scrollable-y{
+    overflow: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
 }
 
 .pos .order{
@@ -1135,6 +1322,8 @@ td {
     font-size:16px;
     border-radius: 3px;
     border: solid 1px rgb(220,220,220);
+    text-align: left;
+    max-width: 500px;
     -webkit-transform: translate3d(0,0,0);
 }
 
@@ -1170,6 +1359,25 @@ td {
     text-align: right;
     border-color:#BBB;
     color:#999;
+}
+
+.pos .order .summary .fidpoints{
+    position: absolute;
+    left: 20px;
+    padding: 10px;
+    color: #6EC89B;
+    background: rgba(110, 200, 155, 0.17);
+    border-radius: 3px;
+}
+
+.submit-kitchen-button {
+    float: left;
+    background: rgb(61, 235, 82);
+    color: white;
+    padding: 12px 20px;
+    margin: 0px 15px;
+    border-radius: 3px;
+    cursor: pointer;
 }
 
 /*  ********* The OrderLineWidget  ********* */
@@ -1229,6 +1437,50 @@ td {
     color: #777;
     font-weight: bold;
     font-style:normal;
+}
+
+/*  ********* SplitBill ********* */
+
+.splitbill-screen .order-info {
+    text-align: center;
+    margin-bottom:20px;
+    padding: 20px 0px;
+    font-size: 64px;
+    color: #43996E;
+    text-shadow: 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.27);
+    border-bottom: dashed 1px rgb(215,215,215);
+}
+.splitbill-screen .order .orderline.selected{
+    background: rgb(110,200,155);
+    color: white;
+    -webkit-transition: background 250ms ease-in-out;
+       -moz-transition: background 250ms ease-in-out;
+            transition: background 250ms ease-in-out;
+    cursor: default;
+}
+.splitbill-screen .order .orderline.partially.selected{
+    background: rgb(136, 214, 176);
+}
+.splitbill-screen .order .orderline.selected .info-list {
+    color: white;
+}
+.splitbill-screen .order .orderline.selected .info-list em{
+    color: white;
+    font-size: 24px;
+    vertical-align: top;
+}
+.splitbill-screen .paymentmethods {
+    margin: 16px;
+}
+.splitbill-screen .paymentmethod {
+    background: rgb(221, 221, 221);
+    line-height: 40px;
+    margin-bottom: 4px;
+    border-radius: 3px;
+    font-size: 16px;
+    border: solid 1px rgb(202, 202, 202);
+    cursor: pointer;
+    text-align: center;
 }
 
 /*  ********* The ActionBarWidget  ********* */
@@ -1407,6 +1659,11 @@ td {
     border-radius: 3px;
     box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
     z-index:1200;
+}
+.pos .popup .comment{
+    font-weight: normal;
+    font-size: 18px;
+    margin: 0px 16px;
 }
 .pos .popup .footer{
     position:absolute;

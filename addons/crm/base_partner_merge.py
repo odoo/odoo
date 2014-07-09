@@ -281,7 +281,7 @@ class MergePartnerAutomatic(osv.TransientModel):
             except (osv.except_osv, orm.except_orm):
                 _logger.info('Skip recursive partner hierarchies for parent_id %s of partner: %s', parent_id, dst_partner.id)
 
-    @mute_logger('openerp.osv.expression', 'openerp.osv.orm')
+    @mute_logger('openerp.osv.expression', 'openerp.models')
     def _merge(self, cr, uid, partner_ids, dst_partner=None, context=None):
         proxy = self.pool.get('res.partner')
 
@@ -327,8 +327,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         information of the previous one and will copy the new cleaned email into
         the email field.
         """
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         proxy_model = self.pool['ir.model.fields']
         field_ids = proxy_model.search(cr, uid, [('model', '=', 'res.partner'),

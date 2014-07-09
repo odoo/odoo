@@ -15,23 +15,60 @@
          </field>
     </record>
 
+    <!-- Custom reports (aka filters) -->
+    <record id="filter_invoice_salespersons" model="ir.filters">
+        <field name="name">By Salespersons</field>
+        <field name="model_id">account.invoice.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date:month', 'user_id']}</field>
+    </record>
+    <record id="filter_invoice_product" model="ir.filters">
+        <field name="name">By Product</field>
+        <field name="model_id">account.invoice.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date:month', 'product_id'], 'set_visible':True, 'residual_invisible':True}</field>
+    </record>
+    <record id="filter_invoice_product_category" model="ir.filters">
+        <field name="name">By Product Category</field>
+        <field name="model_id">account.invoice.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date:month', 'categ_id'], 'residual_invisible':True}</field>
+    </record>
+    <record id="filter_invoice_refund" model="ir.filters">
+        <field name="name">By Refund</field>
+        <field name="model_id">account.invoice.report</field>
+        <field name="domain">[('type', '=', 'out_refund')]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date:month', 'user_id']}</field>
+    </record>
+    <record id="filter_invoice_country" model="ir.filters">
+        <field name="name">By Country</field>
+        <field name="model_id">account.invoice.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date:month', 'country_id']}</field>
+    </record>
+
     <record id="view_account_invoice_report_search" model="ir.ui.view">
         <field name="name">account.invoice.report.search</field>
         <field name="model">account.invoice.report</field>
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
                 <field name="date"/>
-                <filter icon="terp-go-year" string="Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="year"/>
+                <filter string="This Year" name="year" domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <separator/>
-                <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft Invoices"/>
-                <filter string="Pro-forma" icon="terp-gtk-media-pause" domain="['|', ('state','=','proforma'),('state','=','proforma2')]" help = "Pro-forma Invoices"/>
-                <filter string="Invoiced" name="current" icon="terp-check" domain="[('state','not in', ('draft','cancel','proforma','proforma2'))]" help = "Open and Paid Invoices"/>
+                <filter string="To Invoice" domain="[('state','=','draft')]" help = "Draft Invoices"/>
+                <filter string="Pro-forma" domain="['|', ('state','=','proforma'),('state','=','proforma2')]"/>
+                <filter string="Invoiced" name="current" domain="[('state','not in', ('draft','cancel','proforma','proforma2'))]"/>
                 <separator/>
-                <filter icon="terp-personal" string="Customer" name="customer" domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]" help="Customer Invoices And Refunds"/>
-                <filter icon="terp-personal" string="Supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]" help="Supplier Invoices And Refunds"/>
+                <filter string="Customer" name="customer" domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"/>
+                <filter string="Supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"/>
                 <separator/>
-                <filter icon="terp-dolar" string="Invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]" help="Customer And Supplier Invoices"/>
-                <filter icon="terp-dolar_ok!" string="Refund" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]" help="Customer And Supplier Refunds"/>
+                <filter string="Invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"/>
+                <filter string="Refund" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"/>
                 <field name="partner_id"/>
                 <field name="user_id" />
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>

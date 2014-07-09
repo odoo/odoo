@@ -165,51 +165,55 @@ class GettextAlias(object):
             return sql_db.db_connect(db_name)
 
     def _get_cr(self, frame, allow_create=True):
-        is_new_cr = False
-        cr = frame.f_locals.get('cr', frame.f_locals.get('cursor'))
-        if not cr:
-            s = frame.f_locals.get('self', {})
-            cr = getattr(s, 'cr', None)
-        if not cr and allow_create:
+        # try, in order: cr, cursor, self.env.cr, self.cr
+        if 'cr' in frame.f_locals:
+            return frame.f_locals['cr'], False
+        if 'cursor' in frame.f_locals:
+            return frame.f_locals['cursor'], False
+        s = frame.f_locals.get('self')
+        if hasattr(s, 'env'):
+            return s.env.cr, False
+        if hasattr(s, 'cr'):
+            return s.cr, False
+        if allow_create:
+            # create a new cursor
             db = self._get_db()
             if db is not None:
-                cr = db.cursor()
-                is_new_cr = True
-        return cr, is_new_cr
+                return db.cursor(), True
+        return None, False
 
     def _get_uid(self, frame):
-        return frame.f_locals.get('uid') or frame.f_locals.get('user')
+        # try, in order: uid, user, self.env.uid
+        if 'uid' in frame.f_locals:
+            return frame.f_locals['uid']
+        if 'user' in frame.f_locals:
+            return int(frame.f_locals['user'])      # user may be a record
+        s = frame.f_locals.get('self')
+        return s.env.uid
 
     def _get_lang(self, frame):
-        lang = None
-        ctx = frame.f_locals.get('context')
-        if not ctx:
-            kwargs = frame.f_locals.get('kwargs')
-            if kwargs is None:
-                args = frame.f_locals.get('args')
-                if args and isinstance(args, (list, tuple)) \
-                        and isinstance(args[-1], dict):
-                    ctx = args[-1]
-            elif isinstance(kwargs, dict):
-                ctx = kwargs.get('context')
-        if ctx:
-            lang = ctx.get('lang')
-        s = frame.f_locals.get('self', {})
-        if not lang:
-            c = getattr(s, 'localcontext', None)
-            if c:
-                lang = c.get('lang')
-        if not lang:
-            # Last resort: attempt to guess the language of the user
-            # Pitfall: some operations are performed in sudo mode, and we 
-            #          don't know the originial uid, so the language may
-            #          be wrong when the admin language differs.
-            pool = getattr(s, 'pool', None)
-            (cr, dummy) = self._get_cr(frame, allow_create=False)
-            uid = self._get_uid(frame)
-            if pool and cr and uid:
-                lang = pool['res.users'].context_get(cr, uid)['lang']
-        return lang
+        # try, in order: context.get('lang'), kwargs['context'].get('lang'),
+        # self.env.lang, self.localcontext.get('lang')
+        if 'context' in frame.f_locals:
+            return frame.f_locals['context'].get('lang')
+        kwargs = frame.f_locals.get('kwargs', {})
+        if 'context' in kwargs:
+            return kwargs['context'].get('lang')
+        s = frame.f_locals.get('self')
+        if hasattr(s, 'env'):
+            return s.env.lang
+        if hasattr(s, 'localcontext'):
+            return s.localcontext.get('lang')
+        # Last resort: attempt to guess the language of the user
+        # Pitfall: some operations are performed in sudo mode, and we
+        #          don't know the originial uid, so the language may
+        #          be wrong when the admin language differs.
+        pool = getattr(s, 'pool', None)
+        (cr, dummy) = self._get_cr(frame, allow_create=False)
+        uid = self._get_uid(frame)
+        if pool and cr and uid:
+            return pool['res.users'].context_get(cr, uid)['lang']
+        return None
 
     def __call__(self, source):
         res = source
@@ -685,7 +689,7 @@ def trans_generate(lang, modules, cr):
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
             objmodel = registry.get(obj.model)
-            if not objmodel or not field_name in objmodel._columns:
+            if objmodel is None or field_name not in objmodel._columns:
                 continue
             field_def = objmodel._columns[field_name]
 
@@ -736,7 +740,7 @@ def trans_generate(lang, modules, cr):
                 except (IOError, etree.XMLSyntaxError):
                     _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
-        for field_name,field_def in obj._table._columns.items():
+        for field_name, field_def in obj._columns.items():
             if field_def.translate:
                 name = model + "," + field_name
                 try:

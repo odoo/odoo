@@ -14,6 +14,29 @@
          </field>
     </record>
 
+    <!-- Custom reports (aka filters) -->
+    <record id="filter_sale_report_salespersons" model="ir.filters">
+        <field name="name">By Salespersons</field>
+        <field name="model_id">sale.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date:month', 'user_id']}</field>
+    </record>
+    <record id="filter_sale_report_salesteam" model="ir.filters">
+        <field name="name">By Salesteam</field>
+        <field name="model_id">sale.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date:month', 'section_id']}</field>
+    </record>
+    <record id="filter_isale_report_product" model="ir.filters">
+        <field name="name">By Product</field>
+        <field name="model_id">sale.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date:month', 'product_id']}</field>
+    </record>
+
     <record id="view_order_product_search" model="ir.ui.view">
         <field name="name">sale.report.search</field>
         <field name="model">sale.report</field>
@@ -21,14 +44,16 @@
             <search string="Sales Analysis">
                 <field name="date"/>
                 <field name="date_confirm"/>
-                <filter icon="terp-document-new" name="Quotations" domain="[('state','in',('draft','sent'))]"/>
-                <filter icon="terp-check" name="Sales" string="Sales" domain="[('state','not in',('draft','sent','cancel'))]"/>
+                <filter string="This Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <separator/>
-                <filter icon="terp-personal" string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
+                <filter name="Quotations" domain="[('state','in',('draft','sent'))]"/>
+                <filter name="Sales" string="Sales" domain="[('state','not in',('draft','sent','cancel'))]"/>
+                <separator/>
+                <filter string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
                 <field name="user_id"/>
-                <group expand="0" string="Extended Filters...">
+                <group expand="0" string="Extended Filters">
                     <field name="categ_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
@@ -57,7 +82,7 @@
         <field name="view_mode">graph</field>
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="view_id" ref="view_order_product_graph"/>
-        <field name="context">{'search_default_Sales':1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_Sales':1, 'search_default_year': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 

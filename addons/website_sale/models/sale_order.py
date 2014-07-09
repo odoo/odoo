@@ -120,9 +120,9 @@ class website(orm.Model):
 
     _columns = {
         'pricelist_id': fields.related('user_id','partner_id','property_product_pricelist',
-            type='many2one', relation='product.pricelist', string='Default pricelist'),
+            type='many2one', relation='product.pricelist', string='Default Pricelist'),
         'currency_id': fields.related('pricelist_id','currency_id',
-            type='many2one', relation='res.currency', string='Default pricelist'),
+            type='many2one', relation='res.currency', string='Default Currency'),
     }
 
     def sale_product_domain(self, cr, uid, ids, context=None):
@@ -218,9 +218,4 @@ class website(orm.Model):
             'sale_order_code_pricelist_id': False,
         })
 
-    def compute_curency(self, cr, uid, ids, from_amount, from_currency_id=None, context=None):
-        from_currency_id = from_currency_id or self.browse(cr, SUPERUSER_ID, ids[0]).currency_id.id
-        to_currency_id = self.pool.get("res.users").browse(cr, uid, uid).partner_id.property_product_pricelist.currency_id.id
-        return self.pool['res.currency'].compute(cr, uid, from_currency_id, to_currency_id, from_amount, context=context)
 
-# vim:et:

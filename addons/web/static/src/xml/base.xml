@@ -465,7 +465,7 @@
 <t t-name="ViewManagerDebug">
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
     <t t-if="view_manager.active_view === 'form'">
-        <option value="perm_read">View Log (perm_read)</option>
+        <option value="get_metadata">View Metadata</option>
         <option value="toggle_layout_outline">Toggle Form Layout Outline</option>
         <option value="set_defaults">Set Defaults</option>
     </t>
@@ -1365,7 +1365,7 @@
     </div>
 </t>
 <t t-name="WidgetButton">
-    <button type="button" t-att-class="widget.is_stat_button ? 'oe_stat_button btn btn-default' : 'oe_button oe_form_button'"
+    <button type="button" t-att-class="widget.is_stat_button ? 'oe_stat_button btn btn-default' : 'oe_button oe_form_button ' + (widget.node.attrs.class ? widget.node.attrs.class : '')"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
@@ -1653,9 +1653,9 @@
 </div>
 
 
-<div t-name="SearchView.CustomReports" class="oe_searchview_custom oe_searchview_section">
+<div t-name="SearchView.Custom" class="oe_searchview_custom oe_searchview_section">
     <dl class="dl-horizontal">
-        <dt><span class="oe_i">M</span> Custom Reports</dt>
+        <dt><span class="oe_i">M</span> Favorites</dt>
         <dd><ul class="oe_searchview_custom_list"/></dd>
     </dl>
 </div>
@@ -1720,6 +1720,10 @@
     </select>
 </t>
 
+<div t-name="SearchView.autocomplete" class="oe-autocomplete">
+    <ul>
+    </ul>
+</div>
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>

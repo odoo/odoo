@@ -109,7 +109,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             context=request.context)  # todo in trunk: order="grade_id DESC, implemented_count DESC", offset=pager['offset'], limit=self._references_per_page
         partners = partner_obj.browse(request.cr, SUPERUSER_ID, partner_ids, request.context)
         # remove me in trunk
-        partners.sort(key=lambda x: (-1 * (x.grade_id and x.grade_id.id or 0), len(x.implemented_partner_ids)), reverse=True)
+        partners = sorted(partners, key=lambda x: (-1 * (x.grade_id and x.grade_id.id or 0), len(x.implemented_partner_ids)), reverse=True)
         partners = partners[pager['offset']:pager['offset'] + self._references_per_page]
 
         google_map_partner_ids = ','.join(map(str, [p.id for p in partners]))

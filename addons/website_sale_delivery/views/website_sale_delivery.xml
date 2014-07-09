@@ -16,11 +16,13 @@
         </xpath>
     </template>
 
-    <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
-        <xpath expr="//t[@t-set='head']" position="inside">
-            <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_sale_delivery.js"></script>
-        </xpath>
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
+      <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_sale_delivery.js"></script>
+      </xpath>
+    </template>
 
+    <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
         <xpath expr="//div[@id='payment_method']" position="before">
             <div t-if="deliveries" class="row" id="delivery_carrier">
                 <div class="col-lg-5 col-sm-6">

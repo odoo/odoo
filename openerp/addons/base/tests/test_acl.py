@@ -20,6 +20,22 @@ class TestACL(common.TransactionCase):
         self.tech_group = self.registry('ir.model.data').get_object(self.cr, self.uid,
                                                                     *(GROUP_TECHNICAL_FEATURES.split('.')))
 
+    def _set_field_groups(self, model, field_name, groups):
+        field = model._fields[field_name]
+        column = model._columns[field_name]
+        old_groups = field.groups
+        old_prefetch = column._prefetch
+    
+        field.groups = groups
+        column.groups = groups
+        column._prefetch = False
+
+        @self.addCleanup
+        def cleanup():
+            field.groups = old_groups
+            column.groups = old_groups
+            column._prefetch = old_prefetch
+
     def test_field_visibility_restriction(self):
         """Check that model-level ``groups`` parameter effectively restricts access to that
            field for users who do not belong to one of the explicitly allowed groups"""
@@ -33,8 +49,9 @@ class TestACL(common.TransactionCase):
         self.assertNotEquals(view_arch.xpath("//field[@name='accuracy']"), [],
                              "Field 'accuracy' must be found in view definition before the test")
 
-        # Restrict access to the field and check it's gone
-        self.res_currency._columns['accuracy'].groups = GROUP_TECHNICAL_FEATURES
+        # restrict access to the field and check it's gone
+        self._set_field_groups(self.res_currency, 'accuracy', GROUP_TECHNICAL_FEATURES)
+
         fields = self.res_currency.fields_get(self.cr, self.demo_uid, [])
         form_view = self.res_currency.fields_view_get(self.cr, self.demo_uid, False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
@@ -56,9 +73,8 @@ class TestACL(common.TransactionCase):
 
         #cleanup
         self.tech_group.write({'users': [(3, self.demo_uid)]})
-        self.res_currency._columns['accuracy'].groups = False
 
-    @mute_logger('openerp.osv.orm')
+    @mute_logger('openerp.models')
     def test_field_crud_restriction(self):
         "Read/Write RPC access to restricted field should be forbidden"
         # Verify the test environment first
@@ -68,7 +84,8 @@ class TestACL(common.TransactionCase):
         self.assert_(self.res_partner.write(self.cr, self.demo_uid, [1], {'bank_ids': []}))
 
         # Now restrict access to the field and check it's forbidden
-        self.res_partner._columns['bank_ids'].groups = GROUP_TECHNICAL_FEATURES
+        self._set_field_groups(self.res_partner, 'bank_ids', GROUP_TECHNICAL_FEATURES)
+
         with self.assertRaises(openerp.osv.orm.except_orm):
             self.res_partner.read(self.cr, self.demo_uid, [1], ['bank_ids'])
         with self.assertRaises(openerp.osv.orm.except_orm):
@@ -83,25 +100,22 @@ class TestACL(common.TransactionCase):
 
         #cleanup
         self.tech_group.write({'users': [(3, self.demo_uid)]})
-        self.res_partner._columns['bank_ids'].groups = False
 
+    @mute_logger('openerp.models')
     def test_fields_browse_restriction(self):
         """Test access to records having restricted fields"""
-        self.res_partner._columns['email'].groups = GROUP_TECHNICAL_FEATURES
-        try:
-            P = self.res_partner
-            pid = P.search(self.cr, self.demo_uid, [], limit=1)[0]
-            part = P.browse(self.cr, self.demo_uid, pid)
-            # accessing fields must no raise exceptions...
-            part.name
-            # ... except if they are restricted
-            with self.assertRaises(openerp.osv.orm.except_orm) as cm:
-                with mute_logger('openerp.osv.orm'):
-                    part.email
+        self._set_field_groups(self.res_partner, 'email', GROUP_TECHNICAL_FEATURES)
 
-            self.assertEqual(cm.exception.args[0], 'Access Denied')
-        finally:
-            self.res_partner._columns['email'].groups = False
+        pid = self.res_partner.search(self.cr, self.demo_uid, [], limit=1)[0]
+        part = self.res_partner.browse(self.cr, self.demo_uid, pid)
+        # accessing fields must no raise exceptions...
+        part.name
+        # ... except if they are restricted
+        with self.assertRaises(openerp.osv.orm.except_orm) as cm:
+            with mute_logger('openerp.models'):
+                part.email
+
+        self.assertEqual(cm.exception.args[0], 'AccessError')
 
 if __name__ == '__main__':
     unittest2.main()

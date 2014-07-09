@@ -75,9 +75,7 @@ class report_rappel(report_sxw.rml_parse):
         return [{'line': lines} for lines in lines_per_currency.values()]
 
     def _get_text(self, stat_line, followup_id, context=None):
-        if context is None:
-            context = {}
-        context.update({'lang': stat_line.partner_id.lang})
+        context = dict(context or {}, lang=stat_line.partner_id.lang)
         fp_obj = self.pool['account_followup.followup']
         fp_line = fp_obj.browse(self.cr, self.uid, followup_id, context=context).followup_line
         if not fp_line:

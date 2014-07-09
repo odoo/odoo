@@ -80,7 +80,7 @@
       <h5><strong><a itemprop="name" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))" t-field="product.name"/></strong></h5>
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
           <b>
-              <t t-if="(website.compute_curency(product.lst_price) - product.price) &gt; 0.1">
+              <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
                 <del class="text-danger" style="white-space: nowrap;" t-field="product.lst_price" t-field-options='{
                   "widget": "monetary",
                   "from_currency": "website.currency_id",
@@ -371,7 +371,7 @@
           </div>
         </section>
 
-        <section t-attf-class="container oe_website_sale #{(website.compute_curency(product.lst_price) - product.price) &gt; 0.1 and 'discount'}" id="product_detail">
+        <section t-attf-class="container oe_website_sale #{(compute_currency(product.lst_price) - product.price) &gt; 0.1 and 'discount'}" id="product_detail">
           <div class="row">
             <div class="col-sm-7 col-md-7 col-lg-7">
                 <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
@@ -441,7 +441,7 @@
               "widget": "monetary",
               "from_currency": "website.currency_id",
               "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-           }'/><br/>
+           }'/>
           <b class="oe_price" style="white-space: nowrap;"
             t-field="product.price"
             t-field-options='{
@@ -690,7 +690,7 @@
                                   <div class="text-muted" t-field="line.name"/>
                               </td>
                               <td class="text-center" name="price">
-                                <t t-if="(website.compute_curency(line.product_id.lst_price) - line.price_unit) &gt; 0.1">
+                                <t t-if="(compute_currency(line.product_id.lst_price) - line.price_unit) &gt; 0.01">
                                   <del class="text-danger" style="white-space: nowrap;"
                                     t-field="line.product_id.lst_price" t-field-options='{
                                         "widget": "monetary",
@@ -784,7 +784,7 @@
                       <div class="text-muted" t-field="product.description_sale"/>
                   </td>
                   <td>
-                      <t t-if="(website.compute_curency(product.lst_price) - product.price) &gt; 0.1">
+                      <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
                         <del class="text-danger" style="white-space: nowrap;"
                           t-field="product.lst_price" t-field-options='{
                               "widget": "monetary",

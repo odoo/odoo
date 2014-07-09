@@ -294,10 +294,10 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
     def _already_installed(self, cr, uid, context=None):
         """ For each module (boolean fields in a res.config.installer),
         check if it's already installed (either 'to install', 'to upgrade'
-        or 'installed') and if it is return the module's browse_record
+        or 'installed') and if it is return the module's record
 
         :returns: a list of all installed modules in this installer
-        :rtype: [browse_record]
+        :rtype: recordset (collection of Record)
         """
         modules = self.pool['ir.module.module']
 
@@ -333,7 +333,7 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
                    for installer in self.read(cr, uid, ids, context=context)
                    for module_name, to_install in installer.iteritems()
                    if module_name != 'id'
-                   if type(self._columns[module_name]) is fields.boolean
+                   if type(self._columns.get(module_name)) is fields.boolean
                    if to_install)
 
         hooks_results = set()

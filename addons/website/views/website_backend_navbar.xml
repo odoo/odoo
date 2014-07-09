@@ -4,6 +4,7 @@
 <!-- Front-end/Back-end integration -->
 <template id="user_navbar" inherit_id="website.layout" groups="base.group_user">
 <xpath expr="//body/div['id=wrawrap']" position="before">
+<t t-if="website and menu_data">
     <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe_applications">
@@ -79,6 +80,7 @@
             </li>
         </ul>
     </nav>
+</t>
 </xpath>
 </template>
 </data>

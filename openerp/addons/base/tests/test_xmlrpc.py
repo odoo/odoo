@@ -3,7 +3,7 @@ import time
 import unittest2
 import xmlrpclib
 
-import openerp
+import openerp.tests.common
 
 DB = openerp.tests.common.DB
 

@@ -327,7 +327,7 @@ class product_attribute(osv.osv):
     _description = "Product Attribute"
     _columns = {
         'name': fields.char('Name', translate=True, required=True),
-        'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values'),
+        'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values', copy=True),
     }
 
 class product_attribute_value(osv.osv):
@@ -364,7 +364,7 @@ class product_attribute_value(osv.osv):
     _columns = {
         'sequence': fields.integer('Sequence', help="Determine the display order"),
         'name': fields.char('Value', translate=True, required=True),
-        'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True),
+        'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True, ondelete='cascade'),
         'product_ids': fields.many2many('product.product', id1='att_id', id2='prod_id', string='Variants', readonly=True),
         'price_extra': fields.function(_get_price_extra, type='float', string='Attribute Price Extra',
             fnct_inv=_set_price_extra,
@@ -378,20 +378,26 @@ class product_attribute_value(osv.osv):
     _defaults = {
         'price_extra': 0.0,
     }
+    def unlink(self, cr, uid, ids, context=None):
+        ctx = dict(context or {}, active_test=False)
+        product_ids = self.pool['product.product'].search(cr, uid, [('attribute_value_ids', 'in', ids)], context=ctx)
+        if product_ids:
+            raise osv.except_osv(_('Integrity Error!'), _('The operation cannot be completed:\nYou trying to delete an attribute value with a reference on a product variant.'))
+        return super(product_attribute_value, self).unlink(cr, uid, ids, context=context)
 
 class product_attribute_price(osv.osv):
     _name = "product.attribute.price"
     _columns = {
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
-        'value_id': fields.many2one('product.attribute.value', 'Product Attribute Value', required=True),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
+        'value_id': fields.many2one('product.attribute.value', 'Product Attribute Value', required=True, ondelete='cascade'),
         'price_extra': fields.float('Price Extra', digits_compute=dp.get_precision('Product Price')),
     }
 
 class product_attribute_line(osv.osv):
     _name = "product.attribute.line"
     _columns = {
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
-        'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
+        'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True, ondelete='restrict'),
         'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Product Attribute Value'),
     }
 
@@ -414,9 +420,9 @@ class product_template(osv.osv):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     def _is_product_variant(self, cr, uid, ids, name, arg, context=None):
-        return self.is_product_variant(cr, uid, ids, name, arg, context=context)
+        return self._is_product_variant_impl(cr, uid, ids, name, arg, context=context)
 
-    def is_product_variant(self, cr, uid, ids, name, arg, context=None):
+    def _is_product_variant_impl(self, cr, uid, ids, name, arg, context=None):
         prod = self.pool.get('product.product')
         res = dict.fromkeys(ids, False)
         ctx = dict(context, active_test=True)
@@ -848,7 +854,7 @@ class product_product(osv.osv):
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + (data['name'] or '')
         return res
 
-    def is_product_variant(self, cr, uid, ids, name, arg, context=None):
+    def _is_product_variant_impl(self, cr, uid, ids, name, arg, context=None):
         return dict.fromkeys(ids, True)
 
     def _get_name_template_ids(self, cr, uid, ids, context=None):
@@ -898,7 +904,7 @@ class product_product(osv.osv):
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
         }, select=True),
-        'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', readonly=True),
+        'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', readonly=True, ondelete='restrict'),
 
         # image: all image fields are base64 encoded and PIL-supported
         'image_variant': fields.binary("Variant Image",
@@ -1157,7 +1163,7 @@ class product_supplierinfo(osv.osv):
         'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Unit of Measure."),
         'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
-        'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
+        'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist', copy=True),
         'company_id':fields.many2one('res.company','Company',select=1),
     }
     _defaults = {
