@@ -700,7 +700,9 @@ class account_analytic_account(osv.osv):
 
     def _prepare_invoice_lines(self, cr, uid, contract, fiscal_position_id, context=None):
         fpos_obj = self.pool.get('account.fiscal.position')
-        fiscal_position = fpos_obj.browse(cr, uid,  fiscal_position_id, context=context)
+        fiscal_position = None
+        if fiscal_position_id:
+            fiscal_position = fpos_obj.browse(cr, uid,  fiscal_position_id, context=context)
         invoice_lines = []
         for line in contract.recurring_invoice_line_ids:
 
