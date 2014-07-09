@@ -32,13 +32,14 @@ from openerp.tools.translate import _
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
-    'channel_id',
+    'campaign_id',
     'company_id',
     'country_id',
     'section_id',
     'state_id',
     'stage_id',
-    'type_id',
+    'medium_id',
+    'source_id',
     'user_id',
     'title',
     'city',
@@ -67,7 +68,7 @@ class crm_lead(format_address, osv.osv):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority,date_action,id desc"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin', 'crm.tracking.mixin']
 
     _track = {
         'stage_id': {
@@ -214,9 +215,6 @@ class crm_lead(format_address, osv.osv):
         'write_date': fields.datetime('Update Date', readonly=True),
         'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Tags', \
             domain="['|', ('section_id', '=', section_id), ('section_id', '=', False), ('object_id.model', '=', 'crm.lead')]", help="Classify and analyze your lead/opportunity categories like: Training, Service"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
-        'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
         'opt_out': fields.boolean('Opt-Out', oldname='optout',

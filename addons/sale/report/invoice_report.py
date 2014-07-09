@@ -25,6 +25,9 @@ class account_invoice_report(osv.osv):
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
+    _depends = {
+        'account.invoice': ['section_id'],
+    }
 
     def _select(self):
         return  super(account_invoice_report, self)._select() + ", sub.section_id as section_id"

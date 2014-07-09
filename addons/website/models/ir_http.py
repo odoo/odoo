@@ -76,7 +76,7 @@ class ir_http(orm.AbstractModel):
             if self.geo_ip_resolver and request.httprequest.remote_addr:
                 record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
-
+            
         if request.website_enabled:
             if func:
                 self._authenticate(func.routing['auth'])

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,18 +19,4 @@
 #
 ##############################################################################
 
-import crm
-import crm_segmentation
-import crm_lead
-import sales_team
-import calendar_event
-import ir_http
-import crm_phonecall
-import report
-import wizard
-import res_partner
-import res_config
-import base_partner_merge
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+import mass_mailing
