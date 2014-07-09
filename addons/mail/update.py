@@ -29,7 +29,7 @@ def get_sys_logs(self, cr, uid):
     pool = openerp.registry(cr.dbname)
 
     dbuuid = pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-    db_create_date = pool.get('ir.config_parameter').get_param(cr, uid, 'database.create_date')
+    db_create_date = pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'database.create_date')
     limit_date = datetime.datetime.now()
     limit_date = limit_date - datetime.timedelta(15)
     limit_date_str = limit_date.strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
@@ -59,7 +59,7 @@ def get_sys_logs(self, cr, uid):
 
     add_arg = {"timeout":30} if sys.version_info >= (2,6) else {}
     arguments = {'arg0': msg, "action": "update",}
-    arguments_raw = werkzeug.url_encode(arguments)
+    arguments_raw = werkzeug.urls.url_encode(arguments)
 
     url = config.get("publisher_warranty_url")
 

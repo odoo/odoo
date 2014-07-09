@@ -129,8 +129,7 @@ class google_service(osv.osv_memory):
         return res
 
     def _do_request(self, cr, uid, uri, params={}, headers={}, type='POST', preuri="https://www.googleapis.com", context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         """ Return a tuple ('HTTP_CODE', 'HTTP_RESPONSE') """
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri, type, headers, werkzeug.url_encode(params) if type == 'GET' else params))
@@ -174,10 +173,10 @@ class google_service(osv.osv_memory):
         return self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://www.openerp.com?NoBaseUrl', context=context)
 
     def get_client_id(self, cr, uid, service, context=None):
-        return self.pool.get('ir.config_parameter').get_param(cr, uid, 'google_%s_client_id' % (service,), default=False, context=context)
+        return self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % (service,), default=False, context=context)
 
     def get_client_secret(self, cr, uid, service, context=None):
-        return self.pool.get('ir.config_parameter').get_param(cr, uid, 'google_%s_client_secret' % (service,), default=False, context=context)
+        return self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'google_%s_client_secret' % (service,), default=False, context=context)
 
     def get_uri_oauth(self, a=''):  # a = optional action
         return "https://accounts.google.com/o/oauth2/%s" % (a,)

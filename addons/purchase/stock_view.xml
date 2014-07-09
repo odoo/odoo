@@ -35,13 +35,13 @@
                             name="view_picking"
                             class="oe_stat_button"
                             icon="fa-truck"
-                            states="approved">
+                            attrs="{'invisible': [('shipment_count', '=', 0)]}">
                             <field name="shipment_count" widget="statinfo" string="In Shipments" help="Incoming Shipments"/>
                         </button>
                         <button type="object"  name="invoice_open"
                             class="oe_stat_button"
                             icon="fa-pencil-square-o"
-                            attrs="{'invisible': [('state', 'in', ['draft','sent'])]}">
+                            attrs="{'invisible': [('invoice_count', '=', 0)]}">
                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
                         </button> 
                     </div>

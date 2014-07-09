@@ -128,7 +128,7 @@
             <td><span class="glyphicon glyphicon-add-remove"></span></td>
             <td><t t-esc="line.account_code"/></td>
             <td><t t-esc="line.q_due_date"/></td>
-            <td><t t-esc="line.q_label"/></td>
+            <td class="js_qlabel"><t t-esc="line.q_label"/></td>
 
             <td><t t-if="line.debit !== 0">
                 <t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t>
@@ -185,7 +185,7 @@
             <td><span class="toggle_create glyphicon glyphicon-play"></span></td>
             <td><t t-esc="account_code"/></td>
             <td></td>
-            <td>Open balance</td>
+            <td class="js_open_balance">Open balance</td>
             <td><t t-esc="debit"/></td>
             <td><t t-esc="credit"/></td>
             <td></td>

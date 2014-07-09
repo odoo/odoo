@@ -62,9 +62,10 @@ class account_chart(osv.osv_memory):
                                ORDER BY p.date_stop DESC
                                LIMIT 1) AS period_stop''', (fiscalyear_id, fiscalyear_id))
             periods =  [i[0] for i in cr.fetchall()]
-            if periods and len(periods) > 1:
+            if periods:
                 start_period = periods[0]
-                end_period = periods[1]
+                if len(periods) > 1:
+                    end_period = periods[1]
             res['value'] = {'period_from': start_period, 'period_to': end_period}
         else:
             res['value'] = {'period_from': False, 'period_to': False}
@@ -84,7 +85,7 @@ class account_chart(osv.osv_memory):
         fy_obj = self.pool.get('account.fiscalyear')
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         result = mod_obj.get_object_reference(cr, uid, 'account', 'action_account_tree')
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]

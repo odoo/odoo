@@ -40,10 +40,10 @@ class l10n_be_vat_declaration(osv.osv_memory):
         return ''
 
     _columns = {
-        'name': fields.char('File Name', size=32),
+        'name': fields.char('File Name'),
         'period_id': fields.many2one('account.period','Period', required=True),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], required=True),
-        'msg': fields.text('File created', size=64, readonly=True),
+        'msg': fields.text('File created', readonly=True),
         'file_save': fields.binary('Save File'),
         'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a restitution is to make or not?'),
         'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to make or not?'),
@@ -196,6 +196,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         data_of_file += '\n\t</ns2:VATDeclaration> \n</ns2:VATConsignment>'
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_vat_save')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        context = dict(context or {})
         context['file_save'] = data_of_file
         return {
             'name': _('Save XML For Vat declaration'),

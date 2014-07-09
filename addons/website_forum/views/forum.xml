@@ -20,10 +20,31 @@
             <field name="name">forum.forum.form</field>
             <field name="model">forum.forum</field>
             <field name="arch" type="xml">
-                <form string="Forum" version="7.0">
+                <form string="Forum">
                     <sheet>
                         <group>
                             <field name="name"/>
+                            <field name="karma_ask"/>
+                            <field name="karma_edit_own"/>
+                            <field name="karma_edit_all"/>
+                            <field name="karma_close_own"/>
+                            <field name="karma_close_all"/>
+                            <field name="karma_unlink_own"/>
+                            <field name="karma_unlink_all"/>
+                        </group>
+                        <group>
+                            <field name="karma_upvote"/>
+                            <field name="karma_downvote"/>
+                            <field name="karma_answer_accept_own"/>
+                            <field name="karma_answer_accept_all"/>
+                            <field name="karma_editor_link_files"/>
+                            <field name="karma_editor_clickable_link"/>
+                            <field name="karma_comment_own"/>
+                            <field name="karma_comment_all"/>
+                            <field name="karma_comment_convert_own"/>
+                            <field name="karma_comment_convert_all"/>
+                            <field name="karma_comment_unlink_own"/>
+                            <field name="karma_comment_unlink_all"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -59,7 +80,7 @@
             <field name="name">forum.post.form</field>
             <field name="model">forum.post</field>
             <field name="arch" type="xml">
-                <form string="Forum Post" version="7.0">
+                <form string="Forum Post">
                     <sheet>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -105,7 +126,7 @@
                     <field name="name" string="Content" filter_domain="['|', ('name', 'ilike', self), ('content', 'ilike', self)]"/>
                     <field name="create_uid"/>
                     <field name="forum_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Forum" domain="[]" context="{'group_by': 'forum_id'}"/>
                         <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
                     </group>

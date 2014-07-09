@@ -62,6 +62,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     load_kanban: function(data) {
         this.fields_view = data;
+
+        // use default order if defined in xml description
+        var default_order = this.fields_view.arch.attrs.default_order,
+            unsorted = !this.dataset._sort.length;
+        if (unsorted && default_order) {
+            this.dataset.set_sort(default_order.split(','));
+        }
+
         this.$el.addClass(this.fields_view.arch.attrs['class']);
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
         if (this.options.$buttons) {
@@ -348,10 +356,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_groups_started: function() {
         var self = this;
-        if (this.group_by) {
+        if (this.group_by || this.fields_keys.indexOf("sequence") !== -1) {
             // Kanban cards drag'n'drop
-            var prev_widget, is_folded, record;
-            var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards, .oe_kanban_column .oe_kanban_folded_column_cards');
+            var prev_widget, is_folded, record, $columns;
+            if (this.group_by) {
+                $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards, .oe_kanban_column .oe_kanban_folded_column_cards');
+            } else {
+                $columns = this.$el.find('.oe_kanban_column_cards');
+            }
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {

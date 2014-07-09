@@ -10,22 +10,22 @@
                 <div class="row mt32 mb32">
                     <div class="col-xs-3">
                         <strong>Chart of Tax:</strong>
-                        <p t-esc="account"/>
+                        <p t-esc="get_account(data)"/>
                     </div>
-                    <div class="col-xs-3" t-if="fiscalyear">
+                    <div class="col-xs-3">
                         <strong>Fiscal Year:</strong>
-                        <p t-esc="fiscalyear"/>
+                        <p t-esc="get_fiscalyear(data)"/>
                     </div>
-                    <div class="col-xs-3" t-if="period_from and period_to">
+                    <div class="col-xs-3">
                         <strong>Periods:</strong>
                         <p>
-                            Start Period: <span t-esc="period_from"/><br/>
-                            End Period: <span t-esc="period_to"/>
+                            Start Period: <span t-esc="get_start_period(data)"/><br/>
+                            End Period: <span t-esc="get_end_period(data)"/>
                         </p>
                     </div>
                     <div class="col-xs-3">
                         <strong>Based On:</strong>
-                        <p t-esc="based_on"/>
+                        <p t-esc="get_basedon(data)"/>
                     </div>
                 </div>
 

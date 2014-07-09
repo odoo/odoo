@@ -28,7 +28,6 @@ from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.addons.base.res.res_partner import format_address
 from openerp.osv import fields, osv, orm
-from openerp.tools import html2plaintext
 from openerp.tools.translate import _
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
@@ -82,6 +81,7 @@ class crm_lead(format_address, osv.osv):
     _mail_mass_mailing = _('Leads / Opportunities')
 
     def get_empty_list_help(self, cr, uid, help, context=None):
+        context = dict(context or {})
         if context.get('default_type') == 'lead':
             context['empty_list_help_model'] = 'crm.case.section'
             context['empty_list_help_id'] = context.get('default_section_id')
@@ -201,7 +201,7 @@ class crm_lead(format_address, osv.osv):
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Subject', size=64, required=True, select=1),
+        'name': fields.char('Subject', required=True, select=1),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -224,11 +224,11 @@ class crm_lead(format_address, osv.osv):
                     "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."),
         'type': fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', select=True, help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
-        'date_closed': fields.datetime('Closed', readonly=True),
+        'date_closed': fields.datetime('Closed', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange', select=True,
                         domain="['&', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
-        'referred': fields.char('Referred By', size=64),
+        'referred': fields.char('Referred By'),
         'date_open': fields.datetime('Assigned', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='day_open', type="float", store=True),
@@ -246,7 +246,7 @@ class crm_lead(format_address, osv.osv):
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         'date_action': fields.date('Next Action Date', select=True),
-        'title_action': fields.char('Next Action', size=64),
+        'title_action': fields.char('Next Action'),
         'color': fields.integer('Color Index'),
         'partner_address_name': fields.related('partner_id', 'name', type='char', string='Partner Contact Name', readonly=True),
         'partner_address_email': fields.related('partner_id', 'email', type='char', string='Partner Contact Email', readonly=True),
@@ -255,16 +255,16 @@ class crm_lead(format_address, osv.osv):
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
 
         # Fields for address, due to separation from crm and res.partner
-        'street': fields.char('Street', size=128),
-        'street2': fields.char('Street2', size=128),
+        'street': fields.char('Street'),
+        'street2': fields.char('Street2'),
         'zip': fields.char('Zip', change_default=True, size=24),
-        'city': fields.char('City', size=128),
+        'city': fields.char('City'),
         'state_id': fields.many2one("res.country.state", 'State'),
         'country_id': fields.many2one('res.country', 'Country'),
-        'phone': fields.char('Phone', size=64),
-        'fax': fields.char('Fax', size=64),
-        'mobile': fields.char('Mobile', size=64),
-        'function': fields.char('Function', size=128),
+        'phone': fields.char('Phone'),
+        'fax': fields.char('Fax'),
+        'mobile': fields.char('Mobile'),
+        'function': fields.char('Function'),
         'title': fields.many2one('res.partner.title', 'Title'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'payment_mode': fields.many2one('crm.payment.mode', 'Payment Mode', \
@@ -305,7 +305,8 @@ class crm_lead(format_address, osv.osv):
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             values = {
-                'partner_name': partner.name,
+                'partner_name': partner.parent_id.name if partner.parent_id else partner.name,
+                'contact_name': partner.name if partner.parent_id else False,
                 'street': partner.street,
                 'street2': partner.street2,
                 'city': partner.city,
@@ -376,7 +377,6 @@ class crm_lead(format_address, osv.osv):
 
     def case_mark_lost(self, cr, uid, ids, context=None):
         """ Mark the case as lost: state=cancel and probability=0
-            :deprecated: this method will be removed in OpenERP v8.
         """
         stages_leads = {}
         for lead in self.browse(cr, uid, ids, context=context):
@@ -397,7 +397,6 @@ class crm_lead(format_address, osv.osv):
 
     def case_mark_won(self, cr, uid, ids, context=None):
         """ Mark the case as won: state=done and probability=100
-            :deprecated: this method will be removed in OpenERP v8.
         """
         stages_leads = {}
         for lead in self.browse(cr, uid, ids, context=context):
@@ -884,8 +883,7 @@ class crm_lead(format_address, osv.osv):
         return res
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         if vals.get('type') and not context.get('default_type'):
             context['default_type'] = vals.get('type')
         if vals.get('section_id') and not context.get('default_section_id'):
@@ -918,11 +916,10 @@ class crm_lead(format_address, osv.osv):
             default['date_open'] = fields.datetime.now()
         else:
             default['date_open'] = False
-        default['date_closed'] = False
-        default['stage_id'] = self._get_default_stage_id(cr, uid, local_context)
-        return super(crm_lead, self).copy(cr, uid, id, default, context=context)
+        return super(crm_lead, self).copy(cr, uid, id, default, context=local_context)
 
     def get_empty_list_help(self, cr, uid, help, context=None):
+        context = dict(context or {})
         context['empty_list_help_model'] = 'crm.case.section'
         context['empty_list_help_id'] = context.get('default_section_id', None)
         context['empty_list_help_document_name'] = _("opportunity")
@@ -936,8 +933,10 @@ class crm_lead(format_address, osv.osv):
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
-        return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
-                    for lead in self.browse(cr, SUPERUSER_ID, ids, context=context)]
+        leads = self.browse(cr, SUPERUSER_ID, ids, context=context)
+        section_ids = set([lead.section_id.id for lead in leads if lead.section_id])
+        aliases = self.pool['crm.case.section'].message_get_reply_to(cr, uid, list(section_ids), context=context)
+        return dict((lead.id, aliases.get(lead.section_id and lead.section_id.id or 0, False)) for lead in leads)
 
     def get_formview_id(self, cr, uid, id, context=None):
         obj = self.browse(cr, uid, id, context=context)

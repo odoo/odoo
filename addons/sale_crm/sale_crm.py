@@ -19,11 +19,6 @@
 #
 ##############################################################################
 
-import calendar
-from datetime import date
-from dateutil import relativedelta
-
-from openerp import tools
 from openerp.osv import osv, fields
 
 class sale_order(osv.osv):

@@ -21,6 +21,17 @@ instance.web.serialize_sort = function (criterion) {
         }).join(', ');
 };
 
+/**
+ * Reverse of the serialize_sort function: convert an array of SQL-like sort 
+ * descriptors into a list of fields prefixed with '-' if necessary.
+ */
+ instance.web.deserialize_sort = function (criterion) {
+    return _.map(criterion, function (criteria) {
+        var split = _.without(criteria.split(' '), '');
+        return (split[1] && split[1].toLowerCase() === 'desc' ? '-' : '') + split[0];
+    });
+};
+
 instance.web.Query = instance.web.Class.extend({
     init: function (model, fields) {
         this._model = model;
@@ -684,6 +695,15 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
 
         this._sort.unshift((reverse ? '-' : '') + field);
         return undefined;
+    },
+    /**
+     * Set the sort criteria on the dataset.  
+     *
+     * @param {Array} fields_list: list of fields order descriptors, as used by
+     * Odoo's ORM (such as 'name desc', 'product_id', 'order_date asc')
+     */
+    set_sort: function (fields_list) {
+        this._sort = instance.web.deserialize_sort(fields_list);
     },
     size: function () {
         return this.ids.length;

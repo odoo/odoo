@@ -191,8 +191,15 @@
             </tr>
           </tbody>
         </table>
-        <div class="oe_mail-placeholder"></div>
-        <aside class="oe_mail_wall_aside"></aside>
+        <div class="oe_view_manager_wrapper">
+            <div>
+                <div class="oe_view_manager_body">
+                    <div class="oe_searchview_drawer_container"/>
+                    <div class="oe_mail-placeholder"></div>
+                    <aside class="oe_mail_wall_aside"></aside>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!--
@@ -325,16 +332,6 @@
                 <a t-if="widget.nb_messages === 1" class="oe_msg_fetch_more">show one more message</a>
                 <a t-if="widget.nb_messages &gt; 1" class="oe_msg_fetch_more">show <t t-esc="widget.nb_messages" /> more messages</a>
             </div>
-        </div>
-    </t>
-
-    <!--
-        mail.compose_message.button_top_bar
-        render of the button on the user bar for open wizard compose message
-        -->
-    <t t-name="mail.ComposeMessageTopButton">
-        <div title='Compose new Message' class="oe_topbar_item oe_topbar_compose_full_email">
-            <button class="oe_e">%</button>
         </div>
     </t>
 

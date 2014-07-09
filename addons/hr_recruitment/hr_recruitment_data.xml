@@ -33,7 +33,7 @@
         <p>If you want more details, feel free to contact us by phone.</p>
         <p>Kind regards,</p>
         <br/>
-         ${object.user_id and object.user_id.signature or ''}]]></field>
+         ${object.user_id and object.user_id.signature | safe or ''}]]></field>
     </record>
 
     <record id="applicant_interest" model="email.template">
@@ -51,7 +51,7 @@
         If I do not answer, please let me a message with some schedules to call you back.</p>
         <p>Kind regards,</p>
         <br/>
-         ${object.user_id.signature}]]></field>
+         ${object.user_id.signature | safe}]]></field>
     </record>
 
         <!--    HR Recruitment Source        -->

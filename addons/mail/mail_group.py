@@ -23,6 +23,7 @@ import openerp
 import openerp.tools as tools
 from openerp.osv import osv
 from openerp.osv import fields
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp import SUPERUSER_ID
 
 
@@ -36,7 +37,7 @@ class mail_group(osv.Model):
     _inherits = {'mail.alias': 'alias_id'}
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
+        result = {}
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
@@ -45,7 +46,7 @@ class mail_group(osv.Model):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'description': fields.text('Description'),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
         'public': fields.selection([('public', 'Public'), ('private', 'Private'), ('groups', 'Selected Group Only')], 'Privacy', required=True,
@@ -162,15 +163,14 @@ class mail_group(osv.Model):
 
     def unlink(self, cr, uid, ids, context=None):
         groups = self.browse(cr, uid, ids, context=context)
-        # Cascade-delete mail aliases as well, as they should not exist without the mail group.
-        mail_alias = self.pool.get('mail.alias')
         alias_ids = [group.alias_id.id for group in groups if group.alias_id]
+        menu_ids = [group.menu_id.id for group in groups if group.menu_id]
         # Delete mail_group
         res = super(mail_group, self).unlink(cr, uid, ids, context=context)
-        # Delete alias
-        mail_alias.unlink(cr, SUPERUSER_ID, alias_ids, context=context)
+        # Cascade-delete mail aliases as well, as they should not exist without the mail group.
+        self.pool.get('mail.alias').unlink(cr, SUPERUSER_ID, alias_ids, context=context)
         # Cascade-delete menu entries as well
-        self.pool.get('ir.ui.menu').unlink(cr, SUPERUSER_ID, [group.menu_id.id for group in groups if group.menu_id], context=context)
+        self.pool.get('ir.ui.menu').unlink(cr, SUPERUSER_ID, menu_ids, context=context)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -215,12 +215,13 @@ class mail_group(osv.Model):
     def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
         res = super(mail_group, self).message_get_email_values(cr, uid, id, notif_mail=notif_mail, context=context)
         group = self.browse(cr, uid, id, context=context)
-        res.update({
-            'headers': {
-                'Precedence': 'list',
-            }
-        })
-        if group.alias_domain:
-            res['headers']['List-Id'] = '%s.%s' % (group.alias_name, group.alias_domain)
-            res['headers']['List-Post'] = '<mailto:%s@%s>' % (group.alias_name, group.alias_domain)
+        try:
+            headers = eval(res.get('headers', '{}'))
+        except Exception:
+            headers = {}
+        headers['Precedence'] = 'list'
+        if group.alias_domain and group.alias_name:
+            headers['List-Id'] = '%s.%s' % (group.alias_name, group.alias_domain)
+            headers['List-Post'] = '<mailto:%s@%s>' % (group.alias_name, group.alias_domain)
+        res['headers'] = '%s' % headers
         return res

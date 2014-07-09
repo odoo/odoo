@@ -70,7 +70,7 @@
         <field name="name">account.analytic.plan.instance.form</field>
         <field name="model">account.analytic.plan.instance</field>
         <field name="arch" type="xml">
-            <form string="Analytic Distribution" version="7.0">
+            <form string="Analytic Distribution">
                 <group col="4">
                     <field name="name"/>
                     <field name="code"/>
@@ -82,7 +82,7 @@
                         <field name="rate"/>
                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     </tree>
-                    <form string="Analytic Distribution" version="7.0">
+                    <form string="Analytic Distribution">
                         <field name="rate"/>
                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     </form>
@@ -124,7 +124,7 @@
         <field name="name">account.analytic.plan.instance.line.form</field>
         <field name="model">account.analytic.plan.instance.line</field>
         <field name="arch" type="xml">
-            <form string="Analytic Distribution Line" version="7.0">
+            <form string="Analytic Distribution Line">
                 <group col="4">
                     <field name="plan_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
@@ -160,7 +160,7 @@
         <field name="name">account.analytic.plan.form</field>
         <field name="model">account.analytic.plan</field>
         <field name="arch" type="xml">
-            <form string="Analytic Plan" version="7.0">
+            <form string="Analytic Plan">
                 <group col="4">
                     <field name="name"/>
                     <field name="default_instance_id"/>
@@ -204,7 +204,7 @@
         <field name="name">account.analytic.plan.line.form</field>
         <field name="model">account.analytic.plan.line</field>
         <field name="arch" type="xml">
-            <form string="Analytic Plan Line" version="7.0">
+            <form string="Analytic Plan Line">
                 <group col="4">
                     <field name="name"/>
                     <field name="sequence"/>

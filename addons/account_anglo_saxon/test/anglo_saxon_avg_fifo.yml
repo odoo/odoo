@@ -135,8 +135,8 @@
   Reception is ready for process so now done the reception.
 -
   !python {model: stock.picking}: |
-    picking_id = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001_fifo")).picking_ids[0]
-    picking_id.do_transfer(context=context)
+    picking_id = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001_fifo"), context=context).picking_ids[0]
+    picking_id.do_transfer()
 -
   I check the Stock Interim account (Received) is credit successfully.
 -
@@ -154,7 +154,7 @@
     invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_001_fifo")).invoice_ids]
     line_ids = self.pool.get('account.invoice.line').search(cr, uid, [('invoice_id', 'in', invoice_ids)])
     self.pool.get('account.invoice.line').write(cr, uid, line_ids, {'price_unit': 10})
-    self.pool.get('account.invoice').signal_invoice_open(cr, uid, invoice_ids)
+    self.pool.get('account.invoice').signal_workflow(cr, uid, invoice_ids, 'invoice_open')
 -
   I check the Stock Interim account (Received) is debited sucessfully when Invoice validated.
 -
@@ -220,8 +220,8 @@
   I process the delivery.
 -
   !python {model: stock.picking}: |
-    picking = self.pool.get('stock.picking').browse(cr, uid, ref("stock_picking_out001_fifo"))
-    picking.do_transfer(context=context)
+    picking = self.pool.get('stock.picking').browse(cr, uid, ref("stock_picking_out001_fifo"), context=context)
+    picking.do_transfer()
 - 
   I check Stock Interim account (Delivery) is debited successfully.
 -
@@ -257,7 +257,7 @@
     account_invoice_line = self.pool.get('account.invoice.line').search(cr, uid, [('invoice_id', 'in', account_invoice)])
     self.pool.get('account.invoice.line').write(cr, uid, account_invoice_line, {'invoice_line_tax_id': [(6, 0, [])]})
     self.pool.get('account.invoice').button_reset_taxes(cr, uid, account_invoice)
-    self.pool.get('account.invoice').signal_invoice_open(cr, uid, account_invoice)
+    self.pool.get('account.invoice').signal_workflow(cr, uid, account_invoice, 'invoice_open')
 -
   I check Income Account is Credited sucessfully when Invoice validated.
 -

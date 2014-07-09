@@ -21,6 +21,11 @@ function openerp_pos_db(instance, module){
             this.product_by_category_id = {};
             this.product_by_reference = {};
 
+            this.partners_sorted = [];
+            this.partner_by_id = {};
+            this.partner_by_ean13 = {};
+            this.partner_search_string = "";
+
             this.category_by_id = {};
             this.root_category_id  = 0;
             this.category_products = {};
@@ -29,7 +34,7 @@ function openerp_pos_db(instance, module){
             this.category_parent    = {};
             this.category_search_string = {};
             this.packagings_by_id = {};
-            this.packagings_by_product_id = {};
+            this.packagings_by_product_tmpl_id = {};
             this.packagings_by_ean13 = {};
         },
         /* returns the category object from its id. If you pass a list of id as parameters, you get
@@ -130,7 +135,7 @@ function openerp_pos_db(instance, module){
             if(product.default_code){
                 str += '|' + product.default_code;
             }
-            var packagings = this.packagings_by_product_id[product.id] || [];
+            var packagings = this.packagings_by_product_tmpl_id[product.product_tmpl_id] || [];
             for(var i = 0; i < packagings.length; i++){
                 str += '|' + packagings[i].ean;
             }
@@ -149,6 +154,7 @@ function openerp_pos_db(instance, module){
                 if (product.variants){
                     product.name = product.name+" ("+product.variants+")";
                 }
+                product.product_tmpl_id = product.product_tmpl_id[0];
                 if(!stored_categories[categ_id]){
                     stored_categories[categ_id] = [];
                 }
@@ -186,14 +192,68 @@ function openerp_pos_db(instance, module){
             for(var i = 0, len = packagings.length; i < len; i++){
                 var pack = packagings[i];
                 this.packagings_by_id[pack.id] = pack;
-                if(!this.packagings_by_product_id[pack.product_id[0]]){
-                    this.packagings_by_product_id[pack.product_id[0]] = [];
+                if(!this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]]){
+                    this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]] = [];
                 }
-                this.packagings_by_product_id[pack.product_id[0]].push(pack);
+                this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]].push(pack);
                 if(pack.ean){
                     this.packagings_by_ean13[pack.ean] = pack;
                 }
             }
+        },
+        _partner_search_string: function(partner){
+            var str = '' + partner.id + ':' + partner.name;
+            if(partner.ean13){
+                str += '|' + partner.ean13;
+            }
+            if(partner.address){
+                str += '|' + partner.address;
+            }
+            return str + '\n';
+        },
+        add_partners: function(partners){
+            for(var i = 0, len = partners.length; i < len; i++){
+                var partner = partners[i];
+                this.partner_by_id[partner.id] = partner;
+                if(partner.ean13){
+                    this.partner_by_ean13[partner.ean13] = partner;
+                }
+                partner.address = (partner.street || '') +', '+ 
+                                  (partner.zip || '')    +' '+
+                                  (partner.city || '')   +', '+ 
+                                  (partner.country_id[1] || '');
+                this.partner_search_string += this._partner_search_string(partner);
+                this.partners_sorted.push(partner);
+            }
+        },
+        get_partner_by_id: function(id){
+            return this.partner_by_id[id];
+        },
+        get_partner_by_ean13: function(ean13){
+            return this.partner_by_ean13[ean13];
+        },
+        get_partners_sorted: function(){
+            return this.partners_sorted;
+        },
+        search_partner: function(query){
+            try {
+                query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
+                query = query.replace(' ','.+');
+                var re = RegExp("([0-9]+):.*?"+query,"gi");
+            }catch(e){
+                return [];
+            }
+            var results = [];
+            for(var i = 0; i < this.limit; i++){
+                r = re.exec(this.partner_search_string);
+                if(r){
+                    var id = Number(r[1]);
+                    results.push(this.get_partner_by_id(id));
+                }else{
+                    break;
+                }
+            }
+            return results;
         },
         /* removes all the data from the database. TODO : being able to selectively remove data */
         clear: function(stores){
@@ -242,7 +302,13 @@ function openerp_pos_db(instance, module){
          * - a name, package or ean13 containing the query (case insensitive) 
          */
         search_product_in_category: function(category_id, query){
-            var re = RegExp("([0-9]+):.*?"+query,"gi");
+            try {
+                query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
+                query = query.replace(' ','.+');
+                var re = RegExp("([0-9]+):.*?"+query,"gi");
+            }catch(e){
+                return [];
+            }
             var results = [];
             for(var i = 0; i < this.limit; i++){
                 r = re.exec(this.category_search_string[category_id]);

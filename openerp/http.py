@@ -35,6 +35,7 @@ import werkzeug.wrappers
 import werkzeug.wsgi
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
 
@@ -180,12 +181,18 @@ class WebRequest(object):
     .. attribute:: db
 
         ``str``, the name of the database linked to the current request. Can
-        be ``None`` if the current request uses the ``none`` authentication.
+        be ``None`` if the current request uses the ``none`` authentication
+        in ``web`` module's controllers.
 
     .. attribute:: uid
 
         ``int``, the id of the user related to the current request. Can be
         ``None`` if the current request uses the ``none`` authentication.
+
+    .. attribute:: env
+
+        an :class:`openerp.api.Environment` bound to the current
+        request's ``cr``, ``uid`` and ``context``
     """
     def __init__(self, httprequest):
         self.httprequest = httprequest
@@ -223,7 +230,7 @@ class WebRequest(object):
     @property
     def db(self):
         """
-        The registry to the database linked to this request. Can be ``None``
+        The database linked to this request. Can be ``None``
         if the current request uses the ``none`` authentication.
         """
         return self.session.db if not self.disable_db else None
@@ -239,6 +246,13 @@ class WebRequest(object):
         if not self._cr:
             self._cr = self.registry.cursor()
         return self._cr
+
+    @lazy_property
+    def env(self):
+        """
+        The Environment bound to current request.
+        """
+        return openerp.api.Environment(self.cr, self.uid, self.context)
 
     def __enter__(self):
         _request_stack.push(self)
@@ -1044,6 +1058,15 @@ mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 
+class Retry(RuntimeError):
+    """ Exception raised during QWeb rendering to signal that the rendering
+    should be retried with the provided ``render_updates`` dict merged into
+    the previous rendering context
+    """
+    def __init__(self, name, render_updates=None):
+        super(Retry, self).__init__(name)
+        self.updates = render_updates or {}
+
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
 
@@ -1084,7 +1107,13 @@ class Response(werkzeug.wrappers.Response):
     def render(self):
         view_obj = request.registry["ir.ui.view"]
         uid = self.uid or request.uid or openerp.SUPERUSER_ID
-        return view_obj.render(request.cr, uid, self.template, self.qcontext, context=request.context)
+        while True:
+            try:
+                return view_obj.render(
+                    request.cr, uid, self.template, self.qcontext,
+                    context=request.context)
+            except Retry, e:
+                self.qcontext.update(e.updates)
 
     def flatten(self):
         self.response.append(self.render())
@@ -1297,7 +1326,9 @@ def db_list(force=False, httprequest=None):
 def db_filter(dbs, httprequest=None):
     httprequest = httprequest or request.httprequest
     h = httprequest.environ.get('HTTP_HOST', '').split(':')[0]
-    d = h.split('.')[0]
+    d, _, r = h.partition('.')
+    if d == "www" and r:
+        d = r.partition('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs

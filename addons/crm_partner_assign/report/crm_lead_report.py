@@ -55,7 +55,7 @@ class crm_lead_report_assign(osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'type':fields.selection([
             ('lead','Lead'),
-            ('opportunity','Opportunity'),
+            ('opportunity','Opportunity') 
         ],'Type', help="Type is used to separate Leads and Opportunities"),
     }
     def init(self, cr):

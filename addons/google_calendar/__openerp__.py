@@ -26,7 +26,7 @@
     'category': 'Tools',
     'description': """
 The module adds the possibility to synchronize Google Calendar with OpenERP
-========================================
+===========================================================================
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

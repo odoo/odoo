@@ -343,7 +343,7 @@ class MassMailing(osv.Model):
         'name': fields.char('Subject', required=True),
         'email_from': fields.char('From', required=True),
         'create_date': fields.datetime('Creation Date'),
-        'sent_date': fields.datetime('Sent Date', oldname='date'),
+        'sent_date': fields.datetime('Sent Date', oldname='date', copy=False),
         'body_html': fields.html('Body'),
         'attachment_ids': fields.many2many(
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
@@ -355,7 +355,7 @@ class MassMailing(osv.Model):
         ),
         'state': fields.selection(
             [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')],
-            string='Status', required=True,
+            string='Status', required=True, copy=False,
         ),
         'color': fields.related(
             'mass_mailing_campaign_id', 'color',
@@ -460,15 +460,9 @@ class MassMailing(osv.Model):
     #------------------------------------------------------
 
     def copy_data(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
         mailing = self.browse(cr, uid, id, context=context)
-        default.update({
-            'state': 'draft',
-            'statistics_ids': [],
-            'name': _('%s (duplicate)') % mailing.name,
-            'sent_date': False,
-        })
+        default = dict(default or {},
+                       name=_('%s (copy)') % mailing.name)
         return super(MassMailing, self).copy_data(cr, uid, id, default, context=context)
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):

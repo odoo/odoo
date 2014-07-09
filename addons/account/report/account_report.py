@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from datetime import datetime
+import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp import tools
@@ -73,7 +73,7 @@ class temp_range(osv.osv):
     _description = 'A Temporary table used for Dashboard view'
 
     _columns = {
-        'name': fields.char('Range',size=64)
+        'name': fields.char('Range')
     }
 
 
@@ -91,7 +91,7 @@ class report_aged_receivable(osv.osv):
         """
         if context is None:context = {}
         if not self.called:
-            self.init(cr, user)
+            self._init(cr, user)
         self.called = True # To make sure that init doesn't get called multiple times
 
         res = super(report_aged_receivable, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
@@ -112,33 +112,41 @@ class report_aged_receivable(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Month Range', size=7, readonly=True),
+        'name': fields.char('Month Range', size=24, readonly=True),
         'balance': fields.function(_calc_bal, string='Balance', readonly=True),
     }
 
-    def init(self, cr, uid=1):
+    def init(self, cr):
+        return self._init(cr, 1)
+
+    def _init(self, cr, uid):
         """ This view will be used in dashboard
         The reason writing this code here is, we need to check date range from today to first date of fiscal year.
         """
         pool_obj_fy = self.pool['account.fiscalyear']
-        today = time.strftime('%Y-%m-%d')
+        current_date = datetime.date.today()
         fy_id = pool_obj_fy.find(cr, uid, exception=False)
-        LIST_RANGES = []
+        names = []
+
+        def add(names, start_on, stop_on):
+            names.append(start_on.strftime("%Y-%m-%d") + ' to ' + stop_on.strftime('%Y-%m-%d'))
+            return names
+
         if fy_id:
-            fy_start_date = pool_obj_fy.read(cr, uid, fy_id, ['date_start'])['date_start']
-            fy_start_date = datetime.strptime(fy_start_date, '%Y-%m-%d')
-            last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
+            fiscal_year = pool_obj_fy.browse(cr, uid, fy_id)
+            fy_start_date = datetime.datetime.strptime(fiscal_year.date_start, '%Y-%m-%d').date()
+            last_month_date = current_date - relativedelta(months=1)
 
             while (last_month_date > fy_start_date):
-                LIST_RANGES.append(today + " to " + last_month_date.strftime('%Y-%m-%d'))
-                today = (last_month_date- relativedelta(days=1)).strftime('%Y-%m-%d')
-                last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
+                add(names, current_date, last_month_date)
+                current_date = last_month_date - relativedelta(days=1)
+                last_month_date = current_date - relativedelta(months=1)
 
-            LIST_RANGES.append(today +" to " + fy_start_date.strftime('%Y-%m-%d'))
+                add(names, current_date, fy_start_date)
             cr.execute('delete from temp_range')
 
-            for range in LIST_RANGES:
-                self.pool['temp.range'].create(cr, uid, {'name':range})
+            for name in names:
+                self.pool['temp.range'].create(cr, uid, {'name':name})
 
         cr.execute("""
             create or replace view report_aged_receivable as (
@@ -151,14 +159,14 @@ class report_invoice_created(osv.osv):
     _description = "Report of Invoices Created within Last 15 days"
     _auto = False
     _columns = {
-        'name': fields.char('Description', size=64, readonly=True),
+        'name': fields.char('Description', readonly=True),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
             ('out_refund','Customer Refund'),
             ('in_refund','Supplier Refund'),
             ],'Type', readonly=True),
-        'number': fields.char('Invoice Number', size=32, readonly=True),
+        'number': fields.char('Invoice Number', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'amount_untaxed': fields.float('Untaxed', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
@@ -174,7 +182,7 @@ class report_invoice_created(osv.osv):
             ('paid','Done'),
             ('cancel','Cancelled')
         ],'Status', readonly=True),
-        'origin': fields.char('Source Document', size=64, readonly=True, help="Reference of the document that generated this invoice report."),
+        'origin': fields.char('Source Document', readonly=True, help="Reference of the document that generated this invoice report."),
         'create_date': fields.datetime('Create Date', readonly=True)
     }
     _order = 'create_date'
@@ -203,7 +211,7 @@ class report_account_type_sales(osv.osv):
     _description = "Report of the Sales by Account Type"
     _auto = False
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'name': fields.char('Year', required=False, readonly=True),
         'period_id': fields.many2one('account.period', 'Force Period', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
@@ -244,7 +252,7 @@ class report_account_sales(osv.osv):
     _description = "Report of the Sales by Account"
     _auto = False
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True, select=True),
+        'name': fields.char('Year', required=False, readonly=True, select=True),
         'period_id': fields.many2one('account.period', 'Force Period', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),

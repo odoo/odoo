@@ -13,6 +13,7 @@ import psycopg2
 
 import openerp
 from openerp import SUPERUSER_ID
+from openerp.exceptions import Warning
 import openerp.release
 import openerp.sql_db
 import openerp.tools
@@ -24,6 +25,9 @@ _logger = logging.getLogger(__name__)
 self_actions = {}
 self_id = 0
 self_id_protect = threading.Semaphore()
+
+class DatabaseExists(Warning):
+    pass
 
 # This should be moved to openerp.modules.db, along side initialize().
 def _initialize_db(id, db_name, demo, lang, user_password):
@@ -81,7 +85,7 @@ def _create_empty_database(name):
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
                    (name,))
         if cr.fetchall():
-            raise openerp.exceptions.Warning("database %r already exists!" % (name,))
+            raise DatabaseExists("database %r already exists!" % (name,))
         else:
             cr.autocommit(True)     # avoid transaction block
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
@@ -130,7 +134,7 @@ def exp_duplicate_database(db_original_name, db_name):
     from_fs = openerp.tools.config.filestore(db_original_name)
     to_fs = openerp.tools.config.filestore(db_name)
     if os.path.exists(from_fs) and not os.path.exists(to_fs):
-        shutil.copy(from_fs, to_fs)
+        shutil.copytree(from_fs, to_fs)
     return True
 
 def exp_get_progress(id):
