@@ -251,7 +251,7 @@ class event_event(osv.osv):
         values = {}
         if type_event:
             type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)
-            dic ={
+            dic = {
               'reply_to': type_info.default_reply_to,
               'email_registration_id': type_info.default_email_registration.id,
               'email_confirmation_id': type_info.default_email_event.id,
@@ -259,7 +259,7 @@ class event_event(osv.osv):
               'register_max': type_info.default_registration_max,
             }
             values.update(dic)
-        return values
+        return {'value' : values}
 
     def on_change_address_id(self, cr, uid, ids, address_id, context=None):
         values = {}
