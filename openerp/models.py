@@ -5657,7 +5657,7 @@ class RecordCache(MutableMapping):
         if args and isinstance(args[0], SpecialValue):
             values = dict.fromkeys(self._recs._ids, args[0])
             for name, field in self._recs._fields.iteritems():
-                if name not in MAGIC_COLUMNS:
+                if name != 'id':
                     self._recs.env.cache[field].update(values)
         else:
             return super(RecordCache, self).update(*args, **kwargs)
