@@ -1,8 +1,8 @@
 <openerp>
   <data>
-    <!-- balance sheet abrégé model (CA_BILANABR) -->
+    <!-- balance sheet abbreviated model (CA_BILANABR) -->
     <record model="account.financial.report" id="account_financial_report_abr_13">
-      <field name="name">Luxembourg Balance Sheet Abrégé</field>
+      <field name="name">Luxembourg Balance Sheet (abbreviated)</field>
       <field name="sign" eval="1"/>
       <field name="display_detail">detail_flat</field>
       <field name="type">sum</field>
@@ -294,7 +294,7 @@
       <field name="style_overwrite" eval="2"/>
       <field name="sign" eval="-1"/>
       <field name="display_detail">detail_flat</field>
-      <field name="type">accounts</field>
+      <field name="type">sum</field>
       <field name="parent_id" ref="account_financial_report_abr_66"/>
     </record>
 
@@ -326,9 +326,9 @@
       <field name="parent_id" ref="account_financial_report_abr_66"/>
     </record>
 
-    <!-- profit and loss abrégé model (CA_COMPPABR) -->
+    <!-- profit and loss abbreviated model (CA_COMPPABR) -->
     <record model="account.financial.report" id="account_financial_report_abr_14">
-      <field name="name">Luxembourg Profit &amp; Loss Abrégé</field>
+      <field name="name">Luxembourg Profit &amp; Loss (abbreviated)</field>
       <field name="sign" eval="1"/>
       <field name="display_detail">detail_flat</field>
       <field name="type">sum</field>
@@ -506,15 +506,6 @@
       <field name="parent_id" ref="account_financial_report_abr_119"/>
     </record>
 
-    <record model="account.financial.report" id="account_financial_report_abr_162">
-      <field name="name">12. Profit de l'exercice</field>
-      <field name="sequence">800</field>
-      <field name="sign" eval="1"/>
-      <field name="display_detail">no_detail</field>
-      <field name="type">accounts</field>
-      <field name="parent_id" ref="account_financial_report_abr_119"/>
-    </record>
-
     <record model="account.financial.report" id="account_financial_report_abr_140">
       <field name="name">B. PRODUITS</field>
       <field name="sequence">737</field>
@@ -632,23 +623,13 @@
       <field name="parent_id" ref="account_financial_report_abr_140"/>
     </record>
 
-    <record model="account.financial.report" id="account_financial_report_abr_163">
-      <field name="name">12. Perte de l'exercice</field>
-      <field name="sequence">800</field>
-      <field name="sign" eval="-1"/>
-      <field name="display_detail">no_detail</field>
-      <field name="type">accounts</field>
-      <field name="parent_id" ref="account_financial_report_abr_140"/>
-    </record>
-
     <record model="account.financial.report" id="account_financial_report_abr_161">
-      <field name="name">RESULTAT DE L'EXERCICE A TRANSFERER AU 142</field>
+      <field name="name">RESULTAT DE L'EXERCICE</field>
       <field name="sequence">800</field>
       <field name="sign" eval="-1"/>
       <field name="display_detail">no_detail</field>
       <field name="type">accounts</field>
       <field name="parent_id" ref="account_financial_report_abr_14"/>
     </record>
-
   </data>
 </openerp>
