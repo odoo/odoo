@@ -3627,7 +3627,8 @@ class BaseModel(object):
 
         # put the values of pure new-style fields into cache, and inverse them
         if new_vals:
-            self._cache.update(self._convert_to_cache(new_vals))
+            for record in self:
+                record._cache.update(record._convert_to_cache(new_vals, update=True))
             for key in new_vals:
                 self._fields[key].determine_inverse(self)
 
@@ -5098,11 +5099,17 @@ class BaseModel(object):
         context = dict(args[0] if args else self._context, **kwargs)
         return self.with_env(self.env(context=context))
 
-    def _convert_to_cache(self, values, validate=True):
-        """ Convert the `values` dictionary into cached values. """
+    def _convert_to_cache(self, values, update=False, validate=True):
+        """ Convert the `values` dictionary into cached values.
+
+            :param update: whether the conversion is made for updating `self`;
+                this is necessary for interpreting the commands of *2many fields
+            :param validate: whether values must be checked
+        """
         fields = self._fields
+        target = self if update else self.browse()
         return {
-            name: fields[name].convert_to_cache(value, self.env, validate=validate)
+            name: fields[name].convert_to_cache(value, target, validate=validate)
             for name, value in values.iteritems()
             if name in fields
         }
@@ -5191,7 +5198,7 @@ class BaseModel(object):
             exist in the database.
         """
         record = self.browse([NewId()])
-        record._cache.update(self._convert_to_cache(values))
+        record._cache.update(record._convert_to_cache(values, update=True))
 
         if record.env.in_onchange:
             # The cache update does not set inverse fields, so do it manually.
