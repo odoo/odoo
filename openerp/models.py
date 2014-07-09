@@ -5675,8 +5675,7 @@ class RecordCache(MutableMapping):
         cache, id = self._recs.env.cache, self._recs.id
         dummy = SpecialValue(None)
         for name, field in self._recs._fields.iteritems():
-            if name not in MAGIC_COLUMNS and \
-                    not isinstance(cache[field].get(id, dummy), SpecialValue):
+            if name != 'id' and not isinstance(cache[field].get(id, dummy), SpecialValue):
                 yield name
 
     def __len__(self):
