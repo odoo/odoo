@@ -285,7 +285,7 @@ class QWeb(orm.AbstractModel):
             result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
 
         if element.tail:
-            result += element.tail
+            result += element.tail.encode('utf-8')
 
         if isinstance(result, unicode):
             return result.encode('utf-8')
@@ -300,7 +300,7 @@ class QWeb(orm.AbstractModel):
         if inner:
             g_inner = inner
         else:
-            g_inner = [] if element.text is None else [element.text]
+            g_inner = [] if element.text is None else [element.text.encode('utf-8')]
             for current_node in element.iterchildren(tag=etree.Element):
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
