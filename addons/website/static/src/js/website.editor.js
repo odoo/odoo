@@ -974,7 +974,7 @@
                         self.fetch_pages(q.term)
                     ).then(function (exists, results) {
                         var rs = _.map(results, function (r) {
-                            return { id: r.url, text: r.name, };
+                            return { id: r.loc, text: r.loc, };
                         });
                         if (!exists) {
                             rs.push({
