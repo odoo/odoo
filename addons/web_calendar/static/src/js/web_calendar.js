@@ -522,7 +522,10 @@ openerp.web_calendar = function(instance) {
                 }
                 else {
                     var res_text= [];
-                    _.each(temp_ret, function(val,key) { res_text.push(val); });
+                    _.each(temp_ret, function(val,key) {
+                        if( typeof(val) == 'boolean' && val == false ) { }
+                        else { res_text.push(val) };
+                    });
                     the_title = res_text.join(', ');
                 }
                 the_title = _.escape(the_title);
