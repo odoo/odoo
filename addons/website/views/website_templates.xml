@@ -696,13 +696,13 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="sitemap_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <t t-raw="content"/>
 </urlset>
 </template>
 
 <template id="sitemap_index_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<sitemapindex t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap t-foreach="pages" t-as="page">
     <loc><t t-esc="url_root"/>sitemap-<t t-esc="page"/>.xml</loc>
   </sitemap>
