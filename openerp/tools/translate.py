@@ -502,28 +502,6 @@ def trans_export(lang, modules, buffer, format, cr):
     _process(format, modules, translations, buffer, lang)
     del translations
 
-def trans_parse_xsl(de):
-    return list(set(trans_parse_xsl_aux(de, False)))
-
-def trans_parse_xsl_aux(de, t):
-    res = []
-
-    for n in de:
-        t = t or n.get("t")
-        if t:
-                if isinstance(n, SKIPPED_ELEMENT_TYPES) or n.tag.startswith('{http://www.w3.org/1999/XSL/Transform}'):
-                    continue
-                if n.text:
-                    l = n.text.strip().replace('\n',' ')
-                    if len(l):
-                        res.append(l.encode("utf8"))
-                if n.tail:
-                    l = n.tail.strip().replace('\n',' ')
-                    if len(l):
-                        res.append(l.encode("utf8"))
-        res.extend(trans_parse_xsl_aux(n, t))
-    return res
-
 def trans_parse_rml(de):
     res = []
     for n in de:
@@ -535,29 +513,6 @@ def trans_parse_rml(de):
                 if s:
                     res.append(s.encode("utf8"))
         res.extend(trans_parse_rml(n))
-    return res
-
-def trans_parse_view(de):
-    res = []
-    if not isinstance(de, SKIPPED_ELEMENT_TYPES) and de.text and de.text.strip():
-        res.append(de.text.strip().encode("utf8"))
-    if de.tail and de.tail.strip():
-        res.append(de.tail.strip().encode("utf8"))
-    if de.tag == 'attribute' and de.get("name") == 'string':
-        if de.text:
-            res.append(de.text.encode("utf8"))
-    if de.get("string"):
-        res.append(de.get('string').encode("utf8"))
-    if de.get("help"):
-        res.append(de.get('help').encode("utf8"))
-    if de.get("sum"):
-        res.append(de.get('sum').encode("utf8"))
-    if de.get("confirm"):
-        res.append(de.get('confirm').encode("utf8"))
-    if de.get("placeholder"):
-        res.append(de.get('placeholder').encode("utf8"))
-    for n in de:
-        res.extend(trans_parse_view(n))
     return res
 
 # tests whether an object is in a list of modules
@@ -675,14 +630,7 @@ def trans_generate(lang, modules, cr):
             continue
         obj = registry[model].browse(cr, uid, res_id)
 
-        if model=='ir.ui.view':
-            d = etree.XML(encode(obj.arch))
-            for t in trans_parse_view(d):
-                push_translation(module, 'view', encode(obj.model), 0, t)
-        elif model=='ir.actions.wizard':
-            pass # TODO Can model really be 'ir.actions.wizard' ?
-
-        elif model=='ir.model.fields':
+        if model=='ir.model.fields':
             try:
                 field_name = encode(obj.name)
             except AttributeError, exc:
@@ -693,25 +641,25 @@ def trans_generate(lang, modules, cr):
                 continue
             field_def = objmodel._columns[field_name]
 
+            # TODO: speed optimization
             name = "%s,%s" % (encode(obj.model), field_name)
-            push_translation(module, 'field', name, 0, encode(field_def.string))
-
-            if field_def.help:
-                push_translation(module, 'help', name, 0, encode(field_def.help))
-
             if field_def.translate:
                 ids = objmodel.search(cr, uid, [])
                 obj_values = objmodel.read(cr, uid, ids, [field_name])
+                t = lambda x: [x]
+                domain = [
+                    ('model', '=', model),
+                    ('res_id', '=', res_id),
+                ]
+                if field_def.translate is not True:
+                    domain.append(('src','=',term))
+                    t = field_def.translate
                 for obj_value in obj_values:
-                    res_id = obj_value['id']
-                    if obj.name in ('ir.model', 'ir.ui.menu'):
-                        res_id = 0
-                    model_data_ids = model_data_obj.search(cr, uid, [
-                        ('model', '=', model),
-                        ('res_id', '=', res_id),
-                        ])
-                    if not model_data_ids:
-                        push_translation(module, 'model', name, 0, encode(obj_value[field_name]))
+                    for term in t(obj_value[field_name]):
+                        res_id = obj_value['id']
+                        model_data_ids = model_data_obj.search(cr, uid, domain)
+                        if not model_data_ids:
+                            push_translation(module, 'model', name, 0, encode(term))
 
             if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
                 for dummy, val in field_def.selection:
@@ -725,9 +673,7 @@ def trans_generate(lang, modules, cr):
                 parse_func = trans_parse_rml
                 report_type = "report"
             elif obj.report_xsl:
-                fname = obj.report_xsl
-                parse_func = trans_parse_xsl
-                report_type = "xsl"
+                continue
             if fname and obj.report_type in ('pdf', 'xsl'):
                 try:
                     report_file = misc.file_open(fname)

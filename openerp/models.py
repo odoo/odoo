@@ -389,6 +389,7 @@ class BaseModel(object):
                 'required': (f.required and 1) or 0,
                 'selectable': (f.selectable and 1) or 0,
                 'translate': (f.translate and 1) or 0,
+                'help': f.help or False,
                 'relation_field': f._fields_id if isinstance(f, fields.one2many) else '',
                 'serialization_field_id': None,
             }
@@ -762,7 +763,7 @@ class BaseModel(object):
                 'domain': eval(field['domain']) if field['domain'] else None,
                 'size': field['size'] or None,
                 'ondelete': field['on_delete'],
-                'translate': (field['translate']),
+                'translate': field['translate'],
                 'manual': True,
                 '_prefetch': False,
                 #'select': int(field['select_level'])
@@ -1734,46 +1735,6 @@ class BaseModel(object):
         ids = self._search(cr, user, args, limit=limit, context=context, access_rights_uid=access_rights_uid)
         res = self.name_get(cr, access_rights_uid, ids, context)
         return res
-
-    def read_string(self, cr, uid, id, langs, fields=None, context=None):
-        res = {}
-        res2 = {}
-        self.pool.get('ir.translation').check_access_rights(cr, uid, 'read')
-        if not fields:
-            fields = self._columns.keys() + self._inherit_fields.keys()
-        #FIXME: collect all calls to _get_source into one SQL call.
-        for lang in langs:
-            res[lang] = {'code': lang}
-            for f in fields:
-                if f in self._columns:
-                    res_trans = self.pool.get('ir.translation')._get_source(cr, uid, self._name+','+f, 'field', lang)
-                    if res_trans:
-                        res[lang][f] = res_trans
-                    else:
-                        res[lang][f] = self._columns[f].string
-        for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), fields)
-            res2 = self.pool[table].read_string(cr, uid, id, langs, cols, context)
-        for lang in res2:
-            if lang in res:
-                res[lang]['code'] = lang
-            for f in res2[lang]:
-                res[lang][f] = res2[lang][f]
-        return res
-
-    def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.translation').check_access_rights(cr, uid, 'write')
-        #FIXME: try to only call the translation in one SQL
-        for lang in langs:
-            for field in vals:
-                if field in self._columns:
-                    src = self._columns[field].string
-                    self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field], src)
-        for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), vals)
-            if cols:
-                self.pool[table].write_string(cr, uid, id, langs, vals, context)
-        return True
 
     def _add_missing_default_values(self, cr, uid, values, context=None):
         # avoid overriding inherited values when parent is set
@@ -3166,16 +3127,22 @@ class BaseModel(object):
         ids = [vals['id'] for vals in result]
 
         if ids:
-            # translate the fields if necessary
             if context.get('lang'):
                 ir_translation = env['ir.translation']
+                #TODO: optimize out of these loops
                 for f in fields_pre:
-                    if self._columns[f].translate:
-                        #TODO: optimize out of this loop
+                    if self._columns[f].translate is True:
                         res_trans = ir_translation._get_ids(
                             '%s,%s' % (self._name, f), 'model', context['lang'], ids)
                         for vals in result:
                             vals[f] = res_trans.get(vals['id'], False) or vals[f]
+                    elif self._columns[f].translate:
+                        for vals in result:
+                            for term in self._columns[f].translate(vals[f]):
+                                res_trans = ir_translation._get_source(
+                                    '%s,%s' % (self._name, f), 'field', context['lang'], term, record_id)
+                                if res_trans:
+                                    vals[f] = vals[f].replace(term, res_trans)
 
             # apply the symbol_get functions of the fields we just read
             for f in fields_pre:
@@ -3673,7 +3640,7 @@ class BaseModel(object):
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, field, field_column.deprecated)
             if field in self._columns:
                 if self._columns[field]._classic_write and not (hasattr(self._columns[field], '_fnct_inv')):
-                    if (not totranslate) or not self._columns[field].translate:
+                    if (not totranslate) or not (self._columns[field].translate is True):
                         upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
                         upd1.append(self._columns[field]._symbol_set[1](vals[field]))
                     direct.append(field)
@@ -3702,7 +3669,7 @@ class BaseModel(object):
             if totranslate:
                 # TODO: optimize
                 for f in direct:
-                    if self._columns[f].translate:
+                    if self._columns[f].translate is True:
                         src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
                         if not src_trans:
                             src_trans = vals[f]

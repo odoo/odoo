@@ -522,7 +522,10 @@ class Field(object):
         for attr, prop in self.description_attrs:
             value = getattr(self, prop)
             if callable(value):
-                value = value(env)
+                if attr=='translate':
+                    value = False
+                else:
+                    value = value(env)
             if value:
                 desc[attr] = value
         return desc

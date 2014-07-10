@@ -108,6 +108,27 @@ def _hasclass(context, *cls):
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
 
+# TODO: move this method in tools for all XML fields?
+def xml_chunk(attr=['string', 'help', 'sum', 'confirm', 'placeholder']):
+    def xml_chunk_translate(data):
+        def _xml_parse(de):
+            if not isinstance(de, SKIPPED_ELEMENT_TYPES) and de.text and de.text.strip():
+                yield de.text.strip().encode("utf8")
+            if de.tail and de.tail.strip():
+                yield de.tail.strip().encode("utf8")
+            if de.tag == 'attribute' and de.get("name") == 'string':
+                if de.text:
+                    yield de.text.encode("utf8")
+            for attr in ('string', 'help', 'sum', 'confirm', 'placeholder'):
+                if de.get(attr):
+                    yield de.get(attr).encode("utf8")
+            for n in de:
+                _xml_parse(n)
+        print type(data), data
+        de = etree.XML(data)    # encode(data) ?
+        return _xml_parse(de)
+    return xml_chunk_translate
+
 class view(osv.osv):
     _name = 'ir.ui.view'
 
@@ -137,7 +158,7 @@ class view(osv.osv):
             ('kanban', 'Kanban'),
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
-        'arch': fields.text('View Architecture', required=True),
+        'arch': fields.text('View Architecture', required=True, translate=xml_chunk()),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
         'field_parent': fields.char('Child Field'),
