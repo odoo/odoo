@@ -598,4 +598,40 @@
             </div>
         </div>
     </t>
+
+    <t t-name="website.countdown_configuration">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title">Set Release Date</h3>
+                    </div>
+                    <div class="modal-body">
+                         <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <span style="display: table-cell;width:45%">
+                                <input type="text" class="form-control hidden"/>
+                                <input type="text" class="form-control" id="web_countdown_date" placeholder="Date" style="z-index:inherit;"/>
+                            </span>
+                            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                            <span style="display: table-cell;width:15%">
+                                <input type="number" min="0" max="23" class="form-control" id="web_countdown_hour" placeholder="HH"/>
+                            </span>
+                            <span style="display: table-cell;width:15%">
+                                <input type="number" min="0" max="59" class="form-control" id="web_countdown_min" placeholder="MM"/>
+                            </span>
+                                <input type="number" min="0" max="59" class="form-control" id="web_countdown_sec" placeholder="SS"/>
+                          </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-action="set_countdown" class="btn btn-primary">Save</button>
+                        or
+                        <a data-action="discard" data-dismiss="modal" href="#" >Discard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
 </templates>
