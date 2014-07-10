@@ -186,7 +186,7 @@ class event_ticket(osv.osv):
         'deadline': fields.date("Sales End"),
         'is_expired': fields.function(_is_expired, type='boolean', string='Is Expired'),
         'price': fields.float('Price'),
-        'seats_max': fields.integer('Maximum Avalaible Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )"),
+        'seats_max': fields.integer('Maximum Available Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )"),
         'seats_reserved': fields.function(_get_seats, string='Reserved Seats', type='integer', multi='seats_reserved'),
         'seats_available': fields.function(_get_seats, string='Available Seats', type='integer', multi='seats_reserved'),
         'seats_unconfirmed': fields.function(_get_seats, string='Unconfirmed Seat Reservations', type='integer', multi='seats_reserved'),

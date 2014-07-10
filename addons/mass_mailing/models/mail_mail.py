@@ -74,6 +74,11 @@ class MailMail(osv.Model):
         """ Override to add the tracking URL to the body. """
         body = super(MailMail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
 
+        # prepend <base> tag for images using absolute urls
+        domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
+        base = "<base href='%s'>" % domain
+        body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
+
         # generate tracking URL
         if mail.statistics_ids:
             tracking_url = self._get_tracking_url(cr, uid, mail, partner, context=context)

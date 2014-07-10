@@ -74,13 +74,15 @@
                     <group expand="0" string="Extended Filters">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="stage_id" domain="[('section_ids', '=', 'section_id')]" />
-                        <field name="type_id"/>
-                        <field name="channel_id"/>
+                        <field name="campaign_id"/>
+                        <field name="medium_id"/>
+                        <field name="source_id"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
                         <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]" />
-                        <field name="type_id" widget="selection"/>
-                        <field name="channel_id" widget="selection"/>
+                        <field name="campaign_id" widget="selection"/>
+                        <field name="medium_id" widget="selection"/>
+                        <field name="source_id" widget="selection"/>
                         <separator orientation="vertical"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <newline/>
