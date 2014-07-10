@@ -140,7 +140,11 @@ class WebKitParser(report_sxw):
         if webkit_header.orientation :
             command.extend(['--orientation', str(webkit_header.orientation).replace(',', '.')])
         if webkit_header.format :
-            command.extend(['--page-size', str(webkit_header.format).replace(',', '.')])
+            if webkit_header.format=='custom':
+                command.extend(['--page-width', str(webkit_header.paper_width).replace(',', '.')])
+                command.extend(['--page-height', str(webkit_header.paper_height).replace(',', '.')])
+            else:
+                command.extend(['--page-size', str(webkit_header.format).replace(',', '.')])
         count = 0
         for html in html_list :
             with tempfile.NamedTemporaryFile(suffix="%d.body.html" %count,
