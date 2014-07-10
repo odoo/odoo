@@ -854,6 +854,10 @@
             <div class="col-md-7 mb16">
                 <input type="text" class="form-control" name="website" t-attf-value="#{user.partner_id.website or ''}"/>
             </div>
+            <div t-if="email_required" class="alert alert-danger alert-dismissable oe_forum_email_required">
+                <button type="button" class="close" data-dismiss="alert">x</button>
+                <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
+            </div>
             <label class="col-md-4 control-label mb16" for="user.partner_id.email">Email</label>
             <div class="col-md-7 mb16">
                 <input type="text" class="form-control" name="email" required="True" t-attf-value="#{user.partner_id.email}"/>
