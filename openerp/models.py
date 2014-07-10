@@ -3101,10 +3101,10 @@ class BaseModel(object):
             instance) for `self` in cache.
         """
         # fetch the records of this model without field_name in their cache
-        records = self._in_cache_without(field)
+        records = self
 
         # by default, simply fetch field
-        fnames = set((field.name,))
+        fnames = {field.name}
 
         if self.pool._init:
             # columns may be missing from database, do not prefetch other fields
@@ -3176,8 +3176,14 @@ class BaseModel(object):
                     'order': self._parent_order or self._order,
                 }
 
+        empty = self.browse()
+        records = self.browse(set(itertools.chain.from_iterable(
+            (self._in_cache_without(field) - self.env.todo.get(field, empty)).ids
+            for field in (self._fields[name] for name in field_names)
+        )))
+
         result = []
-        for sub_ids in cr.split_for_in_conditions(self.ids):
+        for sub_ids in cr.split_for_in_conditions(records.ids):
             cr.execute(query, [tuple(sub_ids)] + rule_params)
             result.extend(cr.dictfetchall())
 
@@ -3250,9 +3256,9 @@ class BaseModel(object):
 
         # store failed values in cache for the records that could not be read
         fetched = self.browse(ids)
-        missing = self - fetched
+        missing = records - fetched
         if missing:
-            extras = fetched - self
+            extras = fetched - records
             if extras:
                 raise AccessError(
                     _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(
