@@ -69,7 +69,7 @@
                                     <group>
                                         <field name="type"/>
                                         <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                        <field name="lst_price"/>
+                                        <field name="list_price"/>
                                     </group>
                                     <group>
                                         <field name="active"/>
@@ -269,6 +269,9 @@
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
                 </form>
+                <field name="list_price" position="attributes">
+                   <attribute name="name">lst_price</attribute>
+                </field>
                 <field name="name" position="replace">
                     <field name="name" attrs="{'invisible': [('id', '!=', False)]}"/>
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)], 'required': [('id', '!=', False)]}"/>

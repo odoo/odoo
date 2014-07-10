@@ -39,7 +39,7 @@ class contactus(http.Controller):
 
         post_file = []  # List of file to add to ir_attachment once we have the ID
         post_description = []  # Info to add after the message
-        values = {'user_id': False}
+        values = {}
 
         lead_model = request.registry['crm.lead']
 
@@ -80,7 +80,7 @@ class contactus(http.Controller):
             post_description.append("%s: %s" % ("REFERER", environ.get("HTTP_REFERER")))
             values['description'] += dict_to_str(_("Environ Fields: "), post_description)
 
-        lead_id = lead_model.create(request.cr, SUPERUSER_ID, values, request.context)
+        lead_id = lead_model.create(request.cr, SUPERUSER_ID, dict(values, user_id=False), request.context)
         if lead_id:
             for field_value in post_file:
                 attachment_value = {
