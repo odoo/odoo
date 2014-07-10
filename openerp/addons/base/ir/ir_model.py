@@ -200,6 +200,8 @@ class ir_model(osv.osv):
     def instanciate(self, cr, user, model, context=None):
         class x_custom_model(osv.osv):
             _custom = True
+        if isinstance(model, unicode):
+            model = model.encode('utf-8')
         x_custom_model._name = model
         x_custom_model._module = False
         a = x_custom_model._build_model(self.pool, cr)
