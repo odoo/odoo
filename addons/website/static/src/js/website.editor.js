@@ -948,9 +948,7 @@
                 this.text = $(e.target).val();
             },
             'change select.link-style': function (e) {
-                if (this.$("input.url-source[value!='']").val()) {
-                    this.preview();
-                }
+                this.preview();
             },
         }),
         init: function (editor) {
@@ -994,14 +992,14 @@
             });
             return this._super().then(this.proxy('bind_data'));
         },
-        get_data: function () {
+        get_data: function (test) {
             var self = this,
                 def = new $.Deferred(),
                 $e = this.$('.active input.url-source').filter(':input'),
                 val = $e.val(),
                 label = this.$('#link-text').val() || val;
 
-            if (!val || !$e[0].checkValidity()) {
+            if (test !== false && (!val || !$e[0].checkValidity())) {
                 // FIXME: error message
                 $e.closest('.form-group').addClass('has-error');
                 $e.focus();
@@ -1014,7 +1012,7 @@
 
             if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
                 def.resolve('mailto:' + val, false, label);
-            } else if ($e.hasClass('page')) {
+            } else if ($e.val() && $e.val().length && $e.hasClass('page')) {
                 var data = $e.select2('data');
                 if (!data.create) {
                     def.resolve(data.id, false, data.text);
@@ -1066,15 +1064,15 @@
                 });
             }
 
-            if (!href) { return; }
             var match, $control;
-            if ((match = /mailto:(.+)/.exec(href))) {
+            if (href && (match = /mailto:(.+)/.exec(href))) {
                 this.$('input.email-address').val(match[1]).change();
             }
-            if (!$control) {
+            if (href && !$control) {
                 this.$('input.url').val(href).change();
                 this.$('input.window-new').closest("div").show();
             }
+            this.preview();
         },
         changed: function (e) {
             var $e = $(e.target);
@@ -1085,9 +1083,7 @@
                 .addClass('active')
                 .siblings().removeClass('active')
                 .addBack().removeClass('has-error');
-            if ($e.val() && $e.val().length) {
-                this.preview();
-            }
+            this.preview();
         },
         call: function (method, args, kwargs) {
             var self = this;
@@ -1123,10 +1119,9 @@
         },
         preview: function () {
             var $preview = this.$("#link-preview");
-            this.get_data().then(function (url, new_window, label, classes) {
-                $preview.attr("href", url)
-                    .attr("target", new_window ? '_blank' : "")
-                    .text(label && label.length ? label : url)
+            this.get_data(false).then(function (url, new_window, label, classes) {
+                $preview.attr("target", new_window ? '_blank' : "")
+                    .text((label && label.length ? label : url))
                     .attr("class", classes);
             });
         }

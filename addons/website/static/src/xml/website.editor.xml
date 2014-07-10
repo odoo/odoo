@@ -65,41 +65,52 @@
                         <input type="text" class="form-control url email-address url-source"
                                id="link-external" placeholder="http://openerp.com"/>
                     </li>
-                    <li class="list-group-item form-group">
-                        <h4 class="list-group-item-heading">
-                            <label for="link-text" class="control-label">
-                                Link text
-                            </label>
-                        </h4>
-                            <input type="text" class="form-control"
-                                   id="link-text"/>
-                    </li>
-                    <li class="list-group-item form-group">
-                        <h4 class="list-group-item-heading">
-                            <label for="link-type" class="control-label">
-                                Style
-                            </label>
-                        </h4>
-                        <select id="link-style-type" class="form-control link-style pull-left" style="display: inline-block; width: 49%;">
-                            <option value="" selected="selected">Link</option>
-                            <option value="btn-default">Basic</option>
-                            <option value="btn-primary">Primary</option>
-                            <option value="btn-success">Success</option>
-                            <option value="btn-info">Info</option>
-                            <option value="btn-warning">Warning</option>
-                            <option value="btn-danger">Danger</option>
-                        </select>
-                        <select id="link-style-size" class="form-control link-style pull-right" style="display: inline-block; width: 49%;">
-                            <option value="btn-xs">Extra Small</option>
-                            <option value="btn-sm">Small</option>
-                            <option value="" selected="selected">Default</option>
-                            <option value="btn-lg">Large</option>
-                        </select>
-                        <div class="clearfix"/>
-                    </li>
                 </ul>
-                <div class="text-center">
-                    <a id="link-preview" href="#" class="hidden">Preview</a>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="link-text" class="col-sm-2 control-label">
+                            Link text
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="link-text"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="link-style-type" class="col-sm-2 control-label">
+                            Style
+                        </label>
+                        <div class="col-sm-5">
+                            <select id="link-style-type" class="form-control link-style" style="display: inline-block;">
+                                <option value="" selected="selected">Link</option>
+                                <option value="btn-default">Basic</option>
+                                <option value="btn-primary">Primary</option>
+                                <option value="btn-success">Success</option>
+                                <option value="btn-info">Info</option>
+                                <option value="btn-warning">Warning</option>
+                                <option value="btn-danger">Danger</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-5">
+                            <select id="link-style-size" class="form-control link-style" style="display: inline-block;">
+                                <option value="btn-xs">Extra Small</option>
+                                <option value="btn-sm">Small</option>
+                                <option value="" selected="selected">Default</option>
+                                <option value="btn-lg">Large</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="link-text" class="col-sm-2 control-label">
+                            Preview
+                        </label>
+                        <div class="col-sm-10" style="line-height: 2;">
+                            <a id="link-preview" href="#"></a>
+                        </div>
+                    </div>
                 </div>
             </form>
         </t>
