@@ -39,7 +39,6 @@ from lxml import etree
 
 import config
 import misc
-from misc import UpdateableStr
 from misc import SKIPPED_ELEMENT_TYPES
 import osutil
 import openerp
