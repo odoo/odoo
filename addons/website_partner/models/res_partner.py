@@ -14,7 +14,7 @@ class WebsiteResPartner(osv.Model):
             'Website Partner Full Description'
         ),
         'website_short_description': fields.text(
-            'Website artner Short Description'
+            'Website Partner Short Description'
         ),
     }
     _defaults = {
