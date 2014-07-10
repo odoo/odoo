@@ -7,6 +7,7 @@ class mother(models.Model):
 
     name = fields.Char('Name', required=True)
     surname = fields.Char(compute='_compute_surname')
+    state = fields.Selection([('a', 'A'), ('b', 'B')])
 
     @api.one
     @api.depends('name')
@@ -35,6 +36,9 @@ class mother(models.Model):
     # extend the name field by adding a default value
     name = fields.Char(default='Unknown')
 
+    # extend the selection of the state field
+    state = fields.Selection(selection_add=[('c', 'C')])
+
     # override the computed field, and extend its dependencies
     @api.one
     @api.depends('field_in_mother')
@@ -43,5 +47,12 @@ class mother(models.Model):
             self.surname = self.field_in_mother
         else:
             super(mother, self)._compute_surname()
+
+
+class mother(models.Model):
+    _inherit = 'test.inherit.mother'
+
+    # extend again the selection of the state field
+    state = fields.Selection(selection_add=[('d', 'D')])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

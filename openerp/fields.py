@@ -1116,12 +1116,16 @@ class Selection(Field):
             It is given as either a list of pairs (`value`, `string`), or a
             model method, or a method name.
 
+        :param selection_add: provides an extension of the selection in the case
+            of an overridden field. It is a list of pairs (`value`, `string`).
+
         The attribute `selection` is mandatory except in the case of related
         fields (see :ref:`field-related`) or field extensions
         (see :ref:`field-incremental-definition`).
     """
     type = 'selection'
-    selection = None        # [(value, string), ...], model method or method name
+    selection = None        # [(value, string), ...], function or method name
+    selection_add = None    # [(value, string), ...]
 
     def __init__(self, selection=None, string=None, **kwargs):
         if callable(selection):
@@ -1134,6 +1138,23 @@ class Selection(Field):
         # selection must be computed on related field
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
+
+    def _setup_regular(self, env):
+        super(Selection, self)._setup_regular(env)
+        # determine selection (applying extensions)
+        cls = type(env[self.model_name])
+        selection = None
+        for field in resolve_all_mro(cls, self.name, reverse=True):
+            if isinstance(field, type(self)):
+                # We cannot use field.selection or field.selection_add here
+                # because those attributes are overridden by `set_class_name`.
+                if 'selection' in field._attrs:
+                    selection = field._attrs['selection']
+                if 'selection_add' in field._attrs:
+                    selection = selection + field._attrs['selection_add']
+            else:
+                selection = None
+        self.selection = selection
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
