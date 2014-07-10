@@ -845,6 +845,10 @@
             <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
         </div>
         <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal">
+            <div t-if="email_enter_valid" class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: 70px; margin-left: 550px;z-index:5">
+                 <button type="button" class="close" data-dismiss="alert">x</button>
+                 <t t-esc="email_enter_valid" />
+            </div>
             <input name="user_id" t-att-value="user.id" type="hidden"/>
             <label class="col-md-2 control-label mb16" for="user.name">Real name</label>
             <div class="col-md-7 mb16">
