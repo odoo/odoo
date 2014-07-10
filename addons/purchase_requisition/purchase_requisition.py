@@ -152,7 +152,7 @@ class purchase_requisition(osv.osv):
         product_uom = self.pool.get('product.uom')
         product = requisition_line.product_id
         default_uom_po_id = product.uom_po_id.id
-        date_order = requisition.ordering_date and datetime.strptime(requisition.ordering_date, DEFAULT_SERVER_DATE_FORMAT).strftime(DEFAULT_SERVER_DATETIME_FORMAT) or fields.datetime.now()
+        date_order = requisition.ordering_date and fields.date.date_to_datetime(self, cr, uid, requisition.ordering_date, context=context) or fields.datetime.now()
         qty = product_uom._compute_qty(cr, uid, requisition_line.product_uom_id.id, requisition_line.product_qty, default_uom_po_id)
         supplier_pricelist = supplier.property_product_pricelist_purchase and supplier.property_product_pricelist_purchase.id or False
         vals = po_line_obj.onchange_product_id(
