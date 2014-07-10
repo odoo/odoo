@@ -57,7 +57,7 @@ class sale_order_line(osv.osv):
     }
 
     def product_id_change(self, cr, uid, ids,
-                          pricelist, 
+                          pricelist,
                           product,
                           qty=0,
                           uom=False,
@@ -105,7 +105,7 @@ class sale_order_line(osv.osv):
                     message = _("The registration has been created for event <i>%s</i> with the ticket <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.event_ticket_id.name, order_line.order_id.name)
                 else:
                     message = _("The registration has been created for event <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.order_id.name)
-                
+
                 context.update({'mail_create_nolog': True})
                 registration_id = registration_obj.create(cr, uid, dic, context=context)
                 registration_obj.message_post(cr, uid, [registration_id], body=message, context=context)
@@ -138,7 +138,7 @@ class event_event(osv.osv):
         return []
 
     def _get_ticket_events(self, cr, uid, ids, context=None):
-        # `self` is the event.event.ticket model when called by ORM! 
+        # `self` is the event.event.ticket model when called by ORM!
         return list(set(ticket.event_id.id
                             for ticket in self.browse(cr, uid, ids, context)))
 
@@ -184,7 +184,7 @@ class event_ticket(osv.osv):
         current_date = fields.date.context_today(self, cr, uid, context=context)
         return {ticket.id: ticket.deadline and ticket.deadline < current_date
                       for ticket in self.browse(cr, uid, ids, context=context)}
-        
+
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -224,6 +224,8 @@ class event_ticket(osv.osv):
     ]
 
     def onchange_product_id(self, cr, uid, ids, product_id=False, context=None):
+        if not product_id:
+            return {'value': {}}
         return {'value': {'price': self.pool.get("product.product").browse(cr, uid, product_id).list_price or 0}}
 
 
