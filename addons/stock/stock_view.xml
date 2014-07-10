@@ -449,8 +449,9 @@
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel'" string="Moves" create="false">
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
+                    <field name="name" invisible="1"/>
+                    <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
+                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
                     <field name="prodlot_id"  groups="stock.group_production_lot"/>
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
@@ -472,8 +473,9 @@
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel'" string="Moves" create="false">
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
+                    <field name="name" invisible="1"/>
+                    <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
+                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
                     <field name="prodlot_id"  groups="stock.group_production_lot"/>
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
@@ -1130,6 +1132,8 @@
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_uos" groups="product.group_uos"/>
+                    <field name="product_uos_qty" groups="product.group_uos"
+                        on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
@@ -1164,10 +1168,13 @@
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="grey:scrapped == True" string="Stock Moves">
-                    <field name="product_id"/>
+                    <field name="name" invisible="1"/>
+                    <field name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, False)"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_uos" groups="product.group_uos"/>
+                    <field name="product_uos_qty" groups="product.group_uos"
+                        on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"/>
                     <field name="location_id" groups="stock.group_locations" invisible="1"/>
                     <field name="picking_id" invisible="1" />
                     <field name="create_date" invisible="1" />
@@ -1433,12 +1440,13 @@
             <field name="priority" eval="6"/>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel'" string="Moves">
+                    <field name="name" invisible="1"/>
                     <field name="date" widget="date"/>
                     <field name="picking_id" string="Reference" invisible="1"/>
                     <field name="origin"/>
                     <field name="partner_id" string="Supplier"/>
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
+                    <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
+                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="location_id" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
@@ -1481,9 +1489,10 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Moves">
+                    <field name="name" invisible="1"/>
                     <field name="picking_id" string="Reference"/>
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
+                    <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
+                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="date" groups="base.group_no_one"/>
                 </tree>
