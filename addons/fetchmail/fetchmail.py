@@ -35,7 +35,7 @@ import base64
 from openerp import addons
 
 from openerp.osv import fields, osv
-from openerp import tools
+from openerp import tools, api
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -129,6 +129,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
         self.write(cr, uid, ids , {'state':'draft'})
         return True
 
+    @api.cr_uid_ids_context
     def connect(self, cr, uid, server_id, context=None):
         if isinstance(server_id, (list,tuple)):
             server_id = server_id[0]
