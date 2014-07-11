@@ -3177,10 +3177,12 @@ class BaseModel(object):
                 }
 
         empty = self.browse()
-        records = self.browse(set(itertools.chain.from_iterable(
-            (self._in_cache_without(field) - self.env.todo.get(field, empty)).ids
-            for field in (self._fields[name] for name in field_names)
-        )))
+        prefetch = set()
+        todo = set()
+        for field in (self._fields[name] for name in field_names):
+            prefetch.update(self._in_cache_without(field).ids)
+            todo.update(self.env.todo.get(field, empty).ids)
+        records = self.browse(prefetch - todo)
 
         result = []
         for sub_ids in cr.split_for_in_conditions(records.ids):
