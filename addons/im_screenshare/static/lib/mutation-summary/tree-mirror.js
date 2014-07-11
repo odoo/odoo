@@ -105,8 +105,10 @@ var TreeMirror = (function () {
                 break;
         }
 
-        if (!node)
+        if (!node){
+            console.log("REMOVE ME, nodeData not found : " , JSON.stringify(nodeData));
             throw "ouch";
+        }
 
         this.idMap[nodeData.id] = node;
 

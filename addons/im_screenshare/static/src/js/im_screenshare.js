@@ -3,6 +3,10 @@
     instance.im_screenshare = {};
 
     // Default class : it records the summary mutation (start, stop, and send must be override to use the mutations)
+    // A mutation is a key-array :
+    //      * f : string, it is the type of the mutation (initialize or applyChanged for TreeMirror, forwardData for cursorMirror)
+    //      * args : array containing hte DOM mutations ([removed, addedOrMoved, attributes, text] for TreeMirror)
+    //      * timestamp : the timestamp of the mutations
     instance.im_screenshare.RecordHandler = instance.Widget.extend({
         init: function() {
             this.treeMirrorClient = null;
@@ -238,6 +242,9 @@
             this.conv = conv;
             this.count = 0;
             this.uuid = false;
+            // check mutations to send
+            this.loading_node_id = false;
+            this.loading_children_ids = [];
         },
         start: function() {
             this.$el.html('<button class="oe_im_screenshare_button" title="Share your screen"><i class="fa fa-caret-square-o-right"></i></button>');//this.generate_button());
@@ -261,26 +268,117 @@
                 });
             }
         },
+        _child_of_loading_node: function(mutations){
+            var self = this;
+            var children = [];
+            _.each(mutations, function(m){
+                if(m.f === 'applyChanged'){
+                    _.each(m.args[1], function(item){
+                        if(item.parentNode && item.parentNode.id && item.parentNode.id === self.loading_node_id){
+                            children.push(item.id);
+                        }
+                    });
+                }
+             });
+            return children;
+        },
+        _find_loading_node_id: function(){
+            var self = this;
+            var node_id = this.loading_node_id;
+            if(this.treeMirrorClient && !this.loading_node_id){
+                _.each(this.treeMirrorClient.knownNodes.nodes, function(n){
+                    var classes = n.classList || [];
+                    if(_.contains(classes, 'oe_loading')){
+                        node_id = self.treeMirrorClient.knownNodes.nodeId(n);
+                    }
+                });
+            }
+            return node_id;
+        },
+        _filter: function(mutations){
+            var self = this;
+            _.each(mutations, function(m){
+                if(m.f === 'applyChanged'){
+                    // remove the Removed Element (generally child of loading node)
+                    m.args[0] = _.filter(m.args[0], function(item){
+                        return !(item.id && _.contains(self.loading_children_ids, item.id));
+                    });
+                    // remove the element from addedOrMoved containing the node_id
+                    m.args[1] = _.filter(m.args[1], function(item){
+                        return !(item.parentNode && item.parentNode.id && item.parentNode.id === self.loading_node_id);
+                    });
+                    // remove the element from attributes category containing the node_id
+                    m.args[2] = _.filter(m.args[2], function(item){
+                        return !(item.id && item.id === self.loading_node_id);
+                    });
+                }
+            });
+            return mutations;
+        },
+        _remove_empty_mutations: function(mutations){
+            var self = this;
+            var clean_mutations = [];
+            _.each(mutations, function(m){
+                if(m.f === 'applyChanged'){
+                    // remove mutation id=1 and attribute is empty key-array
+                    m.args[2] = _.filter(m.args[2], function(item){
+                        return !(item.id && item.id === 1 && item.attributes);
+                    })
+                    // filter the empty mutations
+                    if(!(_.isEmpty(m.args[0]) && _.isEmpty(m.args[1]) && _.isEmpty(m.args[2]) && _.isEmpty(m.args[3]))){
+                        clean_mutations.push(m);
+                    }
+                }else{
+                    clean_mutations.push(m);
+                }
+            });
+            return clean_mutations;
+        },
         // override functions (stop_recording don't need to be)
         start_record: function(){
             // send the invitation
             var self = this;
-                var invit = "Screensharing with you, follow the link : " + openerp.session.server + '/im_screenshare/player/' + self.uuid;
-                self.conv.send_message(invit, 'meta');
-                // start recording
-                self._super();
-
+            var invit = "Screensharing with you, follow the link : " + openerp.session.server + '/im_screenshare/player/' + self.uuid;
+            self.conv.send_message(invit, 'meta');
+            // start recording
+            self._super();
         },
         send_record: function(json_mutations, type){
-            var type = type || "base";
-            var message = {
-                "num" : this.count,
-                "mutations" : JSON.parse(json_mutations),
-                "type" : JSON.parse(json_mutations)[0] ? JSON.parse(json_mutations)[0].f : type,
-                "uuid" : this.uuid
+            console.log('============================================');
+            var mutations = JSON.parse(json_mutations);
+
+            // find the TreeMirroir id of the loading node
+            this.loading_node_id = this._find_loading_node_id();
+
+            // find new child of the loading node
+            this.loading_children_ids = this.loading_children_ids.concat(this._child_of_loading_node(mutations));
+
+        console.log(this.loading_node_id);
+        console.log(JSON.stringify(this.loading_children_ids));
+        //this.treeMirrorClient && console.log(this.treeMirrorClient.knownNodes.nodes);
+        console.log(JSON.stringify(mutations));
+        console.log("-------------");
+
+            // filter the mutations
+            mutations = this._filter(mutations);
+
+            // remove the empty mutations
+            mutations = this._remove_empty_mutations(mutations);
+        console.log(JSON.stringify(mutations));
+            if(mutations.length !== 0){
+                var type = type || "base";
+                var message = {
+                    "num" : this.count,
+                    "mutations" : mutations,
+                    "type" : mutations[0] ? mutations[0].f : type,
+                    "uuid" : this.uuid
+                };
+        console.log("SEND : ", this.count);
+                this.count++;
+                return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, message : message});
+            }else{
+                return $.Deferred().resolve();
             }
-            this.count++;
-            return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, message : message});
         },
     });
 
@@ -290,7 +388,7 @@
             console.log("channel", channel);
             this.player = player;
             this.channel = channel;
-            this.bus = openerp.im.bus;
+            this.bus = openerp.bus.bus;
             this.bus.add_channel(channel);
             this.bus.on("notification", this, this.on_notification);
             this.bus.start_polling();
