@@ -947,7 +947,7 @@
             'change input#link-text': function (e) {
                 this.text = $(e.target).val();
             },
-            'change select.link-style': function (e) {
+            'change .link-style': function (e) {
                 this.preview();
             },
         }),
@@ -1006,8 +1006,8 @@
                 def.reject();
             }
 
-            var style = this.$("#link-style-type").val();
-            var size = this.$("#link-style-size").val();
+            var style = this.$("input[name='link-style-type']:checked").val();
+            var size = this.$("input[name='link-style-size']:checked").val();
             var classes = (style && style.length ? "btn " : "") + style + " " + size;
 
             if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
@@ -1056,10 +1056,10 @@
 
             var classes = this.element && this.element.$.className;
             if (classes) {
-                this.$('option[value!=""]').each(function () {
+                this.$('input[value!=""]').each(function () {
                     var $option = $(this);
                     if (classes.indexOf($option.val()) !== -1) {
-                        $option.attr("selected", "selected");
+                        $option.attr("checked", "checked");
                     }
                 });
             }
