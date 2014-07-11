@@ -304,11 +304,18 @@ class Vote(osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         vote_id = super(Vote, self).create(cr, uid, vals, context=context)
-        if vals.get('vote', '1') == '1':
-            karma = self.pool['forum.forum']._karma_upvote
-        elif vals.get('vote', '1') == '-1':
-            karma = self.pool['forum.forum']._karma_downvote
         post = self.pool['forum.post'].browse(cr, uid, vals['post_id'], context=context)
+        karma = 0
+        if vals.get('vote', '1') == '1':
+            if post.parent_id:
+                karma = self.pool['forum.forum']._karma_gen_upvote_ans
+            else:
+                karma = self.pool['forum.forum']._karma_gen_upvote_quest
+        elif vals.get('vote', '1') == '-1':
+            if post.parent_id:
+                karma = self.pool['forum.forum']._karma_gen_downvote_ans
+            else:
+                karma = self.pool['forum.forum']._karma_gen_downvote_quest
         self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id], karma, context=context)
         return vote_id
 
