@@ -657,6 +657,10 @@ openerp.web_calendar = function(instance) {
                     date_start_day = new Date(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),7);
                     date_stop_day = new Date(event_end.getFullYear(),event_end.getMonth(),event_end.getDate(),19);
                 }
+                data[this.date_start] = instance.web.parse_value(date_start_day, this.fields[this.date_start]);
+                if (this.date_stop) {
+                    data[this.date_stop] = instance.web.parse_value(date_stop_day, this.fields[this.date_stop]);
+                }
                 diff_seconds = Math.round((date_stop_day.getTime() - date_start_day.getTime()) / 1000);
                                 
             }
