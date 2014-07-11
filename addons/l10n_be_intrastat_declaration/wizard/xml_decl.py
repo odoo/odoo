@@ -286,11 +286,11 @@ class xml_decl(osv.TransientModel):
                 amount = invoiceline.price_unit * invoiceline.quantity
             else:
                 amount = 0
-            if invoiceline.uos_id.category_id.id != invoiceline.product_id.uom_id.category_id.id:
+            if not invoiceline.uos_id.category_id or not invoiceline.product_id.uom_id.category_id or invoiceline.uos_id.category_id.id != invoiceline.product_id.uom_id.category_id.id:
                 weight = invoiceline.product_id.weight_net * invoiceline.quantity
             else:
                 weight = invoiceline.product_id.weight_net * invoiceline.quantity * invoiceline.uos_id.factor
-            if invoiceline.uos_id.category_id.id != invoiceline.product_id.uom_id.category_id.id:
+            if not invoiceline.uos_id.category_id or not invoiceline.product_id.uom_id.category_id or invoiceline.uos_id.category_id.id != invoiceline.product_id.uom_id.category_id.id:
                 supply_units = invoiceline.quantity
             else:
                 supply_units = invoiceline.quantity * invoiceline.uos_id.factor
