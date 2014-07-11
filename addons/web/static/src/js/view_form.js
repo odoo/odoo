@@ -2638,10 +2638,9 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
                 up: 'fa fa-chevron-up',
                 down: 'fa fa-chevron-down'
                },
-            language: this.session.user_context.lang,
+            language: this.session.match_locale(),
             format : instance.web.convert_to_moment_format(l10n.date_format +' '+ l10n.time_format),
         };
-
         this.$input = this.$el.find('input.oe_datepicker_master');
         if (this.type_of_date === 'date') {
             options['pickTime'] = false;
