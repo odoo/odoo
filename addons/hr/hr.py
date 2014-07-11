@@ -301,6 +301,7 @@ class hr_employee(osv.osv):
         resource_ids = []
         for employee in self.browse(cr, uid, ids, context=context):
             resource_ids.append(employee.resource_id.id)
+        super(hr_employee, self).unlink(cr, uid, ids, context=context)
         return self.pool.get('resource.resource').unlink(cr, uid, resource_ids, context=context)
 
     def onchange_address_id(self, cr, uid, ids, address, context=None):
