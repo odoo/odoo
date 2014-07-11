@@ -215,7 +215,8 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = html.replace('&lt;', '<')
 
     # strip all lines
-    html = ''.join([x.strip() for x in html.splitlines(True)])
+    html = '\n'.join([x.strip() for x in html.splitlines()])
+    html = html.replace('\n' * 2, '\n')
 
     for i, url in enumerate(url_index):
         if i == 0:
