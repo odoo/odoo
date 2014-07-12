@@ -35,6 +35,8 @@ This module consists of:
     - Tax and legal related fields
 
 For future development this will be a base for the Turkish localization.
+
+*** Please keep in mind that you should review and adapt it with your Accountant, before using it in a live environment.
     """,
     'author': '7Gates Interactive Technologies',
     'maintainer': 'http://www.7gates.co',
