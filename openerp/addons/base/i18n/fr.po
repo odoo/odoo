@@ -3208,7 +3208,7 @@ msgid "Menu"
 msgstr "Menu"
 
 #. module: base
-#: field:res.currency,rate:0
+#: field:res.currency,rate:0 field:res.currency,rate_silent:0
 msgid "Current Rate"
 msgstr "Taux actuel"
 
@@ -17175,9 +17175,9 @@ msgid "Module not found"
 msgstr "Module introuvable"
 
 #. module: base
-#: help:res.currency,rate:0
-msgid "The rate of the currency to the currency of rate 1."
-msgstr "Le taux de la devise à la devise au taux de 1."
+#: help:res.currency,rate_silent:0
+msgid "The rate of the currency to the currency of rate 1 (0 if no rate defined)."
+msgstr "Le taux de la devise vers la devise avec un taux de 1 (0 si le taux est indéfini)."
 
 #. module: base
 #: field:ir.ui.view,name:0
