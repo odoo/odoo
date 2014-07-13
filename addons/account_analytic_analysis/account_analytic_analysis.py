@@ -700,7 +700,9 @@ class account_analytic_account(osv.osv):
 
     def _prepare_invoice_lines(self, cr, uid, contract, fiscal_position_id, context=None):
         fpos_obj = self.pool.get('account.fiscal.position')
-        fiscal_position = fpos_obj.browse(cr, uid,  fiscal_position_id, context=context)
+        fiscal_position = None
+        if fiscal_position_id:
+            fiscal_position = fpos_obj.browse(cr, uid,  fiscal_position_id, context=context)
         invoice_lines = []
         for line in contract.recurring_invoice_line_ids:
 
@@ -804,6 +806,12 @@ class account_analytic_account_summary_user(osv.osv):
         'user': fields.many2one('res.users', 'User'),
     }
 
+    _depends = {
+        'res.users': ['id'],
+        'account.analytic.line': ['account_id', 'journal_id', 'unit_amount', 'user_id'],
+        'account.analytic.journal': ['type'],
+    }
+
     def init(self, cr):
         openerp.tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_user')
         cr.execute('''CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (
@@ -835,6 +843,11 @@ class account_analytic_account_summary_month(osv.osv):
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'unit_amount': fields.float('Total Time'),
         'month': fields.char('Month', size=32, readonly=True),
+    }
+
+    _depends = {
+        'account.analytic.line': ['account_id', 'date', 'journal_id', 'unit_amount'],
+        'account.analytic.journal': ['type'],
     }
 
     def init(self, cr):

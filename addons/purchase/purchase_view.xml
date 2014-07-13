@@ -632,7 +632,7 @@
         <record id="view_product_template_purchase_buttons_from" model="ir.ui.view">
             <field name="name">product.template.purchase.button.inherit</field>
             <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_form_view_only"/>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button class="oe_inline oe_stat_button" name="action_view_purchases" type="object" 

@@ -220,8 +220,7 @@ class report_custom(report_rml):
 
         elif data['model']=='ir.ui.menu':
             for dept in obj_dept.browse(cr, uid, data['form']['depts'], context=context):
-                cr.execute("SELECT id FROM hr_employee WHERE department_id = %s", (dept.id,))
-                emp_ids = [x[0] for x in cr.fetchall()]
+                emp_ids = obj_emp.search(cr, uid, [('department_id', '=', dept.id)], context=context)
                 if emp_ids==[]:
                     continue
                 dept_done=0

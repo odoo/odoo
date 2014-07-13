@@ -820,5 +820,30 @@ class website_sale(http.Controller):
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)
         return product.write({'website_size_x': x, 'website_size_y': y})
 
+    @http.route(['/shop/tracking_last_order'], type='json', auth="public")
+    def tracking_cart(self, **post):
+        """ return JS code for google analytics"""
+        cr, uid, context = request.cr, request.uid, request.context
+        ret = {}
+        sale_order_id = request.session.get('sale_last_order_id')
+        if sale_order_id:
+            order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
+            ret['transaction'] = {
+                'id': sale_order_id,
+                'affiliation': order.company_id.name,
+                'revenue': order.amount_total,
+                'currency': order.currency_id.name
+            }
+            ret['lines'] = []
+            for line in order.order_line:
+                if not line.is_delivery:
+                    ret['lines'].append({
+                        'id': line.order_id and line.order_id.id,
+                        'name': line.product_id.categ_id and line.product_id.categ_id.name or '-',
+                        'sku': line.product_id.id,
+                        'quantity': line.product_uom_qty,
+                        'price': line.price_unit,
+                    })
+        return ret
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
