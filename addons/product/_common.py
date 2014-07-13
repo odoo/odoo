@@ -32,4 +32,5 @@ def rounding(f, r):
 def ceiling(f, r):
     if not r:
         return f
-    return math.ceil(f / r) * r
+    c = 0.001  # Ceiling precising: Consider only 3 digits after rounding precising
+    return math.ceil(f / r - c) * r  
