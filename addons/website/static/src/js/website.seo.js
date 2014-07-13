@@ -441,7 +441,7 @@
         },
         getMainObject: function () {
             var repr = $('html').data('main-object');
-            var m = repr.match(/.+\((.+), (\d+)\)/);
+            var m = repr.match(/(.+)\((\d+),(.*)\)/);
             if (!m) {
                 return null;
             } else {

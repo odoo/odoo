@@ -326,6 +326,10 @@ class BaseModel(object):
     _log_create = False
     _sql_constraints = []
 
+    # model dependencies, for models backed up by sql views:
+    # {model_name: field_names, ...}
+    _depends = {}
+
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
@@ -585,6 +589,10 @@ class BaseModel(object):
             inherits = dict(parent_class._inherits)
             inherits.update(cls._inherits)
 
+            depends = dict(parent_class._depends)
+            for m, fs in cls._depends.iteritems():
+                depends.setdefault(m, []).extend(fs)
+
             old_constraints = parent_class._constraints
             new_constraints = cls._constraints
             # filter out from old_constraints the ones overridden by a
@@ -604,6 +612,7 @@ class BaseModel(object):
                 '_columns': columns,
                 '_defaults': defaults,
                 '_inherits': inherits,
+                '_depends': depends,
                 '_constraints': constraints,
                 '_sql_constraints': sql_constraints,
             }
@@ -617,6 +626,7 @@ class BaseModel(object):
             '_columns': dict(cls._columns),
             '_defaults': dict(cls._defaults),
             '_inherits': dict(cls._inherits),
+            '_depends': dict(cls._depends),
             '_constraints': list(cls._constraints),
             '_sql_constraints': list(cls._sql_constraints),
             '_original_module': original_module,
@@ -1645,7 +1655,7 @@ class BaseModel(object):
                 record.display_name = convert(record[name])
         else:
             for record in self:
-                record.display_name = "%s,%s" % (self._name, self.id)
+                record.display_name = "%s,%s" % (record._name, record.id)
 
     def _inverse_display_name(self):
         name = self._rec_name
@@ -2765,7 +2775,10 @@ class BaseModel(object):
 
     def _m2m_raise_or_create_relation(self, cr, f):
         m2m_tbl, col1, col2 = f._sql_names(self)
-        self._save_relation_table(cr, m2m_tbl)
+        # do not create relations for custom fields as they do not belong to a module
+        # they will be automatically removed when dropping the corresponding ir.model.field
+        if not f.string.startswith('x_'):
+            self._save_relation_table(cr, m2m_tbl)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if f._obj not in self.pool:
@@ -5647,7 +5660,7 @@ class RecordCache(MutableMapping):
         if args and isinstance(args[0], SpecialValue):
             values = dict.fromkeys(self._recs._ids, args[0])
             for name, field in self._recs._fields.iteritems():
-                if name not in MAGIC_COLUMNS:
+                if name != 'id':
                     self._recs.env.cache[field].update(values)
         else:
             return super(RecordCache, self).update(*args, **kwargs)
@@ -5665,8 +5678,7 @@ class RecordCache(MutableMapping):
         cache, id = self._recs.env.cache, self._recs.id
         dummy = SpecialValue(None)
         for name, field in self._recs._fields.iteritems():
-            if name not in MAGIC_COLUMNS and \
-                    not isinstance(cache[field].get(id, dummy), SpecialValue):
+            if name != 'id' and not isinstance(cache[field].get(id, dummy), SpecialValue):
                 yield name
 
     def __len__(self):

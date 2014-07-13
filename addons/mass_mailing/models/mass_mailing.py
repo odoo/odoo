@@ -144,7 +144,6 @@ class MassMailingCampaign(osv.Model):
             row['replied_ratio'] = 100.0 * row['replied'] / total
         return results
 
-
     _columns = {
         'name': fields.char('Name', required=True),
         'stage_id': fields.many2one('mail.mass_mailing.stage', 'Stage', required=True),
@@ -325,7 +324,6 @@ class MassMailing(osv.Model):
             row['opened_ratio'] = 100.0 * row['opened'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
         return results
-
 
     def _get_mailing_model(self, cr, uid, context=None):
         res = []
