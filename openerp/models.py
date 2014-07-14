@@ -3123,12 +3123,11 @@ class BaseModel(object):
 
         # fetch records with read()
         assert self in records and field.name in fnames
+        result = []
         try:
             result = records.read(list(fnames), load='_classic_write')
-        except AccessError as e:
-            # update cache with the exception
-            records._cache[field] = FailedValue(e)
-            result = []
+        except AccessError:
+            pass
 
         # check the cache, and update it if necessary
         if field not in self._cache:
