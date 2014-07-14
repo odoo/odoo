@@ -668,6 +668,10 @@ def trans_generate(lang, modules, cr):
             _logger.error("Unable to find object %r", model)
             continue
 
+        if not registry[model]._translate:
+            # explicitly disabled
+            continue
+
         exists = registry[model].exists(cr, uid, res_id)
         if not exists:
             _logger.warning("Unable to find object %r with id %d", model, res_id)
@@ -688,7 +692,8 @@ def trans_generate(lang, modules, cr):
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
             objmodel = registry.get(obj.model)
-            if objmodel is None or field_name not in objmodel._columns:
+            if (objmodel is None or field_name not in objmodel._columns
+                    or not objmodel._translate):
                 continue
             field_def = objmodel._columns[field_name]
 

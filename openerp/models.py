@@ -295,6 +295,7 @@ class BaseModel(object):
     _sequence = None
     _description = None
     _needaction = False
+    _translate = True # set to False to disable translations export for this model
 
     # dict of {field:method}, with method returning the (name_get of records, {id: fold})
     # to include in the _read_group, if grouped on this field
