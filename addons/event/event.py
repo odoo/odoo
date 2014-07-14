@@ -55,7 +55,7 @@ class event_event(models.Model):
         readonly=False, states={'done': [('readonly', True)]})
     type = fields.Many2one('event.type', string='Type of Event',
         readonly=False, states={'done': [('readonly', True)]})
-    seats_max = fields.Integer(string='Maximum Avalaible Seats', oldname='register_max',
+    seats_max = fields.Integer(string='Maximum Available Seats', oldname='register_max',
         readonly=True, states={'draft': [('readonly', False)]},
         help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )")
     seats_min = fields.Integer(string='Minimum Reserved Seats', oldname='register_min',

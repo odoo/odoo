@@ -19,13 +19,8 @@
 #
 ##############################################################################
 
-import calendar
-from datetime import date, datetime
-from dateutil import relativedelta
-
-from openerp import tools
-from openerp.osv import fields
-from openerp.osv import osv
+from openerp.osv import osv, fields
+from openerp.http import request
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Very Low'),
@@ -35,8 +30,10 @@ AVAILABLE_PRIORITIES = [
     ('4', 'Very High'),
 ]
 
-class crm_case_channel(osv.osv):
-    _name = "crm.case.channel"
+
+class crm_tracking_medium(osv.Model):
+    # OLD crm.case.channel
+    _name = "crm.tracking.medium"
     _description = "Channels"
     _order = 'name'
     _columns = {
@@ -46,6 +43,67 @@ class crm_case_channel(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
     }
+
+
+class crm_tracking_campaign(osv.Model):
+    # OLD crm.case.resource.type
+    _name = "crm.tracking.campaign"
+    _description = "Campaign"
+    _rec_name = "name"
+    _columns = {
+        'name': fields.char('Campaign Name', required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
+
+
+class crm_tracking_source(osv.Model):
+    _name = "crm.tracking.source"
+    _description = "Source"
+    _rec_name = "name"
+    _columns = {
+        'name': fields.char('Source Name', required=True, translate=True),
+    }
+
+
+class crm_tracking_mixin(osv.AbstractModel):
+    """Mixin class for objects which can be tracked by marketing. """
+    _name = 'crm.tracking.mixin'
+
+    _columns = {
+        'campaign_id': fields.many2one('crm.tracking.campaign', 'Campaign',  # old domain ="['|',('section_id','=',section_id),('section_id','=',False)]"
+                                       help="This is a name that helps you keep track of your different campaign efforts Example: Fall_Drive, Christmas_Special"),
+        'source_id': fields.many2one('crm.tracking.source', 'Source', help="This is the source of the link Example: Search Engine, another domain, or name of email list"),
+        'medium_id': fields.many2one('crm.tracking.medium', 'Channel', help="This is the method of delivery. EX: Postcard, Email, or Banner Ad"),
+    }
+
+    def tracking_fields(self):
+        return [('utm_campaign', 'campaign_id'), ('utm_source', 'source_id'), ('utm_medium', 'medium_id')]
+
+    def tracking_get_values(self, cr, uid, vals, context=None):
+        for key, field in self.tracking_fields():
+            column = self._all_columns[field].column
+            value = vals.get(field) or (request and request.session.get(key))  # params.get sould be always in session by the dispatch from ir_http
+            if column._type in ['many2one'] and isinstance(value, basestring):  # if we receive a string for a many2one, we search / create  the id
+                if value:
+                    Model = self.pool[column._obj]
+                    rel_id = Model.name_search(cr, uid, value, context=context)
+                    if not rel_id:
+                        rel_id = Model.create(cr, uid, {'name': value}, context=context)
+                vals[field] = rel_id
+            # Here the code for other cases that many2one
+            else:
+                vals[field] = value
+        return vals
+
+    def _get_default_track(self, cr, uid, field, context=None):
+        return self.tracking_get_values(cr, uid, {}, context=context).get(field)
+
+    _defaults = {
+        'source_id': lambda self, cr, uid, ctx: self._get_default_track(cr, uid, 'source_id', ctx),
+        'campaign_id': lambda self, cr, uid, ctx: self._get_default_track(cr, uid, 'campaign_id', ctx),
+        'medium_id': lambda self, cr, uid, ctx: self._get_default_track(cr, uid, 'medium_id', ctx),
+    }
+
 
 class crm_case_stage(osv.osv):
     """ Model for case stages. This models the main stages of a document
@@ -104,16 +162,6 @@ class crm_case_categ(osv.osv):
         return ids and ids[0] or False
     _defaults = {
         'object_id' : _find_object_id
-    }
-
-class crm_case_resource_type(osv.osv):
-    """ Resource Type of case """
-    _name = "crm.case.resource.type"
-    _description = "Campaign"
-    _rec_name = "name"
-    _columns = {
-        'name': fields.char('Campaign Name', required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 
 class crm_payment_mode(osv.osv):
