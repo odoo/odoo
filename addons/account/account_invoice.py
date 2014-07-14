@@ -133,7 +133,7 @@ class account_invoice(osv.osv):
                     result[invoice.id] = new_value
 
             #prevent the residual amount on the invoice to be less than 0
-            result[invoice.id] = max(result[invoice.id], 0.0)
+            result[invoice.id] = max(result[invoice.id], 0.0)            
         return result
 
     # Give Journal Items related to the payment reconciled to this invoice
