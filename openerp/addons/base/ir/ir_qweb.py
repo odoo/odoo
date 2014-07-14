@@ -40,6 +40,10 @@ class QWebException(Exception):
     def __init__(self, message, **kw):
         Exception.__init__(self, message)
         self.qweb = dict(kw)
+    def pretty_xml(self):
+        if 'node' not in self.qweb:
+            return ''
+        return etree.tostring(self.qweb['node'], pretty_print=True)
 
 class QWebTemplateNotFound(QWebException):
     pass
