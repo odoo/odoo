@@ -1,0 +1,15 @@
+[Unit]
+Description=Odoo Server
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/odoo
+ExecStart=/home/pi/odoo/openerp-server --pidfile=posbox.pid --db-filter=posbox -d posbox --log-level=error --load=web,hw_posbox_homepage,hw_posbox_upgrade
+ExecStartPre=/usr/bin/sudo  ./posbox/warmup.sh
+PIDFile=/home/pi/odoo/posbox.pid
+Restart=always
+RestartSec=10
+# Type=forking
+
+[Install]
+WantedBy=multi-user.target
