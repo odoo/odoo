@@ -733,6 +733,8 @@ class view(osv.osv):
             for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day', 'attendee'):
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
+        elif node.tag == 'kanban' and node.get('default_group_by'):
+            fields[node.get('default_group_by')] = {}
 
         if not check_group(node):
             # node must be removed, no need to proceed further with its children

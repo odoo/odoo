@@ -131,7 +131,7 @@ instance.web.Query = instance.web.Class.extend({
      * @param {String|Array<String>} grouping
      * @returns {jQuery.Deferred<Array<openerp.web.QueryGroup>> | null}
      */
-    group_by: function (grouping) {
+    group_by: function (grouping, options) {
         var ctx = instance.web.pyeval.eval(
             'context', this._model.context(this._context));
 
@@ -159,7 +159,8 @@ instance.web.Query = instance.web.Class.extend({
             offset: this._offset,
             lazy: this._lazy,
             limit: this._limit,
-            orderby: instance.web.serialize_sort(this._order_by) || false
+            orderby: instance.web.serialize_sort(this._order_by) || false,
+            options: options
         }).then(function (results) {
             return _(results).map(function (result) {
                 // FIX: querygroup initialization

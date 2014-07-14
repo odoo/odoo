@@ -75,12 +75,3 @@ class Post(osv.Model):
         'documentation_stage_id': _get_default_stage_id,
     }
 
-    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        stage_obj = self.pool.get('forum.documentation.stage')
-        stage_ids = stage_obj.search(cr, uid, [], context=context)
-        result = stage_obj.name_get(cr, uid, stage_ids, context=context)
-        return result, {}
-
-    _group_by_full = {
-        'documentation_stage_id': _read_group_stage_ids,
-    }

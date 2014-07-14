@@ -31,8 +31,7 @@
             <field name="name">forum.post.kanban</field>
             <field name="model">forum.post</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="documentation_stage_id" >
-                    <field name="documentation_stage_id"/>
+                <kanban default_group_by="documentation_stage_id" options='{"display_empty_columns":"documentation_stage_id"}' >
                     <field name="create_uid"/>
                     <field name="color"/>
                     <templates>

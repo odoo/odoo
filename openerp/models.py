@@ -1825,7 +1825,7 @@ class BaseModel(object):
 
     def _read_group_fill_results(self, cr, uid, domain, groupby, remaining_groupbys,
                                  aggregated_fields, count_field,
-                                 read_group_result, read_group_order=None, context=None):
+                                 read_group_result, read_group_order=None, context=None, options=None):
         """Helper method for filling in empty groups for all possible values of
            the field being grouped by"""
 
@@ -1836,11 +1836,26 @@ class BaseModel(object):
         # should be displayed even if they don't contain any record.
 
         # Grab the list of all groups that should be displayed, including all present groups
-        present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
-        all_groups,folded = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
-                                                  read_group_order=read_group_order,
-                                                  access_rights_uid=openerp.SUPERUSER_ID,
-                                                  context=context)
+        all_groups = {}
+        folded = {}
+        if groupby in self._group_by_full:
+            present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
+            all_groups,folded = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
+                                                   read_group_order=read_group_order,
+                                                   access_rights_uid=openerp.SUPERUSER_ID,
+                                                   context=context)
+        else :
+            group_by_obj = self.pool.get(self._columns[groupby]._obj)
+            stage_domain = options.get('domain') or []
+            order = group_by_obj._order
+            if read_group_order.endswith('desc'):
+                order = "%s desc" % order
+            group_by_ids = group_by_obj._search(cr, uid, stage_domain, order=order, context=context)
+            if (options.get('display_empty_columns') and groupby in options.get('display_empty_columns')):
+                all_groups = group_by_obj.name_get(cr, openerp.SUPERUSER_ID, group_by_ids, context=context)
+            if (options.get('fold_field') == groupby):
+                for fold in group_by_obj.browse(cr, openerp.SUPERUSER_ID, group_by_ids, context=context):
+                    folded[fold.id] = fold.fold or False
 
         result_template = dict.fromkeys(aggregated_fields, False)
         result_template[groupby + '_count'] = 0
@@ -2036,7 +2051,7 @@ class BaseModel(object):
         del data['id']
         return data
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True, options=None):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
 
@@ -2070,6 +2085,8 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
+        if options is None:
+            options = {}
         self.check_access_rights(cr, uid, 'read')
         query = self._where_calc(cr, uid, domain, context=context) 
         fields = fields or self._columns.keys()
@@ -2153,14 +2170,12 @@ class BaseModel(object):
 
         data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict, context) for k,v in r.iteritems()}, fetched_data)
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, groupby_dict, domain, context) for d in data]
-        if lazy and groupby_fields[0] in self._group_by_full:
+        if lazy and (groupby_fields[0] in self._group_by_full) or (options.get('fold_field') == groupby_fields[0]) or (options.get('display_empty_columns') and groupby_fields[0] in options.get('display_empty_columns')):
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
             # method _read_group_fill_results need to be completely reimplemented
             # in a sane way 
-            result = self._read_group_fill_results(cr, uid, domain, groupby_fields[0], groupby[len(annotated_groupbys):],
-                                                       aggregated_fields, count_field, result, read_group_order=order,
-                                                       context=context)
+            result = self._read_group_fill_results(cr, uid, domain, groupby_fields[0], groupby[len(annotated_groupbys):], aggregated_fields, count_field, result, read_group_order=order, context=context, options=options)
         return result
 
     def _inherits_join_add(self, current_model, parent_model_name, query):
