@@ -1,0 +1,36 @@
+
+                          +-------------------------+
+                          | WELCOME TO THE POSBOX ! |
+                          +-------------------------+
+
+The posbox should mostly run by itself, so if you've found yourself here, you 
+are probably interested in hacking it, etc. Here is a quick overview of how it 
+works:
+
+The posbox uses odoo as a web server to proxy request from the point of sale
+to python driver modules. The main driver modules are hw_proxy, hw_escpos, and
+hw_scanner.
+
+The odoo server is installed in ~/odoo
+
+The openerp server is managed with the odoo.service systemd unit. That unit
+can be found in /etc/systemd/system/odoo.service. Systemd is used to automati-
+cally start openerp at boot and restart it in case of failure.
+
+For those unfamiliar with systemd you'll find help scripts in the ~/odoo/posbox
+directory that help you start / restart / stop or update odoo
+
+~/odoo is a git repository tracking the "posbox" branch of the 
+github.com/odoo/odoo.git repository. The "posbox" branch is forked off the 
+master branch and contains files specific to the posbox. The update mechanism 
+on the posbox simply does a git pull on the posbox branch, updates the db and 
+restarts the server.
+
+Some people are confused by the fact that odoo is running on the posbox. To
+be perfectly clear, There is no business data on the posbox, and we could have 
+used any other web server to implement the posobx. We used openerp simply to 
+reuse a technology that was familiar to us instead of introducing a new one.
+
+                     - Frédéric van der Essen @ Odoo.
+
+ 
