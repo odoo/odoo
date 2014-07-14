@@ -51,7 +51,7 @@ Integrator at Agrolait"""
 
 class TestProjectFlow(TestProjectBase):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_00_project_process(self):
         """ Testing project management """
         cr, uid, user_projectuser_id, user_projectmanager_id, project_pigs_id = self.cr, self.uid, self.user_projectuser_id, self.user_projectmanager_id, self.project_pigs_id
@@ -131,8 +131,8 @@ class TestProjectFlow(TestProjectBase):
         # Test: one task created by mailgateway administrator
         self.assertEqual(len(frogs), 1, 'project: message_process: a new project.task should have been created')
         task = self.project_task.browse(cr, user_projectuser_id, frogs[0])
-        res = self.project_task.perm_read(cr, uid, [task.id], details=False)
-        self.assertEqual(res[0].get('create_uid'), uid,
+        res = self.project_task.get_metadata(cr, uid, [task.id])[0].get('create_uid') or [None]
+        self.assertEqual(res[0], uid,
                          'project: message_process: task should have been created by uid as alias_user_id is False on the alias')
         # Test: messages
         self.assertEqual(len(task.message_ids), 3,

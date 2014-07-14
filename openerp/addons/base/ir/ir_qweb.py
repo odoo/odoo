@@ -4,6 +4,7 @@ import cStringIO
 import datetime
 import hashlib
 import json
+import itertools
 import logging
 import math
 import os
@@ -11,15 +12,13 @@ import re
 import sys
 import textwrap
 import uuid
-import xml  # FIXME use lxml and etree
-import itertools
-import lxml.html
-import werkzeug
 from subprocess import Popen, PIPE
 from urlparse import urlparse
 
 import babel
 import babel.dates
+import werkzeug
+from lxml import etree, html
 from PIL import Image
 
 import openerp.http
@@ -116,7 +115,6 @@ class QWeb(orm.AbstractModel):
 
     _name = 'ir.qweb'
 
-    node = xml.dom.Node
     _void_elements = frozenset([
         'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
         'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
@@ -164,18 +162,17 @@ class QWeb(orm.AbstractModel):
         if hasattr(document, 'documentElement'):
             dom = document
         elif document.startswith("<?xml"):
-            dom = xml.dom.minidom.parseString(document)
+            dom = etree.fromstring(document)
         else:
-            dom = xml.dom.minidom.parse(document)
+            dom = etree.parse(document)
 
-        for node in dom.documentElement.childNodes:
-            if node.nodeType == self.node.ELEMENT_NODE:
-                if node.getAttribute('t-name'):
-                    name = str(node.getAttribute("t-name"))
-                    self.add_template(qwebcontext, name, node)
-                if res_id and node.tagName == "t":
-                    self.add_template(qwebcontext, res_id, node)
-                    res_id = None
+        for node in dom:
+            if node.get('t-name'):
+                name = str(node.get("t-name"))
+                self.add_template(qwebcontext, name, node)
+            if res_id and node.tag == "t":
+                self.add_template(qwebcontext, res_id, node)
+                res_id = None
 
     def get_template(self, name, qwebcontext):
         origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
@@ -246,53 +243,50 @@ class QWeb(orm.AbstractModel):
         return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext)
 
     def render_node(self, element, qwebcontext):
-        result = ""
-        if element.nodeType == self.node.TEXT_NODE or element.nodeType == self.node.CDATA_SECTION_NODE:
-            result = element.data.encode("utf8")
-        elif element.nodeType == self.node.ELEMENT_NODE:
-            generated_attributes = ""
-            t_render = None
-            template_attributes = {}
-            for (attribute_name, attribute_value) in element.attributes.items():
-                attribute_name = str(attribute_name)
-                if attribute_name == "groups":
-                    cr = qwebcontext.get('request') and qwebcontext['request'].cr or None
-                    uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
-                    can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
-                    if not can_see:
-                        if qwebcontext.get('editable') and not qwebcontext.get('editable_no_editor'):
-                            errmsg = _("Editor disabled because some content can not be seen by a user who does not belong to the groups %s")
-                            raise openerp.http.Retry(
-                                _("User does not belong to groups %s") % attribute_value, {
-                                    'editable_no_editor': errmsg % attribute_value
-                                })
-                        return ''
+        generated_attributes = ""
+        t_render = None
+        template_attributes = {}
+        for (attribute_name, attribute_value) in element.attrib.iteritems():
+            attribute_name = str(attribute_name)
+            if attribute_name == "groups":
+                cr = qwebcontext.get('request') and qwebcontext['request'].cr or None
+                uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
+                can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
+                if not can_see:
+                    if qwebcontext.get('editable') and not qwebcontext.get('editable_no_editor'):
+                        errmsg = _("Editor disabled because some content can not be seen by a user who does not belong to the groups %s")
+                        raise openerp.http.Retry(
+                            _("User does not belong to groups %s") % attribute_value, {
+                                'editable_no_editor': errmsg % attribute_value
+                            })
+                    return ''
 
-                if isinstance(attribute_value, unicode):
-                    attribute_value = attribute_value.encode("utf8")
+            attribute_value = attribute_value.encode("utf8")
+
+            if attribute_name.startswith("t-"):
+                for attribute in self._render_att:
+                    if attribute_name[2:].startswith(attribute):
+                        att, val = self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
+                        generated_attributes += val and ' %s="%s"' % (att, escape(val)) or " "
+                        break
                 else:
-                    attribute_value = attribute_value.nodeValue.encode("utf8")
-
-                if attribute_name.startswith("t-"):
-                    for attribute in self._render_att:
-                        if attribute_name[2:].startswith(attribute):
-                            att, val = self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
-                            generated_attributes += val and ' %s="%s"' % (att, escape(val)) or " "
-                            break
-                    else:
-                        if attribute_name[2:] in self._render_tag:
-                            t_render = attribute_name[2:]
-                        template_attributes[attribute_name[2:]] = attribute_value
-                else:
-                    generated_attributes += ' %s="%s"' % (attribute_name, escape(attribute_value))
-
-            if 'debug' in template_attributes:
-                debugger = template_attributes.get('debug', 'pdb')
-                __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
-            if t_render:
-                result = self._render_tag[t_render](self, element, template_attributes, generated_attributes, qwebcontext)
+                    if attribute_name[2:] in self._render_tag:
+                        t_render = attribute_name[2:]
+                    template_attributes[attribute_name[2:]] = attribute_value
             else:
-                result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
+                generated_attributes += ' %s="%s"' % (attribute_name, escape(attribute_value))
+
+        if 'debug' in template_attributes:
+            debugger = template_attributes.get('debug', 'pdb')
+            __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
+        if t_render:
+            result = self._render_tag[t_render](self, element, template_attributes, generated_attributes, qwebcontext)
+        else:
+            result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
+
+        if element.tail:
+            result += element.tail
+
         if isinstance(result, unicode):
             return result.encode('utf-8')
         return result
@@ -306,16 +300,16 @@ class QWeb(orm.AbstractModel):
         if inner:
             g_inner = inner
         else:
-            g_inner = []
-            for current_node in element.childNodes:
+            g_inner = [] if element.text is None else [element.text]
+            for current_node in element.iterchildren(tag=etree.Element):
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
                 except (QWebException, openerp.http.Retry):
                     raise
                 except Exception:
                     template = qwebcontext.get('__template__')
-                    raise_qweb_exception(message="Could not render element %r" % element.nodeName, node=element, template=template)
-        name = str(element.nodeName)
+                    raise_qweb_exception(message="Could not render element %r" % element.tag, node=element, template=template)
+        name = str(element.tag)
         inner = "".join(g_inner)
         trim = template_attributes.get("trim", 0)
         if trim == 0:
@@ -417,7 +411,7 @@ class QWeb(orm.AbstractModel):
 
     def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
         """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
-        if element.childNodes:
+        if len(element):
             # An asset bundle is rendered in two differents contexts (when genereting html and
             # when generating the bundle itself) so they must be qwebcontext free
             # even '0' variable is forbidden
@@ -441,7 +435,7 @@ class QWeb(orm.AbstractModel):
 
     def render_tag_field(self, element, template_attributes, generated_attributes, qwebcontext):
         """ eg: <span t-record="browse_record(res.partner, 1)" t-field="phone">+1 555 555 8069</span>"""
-        node_name = element.nodeName
+        node_name = element.tag
         assert node_name not in ("table", "tbody", "thead", "tfoot", "tr", "td",
                                  "li", "ul", "ol", "dl", "dt", "dd"),\
             "RTE widgets do not work correctly on %r elements" % node_name
@@ -451,7 +445,7 @@ class QWeb(orm.AbstractModel):
         record, field_name = template_attributes["field"].rsplit('.', 1)
         record = self.eval_object(record, qwebcontext)
 
-        column = record._model._all_columns[field_name].column
+        column = record._all_columns[field_name].column
         options = json.loads(template_attributes.get('field-options') or '{}')
         field_type = get_field_type(column, options)
 
@@ -512,10 +506,10 @@ class FieldConverter(osv.AbstractModel):
 
         :returns: iterable of (attribute name, attribute value) pairs.
         """
-        column = record._model._all_columns[field_name].column
+        column = record._all_columns[field_name].column
         field_type = get_field_type(column, options)
         return [
-            ('data-oe-model', record._model._name),
+            ('data-oe-model', record._name),
             ('data-oe-id', record.id),
             ('data-oe-field', field_name),
             ('data-oe-type', field_type),
@@ -547,7 +541,7 @@ class FieldConverter(osv.AbstractModel):
         try:
             content = self.record_to_html(
                 cr, uid, field_name, record,
-                record._model._all_columns[field_name].column,
+                record._all_columns[field_name].column,
                 options, context=context)
             if options.get('html-escape', True):
                 content = escape(content)
@@ -555,7 +549,7 @@ class FieldConverter(osv.AbstractModel):
                 content = content.__html__()
         except Exception:
             _logger.warning("Could not get field %s for model %s",
-                            field_name, record._model._name, exc_info=True)
+                            field_name, record._name, exc_info=True)
             content = None
 
         if context and context.get('inherit_branding'):
@@ -670,7 +664,7 @@ class DateTimeConverter(osv.AbstractModel):
 
         if options and options.get('hide_seconds'):
             pattern = pattern.replace(":ss", "").replace(":s", "")
-        
+
         return babel.dates.format_datetime(value, format=pattern, locale=locale)
 
 class TextConverter(osv.AbstractModel):
@@ -785,7 +779,7 @@ class MonetaryConverter(osv.AbstractModel):
 
         lang_code = context.get('lang') or 'en_US'
         lang = self.pool['res.lang']
-        formatted_amount = lang.format(cr, uid, [lang_code], 
+        formatted_amount = lang.format(cr, uid, [lang_code],
             fmt, Currency.round(cr, uid, display_currency, from_amount),
             grouping=True, monetary=True)
 
@@ -894,7 +888,7 @@ class Contact(orm.AbstractModel):
             'mobile': field_browse.mobile,
             'fax': field_browse.fax,
             'city': field_browse.city,
-            'country_id': field_browse.country_id and field_browse.country_id.name_get()[0][1],
+            'country_id': field_browse.country_id.display_name,
             'website': field_browse.website,
             'email': field_browse.email,
             'fields': opf,
@@ -1007,18 +1001,9 @@ class AssetNotFound(AssetError):
     pass
 
 class AssetsBundle(object):
-    # Sass installation:
-    #
-    #       sudo gem install sass compass bootstrap-sass
-    #
-    # If the following error is encountered:
-    #       'ERROR: Cannot load compass.'
-    # Use this:
-    #       sudo gem install compass --pre
-    cmd_sass = ['sass', '--stdin', '-t', 'compressed', '--unix-newlines', '--compass', '-r', 'bootstrap-sass']
     cache = openerp.tools.lru.LRU(32)
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
-    rx_sass_import = re.compile("""(@import\s?['"]([^'"]+)['"])""")
+    rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
     def __init__(self, xmlid, debug=False, cr=None, uid=None, context=None, registry=None):
@@ -1039,23 +1024,27 @@ class AssetsBundle(object):
         self.parse()
 
     def parse(self):
-        fragments = lxml.html.fragments_fromstring(self.html)
+        fragments = html.fragments_fromstring(self.html)
         for el in fragments:
             if isinstance(el, basestring):
                 self.remains.append(el)
-            elif isinstance(el, lxml.html.HtmlElement):
+            elif isinstance(el, html.HtmlElement):
                 src = el.get('src', '')
                 href = el.get('href', '')
                 atype = el.get('type')
                 media = el.get('media')
                 if el.tag == 'style':
                     if atype == 'text/sass' or src.endswith('.sass'):
-                        self.stylesheets.append(SassAsset(self, inline=el.text, media=media))
+                        self.stylesheets.append(SassStylesheetAsset(self, inline=el.text, media=media))
+                    elif atype == 'text/less' or src.endswith('.less'):
+                        self.stylesheets.append(LessStylesheetAsset(self, inline=el.text, media=media))
                     else:
                         self.stylesheets.append(StylesheetAsset(self, inline=el.text, media=media))
                 elif el.tag == 'link' and el.get('rel') == 'stylesheet' and self.can_aggregate(href):
                     if href.endswith('.sass') or atype == 'text/sass':
-                        self.stylesheets.append(SassAsset(self, url=href, media=media))
+                        self.stylesheets.append(SassStylesheetAsset(self, url=href, media=media))
+                    elif href.endswith('.less') or atype == 'text/less':
+                        self.stylesheets.append(LessStylesheetAsset(self, url=href, media=media))
                     else:
                         self.stylesheets.append(StylesheetAsset(self, url=href, media=media))
                 elif el.tag == 'script' and not src:
@@ -1063,10 +1052,10 @@ class AssetsBundle(object):
                 elif el.tag == 'script' and self.can_aggregate(src):
                     self.javascripts.append(JavascriptAsset(self, url=src))
                 else:
-                    self.remains.append(lxml.html.tostring(el))
+                    self.remains.append(html.tostring(el))
             else:
                 try:
-                    self.remains.append(lxml.html.tostring(el))
+                    self.remains.append(html.tostring(el))
                 except Exception:
                     # notYETimplementederror
                     raise NotImplementedError
@@ -1080,7 +1069,7 @@ class AssetsBundle(object):
         response = []
         if debug:
             if css and self.stylesheets:
-                self.compile_sass()
+                self.preprocess_css()
                 for style in self.stylesheets:
                     response.append(style.to_html())
             if js:
@@ -1131,7 +1120,7 @@ class AssetsBundle(object):
             # Invalidate cache on version mismach
             self.cache.pop(key)
         if key not in self.cache:
-            self.compile_sass()
+            self.preprocess_css()
             content = '\n'.join(asset.minify() for asset in self.stylesheets)
 
             if self.css_errors:
@@ -1166,39 +1155,41 @@ class AssetsBundle(object):
             }
         """ % message.replace('"', '\\"')
 
-    def compile_sass(self):
+    def preprocess_css(self):
         """
-            Checks if the bundle contains any sass content, then compiles it to css.
-            Css compilation is done at the bundle level and not in the assets
-            because they are potentially interdependant.
+            Checks if the bundle contains any sass/less content, then compiles it to css.
         """
-        sass = [asset for asset in self.stylesheets if isinstance(asset, SassAsset)]
-        if not sass:
+        to_preprocess = [asset for asset in self.stylesheets if isinstance(asset, PreprocessedCSS)]
+        if not to_preprocess:
             return
-        source = '\n'.join([asset.get_source() for asset in sass])
+        to_compile = [asset for asset in to_preprocess if type(asset) == type(to_preprocess[0])]
+        if len(to_preprocess) != len(to_compile):
+            self.css_errors.append("You can't mix css preprocessors languages in the same bundle. (%s)" % self.xmlid)
+        command = to_compile[0].get_command()
+        source = '\n'.join([asset.get_source() for asset in to_compile])
 
         # move up all @import rules to the top and exclude file imports
         imports = []
         def push(matchobj):
             ref = matchobj.group(2)
-            line = '@import "%s"' % ref
+            line = '@import "%s"%s' % (ref, matchobj.group(3))
             if '.' not in ref and line not in imports and not ref.startswith(('.', '/', '~')):
                 imports.append(line)
             return ''
-        source = re.sub(self.rx_sass_import, push, source)
+        source = re.sub(self.rx_preprocess_imports, push, source)
         imports.append(source)
         source = u'\n'.join(imports)
 
         try:
-            compiler = Popen(self.cmd_sass, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            compiler = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         except Exception:
-            msg = "Could not find 'sass' program needed to compile sass/scss files"
+            msg = "Could not execute command %r" % command[0]
             _logger.error(msg)
             self.css_errors.append(msg)
             return
         result = compiler.communicate(input=source.encode('utf-8'))
         if compiler.returncode:
-            error = self.get_sass_error(result[1], source=source)
+            error = self.get_preprocessor_error(''.join(result), source=source)
             _logger.warning(error)
             self.css_errors.append(error)
             return
@@ -1206,15 +1197,18 @@ class AssetsBundle(object):
         fragments = self.rx_css_split.split(compiled)[1:]
         while fragments:
             asset_id = fragments.pop(0)
-            asset = next(asset for asset in sass if asset.id == asset_id)
+            asset = next(asset for asset in to_compile if asset.id == asset_id)
             asset._content = fragments.pop(0)
 
-    def get_sass_error(self, stderr, source=None):
+    def get_preprocessor_error(self, stderr, source=None):
         # TODO: try to find out which asset the error belongs to
         error = stderr.split('Load paths')[0].replace('  Use --trace for backtrace.', '')
+        if 'Cannot load compass' in error:
+            error += "Maybe you should install the compass gem using this extra argument:\n\n" \
+                     "    $ sudo gem install compass --pre\n"
         error += "This error occured while compiling the bundle '%s' containing:" % self.xmlid
         for asset in self.stylesheets:
-            if isinstance(asset, SassAsset):
+            if isinstance(asset, PreprocessedCSS):
                 error += '\n    - %s' % (asset.url if asset.url else '<inline sass>')
         return error
 
@@ -1256,7 +1250,7 @@ class WebAsset(object):
                 except Exception:
                     raise AssetNotFound("Could not find %s" % self.name)
 
-    def to_html():
+    def to_html(self):
         raise NotImplementedError()
 
     @lazy_property
@@ -1379,11 +1373,8 @@ class StylesheetAsset(WebAsset):
         else:
             return '<style type="text/css"%s>%s</style>' % (media, self.with_header())
 
-class SassAsset(StylesheetAsset):
+class PreprocessedCSS(StylesheetAsset):
     html_url = '%s.css'
-    rx_indent = re.compile(r'^( +|\t+)', re.M)
-    indent = None
-    reindent = '    '
 
     def minify(self):
         return self.with_header()
@@ -1405,12 +1396,25 @@ class SassAsset(StylesheetAsset):
                     name=url,
                     url=url,
                 ), context=self.context)
-        return super(SassAsset, self).to_html()
+        return super(PreprocessedCSS, self).to_html()
+
+    def get_source(self):
+        content = self.inline or self._fetch_content()
+        return "/*! %s */\n%s" % (self.id, content)
+
+    def get_command(self):
+        raise NotImplementedError
+
+class SassStylesheetAsset(PreprocessedCSS):
+    rx_indent = re.compile(r'^( +|\t+)', re.M)
+    indent = None
+    reindent = '    '
 
     def get_source(self):
         content = textwrap.dedent(self.inline or self._fetch_content())
 
         def fix_indent(m):
+            # Indentation normalization
             ind = m.group()
             if self.indent is None:
                 self.indent = ind
@@ -1424,6 +1428,16 @@ class SassAsset(StylesheetAsset):
         except StopIteration:
             pass
         return "/*! %s */\n%s" % (self.id, content)
+
+    def get_command(self):
+        return ['sass', '--stdin', '-t', 'compressed', '--unix-newlines', '--compass',
+               '-r', 'bootstrap-sass']
+
+class LessStylesheetAsset(PreprocessedCSS):
+    def get_command(self):
+        webpath = openerp.http.addons_manifest['web']['addons_path']
+        lesspath = os.path.join(webpath, 'web', 'static', 'lib', 'bootstrap', 'less')
+        return ['lessc', '-', '--clean-css', '--no-js', '--no-color', '--include-path=%s' % lesspath]
 
 def rjsmin(script):
     """ Minify js with a clever regex.

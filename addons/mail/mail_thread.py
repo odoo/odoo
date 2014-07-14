@@ -39,11 +39,11 @@ import re
 from email.message import Message
 from urllib import urlencode
 
-from openerp import tools
+from openerp import api, tools
 from openerp import SUPERUSER_ID
 from openerp.addons.mail.mail_message import decode
 from openerp.osv import fields, osv, orm
-from openerp.osv.orm import browse_record, browse_null
+from openerp.osv.orm import BaseModel
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
@@ -154,12 +154,12 @@ class mail_thread(osv.AbstractModel):
             - message_unread: has uid unread message for the document
             - message_summary: html snippet summarizing the Chatter for kanban views """
         res = dict((id, dict(message_unread=False, message_unread_count=0, message_summary=' ')) for id in ids)
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        user_pid = self.pool.get('res.users').read(cr, uid, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
 
         # search for unread messages, directly in SQL to improve performances
         cr.execute("""  SELECT m.res_id FROM mail_message m
                         RIGHT JOIN mail_notification n
-                        ON (n.message_id = m.id AND n.partner_id = %s AND (n.read = False or n.read IS NULL))
+                        ON (n.message_id = m.id AND n.partner_id = %s AND (n.is_read = False or n.is_read IS NULL))
                         WHERE m.model = %s AND m.res_id in %s""",
                     (user_pid, self._name, tuple(ids),))
         for result in cr.fetchall():
@@ -192,7 +192,7 @@ class mail_thread(osv.AbstractModel):
                 available, which are followed if any """
         res = dict((id, dict(message_subtype_data='')) for id in ids)
         if user_pid is None:
-            user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+            user_pid = self.pool.get('res.users').read(cr, uid, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
 
         # find current model subtypes, add them to a dictionary
         subtype_obj = self.pool.get('mail.message.subtype')
@@ -232,7 +232,7 @@ class mail_thread(osv.AbstractModel):
         fol_obj = self.pool.get('mail.followers')
         fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)])
         res = dict((id, dict(message_follower_ids=[], message_is_follower=False)) for id in ids)
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        user_pid = self.pool.get('res.users').read(cr, uid, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids):
             res[fol.res_id]['message_follower_ids'].append(fol.partner_id.id)
             if fol.partner_id.id == user_pid:
@@ -448,10 +448,6 @@ class mail_thread(osv.AbstractModel):
     def copy_data(self, cr, uid, id, default=None, context=None):
         # avoid tracking multiple temporary changes during copy
         context = dict(context or {}, mail_notrack=True)
-
-        default = default or {}
-        default['message_ids'] = []
-        default['message_follower_ids'] = []
         return super(mail_thread, self).copy_data(cr, uid, id, default=default, context=context)
 
     #------------------------------------------------------
@@ -621,7 +617,7 @@ class mail_thread(osv.AbstractModel):
         # default action is the Inbox action
         self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         act_model, act_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, *self._get_inbox_action_xml_id(cr, uid, context=context))
-        action = self.pool.get(act_model).read(cr, uid, act_id, [])
+        action = self.pool.get(act_model).read(cr, uid, [act_id], [])[0]
         params = context.get('params')
         msg_id = model = res_id = None
 
@@ -1059,11 +1055,12 @@ class mail_thread(osv.AbstractModel):
 
     def message_route_process(self, cr, uid, message, message_dict, routes, context=None):
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
+        context = dict(context or {})
         partner_ids = message_dict.pop('partner_ids', [])
         thread_id = False
         for model, thread_id, custom_values, user_id, alias in routes:
             if self._name == 'mail.thread':
-                context.update({'thread_model': model})
+                context['thread_model'] = model
             if model:
                 model_pool = self.pool[model]
                 if not (thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new')):
@@ -1508,6 +1505,7 @@ class mail_thread(osv.AbstractModel):
             m2m_attachment_ids.append((0, 0, data_attach))
         return m2m_attachment_ids
 
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
                      subtype=None, parent_id=False, attachments=None, context=None,
                      content_subtype='html', **kwargs):
@@ -1807,10 +1805,8 @@ class mail_thread(osv.AbstractModel):
             record = self.browse(cr, uid, ids[0], context=context)
             for updated_field in updated_fields:
                 field_value = getattr(record, updated_field)
-                if isinstance(field_value, browse_record):
+                if isinstance(field_value, BaseModel):
                     field_value = field_value.id
-                elif isinstance(field_value, browse_null):
-                    field_value = False
                 values[updated_field] = field_value
 
         # find followers of headers, update structure for new followers
@@ -1870,11 +1866,12 @@ class mail_thread(osv.AbstractModel):
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         cr.execute('''
             UPDATE mail_notification SET
-                read=false
+                is_read=false
             WHERE
                 message_id IN (SELECT id from mail_message where res_id=any(%s) and model=%s limit 1) and
                 partner_id = %s
         ''', (ids, self._name, partner_id))
+        self.pool.get('mail.notification').invalidate_cache(cr, uid, ['is_read'], context=context)
         return True
 
     def message_mark_as_read(self, cr, uid, ids, context=None):
@@ -1882,11 +1879,12 @@ class mail_thread(osv.AbstractModel):
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         cr.execute('''
             UPDATE mail_notification SET
-                read=true
+                is_read=true
             WHERE
                 message_id IN (SELECT id FROM mail_message WHERE res_id=ANY(%s) AND model=%s) AND
                 partner_id = %s
         ''', (ids, self._name, partner_id))
+        self.pool.get('mail.notification').invalidate_cache(cr, uid, ['is_read'], context=context)
         return True
 
     #------------------------------------------------------

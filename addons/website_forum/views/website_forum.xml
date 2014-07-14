@@ -3,14 +3,26 @@
     <data>
 
 <!-- Editor custo -->
-<template id="editor_head" inherit_id="website.editor_head"
-    name="Event Editor">
+<template id="assets_editor" inherit_id="website.assets_editor" name="Forum Editor Assets">
     <xpath expr="." position="inside">
         <link rel='stylesheet' href="/website_forum/static/src/css/website_forum.css"/>
 
         <script type="text/javascript" src="/website_forum/static/src/js/website.tour.forum.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.editor.js"/>
     </xpath>
+</template>
+
+<template id="assets_forum" name="Forum Assets">
+    <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
+    <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
+
+    <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
+    <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
+    <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
+    <script type="text/javascript">
+        CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
+        ,['Outdent','Indent','Link','Unlink','Image'],] ;
+    </script>
 </template>
 
 <!-- Layout add nav and footer -->
@@ -34,15 +46,7 @@
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
         <t t-set="head">
-            <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
-            <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
-            <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
-            <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
-            <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
-            <script type="text/javascript">
-                CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
-                ,['Outdent','Indent','Link','Unlink','Image'],] ;
-            </script>
+            <t t-call-assets="website_forum.assets_forum"/>
         </t>
         <div class="container mt16">
             <div class="navbar navbar-default">
@@ -424,7 +428,7 @@
             t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/upvote"/>
         <span id="vote_count" t-esc="post.vote_count"/>
         <a t-attf-class="vote_down fa fa-thumbs-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''} #{((post.user_vote == -1 and not post.can_upvote) or not post.can_downvote) and 'karma_required' or ''}"
-            t-attf-data-karma="#{post.user_vote == -1 and post.karma_uovote or post.karma_downvote}"
+            t-attf-data-karma="#{post.user_vote == -1 and post.karma_upvote or post.karma_downvote}"
             t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/downvote"/>
         <div t-if="vote_count &gt; 1" class="subtitle">
             votes

@@ -127,8 +127,8 @@
   Reception is ready for process so now done the reception.
 -
   !python {model: stock.picking}: |
-    picking_id = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001")).picking_ids[0]
-    picking_id.do_transfer(context=context)
+    picking_id = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001"), context=context).picking_ids[0]
+    picking_id.do_transfer()
 -
   I check the Stock Interim account (Received) is credited successfully.
 -
@@ -144,7 +144,7 @@
 -
   !python {model: purchase.order}: |
     invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_001")).invoice_ids]
-    self.pool.get('account.invoice').signal_invoice_open(cr, uid, invoice_ids)
+    self.pool.get('account.invoice').signal_workflow(cr, uid, invoice_ids, 'invoice_open')
 -
   I check the Stock Interim account (Received) is debited sucessfully when Invoice validated.
 -
@@ -166,7 +166,7 @@
   !python {model: purchase.order}: |
     po = self.browse(cr, uid, ref("purchase_order_001"))
     for invoice in po.invoice_ids:
-      self.pool.get('account.invoice').signal_invoice_open(cr, uid, [invoice.id])
+      invoice.signal_workflow('invoice_open')
 -
   I pay the invoice.
 -
@@ -220,8 +220,8 @@
   I process the delivery.
 -
   !python {model: stock.picking}: |
-    picking = self.pool.get('stock.picking').browse(cr, uid, ref("stock_picking_out001"))
-    picking.do_transfer(context=context)
+    picking = self.pool.get('stock.picking').browse(cr, uid, ref("stock_picking_out001"), context=context)
+    picking.do_transfer()
 - 
   I check Stock Interim account (Delivery) is debited successfully.
 -
@@ -252,7 +252,7 @@
   !python {model: stock.picking}: |
     move_name = self.pool.get('stock.picking').browse(cr, uid, ref('stock_picking_out001')).name
     account_invoice = self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
-    self.pool.get('account.invoice').signal_invoice_open(cr, uid, account_invoice)
+    self.pool.get('account.invoice').signal_workflow(cr, uid, account_invoice, 'invoice_open')
 -
   I check Income Account is Credited sucessfully when Invoice validated.
 -

@@ -58,13 +58,13 @@ class Test_Lunch(common.TransactionCase):
         self.order_one = self.lunch_order_line.browse(cr,uid,self.new_id_order_line,context=None)
         #we check that our order_line is a 'new' one and that there are no cashmove linked to that order_line:
         self.assertEqual(self.order_one.state,'new')
-        self.assertEqual(self.order_one.cashmove, [])
+        self.assertEqual(list(self.order_one.cashmove), [])
         #we order that orderline so it's state will be 'ordered'
         self.order_one.order()
         self.order_one = self.lunch_order_line.browse(cr,uid,self.new_id_order_line,context=None)
         #we check that our order_line is a 'ordered' one and that there are no cashmove linked to that order_line:
         self.assertEqual(self.order_one.state,'ordered')
-        self.assertEqual(self.order_one.cashmove, [])
+        self.assertEqual(list(self.order_one.cashmove), [])
 
     def test_01_lunch_order(self):
         """Change the state of an order line from 'new' to 'ordered' then to 'confirmed'. Check that there is a cashmove linked to the order line"""
@@ -76,7 +76,7 @@ class Test_Lunch(common.TransactionCase):
         self.order_one = self.lunch_order_line.browse(cr,uid,self.new_id_order_line,context=None)
         #we check that our order_line is a 'confirmed' one and that there are a cashmove linked to that order_line with an amount equals to the order line price:
         self.assertEqual(self.order_one.state,'confirmed')
-        self.assertTrue(self.order_one.cashmove!=[])
+        self.assertTrue(self.order_one.cashmove)
         self.assertTrue(self.order_one.cashmove[0].amount==-self.order_one.price)
 
     def test_02_lunch_order(self):
@@ -89,4 +89,4 @@ class Test_Lunch(common.TransactionCase):
         self.order_one = self.lunch_order_line.browse(cr,uid,self.new_id_order_line,context=None)
         #We check that the state is cancelled and that the cashmove has been deleted
         self.assertEqual(self.order_one.state,'cancelled')
-        self.assertTrue(self.order_one.cashmove==[])
+        self.assertFalse(self.order_one.cashmove)

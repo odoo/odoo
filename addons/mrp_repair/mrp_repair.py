@@ -113,7 +113,7 @@ class mrp_repair(osv.osv):
         return self.pool['mrp.repair'].search(cr, uid, [('fees_lines', 'in', ids)], context=context)
 
     _columns = {
-        'name': fields.char('Repair Reference', required=True, states={'confirmed': [('readonly', True)]}),
+        'name': fields.char('Repair Reference', required=True, states={'confirmed': [('readonly', True)]}, copy=False),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
                                     required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -130,7 +130,7 @@ class mrp_repair(osv.osv):
             ('2binvoiced', 'To be Invoiced'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Repaired')
-            ], 'Status', readonly=True, track_visibility='onchange',
+            ], 'Status', readonly=True, track_visibility='onchange', copy=False,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' status is used when a user confirms the repair order. \
             \n* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed. \
@@ -141,7 +141,7 @@ class mrp_repair(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, required=True, states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]}),
         'lot_id': fields.many2one('stock.production.lot', 'Repaired Lot', domain="[('product_id','=', product_id)]", help="Products repaired are all belonging to this lot"),
         'guarantee_limit': fields.date('Warranty Expiration', help="The warranty expiration limit is computed as: last move date + warranty defined on selected product. If the current date is below the warranty expiration limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards.", states={'confirmed': [('readonly', True)]}),
-        'operations': fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft': [('readonly', False)]}),
+        'operations': fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft': [('readonly', False)]}, copy=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='Pricelist of the selected partner.'),
         'partner_invoice_id': fields.many2one('res.partner', 'Invoicing Address'),
         'invoice_method': fields.selection([
@@ -150,14 +150,14 @@ class mrp_repair(osv.osv):
             ("after_repair", "After Repair")
            ], "Invoice Method",
             select=True, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.'),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True, track_visibility="onchange"),
-        'move_id': fields.many2one('stock.move', 'Move', readonly=True, help="Move created by the repair order", track_visibility="onchange"),
-        'fees_lines': fields.one2many('mrp.repair.fee', 'repair_id', 'Fees', readonly=True, states={'draft': [('readonly', False)]}),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True, track_visibility="onchange", copy=False),
+        'move_id': fields.many2one('stock.move', 'Move', readonly=True, help="Move created by the repair order", track_visibility="onchange", copy=False),
+        'fees_lines': fields.one2many('mrp.repair.fee', 'repair_id', 'Fees', readonly=True, states={'draft': [('readonly', False)]}, copy=True),
         'internal_notes': fields.text('Internal Notes'),
         'quotation_notes': fields.text('Quotation Notes'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'invoiced': fields.boolean('Invoiced', readonly=True),
-        'repaired': fields.boolean('Repaired', readonly=True),
+        'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),
+        'repaired': fields.boolean('Repaired', readonly=True, copy=False),
         'amount_untaxed': fields.function(_amount_untaxed, string='Untaxed Amount',
             store={
                 'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations', 'fees_lines'], 10),
@@ -198,19 +198,6 @@ class mrp_repair(osv.osv):
     _sql_constraints = [
         ('name', 'unique (name)', 'The name of the Repair Order must be unique!'),
     ]
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'state': 'draft',
-            'repaired': False,
-            'invoiced': False,
-            'invoice_id': False,
-            'move_id': False,
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
-        })
-        return super(mrp_repair, self).copy(cr, uid, id, default, context)
 
     def onchange_product_id(self, cr, uid, ids, product_id=None):
         """ On change of product sets some values.
@@ -562,12 +549,6 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.line'
     _description = 'Repair Line'
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({'invoice_line_id': False, 'move_id': False, 'invoiced': False, 'state': 'draft'})
-        return super(mrp_repair_line, self).copy_data(cr, uid, id, default, context)
-
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         """ Calculates amount.
         @param field_name: Name of field.
@@ -588,22 +569,22 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'type': fields.selection([('add', 'Add'), ('remove', 'Remove')], 'Type', required=True),
         'to_invoice': fields.boolean('To Invoice'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'invoiced': fields.boolean('Invoiced', readonly=True),
+        'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),
         'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
         'tax_id': fields.many2many('account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True),
+        'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True, copy=False),
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True),
-        'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True),
+        'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True, copy=False),
         'lot_id': fields.many2one('stock.production.lot', 'Lot'),
         'state': fields.selection([
                     ('draft', 'Draft'),
                     ('confirmed', 'Confirmed'),
                     ('done', 'Done'),
-                    ('cancel', 'Cancelled')], 'Status', required=True, readonly=True,
+                    ('cancel', 'Cancelled')], 'Status', required=True, readonly=True, copy=False,
                     help=' * The \'Draft\' status is set automatically as draft when repair order in draft status. \
                         \n* The \'Confirmed\' status is set automatically as confirm when repair order in confirm status. \
                         \n* The \'Done\' status is set automatically when repair order is completed.\
@@ -659,12 +640,6 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.fee'
     _description = 'Repair Fees Line'
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({'invoice_line_id': False, 'invoiced': False})
-        return super(mrp_repair_fee, self).copy_data(cr, uid, id, default, context)
-
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         """ Calculates amount.
         @param field_name: Name of field.
@@ -688,9 +663,9 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
         'tax_id': fields.many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes'),
-        'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True),
+        'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True, copy=False),
         'to_invoice': fields.boolean('To Invoice'),
-        'invoiced': fields.boolean('Invoiced', readonly=True),
+        'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),
     }
 
     _defaults = {

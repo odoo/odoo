@@ -19,18 +19,17 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
+from openerp import models, api
 
-class event_confirm(osv.osv_memory):
-    """
-    Confirm Event
-    """
+
+class event_confirm(models.TransientModel):
+    """Event Confirmation"""
     _name = "event.confirm"
-    _description = "Event Confirmation"
 
-    def confirm(self, cr, uid, ids, context=None):
-        self.pool.get('event.event').do_confirm(cr, uid, context.get('event_ids', []), context=context)
+    @api.multi
+    def confirm(self):
+        events = self.env['event.event'].browse(self._context.get('event_ids', []))
+        events.do_confirm()
         return {'type': 'ir.actions.act_window_close'}
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

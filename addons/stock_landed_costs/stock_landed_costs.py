@@ -80,10 +80,10 @@ class stock_landed_cost(osv.osv):
         return {'value': result}
 
     _columns = {
-        'name': fields.char('Name', track_visibility='always', readonly=True),
-        'date': fields.date('Date', required=True, states={'done': [('readonly', True)]}, track_visibility='onchange'),
-        'picking_ids': fields.many2many('stock.picking', string='Pickings', states={'done': [('readonly', True)]}),
-        'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines', states={'done': [('readonly', True)]}),
+        'name': fields.char('Name', track_visibility='always', readonly=True, copy=False),
+        'date': fields.date('Date', required=True, states={'done': [('readonly', True)]}, track_visibility='onchange', copy=False),
+        'picking_ids': fields.many2many('stock.picking', string='Pickings', states={'done': [('readonly', True)]}, copy=False),
+        'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines', states={'done': [('readonly', True)]}, copy=True),
         'valuation_adjustment_lines': fields.one2many('stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments', states={'done': [('readonly', True)]}),
         'description': fields.text('Item Description', states={'done': [('readonly', True)]}),
         'amount_total': fields.function(_total_amount, type='float', string='Total', digits_compute=dp.get_precision('Account'),
@@ -92,8 +92,8 @@ class stock_landed_cost(osv.osv):
                 'stock.landed.cost.lines': (_get_cost_line, ['price_unit', 'quantity', 'cost_id'], 20),
             }, track_visibility='always'
         ),
-        'state': fields.selection([('draft', 'Draft'), ('done', 'Posted'), ('cancel', 'Cancelled')], 'State', readonly=True, track_visibility='onchange'),
-        'account_move_id': fields.many2one('account.move', 'Journal Entry', readonly=True),
+        'state': fields.selection([('draft', 'Draft'), ('done', 'Posted'), ('cancel', 'Cancelled')], 'State', readonly=True, track_visibility='onchange', copy=False),
+        'account_move_id': fields.many2one('account.move', 'Journal Entry', readonly=True, copy=False),
         'account_journal_id': fields.many2one('account.journal', 'Account Journal', required=True),
     }
 
@@ -102,13 +102,6 @@ class stock_landed_cost(osv.osv):
         'state': 'draft',
         'date': fields.date.context_today,
     }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = {} if default is None else default.copy()
-        default.update({
-            'account_move_id': False,
-        })
-        return super(stock_landed_cost, self).copy(cr, uid, id, default=default, context=context)
 
     def _create_accounting_entries(self, cr, uid, line, move_id, context=None):
         product_obj = self.pool.get('product.product')

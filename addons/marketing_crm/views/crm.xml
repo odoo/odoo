@@ -12,8 +12,9 @@
                     <attribute name="groups"></attribute>
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="type_id"/>
-                    <field name="channel_id" widget="selection"/>
+                    <field name="campaign_id" />
+                    <field name="medium_id"/>
+                    <field name="source_id" />
                 </xpath>
             </field>
         </record>
@@ -25,8 +26,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='mailings']" position="before">
                     <group string="Marketing">
-                        <field name="type_id" />
-                        <field name="channel_id" widget="selection"/>
+                        <field name="campaign_id" />
+                        <field name="medium_id" />
+                        <field name="source_id" />
                     </group>
                 </xpath>
             </field>

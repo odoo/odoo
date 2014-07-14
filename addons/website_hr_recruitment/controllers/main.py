@@ -2,9 +2,9 @@
 import base64
 
 from openerp import SUPERUSER_ID
-from openerp.addons.web import http
+from openerp import http
 from openerp.tools.translate import _
-from openerp.addons.web.http import request
+from openerp.http import request
 
 class website_hr_recruitment(http.Controller):
     @http.route([

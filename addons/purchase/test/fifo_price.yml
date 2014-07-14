@@ -41,8 +41,8 @@
   Process the reception of purchase order 1 and set date
 -
   !python {model: stock.picking}: |
-    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo1")).picking_ids[0]
-    picking_obj.do_transfer(context=context)
+    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo1"), context=context).picking_ids[0]
+    picking_obj.do_transfer()
 - 
   Check the standard price of the product (fifo icecream), that should have not changed because the standard price is supposed to be updated only when goods are going out of the stock
 - 
@@ -69,8 +69,8 @@
   Process the reception of purchase order 2
 - 
   !python {model: stock.picking}: |
-    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo2")).picking_ids[0]
-    picking_obj.do_transfer(context=context)
+    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo2"), context=context).picking_ids[0]
+    picking_obj.do_transfer()
 - 
   Check the standard price of the product, that should have not changed because the standard price is supposed to be updated only when goods are going out of the stock
 - 
@@ -101,8 +101,8 @@
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking}: |
-     pick_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment"))
-     pick_obj.do_transfer(context=context)
+     pick_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment"), context=context)
+     pick_obj.do_transfer()
 - 
   Check product standard price changed to 65.0 (because last outgoing shipment was made of 10 kg at 50€ and 10 kg at 80€)
 - 
@@ -133,8 +133,8 @@
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking}: |
-    pick_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment_uom"))
-    pick_obj.do_transfer(context=context)
+    pick_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment_uom"), context=context)
+    pick_obj.do_transfer()
 - 
   Check product price changed to 80.0 (because last outgoing shipment was made of 0.5 kg at 80€)
 - 
@@ -190,8 +190,8 @@
   Process the reception of purchase order with usd
 -
   !python {model: stock.picking}: |
-    pick_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_usd")).picking_ids[0]
-    pick_obj.do_transfer(context=context)
+    pick_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_usd"), context=context).picking_ids[0]
+    pick_obj.do_transfer()
 - 
   We create delivery order of 49.5 kg
 - 
@@ -217,8 +217,8 @@
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking}: |
-    picking_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment_cur"))
-    picking_obj.do_transfer(context=context)
+    picking_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment_cur"), context=context)
+    picking_obj.do_transfer()
 - 
   Check rounded price is 102 euro (because last outgoing shipment was made of 19.5kg at 80€ and 30kg at $150 (rate=1.2834)
 - 
@@ -249,8 +249,8 @@
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking}: |
-    picking_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment_ret"))
-    picking_obj.do_transfer(context=context)
+    picking_obj = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_fifo_shipment_ret"), context=context)
+    picking_obj.do_transfer()
 - 
   Check rounded price is 150.0 / 1.2834
 - 
@@ -295,8 +295,8 @@
   Process the delivery of the first outgoing shipment
 - 
   !python {model: stock.picking}: |
-    picking_obj = self.browse(cr, uid, ref("outgoing_fifo_shipment_neg"))
-    picking_obj.do_transfer(context=context)
+    picking_obj = self.browse(cr, uid, ref("outgoing_fifo_shipment_neg"), context=context)
+    picking_obj.do_transfer()
 -
   The behavior of fifo/lifo is not garantee if the quants are created at the same second, so i just wait one second
 -
@@ -323,8 +323,8 @@
   Process the delivery of the outgoing shipments
 - 
   !python {model: stock.picking}: |
-    picking_obj1 = self.browse(cr, uid, ref("outgoing_fifo_shipment_neg2"))
-    picking_obj1.do_transfer(context=context)
+    picking_obj1 = self.browse(cr, uid, ref("outgoing_fifo_shipment_neg2"), context=context)
+    picking_obj1.do_transfer()
 
 - 
   Receive purchase order with 50 kg FIFO Ice Cream at 50 euro/kg
@@ -347,8 +347,8 @@
   Process the reception of purchase order 1
 -
   !python {model: stock.picking}: |
-    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_neg")).picking_ids[0]
-    picking_obj.do_transfer(context=context)
+    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_neg"), context=context).picking_ids[0]
+    picking_obj.do_transfer()
 - 
   Assert price on product is still the old price as the out move has not been received fully yet
 - 
@@ -376,8 +376,8 @@
   Process the reception of purchase order 2
 - 
   !python {model: stock.picking}: |
-    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_neg2")).picking_ids[0]
-    picking_obj.do_transfer(context=context)
+    picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_neg2"), context=context).picking_ids[0]
+    picking_obj.do_transfer()
 - 
   The price of the product should have changed back to 65.0 
 - 

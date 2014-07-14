@@ -73,13 +73,13 @@ var Tour = {
     run: function (tour_id, mode) {
         var tour = Tour.tours[tour_id];
         if (!tour) {
-            Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
+            return Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
         }
         console.log("Tour '"+tour_id+"' Begin from run method");
         var state = Tour.getState();
         if (state) {
              if (state.mode === "test") {
-                Tour.error(false, "An other running tour has been detected all tours are now killed.");
+                return Tour.error(false, "An other running tour has been detected all tours are now killed.");
             } else {
                 Tour.endTour();
             }
@@ -332,10 +332,8 @@ var Tour = {
             + (step ? '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' )
             + "\n localStorage: " + JSON.stringify(localStorage)
             + '\n\n' + $("body").html();
-        Tour.reset();
-        if (state.mode === "test") {
-            throw new Error(message);
-        }
+        console.log(message);
+        Tour.endTour();
     },
     lists: function () {
         var tour_ids = [];
@@ -380,7 +378,7 @@ var Tour = {
             Tour.nextStep();
         } else {
             if (state.mode === "test" && state.wait >= 10) {
-                Tour.error(state.step, "Tour '"+state.id+"' undefined");
+                return Tour.error(state.step, "Tour '"+state.id+"' undefined");
             }
             Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
             console.log("Tour '"+state.id+"' wait for running (tour undefined)");
@@ -421,7 +419,7 @@ var Tour = {
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
                 Tour.timer = setTimeout(checkNext, Tour.defaultDelay);
             } else {
-                Tour.error(next, "Can't reach the next step");
+                return Tour.error(next, "Can't reach the next step");
             }
         }
         checkNext();
@@ -437,7 +435,7 @@ var Tour = {
         var next = state.tour.steps[step.id+1];
 
         if (state.mode === "test" && state.number > 3) {
-            Tour.error(next, "Cycling. Can't reach the next step");
+            return Tour.error(next, "Cycling. Can't reach the next step");
         }
         
         Tour.saveState(state.id, state.mode, step.id, state.number);
@@ -472,7 +470,7 @@ var Tour = {
     },
     endTour: function () {
         var state = Tour.getState();
-        var test = state.step.id >= state.tour.steps.length-1;
+        var test = state.step && state.step.id >= state.tour.steps.length-1;
         Tour.reset();
         if (test) {
             console.log("Tour '"+state.id+"' finish: ok");

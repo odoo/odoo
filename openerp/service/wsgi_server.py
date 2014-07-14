@@ -194,14 +194,15 @@ def application_unproxied(environ, start_response):
     if hasattr(threading.current_thread(), 'dbname'):
         del threading.current_thread().dbname
 
-    # Try all handlers until one returns some result (i.e. not None).
-    wsgi_handlers = [wsgi_xmlrpc]
-    wsgi_handlers += module_handlers
-    for handler in wsgi_handlers:
-        result = handler(environ, start_response)
-        if result is None:
-            continue
-        return result
+    with openerp.api.Environment.manage():
+        # Try all handlers until one returns some result (i.e. not None).
+        wsgi_handlers = [wsgi_xmlrpc]
+        wsgi_handlers += module_handlers
+        for handler in wsgi_handlers:
+            result = handler(environ, start_response)
+            if result is None:
+                continue
+            return result
 
     # We never returned from the loop.
     response = 'No handler found.\n'

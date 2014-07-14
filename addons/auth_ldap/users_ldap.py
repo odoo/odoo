@@ -237,14 +237,14 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'ldaps': fields.one2many(
-            'res.company.ldap', 'company', 'LDAP Parameters'),
+            'res.company.ldap', 'company', 'LDAP Parameters', copy=True),
     }
 
 
 class users(osv.osv):
     _inherit = "res.users"
-    def login(self, db, login, password):
-        user_id = super(users, self).login(db, login, password)
+    def _login(self, db, login, password):
+        user_id = super(users, self)._login(db, login, password)
         if user_id:
             return user_id
         registry = RegistryManager.get(db)

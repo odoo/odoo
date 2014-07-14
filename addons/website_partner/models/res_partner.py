@@ -12,12 +12,12 @@ class WebsiteResPartner(osv.Model):
 
     _columns = {
         'website_published': fields.boolean(
-            'Publish', help="Publish on the website"),
+            'Publish', help="Publish on the website", copy=False),
         'website_description': fields.html(
             'Website Partner Full Description'
         ),
         'website_short_description': fields.text(
-            'Website artner Short Description'
+            'Website Partner Short Description'
         ),
         # hack to allow using plain browse record in qweb views
         'self': fields.function(_get_ids, type='many2one', relation=_name),

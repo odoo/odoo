@@ -178,7 +178,7 @@ class delivery_grid(osv.osv):
         'state_ids': fields.many2many('res.country.state', 'delivery_grid_state_rel', 'grid_id', 'state_id', 'States'),
         'zip_from': fields.char('Start Zip', size=12),
         'zip_to': fields.char('To Zip', size=12),
-        'line_ids': fields.one2many('delivery.grid.line', 'grid_id', 'Grid Line'),
+        'line_ids': fields.one2many('delivery.grid.line', 'grid_id', 'Grid Line', copy=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery grid without removing it."),
     }
     _defaults = {

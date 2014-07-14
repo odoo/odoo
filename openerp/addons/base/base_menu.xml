@@ -30,6 +30,10 @@
                 <menuitem id="menu_security" name="Security" parent="menu_custom" sequence="25"/>
                 <menuitem id="menu_ir_property" name="Parameters" parent="menu_custom" sequence="24"/>
 
+        <record model="ir.ui.menu" id="base.menu_administration">
+            <field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
+        </record>
+
         <record id="action_client_base_menu" model="ir.actions.client">
             <field name="name">Open Settings Menu</field>
             <field name="tag">reload</field>

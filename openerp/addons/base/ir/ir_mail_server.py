@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from email.MIMEText import MIMEText
-from email.MIMEBase import MIMEBase
-from email.MIMEMultipart import MIMEMultipart
-from email.Charset import Charset
-from email.Header import Header
-from email.Utils import formatdate, make_msgid, COMMASPACE
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.charset import Charset
+from email.header import Header
+from email.utils import formatdate, make_msgid, COMMASPACE
 from email import Encoders
 import logging
 import re
@@ -461,21 +461,18 @@ class ir_mail_server(osv.osv):
                 mdir.add(message.as_string(True))
                 return message_id
 
+            smtp = None
             try:
                 smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption or False, smtp_debug)
                 smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
             finally:
-                try:
-                    # Close Connection of SMTP Server
+                if smtp is not None:
                     smtp.quit()
-                except Exception:
-                    # ignored, just a consequence of the previous exception
-                    pass
         except Exception, e:
             msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (tools.ustr(smtp_server),
                                                                              e.__class__.__name__,
                                                                              tools.ustr(e))
-            _logger.exception(msg)
+            _logger.error(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
 

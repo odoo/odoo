@@ -10,6 +10,9 @@
                     <separator/>
                     <filter icon="terp-accessories-archiver" string="Picked" domain="[('shipped','=',True)]"/>
                 </filter>
+                <xpath expr="//group/filter[@string='Status']" position="after">
+                    <filter string="Warehouse" context="{'group_by':'warehouse_id'}"/>
+                </xpath>
             </field>
         </record>
      </data>

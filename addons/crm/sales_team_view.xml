@@ -87,14 +87,16 @@
                 <data>
                     <xpath expr="//templates" position="before">
                         <field name="alias_id"/>
+                        <field name="alias_name"/>
+                        <field name="alias_domain"/>
                         <field name="use_leads"/>
                         <field name="use_opportunities"/>
                         <field name="monthly_open_leads"/>
                         <field name="monthly_planned_revenue"/>
                     </xpath>
                     <xpath expr="//h4[@name='name']" position="after">
-                        <div class="oe_kanban_alias oe_center" t-if="record.use_leads.raw_value and record.alias_id.value">
-                            <small><span class="oe_e oe_e_alias" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
+                        <div class="oe_kanban_alias text-center" t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
+                            <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
                         </div>
                         <div class="oe_items_list">
                             <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">

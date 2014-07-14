@@ -24,7 +24,7 @@
         'location_id': pick.location_id.id,
         'location_dest_id': pick.location_dest_id.id,
     })
-    pick.do_transfer(context=context)
+    pick.do_transfer()
 -
   I test that I have two pickings, one done and one backorder to do
 -
@@ -76,7 +76,7 @@
   !python {model: sale.order}: |
     invoice_ids = self.browse(cr, uid, ref("sale.sale_order_8")).invoice_ids
     first_invoice_id = invoice_ids[0]
-    self.pool.get('account.invoice').signal_invoice_cancel(cr, uid, [first_invoice_id.id])
+    self.pool.get('account.invoice').signal_workflow(cr, uid, [first_invoice_id.id], 'invoice_cancel')
 -
   I check order status in "Invoice Exception" and related invoice is in cancel state.
 -

@@ -21,6 +21,11 @@ function openerp_pos_db(instance, module){
             this.product_by_category_id = {};
             this.product_by_reference = {};
 
+            this.partners_sorted = [];
+            this.partner_by_id = {};
+            this.partner_by_ean13 = {};
+            this.partner_search_string = "";
+
             this.category_by_id = {};
             this.root_category_id  = 0;
             this.category_products = {};
@@ -196,6 +201,60 @@ function openerp_pos_db(instance, module){
                 }
             }
         },
+        _partner_search_string: function(partner){
+            var str = '' + partner.id + ':' + partner.name;
+            if(partner.ean13){
+                str += '|' + partner.ean13;
+            }
+            if(partner.address){
+                str += '|' + partner.address;
+            }
+            return str + '\n';
+        },
+        add_partners: function(partners){
+            for(var i = 0, len = partners.length; i < len; i++){
+                var partner = partners[i];
+                this.partner_by_id[partner.id] = partner;
+                if(partner.ean13){
+                    this.partner_by_ean13[partner.ean13] = partner;
+                }
+                partner.address = (partner.street || '') +', '+ 
+                                  (partner.zip || '')    +' '+
+                                  (partner.city || '')   +', '+ 
+                                  (partner.country_id[1] || '');
+                this.partner_search_string += this._partner_search_string(partner);
+                this.partners_sorted.push(partner);
+            }
+        },
+        get_partner_by_id: function(id){
+            return this.partner_by_id[id];
+        },
+        get_partner_by_ean13: function(ean13){
+            return this.partner_by_ean13[ean13];
+        },
+        get_partners_sorted: function(){
+            return this.partners_sorted;
+        },
+        search_partner: function(query){
+            try {
+                query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
+                query = query.replace(' ','.+');
+                var re = RegExp("([0-9]+):.*?"+query,"gi");
+            }catch(e){
+                return [];
+            }
+            var results = [];
+            for(var i = 0; i < this.limit; i++){
+                r = re.exec(this.partner_search_string);
+                if(r){
+                    var id = Number(r[1]);
+                    results.push(this.get_partner_by_id(id));
+                }else{
+                    break;
+                }
+            }
+            return results;
+        },
         /* removes all the data from the database. TODO : being able to selectively remove data */
         clear: function(stores){
             for(var i = 0, len = arguments.length; i < len; i++){
@@ -243,7 +302,13 @@ function openerp_pos_db(instance, module){
          * - a name, package or ean13 containing the query (case insensitive) 
          */
         search_product_in_category: function(category_id, query){
-            var re = RegExp("([0-9]+):.*?"+query,"gi");
+            try {
+                query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
+                query = query.replace(' ','.+');
+                var re = RegExp("([0-9]+):.*?"+query,"gi");
+            }catch(e){
+                return [];
+            }
             var results = [];
             for(var i = 0; i < this.limit; i++){
                 r = re.exec(this.category_search_string[category_id]);
