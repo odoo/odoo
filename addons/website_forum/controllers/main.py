@@ -592,7 +592,7 @@ class WebsiteForum(http.Controller):
             'website': kwargs.get('website'),
             'email': kwargs.get('email'),
             'city': kwargs.get('city'),
-            'country_id': int(kwargs.get('country')),
+            'country_id': int(kwargs.get('country')) if kwargs.get('country') else False,
             'website_description': kwargs.get('description'),
         }, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), user.id))
