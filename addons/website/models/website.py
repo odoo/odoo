@@ -571,7 +571,7 @@ class website_menu(osv.osv):
     _description = "Website Menu"
     _columns = {
         'name': fields.char('Menu', required=True, translate=True),
-        'url': fields.char('Url', translate=True),
+        'url': fields.char('Url'),
         'new_window': fields.boolean('New Window'),
         'sequence': fields.integer('Sequence'),
         # TODO: support multiwebsite once done for ir.ui.views
