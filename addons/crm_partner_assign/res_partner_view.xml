@@ -103,60 +103,25 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base_geolocalize.view_crm_partner_geo_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='geo_localization']" position="replace">
-            <!-- <xpath expr="//notebook[last()]" position="inside"> -->
-                <page string="Geo Localization" name="geo_localization">
+            <xpath expr="//page[@name='geo_location']" position="inside">
+                <group>
                     <group>
-                        <group>
-                            <separator string="Partner Activation" colspan="2"/>
-                            <field name="grade_id" widget="selection"/>
-                            <field name="activation" widget="selection"/>
-                            <field name="partner_weight"/>
-                        </group>
-                        <group>
-                            <separator string="Partner Review" colspan="2"/>
-                            <field name="date_review"/>
-                            <field name="date_review_next"/>
-                            <field name="date_partnership"/>
-                        </group>
+                        <separator string="Partner Activation" colspan="2"/>
+                        <field name="grade_id" widget="selection"/>
+                        <field name="activation" widget="selection"/>
+                        <field name="partner_weight"/>
+                        <field name="assigned_partner_id"/>
                     </group>
-                    <group colspan="2" col="2">
-                        <separator string="Geo Localization" colspan="2"/>
-                        <button
-                            string="Geo Localize"
-                            name="geo_localize"
-                            colspan="2"
-                            icon="gtk-apply"
-                            type="object"/>
-                        <field name="partner_latitude"/>
-                        <field name="partner_longitude"/>
-                        <field name="date_localization"/>
+                    <group>
+                        <separator string="Partner Review" colspan="2"/>
+                        <field name="date_review"/>
+                        <field name="date_review_next"/>
+                        <field name="date_partnership"/>
                     </group>
-                    <newline/>
-
-                    <field name="opportunity_assigned_ids" colspan="4" nolabel="1">
-                         <tree string="Assigned Opportunities">
-                             <field name="create_date"/>
-                             <field name="name"/>
-                             <field name="type"/>
-                             <field name="probability" invisible="1"/>
-                             <field name="stage_id"/>
-                             <field name="section_id"
-                                    invisible="context.get('invisible_section', True)"
-                                    groups="base.group_multi_salesteams"/>
-                             <field name="user_id" />
-                             <button string="Convert to Opportunity"
-                                    name="convert_opportunity"
-                                    type="object" 
-                                    icon="gtk-convert"
-                                    attrs="{'invisible':[('type','=','opportunity')]}" />
-                             <button name="case_escalate" string="Escalate"
-                                    type="object"
-                                    icon="gtk-go-up" 
-                                    attrs="{'invisible':[('probability', '=', 100)]}" />
-                         </tree>
-                    </field>
-                </page>
+                    <group>
+                        <button name="%(crm.relate_partner_opportunities)d"  string="Assigned Opportunities" type="action" />
+                    </group>
+                </group>
             </xpath>
         </field>
     </record>

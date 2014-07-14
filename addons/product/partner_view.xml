@@ -6,8 +6,8 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page string="Sales &amp; Purchases" position="inside">
-                    <group>
+                <page name="sales_purchases" position="inside">
+                    <group name="property_invoice_type" position="after">
                         <group name="pricelists" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
                             <field name="property_product_pricelist" groups="product.group_sale_pricelist"/>
                         </group>
