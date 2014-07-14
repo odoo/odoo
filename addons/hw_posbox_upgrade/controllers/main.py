@@ -106,7 +106,7 @@ class PosboxUpgrader(hw_proxy.Proxy):
             self.upgrading.release()
             return 'UPTODATE'
         else:
-            os.system('/bin/bash /home/pi/openerp/update.sh')
+            os.system('/bin/bash /home/pi/odoo/posbox/update.sh')
             self.last_upgrade = time.time()
             self.upgrading.release()
             return 'SUCCESS'
@@ -118,7 +118,7 @@ class PosboxUpgrader(hw_proxy.Proxy):
             self.upgrading.release()
             return 'RESTARTED'
         else:
-            os.system('/bin/bash /home/pi/openerp/restart.sh')
+            os.system('/bin/bash /home/pi/odoo/posbox/restart.sh')
             self.last_upgrade = time.time()
             self.upgrading.release()
             return 'SUCCESS'
