@@ -702,9 +702,9 @@
                         </div>
                         <group>
                             <group>
-                                <field name="account_id"/>
+                                <field name="account_id" domain="[('type', 'not in', ['view', 'closed', 'consolidation'])]"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id"/>
+                                <field name="tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
                             </group>
                             <group>
                                 <field name="label"/>
