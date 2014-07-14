@@ -56,7 +56,7 @@ class crm_helpdesk(osv.osv):
             'date': fields.datetime('Date'),
             'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
             'ref2': fields.reference('Reference 2', selection=openerp.addons.base.res.res_request.referencable_models),
-            'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
+            'channel_id': fields.many2one('crm.tracking.medium', 'Channel', help="Communication channel."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
             'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),

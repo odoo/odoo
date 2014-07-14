@@ -59,6 +59,14 @@ class hr_evaluation_report(osv.Model):
     }
     _order = 'create_date desc'
 
+    _depends = {
+        'hr.evaluation.interview': ['evaluation_id', 'id', 'request_id'],
+        'hr_evaluation.evaluation': [
+            'create_date', 'date', 'date_close', 'employee_id', 'plan_id',
+            'rating', 'state',
+        ],
+    }
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'hr_evaluation_report')
         cr.execute("""

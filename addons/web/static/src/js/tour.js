@@ -332,11 +332,8 @@ var Tour = {
             + (step ? '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' )
             + "\n localStorage: " + JSON.stringify(localStorage)
             + '\n\n' + $("body").html();
-        Tour.reset();
-        if (state.mode === "test") {
-            console.log(message);
-            Tour.endTour();
-        }
+        console.log(message);
+        Tour.endTour();
     },
     lists: function () {
         var tour_ids = [];
@@ -473,7 +470,7 @@ var Tour = {
     },
     endTour: function () {
         var state = Tour.getState();
-        var test = state.step.id >= state.tour.steps.length-1;
+        var test = state.step && state.step.id >= state.tour.steps.length-1;
         Tour.reset();
         if (test) {
             console.log("Tour '"+state.id+"' finish: ok");

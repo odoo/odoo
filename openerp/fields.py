@@ -366,9 +366,17 @@ class Field(object):
         else:
             self._setup_regular(env)
 
-        # put invalidation/recomputation triggers on dependencies
+        # put invalidation/recomputation triggers on field dependencies
+        model = env[self.model_name]
         for path in self.depends:
-            self._setup_dependency([], env[self.model_name], path.split('.'))
+            self._setup_dependency([], model, path.split('.'))
+
+        # put invalidation triggers on model dependencies
+        for dep_model_name, field_names in model._depends.iteritems():
+            dep_model = env[dep_model_name]
+            for field_name in field_names:
+                field = dep_model._fields[field_name]
+                field._triggers.add((self, None))
 
     #
     # Setup of related fields
@@ -800,7 +808,7 @@ class Field(object):
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
         for field, path in self._triggers:
-            if field.store:
+            if path and field.store:
                 # don't move this line to function top, see log
                 env = records.env(user=SUPERUSER_ID, context={'active_test': False})
                 target = env[field.model_name].search([(path, 'in', records.ids)])
@@ -824,10 +832,13 @@ class Field(object):
             computed = target.browse(env.computed[field])
             if path == 'id':
                 target = records - computed
+            elif path:
+                target = (target.browse(env.cache[field]) - computed).filtered(
+                    lambda rec: rec._mapped_cache(path) & records
+                )
             else:
-                for record in target.browse(env.cache[field]) - computed:
-                    if record._mapped_cache(path) & records:
-                        target += record
+                target = target.browse(env.cache[field]) - computed
+
             if target:
                 spec.append((field, target._ids))
 
@@ -1541,6 +1552,9 @@ class Id(Field):
     """ Special case for field 'id'. """
     store = True
     readonly = True
+
+    def __init__(self, string=None, **kwargs):
+        super(Id, self).__init__(type='integer', string=string, **kwargs)
 
     def to_column(self):
         return fields.integer('ID')
