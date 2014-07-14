@@ -73,9 +73,11 @@ upgrade_template = """
     <body>
         <h1>PosBox Software Upgrade</h1>
         <p>
-        This tool will help you perform an upgrade of the PosBox's software.
+        This tool will help you perform an upgrade of the PosBox's software over the
+	internet. 
+	<p></p>
         However the preferred method to upgrade the posbox is to flash the sd-card with
-        the <a href='http://nightly.openerp.com/trunk/posbox/'>latest image</a>. The upgrade
+        the <a href='http://nightly.odoo.com/trunk/posbox/'>latest image</a>. The upgrade
         procedure is explained into to the <a href='/hw_proxy/static/doc/manual.pdf'>PosBox manual</a>
         </p>
         <p>
