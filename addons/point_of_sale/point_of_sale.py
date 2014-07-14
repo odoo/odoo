@@ -1379,6 +1379,9 @@ class product_template(osv.osv):
         'available_in_pos': True,
     }
 
+class product_product(osv.osv):
+    _inherit = 'product.product'
+
     def edit_ean(self, cr, uid, ids, context):
         return {
             'name': _("Assign a Custom EAN"),
