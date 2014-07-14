@@ -69,8 +69,8 @@ class Scale(Thread):
                         stopbits = serial.STOPBITS_ONE, 
                         parity   = serial.PARITY_EVEN, 
                         #xonxoff  = serial.XON,
-                        timeout  = 0.01, 
-                        writeTimeout= 0.01)
+                        timeout  = 0.02, 
+                        writeTimeout= 0.02)
             else:
                 self.set_status('disconnected','Scale Not Found')
                 return None
@@ -95,7 +95,7 @@ class Scale(Thread):
             if self.device:
                 try:
                     self.device.write('W')
-                    time.sleep(0.1)
+                    time.sleep(0.2)
                     answer = []
 
                     while True:
@@ -171,7 +171,7 @@ class Scale(Thread):
         while True: 
             if self.device:
                 self.read_weight()
-                time.sleep(0.05)
+                time.sleep(0.15)
             else:
                 with self.scalelock:
                     self.device = self.get_device()
