@@ -383,7 +383,17 @@ class stock_move(osv.osv):
             sale_line = move.procurement_id.sale_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in sale_line.tax_id])]
             res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
-            res['price_unit'] = sale_line.price_unit
+            price_unit = sale_line.price_unit
+            if res['product_id'] != sale_line.product_id.id:
+                # in case the product is not the same of the saleorder
+                # for ex: phantom bom, calculate price from pricelist
+                pricelist_id = sale_line.order_id.pricelist_id.id
+                partner_id = sale_line.order_id.partner_id.id
+                prices = self.pool.get('product.pricelist').price_get(cr, uid, pricelist_id, res['product_id'], res['quantity'], partner=partner_id, context=context)
+                price_unit = prices.get(pricelist_id,False)
+                if not price_unit is False:
+                    res['price_unit'] = price_unit
+            res['price_unit'] = price_unit
             res['discount'] = sale_line.discount
         return res
 
