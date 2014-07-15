@@ -62,7 +62,7 @@
                 <search string="Vehicles costs" >
                     <field name="brand_id" />
                     <group expand="1" string="Group By">
-                        <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Brand"/>
+                        <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Make"/>
                     </group>
                 </search>
             </field>
@@ -78,7 +78,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new model.
               </p><p>
-                You can define several models (e.g. A3, A4) for each brand (Audi).
+                You can define several models (e.g. A3, A4) for each make (Audi).
               </p>
             </field>
         </record>
@@ -87,7 +87,7 @@
             <field name="name">fleet.vehicle.model.brand.tree</field>
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
-                <tree string="Model Brand">
+                <tree string="Model Make">
                     <field name="name" />
                 </tree>
             </field>
@@ -97,7 +97,7 @@
             <field name="name">fleet.vehicle.model.brand.form</field>
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
-                <form string="Model Brand">
+                <form string="Model Make">
                     <sheet>
                         <group>
                             <div>
@@ -144,13 +144,13 @@
         </record>
 
         <record model='ir.actions.act_window' id='fleet_vehicle_model_brand_act'>
-            <field name="name">Model brand of Vehicle</field>
+            <field name="name">Model make of Vehicle</field>
             <field name="res_model">fleet.vehicle.model.brand</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new brand.
+                Click to create a new make.
               </p>
             </field>
         </record>
