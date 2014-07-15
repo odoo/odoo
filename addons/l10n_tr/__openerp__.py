@@ -47,7 +47,7 @@ For future development this will be a base for the Turkish localization.
         'account_chart',
     ],
     'data': [
-        'data/account_code_template.xml',
+        # 'data/account_type_template.xml',
         'data/account_tdhp_turkey.xml',
         'data/account_tax_code_template.xml',
         'data/account_chart_template.xml',
