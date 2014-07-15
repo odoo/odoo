@@ -16,7 +16,7 @@ upgrade_template = """
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>OpenERP's PosBox - Software Upgrade</title>
+        <title>Odoo's PosBox - Software Upgrade</title>
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script>
         $(function(){
