@@ -176,9 +176,10 @@ class website(orm.Model):
                 fiscal_position = sale_order.fiscal_position and sale_order.fiscal_position.id or False
 
                 values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], partner.id, context=context)['value']
-                order_lines = map(int,sale_order.order_line)
-                values.update(sale_order_obj.onchange_fiscal_position(cr, SUPERUSER_ID, [],
-                    values['fiscal_position'], [[6, 0, order_lines]], context=context)['value'])
+                if values.get('fiscal_position'):
+                    order_lines = map(int,sale_order.order_line)
+                    values.update(sale_order_obj.onchange_fiscal_position(cr, SUPERUSER_ID, [],
+                        values['fiscal_position'], [[6, 0, order_lines]], context=context)['value'])
 
                 values['partner_id'] = partner.id
                 sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
