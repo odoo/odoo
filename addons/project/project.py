@@ -1101,7 +1101,14 @@ class task(osv.osv):
             'planned_hours': 0.0,
         }
         defaults.update(custom_values)
-        return super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        res = super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        email_list = tools.email_split(msg.get('to', '') + ',' + msg.get('cc', ''))
+        new_task = self.browse(cr, uid, res, context=context)
+        if new_task.project_id and new_task.project_id.alias_name:  # check left-part is not already an alias
+            email_list = filter(lambda x: x.split('@')[0] != new_task.project_id.alias_name, email_list)
+        partner_ids = filter(lambda x: x, self._find_partner_from_emails(cr, uid, None, email_list, context=context, check_followers=False))
+        self.message_subscribe(cr, uid, [res], partner_ids, context=context)
+        return res
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override to update the task according to the email. """
