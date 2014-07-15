@@ -440,7 +440,7 @@ class ir_model_fields(osv.osv):
                     column_rename = (obj, (obj._table, item.name, vals['name']))
                     final_name = vals['name']
 
-                if 'model_id' in vals and vals['model_id'] != item.model_id:
+                if 'model_id' in vals and vals['model_id'] != item.model_id.id:
                     raise except_orm(_("Error!"), _("Changing the model of a field is forbidden!"))
 
                 if 'ttype' in vals and vals['ttype'] != item.ttype:
