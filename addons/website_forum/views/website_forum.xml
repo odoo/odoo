@@ -18,6 +18,9 @@
 
     <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
     <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
+    <script type="text/javascript">
+        var CKEDITOR_BASEPATH = "/web/static/lib/ckeditor/";
+    </script>
     <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
     <script type="text/javascript">
         CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
@@ -76,7 +79,7 @@
                             <a t-attf-href="/forum/#{ slug(forum) }/badge">Badges</a>
                         </li>
                         <li t-if="not is_public_user" t-att-class="searches.get('my_profile') and 'active' or '' ">
-                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{user.id}">My Profile</a>
+                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{uid}">My Profile</a>
                         </li>
                     </ul>
                     <form class="navbar-form navbar-right" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
@@ -874,13 +877,17 @@
             <!--Note: using website_description fiels instead of using commnt firld of partner-->
             <label class="col-md-4 control-label mb16" for="user.partner_id.website_description">Biography</label>
             <div class="col-md-7 mb16">
-                <textarea name="description" style="min-height: 120px" required="True" 
-                    class="form-control"><t t-esc="user.partner_id.website_description"/></textarea>
+                <textarea name="description" style="min-height: 120px" required="True" class="form-control load_editor" id="description">
+                    <t t-esc="user.partner_id.website_description"/>
+                </textarea>
             </div>
             <div class="col-sm-offset-4 col-md-4 mb16">
                 <button class="btn btn-primary btn-lg">Update</button>
             </div>
         </form>
+        <script type="text/javascript">
+            CKEDITOR.replace("description");
+        </script>
     </t>
 </template>
 
