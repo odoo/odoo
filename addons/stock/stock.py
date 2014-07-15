@@ -2148,20 +2148,18 @@ class stock_move(osv.osv):
                 if move.propagate:
                     procurement_ids = procurement_obj.search(cr, uid, [('move_dest_id', '=', move.id)], context=context)
                     procurement_obj.cancel(cr, uid, procurement_ids, context=context)
-            elif move.move_dest_id:
-                #cancel chained moves
-                if move.propagate:
-                    self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
-                    # If we have a long chain of moves to be cancelled, it is easier for the user to handle
-                    # only the last procurement which will go into exception, instead of all procurements
-                    # along the chain going into exception.  We need to check if there are no split moves not cancelled however
-                    if move.procurement_id:
-                        proc = move.procurement_id
-                        if all([x.state == 'cancel' for x in proc.move_ids if x.id != move.id]):
-                            procurement_obj.write(cr, uid, [proc.id], {'state': 'cancel'})
-
-                elif move.move_dest_id.state == 'waiting':
-                    self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
+            else:
+                if move.move_dest_id:
+                    if move.propagate:
+                        self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
+                    elif move.move_dest_id.state == 'waiting':
+                        #If waiting, the chain will be broken and we are not sure if we can still wait for it (=> could take from stock instead)
+                        self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
+                if move.procurement_id:
+                    # Does the same as procurement check, only eliminating a refresh
+                    proc = move.procurement_id
+                    if all([x.state == 'cancel' for x in proc.move_ids if x.id != move.id]):
+                        procurement_obj.write(cr, uid, [proc.id], {'state': 'cancel'})
         return self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False}, context=context)
 
     def _check_package_from_moves(self, cr, uid, ids, context=None):
@@ -3934,7 +3932,8 @@ class stock_warehouse_orderpoint(osv.osv):
                 continue
             procurement_qty = uom_obj._compute_qty_obj(cr, uid, procurement.product_uom, procurement.product_qty, procurement.product_id.uom_id, context=context)
             for move in procurement.move_ids:
-                if move.state not in ('draft', 'cancel'):
+                #need to add the moves in draft as they aren't in the virtual quantity + moves that have not been created yet
+                if move.state not in ('draft'):
                     #if move is already confirmed, assigned or done, the virtual stock is already taking this into account so it shouldn't be deducted
                     procurement_qty -= move.product_qty
             qty += procurement_qty
@@ -3950,7 +3949,6 @@ class stock_warehouse_orderpoint(osv.osv):
         for rule in self.browse(cr, uid, ids, context=context):
             if rule.product_id.uom_id.category_id.id != rule.product_uom.category_id.id:
                 return False
-
         return True
 
     def action_view_proc_to_process(self, cr, uid, ids, context=None):
