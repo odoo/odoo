@@ -83,7 +83,11 @@ class sale_order_line(osv.osv):
         if product:
             product_res = self.pool.get('product.product').browse(cr, uid, product, context=context)
             if product_res.event_ok:
-                res['value'].update({'event_type_id': product_res.event_type_id.id, 'event_ok':product_res.event_ok})
+                res['value'].update(event_type_id=product_res.event_type_id.id,
+                                    event_ok=product_res.event_ok)
+            else:
+                res['value'].update(event_type_id=False,
+                                    event_ok=False)
         return res
 
     def button_confirm(self, cr, uid, ids, context=None):
