@@ -1166,6 +1166,13 @@ instance.web.Client = instance.web.Widget.extend({
             }
         });
     },
+    on_logo_click: function(ev){
+        if (!this.has_uncommitted_changes()) {
+            return;
+        } else {
+            ev.preventDefault();
+        }
+    },
     show_common: function() {
         var self = this;
         this.crashmanager =  new instance.web.CrashManager();
@@ -1270,6 +1277,9 @@ instance.web.WebClient = instance.web.Client.extend({
             self.logo_edit(ev);
         });
 
+        this.$('.oe_logo img').click(function(ev) {
+	        self.on_logo_click(ev);
+	    });
         // Menu is rendered server-side thus we don't want the widget to create any dom
         self.menu = new instance.web.Menu(self);
         self.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
