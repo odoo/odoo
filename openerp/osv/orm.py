@@ -2434,7 +2434,7 @@ class BaseModel(object):
 
         return result
 
-    def _inherits_join_add(self, current_model, parent_model_name, query):
+    def _inherits_join_add(self, current_model, parent_model_name, query, current_alias=False):
         """
         Add missing table SELECT and JOIN clause to ``query`` for reaching the parent table (no duplicates)
         :param current_model: current model object
@@ -2443,7 +2443,7 @@ class BaseModel(object):
         """
         inherits_field = current_model._inherits[parent_model_name]
         parent_model = self.pool[parent_model_name]
-        parent_alias, parent_alias_statement = query.add_join((current_model._table, parent_model._table, inherits_field, 'id', inherits_field), implicit=True)
+        parent_alias, parent_alias_statement = query.add_join((current_model._table, parent_model._table, inherits_field, 'id', inherits_field), implicit=True, lhs_alias=current_alias)
         return parent_alias
 
     def _inherits_join_calc(self, field, query):
@@ -2457,11 +2457,13 @@ class BaseModel(object):
         """
         current_table = self
         parent_alias = '"%s"' % current_table._table
+        current_alias = False
         while field in current_table._inherit_fields and not field in current_table._columns:
             parent_model_name = current_table._inherit_fields[field][0]
             parent_table = self.pool[parent_model_name]
-            parent_alias = self._inherits_join_add(current_table, parent_model_name, query)
+            parent_alias = self._inherits_join_add(current_table, parent_model_name, query, current_alias)
             current_table = parent_table
+            current_alias = parent_alias
         return '%s."%s"' % (parent_alias, field)
 
     def _parent_store_compute(self, cr):
