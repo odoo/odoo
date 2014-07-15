@@ -361,13 +361,14 @@
         CKEDITOR.plugins.add('customColor', {
             requires: 'panelbutton,floatpanel',
             init: function (editor) {
-                function create_button (buttonID, label, className) {
+                function create_button (buttonID, label) {
+                    var btnID = buttonID;
                     editor.ui.add(buttonID, CKEDITOR.UI_PANELBUTTON, {
                         label: label,
                         title: label,
                         modes: { wysiwyg: true },
                         editorFocus: true,
-                        context: 'font',
+                        context: 'span',
                         panel: {
                             css: [  '/web/css/web.assets_common/' + (new Date().getTime()),
                                     '/web/css/website.assets_frontend/' + (new Date().getTime()),
@@ -405,89 +406,51 @@
                                 self.clicked(this);
                             });
                         },
-                        clicked: function (button) {
-                            // var item = (function () {
-                            //     var sel = editor.getSelection(),
-                            //         el = sel.getSelectedElement();
-                            //     if (el) { return el; }
-
-                            //     var range = sel.getRanges(true)[0];
-                            //     if (!range) { return null; }
-
-                            //     var text = editor.getSelection()._.cache.selectedText;
-                            //     var element = CKEDITOR.dom.element.createFromHtml('<span class="spanBlock" style="color: red;">'+text+'<span>');
-
-                            //     // console.log(range);
-                            //     // console.log(editor.getSelection()._.cache);
-                            //     // console.log("-----------");
-                            //     // range.deleteContents();
-                            //     // range.insertNode( element );
-                            //     // return element;
-
-
-                            //     range.shrink(CKEDITOR.SHRINK_TEXT);
-                            //     var commonAncestor = range.getCommonAncestor();
-
-                            //     var viewRoot = editor.elementPath(commonAncestor).contains(function (element) {
-                            //         return element.data('oe-model') === 'ir.ui.view';
-                            //     });
-                            //     if (!viewRoot) { return null; }
-
-                            //     return new CKEDITOR.dom.elementPath(commonAncestor).elements[0];
-                            // })();
-
-                            var selection = editor.getSelection();
-                            var element = selection.getStartElement();
-                            if ( element ) {
-                                element = element.getAscendant( 'span', true );
-                            }
-                            if ( !element || element.getName() != 'span' ) {
-                                element = editor.document.createElement( 'span' );
-                                this.insertMode = true;
-                            } else {
-                                this.insertMode = false;
-                            }
-                            this.element = element;
-
-                            console.log(this.element);
-
-
-                            // var id = this._.id;
-                            // var block = this._.panel._.panel._.blocks[id];
-                            // var $root = $(block.element.$);
-
-                            // var classNames = $.makeArray( $root.find("button").map(function () {
-                            //     return $(this).attr("class");
-                            // }) );
-
-                            var className = $(button).attr("class");
-                            element.setAttribute( "class", className );
-
-
-                            // console.log(editor.getSelection());
-
-                            // editor.focus();
-                            // editor.fire('saveSnapshot');
-
-                            // $(item.$).removeClass(classNames).addClass(className);
-                            // console.log(item);
-
-                            // this._.panel.hide();
-                            // editor.fire('saveSnapshot');
-
-                            console.log(this.insertMode);
-                            if ( !this.insertMode ) {
-                                this.setupContent( element );
-                            }
-                            editor.insertElement( element );
+                        getClasses: function () {
+                            var classes = [];
+                            var id = this._.id;
+                            var block = this._.panel._.panel._.blocks[id];
+                            var $root = $(block.element.$);
+                            $root.find("button").map(function () {
+                                classes.push( btnID === "BGColor" ? $(this).attr("class") : $(this).attr("class").replace(/^bg_/i, 'text_') );
+                            });
+                            return classes;
                         },
-                        onOk: function() {
-                            console.log("---------------");
+                        getClass: function (button) {
+                            return btnID === "BGColor" ? $(button).attr("class") : $(button).attr("class").replace(/^bg_/i, 'text_');
+                        },
+                        clicked: function (button) {
+                            var classes = this.getClasses();
+                            var className = this.getClass(button);
+
+                            var filter = new CKEDITOR.filter(
+                                'span('+classes.join(',')+')'
+                            );
+
+                            editor.focus();
+                            this._.panel.hide();
+                            editor.fire('saveSnapshot');
+
+                            // get line 8149 to speed up
+
+                            for (var k in classes) {
+                                editor.removeStyle( new CKEDITOR.style({
+                                    element: 'span',
+                                    attributes: { 'class': className },
+                                }) );
+                            }
+                            if (className) {
+                                editor.applyStyle( new CKEDITOR.style({
+                                    element: 'span',
+                                    attributes: { 'class': className },
+                                }) );
+                            }
+                            editor.fire('saveSnapshot');
                         }
 
                     });
                 }
-                //create_button("BGColor", "Background Color");
+                create_button("BGColor", "Background Color");
                 create_button("TextColor", "Text Color");
             }
         });
