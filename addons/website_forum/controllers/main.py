@@ -51,17 +51,12 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum'], type='http', auth="public", website=True)
     def forum(self, **kwargs):
-        cr, uid, context = request.cr, request.uid, request.context
-        Forum = request.registry['forum.forum']
-        obj_ids = Forum.search(cr, uid, [], context=context)
-        forums = Forum.browse(cr, uid, obj_ids, context=context)
+        forums = request.env['forum.forum'].search([])
         return request.website.render("website_forum.forum_all", {'forums': forums})
 
     @http.route('/forum/new', type='http', auth="user", methods=['POST'], website=True)
     def forum_create(self, forum_name="New Forum", **kwargs):
-        forum_id = request.registry['forum.forum'].create(request.cr, request.uid, {
-            'name': forum_name,
-        }, context=request.context)
+        forum_id = request.env['forum.forum'].create({'name': forum_name})
         return request.redirect("/forum/%s" % slug(forum_id))
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
