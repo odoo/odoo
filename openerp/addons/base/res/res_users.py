@@ -225,8 +225,11 @@ class res_users(osv.osv):
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
             uid2 = uid
-        user = self.pool['res.users'].browse(cr, uid, uid2, context)
-        return user.company_id.id
+        # use read method to compute default values to don't create browse record and fetch all fields
+        # browse crash for install or update module
+        user = self.pool['res.users'].read(cr, uid, uid2, ['company_id'], context)
+        company_id = user['company_id'] and user['company_id'][0] or False
+        return company_id
 
     def _get_companies(self, cr, uid, context=None):
         c = self._get_company(cr, uid, context)
