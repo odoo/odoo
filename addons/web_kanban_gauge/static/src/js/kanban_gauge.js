@@ -39,7 +39,7 @@ var GaugeWidget = AbstractField.extend({
         }
         var label = this.options.label || "";
         if (this.options.label_field) {
-            label = this.getParent().record[this.options.label_field].raw_value;
+             label = this.getParent().record[this.options.label_field].raw_value;
         }
         var title = this.$node.html() || this.field.string;
         // current gauge value
