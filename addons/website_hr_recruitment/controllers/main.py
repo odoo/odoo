@@ -38,9 +38,10 @@ class website_hr_recruitment(http.Controller):
         if not country and not department and not office_id:
             country_code = request.session['geoip'].get('country_code')
             if country_code:
-                country_ids = request.registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
+                Country = request.registry['res.country']
+                country_ids = Country.search(cr, uid, [('code', '=', country_code)], context=context)
                 if country_ids:
-                    country = country_ids[0]
+                    country = Country.browse(cr, uid, country_ids[0], context=context)
 
         # Filter the matching one
         jobs = [j for j in jobs if country==None or j.address_id==None or j.address_id.country_id and j.address_id.country_id.id == country.id]
