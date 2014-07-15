@@ -40,16 +40,16 @@ class product_product(osv.osv):
             if bom_ids:
                 bom_id = bom_ids[0]
                 # In recursive mode, it will first compute the prices of child boms
+                bom = bom_obj.browse(cr, uid, bom_id, context=context)
                 if recursive:
                     #Search the products that are components of this bom of prod_id
-                    boms = bom_obj.search(cr, uid, [('bom_id', '=', bom_id)], context=context)
+                    product_ids = [line.product_id.id for line in bom.bom_line_ids]
                     #Call compute_price on these subproducts
-                    prod_set = set([x.product_id.id for x in bom_obj.browse(cr, uid, boms, context=context)])
-                    res = self.compute_price(cr, uid, list(prod_set), recursive=recursive, test=test, real_time_accounting = real_time_accounting, context=context)
+                    res = self.compute_price(cr, uid, product_ids, recursive=recursive, test=test, real_time_accounting = real_time_accounting, context=context)
                     if test: 
                         testdict.update(res)
                 #Use calc price to calculate and put the price on the product of the BoM if necessary
-                price = self._calc_price(cr, uid, bom_obj.browse(cr, uid, bom_id, context=context), test=test, real_time_accounting = real_time_accounting, context=context)
+                price = self._calc_price(cr, uid, bom, test=test, real_time_accounting = real_time_accounting, context=context)
                 if test:
                     testdict.update({prod_id : price})
         if test:
@@ -65,7 +65,7 @@ class product_product(osv.osv):
         uom_obj = self.pool.get("product.uom")
         if bom.bom_line_ids:
             for sbom in bom.bom_line_ids:
-                my_qty = sbom.bom_line_ids and 1.0 or sbom.product_qty
+                my_qty = sbom.product_qty or bom.bom_line_ids and 1.0
                 price += uom_obj._compute_price(cr, uid, sbom.product_id.uom_id.id, sbom.product_id.standard_price, sbom.product_uom.id) * my_qty
 
         if bom.routing_id:
@@ -77,9 +77,9 @@ class product_product(osv.osv):
                 price = self.pool.get('product.uom')._compute_price(cr,uid,bom.product_uom.id, price, bom.product_id.uom_id.id)
         
         #Convert on product UoM quantities
+        product = self.pool.get("product.product").browse(cr, uid, bom.product_id.id, context=context)
         if price > 0:
             price = uom_obj._compute_price(cr, uid, bom.product_uom.id, price / bom.product_qty, bom.product_id.uom_id.id)
-            product = self.pool.get("product.product").browse(cr, uid, bom.product_id.id, context=context)
         if not test:
             if (product.valuation != "real_time" or not real_time_accounting):
                 self.write(cr, uid, [bom.product_id.id], {'standard_price' : price}, context=context)
