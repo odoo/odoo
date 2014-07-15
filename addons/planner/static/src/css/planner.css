@@ -1,0 +1,41 @@
+#oe_main_menu_navbar.navbar .oe_planner_systray {
+  width: 100px;
+  height: 13px;
+  margin: 10px 20px 0 0;
+}
+#oe_main_menu_navbar.navbar .oe_planner_systray div.oe_planner_progress {
+  cursor: pointer;
+}
+#oe_main_menu_navbar.navbar .oe_planner_systray .oe_planner_progress div.progress {
+  height: 13px;
+}
+
+.planner-dialog {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.planner-dialog .oe_planner_title {
+  margin-top: -2px;
+}
+.planner-dialog .oe_planner .nav-stacked a{
+  padding: 7px;
+}
+.planner-dialog .oe_planner .planner_footer .btn-default {
+  background-color: #bdbaba;
+}
+.planner-dialog .oe_planner .planner_footer span {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.planner-dialog .oe_planner .oe_report_header {
+  width: 100%;
+}
+
+@media print {
+  .oe_planner_page {
+    page-break-after: always;
+  }
+  .oe_planner_page a[href]:after {
+    content: none !important;
+  }
+}
