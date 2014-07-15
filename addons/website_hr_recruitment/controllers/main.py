@@ -21,15 +21,16 @@ class website_hr_recruitment(http.Controller):
         context=dict(request.context, show_address=True, no_tag_br=True)
         cr, uid = request.cr, request.uid
 
+        Country = request.registry['res.country']
+        Jobs = request.registry['hr.job']
+
         # Search all available jobs as uid
-        JobsObj = request.registry['hr.job']
-        job_ids = JobsObj.search(cr, uid, [], order="website_published desc,no_of_recruitment desc", context=context)
+        job_ids = Jobs.search(cr, uid, [], order="website_published desc,no_of_recruitment desc", context=context)
 
         # Browse jobs as superuser, because address is restricted
-        jobs = JobsObj.browse(cr, 1, job_ids, context=context)
+        jobs = Jobs.browse(cr, 1, job_ids, context=context)
 
         # Deduce departments and offices of those jobs
-        countries = set(j.address_id.country_id for j in jobs if j.address_id and j.address_id.country_id)
         departments = set(j.department_id for j in jobs if j.department_id)
         offices = set(j.address_id for j in jobs if j.address_id)
         countries = set(o.country_id for o in offices if o.country_id)
@@ -38,15 +39,17 @@ class website_hr_recruitment(http.Controller):
         if not country and not department and not office_id:
             country_code = request.session['geoip'].get('country_code')
             if country_code:
-                Country = request.registry['res.country']
                 country_ids = Country.search(cr, uid, [('code', '=', country_code)], context=context)
                 if country_ids:
                     country = Country.browse(cr, uid, country_ids[0], context=context)
 
         # Filter the matching one
-        jobs = [j for j in jobs if country==None or j.address_id==None or j.address_id.country_id and j.address_id.country_id.id == country.id]
-        jobs = [j for j in jobs if department==None or j.department_id and j.department_id.id == department.id]
-        jobs = [j for j in jobs if office_id==None or j.address_id and j.address_id.id == office_id]
+        if country:
+            jobs = (j for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id)
+        if department:
+            jobs = (j for j in jobs if j.department_id and j.department_id.id == department.id)
+        if office_id:
+            jobs = (j for j in jobs if j.address_id and j.address_id.id == office_id)
 
         # Render page
         return request.website.render("website_hr_recruitment.index", {
@@ -57,7 +60,6 @@ class website_hr_recruitment(http.Controller):
             'country_id': country,
             'department_id': department,
             'office_id': office_id,
-            'countries': countries
         })
 
     @http.route('/jobs/add', type='http', auth="user", website=True)
