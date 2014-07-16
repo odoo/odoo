@@ -2777,7 +2777,8 @@ class BaseModel(object):
         m2m_tbl, col1, col2 = f._sql_names(self)
         # do not create relations for custom fields as they do not belong to a module
         # they will be automatically removed when dropping the corresponding ir.model.field
-        if not f.string.startswith('x_'):
+        # table name for custom relation all starts with x_, see __init__
+        if not m2m_tbl.startswith('x_'):
             self._save_relation_table(cr, m2m_tbl)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
@@ -3101,10 +3102,10 @@ class BaseModel(object):
             instance) for `self` in cache.
         """
         # fetch the records of this model without field_name in their cache
-        records = self._in_cache_without(field)
+        records = self
 
         # by default, simply fetch field
-        fnames = set((field.name,))
+        fnames = {field.name}
 
         if self.pool._init:
             # columns may be missing from database, do not prefetch other fields
@@ -3123,12 +3124,11 @@ class BaseModel(object):
 
         # fetch records with read()
         assert self in records and field.name in fnames
+        result = []
         try:
             result = records.read(list(fnames), load='_classic_write')
-        except AccessError as e:
-            # update cache with the exception
-            records._cache[field] = FailedValue(e)
-            result = []
+        except AccessError:
+            pass
 
         # check the cache, and update it if necessary
         if field not in self._cache:
@@ -3176,8 +3176,16 @@ class BaseModel(object):
                     'order': self._parent_order or self._order,
                 }
 
+        empty = self.browse()
+        prefetch = set()
+        todo = set()
+        for field in (self._fields[name] for name in field_names):
+            prefetch.update(self._in_cache_without(field).ids)
+            todo.update(self.env.todo.get(field, empty).ids)
+        records = self.browse(prefetch - todo)
+
         result = []
-        for sub_ids in cr.split_for_in_conditions(self.ids):
+        for sub_ids in cr.split_for_in_conditions(records.ids):
             cr.execute(query, [tuple(sub_ids)] + rule_params)
             result.extend(cr.dictfetchall())
 
@@ -3250,9 +3258,9 @@ class BaseModel(object):
 
         # store failed values in cache for the records that could not be read
         fetched = self.browse(ids)
-        missing = self - fetched
+        missing = records - fetched
         if missing:
-            extras = fetched - self
+            extras = fetched - records
             if extras:
                 raise AccessError(
                     _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(
