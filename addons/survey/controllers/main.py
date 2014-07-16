@@ -317,6 +317,43 @@ class WebsiteSurvey(http.Controller):
                                        'filter_display_data': filter_display_data,
                                        'filter_finish': filter_finish
                                        })
+        # Quick retroengineering of what is injected into the template for now:
+        # (TODO: flatten and simplify this)
+        #
+        #     survey: a browse record of the survey
+        #     survey_dict: very messy dict containing all the info to display answers
+        #         {'page_ids': [
+        #
+        #             ...
+        #
+        #                 {'page': browse record of the page,
+        #                  'question_ids': [
+        #
+        #                     ...
+        #
+        #                     {'graph_data': data to be displayed on the graph
+        #                      'input_summary': number of answered, skipped...
+        #                      'prepare_result': {
+        #                                         answers displayed in the tables
+        #                                         }
+        #                      'question': browse record of the question_ids
+        #                     }
+        #
+        #                     ...
+        #
+        #                     ]
+        #                 }
+        #
+        #             ...
+        #
+        #             ]
+        #         }
+        #
+        #     page_range: pager helper function
+        #     current_filters: a list of ids
+        #     filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
+        #     filter_finish: boolean => only finished surveys or not
+        #
 
     def prepare_result_dict(self,survey, current_filters=[]):
         """Returns dictionary having values for rendering template"""
