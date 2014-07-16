@@ -114,7 +114,7 @@ def slugify(s, max_length=None):
 def slug(value):
     if isinstance(value, orm.browse_record):
         # [(id, name)] = value.name_get()
-        id, name = value.id, value[value._rec_name]
+        id, name = value.id, value.display_name
     else:
         # assume name_search result tuple
         id, name = value
