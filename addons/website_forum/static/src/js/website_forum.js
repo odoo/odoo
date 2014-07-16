@@ -25,6 +25,14 @@ website.if_dom_contains('.website_forum', function () {
         }
     });
 
+    $('.tag_follow').hover(
+        function(event) {
+            $(this).find('.follow_box').stop().fadeIn().css('display','block');
+        },
+        function(event) {
+            $(this).find('.follow_box').stop().fadeOut().css('display','none');
+    });
+
     $('.vote_up,.vote_down').not('.karma_required').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);

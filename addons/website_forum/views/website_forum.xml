@@ -445,6 +445,7 @@
                         class="form-control"/>
                 </div>
             </div>
+            <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="post_tags">Tags</label>
                 <div class="col-sm-8">
@@ -479,6 +480,7 @@
                 <t t-esc="question_content"/>
             </textarea>
             <br/>
+            <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <input type="text" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
@@ -517,6 +519,7 @@
                 <t t-esc="question_content"/>
             </textarea>
             <br/>
+            <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <input type="hidden" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
@@ -539,7 +542,7 @@
                 <h5 t-if="post.post_type == 'question'" class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
             </div>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
-            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+            <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
             <textarea name="content" id="content" required="True" class="form-control load_editor"
                     t-att-data-karma="forum.karma_editor">
                 <t t-esc="post.content"/>
@@ -947,11 +950,20 @@
         </nav>
         <div class="row">
             <div class="col-sm-3 mt16" t-foreach="tags" t-as="tag">
-                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="label label-default">
-                    <span t-field="tag.name"/>
-                </a>
+                <span t-att-id="tag.name" class="tag_follow">
+                    <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="badge label label-default"><span t-field="tag.name"/></a>
+                    <div class="well follow_box">
+                        <div class="row input-group js_follow" t-att-data-id="tag.id" t-att-data-object="tag._name" t-att-data-follow="tag.id and tag.message_is_follower and 'on' or 'off'">
+                            <input type="email" name="email" class="js_follow_email form-control" placeholder="your email..." style="height: 30px"/>
+                            <span class="input-group-btn">
+                                <button href="#" t-attf-class="btn btn-default btn-sm js_unfollow_btn">Unfollow</button>
+                                <button href="#" t-attf-class="btn btn-primary btn-sm js_follow_btn">Follow</button>
+                            </span>
+                        </div>
+                    </div>
                 <span>
                     X <t t-esc="tag.posts_count"/>
+                </span>
                 </span>
             </div>
         </div>
