@@ -105,7 +105,7 @@
                     });
             });
             //sort element by things to do, then things done, then grouped by packages
-            group_by_container = _.groupBy(self.rows, function(row){
+            var group_by_container = _.groupBy(self.rows, function(row){
                 return row.cols.container;
             });
             var sorted_row = [];
@@ -361,13 +361,13 @@
         },
         get_current_op_selection: function(ignore_container){
             //get ids of visible on the screen
-            pack_op_ids = []
+            var pack_op_ids = []
             this.$('.js_pack_op_line:not(.processed):not(.js_pack_op_line.hidden):not(.container_head)').each(function(){
-                cur_id = $(this).data('id');
+                var cur_id = $(this).data('id');
                 pack_op_ids.push(parseInt(cur_id));
             });
             //get list of element in this.rows where rem > 0 and container is empty is specified
-            list = []
+            var list = []
             _.each(this.rows, function(row){
                 if (row.cols.rem > 0 && (ignore_container || row.cols.container === undefined)){
                     list.push(row.cols.id);
