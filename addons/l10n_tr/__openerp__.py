@@ -53,6 +53,7 @@ For future development this will be a base for the Turkish localization.
         'data/account_chart_template.xml',
         'data/account_tax_template.xml',
         'l10n_tr_wizard.xml',
+        'view/res_partner_view.xml',
         'view/res_company_view.xml',
     ],
     'installable': True,
