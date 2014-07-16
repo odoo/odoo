@@ -270,7 +270,7 @@
                                              <field name="name"/> 
                                         </a>
                                     </h4>
-                                    <a name="%(product.product_variant_action)d" type="action">
+                                    <a name="%(product.product_variant_action)d" type="action" t-if="record.product_variant_count.raw_value&gt;1" >
                                         <t t-esc="record.product_variant_count.value"/> Variants
                                     </a>
                                     <div name="tags"/>
