@@ -1005,15 +1005,18 @@ class account_invoice(models.Model):
         #TODO: implement messages system
         return True
 
-    @api.one
-    def _compute_display_name(self):
+    @api.multi
+    def name_get(self):
         TYPES = {
             'out_invoice': _('Invoice'),
             'in_invoice': _('Supplier Invoice'),
             'out_refund': _('Refund'),
             'in_refund': _('Supplier Refund'),
         }
-        self.display_name = "%s %s" % (self.number or TYPES[self.type], self.name or '')
+        result = []
+        for inv in self:
+            result.append((inv.id, "%s %s" % (inv.number or TYPES[inv.type], inv.name or '')))
+        return result
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):

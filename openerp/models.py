@@ -500,9 +500,8 @@ class BaseModel(object):
         # this field 'id' must override any other column or field
         cls._add_field('id', fields.Id(automatic=True))
 
-        add('display_name', fields.Char(string='Name',
-            compute='_compute_display_name', inverse='_inverse_display_name',
-            search='_search_display_name', automatic=True))
+        add('display_name', fields.Char(string='Display Name', automatic=True,
+            compute='_compute_display_name'))
 
         if cls._log_access:
             add('create_uid', fields.Many2one('res.users', string='Created by', automatic=True))
@@ -1648,30 +1647,8 @@ class BaseModel(object):
 
     @api.depends(lambda self: (self._rec_name,) if self._rec_name else ())
     def _compute_display_name(self):
-        name = self._rec_name
-        if name in self._fields:
-            convert = self._fields[name].convert_to_display_name
-            for record in self:
-                record.display_name = convert(record[name])
-        else:
-            for record in self:
-                record.display_name = "%s,%s" % (record._name, record.id)
-
-    def _inverse_display_name(self):
-        name = self._rec_name
-        if name in self._fields and not self._fields[name].relational:
-            for record in self:
-                record[name] = record.display_name
-        else:
-            _logger.warning("Cannot inverse field display_name on %s", self._name)
-
-    def _search_display_name(self, operator, value):
-        name = self._rec_name
-        if name in self._fields:
-            return [(name, operator, value)]
-        else:
-            _logger.warning("Cannot search field display_name on %s", self._name)
-            return [(0, '=', 1)]
+        for i, got_name in enumerate(self.name_get()):
+            self[i].display_name = got_name[1]
 
     @api.multi
     def name_get(self):
@@ -1682,11 +1659,15 @@ class BaseModel(object):
             :return: list of pairs ``(id, text_repr)`` for all records
         """
         result = []
-        for record in self:
-            try:
-                result.append((record.id, record.display_name))
-            except MissingError:
-                pass
+        name = self._rec_name
+        if name in self._fields:
+            convert = self._fields[name].convert_to_display_name
+            for record in self:
+                result.append((record.id, convert(record[name])))
+        else:
+            for record in self:
+                result.append((record.id, "%s,%s" % (record._name, record.id)))
+
         return result
 
     @api.model
@@ -1702,13 +1683,12 @@ class BaseModel(object):
             :rtype: tuple
             :return: the :meth:`~.name_get` pair value of the created record
         """
-        # Shortcut the inverse function of 'display_name' with self._rec_name.
-        # This is useful when self._rec_name is a required field: in that case,
-        # create() creates a record without the field, and inverse display_name
-        # afterwards.
-        field_name = self._rec_name if self._rec_name else 'display_name'
-        record = self.create({field_name: name})
-        return (record.id, record.display_name)
+        if self._rec_name:
+            record = self.create({self._rec_name: name})
+            return record.name_get()[0]
+        else:
+            _logger.warning("Cannot execute name_create, no _rec_name defined on %s", self._name)
+            return False
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
@@ -1734,8 +1714,10 @@ class BaseModel(object):
             :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
         args = list(args or [])
-        if not (name == '' and operator == 'ilike'):
-            args += [('display_name', operator, name)]
+        if not self._rec_name:
+            _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
+        elif not (name == '' and operator == 'ilike'):
+            args += [(self._rec_name, operator, name)]
         return self.search(args, limit=limit).name_get()
 
     def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
@@ -1743,8 +1725,10 @@ class BaseModel(object):
         # for the name_get part to solve some access rights issues
         args = list(args or [])
         # optimize out the default criterion of ``ilike ''`` that matches everything
-        if not (name == '' and operator == 'ilike'):
-            args += [('display_name', operator, name)]
+        if not self._rec_name:
+            _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
+        elif not (name == '' and operator == 'ilike'):
+            args += [(self._rec_name, operator, name)]
         access_rights_uid = name_get_uid or user
         ids = self._search(cr, user, args, limit=limit, context=context, access_rights_uid=access_rights_uid)
         res = self.name_get(cr, access_rights_uid, ids, context)
