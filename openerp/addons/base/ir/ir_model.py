@@ -132,10 +132,15 @@ class ir_model(osv.osv):
         ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
     ]
 
-    def _search_display_name(self, operator, value):
-        # overridden to allow searching both on model name (model field) and
-        # model description (name field)
-        return ['|', ('model', operator, value), ('name', operator, value)]
+    # overridden to allow searching both on model name (model field)
+    # and model description (name field)
+    def _name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
+        if args is None:
+            args = []
+        domain = args + ['|', ('model', operator, name), ('name', operator, name)]
+        return self.name_get(cr, name_get_uid or uid,
+                             super(ir_model, self).search(cr, uid, domain, limit=limit, context=context),
+                             context=context)
 
     def _drop_table(self, cr, uid, ids, context=None):
         for model in self.browse(cr, uid, ids, context):
@@ -806,20 +811,19 @@ class ir_model_data(osv.osv):
     """
     _name = 'ir.model.data'
     _order = 'module,model,name'
-    def _display_name_get(self, cr, uid, ids, prop, unknow_none, context=None):
+    def name_get(self, cr, uid, ids, context=None):
         result = {}
-        result2 = {}
+        result2 = []
         for res in self.browse(cr, uid, ids, context=context):
             if res.id:
                 result.setdefault(res.model, {})
                 result[res.model][res.res_id] = res.id
-            result2[res.id] = False
 
         for model in result:
             try:
                 r = dict(self.pool[model].name_get(cr, uid, result[model].keys(), context=context))
                 for key,val in result[model].items():
-                    result2[val] = r.get(key, False)
+                    result2.append((val, r.get(key, False)))
             except:
                 # some object have no valid name_get implemented, we accept this
                 pass
@@ -836,7 +840,6 @@ class ir_model_data(osv.osv):
                             help="External Key/Identifier that can be used for "
                                  "data integration with third-party systems"),
         'complete_name': fields.function(_complete_name_get, type='char', string='Complete ID'),
-        'display_name': fields.function(_display_name_get, type='char', string='Record Name'),
         'model': fields.char('Model Name', required=True, select=1),
         'module': fields.char('Module', required=True, select=1),
         'res_id': fields.integer('Record ID', select=1,
