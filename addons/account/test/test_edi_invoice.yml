@@ -6,7 +6,7 @@
   !record {model: account.invoice, id: invoice_edi_1}:
     journal_id: 1
     partner_id: base.res_partner_2
-    currency_id: base.EUR
+    currency_id: base.USD
     company_id: 1
     account_id: account.a_pay
     date_invoice: !eval "'%s' % (time.strftime('%Y-%m-%d'))"
@@ -72,11 +72,11 @@
         },
         "company_id": ["account:b33adf8a-decd-11f0-a4de-702a04e25700.res_company_test11", "Thomson pvt. ltd."],
         "currency": {
-            "__id": "base:b33adf8a-decd-11f0-a4de-702a04e25700.EUR",
+            "__id": "base:b33adf8a-decd-11f0-a4de-702a04e25700.USD",
             "__module": "base",
             "__model": "res.currency",
-            "code": "EUR",
-            "symbol": "€",
+            "code": "USD",
+            "symbol": "$",
         },
         "partner_id": ["account:b33adf8a-decd-11f0-a4de-702a04e25700.res_partner_test20", "Junjun wala"],
         "partner_address": {
@@ -182,11 +182,11 @@
         }, 
         "company_id": ["account:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_company_test11", "Thomson pvt. ltd."], 
         "currency": {
-            "__id": "base:b22acf7a-ddcd-11e0-a4db-701a04e25543.EUR",
+            "__id": "base:b22acf7a-ddcd-11e0-a4db-701a04e25543.USD",
             "__module": "base",
             "__model": "res.currency",
-            "code": "EUR",
-            "symbol": "€",
+            "code": "USD",
+            "symbol": "$",
         }, 
         "partner_id": ["account:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_partner_test20", "Junjun wala"],
         "partner_address": {

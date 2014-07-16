@@ -6,44 +6,44 @@
     uid: 'res_users_account_voucher_manager'
 -
   In order to check the payment with multi-currency in OpenERP, 
-  I create an invoice in EUR and make payment in USD based on the currency rating.
+  I create an invoice in USD and make payment in EUR based on the currency rating.
 -
-  I update the Currency USD in OpenERP for January with rate 1.200000
+  I update the Currency EUR in OpenERP for January with rate 1.400000
 -
   !python {model: res.currency.rate}: |
     from datetime import datetime
-    curr_id = self.pool.get('res.currency').search(cr, uid, [('name', '=', 'USD')])[0]
+    curr_id = self.pool.get('res.currency').search(cr, uid, [('name', '=', 'EUR')])[0]
     date = '%s-01-01' %(datetime.now().year)
     ids = self.search(cr, uid, [('currency_id','=',curr_id), ('name', '=', date)])
-    self.write(cr, uid, ids, {'rate': 1.200000})
+    self.write(cr, uid, ids, {'rate': 1.400000})
 -
-  I update the Currency USD in OpenERP for February with rate 1.400000
+  I update the Currency EUR in OpenERP for February with rate 1.600000
 -
-  !record {model: res.currency.rate, id: feb_usd}:
-    currency_id: base.USD
+  !record {model: res.currency.rate, id: feb_eur}:
+    currency_id: base.EUR
     name: !eval "'%s-02-01' %(datetime.now().year)"
-    rate: 1.400000
+    rate: 1.600000
 -
-  I create a bank account with USD as currency
+  I create a bank account with EUR as currency
 -
-  !record {model: account.account, id: account_eur_usd_id}:
-    currency_id: base.USD
-    name: "Bank usd"
-    code: "BUSD"
+  !record {model: account.account, id: account_usd_eur_id}:
+    currency_id: base.EUR
+    name: "Bank eur"
+    code: "BEUR"
     type: 'liquidity'
     user_type: account.data_account_type_asset
 -
-  I create a bank journal with USD as currency
+  I create a bank journal with EUR as currency
 -
-  !record {model: account.journal, id: bank_journal_USD1}:
-    name: Bank Journal Test(USD)
-    code: BEUSD
+  !record {model: account.journal, id: bank_journal_EUR1}:
+    name: Bank Journal Test(EUR)
+    code: BEEUR
     type: bank
     analytic_journal_id: analytic.sit
     sequence_id: account.sequence_bank_journal
-    default_debit_account_id: account_eur_usd_id
-    default_credit_account_id: account_eur_usd_id
-    currency: base.USD
+    default_debit_account_id: account_usd_eur_id
+    default_credit_account_id: account_usd_eur_id
+    currency: base.EUR
     company_id: base.main_company
 -
   On the first of January, I create an invoice of 1000€
@@ -51,7 +51,7 @@
   !record {model: account.invoice, id: account_invoice_eur_usd}:
     account_id: account.a_recv
     company_id: base.main_company
-    currency_id: base.EUR
+    currency_id: base.USD
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
     period_id: account.period_1
     invoice_line:
@@ -90,7 +90,7 @@
     account_id: account.cash
     amount: 1350.0
     company_id: base.main_company
-    journal_id: bank_journal_USD1
+    journal_id: bank_journal_EUR1
     name: 'payment: Case EUR/USD'
     partner_id: base.res_partner_19
     period_id: account.period_5
@@ -106,19 +106,19 @@
     data = []
     voucher = self.browse(cr, uid, ref('account_voucher_eur_usd_case'))
     for item in voucher.line_cr_ids:
-        if float_compare(item.amount_unreconciled, 1400, precision_digits=2) == 0:
-            data += [(item.id, 1400)]
+        if float_compare(item.amount_unreconciled, 1600, precision_digits=2) == 0:
+            data += [(item.id, 1600)]
     assert data, "Credit line not found"
     for line_id, amount in data:
         self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
     assert (voucher.state=='draft'), "Voucher is not in draft state"
 -
-  I check that writeoff amount computed is -50.0
+  I check that writeoff amount computed is -250.0
 -
   !python {model: account.voucher}: |
     from openerp.tools import float_compare
     voucher = self.browse(cr, uid, ref('account_voucher_eur_usd_case'))
-    assert (float_compare(voucher.writeoff_amount, -50.0, precision_digits=2) == 0), "Writeoff amount is not -50.0"
+    assert (float_compare(voucher.writeoff_amount, -250.0, precision_digits=2) == 0), "Writeoff amount is not -250.0"
 -
   I confirm the voucher
 -
@@ -145,18 +145,18 @@
 -
   I  check that the total reconcilation created entries as expected
 -
-  I check that my writeoff is correct. 35.71 debit and 50 amount_currency
+  I check that my writeoff is correct. 156.25 debit and 250 amount_currency
 -
-  I check that my bank account is correct. 964.29 debit and 1350 amount_currency
+  I check that my bank account is correct. 843.75 debit and 1350 amount_currency
 -
   !python {model: account.voucher}: |
     from openerp.tools import float_compare
     voucher = self.browse(cr, uid, ref('account_voucher_eur_usd_case'))
     for move_line in voucher.move_ids:
         if float_compare(move_line.amount_currency, 1350, precision_digits=2) == 0:
-            assert float_compare(move_line.debit, 964.29, precision_digits=2) == 0,"debtor account is not correct"
-        if float_compare(move_line.amount_currency, 50, precision_digits=2) == 0:
-            assert float_compare(move_line.debit, 35.71, precision_digits=2) == 0,"write off bank account is not correct"
+            assert float_compare(move_line.debit, 843.75, precision_digits=2) == 0,"debtor account is not correct"
+        if float_compare(move_line.amount_currency, 250, precision_digits=2) == 0:
+            assert float_compare(move_line.debit, 156.25, precision_digits=2) == 0,"write off bank account is not correct"
         if float_compare(move_line.amount_currency, 0.0, precision_digits=2) == 0:
             assert float_compare(move_line.credit, 1000, precision_digits=2) == 0,"total reconcile is not correct of invoice"
 -

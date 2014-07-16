@@ -39,8 +39,7 @@ class account_config_settings(osv.osv_memory):
         'expects_chart_of_accounts': fields.related('company_id', 'expects_chart_of_accounts', type='boolean',
             string='This company has its own chart of accounts',
             help="""Check this box if this company is a legal entity."""),
-        'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
-            string='Default company currency', help="Main currency of the company."),
+        'currency_id': fields.many2one('res.currency', required=True, string='Default company currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
             string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the Odoo portal."),
         'company_footer': fields.related('company_id', 'rml_footer', type='text', readonly=True,
@@ -144,6 +143,16 @@ class account_config_settings(osv.osv_memory):
             string="Loss Exchange Rate Account",
             domain="[('type', '=', 'other')]"),
     }
+
+    def set_default_currency(self, cr, uid, ids, context=None):
+        config_data = self.browse(cr, uid, ids, context=context)
+        company_id = config_data.company_id.id 
+        currency_id = config_data.currency_id.id
+        return self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': currency_id}, context=context)
+
+    def get_default_currency(self, cr, uid, fields, context=None):
+        currency_id = self.pool.get('res.company')._get_company_currency(cr, uid, uid, context)
+        return {'currency_id': currency_id}
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)

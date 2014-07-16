@@ -1,11 +1,11 @@
 -
-  In order to check the Account_voucher module with multi-currency in OpenERP, 
-  I create 2 Invoices in EUR and make 2 Payments in EUR based on the currency rating on that particular date.
+  In order to check the Account_voucher module with multi-currency in OpenERP,
+  I create 2 Invoices in USD and make 2 Payments in USD based on the currency rating on that particular date.
 -
-  I create currency EUR in OpenERP for January of 1.000000 Rate
+  I create currency USD in OpenERP for January of 1.000000 Rate
 -
-  !record {model: res.currency.rate, id: jan_eur}:
-    currency_id: base.EUR
+  !record {model: res.currency.rate, id: jan_USD}:
+    currency_id: base.USD
     name: !eval "'%s-01-01' %(datetime.now().year)"
     rate: 1.000000
 -
@@ -16,11 +16,11 @@
     ids = self.search(cr, uid, [('name', 'ilike', 'debtor')])
     self.write(cr, uid, ids, {'currency_id': False})
 -
-  I create a bank journal with EUR as currency
+  I create a bank journal with USD as currency
 -
-  !record {model: account.journal, id: bank_journal_EUR}:
-    name: Bank Journal(EUR)
-    code: BEUR
+  !record {model: account.journal, id: bank_journal_USD}:
+    name: Bank Journal(USD)
+    code: BUSD
     type: bank
     analytic_journal_id: analytic.sit
     sequence_id: account.sequence_bank_journal
@@ -28,12 +28,12 @@
     default_credit_account_id: account.cash
     company_id: base.main_company
 -
-  I create the first invoice on 1st January for 150 EUR
+  I create the first invoice on 1st January for 150 USD
 -
-  !record {model: account.invoice, id: account_first_invoice_jan_eur}:
+  !record {model: account.invoice, id: account_first_invoice_jan_usd}:
     account_id: account.a_recv
     company_id: base.main_company
-    currency_id: base.EUR
+    currency_id: base.USD
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
     period_id: account.period_1
     invoice_line:
@@ -49,25 +49,25 @@
 -
   I Validate invoice by clicking on Validate button
 -
-  !workflow {model: account.invoice, action: invoice_open, ref: account_first_invoice_jan_eur}
+  !workflow {model: account.invoice, action: invoice_open, ref: account_first_invoice_jan_usd}
 -
   I check that first invoice move is correct for debtor account(debit - credit == 150)
 -
   !python {model: account.invoice}: |
     from openerp.tools import float_compare
-    invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_eur"))
+    invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_usd"))
     assert invoice_id.move_id, "Move not created for open invoice"
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
     assert (float_compare(move_line.debit - move_line.credit, 150.00, precision_digits=2) == 0), "Invoice move is incorrect for debtors account"
 -
-  I create the second invoice on 1st February for 80 EUR
+  I create the second invoice on 1st February for 80 USD
 -
   !record {model: account.invoice, id: account_second_invoice_feb_eur}:
     account_id: account.a_recv
     company_id: base.main_company
-    currency_id: base.EUR
+    currency_id: base.USD
     date_invoice: !eval "'%s-02-01' %(datetime.now().year)"
     period_id: account.period_1
     invoice_line:
@@ -107,7 +107,7 @@
     account_id: account.cash
     amount: 120.0
     company_id: base.main_company
-    journal_id: bank_journal_EUR
+    journal_id: bank_journal_USD
     partner_id: base.res_partner_19
     period_id: account.period_3
     date: !eval time.strftime("%Y-03-01")
@@ -177,7 +177,7 @@
 -
   !python {model: account.invoice}: |
     from openerp.tools import float_compare
-    invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_eur"))
+    invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_usd"))
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
@@ -199,7 +199,7 @@
     account_id: account.cash
     amount: 120.0
     company_id: base.main_company
-    journal_id: bank_journal_EUR
+    journal_id: bank_journal_USD
     partner_id: base.res_partner_19
     period_id: account.period_3
     date: !eval time.strftime("%Y-04-01")
@@ -270,7 +270,7 @@
 -
   !python {model: account.invoice}: |
     from openerp.tools import float_compare
-    invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_eur"))
+    invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_usd"))
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])

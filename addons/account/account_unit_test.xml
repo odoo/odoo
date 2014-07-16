@@ -3,7 +3,7 @@
     <data>
         <!-- This file must be loaded  _after_  account_demo.xml ! -->
         <record id="test_invoice_1" model="account.invoice">
-            <field name="currency_id" ref="base.EUR"/>
+            <field name="currency_id" ref="base.USD"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="journal_id" ref="account.expenses_journal"/>
@@ -34,8 +34,8 @@
             <field name="account_id" ref="account.a_sale"/>
         </record>
 
-        <assert id="test_invoice_1" model="account.invoice" string="The currency unit of Test invoice 1 is EUR">
-            <test expr="currency_id.symbol">€</test>
+        <assert id="test_invoice_1" model="account.invoice" string="The currency unit of Test invoice 1 is USD">
+            <test expr="currency_id.symbol">$</test>
         </assert>
 
         <assert id="test_invoice_1" model="account.invoice" severity="error" string="The amount of Test invoice 1 is correct">

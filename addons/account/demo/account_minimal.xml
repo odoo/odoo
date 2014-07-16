@@ -122,13 +122,13 @@
             <field name="type">other</field>
             <field name="user_type" ref="data_account_type_income"/>
         </record>
-        <record id="usd_bnk" model="account.account">
+        <record id="eur_bnk" model="account.account">
             <field name="code">X11007</field>
-            <field name="name">USD Bank Account - (test)</field>
+            <field name="name">EUR Bank Account - (test)</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">liquidity</field>
             <field name="user_type" ref="data_account_type_asset"/>
-            <field name="currency_id" ref="base.USD"/>
+            <field name="currency_id" ref="base.EUR"/>
         </record>
 
         <record model="account.account" id="liabilities_view">
@@ -409,13 +409,13 @@
             <field name="user_id" ref="base.user_root"/>
         </record>
 
-        <record id="bank_journal_usd" model="account.journal">
-            <field name="name">USD Bank Journal - (test)</field>
-            <field name="code">TUBK</field>
+        <record id="bank_journal_eur" model="account.journal">
+            <field name="name">EUR Bank Journal - (test)</field>
+            <field name="code">TEBK</field>
             <field name="type">bank</field>
-            <field name="default_debit_account_id" ref="usd_bnk"/>
-            <field name="default_credit_account_id" ref="usd_bnk"/>
-            <field name="currency" ref="base.USD"/>
+            <field name="default_debit_account_id" ref="eur_bnk"/>
+            <field name="default_credit_account_id" ref="eur_bnk"/>
+            <field name="currency" ref="base.EUR"/>
         </record>
         <!--
         Product income and expense accounts, default parameters
