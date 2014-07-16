@@ -21,6 +21,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class res_company(osv.osv):
     
@@ -40,7 +41,8 @@ class res_company(osv.osv):
             fax              and '%s: %s' % (_('Fax'), fax),
             email            and '%s: %s' % (_('Email'), email),
             website          and '%s: %s' % (_('Website'), website),
-            vat_dept or vat  and '%s: %s' % (_('TIN'), vat_dept + vat),
+            vat_dept         and '%s: %s' % (_('TID'), vat_dept),
+            vat              and '%s: %s' % (_('TIN'), vat),
             company_registry and '%s: %s' % (_('Reg'), company_registry),
         ]))
         # second line: bank accounts
