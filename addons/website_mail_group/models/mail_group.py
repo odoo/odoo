@@ -3,7 +3,7 @@
 from openerp.osv import osv
 from openerp import tools
 from openerp.tools.translate import _
-
+from openerp.addons.website.models.website import slug
 
 class MailGroup(osv.Model):
     _inherit = 'mail.group'
@@ -13,7 +13,7 @@ class MailGroup(osv.Model):
         group = self.browse(cr, uid, id, context=context)
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         res['headers'].update({
-            'List-Archive': '<%s/groups/%s>' % (base_url, group.id),
+            'List-Archive': '<%s/groups/%s>' % (base_url, slug(group)),
             'List-Subscribe': '<%s/groups>' % (base_url),
             'List-Unsubscribe': '<%s/groups?unsubscribe>' % (base_url,),
         })
@@ -36,7 +36,7 @@ class MailMail(osv.Model):
                 'post_to': _('Post to'),
                 'unsub': _('Unsubscribe'),
                 'mailto': 'mailto:%s@%s' % (group.alias_name, group.alias_domain),
-                'group_url': '%s/groups/%s' % (base_url, group.id),
+                'group_url': '%s/groups/%s' % (base_url, slug(group)),
                 'unsub_url': '%s/groups?unsubscribe' % (base_url,),
             }
             footer = """_______________________________________________
