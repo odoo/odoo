@@ -108,10 +108,12 @@ class Forum(models.Model):
     karma_answer = fields.Integer(string='Answer questions', default=3)
     karma_edit_own = fields.Integer(string='Edit own posts', default=1)
     karma_edit_all = fields.Integer(string='Edit all posts', default=300)
+    karma_edit_retag = fields.Integer(string='Change question tags', default=75, oldname="karma_retag")
     karma_close_own = fields.Integer(string='Close own posts', default=100)
     karma_close_all = fields.Integer(string='Close all posts', default=500)
     karma_unlink_own = fields.Integer(string='Delete own posts', default=500)
     karma_unlink_all = fields.Integer(string='Delete all posts', default=1000)
+    karma_tag_create = fields.Integer(string='Create new tags', default=30)
     karma_upvote = fields.Integer(string='Upvote', default=5)
     karma_downvote = fields.Integer(string='Downvote', default=50)
     karma_answer_accept_own = fields.Integer(string='Accept an answer on own questions', default=20)
@@ -122,7 +124,6 @@ class Forum(models.Model):
     karma_comment_convert_all = fields.Integer(string='Convert all answers to comments and vice versa', default=500)
     karma_comment_unlink_own = fields.Integer(string='Unlink own comments', default=50)
     karma_comment_unlink_all = fields.Integer(string='Unlink all comments', default=500)
-    karma_retag = fields.Integer(string='Change question tags', default=75)
     karma_flag = fields.Integer(string='Flag a post as offensive', default=500)
     karma_dofollow = fields.Integer(string='Nofollow links', help='If the author has not enough karma, a nofollow attribute is added to links', default=500)
     karma_editor = fields.Integer(string='Editor Features: image and links',
@@ -161,10 +162,10 @@ class Forum(models.Model):
 
     @api.model
     def _tag_to_write_vals(self, tags=''):
-        User = self.env['res.users']
         Tag = self.env['forum.tag']
         post_tags = []
         existing_keep = []
+        user = self.env.user
         for tag in filter(None, tags.split(',')):
             if tag.startswith('_'):  # it's a new tag
                 # check that not arleady created meanwhile or maybe excluded by the limit on the search
@@ -173,8 +174,7 @@ class Forum(models.Model):
                     existing_keep.append(int(tag_ids[0]))
                 else:
                     # check if user have Karma needed to create need tag
-                    user = User.sudo().browse(self._uid)
-                    if user.exists() and user.karma >= self.karma_retag:
+                    if user.exists() and user.karma >= self.karma_tag_create:
                         post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
             else:
                 existing_keep.append(int(tag))
@@ -415,7 +415,6 @@ class Post(models.Model):
         # add karma for posting new questions
         if not post.parent_id and post.state == 'active':
             self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
-
         post.post_notification()
         return post
 
@@ -457,10 +456,14 @@ class Post(models.Model):
                 if vals['is_correct'] != post.is_correct and post.create_uid.id != self._uid:
                     post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * mult)
                     self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accept * mult)
-        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id'] for key in vals.keys()) and any(not post.can_edit for post in self):
+        if 'tag_ids' in vals:
+            if any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
+                raise KarmaError(_('Not enough karma to retag.'))
+        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id', 'tag_ids'] for key in vals.keys()) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
 
         res = super(Post, self).write(vals)
+
         # if post content modify, notify followers
         if 'content' in vals or 'name' in vals:
             for post in self:
@@ -477,6 +480,9 @@ class Post(models.Model):
     def post_notification(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for post in self:
+            tag_partners = post.tag_ids.mapped('message_partner_ids')
+            tag_channels = post.tag_ids.mapped('message_channel_ids')
+
             if post.state == 'active' and post.parent_id:
                 body = """
 <p>%(intro)s</p>
@@ -487,7 +493,7 @@ class Post(models.Model):
 </p>""" % {'intro': _('A new answer on %s has been posted. Click here to access the post :') % self.parent_id.name,
            'url': '%s/forum/%s/question/%s' % (base_url, slug(self.parent_id.forum_id), slug(self.parent_id)),
            'click': _('See post')}
-                post.parent_id.message_post(subject=_('Re: %s') % post.parent_id.name, body=body, subtype='website_forum.mt_answer_new')
+                post.parent_id.message_post(subject=_('Re: %s') % post.parent_id.name, body=body, partner_ids=[(4, p.id) for p in tag_partners], channel_ids=[(4, c.id) for c in tag_channels], subtype='website_forum.mt_answer_new')
             elif post.state == 'active' and not post.parent_id:
                 body = """
 <p>%(intro)s</p>
@@ -495,14 +501,15 @@ class Post(models.Model):
     <a href="%(url)s" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">
         %(click)s
     </a>
-</p>""" % {'intro': _('A new question <b>%s</b> on %s has been posted. Click here to access the question :') % (self.name, self.parent_id.name),
+</p>""" % {'intro': _('A new question <b>%s</b> on %s has been posted. Click here to access the question :') % (self.name, self.forum_id.name),
            'url': '%s/forum/%s/question/%s' % (base_url, slug(self.forum_id), slug(self)),
            'click': _('See question')}
-                post.message_post(subject=post.name, body=body, subtype='website_forum.mt_question_new')
+                post.message_post(subject=post.name, body=body, partner_ids=[(4, p.id) for p in tag_partners], channel_ids=[(4, c.id) for c in tag_channels], subtype='website_forum.mt_question_new')
             elif post.state == 'pending' and not post.parent_id:
                 # TDE FIXME: in master, you should probably use a subtype;
                 # however here we remove subtype but set partner_ids
-                partners = post.message_partner_ids.filtered(lambda partner: partner.user_ids and partner.user_ids.karma >= post.forum_id.karma_moderate)
+                partners = post.message_partner_ids | tag_partners
+                partners = partners.filtered(lambda partner: partner.user_ids and partner.user_ids.karma >= post.forum_id.karma_moderate)
                 note_subtype = self.sudo().env.ref('mail.mt_note')
                 body = """
 <p>%(intro)s</p>
@@ -849,12 +856,14 @@ class Vote(models.Model):
 class Tags(models.Model):
     _name = "forum.tag"
     _description = "Forum Tag"
-    _inherit = ['website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata']
 
     name = fields.Char('Name', required=True)
     create_uid = fields.Many2one('res.users', string='Created by', readonly=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
-    post_ids = fields.Many2many('forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_id', string='Posts')
+    post_ids = fields.Many2many(
+        'forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_id',
+        string='Posts', domain=[('state', '=', 'active')])
     posts_count = fields.Integer('Number of Posts', compute='_get_posts_count', store=True)
 
     _sql_constraints = [
@@ -862,7 +871,14 @@ class Tags(models.Model):
     ]
 
     @api.multi
-    @api.depends("post_ids.tag_ids")
+    @api.depends("post_ids.tag_ids", "post_ids.state")
     def _get_posts_count(self):
         for tag in self:
             tag.posts_count = len(tag.post_ids)
+
+    @api.model
+    def create(self, vals):
+        forum = self.env['forum.forum'].browse(vals.get('forum_id'))
+        if self.env.user.karma < forum.karma_tag_create:
+            raise KarmaError(_('Not enough karma to create a new Tag'))
+        return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)

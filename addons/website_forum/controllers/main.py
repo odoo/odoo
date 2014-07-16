@@ -198,6 +198,7 @@ class WebsiteForum(http.Controller):
         tags = request.env['forum.tag'].search(domain, limit=None, order=order_by)
         # prepare values and render template
         values = self._prepare_forum_values(forum=forum, searches={'tags': True}, **post)
+
         values.update({
             'tags': tags,
             'pager_tag_chars': first_char_list,
@@ -384,7 +385,7 @@ class WebsiteForum(http.Controller):
     def post_save(self, forum, post, **kwargs):
         if 'post_name' in kwargs and not kwargs.get('post_name').strip():
             return request.website.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
-        post_tags = forum._tag_to_write_vals(kwargs.get('post_tag', ''))
+        post_tags = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         vals = {
             'tag_ids': post_tags,
             'name': kwargs.get('post_name'),

@@ -482,7 +482,7 @@
         <form t-att-action="action_url" method="post" role="form" class="tag_text form-horizontal js_website_submit_form">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
-            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+            <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="content_link">URL to Share</label>
                 <div class="col-sm-8">
@@ -497,10 +497,11 @@
                         class="form-control"/>
                 </div>
             </div>
+            <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="post_tags">Tags</label>
                 <div class="col-sm-8">
-                    <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+                    <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
                     <input type="text" name="post_tags" class="form-control js_select2"/>
                 </div>
             </div>
@@ -532,7 +533,8 @@
                 <t t-esc="question_content"/>
             </textarea>
             <br/>
-            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+            <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
+            <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
             <input type="text" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
             <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
@@ -571,7 +573,8 @@
                 <t t-esc="question_content"/>
             </textarea>
             <br/>
-            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+            <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
+            <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
             <input type="hidden" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
             <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
@@ -594,14 +597,14 @@
                 <h5 t-if="post.post_type == 'question'" class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
             </div>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
-            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+            <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
             <textarea name="content" id="content" required="True" class="form-control load_editor"
                     t-att-data-karma="forum.karma_editor">
                 <t t-esc="post.content"/>
             </textarea>
             <div t-if="not is_answer">
                 <br/>
-                <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+                <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
                 <input type="text" name="post_tags" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}" value="Tags"/>
                 <br/>
             </div>
@@ -1069,7 +1072,7 @@
         <p class="text-muted">
             A tag is a label that categorizes your question with other,
             similar questions. Using the right tags makes it easier for
-            others to find and answer your question.
+            others to find and answer your question. (Hover the mouse to follow/unfollow tag(s))
         </p>
         <nav t-if="pager_tag_chars">
             <ul class="pagination mt0 mb0">
@@ -1080,13 +1083,24 @@
             </ul>
         </nav>
         <div class="row">
-            <div class="col-sm-3 mt16" t-foreach="tags" t-as="tag">
-                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="label label-default">
+            <div class="col-sm-3 mt16 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
+                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}"
+                        t-attf-class="label #{'label-primary' if tag.message_is_follower else 'label-default'}">
                     <span t-field="tag.name"/>
                 </a>
                 <span>
                     X <t t-esc="tag.posts_count"/>
                 </span>
+                <div t-attf-class="well o_forum_tag_follow_box">
+                    <div class="row input-group">
+                        <span>
+                            <t t-call="website_mail.follow">
+                                <t t-set="email" t-value="user_id.email"/>
+                                <t t-set="object" t-value="tag"/>
+                            </t>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </t>
