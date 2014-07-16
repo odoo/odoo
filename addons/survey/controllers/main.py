@@ -321,7 +321,7 @@ class WebsiteSurvey(http.Controller):
     def prepare_result_dict(self,survey, current_filters=[]):
         """Returns dictionary having values for rendering template"""
         survey_obj = request.registry['survey.survey']
-        result = {'survey':survey, 'page_ids': []}
+        result = {'page_ids': []}
         for page in survey.page_ids:
             page_dict = {'page': page, 'question_ids': []}
             for question in page.question_ids:
