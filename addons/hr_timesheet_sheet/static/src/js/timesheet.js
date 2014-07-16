@@ -101,7 +101,6 @@ openerp.hr_timesheet_sheet = function(instance) {
                 return;
             this.donot_destroy_options = true;
             this.destroy_content();
-            this.donot_destroy_options = false;
             // it's important to use those vars to avoid race conditions
             var dates;
             var accounts;
@@ -194,10 +193,6 @@ openerp.hr_timesheet_sheet = function(instance) {
                 this.dfm = undefined;
             }
         },
-        destroy: function () {
-            this._super();
-            this.active_widget.destroy();
-        },
         is_valid_value: function(value){
             var split_value = value.split(":");
             var valid_value = true;
@@ -272,11 +267,10 @@ openerp.hr_timesheet_sheet = function(instance) {
                 });
             });
         },
-        do_switch_mode: function (event, options) {
+        do_switch_mode: function (event) {
             this.destroy_content();
-            var $target = $(event.currentTarget);
-            this.mode = (options && options.mode) ? options.mode : $target.data("mode");
-            this.display_data(options);
+            this.mode = $(event.target).data("mode");
+            this.display_data();
         },
         get_box: function(account, day_count) {
             return this.$('.oe_timesheet_box[data-account="' + account + '"][data-day-count="' + day_count + '"]');
@@ -349,8 +343,8 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
                             $(this).val(self.sum_box(account, true));
                         } else {
                             account[0].unit_amount += num - self.sum_box(account);
-                            var product = (account[0].product_id instanceof Array) ? account[0].product_id[0] : account[0].product_id;
-                            var journal = (account[0].journal_id instanceof Array) ? account[0].journal_id[0] : account[0].journal_id;
+                            var product = (account[0].product_id instanceof Array) ? account[0].product_id[0] : account[0].product_id
+                            var journal = (account[0].journal_id instanceof Array) ? account[0].journal_id[0] : account[0].journal_id
                             self.parent.defs.push(new instance.web.Model("hr.analytic.timesheet").call("on_change_unit_amount", [[], product, account[0].unit_amount, false, false, journal]).then(function(res) {
                                 account[0].amount = res.value.amount || 0;
                                 self.sync_parent_data(account[0], day_count);
@@ -361,10 +355,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
                                 $(this).val(self.sum_box(account, true));
                             }
                         }
-                    });
-                    self.get_description_box(account[0].account_id, day_count).change(function(e) {
-                        account[0].name = $(this).val();
-                        self.parent.sync();
                     });
                 } else {
                     self.parent.get_box(account[0].account_id, day_count).html(self.sum_box(account, true));
@@ -466,9 +456,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
     get_super_total: function() {
         return this.$('.oe_header_total');
     },
-    get_description_box: function(account_id, day_count) {
-        return this.$('.oe_edit_input[data-account="' + account_id + '"][data-day-count="' + day_count + '"]');
-    },
     sum_box: function(account, show_value_in_hour) {
         var line_total = 0;
         _.each(account, function(line){
@@ -504,30 +491,30 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         var self = this;
         var ops = [];
         var ignored_fields = self.parent.ignore_fields();
-        _.each(self.days, function(day) {
-            var auth_keys = _.extend(_.clone(day.account_defaults || {}), {
-                id: true, name: true, amount:true, unit_amount: true, date: true, account_id:true, date_start: true,
-            });
-            _.each(day.account_group, function(account) {
-                _.each(account,function(line) {
-                    var tmp = _.clone(line);
-                    //tmp.id = undefined;
-                    _.each(line, function(v, k) {
-                        if (v instanceof Array) {
-                            tmp[k] = v[0];
-                        }
+            _.each(self.days, function(day) {
+                var auth_keys = _.extend(_.clone(day.account_defaults || {}), {
+                    name: true, amount:true, unit_amount: true, date: true, account_id:true, date_start: true,
+                });
+                _.each(day.account_group, function(account) {
+                    _.each(account,function(line){
+                        var tmp = _.clone(line);
+                        tmp.id = undefined;
+                        _.each(line, function(v, k) {
+                            if (v instanceof Array) {
+                                tmp[k] = v[0];
+                            }
+                        });
+                        // we have to remove some keys, because analytic lines are shitty
+                        _.each(_.keys(tmp), function(key) {
+                            if (auth_keys[key] === undefined) {
+                                tmp[key] = undefined;
+                            }
+                        });
+                        tmp = _.omit(tmp, ignored_fields);
+                        ops.push(tmp);
                     });
-                    // we have to remove some keys, because analytic lines are shitty
-                    _.each(_.keys(tmp), function(key) {
-                        if (auth_keys[key] === undefined) {
-                            tmp[key] = undefined;
-                        }
-                    });
-                    tmp = _.omit(tmp, ignored_fields);
-                    ops.push(tmp);
                 });
             });
-        });
         return ops;
     },
     is_any_accounts: function() {
@@ -559,7 +546,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         _.each(self.days[count].account_group, function(account) {
             var d = self.days[count].day.toString("yyyy-MM-dd")
             _.each(account,function(account) {
-                account.id = undefined;
                 account.date = d;
                 account.name = self.parent.description_line;
                 account.date_start = false;
@@ -582,6 +568,20 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
             last_activites = groupby_date[latest_activity_date];
         }
         return last_activites;
+    },
+    addDescription: function(e) {
+        var self=this;
+        var count = this.get('count');
+        var day_count = this.$(e.target).attr("data-day-count") || this.$(e.srcElement).attr("data-day-count"); //No need, count and day_count always be same
+        var account_id = this.$(e.target).attr("data-account");
+        var $input = this.$('.oe_edit_input[data-account="' + account_id + '"][data-day-count="' + day_count + '"]');
+        this.$(".oe_edit_input").hide();
+        var account = self.days[count].account_group[account_id];
+        $input.val(account[0].name).show();
+        $input.change(function() {
+            account[0].name = $(this).val();
+            self.parent.sync();
+        });
     },
     start_interval: function(){
         var self = this;
@@ -650,13 +650,12 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         $.when(def).then(function() {
             self.parent.sync();
             current_account[0].date_diff_hour = current_account[0].date_diff_minute = 0;
-            ret = self.parent.view.save().done(function() {
-                self.parent.view.reload(); //Need to reload view so that one2many have newly created ids in sheet or we should reload only timesheet_ids field, or do not display button on unsaved record
-            });
+            self.parent.view.save();
+            self.parent.display_data(self.options);
         });
     },
     toggle_active: function(day_count) {
-        this.$el.find(".oe_nav_button[data-day-counter|="+day_count+"]").addClass("oe_active_day").siblings().removeClass("oe_active_day");
+        this.$el.find(".oe_nav_button[data-day-counter|="+day_count+"]").addClass("oe_active_day").siblings().removeClass("oe_active_day")
     },
     navigateAll: function(e){
         var self = this;
@@ -707,7 +706,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
     template: "hr_timesheet_sheet.WeeklyTimesheet",
     events: {
         "click .oe_timesheet_weekly_account a": "go_to",
-        "click .oe_timesheet_switch, .oe_timesheet_weekly_day": "do_switch_mode",
+        "click .oe_timesheet_switch": "do_switch_mode",
     },
     init: function (parent) {
         this.parent = parent;
@@ -715,9 +714,9 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         this.set('effective_readonly', this.parent.get("effective_readonly"));
         this.dates = parent.dates;
         this.accounts = parent.accounts;
-        this.account_names = parent.account_names;
-        this.default_get = parent.default_get;
-        this.account_defaults = parent.account_defaults;
+        this.account_names = parent.account_names
+        this.default_get = parent.default_get
+        this.account_defaults = parent.account_defaults
     },
     start: function() {
         this.display_data();
@@ -739,8 +738,8 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
                             $(this).val(self.sum_box(account, day_count, true));
                         } else {
                             account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
-                            var product = (account.days[day_count].lines[0].product_id instanceof Array) ? account.days[day_count].lines[0].product_id[0] : account.days[day_count].lines[0].product_id;
-                            var journal = (account.days[day_count].lines[0].journal_id instanceof Array) ? account.days[day_count].lines[0].journal_id[0] : account.days[day_count].lines[0].journal_id;
+                            var product = (account.days[day_count].lines[0].product_id instanceof Array) ? account.days[day_count].lines[0].product_id[0] : account.days[day_count].lines[0].product_id
+                            var journal = (account.days[day_count].lines[0].journal_id instanceof Array) ? account.days[day_count].lines[0].journal_id[0] : account.days[day_count].lines[0].journal_id
                             self.parent.defs.push(new instance.web.Model("hr.analytic.timesheet").call("on_change_unit_amount", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
                                 account.days[day_count].lines[0]['amount'] = res.value.amount || 0;
                                 self.display_totals();
@@ -760,11 +759,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         self.$(".oe_timesheet_weekly_adding a").click(_.bind(this.parent.init_add_account, this.parent, instance.web.date_to_str(self.dates[0]), _.pluck(self.accounts, "account")));
     },
     do_switch_mode: function(e) {
-        var index = $(e.currentTarget).attr("data-day-counter");
-        if(index)
-            this.parent.do_switch_mode(e, {mode: "day", count: parseInt(index), week: this.dates[index].getWeek()});
-        else
-            this.parent.do_switch_mode(e);
+        this.parent.do_switch_mode(e);
     },
     sum_box: function(account, day_count, show_value_in_hour) {
         var line_total = 0;
@@ -807,13 +802,13 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         var ignored_fields = self.parent.ignore_fields();
         _.each(self.accounts, function(account) {
             var auth_keys = _.extend(_.clone(account.account_defaults), {
-                id: true, name: true, amount:true, unit_amount: true, date: true, account_id:true, date_start: true,
+                name: true, amount:true, unit_amount: true, date: true, account_id:true, date_start: true,
             });
             _.each(account.days, function(day) {
                 _.each(day.lines, function(line) {
                     if (line.unit_amount !== 0) {
                         var tmp = _.clone(line);
-                        //tmp.id = undefined;
+                        tmp.id = undefined;
                         _.each(line, function(v, k) {
                             if (v instanceof Array) {
                                 tmp[k] = v[0];

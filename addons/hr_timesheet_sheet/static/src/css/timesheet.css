@@ -2,17 +2,14 @@
 .openerp .oe_form_readonly .oe_timesheet_weekly .oe_timesheet_button_add {
   display: none;
 }
-.openerp .oe_timesheet_weekly .oe_timesheet_weekly_body {
+.openerp .oe_timesheet_weekly {
   overflow-x: auto;
-}
-.openerp .oe_timesheet_weekly .oe_timesheet_weekly_body table {
-  border-collapse: separate;
 }
 .openerp .oe_timesheet_weekly .oe_timesheet_white {
   color: white;
 }
 .openerp .oe_timesheet_daily .oe_timesheet_white {
-  color: white !important;
+  color: white;
 }
 .openerp .oe_timesheet_weekly .oe_timesheet_weekly_account, .openerp .oe_timesheet_daily .oe_timesheet_daily_account {
   font-weight: bold;
@@ -27,9 +24,6 @@
   text-align: right;
   min-width: 0 !important;
 }
-.openerp .oe_timesheet_weekly .oe_timesheet_weekly_day {
-  cursor: pointer;
-}
 .openerp .oe_timesheet_weekly .oe_timesheet_weekly_adding_tot {
   display: table;
   width: 100%;
@@ -38,34 +32,21 @@
   display: table-cell;
   text-align: left;
 }
-.openerp .oe_timesheet_weekly .oe_timesheet_weekly_daytotal {
-  float: right;
-}
-.openerp .oe_timesheet_weekly_day {
-  border: 1px solid;
-  border-color: #cccccc;
-  border-left: 0px;
-  border-bottom: 1px solid;
-  border-style: solid solid solid none;
-  border-color: #cccccc #cccccc #cccccc;
-}
-.openerp .oe_timesheet_weekly_day_blank {
-  border: none;
-}
-.openerp .oe_timesheet_weekly_day:nth-child(2) {
-  border-left: 1px solid #cccccc;
-  border-bottom-left-radius: 4px;
-  border-top-left-radius: 4px;
-}
-.openerp .oe_timesheet_weekly_day_total {
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-  vertical-align: middle;
-  opacity: 0.65;
-}
 .openerp .oe_timesheet_add_row .oe_form_field_many2one {
   display: inline-block;
   width: 200px;
+}
+.openerp .oe_timesheet_weekly .oe_view_nocontent .oe_view_nocontent_create:before, .openerp .oe_timesheet_daily .oe_view_nocontent .oe_view_nocontent_create:before {
+  margin: -5px 0 0 -95px;
+  -o-transform: scaleY(-1);
+  -ms-transform: scaleY(-1);
+  -moz-transform: scaleY(-1);
+  -webkit-transform: scaleY(-1);
+  transform: scaleY(-1);
+}
+.openerp .oe_timesheet_weekly .oe_view_nocontent, .openerp .oe_timesheet_daily .oe_view_nocontent {
+  padding-left: 50px;
+  margin-top: -20px;
 }
 .openerp .oe_timesheet_weekly .oe_hide {
   display: none;
@@ -76,21 +57,15 @@
 .openerp .oe_mb {
   margin-bottom: 20px;
 }
+.openerp .oe_timesheet_daily .oe_active_day {
+  background-color: #428bca;
+  color: white;
+}
 .openerp .oe_timesheet_daily .oe_daily_header {
   width: 100%;
 }
-.openerp .oe_timesheet_daily .oe_nav {
-  margin: 0px !important;
-}
-.openerp .oe_timesheet_daily h5 {
-  color: #428bca !important;
-}
 .openerp .oe_timesheet_daily .oe_header {
   width: 12.5%;
-}
-.openerp .oe_timesheet_daily .oe_header.oe_active_day {
-  background-color: #428bca;
-  color: white !important;
 }
 .openerp .oe_timesheet_daily .oe_hide {
   display: none;
@@ -98,17 +73,8 @@
 .openerp .oe_timesheet_daily .oe_timesheet_box {
   text-align: right;
 }
-.openerp .oe_timesheet_daily .oe_timesheet_daily_footer {
-  width: 100%;
-  max-width: 100%;
-}
 .openerp .oe_timesheet_daily .oe_timesheet_daily_footer h4 {
   text-align: right;
-  color: #428bca;
-  padding-right: 8px;
-}
-.openerp .oe_timesheet_daily .oe_timer {
-  float: right !important;
 }
 .openerp .oe_timesheet_daily .oe_timer .oe_timer_clock {
   bottom: 0;
@@ -116,15 +82,6 @@
   left: initial;
   line-height: initial;
   width: initial;
-}
-.openerp .oe_timesheet_daily .oe_timesheet_daily_delete {
-  float: right;
-  padding-top: 5px;
-}
-.openerp .oe_timesheet_daily .oe_timesheet_daily_delete button {
-  border: none;
-  background: transparent;
-  padding: 0;
 }
 .openerp .oe_timesheet_daily .oe_display_day_total {
   font-size: 12px;
