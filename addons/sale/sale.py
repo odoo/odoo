@@ -658,7 +658,7 @@ class sale_order(osv.osv):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
-        date_planned = self._get_date_planned(cr, uid, order, line, order.date_order, context=context)
+        date_planned = self._get_date_planned(cr, uid, order, line, order.date_confirm, context=context)
         return {
             'name': line.name,
             'origin': order.name,
