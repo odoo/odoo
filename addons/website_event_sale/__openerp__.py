@@ -2,7 +2,7 @@
 
 {
     'name': "Online Event's Tickets",
-    'category': 'Hidden',
+    'category': 'Website',
     'summary': "Sell Your Event's Tickets",
     'website': 'https://www.odoo.com/page/events',
     'version': '1.0',

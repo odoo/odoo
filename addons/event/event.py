@@ -81,7 +81,7 @@ class event_event(models.Model):
         store=True, readonly=True, compute='_compute_seats')
 
     @api.multi
-    @api.depends('seats_max', 'registration_ids.state', 'registration_ids.nb_register')
+    @api.depends('seats_max', 'registration_ids.state')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
         # initialize fields to 0
@@ -94,7 +94,7 @@ class event_event(models.Model):
                 'open': 'seats_reserved',
                 'done': 'seats_used',
             }
-            query = """ SELECT event_id, state, sum(nb_register)
+            query = """ SELECT event_id, state, count(event_id)
                         FROM event_registration
                         WHERE event_id IN %s AND state IN ('draft', 'open', 'done')
                         GROUP BY event_id, state
@@ -110,7 +110,7 @@ class event_event(models.Model):
 
     # Registration fields
     registration_ids = fields.One2many(
-        'event.registration', 'event_id', string='Registrations',
+        'event.registration', 'event_id', string='Attendees',
         readonly=False, states={'done': [('readonly', True)]})
     count_registrations = fields.Integer(string='Registrations', compute='_count_registrations')
 
@@ -245,36 +245,6 @@ class event_event(models.Model):
         """ Confirm Event and send confirmation email to all register peoples """
         self.confirm_event()
 
-    @api.one
-    def subscribe_to_event(self):
-        """ Subscribe the current user to a given event """
-        user = self.env.user
-        num_of_seats = int(self._context.get('ticket', 1))
-        regs = self.registration_ids.filtered(lambda reg: reg.user_id == user)
-        # the subscription is done as SUPERUSER_ID because in case we share the
-        # kanban view, we want anyone to be able to subscribe
-        if not regs:
-            regs = regs.sudo().create({
-                'event_id': self.id,
-                'email': user.email,
-                'name': user.name,
-                'user_id': user.id,
-                'nb_register': num_of_seats,
-            })
-        else:
-            regs.write({'nb_register': num_of_seats})
-        if regs._check_auto_confirmation():
-            regs.sudo().confirm_registration()
-
-    @api.one
-    def unsubscribe_to_event(self):
-        """ Unsubscribe the current user from a given event """
-        # the unsubscription is done as SUPERUSER_ID because in case we share
-        # the kanban view, we want anyone to be able to unsubscribe
-        user = self.env.user
-        regs = self.sudo().registration_ids.filtered(lambda reg: reg.user_id == user)
-        regs.button_reg_cancel()
-
     @api.onchange('type')
     def _onchange_type(self):
         if self.type:
@@ -289,35 +259,31 @@ class event_event(models.Model):
         res = self.env['ir.actions.act_window'].for_xml_id('event', 'action_report_event_registration')
         res['context'] = {
             "search_default_event_id": self.id,
-            "group_by": ['event_date:day'],
+            "group_by": ['create_date:day'],
         }
         return res
 
 
 class event_registration(models.Model):
     _name = 'event.registration'
-    _description = 'Event Registration'
+    _description = 'Attendee'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'name, create_date desc'
 
     origin = fields.Char(
         string='Source Document', readonly=True,
-        help="Reference of the sales order which created the registration")  # funny we refer sale orders... event is not sale related
-    nb_register = fields.Integer(
-        string='Number of Participants', required=True, default=1,
-        readonly=True, states={'draft': [('readonly', False)]})
+        help="Reference of the document that created the registration, for example a sale order")
     event_id = fields.Many2one(
         'event.event', string='Event', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one(
-        'res.partner', string='Partner',
+        'res.partner', string='Contact',
         states={'done': [('readonly', True)]})
     date_open = fields.Datetime(string='Registration Date', readonly=True)
     date_closed = fields.Datetime(string='Attended Date', readonly=True)
     reply_to = fields.Char(string='Reply-to Email', related='event_id.reply_to', readonly=True)
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
-    user_id = fields.Many2one('res.users', string='User', states={'done': [('readonly', True)]})
     company_id = fields.Many2one(
         'res.company', string='Company', related='event_id.company_id',
         store=True, readonly=True, states={'draft': [('readonly', False)]})
@@ -327,17 +293,18 @@ class event_registration(models.Model):
         string='Status', default='draft', readonly=True, copy=False, track_visibility='onchange')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
-    name = fields.Char(string='Name', select=True)
+    name = fields.Char(string='Attendee Name', select=True)
 
     @api.one
-    @api.constrains('event_id', 'state', 'nb_register')
+    @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
-        if self.event_id.seats_max and \
-                self.event_id.seats_available < (self.nb_register if self.state == 'draft' else 0):
-            raise Warning(_('Only %s seats available for this event') % self.event_id.seats_available if self.event_id.seats_available > 0 else _('No more seats available for this event.'))
+        if self.event_id.seats_max and self.event_id.seats_available < (1 if self.state == 'draft' else 0):
+            raise Warning(_('No more seats available for this event.'))
 
     @api.one
     def _check_auto_confirmation(self):
+        if self._context.get('registration_force_draft'):
+            return False
         if self.event_id and self.event_id.state == 'confirm' and self.event_id.auto_confirm and self.event_id.seats_available:
             return True
         return False
@@ -345,7 +312,7 @@ class event_registration(models.Model):
     @api.model
     def create(self, vals):
         res = super(event_registration, self).create(vals)
-        if res._check_auto_confirmation():
+        if res._check_auto_confirmation()[0]:
             res.sudo().confirm_registration()
         return res
 
@@ -402,6 +369,6 @@ class event_registration(models.Model):
             contact_id = self.partner_id.address_get().get('default', False)
             if contact_id:
                 contact = self.env['res.partner'].browse(contact_id)
-                self.name = contact.name
-                self.email = contact.email
-                self.phone = contact.phone
+                self.name = self.name or contact.name
+                self.email = self.email or contact.email
+                self.phone = self.phone or contact.phone

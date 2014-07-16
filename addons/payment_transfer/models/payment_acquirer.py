@@ -83,4 +83,4 @@ class TransferPaymentTransaction(osv.Model):
 
     def _transfer_form_validate(self, cr, uid, tx, data, context=None):
         _logger.info('Validated transfer payment for tx %s: set as pending' % (tx.reference))
-        return tx.write({'state': 'pending'})
+        return tx.write({'state': 'done'})

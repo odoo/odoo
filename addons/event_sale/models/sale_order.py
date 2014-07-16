@@ -1,7 +1,21 @@
 # -*- coding: utf-8 -*-
 
+from openerp import api
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
+
+
+class sale_order(osv.osv):
+    _inherit = "sale.order"
+
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        # TDE note: This method works on a list of one id (see sale/sale.py) so working on ids[0] seems safe.
+        res = super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
+        redirect_to_event_registration = any(line.event_id for order in self.browse(cr, uid, ids, context=context) for line in order.order_line)
+        if redirect_to_event_registration:
+            event_ctx = dict(context, default_sale_order_id=ids[0])
+            return self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'event_sale', 'action_sale_order_event_registration', event_ctx)
+        else:
+            return res
 
 
 class sale_order_line(osv.osv):
@@ -35,34 +49,36 @@ class sale_order_line(osv.osv):
                                     event_ok=False)
         return res
 
+    @api.multi
+    def _update_registrations(self):
+        """ Create or update registrations linked to a sale order line. A sale
+        order line has a product_uom_qty attribute that will be the number of
+        registrations linked to this line. This method update existing registrations
+        and create new one for missing one. """
+        registrations = self.env['event.registration'].search([('origin', 'in', list(set([so.name for line in self for so in line.order_id if line.event_id])))])
+        for so_line in [l for l in self if l.event_id]:
+            existing_registrations = [r for r in registrations if r.event_id == so_line.event_id and r.origin == so_line.order_id.name]
+            for registration in existing_registrations:
+                registration.write({'state': 'open'})
+
+            for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
+                self.env['event.registration'].create({
+                    'event_id': so_line.event_id.id,
+                    'event_ticket_id': so_line.event_ticket_id.id,
+                    'partner_id': so_line.order_id.partner_id.id,
+                    'origin': so_line.order_id.name,
+                })
+        return True
+
     def button_confirm(self, cr, uid, ids, context=None):
+        """ Override confirmation of the sale order line in order to create
+        or update the possible event registrations linked to the sale. """
         '''
         create registration with sales order
         '''
-        context = dict(context or {})
-        registration_obj = self.pool.get('event.registration')
-        for order_line in self.browse(cr, uid, ids, context=context):
-            if order_line.event_id:
-                dic = {
-                    'name': order_line.order_id.partner_invoice_id.name,
-                    'partner_id': order_line.order_id.partner_id.id,
-                    'nb_register': int(order_line.product_uom_qty),
-                    'email': order_line.order_id.partner_id.email,
-                    'phone': order_line.order_id.partner_id.phone,
-                    'origin': order_line.order_id.name,
-                    'event_id': order_line.event_id.id,
-                    'event_ticket_id': order_line.event_ticket_id and order_line.event_ticket_id.id or None,
-                }
-
-                if order_line.event_ticket_id:
-                    message = _("The registration has been created for event <i>%s</i> with the ticket <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.event_ticket_id.name, order_line.order_id.name)
-                else:
-                    message = _("The registration has been created for event <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.order_id.name)
-
-                context.update({'mail_create_nolog': True})
-                registration_id = registration_obj.create(cr, uid, dic, context=context)
-                registration_obj.message_post(cr, uid, [registration_id], body=message, context=context)
-        return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
+        res = super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
+        self._update_registrations(cr, uid, ids, context=context)
+        return res
 
     def onchange_event_ticket_id(self, cr, uid, ids, event_ticket_id=False, context=None):
         price = event_ticket_id and self.pool["event.event.ticket"].browse(cr, uid, event_ticket_id, context=context).price or False

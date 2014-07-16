@@ -20,7 +20,7 @@ class TestEventFlow(TestEventCommon):
             'name': 'TestEvent',
             'date_begin': datetime.datetime.now() + relativedelta(days=-1),
             'date_end': datetime.datetime.now() + relativedelta(days=1),
-            'seats_max': 10,
+            'seats_max': 2,
         })
         self.assertEqual(test_event.state, 'confirm', 'Event: auto_confirmation of event failed')
 
@@ -28,33 +28,30 @@ class TestEventFlow(TestEventCommon):
         test_reg1 = self.Registration.sudo(self.user_eventuser).create({
             'name': 'TestReg1',
             'event_id': test_event.id,
-            'nb_register': 7,
         })
         self.assertEqual(test_reg1.state, 'open', 'Event: auto_confirmation of registration failed')
-        self.assertEqual(test_event.seats_reserved, 7, 'Event: wrong number of reserved seats after confirmed registration')
+        self.assertEqual(test_event.seats_reserved, 1, 'Event: wrong number of reserved seats after confirmed registration')
         test_reg2 = self.Registration.sudo(self.user_eventuser).create({
             'name': 'TestReg2',
             'event_id': test_event.id,
-            'nb_register': 3,
         })
         self.assertEqual(test_reg2.state, 'open', 'Event: auto_confirmation of registration failed')
-        self.assertEqual(test_event.seats_reserved, 10, 'Event: wrong number of reserved seats after confirmed registration')
+        self.assertEqual(test_event.seats_reserved, 2, 'Event: wrong number of reserved seats after confirmed registration')
 
         # EventUser create registrations for this event: too much registrations
         with self.assertRaises(ValidationError):
             self.Registration.sudo(self.user_eventuser).create({
                 'name': 'TestReg3',
                 'event_id': test_event.id,
-                'nb_register': 1,
             })
 
         # EventUser validates registrations
         test_reg1.button_reg_close()
         self.assertEqual(test_reg1.state, 'done', 'Event: wrong state of attended registration')
-        self.assertEqual(test_event.seats_used, 7, 'Event: incorrect number of attendees after closing registration')
+        self.assertEqual(test_event.seats_used, 1, 'Event: incorrect number of attendees after closing registration')
         test_reg2.button_reg_close()
         self.assertEqual(test_reg1.state, 'done', 'Event: wrong state of attended registration')
-        self.assertEqual(test_event.seats_used, 10, 'Event: incorrect number of attendees after closing registration')
+        self.assertEqual(test_event.seats_used, 2, 'Event: incorrect number of attendees after closing registration')
 
         # EventUser closes the event
         test_event.button_done()
@@ -62,6 +59,7 @@ class TestEventFlow(TestEventCommon):
         # EventUser cancels -> not possible when having attendees
         with self.assertRaises(Warning):
             test_event.button_cancel()
+
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_10_advanced_event_flow(self):

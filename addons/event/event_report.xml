@@ -17,16 +17,13 @@
         <field name="header_spacing">0</field>
         <field name="dpi">80</field>
     </record>
-    <report 
-        id="action_report_registrationbadge"
-        model="event.registration" 
-        string="Badge"
-        report_type="qweb-html"
-        name="event_sale.report_registrationbadge"
-        file="event_sale.report_registrationbadge"
-    />
-    <record id="action_report_registrationbadge" model="ir.actions.report.xml">
-        <field name="paperformat_id" ref="event_sale.paperformat_euro_lowmargin"/>
+
+    <report id="action_report_registration_badge" model="event.registration" 
+        string="Badge" report_type="qweb-html"
+        name="event.report_registration_badge"
+        file="event.report_registration_badge"/>
+    <record model="ir.actions.report.xml" id="event.action_report_registration_badge">
+        <field name="paperformat_id" ref="event.paperformat_euro_lowmargin"/>
     </record>
 
     </data>
