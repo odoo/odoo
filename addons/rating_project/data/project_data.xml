@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="rating_request" model="email.template">
+            <field name="name">Rating Request</field>
+            <field name="email_from">${ctx['model'].user_id.email or ''}</field>
+            <field name="subject">${ctx['model'].name}</field>
+            <field name="model_id" ref="project.model_project_task_type"/>
+            <field name="email_to" >${ ctx['email_to'] }</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[ 
+<body>
+    <div style="max-width:600px; height:auto; margin-left:30px;">
+        <div style="margin-left:30px;align=center;">
+            Dear ${ctx['model'].partner_id.name},
+        </div><br>
+        <div style="margin-left:30px;align=center;" width="60%">
+            We hope that the services provided have met your expectations.
+            <br>If you have any more questions or comments, don't hesitate to reply to this e-mail.
+            <br><br>Please, help us to improve ourself by rating the service we provide.
+        </div><br>
+        <table style="margin-left:50px;" width="70%">
+            <tr>
+                <td>
+                    <a href="/rating/${ctx['access_token']}?rating=10">
+                        <img alt="Great" src="rating/static/src/img/rating_10.png" title="It was great"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="/rating/${ctx['access_token']}?rating=5">
+                        <img alt="Okay" src="rating/static/src/img/rating_5.png" title="It was okay"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="/rating/${ctx['access_token']}?rating=0">
+                        <img alt="Bad" src="rating/static/src/img/rating_0.png" title="It wasn't good"/>
+                    </a>
+                </td>
+            </tr>
+        </table><br>
+        <h4 style="margin-left:30px;font-weight:normal;">Thank you </h4>
+        <h4 style="margin-left:30px;font-weight:normal;">${ctx['model'].user_id.signature|safe or ''} </h4>
+    </div>
+</body>
+                ]]>
+            </field>
+        </record>
+        <record id="project.project_stage_2" model="project.task.type">
+            <field name="template_id" ref="rating_request"/>
+        </record>
+    </data>
+</openerp>

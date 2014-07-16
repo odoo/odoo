@@ -44,6 +44,8 @@ class project_configuration(osv.osv_memory):
         'module_project_issue': fields.boolean("Track issues and bugs",
             help='Provides management of issues/bugs in projects.\n'
                  '-This installs the module project_issue.'),
+        'module_rating_project': fields.boolean('Allow customers to rate provided services',
+            help="This allows customers to give rating on provided services"),
         'time_unit': fields.many2one('product.uom', 'Working time unit', required=True,
             help="""This will set the unit of measure used in projects and tasks."""),
         'module_project_issue_sheet': fields.boolean("Invoice working time on issues",
