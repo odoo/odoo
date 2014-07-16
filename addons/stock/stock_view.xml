@@ -1158,7 +1158,7 @@
             Reception Picking (By Stock Move)
             From stock_partial_move_view
         -->
-        <record id="view_move_tree_reception_picking" model="ir.ui.view">
+        <record id="view_move_tree_receipt_picking" model="ir.ui.view">
             <field name="name">stock.move.tree2</field>
             <field name="model">stock.move</field>
             <field name="priority" eval="6"/>
@@ -1188,7 +1188,7 @@
         </record>
 
         <!-- test -->
-        <record id="view_move_tree_reception_picking_board" model="ir.ui.view">
+        <record id="view_move_tree_receipt_picking_board" model="ir.ui.view">
             <field name="name">stock.move.tree3</field>
             <field name="model">stock.move</field>
             <field eval="6" name="priority"/>
@@ -1210,7 +1210,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain" eval="[('picking_id.picking_type_id.code','=','incoming'), ('location_id.usage','!=','internal'), ('location_dest_id.usage', '=', 'internal')]"/>
-            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="view_id" ref="view_move_tree_receipt_picking"/>
             <field name="context">{'product_receive': True, 'search_default_future': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

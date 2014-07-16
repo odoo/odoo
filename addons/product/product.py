@@ -492,7 +492,7 @@ class product_template(osv.osv):
             help="A precise description of the Product, used only for internal information purposes."),
         'description_purchase': fields.text('Purchase Description',translate=True,
             help="A description of the Product that you want to communicate to your suppliers. "
-                 "This description will be copied to every Purchase Order, Reception and Supplier Invoice/Refund."),
+                 "This description will be copied to every Purchase Order, Receipt and Supplier Invoice/Refund."),
         'description_sale': fields.text('Sale Description',translate=True,
             help="A description of the Product that you want to communicate to your customers. "
                  "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),
@@ -550,7 +550,7 @@ class product_template(osv.osv):
                  "the picking order and is mainly used if you use the EDI module."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Supplier'),
         'seller_delay': fields.related('seller_ids','delay', type='integer', string='Supplier Lead Time',
-            help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
+            help="This is the average delay in days between the purchase order confirmation and the receipts for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_qty': fields.related('seller_ids','qty', type='float', string='Supplier Quantity',
             help="This is minimum quantity to purchase from Main Supplier."),
         'seller_id': fields.related('seller_ids','name', type='many2one', relation='res.partner', string='Main Supplier',
@@ -1162,7 +1162,7 @@ class product_supplierinfo(osv.osv):
         'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the supplier Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
         'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Unit of Measure."),
         'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
-        'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
+        'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist', copy=True),
         'company_id':fields.many2one('res.company','Company',select=1),
     }
