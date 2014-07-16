@@ -180,7 +180,7 @@
                 var op_id = $(this).parent().data('id');
                 var line = $(this).parent();
                 //select all js_pack_op_line with class in_container_hidden and correct container-id
-                select = self.$('.js_pack_op_line.in_container_hidden[data-container-id='+op_id+']')
+                var select = self.$('.js_pack_op_line.in_container_hidden[data-container-id='+op_id+']')
                 if (select.length > 0){
                     //we unfold
                     line.addClass('warning');
