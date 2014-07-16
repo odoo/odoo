@@ -30,33 +30,21 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-class account_coda_import(osv.osv_memory):
-    _name = 'account.coda.import'
+from openerp.addons.account_bank_statement_import import account_bank_statement_import as coda_ibs
+
+coda_ibs._IMPORT_FILE_TYPE.append(('coda', 'CODA'))
+
+class account_bank_statement_import(osv.TransientModel):
+    _inherit = "account.bank.statement.import"
     _description = 'Import CODA File'
     _columns = {
-        'coda_data': fields.binary('CODA File', required=True),
-        'coda_fname': fields.char('CODA Filename', required=True),
+        'file_type': fields.selection(coda_ibs._IMPORT_FILE_TYPE, 'File Type'),
         'note': fields.text('Log'),
     }
 
-    _defaults = {
-        'coda_fname': lambda *a: '',
-    }
-
-    def coda_parsing(self, cr, uid, ids, context=None, batch=False, codafile=None, codafilename=None):
+    def process_coda(self, cr, uid, codafile=None, journal_id=False, account_id=False, context=None):
         if context is None:
             context = {}
-        if batch:
-            codafile = str(codafile)
-            codafilename = codafilename
-        else:
-            data = self.browse(cr, uid, ids)[0]
-            try:
-                codafile = data.coda_data
-                codafilename = data.coda_fname
-            except:
-                raise osv.except_osv(_('Error'), _('Wizard in incorrect state. Please hit the Cancel button'))
-                return {}
         recordlist = unicode(base64.decodestring(codafile), 'windows-1252', 'strict').split('\n')
         statements = []
         for line in recordlist:
@@ -241,6 +229,7 @@ class account_coda_import(osv.osv_memory):
                     statement['balance_end_real'] = statement['balance_start'] + statement['balancePlus'] - statement['balanceMin']
         for i, statement in enumerate(statements):
             statement['coda_note'] = ''
+            statement_line = []
             balance_start_check_date = (len(statement['lines']) > 0 and statement['lines'][0]['entryDate']) or statement['date']
             cr.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
@@ -265,7 +254,6 @@ class account_coda_import(osv.osv_memory):
                 'balance_start': statement['balance_start'],
                 'balance_end_real': statement['balance_end_real'],
             }
-            statement['id'] = self.pool.get('account.bank.statement').create(cr, uid, data, context=context)
             for line in statement['lines']:
                 if line['type'] == 'information':
                     statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' with Ref. ' + str(line['ref']), 'Date: ' + str(line['entryDate']), 'Communication: ' + line['communication'], ''])
@@ -313,33 +301,21 @@ class account_coda_import(osv.osv_memory):
                             bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, {'acc_number': str(line['counterpartyNumber']), 'state': bank_code}, context=context)
                     if 'communication' in line and line['communication'] != '':
                         note.append(_('Communication') + ': ' + line['communication'])
-                    data = {
+                    line_data = {
                         'name': line['name'],
                         'note': "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
                         'partner_id': partner_id,
-                        'statement_id': statement['id'],
                         'ref': structured_com,
                         'sequence': line['sequence'],
                         'bank_account_id': bank_account_id,
                     }
-                    self.pool.get('account.bank.statement.line').create(cr, uid, data, context=context)
+                    statement_line.append((0, 0, line_data))
             if statement['coda_note'] != '':
-                self.pool.get('account.bank.statement').write(cr, uid, [statement['id']], {'coda_note': statement['coda_note']}, context=context)
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_statement_tree')
-        action = self.pool[model].browse(cr, uid, action_id, context=context)
-        return {
-            'name': action.name,
-            'view_type': action.view_type,
-            'view_mode': action.view_mode,
-            'res_model': action.res_model,
-            'domain': action.domain,
-            'context': action.context,
-            'type': 'ir.actions.act_window',
-            'search_view_id': action.search_view_id.id,
-            'views': [(v.view_id.id, v.view_mode) for v in action.view_ids]
-        }
+                data.update({'coda_note': statement['coda_note']})
+            data.update({'journal_id': journal_id, 'line_ids' : statement_line})
+        return data
 
 
 def rmspaces(s):

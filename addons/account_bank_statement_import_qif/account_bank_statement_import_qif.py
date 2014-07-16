@@ -1,0 +1,76 @@
+# -*- coding: utf-8 -*-
+
+import dateutil.parser
+import base64
+import logging
+from tempfile import TemporaryFile
+
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
+from openerp import tools
+
+_logger = logging.getLogger(__name__)
+
+from openerp.addons.account_bank_statement_import import account_bank_statement_import as ibs
+
+ibs._IMPORT_FILE_TYPE.append(('qif', 'QIF'))
+
+class account_bank_statement_import(osv.TransientModel):
+    _inherit = "account.bank.statement.import"
+
+    _columns = {
+        'file_type': fields.selection(ibs._IMPORT_FILE_TYPE, 'File Type'),
+    }
+
+    def process_qif(self, cr, uid, data_file, journal_id=False, account_id=False, context=None):
+        try:
+            fileobj = TemporaryFile('wb+')
+            fileobj.write(base64.b64decode(data_file))
+            fileobj.seek(0)
+            file_data = ""
+            for line in fileobj.readlines():
+                file_data += line
+            fileobj.close()
+            if '\r' in file_data:
+                data_list = file_data.split('\r')
+            else:
+                data_list = file_data.split('\n')
+            header = data_list[0].strip()
+            header = header.split(":")[1]
+        except:
+            raise osv.except_osv(_('Import Error!'), _('Please check QIF file format is proper or not.'))
+        line_ids = []
+        vals_line = {}
+        total = 0
+        if header == "Bank":
+            vals_bank_statement = {}
+            for line in data_list:
+                line = line.strip()
+                if not line: continue
+                if line[0] == 'D': # date of transaction 
+                    vals_line['date'] = dateutil.parser.parse(line[1:], fuzzy=True).date()
+                    if vals_line.get('date'):
+                        period_ids = self.pool.get('account.period').find(cr, uid, vals_line['date'], context=context)
+                        vals_bank_statement.update({'period_id': period_ids and period_ids[0] or False})
+                elif line[0] == 'T': # Total amount
+                    total += float(line[1:].replace(',', ''))
+                    vals_line['amount'] = float(line[1:].replace(',', ''))
+                elif line[0] == 'N': # Check number
+                    vals_line['ref'] = line[1:]
+                elif line[0] == 'P': # Payee
+                    vals_line['name'] = line[1:]
+                elif line[0] == '^': # end of item
+                    line_ids.append((0, 0, vals_line))
+                    vals_line = {}
+                elif line[0] == '\n':
+                    line_ids = []
+                else:
+                    pass
+        else:
+            raise osv.except_osv(_('Error!'), _('Cannot support this Format !Type:%s.') % (header,))
+        vals_bank_statement.update({'balance_end_real': total,
+                                    'line_ids': line_ids,
+                                    'journal_id': journal_id})
+        return vals_bank_statement
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
