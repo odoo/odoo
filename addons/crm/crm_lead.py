@@ -752,19 +752,19 @@ class crm_lead(format_address, osv.osv):
         return partner
 
     def _create_lead_partner(self, cr, uid, lead, context=None):
-        partner_id = False
-        if lead.partner_name and lead.contact_name:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, partner_id, context=context)
-        elif lead.partner_name and not lead.contact_name:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
-        elif not lead.partner_name and lead.contact_name:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, context=context)
-        elif lead.email_from and self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)[0]:
-            contact_name = self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)[0]
-            partner_id = self._lead_create_contact(cr, uid, lead, contact_name, False, context=context)
+        contact_id = False
+        contact_name = lead.contact_name or lead.email_from and self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)[0] or False
+        if lead.partner_name:
+            partner_company_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
+        elif lead.partner_id:
+            partner_company_id = lead.partner_id.id
         else:
-            raise UserError(_('No customer name defined. Please fill one of the following fields: Company Name, Contact Name or Email ("Name <email@address>")'))
+            partner_company_id = False
+
+        if contact_name:
+            contact_id = self._lead_create_contact(cr, uid, lead, contact_name, False, partner_company_id, context=context)
+
+        partner_id = contact_id or partner_company_id or self._lead_create_contact(cr, uid, lead, lead.name, False, context=context)
         return partner_id
 
     def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):
@@ -784,8 +784,7 @@ class crm_lead(format_address, osv.osv):
             # If the action is set to 'create' and no partner_id is set, create a new one
             if lead.partner_id:
                 partner_ids[lead.id] = lead.partner_id.id
-                continue
-            if not partner_id and action == 'create':
+            if action == 'create':
                 partner_id = self._create_lead_partner(cr, uid, lead, context)
                 self.pool['res.partner'].write(cr, uid, partner_id, {'team_id': lead.team_id and lead.team_id.id or False})
             if partner_id:
