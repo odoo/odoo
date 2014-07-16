@@ -291,7 +291,7 @@ class sale_order(osv.osv):
         value = {
             'currency_id': self.pool.get('product.pricelist').browse(cr, uid, pricelist_id, context=context).currency_id.id
         }
-        if not order_lines:
+        if not order_lines or order_lines == [(6, 0, [])]:
             return {'value': value}
         warning = {
             'title': _('Pricelist Warning!'),
