@@ -3182,7 +3182,7 @@ class BaseModel(object):
         for field in (self._fields[name] for name in field_names):
             prefetch.update(self._in_cache_without(field).ids)
             todo.update(self.env.todo.get(field, empty).ids)
-        records = self.browse(prefetch - todo)
+        records = self.browse(prefetch - todo | set(self.ids))
 
         result = []
         for sub_ids in cr.split_for_in_conditions(records.ids):
