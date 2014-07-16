@@ -86,8 +86,9 @@ class StockMove(osv.osv):
                     'state': state,
                     'name': line['name'],
                     'procurement_id': move.procurement_id.id,
+                    'split_from': move.id, #Needed in order to keep purchase connection, but will be removed by unlink
                 }
-                mid = move_obj.copy(cr, uid, move.id, default=valdef, context={'split': True})
+                mid = move_obj.copy(cr, uid, move.id, default=valdef)
                 to_explode_again_ids.append(mid)
 
             #delete the move with original product which is not relevant anymore

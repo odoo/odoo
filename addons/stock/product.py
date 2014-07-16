@@ -175,7 +175,7 @@ class product_product(osv.osv):
         return res
 
     _columns = {
-        'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
+        'reception_count': fields.function(_stock_move_count, string="Receipt", type='integer', multi='pickings'),
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
         'qty_available_text': fields.function(_product_available_text, type='char'),
         'qty_available': fields.function(_product_available, multi='qty_available',
@@ -244,7 +244,7 @@ class product_product(osv.osv):
             if fields:
                 if location_info.usage == 'supplier':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Future Receptions')
+                        res['fields']['virtual_available']['string'] = _('Future Receipts')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Received Qty')
 
@@ -392,9 +392,8 @@ class product_template(osv.osv):
             product_route_ids |= set([r.id for r in product.route_ids])
             product_route_ids |= set([r.id for r in product.categ_id.total_route_ids])
         route_ids = route_obj.search(cr, uid, ['|', ('id', 'in', list(product_route_ids)), ('warehouse_selectable', '=', True)], context=context)
-        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_routes_form')
-        id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result = mod_obj.xmlid_to_res_id(cr, uid, 'stock.action_routes_form', raise_if_not_found=True)
+        result = act_obj.read(cr, uid, [result], context=context)[0]
         result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
         return result
 
@@ -405,24 +404,23 @@ class product_template(osv.osv):
             products += [x.id for x in prodtmpl.product_variant_ids]
         return products
     
-    def _get_act_window_dict(self, cr, uid, module, name, context=None):
+    def _get_act_window_dict(self, cr, uid, name, context=None):
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-        result = mod_obj.get_object_reference(cr, uid, module, name)
-        id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result = mod_obj.xmlid_to_res_id(cr, uid, name, raise_if_not_found=True)
+        result = act_obj.read(cr, uid, [result], context=context)[0]
         return result
     
     def action_open_quants(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
-        result = self._get_act_window_dict(cr, uid, 'stock','product_open_quants', context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock.product_open_quants', context=context)
         result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
         result['context'] = "{'search_default_locationgroup': 1, 'search_default_internal_loc': 1}"
         return result
     
     def action_view_orderpoints(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
-        result = self._get_act_window_dict(cr, uid, 'stock','product_open_orderpoint', context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock.product_open_orderpoint', context=context)
         result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
         result['context'] = "{}"
         return result
@@ -430,7 +428,7 @@ class product_template(osv.osv):
 
     def action_view_stock_moves(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
-        result = self._get_act_window_dict(cr, uid, 'stock','act_product_stock_move_open', context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock.act_product_stock_move_open', context=context)
         result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
         result['context'] = "{}"
         return result

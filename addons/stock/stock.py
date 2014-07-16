@@ -2770,7 +2770,7 @@ class stock_warehouse(osv.osv):
         'in_type_id': fields.many2one('stock.picking.type', 'In Type'),
         'int_type_id': fields.many2one('stock.picking.type', 'Internal Type'),
         'crossdock_route_id': fields.many2one('stock.location.route', 'Crossdock Route'),
-        'reception_route_id': fields.many2one('stock.location.route', 'Reception Route'),
+        'reception_route_id': fields.many2one('stock.location.route', 'Receipt Route'),
         'delivery_route_id': fields.many2one('stock.location.route', 'Delivery Route'),
         'resupply_from_wh': fields.boolean('Resupply From Other Warehouses'),
         'resupply_wh_ids': fields.many2many('stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id', 'Resupply Warehouses'),
@@ -3072,7 +3072,7 @@ class stock_warehouse(osv.osv):
         for pull_rule in pull_rules_list:
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
-        #update reception route and rules: unlink the existing rules of the warehouse reception route and recreate it
+        #update receipt route and rules: unlink the existing rules of the warehouse receipt route and recreate it
         pull_obj.unlink(cr, uid, [pu.id for pu in warehouse.reception_route_id.pull_ids], context=context)
         push_obj.unlink(cr, uid, [pu.id for pu in warehouse.reception_route_id.push_ids], context=context)
         route_name, values = routes_dict[new_reception_step]
@@ -3082,7 +3082,7 @@ class stock_warehouse(osv.osv):
         for push_rule in push_rules_list:
             push_obj.create(cr, uid, vals=push_rule, context=context)
         for pull_rule in pull_rules_list:
-            #all pull rules in reception route are mto, because we don't want to wait for the scheduler to trigger an orderpoint on input location
+            #all pull rules in receipt route are mto, because we don't want to wait for the scheduler to trigger an orderpoint on input location
             pull_rule['procure_method'] = 'make_to_order'
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
@@ -3136,7 +3136,7 @@ class stock_warehouse(osv.osv):
         max_sequence = max_sequence and max_sequence[0]['sequence'] or 0
 
         in_type_id = picking_type_obj.create(cr, uid, vals={
-            'name': _('Receptions'),
+            'name': _('Receipts'),
             'warehouse_id': warehouse.id,
             'code': 'incoming',
             'sequence_id': in_seq_id,
@@ -3258,9 +3258,9 @@ class stock_warehouse(osv.osv):
         customer_loc, supplier_loc = self._get_partner_locations(cr, uid, ids, context=context)
 
         return {
-            'one_step': (_('Reception in 1 step'), []),
-            'two_steps': (_('Reception in 2 steps'), [(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id.id)]),
-            'three_steps': (_('Reception in 3 steps'), [(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.int_type_id.id), (warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id.id)]),
+            'one_step': (_('Receipt in 1 step'), []),
+            'two_steps': (_('Receipt in 2 steps'), [(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id.id)]),
+            'three_steps': (_('Receipt in 3 steps'), [(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.int_type_id.id), (warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id.id)]),
             'crossdock': (_('Cross-Dock'), [(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.int_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
             'ship_only': (_('Ship Only'), [(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id.id)]),
             'pick_ship': (_('Pick + Ship'), [(warehouse.lot_stock_id, warehouse.wh_output_stock_loc_id, warehouse.pick_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
@@ -3313,7 +3313,7 @@ class stock_warehouse(osv.osv):
 
     def _check_reception_resupply(self, cr, uid, warehouse, new_location, context=None):
         """
-            Will check if the resupply routes to this warehouse follow the changes of number of reception steps
+            Will check if the resupply routes to this warehouse follow the changes of number of receipt steps
         """
         #Check routes that are being delivered by this warehouse and change the rule coming from transit location
         route_obj = self.pool.get("stock.location.route")

@@ -1155,7 +1155,7 @@
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3" groups="stock.group_locations"/>
 
         <!--
-            Reception Picking (By Stock Move)
+            Receipt Picking (By Stock Move)
             From stock_partial_move_view
         -->
         <record id="view_move_tree_receipt_picking" model="ir.ui.view">
@@ -1203,7 +1203,7 @@
             </field>
         </record>
 
-        <record id="action_reception_picking_move" model="ir.actions.act_window">
+        <record id="action_receipt_picking_move" model="ir.actions.act_window">
             <field name="name">Incoming  Products</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
@@ -1214,7 +1214,7 @@
             <field name="context">{'product_receive': True, 'search_default_future': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to register a product reception. 
+                Click to register a product receipt. 
               </p><p>
                 Here you can receive individual products, no matter what
                 purchase order or picking order they come from. You will find
