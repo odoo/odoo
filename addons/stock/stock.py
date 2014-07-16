@@ -2138,6 +2138,7 @@ class stock_move(osv.osv):
         """
         procurement_obj = self.pool.get('procurement.order')
         context = context or {}
+        procs_to_check = []
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'done':
                 raise osv.except_osv(_('Operation Forbidden!'),
@@ -2157,10 +2158,12 @@ class stock_move(osv.osv):
                         self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
                 if move.procurement_id:
                     # Does the same as procurement check, only eliminating a refresh
-                    proc = move.procurement_id
-                    if all([x.state == 'cancel' for x in proc.move_ids if x.id != move.id]):
-                        procurement_obj.write(cr, uid, [proc.id], {'state': 'cancel'})
-        return self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False}, context=context)
+                    procs_to_check.append(move.procurement_id.id)
+                    
+        res = self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False}, context=context)
+        if procs_to_check:
+            procurement_obj.check(cr, uid, procs_to_check, context=context)
+        return res
 
     def _check_package_from_moves(self, cr, uid, ids, context=None):
         pack_obj = self.pool.get("stock.quant.package")
