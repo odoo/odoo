@@ -183,8 +183,8 @@
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="debit" attrs="{'readonly':[('type','in',('view','consolidation'))]}"/>
-                            <field name="credit" attrs="{'readonly':[('type','in',('view','consolidation'))]}"/>
+                            <field name="debit" attrs="{'readonly':[('type','=','view')]}"/>
+                            <field name="credit" attrs="{'readonly':[('type','=','view')]}"/>
                             <field name="balance"/>
                         </group>
                         <group>
