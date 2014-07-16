@@ -348,6 +348,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super();
 
+            $('body').append('<audio src="/point_of_sale/static/src/sounds/error.wav" autoplay="true"></audio>');
+
             if( text && (text.message || text.comment) ){
                 this.$('.message').text(text.message);
                 this.$('.comment').text(text.comment);
@@ -375,6 +377,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show: function(barcode){
             this._super();
             this.$('.barcode').text(barcode);
+
         },
     });
 
