@@ -36,6 +36,17 @@ import openerp.addons.decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
+ACCOUNT_JOURNAL_TYPE = [('sale', 'Sale'),('sale_refund','Sale Refund'),
+        ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'),
+        ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'),
+        ('situation', 'Opening/Closing Situation')]
+
+ACCOUNT_JOURNAL_HELP = _("Select 'Sale' for customer invoices journals."
+                     " Select 'Purchase' for supplier invoices journals."
+                     " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."
+                     " Select 'General' for miscellaneous operations journals."
+                     " Select 'Opening/Closing Situation' for entries generated for new fiscal years.")
+
 def check_cycle(self, cr, uid, ids, context=None):
     """ climbs the ``self._table.parent_id`` chains for 100 levels or
     until it can't find any more parent(s)
@@ -714,12 +725,8 @@ class account_journal(osv.osv):
         'with_last_closing_balance' : fields.boolean('Opening With Last Closing Balance'),
         'name': fields.char('Journal Name', size=64, required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
-                                 help="Select 'Sale' for customer invoices journals."\
-                                 " Select 'Purchase' for supplier invoices journals."\
-                                 " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
-                                 " Select 'General' for miscellaneous operations journals."\
-                                 " Select 'Opening/Closing Situation' for entries generated for new fiscal years."),
+        'type': fields.selection(ACCOUNT_JOURNAL_TYPE, 'Type', size=32, required=True,
+                                 help=ACCOUNT_JOURNAL_HELP),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
         'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]", help="It acts as a default account for credit amount"),
