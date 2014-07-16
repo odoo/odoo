@@ -468,14 +468,10 @@ class test_mail(TestMail):
                             'message_post: notification email subject incorrect')
             self.assertIn(_body1, sent_email['body'],
                             'message_post: notification email body incorrect')
-            self.assertIn(user_raoul.signature, sent_email['body'],
-                            'message_post: notification email body should contain the sender signature')
             self.assertIn('Pigs rules', sent_email['body_alternative'],
                             'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
-            self.assertIn(user_raoul.signature, sent_email['body_alternative'],
-                            'message_post: notification email body alternative should contain the sender signature')
             self.assertFalse(sent_email['references'],
                             'message_post: references should be False when sending a message that is not a reply')
 
@@ -539,14 +535,10 @@ class test_mail(TestMail):
                             'message_post: notification email subject incorrect')
             self.assertIn(html_sanitize(_body2), sent_email['body'],
                             'message_post: notification email does not contain the body')
-            self.assertIn(user_raoul.signature, sent_email['body'],
-                            'message_post: notification email body should contain the sender signature')
             self.assertIn('Pigs rocks', sent_email['body_alternative'],
                             'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
-            self.assertIn(user_raoul.signature, sent_email['body_alternative'],
-                            'message_post: notification email body alternative should contain the sender signature')
             self.assertIn(msg_message_id, sent_email['references'],
                             'message_post: notification email references lacks parent message message_id')
         # Test: attachments + download
