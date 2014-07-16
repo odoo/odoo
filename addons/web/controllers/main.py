@@ -370,6 +370,8 @@ def clean_action(action):
     action.setdefault('flags', {})
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
     if action_type == 'ir.actions.act_window':
+        if action.get('view_mode', 'form') != 'form':
+            action['flags'].update({'pager': True})
         return fix_view_modes(action)
     return action
 
