@@ -368,7 +368,7 @@
                         title: label,
                         modes: { wysiwyg: true },
                         editorFocus: true,
-                        context: 'span',
+                        context: 'font',
                         panel: {
                             css: [  '/web/css/web.assets_common/' + (new Date().getTime()),
                                     '/web/css/website.assets_frontend/' + (new Date().getTime()),
@@ -379,7 +379,7 @@
                             var self = this;
                             editor.on('selectionChange', function (e) {
                                 var path = e.data.path, el;
-                                if (!(e = (path.contains('p') || path.contains('span'))) || e.isReadOnly()) {
+                                if (!(e = (path.contains('p') || path.contains('span') || path.contains('font'))) || e.isReadOnly()) {
                                     self.disable();
                                     return;
                                 }
@@ -420,28 +420,32 @@
                             return btnID === "BGColor" ? $(button).attr("class") : $(button).attr("class").replace(/^bg_/i, 'text_');
                         },
                         clicked: function (button) {
-                            var classes = this.getClasses();
                             var className = this.getClass(button);
-
-                            var filter = new CKEDITOR.filter(
-                                'span('+classes.join(',')+')'
-                            );
+                            var ancestor = editor.getSelection().getCommonAncestor();
 
                             editor.focus();
                             this._.panel.hide();
                             editor.fire('saveSnapshot');
 
-                            // get line 8149 to speed up
-
+                            // remove style
+                            var classes = [];
+                            $(ancestor.$).find('font').filter("."+this.getClasses().join(",.")).map(function () {
+                                var className = $(this).attr("class");
+                                if (classes.indexOf(className) === -1) {
+                                    classes.push(className);
+                                }
+                            });
                             for (var k in classes) {
                                 editor.removeStyle( new CKEDITOR.style({
-                                    element: 'span',
-                                    attributes: { 'class': className },
+                                    element: 'font',
+                                    attributes: { 'class': classes[k] },
                                 }) );
                             }
+
+                            // add new style
                             if (className) {
                                 editor.applyStyle( new CKEDITOR.style({
-                                    element: 'span',
+                                    element: 'font',
                                     attributes: { 'class': className },
                                 }) );
                             }
