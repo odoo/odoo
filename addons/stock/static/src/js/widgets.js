@@ -1,8 +1,12 @@
-function openerp_picking_widgets(instance){
+(function () {
 
-    var module = instance.stock;
-    var _t     = instance.web._t;
-    var QWeb   = instance.web.qweb;
+    'use strict';
+
+    openerp.stock = openerp.stock || {};
+    var module = openerp.stock;
+    var _t     = openerp.web._t;
+    var QWeb   = openerp.web.qweb;
+    var instance = openerp;
 
     // This widget makes sure that the scaling is disabled on mobile devices.
     // Widgets that want to display fullscreen on mobile phone need to extend this
@@ -134,8 +138,8 @@ function openerp_picking_widgets(instance){
             });
             this.$('.js_pick_pack').click(function(){ self.getParent().pack(); });
             this.$('.js_drop_down').click(function(){ self.getParent().drop_down();});
-            this.$('.js_clear_search').click(function(){ 
-                self.on_searchbox(''); 
+            this.$('.js_clear_search').click(function(){
+                self.on_searchbox('');
                 self.$('.oe_searchbox').val('');
             });
             this.$('.oe_searchbox').focus(function(){
@@ -181,14 +185,14 @@ function openerp_picking_widgets(instance){
                     //we unfold
                     line.addClass('warning');
                     select.removeClass('in_container_hidden');
-                    select.addClass('in_container'); 
+                    select.addClass('in_container');
                 }
                 else{
                     //we fold
                     line.removeClass('warning');
                     select = self.$('.js_pack_op_line.in_container[data-container-id='+op_id+']')
                     select.removeClass('in_container');
-                    select.addClass('in_container_hidden'); 
+                    select.addClass('in_container_hidden');
                 }
             });
             this.$('.js_create_lot').click(function(){
@@ -201,7 +205,7 @@ function openerp_picking_widgets(instance){
                 $lot_modal.modal()
                 //focus input
                 $lot_modal.on('shown.bs.modal', function(){
-                    self.$('.js_lot_scan').focus();    
+                    self.$('.js_lot_scan').focus();
                 })
                 //reactivate scanner when dialog close
                 $lot_modal.on('hidden.bs.modal', function(){
@@ -439,7 +443,7 @@ function openerp_picking_widgets(instance){
                     self.pickings_by_type[0] = [];
 
                     return new instance.web.Model('stock.picking').call('search_read',[ [['state','in', ['assigned', 'partially_available']]], [] ], {context: new instance.web.CompoundContext()});
-                                                                  
+
                 }).then(function(pickings){
                     self.pickings = pickings;
                     for(var i = 0; i < pickings.length; i++){
@@ -490,7 +494,7 @@ function openerp_picking_widgets(instance){
                 //avoid crash if a not supported char is given (like '\' or ')')
 	        return [];
             }
-            
+
             var results = [];
             for(var i = 0; i < 100; i++){
                 r = re.exec(this.picking_search_string);
@@ -555,7 +559,7 @@ function openerp_picking_widgets(instance){
             instance.webclient.set_content_full_screen(false);
         },
     });
-    openerp.web.client_actions.add('stock.menu', 'instance.stock.PickingMenuWidget');
+    instance.web.client_actions.add('stock.menu', 'instance.stock.PickingMenuWidget');
 
     module.PickingMainWidget = module.MobileWidget.extend({
         template: 'PickingMainWidget',
@@ -574,7 +578,7 @@ function openerp_picking_widgets(instance){
                     });
                 }
             });
-            init_hash = $.bbq.getState();
+            var init_hash = $.bbq.getState();
             this.picking_type_id = init_hash.picking_type_id ? init_hash.picking_type_id:0;
             this.picking_id = init_hash.picking_id ? init_hash.picking_id:undefined;
             this.picking = null;
@@ -597,7 +601,7 @@ function openerp_picking_widgets(instance){
         load: function(picking_id){
             var self = this;
 
-       
+
             function load_picking_list(type_id){
                 var pickings = new $.Deferred();
                 new instance.web.Model('stock.picking')
@@ -606,8 +610,8 @@ function openerp_picking_widgets(instance){
                         if(!picking_ids || picking_ids.length === 0){
                             (new instance.web.Dialog(self,{
                                 title: _t('No Picking Available'),
-                                buttons: [{ 
-                                    text:_t('Ok'), 
+                                buttons: [{
+                                    text:_t('Ok'),
                                     click: function(){
                                         self.menu();
                                     }
@@ -634,7 +638,7 @@ function openerp_picking_widgets(instance){
                         return load_picking_list(self.picking.picking_type_id[0]);
                     });
             }else{
-                // if we don't have a specified picking id, we load the pickings belong to the specified type, and then we take 
+                // if we don't have a specified picking id, we load the pickings belong to the specified type, and then we take
                 // the first one of that list as the active picking
                 var loaded_picking = new $.Deferred();
                 load_picking_list(self.picking_type_id)
@@ -694,7 +698,7 @@ function openerp_picking_widgets(instance){
             this.barcode_scanner.connect(function(ean){
                 self.scan(ean);
             });
-            
+
             this.$('.js_pick_quit').click(function(){ self.quit(); });
             this.$('.js_pick_prev').click(function(){ self.picking_prev(); });
             this.$('.js_pick_next').click(function(){ self.picking_next(); });
@@ -714,13 +718,13 @@ function openerp_picking_widgets(instance){
             $.when(this.loaded).done(function(){
                 self.picking_editor = new module.PickingEditorWidget(self);
                 self.picking_editor.replace(self.$('.oe_placeholder_picking_editor'));
-                
+
                 if( self.picking.id === self.pickings[0]){
                     self.$('.js_pick_prev').addClass('disabled');
                 }else{
                     self.$('.js_pick_prev').removeClass('disabled');
                 }
-                
+
                 if( self.picking.id === self.pickings[self.pickings.length-1] ){
                     self.$('.js_pick_next').addClass('disabled');
                 }else{
@@ -746,7 +750,7 @@ function openerp_picking_widgets(instance){
             var self = this;
             self.picking_editor.on_searchbox(query.toUpperCase());
         },
-        // reloads the data from the provided picking and refresh the ui. 
+        // reloads the data from the provided picking and refresh the ui.
         // (if no picking_id is provided, gets the first picking in the db)
         refresh_ui: function(picking_id){
             var self = this;
@@ -776,7 +780,7 @@ function openerp_picking_widgets(instance){
                     }else{
                         self.$('.js_pick_prev').removeClass('disabled');
                     }
-                    
+
                     if( self.picking.id === self.pickings[self.pickings.length-1] ){
                         self.$('.js_pick_next').addClass('disabled');
                     }else{
@@ -980,7 +984,7 @@ function openerp_picking_widgets(instance){
             instance.webclient.set_content_full_screen(false);
         },
     });
-    openerp.web.client_actions.add('stock.ui', 'instance.stock.PickingMainWidget');
+    instance.web.client_actions.add('stock.ui', 'instance.stock.PickingMainWidget');
 
     module.BarcodeScanner = instance.web.Class.extend({
         connect: function(callback){
@@ -1018,9 +1022,4 @@ function openerp_picking_widgets(instance){
         },
     });
 
-}
-
-openerp.stock = function(openerp) {
-    openerp.stock = openerp.stock || {};
-    openerp_picking_widgets(openerp);
-}
+})();
