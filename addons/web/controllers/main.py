@@ -1272,10 +1272,14 @@ class Binary(openerpweb.Controller):
         """
         Model = req.session.model(model)
         fields = [field]
+        content_type = 'application/octet-stream'
         if filename_field:
             fields.append(filename_field)
         if id:
+            fields.append('file_type')
             res = Model.read([int(id)], fields, req.context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(fields, req.context)
         filecontent = base64.b64decode(res.get(field, ''))
@@ -1285,9 +1289,10 @@ class Binary(openerpweb.Controller):
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
                 filename = res.get(filename_field, '') or filename
-            return req.make_response(filecontent,
-                [('Content-Type', 'application/octet-stream'),
-                 ('Content-Disposition', content_disposition(filename, req))])
+            return req.make_response(
+                filecontent, [('Content-Type', content_type),
+                              ('Content-Disposition',
+                               content_disposition(filename, req))])
 
     @openerpweb.httprequest
     def saveas_ajax(self, req, data, token):
@@ -1298,6 +1303,7 @@ class Binary(openerpweb.Controller):
         id = jdata.get('id', None)
         filename_field = jdata.get('filename_field', None)
         context = jdata.get('context', {})
+        content_type = 'application/octet-stream'
 
         Model = req.session.model(model)
         fields = [field]
@@ -1306,7 +1312,10 @@ class Binary(openerpweb.Controller):
         if data:
             res = { field: data }
         elif id:
+            fields.append('file_type')
             res = Model.read([int(id)], fields, context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field, ''))
@@ -1317,9 +1326,10 @@ class Binary(openerpweb.Controller):
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
                 filename = res.get(filename_field, '') or filename
-            return req.make_response(filecontent,
-                headers=[('Content-Type', 'application/octet-stream'),
-                        ('Content-Disposition', content_disposition(filename, req))],
+            return req.make_response(
+                filecontent, headers=[('Content-Type', content_type),
+                                      ('Content-Disposition',
+                                       content_disposition(filename, req))],
                 cookies={'fileToken': token})
 
     @openerpweb.httprequest
