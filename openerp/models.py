@@ -500,7 +500,7 @@ class BaseModel(object):
         # this field 'id' must override any other column or field
         cls._add_field('id', fields.Id(automatic=True))
 
-        add('display_name', fields.Char(string='Name',
+        add('display_name', fields.Char(string='Display Name',
             compute='_compute_display_name', inverse='_inverse_display_name',
             search='_search_display_name', automatic=True))
 
