@@ -1,0 +1,37 @@
+.page {
+    margin: 7px auto 7px auto;
+    position: relative;
+    overflow: visible;
+    background-clip: content-box;
+    background-color: white;
+    
+    box-shadow:         0px 0px 7px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow:    0px 0px 7px rgba(0, 0, 0, 0.75);
+    -ms-box-shadow:    0px 0px 7px rgba(0, 0, 0, 0.75);
+    -o-box-shadow:    0px 0px 7px rgba(0, 0, 0, 0.75);
+}
+
+.textLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  color: #000;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+.textLayer > div {
+  color: transparent;
+  position: absolute;
+  line-height: 1;
+  white-space: pre;
+  cursor: text;
+  overflow: hidden;
+}
+
+::selection { background:rgba(0,0,255,0.3); }
+::-moz-selection { background:rgba(0,0,255,0.3); }
+
