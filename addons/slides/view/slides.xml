@@ -1,0 +1,154 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+		<!-- Website menu -->
+		<record id="website_menu" model="website.menu">
+			<field name="name">Slides</field>
+			<field name="url">/slides</field>
+			<field name="parent_id" ref="website.main_menu" />
+			<field name="sequence" type="int">25</field>
+		</record>
+		<record id="view_attachment_form" model="ir.ui.view">
+			<field name="name">slide option</field>
+			<field name="model">ir.attachment</field>
+			<field name="inherit_id" ref="base.view_attachment_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='url']" position="after">
+					<field name="is_slide" class="oe_inline" />
+				</xpath>
+			</field>
+		</record>
+
+		<template id='headersearch' name="slide">
+			<t t-call="website.layout">
+				<div class="container mt16">
+					<div class="navbar navbar-default">
+						<div class="navbar-header">
+							<button data-target="#oe-help-navbar-collapse"
+								data-toggle="collapse" type="button" class="navbar-toggle collapsed">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<span class="navbar-brand">slides</span>
+						</div>
+						<div id="oe-help-navbar-collapse" class="collapse navbar-collapse">
+							<form action="/slides" role="search" class="navbar-form navbar-right"
+								method="post">
+								<div class="form-group">
+									<input name="search" placeholder="Search query..." class="form-control"
+										type="search" />
+									<button type="submit" class="btn btn-default">Search</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<t t-raw="0"/>
+			</t>
+		</template>
+
+		<template id='home' name="slide">
+			<t t-call="slides.headersearch">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-9">
+							<h4 class="page-header mt0">
+								<t t-esc="len(attachment)" />
+								results are found
+							</h4>
+							<div class="mb16" t-foreach="attachment" t-as="file">
+								<div class="question clearfix">
+									<div class="col-md-2">
+										<div class="box">
+											<a t-attf-href="/slides/view/#{file['id']}" class="img-thumbnail">
+												<img src="/slides/static/description/icon.png" class="img-responsive"
+													alt="Responsive image" style="width:80px;" />
+											</a>
+										</div>
+									</div>
+									<div class="col-md-10">
+										<div class="question-name">
+											Name:
+											<t t-esc="file['name']" />
+										</div>
+										<div class="text-muted">
+											upload by:
+											<t t-esc="file['write_uid'][1]" />
+										</div>
+										<a t-attf-href="/slides/download/#{file['id']}" class="btn btn-success">
+											<span class="glyphicon glyphicon-cloud-download"></span>
+										</a>
+									</div>
+								</div>
+							</div>
+
+						</div>
+						<div class="col-sm-3">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title">tag cloud</h3>
+								</div>
+								<div class="panel-body">
+									tags
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</t>
+		</template>
+
+
+		<template id='view' name="slide">
+			<t t-call="website.layout">
+				<div class="container mt16">
+
+					<div class="navbar navbar-default">
+						<div class="navbar-header">
+							<button data-target="#oe-help-navbar-collapse"
+								data-toggle="collapse" type="button" class="navbar-toggle collapsed">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+
+								<span class="icon-bar"></span>
+							</button>
+							<span class="navbar-brand">slides</span>
+						</div>
+						<div id="oe-help-navbar-collapse" class="collapse navbar-collapse">
+
+							<form action="/slides" role="search" class="navbar-form navbar-right"
+								method="post">
+								<div class="form-group">
+									<input name="search" placeholder="Search query..." class="form-control"
+										type="search" />
+									<button type="submit" class="btn btn-default">Search</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-9">
+							<iframe id="viewer"
+								t-attf-src="/slides/static/src/viewerjs/index.html&#35;#{slide.url}"
+								width='100%' height='500' allowfullscreen="true"
+								webkitallowfullscreen="true"></iframe>
+						</div>
+						<div class="col-sm-3">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title">tag cloud</h3>
+								</div>
+								<div class="panel-body">
+									tags
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</t>
+		</template>
+	</data>
+</openerp>
