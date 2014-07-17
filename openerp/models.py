@@ -3107,10 +3107,7 @@ class BaseModel(object):
         # by default, simply fetch field
         fnames = {field.name}
 
-        if self.pool._init:
-            # columns may be missing from database, do not prefetch other fields
-            pass
-        elif self.env.in_draft:
+        if self.env.in_draft:
             # we may be doing an onchange, do not prefetch other fields
             pass
         elif field in self.env.todo:
