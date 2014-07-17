@@ -314,6 +314,26 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     });
 
 
+    module.FullscreenPopup = module.PopUpWidget.extend({
+        template:'FullscreenPopupWidget',
+        show: function(){
+            var self = this;
+            this._super();
+            this.renderElement();
+            this.$('.button.fullscreen').off('click').click(function(){
+                window.document.body.webkitRequestFullscreen();
+                self.pos_widget.screen_selector.close_popup();
+            });
+            this.$('.button.cancel').off('click').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+            });
+        },
+        ismobile: function(){
+            return typeof window.orientation !== 'undefined'; 
+        }
+    });
+
+
     module.ChooseReceiptPopupWidget = module.PopUpWidget.extend({
         template:'ChooseReceiptPopupWidget',
         show: function(){

@@ -586,6 +586,51 @@
         </div>
     </t>
 
+    <t t-name="FullscreenPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-fullscreen">
+                <p class="message">Fullscreen Setup</p>
+
+                <t t-if='widget.ismobile()'>
+                    <p class="comment">
+                        The best way to make the point of sale fullscreen on mobile
+                        devices is to add the point of sale to your home screen. On 
+                        iPhone and iPad this is done by tapping <img src='/point_of_sale/static/src/img/ios-share-icon.png' />
+                        and then <i>Add to Homescreen</i>
+                    </p>
+                    <p class='comment'>
+                        This also works on Android with the Chrome Beta Browser, using the <i>Add to Homescreen</i> option 
+                        in the browser's menu.
+                    </p>
+                    <p class='comment'> 
+                        If you want to work in fullscreen just this time tap the <i>Go Fullscreen</i> button.
+                    </p>
+                </t>
+
+                <t t-if='!widget.ismobile()'>
+                    <p class="comment">
+                        The best way to make the point of sale fullscreen on desktop
+                        and laptops is to launch your browser in kiosk mode. Please
+                        refer to your browser's documentation for the specific 
+                        instructions.
+                    </p>
+                    <p class="comment">
+                        If you want to work in fullscreen just this time, click the <i> Go Fullscreen</i> button.
+                    </p>
+                </t>
+
+                <div class="footer">
+                    <div class="button fullscreen">
+                        Go Fullscreen
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ErrorSessionPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-nosession">

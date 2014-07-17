@@ -1001,6 +1001,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     self.screen_selector.show_popup('error', 'Sorry, we could not create a user session');
                 }else if(!self.pos.config){
                     self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
+                }else if(self.pos.config.iface_fullscreen && document.body.webkitRequestFullscreen && (
+                    window.screen.availWidth  > window.innerWidth ||
+                    window.screen.availHeight > window.innerHeight    )){
+                    self.screen_selector.show_popup('fullscreen');
                 }
             
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').addClass('oe_hidden');});
@@ -1085,6 +1089,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.confirm_popup = new module.ConfirmPopupWidget(this,{});
             this.confirm_popup.appendTo(this.$el);
 
+            this.fullscreen_popup = new module.FullscreenPopup(this,{});
+            this.fullscreen_popup.appendTo(this.$el);
+
             // --------  Misc ---------
 
             this.close_button = new module.HeaderButtonWidget(this,{
@@ -1140,6 +1147,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'error-no-client': this.error_no_client_popup,
                     'error-invoice-transfer': this.error_invoice_transfer_popup,
                     'confirm': this.confirm_popup,
+                    'fullscreen': this.fullscreen_popup,
                 },
                 default_screen: 'products',
                 default_mode: 'cashier',
