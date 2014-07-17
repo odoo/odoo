@@ -46,7 +46,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="attributes">
-                    <attribute name="domain">[('type','in',['normal','contract']),('state', '!=', 'close'),('invoice_on_timesheets','=',1)]</attribute>
+                    <attribute name="domain">[('type','in',['normal','contract']),('state', 'not in', ['close','cancelled']),('invoice_on_timesheets','=',1)]</attribute>
                     <attribute name="on_change">on_change_account_id(account_id, user_id)</attribute>
                     <attribute name="context">{'default_invoice_on_timesheets': 1}</attribute>
                 </field>
@@ -70,7 +70,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="attributes">
-                    <attribute name="domain">[('type','in',['normal','contract']),('state', '!=', 'close'),('invoice_on_timesheets','=',1)]</attribute>
+                    <attribute name="domain">[('type','in',['normal','contract']),('state', 'not in', ['close','cancelled']),('invoice_on_timesheets','=',1)]</attribute>
                     <attribute name="on_change">on_change_account_id(account_id, user_id)</attribute>
                     <attribute name="context">{'default_invoice_on_timesheets': 1}</attribute>
                 </field>

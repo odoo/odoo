@@ -565,11 +565,15 @@ class sale_order(osv.osv):
         self.signal_workflow(cr, uid, ids, 'order_confirm')
         return True
         
+    def _check_order_before_confirm(self, cr, uid, order, context=None):
+        return True
+
     def action_wait(self, cr, uid, ids, context=None):
         context = context or {}
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
                 raise UserError(_('You cannot confirm a sales order which has no line.'))
+            self._check_order_before_confirm(cr, uid, o, context)
             noprod = self.test_no_product(cr, uid, o, context)
             if (o.order_policy == 'manual') or noprod:
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
