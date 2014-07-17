@@ -580,6 +580,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ClientListScreenWidget = module.ScreenWidget.extend({
         template: 'ClientListScreenWidget',
 
+        init: function(parent, options){
+            this._super(parent, options);
+            this.partner_cache = new module.DomCache();
+        },
+
         show_leftpane: false,
 
         auto_back: true,
@@ -610,7 +615,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
 
             this.$('.client-list-contents').delegate('.client-line','click',function(event){
-                console.log('uh');
                 self.line_select(event,$(this),parseInt($(this).data('id')));
             });
 
@@ -651,14 +655,24 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.$('.searchbox input').focus();
         },
         render_list: function(partners){
-            var contents = this.$('.client-list-contents');
-            contents.empty();
+            var contents = this.$el[0].querySelector('.client-list-contents');
+            contents.innerHtml = "";
             for(var i = 0, len = partners.length; i < len; i++){
-                var clientline = $(QWeb.render('ClientLine',{partner:partners[i]}));
-                if( partners[i] === this.new_client ){
-                    clientline.addClass('highlight');
+                var partner    = partners[i];
+                var clientline = this.partner_cache.get_node(partner.id);
+                if(!clientline){
+                    var clientline_html = QWeb.render('ClientLine',{partner:partners[i]});
+                    var clientline = document.createElement('tbody');
+                    clientline.innerHTML = clientline_html;
+                    clientline = clientline.childNodes[1];
+                    this.partner_cache.cache_node(partner.id,clientline);
                 }
-                contents.append(clientline);
+                if( partners === this.new_client ){
+                    clientline.classList.add('highlight');
+                }else{
+                    clientline.classList.remove('highlight');
+                }
+                contents.appendChild(clientline);
             }
         },
         save_changes: function(){
