@@ -279,7 +279,7 @@
                         <select class="form-control" name="attrib">
                           <option value=""/>
                           <t t-foreach="a.value_ids" t-as="v">
-                            <option t-att-value="'%s,%s' % (a.id,v.id)" t-field="v.name" t-att-selected="'selected' if v.id in attrib_set else ''"/>
+                            <option t-att-value="'%s,%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="'selected' if v.id in attrib_set else ''"/>
                           </t>
                         </select>
                       </t>
