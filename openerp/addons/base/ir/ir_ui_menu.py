@@ -53,6 +53,8 @@ class ir_ui_menu(osv.osv):
                 # but since we do not use it, set it by ourself.
                 self.pool._any_cache_cleared = True
             self._menu_cache.clear()
+        self.load_menus_root._orig.clear_cache(self)
+        self.load_menus._orig.clear_cache(self)
 
     @api.multi
     @api.returns('self')
@@ -352,6 +354,8 @@ class ir_ui_menu(osv.osv):
         menu_domain = [('parent_id', '=', False)]
         return self.search(cr, uid, menu_domain, context=context)
 
+    @api.cr_uid_context
+    @tools.ormcache_context(accepted_keys=('lang',))
     def load_menus_root(self, cr, uid, context=None):
         fields = ['name', 'sequence', 'parent_id', 'action']
         menu_root_ids = self.get_user_roots(cr, uid, context=context)
@@ -364,6 +368,9 @@ class ir_ui_menu(osv.osv):
             'all_menu_ids': menu_root_ids,
         }
 
+
+    @api.cr_uid_context
+    @tools.ormcache_context(accepted_keys=('lang',))
     def load_menus(self, cr, uid, context=None):
         """ Loads all menu items (all applications and their sub-menus).
 

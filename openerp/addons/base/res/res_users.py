@@ -126,6 +126,7 @@ class res_groups(osv.osv):
                         _('The name of the group can not start with "-"'))
         res = super(res_groups, self).write(cr, uid, ids, vals, context=context)
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
+        self.pool['res.users'].has_group.clear_cache(self.pool['res.users'])
         return res
 
 class res_users(osv.osv):
@@ -329,6 +330,7 @@ class res_users(osv.osv):
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
         self.context_get.clear_cache(self)
+        self.has_group.clear_cache(self)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
@@ -511,6 +513,7 @@ class res_users(osv.osv):
             'target': 'new',
         }
 
+    @tools.ormcache(skiparg=2)
     def has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
 
