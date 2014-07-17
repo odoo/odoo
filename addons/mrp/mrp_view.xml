@@ -547,29 +547,21 @@
                  </xpath>
              </field>
         </record>
-        
-        <record id="product_template_form_view_inherit" model="ir.ui.view">
-             <field name="name">product.product.form.view.inherited</field>
-             <field name="model">product.product</field>
-             <field name="inherit_id" ref="product.product_normal_form_view"/>
-             <field name="arch" type="xml">
+
+        <record id="view_mrp_product_template_form_inherited" model="ir.ui.view">
+            <field name="name">product.form.mrp.inherited</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//group[@name='lot']" position="inside">
+                    <field name="track_production" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                </xpath>
                 <group name="sale_condition" position="inside">
                     <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
                     <div attrs="{'invisible':[('type','=','service')]}">
                         <field name="produce_delay" class="oe_inline"/> days
                     </div>
                 </group>
-             </field>
-        </record>
-
-        <record id="view_mrp_product_form_inherited" model="ir.ui.view">
-            <field name="name">product.form.mrp.inherited</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
-            <field name="arch" type="xml">
-                 <xpath expr="//group[@name='lot']" position="inside">
-                    <field name="track_production" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
-                </xpath>
             </field>
         </record>
         
@@ -1052,6 +1044,7 @@
             <field name="res_model">mrp.production</field>
             <field name="view_id" ref="mrp_production_tree_view"/>
         </record>
+
         <record model="ir.ui.view" id="product_template_form_view_bom_button">
             <field name="name">product.template.procurement</field>
             <field name="model">product.template</field>
@@ -1065,6 +1058,7 @@
                 </div>
             </field>
         </record>
+
         <record model="ir.ui.view" id="product_product_form_view_bom_button">
             <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
@@ -1072,6 +1066,24 @@
             <field name="arch" type="xml">
                 <div name="buttons" position="inside">
                     <button class="oe_inline oe_stat_button" name="%(product_open_bom)d" type="action"
+                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
+                        <field string="Bill of Materials" name="bom_count" widget="statinfo" />
+                    </button>
+                    <button class="oe_inline oe_stat_button" name="action_view_mos" type="object" 
+                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
+                        <field string="Manufacturing" name="mo_count" widget="statinfo" />
+                    </button>
+                </div>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="product_normal_form_view_bom_button">
+            <field name="name">product.product.mrp.button</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <div name="buttons" position="inside">
+                    <button class="oe_inline oe_stat_button" name="action_view_bom" type="object" 
                         groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
