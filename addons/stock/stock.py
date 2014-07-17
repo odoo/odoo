@@ -1746,7 +1746,7 @@ class stock_move(osv.osv):
             ['product_uom']),
     ]
 
-
+    @api.cr_uid_ids_context
     def do_unreserve(self, cr, uid, move_ids, context=None):
         quant_obj = self.pool.get("stock.quant")
         for move in self.browse(cr, uid, move_ids, context=context):
