@@ -1239,6 +1239,7 @@ class stock_picking(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids, context=context):
             new_picking = None
+            flag = 0
             complete, too_many, too_few = [], [], []
             move_product_qty, prodlot_ids, product_avail, partial_qty, product_uoms = {}, {}, {}, {}, {}
             for move in pick.move_lines:
@@ -1261,6 +1262,8 @@ class stock_picking(osv.osv):
                 else:
                     too_many.append(move)
 
+                if partial_qty[move.id] > 0:
+                    flag +=1
                 # Average price computation
                 if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
                     product = product_obj.browse(cr, uid, move.product_id.id)
@@ -1300,7 +1303,7 @@ class stock_picking(osv.osv):
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
-                if not new_picking:
+                if not new_picking and flag > 0:
                     new_picking_name = pick.name
                     self.write(cr, uid, [pick.id], 
                                {'name': sequence_obj.get(cr, uid,
@@ -1366,6 +1369,8 @@ class stock_picking(osv.osv):
                 delivered_pack_id = pick.id
                 back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
                 self.message_post(cr, uid, new_picking, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
+            elif flag == 0:
+                delivered_pack_id = pick.id
             else:
                 self.action_move(cr, uid, [pick.id], context=context)
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
