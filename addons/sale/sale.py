@@ -191,7 +191,7 @@ class sale_order(osv.osv):
                but waiting for the scheduler to run on the order date.", select=True),
         'date_order': fields.datetime('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
-        'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed.", copy=False),
+        'date_confirm': fields.datetime('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed.", copy=False),
         'user_id': fields.many2one('res.users', 'Salesperson', states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True, track_visibility='onchange'),
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, select=True, track_visibility='always'),
         'partner_invoice_id': fields.many2one('res.partner', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order."),
@@ -658,8 +658,7 @@ class sale_order(osv.osv):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
-        date_confirm = fields.date.date_to_datetime(self, cr, uid, order.date_confirm, context=context)
-        date_planned = self._get_date_planned(cr, uid, order, line, date_confirm, context=context)
+        date_planned = self._get_date_planned(cr, uid, order, line, order.date_confirm, context=context)
         return {
             'name': line.name,
             'origin': order.name,
