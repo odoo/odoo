@@ -21,13 +21,28 @@
 import openerp
 from openerp.osv import fields, osv
 
+class tags(osv.osv):
+    _name = 'ir.attachment.tag'
+
+    _columns = {
+        'name': fields.char('Name')
+    }
 
 class slides_attachment(osv.osv):	
     _inherit = 'ir.attachment'
 
     _columns = {
-        'is_slide': fields.boolean('Is Slide')
+        'is_slide': fields.boolean('Is Slide'),
+        'tag_ids': fields.many2many('ir.attachment.tag', 'rel_attachment_tags', 'attachment_id', 'tag_id', 'Tags')
     }
+
+    def _default_slides(self, cr, uid, ids, context):
+        return context.get('is_slide', False)
+
+    _defaults = {
+        'is_slide': _default_slides
+    }
+
     _order = "id desc"
    
     def create(self, cr, uid, values, context=None):
@@ -40,3 +55,15 @@ class slides_attachment(osv.osv):
         if values['is_slide']:
             values['url']="/slides/"+ datas_fname
         return super(slides_attachment, self).write(cr, uid, ids, values, context)
+
+#TODO: use directory as a category, so if category is not public it can not be displayed on the website
+class document_directory(osv.osv):
+    _inherit = 'document.directory'
+
+    _columns = {
+        'is_public': fields.boolean('Is Public')
+    }
+
+    _defaults = {
+        'is_slide': False
+    }

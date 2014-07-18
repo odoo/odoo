@@ -19,25 +19,25 @@
 #
 ##############################################################################
 
-
 {
-    'name': 'slides',
+    'name': 'Odoo Slides',
     'version': '1.0',
+    'summary': 'Publish Slides and Documents Online',
     'category': 'website',
     'description': """
-Slide management system
+Publish Documents as a Slides online
 ==============================================
-    * share slides 
-    
+You can link and publish documents and slides to the event and talks also you can publish documents and slides on slides. You can publish following all the file formats
+
+* Publish Slides (odp, pdf)
+* Publish Documents (pdf)
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['website'],
+    'depends': ['website', 'document'],
     'data': [
         'view/slides.xml',       
     ],   
     'installable': True,
     'auto_install': False,   
 }
-
-
