@@ -493,7 +493,7 @@ class pos_session(osv.osv):
             pos_order_obj._create_account_move_line(cr, uid, order_ids, session, move_id, context=local_context)
 
             for order in session.order_ids:
-                if order.state not in ('paid', 'invoiced'):
+                if order.state not in ('paid', 'invoiced', 'done'):
                     raise osv.except_osv(
                         _('Error!'),
                         _("You cannot confirm all orders of this session, because they have not the 'paid' status"))
