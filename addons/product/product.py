@@ -811,7 +811,6 @@ class product_product(osv.osv):
         return res
 
     def _product_lst_price(self, cr, uid, ids, name, arg, context=None):
-        res = {}
         product_uom_obj = self.pool.get('product.uom')
         res = dict.fromkeys(ids, 0.0)
 
@@ -825,6 +824,18 @@ class product_product(osv.osv):
             res[product.id] =  res[product.id] + product.price_extra
 
         return res
+
+    def _set_product_lst_price(self, cr, uid, id, name, value, args, context=None):
+        product_uom_obj = self.pool.get('product.uom')
+
+        product = self.browse(cr, uid, id, context=context)
+        if 'uom' in context:
+            uom = product.uos_id or product.uom_id
+            value = product_uom_obj._compute_price(cr, uid,
+                    context['uom'], value, uom.id)
+        value =  value - product.price_extra
+        
+        return product.write({'list_price': value}, context=context)
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
         for supinfo in product.seller_ids:
@@ -893,7 +904,7 @@ class product_product(osv.osv):
     _columns = {
         'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is le sum of the extra price of all attributes"),
-        'lst_price': fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
+        'lst_price': fields.function(_product_lst_price, fnct_inv=_set_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', select=True),
