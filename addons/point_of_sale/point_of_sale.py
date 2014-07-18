@@ -395,7 +395,7 @@ class pos_session(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             for statement in obj.statement_ids:
                 statement.unlink(context=context)
-        return True
+        return super(pos_session, self).unlink(cr, uid, ids, context=context)
 
 
     def open_cb(self, cr, uid, ids, context=None):
