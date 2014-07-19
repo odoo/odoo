@@ -162,7 +162,7 @@ class calendar_attendee(osv.Model):
                 elif interval == 'minutes':
                     delta = timedelta(minutes=duration)
                 trigger.value = delta
-                valarm.add('DESCRIPTION').value = alarm.name or 'OpenERP'
+                valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
         for attendee in event_obj.attendee_ids:
             attendee_add = event.add('attendee')
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
@@ -745,6 +745,8 @@ class calendar_event(osv.Model):
 
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}
+        if not isinstance(fields, list):
+            fields = [fields]
         for meeting_id in ids:
             res[meeting_id] = {}
             attendee = self._find_my_attendee(cr, uid, [meeting_id], context)

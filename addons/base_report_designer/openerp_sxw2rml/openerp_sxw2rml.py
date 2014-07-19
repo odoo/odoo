@@ -337,7 +337,7 @@ def sxw2rml(sxw_file, xsl, output='.', save_pict=False):
 if __name__ == "__main__":
     import optparse
     parser = optparse.OptionParser(
-        version="OpenERP Report v%s" % __version__,
+        version="Odoo Report v%s" % __version__,
         usage = 'openerp_sxw2rml.py [options] file.sxw')
     parser.add_option("-v", "--verbose", default=False, dest="verbose", help="enable basic debugging")
     parser.add_option("-o", "--output", dest="output", default='.', help="directory of image output")
