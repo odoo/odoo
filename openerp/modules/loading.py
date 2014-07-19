@@ -52,7 +52,7 @@ _test_logger = logging.getLogger('openerp.tests')
 def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, report=None):
     """Migrates+Updates or Installs all module nodes from ``graph``
        :param graph: graph of module nodes to load
-       :param status: status dictionary for keeping track of progress
+       :param status: deprecated parameter, unused, left to avoid changing signature in 8.0
        :param perform_checks: whether module descriptors should be checked for validity (prints warnings
                               for same cases)
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
@@ -120,9 +120,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if kind in ('demo', 'test'):
                 threading.currentThread().testing = False
 
-    if status is None:
-        status = {}
-
     processed_modules = []
     loaded_modules = []
     registry = openerp.registry(cr.dbname)
@@ -164,7 +161,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             registry.setup_models(cr)
             init_module_models(cr, package.name, models)
-        status['progress'] = float(index) / len(graph)
 
         # Can't put this line out of the loop: ir.module.module will be
         # registered by init_module_models() above.
@@ -186,7 +182,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             _load_data(cr, module_name, idref, mode, kind='data')
             has_demo = hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed')
             if has_demo:
-                status['progress'] = (index + 0.75) / len(graph)
                 _load_data(cr, module_name, idref, mode, kind='demo')
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
                 modobj.invalidate_cache(cr, SUPERUSER_ID, ['demo'], [module_id])
@@ -272,9 +267,6 @@ def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_m
     return processed_modules
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
-    # TODO status['progress'] reporting is broken: used twice (and reset each
-    # time to zero) in load_module_graph, not fine-grained enough.
-    # It should be a method exposed by the registry.
     initialize_sys_path()
 
     force = []

@@ -252,7 +252,7 @@ instance.web.CrashManager = instance.web.Class.extend({
             return;
         }
         if (error.data.name === "openerp.http.SessionExpiredException" || error.data.name === "werkzeug.exceptions.Forbidden") {
-            this.show_warning({type: "Session Expired", data: { message: _t("Your OpenERP session expired. Please refresh the current web page.") }});
+            this.show_warning({type: "Session Expired", data: { message: _t("Your Odoo session expired. Please refresh the current web page.") }});
             return;
         }
         if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning" || error.data.exception_type === "access_error") {
@@ -270,7 +270,7 @@ instance.web.CrashManager = instance.web.Class.extend({
         }
         new instance.web.Dialog(this, {
             size: 'medium',
-            title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
+            title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
                 {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
             ],
@@ -285,7 +285,7 @@ instance.web.CrashManager = instance.web.Class.extend({
             this.parents('.modal').modal('hide');
         };
         new instance.web.Dialog(this, {
-            title: "OpenERP " + _.str.capitalize(error.type),
+            title: "Odoo " + _.str.capitalize(error.type),
             buttons: buttons
         }, QWeb.render('CrashManager.error', {session: instance.session, error: error})).open();
     },
@@ -337,7 +337,7 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
 
         new instance.web.Dialog(this, {
             size: 'medium',
-            title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
+            title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
                 {text: _t("Ok"), click: function() { self.$el.parents('.modal').modal('hide');  self.destroy();}},
                 {text: error.data.arguments[2],
@@ -1190,7 +1190,7 @@ instance.web.WebClient = instance.web.Client.extend({
         this._current_state = null;
         this.menu_dm = new instance.web.DropMisordered();
         this.action_mutex = new $.Mutex();
-        this.set('title_part', {"zopenerp": "OpenERP"});
+        this.set('title_part', {"zopenerp": "Odoo"});
     },
     start: function() {
         var self = this;
