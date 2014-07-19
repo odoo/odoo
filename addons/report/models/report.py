@@ -387,8 +387,6 @@ class Report(osv.Model):
         todel = True
         if OsName == 'nt':
             todel = False
-        else:
-            todel = True
 
         for index, reporthtml in enumerate(bodies):
             local_command_args = []
