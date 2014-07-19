@@ -162,7 +162,7 @@ class calendar_attendee(osv.Model):
                 elif interval == 'minutes':
                     delta = timedelta(minutes=duration)
                 trigger.value = delta
-                valarm.add('DESCRIPTION').value = alarm.name or 'OpenERP'
+                valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
         for attendee in event_obj.attendee_ids:
             attendee_add = event.add('attendee')
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
@@ -745,6 +745,8 @@ class calendar_event(osv.Model):
 
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}
+        if not isinstance(fields, list):
+            fields = [fields]
         for meeting_id in ids:
             res[meeting_id] = {}
             attendee = self._find_my_attendee(cr, uid, [meeting_id], context)
@@ -1567,6 +1569,12 @@ class calendar_event(osv.Model):
             select = [ids]
         else:
             select = ids
+
+        # FIXME: find a better way to not push virtual ids in the cache
+        # (leading to their prefetching and ultimately a type error when
+        # postgres tries to convert '14-3489274297' to an integer)
+        self.invalidate_cache(cr, uid, context=context)
+
         select = map(lambda x: (x, calendar_id2real_id(x)), select)
         result = []
         real_data = super(calendar_event, self).read(cr, uid, [real_id for calendar_id, real_id in select], fields=fields2, context=context, load=load)

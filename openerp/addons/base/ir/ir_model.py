@@ -187,13 +187,16 @@ class ir_model(osv.osv):
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
             self.instanciate(cr, user, vals['model'], context)
+            model = self.pool[vals['model']]
+            model._prepare_setup_fields(cr, SUPERUSER_ID)
+            model._setup_fields(cr, SUPERUSER_ID)
             ctx = dict(context,
                 field_name=vals['name'],
                 field_state='manual',
                 select=vals.get('select_level', '0'),
                 update_custom_fields=True)
-            self.pool[vals['model']]._auto_init(cr, ctx)
-            self.pool[vals['model']]._auto_end(cr, ctx) # actually create FKs!
+            model._auto_init(cr, ctx)
+            model._auto_end(cr, ctx) # actually create FKs!
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
@@ -356,17 +359,21 @@ class ir_model_fields(osv.osv):
                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
             if vals['model'] in self.pool:
+                model = self.pool[vals['model']]
                 if vals['model'].startswith('x_') and vals['name'] == 'x_name':
-                    self.pool[vals['model']]._rec_name = 'x_name'
-                self.pool[vals['model']].__init__(self.pool, cr)
+                    model._rec_name = 'x_name'
+                model.__init__(self.pool, cr)
+                model._prepare_setup_fields(cr, SUPERUSER_ID)
+                model._setup_fields(cr, SUPERUSER_ID)
+
                 #Added context to _auto_init for special treatment to custom field for select_level
                 ctx = dict(context,
                     field_name=vals['name'],
                     field_state='manual',
                     select=vals.get('select_level', '0'),
                     update_custom_fields=True)
-                self.pool[vals['model']]._auto_init(cr, ctx)
-                self.pool[vals['model']]._auto_end(cr, ctx) # actually create FKs!
+                model._auto_init(cr, ctx)
+                model._auto_end(cr, ctx) # actually create FKs!
                 openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
 
         return res

@@ -2457,6 +2457,10 @@ class BaseModel(object):
 
             if create:
                 self._create_table(cr)
+                has_rows = False
+            else:
+                cr.execute('SELECT COUNT(1) FROM "%s"' % (self._table,))
+                has_rows = cr.fetchone()[0]
 
             cr.commit()
             if self._parent_store:
@@ -2575,7 +2579,8 @@ class BaseModel(object):
 
                             # if the field is required and hasn't got a NOT NULL constraint
                             if f.required and f_pg_notnull == 0:
-                                self._set_default_value_on_column(cr, k, context=context)
+                                if has_rows:
+                                    self._set_default_value_on_column(cr, k, context=context)
                                 # add the NOT NULL constraint
                                 try:
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
@@ -2628,7 +2633,7 @@ class BaseModel(object):
                                 self._table, k, get_pg_type(f)[1])
 
                             # initialize it
-                            if not create:
+                            if has_rows:
                                 self._set_default_value_on_column(cr, k, context=context)
 
                             # remember the functions to call for the stored fields
@@ -3102,15 +3107,12 @@ class BaseModel(object):
             instance) for `self` in cache.
         """
         # fetch the records of this model without field_name in their cache
-        records = self._in_cache_without(field)
+        records = self
 
         # by default, simply fetch field
-        fnames = set((field.name,))
+        fnames = {field.name}
 
-        if self.pool._init:
-            # columns may be missing from database, do not prefetch other fields
-            pass
-        elif self.env.in_draft:
+        if self.env.in_draft:
             # we may be doing an onchange, do not prefetch other fields
             pass
         elif field in self.env.todo:
@@ -3124,12 +3126,11 @@ class BaseModel(object):
 
         # fetch records with read()
         assert self in records and field.name in fnames
+        result = []
         try:
             result = records.read(list(fnames), load='_classic_write')
-        except AccessError as e:
-            # update cache with the exception
-            records._cache[field] = FailedValue(e)
-            result = []
+        except AccessError:
+            pass
 
         # check the cache, and update it if necessary
         if field not in self._cache:
@@ -3177,8 +3178,16 @@ class BaseModel(object):
                     'order': self._parent_order or self._order,
                 }
 
+        empty = self.browse()
+        prefetch = set()
+        todo = set()
+        for field in (self._fields[name] for name in field_names):
+            prefetch.update(self._in_cache_without(field).ids)
+            todo.update(self.env.todo.get(field, empty).ids)
+        records = self.browse(prefetch - todo | set(self.ids))
+
         result = []
-        for sub_ids in cr.split_for_in_conditions(self.ids):
+        for sub_ids in cr.split_for_in_conditions(records.ids):
             cr.execute(query, [tuple(sub_ids)] + rule_params)
             result.extend(cr.dictfetchall())
 
@@ -3251,9 +3260,9 @@ class BaseModel(object):
 
         # store failed values in cache for the records that could not be read
         fetched = self.browse(ids)
-        missing = self - fetched
+        missing = records - fetched
         if missing:
-            extras = fetched - self
+            extras = fetched - records
             if extras:
                 raise AccessError(
                     _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(

@@ -25,7 +25,7 @@ openerp.google_calendar = function(instance) {
                 local_context: context
             }).done(function(o) {
                 if (o.status === "need_auth") {
-                    alert(_t("You will be redirected on gmail to authorize your OpenErp to access your calendar !"));
+                    alert(_t("You will be redirected on gmail to authorize your Odoo to access your calendar !"));
                     instance.web.redirect(o.url);
                 }
                 else if (o.status === "need_config_from_admin"){
