@@ -615,7 +615,7 @@ class Field(object):
         """ convert `value` from the cache to a value as returned by method
             :meth:`BaseModel.read`
         """
-        return value
+        return False if value is None else value
 
     def convert_to_write(self, value, target=None, fnames=None):
         """ convert `value` from the cache to a valid value for method
