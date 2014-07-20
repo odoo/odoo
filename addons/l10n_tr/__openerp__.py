@@ -45,6 +45,7 @@ For future development this will be a base for the Turkish localization.
         'account',
         'base_vat',
         'account_chart',
+        'base_iban',
     ],
     'data': [
         # 'data/account_type_template.xml',
