@@ -236,18 +236,8 @@ class document_directory(osv.osv):
         _parent(dir_id, path)
         return path
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from document_directory where id in ('+','.join(map(str,ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
     _constraints = [
-        (_check_recursion, 'Error! You cannot create recursive directories.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error! You cannot create recursive directories.', ['parent_id'])
     ]
 
     def onchange_content_id(self, cr, uid, ids, ressource_type_id):
