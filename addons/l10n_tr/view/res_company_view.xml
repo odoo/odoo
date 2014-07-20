@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
 				<xpath expr="//field[@name='vat']"
                         position="before">
-                    <field name="vat_dept" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)" />
+                    <field name="vat_dept" placeholder="e.g. Beşiktaş" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)" />
                 </xpath>
 				
 				<!-- Replace all the fields with new on_change method-->
@@ -40,7 +40,7 @@
 				
 				<xpath expr="//field[@name='vat']"
 						position="replace">
-					 <field name="vat" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)"/>
+					 <field name="vat" placeholder="e.g. TR12345678901" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat_dept, vat, company_registry, bank_ids)"/>
 				</xpath>
 				
 				<xpath expr="//field[@name='company_registry']"
