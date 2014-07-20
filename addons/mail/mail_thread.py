@@ -1660,7 +1660,10 @@ class mail_thread(osv.AbstractModel):
         if user_ids is None:
             user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
-        return self.message_subscribe(cr, uid, ids, partner_ids, subtype_ids=subtype_ids, context=context)
+        result = self.message_subscribe(cr, uid, ids, partner_ids, subtype_ids=subtype_ids, context=context)
+        if partner_ids and result:
+            self.pool['ir.ui.menu'].clear_cache()
+        return result
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
@@ -1720,7 +1723,10 @@ class mail_thread(osv.AbstractModel):
         if user_ids is None:
             user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
-        return self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
+        result = self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
+        if partner_ids and result:
+            self.pool['ir.ui.menu'].clear_cache()
+        return result
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Remove partners from the records followers. """

@@ -46,8 +46,8 @@ class stock_move(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
+        default = default or {}
+        context = context or {}
         if not default.get('split_from'):
             #we don't want to propagate the link to the purchase order line except in case of move split
             default['purchase_line_id'] = False
@@ -102,7 +102,7 @@ class stock_picking(osv.osv):
 
     _columns = {
         'reception_to_invoice': fields.function(_get_to_invoice, type='boolean', string='Invoiceable on incoming shipment?',
-               help='Does the picking contains some moves related to a purchase order invoiceable on the reception?',
+               help='Does the picking contains some moves related to a purchase order invoiceable on the receipt?',
                store={
                    'stock.move': (_get_picking_to_recompute, ['purchase_line_id', 'picking_id'], 10),
                }),

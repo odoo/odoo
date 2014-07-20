@@ -40,7 +40,7 @@ class website_hr_recruitment(http.Controller):
             country_code = request.session['geoip'].get('country_code')
             if country_code:
                 countries_ = Country.search([('code', '=', country_code)])
-                country = countries[0] if countries_ else None
+                country = countries_[0] if countries_ else None
 
         # Filter the matching one
         if country:

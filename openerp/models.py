@@ -2457,6 +2457,10 @@ class BaseModel(object):
 
             if create:
                 self._create_table(cr)
+                has_rows = False
+            else:
+                cr.execute('SELECT COUNT(1) FROM "%s"' % (self._table,))
+                has_rows = cr.fetchone()[0]
 
             cr.commit()
             if self._parent_store:
@@ -2575,7 +2579,8 @@ class BaseModel(object):
 
                             # if the field is required and hasn't got a NOT NULL constraint
                             if f.required and f_pg_notnull == 0:
-                                self._set_default_value_on_column(cr, k, context=context)
+                                if has_rows:
+                                    self._set_default_value_on_column(cr, k, context=context)
                                 # add the NOT NULL constraint
                                 try:
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
@@ -2628,7 +2633,7 @@ class BaseModel(object):
                                 self._table, k, get_pg_type(f)[1])
 
                             # initialize it
-                            if not create:
+                            if has_rows:
                                 self._set_default_value_on_column(cr, k, context=context)
 
                             # remember the functions to call for the stored fields
@@ -3107,10 +3112,7 @@ class BaseModel(object):
         # by default, simply fetch field
         fnames = {field.name}
 
-        if self.pool._init:
-            # columns may be missing from database, do not prefetch other fields
-            pass
-        elif self.env.in_draft:
+        if self.env.in_draft:
             # we may be doing an onchange, do not prefetch other fields
             pass
         elif field in self.env.todo:

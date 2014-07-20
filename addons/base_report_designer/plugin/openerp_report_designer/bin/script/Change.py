@@ -63,7 +63,7 @@ class Change( unohelper.Base, XJobExecutor ):
                     break
         else:
             protocol='XML-RPC'
-        self.win=DBModalDialog(60, 50, 120, 90, "Connect to Open ERP Server")
+        self.win=DBModalDialog(60, 50, 120, 90, "Connect to Odoo Server")
 
         self.win.addFixedText("lblVariable", 38, 12, 25, 15, "Server  ")
         self.win.addEdit("txtHost",-2,9,60,15, host or 'localhost')

@@ -19,10 +19,8 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from openerp.osv import fields
-
 
 class ir_ui_menu(osv.osv):
     """ Override of ir.ui.menu class. When adding mail_thread module, each
@@ -38,21 +36,22 @@ class ir_ui_menu(osv.osv):
     }
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        """ Override to take off menu entries (mail.group) the user is not
-            following. Access are done using SUPERUSER_ID to avoid access
-            rights issues for an internal back-end algorithm. """
-        ids = super(ir_ui_menu, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
-        partner_id = self.pool.get('res.users').read(cr, uid, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
-        follower_obj = self.pool.get('mail.followers')
-        for menu in self.browse(cr, uid, ids, context=context):
-            if menu.mail_group_id:
-                sub_ids = follower_obj.search(cr, SUPERUSER_ID, [
-                    ('partner_id', '=', partner_id),
-                    ('res_model', '=', 'mail.group'),
-                    ('res_id', '=', menu.mail_group_id.id)
-                    ], context=context)
-                if not sub_ids:
-                    ids.remove(menu.id)
+        """ Remove mail.group menu entries when the user is not a follower."""
+        ids = super(ir_ui_menu, self).search(cr, uid, args, offset=offset,
+                                             limit=limit, order=order,
+                                             context=context, count=False)
+        if ids:
+            cr.execute("""
+                SELECT id FROM ir_ui_menu m
+                WHERE m.mail_group_id IS NULL OR EXISTS (
+                        SELECT 1 FROM mail_followers
+                        WHERE res_model = 'mail.group' AND res_id = m.mail_group_id
+                            AND partner_id = (SELECT partner_id FROM res_users WHERE id = %s)
+                      ) AND id in %s
+            """, (uid, tuple(ids)))
+            # Preserve original search order
+            visible_ids = set(x[0] for x in cr.fetchall())
+            ids = [i for i in ids if i in visible_ids]
         if count:
             return len(ids)
         return ids
