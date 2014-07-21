@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="website.portal" name="Portal" page="True">
+            <t t-call="website.layout">
+                <t t-call-assets="web.assets_backend"/>
+                <link rel='stylesheet' href='/website_portal/static/src/css/website_portal.css'/>
+                <script type="text/javascript">
+                    $(function() {
+                        var s = new openerp.init();
+                        <t t-if="init">
+                           <t t-raw="init"/>
+                        </t>
+                        <t t-if="not init">
+                            var wc = new s.web.WebClient();
+                            wc.setElement($(".openerp_webclient_container"));
+                            wc.start();
+                        </t>
+                    });
+                </script>
+                <div id="wrap" t-ignore="true">
+                    <div class="oe_structure">
+                        <div class="openerp openerp_webclient_container">
+                            <div id="oe_main_menu_navbar" style="display:none"></div>
+                            <table class="oe_webclient">
+                                <tr>
+                                    <td>
+                                        <div class="oe_application_menu_placeholder">
+                                           <t t-call="portal.menu_secondary"/>
+                                        </div>
+                                    </td>
+                                    <td class="oe_application"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="portal.menu_secondary">
+            <div>
+                <div>
+                    <div class="oe_secondary_menus_container">
+                        <t t-foreach="portal_menu_data['children']" t-as="menu">
+                            <div class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
+                                <t t-foreach="menu['children']" t-as="menu">
+                                    <div class="oe_secondary_menu_section">
+                                        <t t-esc="menu['name']"/>
+                                    </div>
+                                    <t t-call="web.menu_secondary_submenu"/>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </data>
+</openerp>
+		

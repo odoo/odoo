@@ -1,7 +1,7 @@
 $(document).ready(function() {
     "use strict";
 
-    var website = openerp.website;
+    var website = _.isEmpty(openerp.website) ? openerp.web.website : openerp.website;
     var _t = openerp._t;
 
     website.EditorBarContent.include({

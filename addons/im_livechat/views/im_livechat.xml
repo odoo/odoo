@@ -101,18 +101,18 @@
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
-            <!-- add the internal lib -->
-            <t t-call="im_livechat.internal_lib"/>
-        </template>
-
-        <!-- Bundle of Librairies of the Bus, Chat, Livechat -->
-        <template id="internal_lib" name="Librairies of the Livechat">
             <!-- Datejs -->
             <script type="text/javascript" src="/web/static/lib/datejs/globalization/en-US.js"></script>
             <script type="text/javascript" src="/web/static/lib/datejs/core.js"></script>
             <script type="text/javascript" src="/web/static/lib/datejs/parser.js"></script>
             <script type="text/javascript" src="/web/static/lib/datejs/sugarpak.js"></script>
             <script type="text/javascript" src="/web/static/lib/datejs/extras.js"></script>
+            <!-- add the internal lib -->
+            <t t-call="im_livechat.internal_lib"/>
+        </template>
+
+        <!-- Bundle of Librairies of the Bus, Chat, Livechat -->
+        <template id="internal_lib" name="Librairies of the Livechat">
             <!-- IM module -->
             <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
             <script type="text/javascript" src="/im_chat/static/src/js/im_chat.js"></script>

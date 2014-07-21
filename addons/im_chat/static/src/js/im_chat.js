@@ -295,7 +295,7 @@
                 m.create_date = Date.parse(m.create_date).setTimezone("UTC").toString("yyyy-MM-dd HH:mm:ss");
                 return m;
             });
-           	this.set("messages", _.sortBy(this.get("messages").concat(messages), function(m){ return m.id; }));
+            this.set("messages", _.sortBy(this.get("messages").concat(messages), function(m){ return m.id; }));
         },
         render_messages: function(){
             var self = this;
@@ -588,7 +588,7 @@
         },
     });
 
-    if(openerp.web && openerp.web.UserMenu) {
+    if(openerp.web && openerp.web.UserMenu && !openerp.web.website) {
         openerp.web.UserMenu.include({
             do_update: function(){
                 var self = this;

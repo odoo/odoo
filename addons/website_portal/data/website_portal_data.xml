@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="menu_portal" model="website.menu">
+            <field name="name">Portal</field>
+            <field name="url">/website_portal/portal</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">62</field>
+            <field name="groups_id" eval="[(4,  ref('base.group_portal'))]"/>
+        </record>
+    </data>
+</openerp>

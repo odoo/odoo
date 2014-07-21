@@ -12,6 +12,7 @@ import unicodedata
 import os
 import re
 import urlparse
+import threading
 
 from PIL import Image
 from sys import maxint
@@ -611,11 +612,77 @@ class website_menu(osv.osv):
         'child_id': fields.one2many('website.menu', 'parent_id', string='Child Menus'),
         'parent_left': fields.integer('Parent Left', select=True),
         'parent_right': fields.integer('Parent Right', select=True),
+        'groups_id': fields.many2many('res.groups', 'ir_ui_webmenu_group_rel',
+        'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
+        "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
     }
 
+    def __init__(self, *args, **kwargs):
+        cls = type(self)
+        # by design, self._menu_cache is specific to the database
+        cls._menu_cache_lock = threading.RLock()
+        cls._menu_cache = {}
+        super(website_menu, self).__init__(*args, **kwargs)
+        self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
+
+    def clear_cache(self):
+        with self._menu_cache_lock:
+            # radical but this doesn't frequently happen
+            if self._menu_cache:
+                # Normally this is done by openerp.tools.ormcache
+                # but since we do not use it, set it by ourself.
+                self.pool._any_cache_cleared = True
+            self._menu_cache.clear()
+    
     def __defaults_sequence(self, cr, uid, context):
         menu = self.search_read(cr, uid, [(1,"=",1)], ["sequence"], limit=1, order="sequence DESC", context=context)
         return menu and menu[0]["sequence"] or 0
+
+    def _filter_visible_menus(self, cr, uid, ids, context):
+        groups = self.pool.get("res.users").browse(cr, uid, uid, context).groups_id
+        visible = []
+        key = frozenset(groups._ids)
+        if key in self._menu_cache:
+            return [menu for menu in ids if menu in self._menu_cache[key]]
+        # get all menus then filter visible
+        menus = self.search(cr, uid, [], offset=0, limit=None, order=None, context={'website.menu.full_list':True})
+        for menu in self.browse(cr, uid, menus, context=context):
+            if not menu.groups_id or menu.groups_id & groups:
+                visible.append(menu.id)
+        self._menu_cache[key] = visible
+        return [menu for menu in ids if menu in visible]
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
+
+        ids = super(website_menu, self).search(cr, uid, args, offset=0,
+            limit=None, order=order, context=context, count=False)
+
+        if not ids:
+            if count:
+                return 0
+            return []
+        if context.get('website.menu.full_list'):
+            result = ids
+        else:
+            result = self._filter_visible_menus(cr, uid, ids, context)
+        if offset:
+            result = result[long(offset):]
+        if limit:
+            result = result[:long(limit)]
+
+        if count:
+            return len(result)
+        return result
+
+    def create(self, cr, uid, values, context=None):
+        self.clear_cache()
+        return super(website_menu, self).create(cr, uid, values, context=context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        self.clear_cache()
+        return super(website_menu, self).write(cr, uid, ids, values, context=context)
 
     _defaults = {
         'url': '',
