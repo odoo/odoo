@@ -17,7 +17,7 @@ install:
   - pip install -r ${HOME}/maintainer-quality-tools/travis/requirements.txt
 
 script:
-  - travis_run_flake8
+#  - travis_run_flake8
   - createdb ${DATABASE}
   - ./openerp-server -d ${DATABASE} --addons-path=./openerp/addons,./addons --stop-after-init --init=all
   - coverage run ./openerp-server -d ${DATABASE} --addons-path=./openerp/addons,./addons --stop-after-init --init=all --test-enable --log-level=test | tee stdout.log
