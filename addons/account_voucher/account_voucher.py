@@ -789,7 +789,7 @@ class account_voucher(osv.osv):
                 if line.amount_residual_currency == price:
                     move_lines_found.append(line.id)
                     break
-                total_credit += line.credit and line.amount_currency or 0.0
+                total_credit += line.credit and abs(line.amount_currency) or 0.0
                 total_debit += line.debit and line.amount_currency or 0.0
 
         remaining_amount = price
@@ -1217,6 +1217,9 @@ class account_voucher(osv.osv):
                     raise osv.except_osv(_('Wrong voucher line'),_("The invoice you are willing to pay is not valid anymore."))
                 sign = voucher.type in ('payment', 'purchase') and -1 or 1
                 currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
+                if (voucher.type == 'payment' and line.type == 'cr') \
+                        or (voucher.type == 'receipt' and line.type == 'dr'):
+                    currency_rate_difference = -1 * currency_rate_difference
             else:
                 currency_rate_difference = 0.0
             move_line = {
@@ -1274,7 +1277,10 @@ class account_voucher(osv.osv):
                         amount_currency = currency_obj.compute(cr, uid, company_currency, line.move_line_id.currency_id.id, move_line['debit']-move_line['credit'], context=ctx)
                 if line.amount == line.amount_unreconciled:
                     sign = voucher.type in ('payment', 'purchase') and -1 or 1
-                    foreign_currency_diff = sign * line.move_line_id.amount_residual_currency + amount_currency
+                    if line.type == 'dr':
+                        foreign_currency_diff = sign * (line.move_line_id.amount_residual_currency - amount_currency)
+                    else:
+                        foreign_currency_diff = sign * (line.move_line_id.amount_residual_currency + amount_currency)
 
             move_line['amount_currency'] = amount_currency
             voucher_line = move_line_obj.create(cr, uid, move_line)
