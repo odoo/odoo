@@ -21,7 +21,7 @@ script:
   - createdb ${DATABASE}
   - ./openerp-server -d ${DATABASE} --addons-path=./openerp/addons,./addons --stop-after-init --init=all
   - coverage run ./openerp-server -d ${DATABASE} --addons-path=./openerp/addons,./addons --stop-after-init --init=all --test-enable --log-level=test | tee stdout.log
-  - if grep -v mail stdout.log | egrep -q "(At least one test failed when loading the modules.|ERROR ${DATABASE})"; then exit 1; fi
+  - if egrep -q "(At least one test failed when loading the modules.|ERROR ${DATABASE})" stdout.log; then exit 1; fi
 
 after_success:
   coveralls
