@@ -507,7 +507,7 @@
                         <t t-if="'expression' in qweb_exception.qweb">and evaluating the following expression: <code t-esc="qweb_exception.qweb['expression']"/></t>
                     </p>
                     <t t-if="'node' in qweb_exception.qweb">
-                        <pre id="exception_node" t-esc="qweb_exception.qweb['node'].toxml()"/>
+                        <pre id="exception_node" t-esc="qweb_exception.pretty_xml()"/>
                     </t>
                 </div>
             </div>
