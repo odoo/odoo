@@ -47,6 +47,7 @@ This module consists :
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
         'data/res.bank.csv',
+        'l10n_hu.xml',
     ],
     'installable': True,
     'auto_install': False,
