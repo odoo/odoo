@@ -158,6 +158,37 @@ $sheet-padding: 16px
 #oe_main_menu_navbar.navbar
     margin-bottom: 0px
 
+.oe_systray
+    margin-right: 0px !important
+
+// Notifications {{{
+.oe_notification
+    z-index: 1600
+    
+.oe_webclient_timezone_notification
+    a
+        color: white
+        text-decoration: underline
+    p
+        margin-top: 1em
+    dt
+        font-weight: bold
+.oe_timezone_systray
+    span
+        margin-top: 1px
+        background-color: #f6cf3b
+// }}}
+// Top Menu {{{
+.navbar
+    .oe_topbar_name
+        max-width: 150px
+        display: inline-block
+        height: 15px // Customize to manage caret when topbar_name is over sized.
+        text-overflow: ellipsis
+        white-space: nowrap
+        overflow: hidden // Customize to bring ellipsis when topbar_name is over sized.
+// }}}
+
 .openerp
     // Global style {{{
     padding: 0
@@ -690,23 +721,6 @@ $sheet-padding: 16px
         border-bottom-right-radius: 8px
         border-bottom-left-radius: 8px
     // }}}
-    // Notifications {{{
-    .oe_notification
-        z-index: 1500
-        
-    .oe_webclient_timezone_notification
-        a
-            color: white
-            text-decoration: underline
-        p
-            margin-top: 1em
-        dt
-            font-weight: bold
-    .oe_timezone_systray
-        span
-            margin-top: 1px
-            background-color: #f6cf3b
-    // }}}
     // CrashManager {{{
     .oe_dialog_warning
         width: 100%
@@ -737,95 +751,6 @@ $sheet-padding: 16px
             left: 0
         .oe_topbar, .oe_leftbar
             display: none
-    // }}}
-    // Top Menu {{{
-    .navbar
-        .oe_topbar_anonymous_login
-            background-color: #dc5f59
-            color: #eeeeee
-            @include vertical-gradient(#FC8787, #800000)
-            a
-                display: block
-                padding: 5px 10px 7px
-                line-height: 20px
-                height: 30px
-                text-decoration: none
-                color: white
-                background: transparent
-                @include transition(all 0.2s ease-out)
-            a:hover
-                background: rgba(0,0,0,0.1)
-                color: white
-                text-shadow: 0px 0px 3px rgba(0,0,0,0.2)
-                @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
-        .oe_topbar_item
-            display: block
-            padding: 5px 10px 26px
-            line-height: 20px
-            height: 20px
-            text-decoration: none
-            color: #eee
-            vertical-align: top
-            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-            @include transition(all 0.2s ease-out)
-            &:hover
-                background: rgba(0,0,0,0.2)
-                text-shadow: black 0px 0px 3px
-                color: white
-                @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
-
-        .oe_topbar_avatar
-            width: 24px
-            height: 24px
-            margin: -2px 2px 0 0
-            @include radius(3px)
-        .oe_topbar_avatar
-            vertical-align: top
-        .oe_dropdown_arrow:after
-            border-top: 4px solid white
-        .dropdown_menu
-            top: 32px
-            background: #333
-            background: rgba(37,37,37,0.9)
-            border-color: #999
-            border-color: rgba(0, 0, 0, 0.2)
-            border-style: solid
-            border-width: 0 2px 1px
-            @include radius(0 0 6px 6px)
-            @include background-clip()
-            li
-                float: none
-                padding: 3px 12px
-                a
-                    color: #eee
-                &:hover
-                    @include vertical-gradient(#292929, #191919)
-                    @include box-shadow(none)
-        .oe_topbar_name
-            max-width: 150px
-            display: inline-block
-            height: 15px // Customize to manage caret when topbar_name is over sized.
-            text-overflow: ellipsis
-            white-space: nowrap
-            overflow: hidden // Customize to bring ellipsis when topbar_name is over sized.
-
-    // oe menu is the list of the buttons on the left side of the bar.
-    // So why aren't the buttons oe_topbar_items ? This sad state of affairs
-    // is a leftover from an uncomplete refactoring when the left and top menu
-    // were merged. You are welcome to refactor and clean this up
-    .nav li a
-        padding: 6px 8px 4px 8px
-
-    .oe_user_menu
-        float: right
-        padding: 0
-        margin: 0
-        li
-            list-style-type: none
-            float: left
-        .oe_dropdown_menu
-            right: -1px
-
     // }}}
     // Webclient.leftbar {{{
     .oe_leftbar

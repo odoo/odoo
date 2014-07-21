@@ -54,9 +54,20 @@
                     <filter string="Unassigned" name="unassigned" domain="[('user_id','=',False)]"/>
                     <separator/>
                     <filter string="New" name="new" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
-                    <group expand="0" string="Extended Filters...">
+                    <group expand="0" string="Extended Filters">
                         <field name="priority"/>
                         <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group expand="1" string="Group By">
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
+                        <filter string="Task" context="{'group_by':'name'}" />
+                        <filter string="Contact" context="{'group_by':'partner_id'}" />
+                        <filter string="Assigned to" name="User" context="{'group_by':'user_id'}" />
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Assignation date (day)" context="{'group_by':'date_start:day'}" help="Creation Date"/>
+                        <filter string="Assignation date (month)" context="{'group_by':'date_start:month'}" help="Creation Date"/>
+                        <filter string="Assignation date (year)" context="{'group_by':'date_start:year'}" help="Creation Date"/>
+                        <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}" help="Last Stage Update"/>
                     </group>
                 </search>
             </field>

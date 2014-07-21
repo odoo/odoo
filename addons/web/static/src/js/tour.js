@@ -75,7 +75,7 @@ var Tour = {
         if (!tour) {
             return Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
         }
-        console.log("Tour '"+tour_id+"' Begin from run method");
+        Tour.log("Tour '"+tour_id+"' Begin from run method", true);
         var state = Tour.getState();
         if (state) {
              if (state.mode === "test") {
@@ -311,7 +311,7 @@ var Tour = {
                 "step_id": 0
             };
             window.location.hash = "";
-            console.log("Tour '"+state.id+"' Begin from url hash");
+            Tour.log("Tour '"+state.id+"' Begin from url hash");
             Tour.saveState(state.id, state.mode, state.step_id, 0);
         }
         if (!state.id) {
@@ -320,6 +320,14 @@ var Tour = {
         state.tour = Tour.tours[state.id];
         state.step = state.tour && state.tour.steps[state.step_id === -1 ? 0 : state.step_id];
         return state;
+    },
+    log: function (message, add_user) {
+        if (add_user) {
+            var user = $(".navbar .dropdown:has(>.js_usermenu) a:first, .navbar .oe_topbar_name").text();
+            if (!user && $('a[href*="/login"]')) user = 'Public User';
+            message += " (" + (user||"").replace(/^\s*|\s*$/g, '') + ")";
+        }
+        console.log(message);
     },
     error: function (step, message) {
         var state = Tour.getState();
@@ -332,11 +340,8 @@ var Tour = {
             + (step ? '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' )
             + "\n localStorage: " + JSON.stringify(localStorage)
             + '\n\n' + $("body").html();
-        Tour.reset();
-        if (state.mode === "test") {
-            console.log(message);
-            Tour.endTour();
-        }
+        Tour.log(message, true);
+        Tour.endTour();
     },
     lists: function () {
         var tour_ids = [];
@@ -366,7 +371,7 @@ var Tour = {
         clearTimeout(Tour.timer);
         clearTimeout(Tour.testtimer);
         Tour.closePopover();
-        console.log("Tour reset");
+        Tour.log("Tour reset");
     },
     running: function () {
         var state = Tour.getState();
@@ -376,7 +381,7 @@ var Tour = {
                 Tour.load_template().then(Tour.running);
                 return;
             }
-            console.log("Tour '"+state.id+"' is running");
+            Tour.log("Tour '"+state.id+"' is running", true);
             Tour.registerSteps(state.tour, state.mode);
             Tour.nextStep();
         } else {
@@ -384,7 +389,7 @@ var Tour = {
                 return Tour.error(state.step, "Tour '"+state.id+"' undefined");
             }
             Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
-            console.log("Tour '"+state.id+"' wait for running (tour undefined)");
+            Tour.log("Tour '"+state.id+"' wait for running (tour undefined)");
             setTimeout(Tour.running, Tour.retryRunningDelay);
         }
     },
@@ -444,7 +449,7 @@ var Tour = {
         Tour.saveState(state.id, state.mode, step.id, state.number);
 
         if (step.id !== state.step_id) {
-            console.log("Tour '"+state.id+"' Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
+            Tour.log("Tour '"+state.id+"' Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
         }
 
         Tour.autoTogglePopover(true);
@@ -473,14 +478,14 @@ var Tour = {
     },
     endTour: function () {
         var state = Tour.getState();
-        var test = state.step.id >= state.tour.steps.length-1;
+        var test = state.step && state.step.id >= state.tour.steps.length-1;
         Tour.reset();
         if (test) {
-            console.log("Tour '"+state.id+"' finish: ok");
-            console.log('ok');
+            Tour.log("Tour '"+state.id+"' finish: ok");
+            Tour.log('ok');
         } else {
-            console.log("Tour '"+state.id+"' finish: error");
-            console.log('error');
+            Tour.log("Tour '"+state.id+"' finish: error");
+            Tour.log('error');
         }
     },
     autoNextStep: function (tour, step) {

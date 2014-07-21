@@ -71,82 +71,6 @@ rml2sxw = {
 def get_date_length(date_format=DEFAULT_SERVER_DATE_FORMAT):
     return len((datetime.now()).strftime(date_format))
 
-class _format(object):
-    def set_value(self, cr, uid, name, object, field, lang_obj):
-        self.object = object
-        self._field = field
-        self.name = name
-        self.lang_obj = lang_obj
-
-class _float_format(float, _format):
-    def __init__(self,value):
-        super(_float_format, self).__init__()
-        self.val = value or 0.0
-
-    def __str__(self):
-        digits = 2
-        if hasattr(self,'_field') and getattr(self._field, 'digits', None):
-            digits = self._field.digits[1]
-        if hasattr(self, 'lang_obj'):
-            return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
-        return str(self.val)
-
-class _int_format(int, _format):
-    def __init__(self,value):
-        super(_int_format, self).__init__()
-        self.val = value or 0
-
-    def __str__(self):
-        if hasattr(self,'lang_obj'):
-            return self.lang_obj.format('%.d', self.name, True)
-        return str(self.val)
-
-class _date_format(str, _format):
-    def __init__(self,value):
-        super(_date_format, self).__init__()
-        self.val = value and str(value) or ''
-
-    def __str__(self):
-        if self.val:
-            if getattr(self,'name', None):
-                date = datetime.strptime(self.name[:get_date_length()], DEFAULT_SERVER_DATE_FORMAT)
-                return date.strftime(self.lang_obj.date_format.encode('utf-8'))
-        return self.val
-
-class _dttime_format(str, _format):
-    def __init__(self,value):
-        super(_dttime_format, self).__init__()
-        self.val = value and str(value) or ''
-
-    def __str__(self):
-        if self.val and getattr(self,'name', None):
-            return datetime.strptime(self.name, DEFAULT_SERVER_DATETIME_FORMAT)\
-                   .strftime("%s %s"%((self.lang_obj.date_format).encode('utf-8'),
-                                      (self.lang_obj.time_format).encode('utf-8')))
-        return self.val
-
-
-_fields_process = {
-    'float': _float_format,
-    'date': _date_format,
-    'integer': _int_format,
-    'datetime' : _dttime_format
-}
-
-#
-# Context: {'node': node.dom}
-#
-class browse_record_list(list):
-    def __init__(self, lst, context):
-        super(browse_record_list, self).__init__(lst)
-        self.context = context
-
-    def __getattr__(self, name):
-        res = browse_record_list([getattr(x,name) for x in self], self.context)
-        return res
-
-    def __str__(self):
-        return "browse_record_list("+str(len(self))+")"
 
 class rml_parse(object):
     def __init__(self, cr, uid, name, parents=rml_parents, tag=rml_tag, context=None):
@@ -221,8 +145,8 @@ class rml_parse(object):
         if not model:
             model = 'ir.attachment'
         try :
-            ids = [int(id)]
-            res = self.pool[model].read(self.cr,self.uid,ids)[0]
+            id = int(id)
+            res = self.pool[model].read(self.cr,self.uid,id)
             if field :
                 return res[field]
             elif model =='ir.attachment' :
@@ -235,8 +159,9 @@ class rml_parse(object):
     def setLang(self, lang):
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
-        for obj in self.objects:
-            obj._context['lang'] = lang
+        # re-evaluate self.objects in a different environment
+        env = self.objects.env(self.cr, self.uid, self.localcontext)
+        self.objects = self.objects.with_env(env)
 
     def _get_lang_dict(self):
         pool_lang = self.pool['res.lang']
@@ -292,7 +217,7 @@ class rml_parse(object):
             self.lang_dict_called = True
 
         if date or date_time:
-            if not str(value):
+            if not value:
                 return ''
 
             date_format = self.lang_dict['date_format']
@@ -324,8 +249,8 @@ class rml_parse(object):
                 res='%s %s'%(currency_obj.symbol, res)
         return res
 
-    def display_address(self, address_browse_record):
-        return self.pool['res.partner']._display_address(self.cr, self.uid, address_browse_record)
+    def display_address(self, address_record):
+        return address_record.contact_address
 
     def repeatIn(self, lst, name,nodes_parent=False):
         ret_lst = []
@@ -413,11 +338,10 @@ class report_sxw(report_rml, preprocess.report):
 
     def getObjects(self, cr, uid, ids, context):
         table_obj = openerp.registry(cr.dbname)[self.table]
-        return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context, fields_process=_fields_process)
+        return table_obj.browse(cr, uid, ids, context=context)
 
     def create(self, cr, uid, ids, data, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         if self.internal_header:
             context.update(internal_header=self.internal_header)
 
@@ -444,8 +368,13 @@ class report_sxw(report_rml, preprocess.report):
                 report_xml = a(title=title, report_type=report_type, report_rml_content=rml, name=title, attachment=False, header=self.header)
             finally:
                 report_file.close()
-        if report_xml.header:
-            report_xml.header = self.header
+
+        # We add an attribute on the ir.actions.report.xml instance.
+        # This attribute 'use_global_header' will be used by
+        # the create_single_XXX function of the report engine.
+        # This change has been done to avoid a big change of the API.
+        setattr(report_xml, 'use_global_header', self.header if report_xml.header else False)
+
         report_type = report_xml.report_type
         if report_type in ['sxw','odt']:
             fnct = self.create_source_odt
@@ -542,7 +471,7 @@ class report_sxw(report_rml, preprocess.report):
         objs = self.getObjects(cr, uid, ids, context)
         rml_parser.set_context(objs, data, ids, report_xml.report_type)
         processed_rml = etree.XML(rml)
-        if report_xml.header:
+        if report_xml.use_global_header:
             rml_parser._add_header(processed_rml, self.header)
         processed_rml = self.preprocess_rml(processed_rml,report_xml.report_type)
         if rml_parser.logo:
@@ -552,11 +481,9 @@ class report_sxw(report_rml, preprocess.report):
         return pdf, report_xml.report_type
 
     def create_single_odt(self, cr, uid, ids, data, report_xml, context=None):
-        if not context:
-            context={}
-        context = context.copy()
-        report_type = report_xml.report_type
+        context = dict(context or {})
         context['parents'] = sxw_parents
+        report_type = report_xml.report_type
         binary_report_content = report_xml.report_sxw_content
         if isinstance(report_xml.report_sxw_content, unicode):
             # if binary content was passed as unicode, we must
@@ -637,7 +564,7 @@ class report_sxw(report_rml, preprocess.report):
                              encoding='utf-8', xml_declaration=True)
         sxw_contents = {'content.xml':odt, 'meta.xml':meta}
 
-        if report_xml.header:
+        if report_xml.use_global_header:
             #Add corporate header/footer
             rml_file = tools.file_open(os.path.join('base', 'report', 'corporate_%s_header.xml' % report_type))
             try:
@@ -650,7 +577,7 @@ class report_sxw(report_rml, preprocess.report):
                 rml_dom = self.preprocess_rml(etree.XML(rml),report_type)
                 create_doc = self.generators[report_type]
                 odt = create_doc(rml_dom,rml_parser.localcontext)
-                if report_xml.header:
+                if report_xml.use_global_header:
                     rml_parser._add_header(odt)
                 odt = etree.tostring(odt, encoding='utf-8',
                                      xml_declaration=True)
@@ -676,11 +603,9 @@ class report_sxw(report_rml, preprocess.report):
         return final_op, mime_type
 
     def create_single_html2html(self, cr, uid, ids, data, report_xml, context=None):
-        if not context:
-            context = {}
-        context = context.copy()
-        report_type = 'html'
+        context = dict(context or {})
         context['parents'] = html_parents
+        report_type = 'html'
 
         html = report_xml.report_rml_content
         html_parser = self.parser(cr, uid, self.name2, context=context)

@@ -335,10 +335,13 @@ class account_voucher(osv.osv):
             ('receipt','Receipt'),
         ],'Default Type', readonly=True, states={'draft':[('readonly',False)]}),
         'name':fields.char('Memo', readonly=True, states={'draft':[('readonly',False)]}),
-        'date':fields.date('Date', readonly=True, select=True, states={'draft':[('readonly',False)]}, help="Effective date for accounting entries"),
+        'date':fields.date('Date', readonly=True, select=True, states={'draft':[('readonly',False)]},
+                           help="Effective date for accounting entries", copy=False),
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'line_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=True, states={'draft':[('readonly',False)]}),
+        'line_ids':fields.one2many('account.voucher.line', 'voucher_id', 'Voucher Lines',
+                                   readonly=True, copy=True,
+                                   states={'draft':[('readonly',False)]}),
         'line_cr_ids':fields.one2many('account.voucher.line','voucher_id','Credits',
             domain=[('type','=','cr')], context={'default_type':'cr'}, readonly=True, states={'draft':[('readonly',False)]}),
         'line_dr_ids':fields.one2many('account.voucher.line','voucher_id','Debits',
@@ -352,16 +355,17 @@ class account_voucher(osv.osv):
              ('cancel','Cancelled'),
              ('proforma','Pro-forma'),
              ('posted','Posted')
-            ], 'Status', readonly=True, track_visibility='onchange',
+            ], 'Status', readonly=True, track_visibility='onchange', copy=False,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Voucher. \
                         \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
                         \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                         \n* The \'Cancelled\' status is used when user cancel voucher.'),
         'amount': fields.float('Total', digits_compute=dp.get_precision('Account'), required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'tax_amount':fields.float('Tax Amount', digits_compute=dp.get_precision('Account'), readonly=True, states={'draft':[('readonly',False)]}),
-        'reference': fields.char('Ref #', readonly=True, states={'draft':[('readonly',False)]}, help="Transaction reference number."),
-        'number': fields.char('Number', readonly=True,),
-        'move_id':fields.many2one('account.move', 'Account Entry'),
+        'reference': fields.char('Ref #', readonly=True, states={'draft':[('readonly',False)]},
+                                 help="Transaction reference number.", copy=False),
+        'number': fields.char('Number', readonly=True, copy=False),
+        'move_id':fields.many2one('account.move', 'Account Entry', copy=False),
         'move_ids': fields.related('move_id','line_id', type='one2many', relation='account.move.line', string='Journal Items', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', change_default=1, readonly=True, states={'draft':[('readonly',False)]}),
         'audit': fields.related('move_id','to_check', type='boolean', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.', relation='account.move', string='To Review'),
@@ -573,7 +577,7 @@ class account_voucher(osv.osv):
         ctx.update({'date': date})
         #read the voucher rate with the right date in the context
         currency_id = currency_id or self.pool.get('res.company').browse(cr, uid, company_id, context=ctx).currency_id.id
-        voucher_rate = self.pool.get('res.currency').read(cr, uid, currency_id, ['rate'], context=ctx)['rate']
+        voucher_rate = self.pool.get('res.currency').read(cr, uid, [currency_id], ['rate'], context=ctx)[0]['rate']
         ctx.update({
             'voucher_special_currency': payment_rate_currency_id,
             'voucher_special_currency_rate': rate * voucher_rate})
@@ -615,7 +619,7 @@ class account_voucher(osv.osv):
             'payment_rate_currency_id': payment_rate_currency_id
         })
         #read the voucher rate with the right date in the context
-        voucher_rate = self.pool.get('res.currency').read(cr, uid, currency_id, ['rate'], context=ctx)['rate']
+        voucher_rate = self.pool.get('res.currency').read(cr, uid, [currency_id], ['rate'], context=ctx)[0]['rate']
         ctx.update({
             'voucher_special_currency_rate': payment_rate * voucher_rate,
             'voucher_special_currency': payment_rate_currency_id})
@@ -847,7 +851,7 @@ class account_voucher(osv.osv):
             ctx = context.copy()
             ctx.update({'date': date})
             #read the voucher rate with the right date in the context
-            voucher_rate = self.pool.get('res.currency').read(cr, uid, currency_id, ['rate'], context=ctx)['rate']
+            voucher_rate = self.pool.get('res.currency').read(cr, uid, [currency_id], ['rate'], context=ctx)[0]['rate']
             ctx.update({
                 'voucher_special_currency_rate': payment_rate * voucher_rate, 
                 'voucher_special_currency': payment_rate_currency_id})
@@ -922,7 +926,7 @@ class account_voucher(osv.osv):
         return vals
 
     def button_proforma_voucher(self, cr, uid, ids, context=None):
-        self.signal_proforma_voucher(cr, uid, ids)
+        self.signal_workflow(cr, uid, ids, 'proforma_voucher')
         return {'type': 'ir.actions.act_window_close'}
 
     def proforma_voucher(self, cr, uid, ids, context=None):
@@ -1182,7 +1186,7 @@ class account_voucher(osv.osv):
         tot_line = line_total
         rec_lst_ids = []
 
-        date = self.read(cr, uid, voucher_id, ['date'], context=context)['date']
+        date = self.read(cr, uid, [voucher_id], ['date'], context=context)[0]['date']
         ctx = context.copy()
         ctx.update({'date': date})
         voucher = self.pool.get('account.voucher').browse(cr, uid, voucher_id, context=ctx)
@@ -1419,22 +1423,6 @@ class account_voucher(osv.osv):
                     reconcile = move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
         return True
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({
-            'state': 'draft',
-            'number': False,
-            'move_id': False,
-            'line_cr_ids': False,
-            'line_dr_ids': False,
-            'reference': False
-        })
-        if 'date' not in default:
-            default['date'] = time.strftime('%Y-%m-%d')
-        return super(account_voucher, self).copy(cr, uid, id, default, context)
-
-
 class account_voucher_line(osv.osv):
     _name = 'account.voucher.line'
     _description = 'Voucher Lines'
@@ -1495,7 +1483,7 @@ class account_voucher_line(osv.osv):
         'reconcile': fields.boolean('Full Reconcile'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Dr/Cr'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
-        'move_line_id': fields.many2one('account.move.line', 'Journal Item'),
+        'move_line_id': fields.many2one('account.move.line', 'Journal Item', copy=False),
         'date_original': fields.related('move_line_id','date', type='date', relation='account.move.line', string='Date', readonly=1),
         'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),
         'amount_original': fields.function(_compute_balance, multi='dc', type='float', string='Original Amount', store=True, digits_compute=dp.get_precision('Account')),

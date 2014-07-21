@@ -28,6 +28,13 @@ treated as a 'Server error'.
 If you consider introducing new exceptions, check out the test_exceptions addon.
 """
 
+# kept for backward compatibility
+class except_orm(Exception):
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+        self.args = (name, value)
+
 class Warning(Exception):
     pass
 
@@ -47,8 +54,15 @@ class AccessDenied(Exception):
         super(AccessDenied, self).__init__('Access denied.')
         self.traceback = ('', '', '')
 
-class AccessError(Exception):
+class AccessError(except_orm):
     """ Access rights error. """
+    def __init__(self, msg):
+        super(AccessError, self).__init__('AccessError', msg)
+
+class MissingError(except_orm):
+    """ Missing record(s). """
+    def __init__(self, msg):
+        super(MissingError, self).__init__('MissingError', msg)
 
 class DeferredException(Exception):
     """ Exception object holding a traceback for asynchronous reporting.

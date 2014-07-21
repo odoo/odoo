@@ -50,12 +50,27 @@
                 <separator/>
                 <filter string="New" domain="[('sequence', '=', 1)]"/>
                 <separator/>
-                <group expand="0" string="Extended Filters...">
+                <group expand="0" string="Extended Filters">
                     <field name="priority"/>
                     <field name="stage_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="date_create"/>
                     <field name="date_closed"/>
+                </group>
+                <group expand="1" string="Group By">
+                   <filter string="Responsible" name='User' context="{'group_by':'user_id'}"/>
+                   <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                   <filter string="Partner" context="{'group_by':'partner_id'}" />
+                   <filter string="Jobs" name="job" context="{'group_by':'job_id'}"/>
+                   <filter string="Department" name="department" context="{'group_by':'department_id'}"/>
+                   <filter string="Degree" name="degree" context="{'group_by':'type_id'}"/>
+                   <filter string="Last Stage" help="Match this group by with a specific stage filter in order to analyse the recruitment process" context="{'group_by':'last_stage_id'}"/>
+                   <filter string="Stage" context="{'group_by':'stage_id'}" />
+                   <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}" />
+                   <filter string="Creation Date (day)" context="{'group_by':'date_create:day'}" help="Creation Date"/>
+                   <filter string="Creation Date (week)" context="{'group_by':'date_create:week'}" help="Creation Date"/>
+                   <filter string="Creation Date (month)" context="{'group_by':'date_create:month'}" help="Creation Date"/>
+                   <filter string="Creation Date (year)" context="{'group_by':'date_create:year'}" help="Creation Date"/>
                 </group>
             </search>
         </field>

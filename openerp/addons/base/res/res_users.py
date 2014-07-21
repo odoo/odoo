@@ -27,11 +27,10 @@ from lxml import etree
 from lxml.builder import E
 
 import openerp
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, models
 from openerp import tools
 import openerp.exceptions
-from openerp.osv import fields,osv, expression
-from openerp.osv.orm import browse_record
+from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
 from openerp.http import request
 
@@ -168,7 +167,7 @@ class res_users(osv.osv):
             help='Partner-related data of the user'),
         'login': fields.char('Login', size=64, required=True,
             help="Used to log into the system"),
-        'password': fields.char('Password', size=64, invisible=True,
+        'password': fields.char('Password', size=64, invisible=True, copy=False,
             help="Keep empty if you don't want the user to be able to connect on the system."),
         'new_password': fields.function(_get_password, type='char', size=64,
             fnct_inv=_set_new_password, string='Set Password',
@@ -226,9 +225,8 @@ class res_users(osv.osv):
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
             uid2 = uid
-        user = self.pool['res.users'].read(cr, uid, uid2, ['company_id'], context)
-        company_id = user.get('company_id', False)
-        return company_id and company_id[0] or False
+        user = self.pool['res.users'].browse(cr, uid, uid2, context)
+        return user.company_id.id
 
     def _get_companies(self, cr, uid, context=None):
         c = self._get_company(cr, uid, context)
@@ -249,6 +247,9 @@ class res_users(osv.osv):
             pass
         return result
 
+    def _get_default_image(self, cr, uid, context=None):
+        return self.pool['res.partner']._get_default_image(cr, uid, False, colorize=True, context=context)
+
     _defaults = {
         'password': '',
         'active': True,
@@ -256,7 +257,7 @@ class res_users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'image': lambda self, cr, uid, ctx={}: self.pool['res.partner']._get_default_image(cr, uid, False, ctx, colorize=True),
+        'image': _get_default_image,
     }
 
     # User can write on a few of his own fields (but not his groups for example)
@@ -304,7 +305,8 @@ class res_users(osv.osv):
                     break
             else:
                 if 'company_id' in values:
-                    if not (values['company_id'] in self.read(cr, SUPERUSER_ID, uid, ['company_ids'], context=context)['company_ids']):
+                    user = self.browse(cr, SUPERUSER_ID, uid, context=context)
+                    if not (values['company_id'] in user.company_ids.ids):
                         del values['company_id']
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
@@ -369,8 +371,8 @@ class res_users(osv.osv):
             else:
                 context_key = False
             if context_key:
-                res = getattr(user,k) or False
-                if isinstance(res, browse_record):
+                res = getattr(user, k) or False
+                if isinstance(res, models.BaseModel):
                     res = res.id
                 result[context_key] = res or False
         return result
@@ -392,7 +394,7 @@ class res_users(osv.osv):
         if not res:
             raise openerp.exceptions.AccessDenied()
 
-    def login(self, db, login, password):
+    def _login(self, db, login, password):
         if not password:
             return False
         user_id = False
@@ -421,6 +423,7 @@ class res_users(osv.osv):
                 try:
                     cr.execute("SELECT id FROM res_users WHERE id=%s FOR UPDATE NOWAIT", (user_id,), log_exceptions=False)
                     cr.execute("UPDATE res_users SET login_date = now() AT TIME ZONE 'UTC' WHERE id=%s", (user_id,))
+                    self.invalidate_cache(cr, user_id, ['login_date'], [user_id])
                 except Exception:
                     _logger.debug("Failed to update last_login for db:%s login:%s", db, login, exc_info=True)
         except openerp.exceptions.AccessDenied:
@@ -442,7 +445,7 @@ class res_users(osv.osv):
            :param dict user_agent_env: environment dictionary describing any
                relevant environment attributes
         """
-        uid = self.login(db, login, password)
+        uid = self._login(db, login, password)
         if uid == openerp.SUPERUSER_ID:
             # Successfully logged in as admin!
             # Attempt to guess the web base url...
@@ -665,6 +668,21 @@ def partition(f, xs):
         (yes if f(x) else nos).append(x)
     return yes, nos
 
+def parse_m2m(commands):
+    "return a list of ids corresponding to a many2many value"
+    ids = []
+    for command in commands:
+        if isinstance(command, (tuple, list)):
+            if command[0] in (1, 4):
+                ids.append(command[2])
+            elif command[0] == 5:
+                ids = []
+            elif command[0] == 6:
+                ids = list(command[2])
+        else:
+            ids.append(command)
+    return ids
+
 
 class groups_view(osv.osv):
     _inherit = 'res.groups'
@@ -690,7 +708,7 @@ class groups_view(osv.osv):
         # we have to try-catch this, because at first init the view does not exist
         # but we are already creating some basic groups
         view = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.user_groups_view', context=context)
-        if view and view.exists() and view._table_name == 'ir.ui.view':
+        if view and view.exists() and view._name == 'ir.ui.view':
             xml1, xml2 = [], []
             xml1.append(E.separator(string=_('Application'), colspan="4"))
             for app, kind, gs in self.get_groups_by_application(cr, uid, context):
@@ -836,7 +854,7 @@ class users_view(osv.osv):
 
     def _get_reified_groups(self, fields, values):
         """ compute the given reified group fields from values['groups_id'] """
-        gids = set(values.get('groups_id') or [])
+        gids = set(parse_m2m(values.get('groups_id') or []))
         for f in fields:
             if is_boolean_group(f):
                 values[f] = get_boolean_group(f) in gids

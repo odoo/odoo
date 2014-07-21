@@ -39,7 +39,7 @@ class res_users(osv.Model):
     _columns = {
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="Email address internally associated with this user. Incoming "\
-                 "emails will appear in the user's notifications."),
+                 "emails will appear in the user's notifications.", copy=False),
         'display_groups_suggestions': fields.boolean("Display Groups Suggestions"),
     }
 

@@ -297,7 +297,7 @@ class res_partner(osv.Model):
         Used by web_calendar.js : Many2ManyAttendee
         """
         datas = []
-        meeting = False
+        meeting = None
         if meeting_id:
             meeting = self.pool['calendar.event'].browse(cr, uid, get_real_ids(meeting_id), context=context)
         for partner in self.browse(cr, uid, ids, context=context):
@@ -309,7 +309,7 @@ class res_partner(osv.Model):
             datas.append(data)
         return datas
 
-    def calendar_last_notif_ack(self, cr, uid, context=None):
+    def _set_calendar_last_notif_ack(self, cr, uid, context=None):
         partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id
         self.write(cr, uid, partner.id, {'calendar_last_notif_ack': datetime.now()}, context=context)
         return
@@ -708,6 +708,7 @@ class calendar_event(osv.Model):
         return (format_date, format_time)
 
     def get_display_time_tz(self, cr, uid, ids, tz=False, context=None):
+        context = dict(context or {})
         if tz:
             context["tz"] = tz
         ev = self.browse(cr, uid, ids, context=context)[0]
@@ -720,8 +721,7 @@ class calendar_event(osv.Model):
             1) if user add duration for 2 hours, return : August-23-2013 at (04-30 To 06-30) (Europe/Brussels)
             2) if event all day ,return : AllDay, July-31-2013
         """
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         tz = context.get('tz', False)
         if not tz:  # tz can have a value False, so dont do it in the default value of get !
@@ -782,7 +782,7 @@ class calendar_event(osv.Model):
             if data.count and data.count <= 0:
                 raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
 
-            data = self.read(cr, uid, id, ['id', 'byday', 'recurrency', 'month_list', 'final_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list'], context=context)
+            data = self.read(cr, uid, id, ['id', 'byday', 'recurrency', 'final_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list'], context=context)
             event = data['id']
             if data['recurrency']:
                 result[event] = self.compute_rule_string(data)
@@ -900,7 +900,7 @@ class calendar_event(osv.Model):
         'categ_ids': fields.many2many('calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags'),
         'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
         'partner_ids': fields.many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}),
-        'alarm_ids': fields.many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict"),
+        'alarm_ids': fields.many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False),
     }
     _defaults = {
         'end_type': 'count',
@@ -1404,16 +1404,9 @@ class calendar_event(osv.Model):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-
         default = default or {}
-
         self._set_date(cr, uid, default, id=default.get('id'), context=context)
-        default['attendee_ids'] = False
-
-        res = super(calendar_event, self).copy(cr, uid, calendar_id2real_id(id), default, context)
-        return res
+        return super(calendar_event, self).copy(cr, uid, calendar_id2real_id(id), default, context)
 
     def _detach_one_event(self, cr, uid, id, values=dict(), context=None):
         real_event_id = calendar_id2real_id(id)
@@ -1547,8 +1540,7 @@ class calendar_event(osv.Model):
         return res
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
-        if not context:
-            context = {}
+        context = dict(context or {})
 
         if 'date' in groupby:
             raise osv.except_osv(_('Warning!'), _('Group by date is not supported, use the calendar view instead.'))

@@ -8,6 +8,7 @@ import traceback
 
 import werkzeug
 import werkzeug.routing
+import werkzeug.utils
 
 import openerp
 from openerp.addons.base import ir
@@ -75,7 +76,7 @@ class ir_http(orm.AbstractModel):
             if self.geo_ip_resolver and request.httprequest.remote_addr:
                 record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
-
+            
         if request.website_enabled:
             if func:
                 self._authenticate(func.routing['auth'])
@@ -117,10 +118,11 @@ class ir_http(orm.AbstractModel):
     def _postprocess_args(self, arguments, rule):
         super(ir_http, self)._postprocess_args(arguments, rule)
 
-        for arg, val in arguments.items():
+        for key, val in arguments.items():
             # Replace uid placeholder by the current request.uid
-            if isinstance(val, orm.browse_record) and isinstance(val._uid, RequestUID):
-                val._uid = request.uid
+            if isinstance(val, orm.BaseModel) and isinstance(val._uid, RequestUID):
+                arguments[key] = val.sudo(request.uid)
+
         try:
             _, path = rule.build(arguments)
             assert path is not None

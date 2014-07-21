@@ -25,7 +25,7 @@ from openerp.osv import osv
 from openerp.osv import fields
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp import SUPERUSER_ID
-
+from openerp.tools.translate import _
 
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
@@ -37,7 +37,7 @@ class mail_group(osv.Model):
     _inherits = {'mail.alias': 'alias_id'}
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
+        result = {}
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
@@ -163,15 +163,20 @@ class mail_group(osv.Model):
 
     def unlink(self, cr, uid, ids, context=None):
         groups = self.browse(cr, uid, ids, context=context)
-        # Cascade-delete mail aliases as well, as they should not exist without the mail group.
-        mail_alias = self.pool.get('mail.alias')
         alias_ids = [group.alias_id.id for group in groups if group.alias_id]
+        menu_ids = [group.menu_id.id for group in groups if group.menu_id]
         # Delete mail_group
+        try:
+            all_emp_group = self.pool['ir.model.data'].get_object_reference(cr, uid, 'mail', 'group_all_employees')[1]
+        except ValueError:
+            all_emp_group = None
+        if all_emp_group and all_emp_group in ids:
+            raise osv.except_osv(_('Warning!'), _('You cannot delete those groups, as the Whole Company group is required by other modules.'))
         res = super(mail_group, self).unlink(cr, uid, ids, context=context)
-        # Delete alias
-        mail_alias.unlink(cr, SUPERUSER_ID, alias_ids, context=context)
+        # Cascade-delete mail aliases as well, as they should not exist without the mail group.
+        self.pool.get('mail.alias').unlink(cr, SUPERUSER_ID, alias_ids, context=context)
         # Cascade-delete menu entries as well
-        self.pool.get('ir.ui.menu').unlink(cr, SUPERUSER_ID, [group.menu_id.id for group in groups if group.menu_id], context=context)
+        self.pool.get('ir.ui.menu').unlink(cr, SUPERUSER_ID, menu_ids, context=context)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):

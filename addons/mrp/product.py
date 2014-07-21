@@ -51,14 +51,6 @@ class product_template(osv.osv):
     _defaults = {
         "produce_delay": 1,
     }
-    
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'bom_ids': []
-        })
-        return super(product_template, self).copy(cr, uid, id, default, context=context)
 
 class product_product(osv.osv):
     _inherit = "product.product"

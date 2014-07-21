@@ -71,7 +71,7 @@ class mrp_bom(osv.osv):
     _inherit='mrp.bom'
 
     _columns={
-        'sub_products':fields.one2many('mrp.subproduct', 'bom_id', 'Byproducts'),
+        'sub_products':fields.one2many('mrp.subproduct', 'bom_id', 'Byproducts', copy=True),
     }
 
 

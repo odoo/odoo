@@ -958,6 +958,8 @@ instance.web.Menu =  instance.web.Widget.extend({
                 id: id,
                 previous_menu_id: this.current_menu // Here we don't know if action will fail (in which case we have to revert menu)
             }, $item);
+        } else {
+            console.log('Menu no action found web test 04 will fail');
         }
         this.open_menu(id);
     },
@@ -1378,8 +1380,7 @@ instance.web.WebClient = instance.web.Client.extend({
                         var first_menu_id = self.menu.$el.find("a:first").data("menu");
                         if(first_menu_id) {
                             self.menu.menu_click(first_menu_id);
-                        }
-                    }
+                        }                    }
                 });
             });
         } else {
