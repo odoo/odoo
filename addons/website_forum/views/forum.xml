@@ -35,13 +35,13 @@
                                 <field name="allow_question"/>
                                 <field name="allow_link"/>
                                 <field name="allow_discussion"/>
-                                <field name="default_allow"/>
+                                <field name="default_post_type"/>
                               </group>
                               <group string="Orders">
                                 <field name="default_order"/>
-                                <label for="relevancy_option_first" string="Relevancy Computation"/>
+                                <label for="relevancy_post_vote" string="Relevancy Computation"/>
                                 <div>
-                                    (votes - 1) ** <field name="relevancy_option_first" class="oe_inline"/> / (days + 2) ** <field name="relevancy_option_second" class="oe_inline"/>
+                                    (votes - 1) ** <field name="relevancy_post_vote" class="oe_inline"/> / (days + 2) ** <field name="relevancy_time_decay" class="oe_inline"/>
                                 </div>
                               </group>
                             </page>

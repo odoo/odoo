@@ -24,7 +24,7 @@
         <record id="question_0" model="forum.post">
             <field name="name">How to configure alerts for employee contract expiration</field>
             <field name="forum_id" ref="website_forum.forum_help"/>
-            <field name="type">question</field>
+            <field name="post_type">question</field>
             <field name="views">3</field>
             <field name="tag_ids" eval="[(4,ref('website_forum.tags_0')), (4,ref('website_forum.tags_1'))]"/>
         </record>
@@ -37,7 +37,7 @@
 Can I use Odoo as a replacement CMS of Wordpress + eCommerce plugin?
 
 In simple words does Odoo became CMS+ERP platform?</p>]]></field>
-            <field name="type">question</field>
+            <field name="post_type">question</field>
             <field name="tag_ids" eval="[(4,ref('website_forum.tags_2'))]"/>
         </record>
 
@@ -52,7 +52,7 @@ In simple words does Odoo became CMS+ERP platform?</p>]]></field>
     <li>Step 4. To test, set a contract to expire tomorrow under one of your fleets vehicles. Then Save it.</li>
     <li>Step 5. Go to Scheduled Actions.. Set interval number to 1. Interval Unit to Minutes. Then Set the Next Execution date to 2 minutes from now. If your SMTP is configured correctly you will start to get a mail every minute with the reminder.</li></ul>]]></field>
             <field name="parent_id" ref="question_0" />
-            <field name="type">question</field>
+            <field name="post_type">question</field>
         </record>
         <record id="answer_1" model="forum.post">
             <field name="forum_id" ref="website_forum.forum_help"/>
@@ -60,7 +60,7 @@ In simple words does Odoo became CMS+ERP platform?</p>]]></field>
                             The CMS editor in Odoo web is nice but I prefer Drupal for customization and there is a Drupal module for Odoo. I think WP is better than Odoo web too.
             </field>
             <field name="parent_id" ref="question_1"/>
-            <field name="type">question</field>
+            <field name="post_type">question</field>
         </record>
 
         <!-- Article-->
@@ -68,7 +68,7 @@ In simple words does Odoo became CMS+ERP platform?</p>]]></field>
             <field name="content_link">https://www.odoo.com</field>
             <field name="name">Discover Odoo, an open source ERP.</field>
             <field name="forum_id" ref="website_forum.forum_help"/>
-            <field name="type">link</field>
+            <field name="post_type">link</field>
             <field name="views">6</field>
             <field name="tag_ids" eval="[(4,ref('website_forum.tags_3'))]"/>
         </record>
@@ -86,7 +86,7 @@ Are there any automation scripts available I might use?
 
 (I'm using Ubuntu Server.)</field>
             <field name="forum_id" ref="website_forum.forum_help"/>
-            <field name="type">discussion</field>
+            <field name="post_type">discussion</field>
             <field name="views">5</field>
         </record>
 
@@ -100,7 +100,7 @@ Are there any automation scripts available I might use?
                 </ol>]]>
             </field>
             <field name="parent_id" ref="discussion_0"/>
-            <field name="type">discussion</field>
+            <field name="post_type">discussion</field>
         </record>
 
         <!-- Post Vote  -->

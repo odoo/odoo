@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+import math
 import uuid
 from werkzeug.exceptions import Forbidden
 
-import openerp
-from openerp import api, tools
+from openerp import _
+from openerp import api, fields, models
+from openerp import modules
+from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
 from openerp.exceptions import Warning
-from openerp.osv import osv, fields
-from openerp.tools import html2plaintext
-from openerp.tools.translate import _
 
 
 class KarmaError(Forbidden):
@@ -19,496 +19,383 @@ class KarmaError(Forbidden):
     pass
 
 
-class Forum(osv.Model):
-    """TDE TODO: set karma values for actions dynamic for a given forum"""
+class Forum(models.Model):
     _name = 'forum.forum'
-    _description = 'Forums'
+    _description = 'Forum'
     _inherit = ['mail.thread', 'website.seo.metadata']
 
     def init(self, cr):
-        """ Add forum uuid for user email validation. """
+        """ Add forum uuid for user email validation.
+
+        TDE TODO: move me somewhere else, auto_init ? """
         forum_uuids = self.pool['ir.config_parameter'].search(cr, SUPERUSER_ID, [('key', '=', 'website_forum.uuid')])
         if not forum_uuids:
             self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'website_forum.uuid', str(uuid.uuid4()), ['base.group_system'])
 
-    _columns = {
-        'name': fields.char('Forum Name', required=True, translate=True),
-        'faq': fields.html('Guidelines'),
-        'description': fields.html('Description'),
-        'introduction_message': fields.html('Introduction Message'),
-        'relevancy_option_first': fields.float('First Relevancy Parameter'),
-        'relevancy_option_second': fields.float('Second Relevancy Parameter'),
-        'default_order': fields.selection([
-            ('create_date desc','Newest'),
-            ('write_date desc','Last Updated'),
-            ('vote_count desc','Most Voted'),
-            ('relevancy desc','Relevancy'),
-            ('child_count desc','Answered'),
-            ], 'Default Order', required=True),
-        'default_allow': fields.selection([('post_link','Link'),('ask_question','Question'),('post_discussion','Discussion')], 'Default Post', required=True),
-        'allow_link': fields.boolean('Links', help="When clicking on the post, it redirects to an external link"),
-        'allow_question': fields.boolean('Questions', help="Users can answer only once per question. Contributors can edit answers and mark the right ones."),
-        'allow_discussion': fields.boolean('Discussions'),
-        # karma generation
-        'karma_gen_question_new': fields.integer('Asking a question'),
-        'karma_gen_question_upvote': fields.integer('Question upvoted'),
-        'karma_gen_question_downvote': fields.integer('Question downvoted'),
-        'karma_gen_answer_upvote': fields.integer('Answer upvoted'),
-        'karma_gen_answer_downvote': fields.integer('Answer downvoted'),
-        'karma_gen_answer_accept': fields.integer('Accepting an answer'),
-        'karma_gen_answer_accepted': fields.integer('Answer accepted'),
-        'karma_gen_answer_flagged': fields.integer('Answer flagged'),
-        # karma-based actions
-        'karma_ask': fields.integer('Ask a new question'),
-        'karma_answer': fields.integer('Answer a question'),
-        'karma_edit_own': fields.integer('Edit its own posts'),
-        'karma_edit_all': fields.integer('Edit all posts'),
-        'karma_close_own': fields.integer('Close its own posts'),
-        'karma_close_all': fields.integer('Close all posts'),
-        'karma_unlink_own': fields.integer('Delete its own posts'),
-        'karma_unlink_all': fields.integer('Delete all posts'),
-        'karma_upvote': fields.integer('Upvote'),
-        'karma_downvote': fields.integer('Downvote'),
-        'karma_answer_accept_own': fields.integer('Accept an answer on its own questions'),
-        'karma_answer_accept_all': fields.integer('Accept an answer to all questions'),
-        'karma_editor_link_files': fields.integer('Linking files (Editor)'),
-        'karma_editor_clickable_link': fields.integer('Add clickable links (Editor)'),
-        'karma_comment_own': fields.integer('Comment its own posts'),
-        'karma_comment_all': fields.integer('Comment all posts'),
-        'karma_comment_convert_own': fields.integer('Convert its own answers to comments and vice versa'),
-        'karma_comment_convert_all': fields.integer('Convert all answers to comments and vice versa'),
-        'karma_comment_unlink_own': fields.integer('Unlink its own comments'),
-        'karma_comment_unlink_all': fields.integer('Unlink all comments'),
-        'karma_retag': fields.integer('Change question tags'),
-        'karma_flag': fields.integer('Flag a post as offensive'),
-    }
-
-    def _get_default_faq(self, cr, uid, context=None):
-        fname = openerp.modules.get_module_resource('website_forum', 'data', 'forum_default_faq.html')
+    @api.model
+    def _get_default_faq(self):
+        fname = modules.get_module_resource('website_forum', 'data', 'forum_default_faq.html')
         with open(fname, 'r') as f:
             return f.read()
         return False
 
-    _defaults = {
-        'default_order': 'write_date desc',
-        'allow_question': True,
-        'default_allow': 'ask_question',
-        'allow_link': False,
-        'allow_discussion': False,
-        'description': 'This community is for professionals and enthusiasts of our products and services.',
-        'faq': _get_default_faq,
-        'karma_gen_question_new': 0,  # set to null for anti spam protection
-        'introduction_message': """<h1 class="mt0">Welcome!</h1>
-                  <p> This community is for professionals and enthusiasts of our products and services.
-                      Share and discuss the best content and new marketing ideas,
-                      build your professional profile and become a better marketer together.
-                  </p>""",
-        'relevancy_option_first': 0.8,
-        'relevancy_option_second': 1.8,
-        'karma_gen_question_upvote': 5,
-        'karma_gen_question_downvote': -2,
-        'karma_gen_answer_upvote': 10,
-        'karma_gen_answer_downvote': -2,
-        'karma_gen_answer_accept': 2,
-        'karma_gen_answer_accepted': 15,
-        'karma_gen_answer_flagged': -100,
-        'karma_ask': 3,  # set to not null for anti spam protection
-        'karma_answer': 3,  # set to not null for anti spam protection
-        'karma_edit_own': 1,
-        'karma_edit_all': 300,
-        'karma_close_own': 100,
-        'karma_close_all': 500,
-        'karma_unlink_own': 500,
-        'karma_unlink_all': 1000,
-        'karma_upvote': 5,
-        'karma_downvote': 50,
-        'karma_answer_accept_own': 20,
-        'karma_answer_accept_all': 500,
-        'karma_editor_link_files': 20,
-        'karma_editor_clickable_link': 20,
-        'karma_comment_own': 3,
-        'karma_comment_all': 5,
-        'karma_comment_convert_own': 50,
-        'karma_comment_convert_all': 500,
-        'karma_comment_unlink_own': 50,
-        'karma_comment_unlink_all': 500,
-        'karma_retag': 75,
-        'karma_flag': 500,
-    }
+    # description and use
+    name = fields.Char('Forum Name', required=True, translate=True)
+    faq = fields.Html('Guidelines', default=_get_default_faq, translate=True)
+    description = fields.Html(
+        'Description',
+        default='<p> This community is for professionals and enthusiasts of our products and services.'
+                'Share and discuss the best content and new marketing ideas,'
+                'build your professional profile and become a better marketer together.</p>')
+    default_order = fields.Selection([
+        ('create_date desc', 'Newest'),
+        ('write_date desc', 'Last Updated'),
+        ('vote_count desc', 'Most Voted'),
+        ('relevancy desc', 'Relevancy'),
+        ('child_count desc', 'Answered')],
+        string='Default Order', required=True, default='write_date desc')
+    relevancy_post_vote = fields.Float('First Relevancy Parameter', default=0.8)
+    relevancy_time_decay = fields.Float('Second Relevancy Parameter', default=1.8)
+    default_post_type = fields.Selection([
+        ('question', 'Question'),
+        ('discussion', 'Discussion'),
+        ('link', 'Link')],
+        string='Default Post', required=True, default='question')
+    allow_question = fields.Boolean('Questions', help="Users can answer only once per question. Contributors can edit answers and mark the right ones.", default=True)
+    allow_discussion = fields.Boolean('Discussions', default=False)
+    allow_link = fields.Boolean('Links', help="When clicking on the post, it redirects to an external link", default=False)
+    # karma generation
+    karma_gen_question_new = fields.Integer(string='Asking a question', default=2)
+    karma_gen_question_upvote = fields.Integer(string='Question upvoted', default=5)
+    karma_gen_question_downvote = fields.Integer(string='Question downvoted', default=-2)
+    karma_gen_answer_upvote = fields.Integer(string='Answer upvoted', default=10)
+    karma_gen_answer_downvote = fields.Integer(string='Answer downvoted', default=-2)
+    karma_gen_answer_accept = fields.Integer(string='Accepting an answer', default=2)
+    karma_gen_answer_accepted = fields.Integer(string='Answer accepted', default=15)
+    karma_gen_answer_flagged = fields.Integer(string='Answer flagged', default=-100)
+    # karma-based actions
+    karma_ask = fields.Integer(string='Ask a new question', default=3)
+    karma_answer = fields.Integer(string='Answer a question', default=3)
+    karma_edit_own = fields.Integer(string='Edit its own posts', default=1)
+    karma_edit_all = fields.Integer(string='Edit all posts', default=300)
+    karma_close_own = fields.Integer(string='Close its own posts', default=100)
+    karma_close_all = fields.Integer(string='Close all posts', default=500)
+    karma_unlink_own = fields.Integer(string='Delete its own posts', default=500)
+    karma_unlink_all = fields.Integer(string='Delete all posts', default=1000)
+    karma_upvote = fields.Integer(string='Upvote', default=5)
+    karma_downvote = fields.Integer(string='Downvote', default=50)
+    karma_answer_accept_own = fields.Integer(string='Accept an answer on its own questions', default=20)
+    karma_answer_accept_all = fields.Integer(string='Accept an answers to all questions', default=500)
+    karma_editor_link_files = fields.Integer(string='Linking files (Editor)', default=20)
+    karma_editor_clickable_link = fields.Integer(string='Add clickable links (Editor)', default=20)
+    karma_comment_own = fields.Integer(string='Comment its own posts', default=1)
+    karma_comment_all = fields.Integer(string='Comment all posts', default=1)
+    karma_comment_convert_own = fields.Integer(string='Convert its own answers to comments and vice versa', default=50)
+    karma_comment_convert_all = fields.Integer(string='Convert all answers to answers and vice versa', default=500)
+    karma_comment_unlink_own = fields.Integer(string='Unlink its own comments', default=50)
+    karma_comment_unlink_all = fields.Integer(string='Unlinnk all comments', default=500)
+    karma_retag = fields.Integer(string='Change question tags', default=75)
+    karma_flag = fields.Integer(string='Flag a post as offensive', default=500)
 
-    def create(self, cr, uid, values, context=None):
-        if context is None:
-            context = {}
-        create_context = dict(context, mail_create_nolog=True)
-        return super(Forum, self).create(cr, uid, values, context=create_context)
+    @api.model
+    def create(self, values):
+        return super(Forum, self.with_context(mail_create_nolog=True)).create(values)
 
 
-class Post(osv.Model):
+class Post(models.Model):
     _name = 'forum.post'
     _description = 'Forum Post'
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = "is_correct DESC, vote_count DESC, write_date DESC"
 
-    def _get_post_relevancy(self, cr, uid, ids, field_name, arg, context):
-        res = dict.fromkeys(ids, 0)
-        for post in self.browse(cr, uid, ids, context=context):
-            days = (datetime.today() - datetime.strptime(post.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days
-            relavency = abs(post.vote_count - 1) ** post.forum_id.relevancy_option_first / ( days + 2) ** post.forum_id.relevancy_option_second
-            res[post.id] = relavency if (post.vote_count - 1) >= 0 else -relavency
-        return res
+    name = fields.Char('Title')
+    forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
+    content = fields.Html('Content')
+    content_link = fields.Char('URL', help="URL of Link Articles")
+    tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
+    state = fields.Selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], string='Status', default='active')
+    views = fields.Integer('Number of Views', default=0)
+    active = fields.Boolean('Active', default=True)
+    post_type = fields.Selection([
+        ('question', 'Question'),
+        ('link', 'Article'),
+        ('discussion', 'Discussion')],
+        string='Type', default='question')
+    website_message_ids = fields.One2many(
+        'mail.message', 'res_id',
+        domain=lambda self: ['&', ('model', '=', self._name), ('type', 'in', ['email', 'comment'])],
+        string='Post Messages', help="Comments on forum post",
+    )
+    # history
+    create_date = fields.Datetime('Asked on', select=True, readonly=True)
+    create_uid = fields.Many2one('res.users', string='Created by', select=True, readonly=True)
+    write_date = fields.Datetime('Update on', select=True, readonly=True)
+    write_uid = fields.Many2one('res.users', string='Updated by', select=True, readonly=True)
+    relevancy = fields.Float('Relevancy', compute="_compute_relevancy", store=True)
 
-    def _get_user_vote(self, cr, uid, ids, field_name, arg, context):
-        res = dict.fromkeys(ids, 0)
-        vote_ids = self.pool['forum.post.vote'].search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
-        for vote in self.pool['forum.post.vote'].browse(cr, uid, vote_ids, context=context):
-            res[vote.post_id.id] = vote.vote
-        return res
+    @api.one
+    @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
+    def _compute_relevancy(self):
+        days = (datetime.today() - datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days
+        self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
 
-    def _get_vote_count(self, cr, uid, ids, field_name, arg, context):
-        res = dict.fromkeys(ids, 0)
-        for post in self.browse(cr, uid, ids, context=context):
-            for vote in post.vote_ids:
-                res[post.id] += int(vote.vote)
-        return res
+    # vote
+    vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
+    user_vote = fields.Integer('My Vote', compute='_get_user_vote')
+    vote_count = fields.Integer('Votes', compute='_get_vote_count', store=True)
 
-    def _get_post_from_vote(self, cr, uid, ids, context=None):
-        result = {}
-        for vote in self.pool['forum.post.vote'].browse(cr, uid, ids, context=context):
-            result[vote.post_id.id] = True
-        return result.keys()
+    @api.multi
+    def _get_user_vote(self):
+        votes = self.env['forum.post.vote'].search_read([('post_id', 'in', self._ids), ('user_id', '=', self._uid)], ['vote', 'post_id'])
+        mapped_vote = dict([(v['post_id'][0], v['vote']) for v in votes])
+        for vote in self:
+            vote.user_vote = mapped_vote.get(vote.id, 0)
 
-    def _get_user_favourite(self, cr, uid, ids, field_name, arg, context):
-        res = dict.fromkeys(ids, False)
-        for post in self.browse(cr, uid, ids, context=context):
-            if uid in [f.id for f in post.favourite_ids]:
-                res[post.id] = True
-        return res
+    @api.multi
+    @api.depends('vote_ids')
+    def _get_vote_count(self):
+        read_group_res = self.env['forum.post.vote'].read_group([('post_id', 'in', self._ids)], ['post_id', 'vote'], ['post_id', 'vote'], lazy=False)
+        result = dict.fromkeys(self._ids, 0)
+        for data in read_group_res:
+            result[data['post_id'][0]] += data['__count'] * int(data['vote'])
+        for post in self:
+            post.vote_count = result[post.id]
 
-    def _get_favorite_count(self, cr, uid, ids, field_name, arg, context):
-        res = dict.fromkeys(ids, 0)
-        for post in self.browse(cr, uid, ids, context=context):
-            res[post.id] += len(post.favourite_ids)
-        return res
+    # favorite
+    favourite_ids = fields.Many2many('res.users', string='Favourite')
+    user_favourite = fields.Boolean('Is Favourite', compute='_get_user_favourite')
+    favourite_count = fields.Integer('Favorite Count', compute='_get_favorite_count', store=True)
 
-    def _get_post_from_hierarchy(self, cr, uid, ids, context=None):
-        post_ids = set(ids)
-        for post in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            if post.parent_id:
-                post_ids.add(post.parent_id.id)
-        return list(post_ids)
+    @api.one
+    def _get_user_favourite(self):
+        self.user_favourite = self._uid in self.favourite_ids.ids
 
-    def _get_child_count(self, cr, uid, ids, field_name=False, arg={}, context=None):
-        res = dict.fromkeys(ids, 0)
-        for post in self.browse(cr, uid, ids, context=context):
-            if post.parent_id:
-                res[post.parent_id.id] = len(post.parent_id.child_ids)
-            else:
-                res[post.id] = len(post.child_ids)
-        return res
+    @api.one
+    @api.depends('favourite_ids')
+    def _get_favorite_count(self):
+        self.favourite_count = len(self.favourite_ids)
 
-    def _get_uid_answered(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, False)
-        for post in self.browse(cr, uid, ids, context=context):
-            res[post.id] = any(answer.create_uid.id == uid for answer in post.child_ids)
-        return res
+    # hierarchy
+    is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
+    parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade')
+    self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
+    child_ids = fields.One2many('forum.post', 'parent_id', string='Answers')
+    child_count = fields.Integer('Number of answers', compute='_get_child_count', store=True)
+    uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
+    has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
 
-    def _get_has_validated_answer(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, False)
-        ans_ids = self.search(cr, uid, [('parent_id', 'in', ids), ('is_correct', '=', True)], context=context)
-        for answer in self.browse(cr, uid, ans_ids, context=context):
-            res[answer.parent_id.id] = True
-        return res
+    @api.multi
+    @api.depends('create_uid', 'parent_id')
+    def _is_self_reply(self):
+        self_replies = self.search([('parent_id.create_uid', '=', self._uid)])
+        for post in self:
+            post.is_self_reply = post in self_replies
 
-    def _is_self_reply(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, False)
-        for post in self.browse(cr, uid, ids, context=context):
-            res[post.id] = post.parent_id and post.parent_id.create_uid == post.create_uid or False
-        return res
+    @api.one
+    @api.depends('child_ids')
+    def _get_child_count(self):
+        self.child_count = len(self.child_ids)
 
-    def _get_post_karma_rights(self, cr, uid, ids, field_name, arg, context=None):
-        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-        res = dict.fromkeys(ids, False)
-        for post in self.browse(cr, uid, ids, context=context):
-            res[post.id] = {
-                'karma_ask': post.forum_id.karma_ask,
-                'karma_answer': post.forum_id.karma_answer,
-                'karma_accept': post.parent_id and post.parent_id.create_uid.id == uid and post.forum_id.karma_answer_accept_own or post.forum_id.karma_answer_accept_all,
-                'karma_edit': post.create_uid.id == uid and post.forum_id.karma_edit_own or post.forum_id.karma_edit_all,
-                'karma_close': post.create_uid.id == uid and post.forum_id.karma_close_own or post.forum_id.karma_close_all,
-                'karma_unlink': post.create_uid.id == uid and post.forum_id.karma_unlink_own or post.forum_id.karma_unlink_all,
-                'karma_upvote': post.forum_id.karma_upvote,
-                'karma_downvote': post.forum_id.karma_downvote,
-                'karma_comment': post.create_uid.id == uid and post.forum_id.karma_comment_own or post.forum_id.karma_comment_all,
-                'karma_comment_convert': post.create_uid.id == uid and post.forum_id.karma_comment_convert_own or post.forum_id.karma_comment_convert_all,
-            }
-            res[post.id].update({
-                'can_ask': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_ask'],
-                'can_answer': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_answer'],
-                'can_accept': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_accept'],
-                'can_edit': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_edit'],
-                'can_close': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_close'],
-                'can_unlink': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_unlink'],
-                'can_upvote': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_upvote'],
-                'can_downvote': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_downvote'],
-                'can_comment': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_comment'],
-                'can_comment_convert': uid == SUPERUSER_ID or user.karma >= res[post.id]['karma_comment_convert'],
-            })
-        return res
+    @api.one
+    def _get_uid_has_answered(self):
+        self.uid_has_answered = any(answer.create_uid.id == self._uid for answer in self.child_ids)
 
-    _columns = {
-        'name': fields.char('Title'),
-        'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
-        'content': fields.html('Content'),
-        'content_link': fields.char('URL', help="URL of Link Articles"),
-        'tag_ids': fields.many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tags'),
-        'state': fields.selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], 'Status'),
-        'views': fields.integer('Number of Views'),
-        'active': fields.boolean('Active'),
-        'type': fields.selection([('question', 'Question'), ('link', 'Article'), ('discussion', 'Discussion')], 'Type'),
-        'relevancy': fields.function(
-            _get_post_relevancy, string="Relevancy", type='float',
-            store={
-                'forum.post': (lambda self, cr, uid, ids, c={}: ids, ['vote_ids'], 10),
-                'forum.post.vote': (_get_post_from_vote, [], 10),
-            }),
-        'is_correct': fields.boolean('Valid Answer', help='Correct Answer or Answer on this question accepted.'),
-        'website_message_ids': fields.one2many(
-            'mail.message', 'res_id',
-            domain=lambda self: [
-                '&', ('model', '=', self._name), ('type', 'in', ['email', 'comment'])
-            ],
-            string='Post Messages', help="Comments on forum post",
-        ),
-        # history
-        'create_date': fields.datetime('Asked on', select=True, readonly=True),
-        'create_uid': fields.many2one('res.users', 'Created by', select=True, readonly=True),
-        'write_date': fields.datetime('Update on', select=True, readonly=True),
-        'write_uid': fields.many2one('res.users', 'Updated by', select=True, readonly=True),
-        # vote fields
-        'vote_ids': fields.one2many('forum.post.vote', 'post_id', 'Votes'),
-        'user_vote': fields.function(_get_user_vote, string='My Vote', type='integer'),
-        'vote_count': fields.function(
-            _get_vote_count, string="Votes", type='integer',
-            store={
-                'forum.post': (lambda self, cr, uid, ids, c={}: ids, ['vote_ids'], 10),
-                'forum.post.vote': (_get_post_from_vote, [], 10),
-            }),
-        # favorite fields
-        'favourite_ids': fields.many2many('res.users', string='Favourite'),
-        'user_favourite': fields.function(_get_user_favourite, string="My Favourite", type='boolean'),
-        'favourite_count': fields.function(
-            _get_favorite_count, string='Favorite Count', type='integer',
-            store={
-                'forum.post': (lambda self, cr, uid, ids, c={}: ids, ['favourite_ids'], 10),
-            }),
-        # hierarchy
-        'parent_id': fields.many2one('forum.post', 'Question', ondelete='cascade'),
-        'self_reply': fields.function(
-            _is_self_reply, 'Reply to own question', type='boolean',
-            store={
-                'forum.post': (lambda self, cr, uid, ids, c={}: ids, ['parent_id', 'create_uid'], 10),
-            }),
-        'child_ids': fields.one2many('forum.post', 'parent_id', 'Answers'),
-        'child_count': fields.function(
-            _get_child_count, string="Answers", type='integer',
-            store={
-                'forum.post': (_get_post_from_hierarchy, ['parent_id', 'child_ids'], 10),
-            }),
-        'uid_has_answered': fields.function(
-            _get_uid_answered, string='Has Answered', type='boolean',
-        ),
-        'has_validated_answer': fields.function(
-            _get_has_validated_answer, string='Has a Validated Answered', type='boolean',
-            store={
-                'forum.post': (_get_post_from_hierarchy, ['parent_id', 'child_ids', 'is_correct'], 10),
-            }
-        ),
-        # closing
-        'closed_reason_id': fields.many2one('forum.post.reason', 'Reason'),
-        'closed_uid': fields.many2one('res.users', 'Closed by', select=1),
-        'closed_date': fields.datetime('Closed on', readonly=True),
-        # karma
-        'karma_ask': fields.function(_get_post_karma_rights, string='Karma to ask', type='integer', multi='_get_post_karma_rights'),
-        'karma_answer': fields.function(_get_post_karma_rights, string='Karma to answer', type='integer', multi='_get_post_karma_rights'),
-        'karma_accept': fields.function(_get_post_karma_rights, string='Karma to accept this answer', type='integer', multi='_get_post_karma_rights'),
-        'karma_edit': fields.function(_get_post_karma_rights, string='Karma to edit', type='integer', multi='_get_post_karma_rights'),
-        'karma_close': fields.function(_get_post_karma_rights, string='Karma to close', type='integer', multi='_get_post_karma_rights'),
-        'karma_unlink': fields.function(_get_post_karma_rights, string='Karma to unlink', type='integer', multi='_get_post_karma_rights'),
-        'karma_upvote': fields.function(_get_post_karma_rights, string='Karma to upvote', type='integer', multi='_get_post_karma_rights'),
-        'karma_downvote': fields.function(_get_post_karma_rights, string='Karma to downvote', type='integer', multi='_get_post_karma_rights'),
-        'karma_comment': fields.function(_get_post_karma_rights, string='Karma to comment', type='integer', multi='_get_post_karma_rights'),
-        'karma_comment_convert': fields.function(_get_post_karma_rights, string='karma to convert as a comment', type='integer', multi='_get_post_karma_rights'),
-        # access rights
-        'can_ask': fields.function(_get_post_karma_rights, string='Can Ask', type='boolean', multi='_get_post_karma_rights'),
-        'can_answer': fields.function(_get_post_karma_rights, string='Can Answer', type='boolean', multi='_get_post_karma_rights'),
-        'can_accept': fields.function(_get_post_karma_rights, string='Can Accept', type='boolean', multi='_get_post_karma_rights'),
-        'can_edit': fields.function(_get_post_karma_rights, string='Can Edit', type='boolean', multi='_get_post_karma_rights'),
-        'can_close': fields.function(_get_post_karma_rights, string='Can Close', type='boolean', multi='_get_post_karma_rights'),
-        'can_unlink': fields.function(_get_post_karma_rights, string='Can Unlink', type='boolean', multi='_get_post_karma_rights'),
-        'can_upvote': fields.function(_get_post_karma_rights, string='Can Upvote', type='boolean', multi='_get_post_karma_rights'),
-        'can_downvote': fields.function(_get_post_karma_rights, string='Can Downvote', type='boolean', multi='_get_post_karma_rights'),
-        'can_comment': fields.function(_get_post_karma_rights, string='Can Comment', type='boolean', multi='_get_post_karma_rights'),
-        'can_comment_convert': fields.function(_get_post_karma_rights, string='Can Convert to Comment', type='boolean', multi='_get_post_karma_rights'),
-    }
+    @api.multi
+    @api.depends('child_ids', 'is_correct')
+    def _get_has_validated_answer(self):
+        correct_posts = [ans.parent_id for ans in self.search([('parent_id', 'in', self._ids), ('is_correct', '=', True)])]
+        for post in self:
+            post.is_correct = post in correct_posts
 
-    _defaults = {
-        'state': 'active',
-        'views': 0,
-        'active': True,
-        'type': 'question',
-        'vote_ids': list(),
-        'favourite_ids': list(),
-        'child_ids': list(),
-    }
+    # closing
+    closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
+    closed_uid = fields.Many2one('res.users', string='Closed by', select=1)
+    closed_date = fields.Datetime('Closed on', readonly=True)
+    # karma calculation and access
+    karma_accept = fields.Integer('Convert comment to answer', compute='_get_post_karma_rights')
+    karma_edit = fields.Integer('Karma to edit', compute='_get_post_karma_rights')
+    karma_close = fields.Integer('Karma to close', compute='_get_post_karma_rights')
+    karma_unlink = fields.Integer('Karma to unlink', compute='_get_post_karma_rights')
+    karma_comment = fields.Integer('Karma to comment', compute='_get_post_karma_rights')
+    karma_comment_convert = fields.Integer('Karma to convert comment to answer', compute='_get_post_karma_rights')
+    can_ask = fields.Boolean('Can Ask', compute='_get_post_karma_rights')
+    can_answer = fields.Boolean('Can Answer', compute='_get_post_karma_rights')
+    can_accept = fields.Boolean('Can Accept', compute='_get_post_karma_rights')
+    can_edit = fields.Boolean('Can Edit', compute='_get_post_karma_rights')
+    can_close = fields.Boolean('Can Close', compute='_get_post_karma_rights')
+    can_unlink = fields.Boolean('Can Unlink', compute='_get_post_karma_rights')
+    can_upvote = fields.Boolean('Can Upvote', compute='_get_post_karma_rights')
+    can_downvote = fields.Boolean('Can Downvote', compute='_get_post_karma_rights')
+    can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights')
+    can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
 
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        create_context = dict(context, mail_create_nolog=True)
-        post_id = super(Post, self).create(cr, uid, vals, context=create_context)
-        post = self.browse(cr, uid, post_id, context=context)
+    @api.one
+    def _get_post_karma_rights(self):
+        user = self.env.user
+
+        self.karma_accept = self.parent_id and self.parent_id.create_uid.id == self._uid and self.forum_id.karma_answer_accept_own or self.forum_id.karma_answer_accept_all
+        self.karma_edit = self.create_uid.id == self._uid and self.forum_id.karma_edit_own or self.forum_id.karma_edit_all
+        self.karma_close = self.create_uid.id == self._uid and self.forum_id.karma_close_own or self.forum_id.karma_close_all
+        self.karma_unlink = self.create_uid.id == self._uid and self.forum_id.karma_unlink_own or self.forum_id.karma_unlink_all
+        self.karma_comment = self.create_uid.id == self._uid and self.forum_id.karma_comment_own or self.forum_id.karma_comment_all
+        self.karma_comment_convert = self.create_uid.id == self._uid and self.forum_id.karma_comment_convert_own or self.forum_id.karma_comment_convert_all
+
+        self.can_ask = user.karma >= self.forum_id.karma_ask
+        self.can_answer = user.karma >= self.forum_id.karma_answer
+        self.can_accept = user.karma >= self.karma_accept
+        self.can_edit = user.karma >= self.karma_edit
+        self.can_close = user.karma >= self.karma_close
+        self.can_unlink = user.karma >= self.karma_unlink
+        self.can_upvote = user.karma >= self.forum_id.karma_upvote
+        self.can_downvote = user.karma >= self.forum_id.karma_downvote
+        self.can_comment = user.karma >= self.karma_comment
+        self.can_comment_convert = user.karma >= self.karma_comment_convert
+
+    @api.model
+    def create(self, vals):
+        post = super(Post, self.with_context(mail_create_nolog=True)).create(vals)
         # deleted or closed questions
-        if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active == False):
-            osv.except_osv(_('Error !'), _('Posting answer on [Deleted] or [Closed] question is prohibited'))
+        if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active is False):
+            raise Warning(_('Posting answer on a [Deleted] or [Closed] question is not possible'))
         # karma-based access
         if not post.parent_id and not post.can_ask:
             raise KarmaError('Not enough karma to create a new question')
         elif post.parent_id and not post.can_answer:
             raise KarmaError('Not enough karma to answer to a question')
         # messaging and chatter
-        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         if post.parent_id:
             body = _(
                 '<p>A new answer for <i>%s</i> has been posted. <a href="%s/forum/%s/question/%s">Click here to access the post.</a></p>' %
                 (post.parent_id.name, base_url, slug(post.parent_id.forum_id), slug(post.parent_id))
             )
-            self.message_post(cr, uid, post.parent_id.id, subject=_('Re: %s') % post.parent_id.name, body=body, subtype='website_forum.mt_answer_new', context=context)
+            post.parent_id.message_post(subject=_('Re: %s') % post.parent_id.name, body=body, subtype='website_forum.mt_answer_new')
         else:
             body = _(
                 '<p>A new question <i>%s</i> has been asked on %s. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>' %
                 (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
             )
-            self.message_post(cr, uid, post_id, subject=post.name, body=body, subtype='website_forum.mt_question_new', context=context)
-            self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [uid], post.forum_id.karma_gen_question_new, context=context)
-        return post_id
+            post.message_post(subject=post.name, body=body, subtype='website_forum.mt_question_new')
+            self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
+        return post
 
-    def write(self, cr, uid, ids, vals, context=None):
-        posts = self.browse(cr, uid, ids, context=context)
+    @api.multi
+    def write(self, vals):
         if 'state' in vals:
-            if vals['state'] in ['active', 'close'] and any(not post.can_close for post in posts):
+            if vals['state'] in ['active', 'close'] and any(not post.can_close for post in self):
                 raise KarmaError('Not enough karma to close or reopen a post.')
         if 'active' in vals:
-            if any(not post.can_unlink for post in posts):
+            if any(not post.can_unlink for post in self):
                 raise KarmaError('Not enough karma to delete or reactivate a post')
         if 'is_correct' in vals:
-            if any(not post.can_accept for post in posts):
+            if any(not post.can_accept for post in self):
                 raise KarmaError('Not enough karma to accept or refuse an answer')
             # update karma except for self-acceptance
             mult = 1 if vals['is_correct'] else -1
-            for post in self.browse(cr, uid, ids, context=context):
-                if vals['is_correct'] != post.is_correct and post.create_uid.id != uid:
-                    self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id], post.forum_id.karma_gen_answer_accepted * mult, context=context)
-                    self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [uid], post.forum_id.karma_gen_answer_accept * mult, context=context)
-        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id'] for key in vals.keys()) and any(not post.can_edit for post in posts):
+            for post in self:
+                if vals['is_correct'] != post.is_correct and post.create_uid.id != self._uid:
+                    post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * mult)
+                    self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accept * mult)
+        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id'] for key in vals.keys()) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
 
-        res = super(Post, self).write(cr, uid, ids, vals, context=context)
+        res = super(Post, self).write(vals)
         # if post content modify, notify followers
         if 'content' in vals or 'name' in vals:
-            for post in posts:
+            for post in self:
                 if post.parent_id:
                     body, subtype = _('Answer Edited'), 'website_forum.mt_answer_edit'
-                    obj_id = post.parent_id.id
+                    obj_id = post.parent_id
                 else:
                     body, subtype = _('Question Edited'), 'website_forum.mt_question_edit'
-                    obj_id = post.id
-                self.message_post(cr, uid, obj_id, body=body, subtype=subtype, context=context)
+                    obj_id = post
+                obj_id.message_post(body=body, subtype=subtype)
         return res
 
-    def close(self, cr, uid, ids, reason_id, context=None):
-        if any(post.parent_id for post in self.browse(cr, uid, ids, context=context)):
+    @api.multi
+    def close(self, reason_id):
+        if any(post.parent_id for post in self):
             return False
-        return self.pool['forum.post'].write(cr, uid, ids, {
+        self.write({
             'state': 'close',
-            'closed_uid': uid,
+            'closed_uid': self._uid,
             'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
             'closed_reason_id': reason_id,
-        }, context=context)
+        })
+        return True
 
-    def unlink(self, cr, uid, ids, context=None):
-        posts = self.browse(cr, uid, ids, context=context)
-        if any(not post.can_unlink for post in posts):
+    @api.multi
+    def unlink(self):
+        if any(not post.can_unlink for post in self):
             raise KarmaError('Not enough karma to unlink a post')
         # if unlinking an answer with accepted answer: remove provided karma
-        for post in posts:
+        for post in self:
             if post.is_correct:
-                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id], post.forum_id.karma_gen_answer_accepted * -1, context=context)
-                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [uid], post.forum_id.karma_gen_answer_accept * -1, context=context)
-        return super(Post, self).unlink(cr, uid, ids, context=context)
+                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * -1)
+                self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * -1)
+        return super(Post, self).unlink()
 
-    def vote(self, cr, uid, ids, upvote=True, context=None):
-        Vote = self.pool['forum.post.vote']
-        vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
+    @api.multi
+    def vote(self, upvote=True):
+        Vote = self.env['forum.post.vote']
+        vote_ids = Vote.search([('post_id', 'in', self._ids), ('user_id', '=', self._uid)])
         new_vote = '1' if upvote else '-1'
         voted_forum_ids = set()
         if vote_ids:
-            for vote in Vote.browse(cr, uid, vote_ids, context=context):
+            for vote in vote_ids:
                 if upvote:
                     new_vote = '0' if vote.vote == '-1' else '1'
                 else:
                     new_vote = '0' if vote.vote == '1' else '-1'
-                Vote.write(cr, uid, vote_ids, {'vote': new_vote}, context=context)
+                vote.vote = new_vote
                 voted_forum_ids.add(vote.post_id.id)
-        for post_id in set(ids) - voted_forum_ids:
-            for post_id in ids:
-                Vote.create(cr, uid, {'post_id': post_id, 'vote': new_vote}, context=context)
-        return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]], 'user_vote': new_vote}
+        for post_id in set(self._ids) - voted_forum_ids:
+            for post_id in self._ids:
+                Vote.create({'post_id': post_id, 'vote': new_vote})
+        return {'vote_count': self.vote_count, 'user_vote': new_vote}
 
-    def convert_answer_to_comment(self, cr, uid, id, context=None):
+    @api.one
+    def convert_answer_to_comment(self):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
         The original post is unlinked and a new comment is posted on the question
         using the post create_uid as the comment's author. """
-        post = self.browse(cr, SUPERUSER_ID, id, context=context)
-        if not post.parent_id:
+        if not self.parent_id:
             return False
 
         # karma-based action check: use the post field that computed own/all value
-        if not post.can_comment_convert:
+        if not self.can_comment_convert:
             raise KarmaError('Not enough karma to convert an answer to a comment')
 
         # post the message
-        question = post.parent_id
+        question = self.parent_id
         values = {
-            'author_id': post.create_uid.partner_id.id,
-            'body': html2plaintext(post.content),
+            'author_id': self.create_uid.partner_id.id,
+            'body': tools.html2plaintext(self.content),
             'type': 'comment',
             'subtype': 'mail.mt_comment',
-            'date': post.create_date,
+            'date': self.create_date,
         }
-        message_id = self.pool['forum.post'].message_post(
-            cr, uid, question.id,
-            context=dict(context, mail_create_nosubcribe=True),
-            **values)
+        new_message = self.browse(question.id).with_context(mail_create_nosubcribe=True).message_post(**values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
-        self.pool['forum.post'].unlink(cr, SUPERUSER_ID, [post.id], context=context)
+        self.sudo().unlink()
 
-        return message_id
+        return new_message
 
-    def convert_comment_to_answer(self, cr, uid, message_id, default=None, context=None):
+    @api.model
+    def convert_comment_to_answer(self, message_id, default=None):
         """ Tool to convert a comment (mail.message) into an answer (forum.post).
         The original comment is unlinked and a new answer from the comment's author
         is created. Nothing is done if the comment's author already answered the
         question. """
-        comment = self.pool['mail.message'].browse(cr, SUPERUSER_ID, message_id, context=context)
-        post = self.pool['forum.post'].browse(cr, uid, comment.res_id, context=context)
-        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        comment = self.env['mail.message'].sudo().browse(message_id)
+        post = self.browse(comment.res_id)
         if not comment.author_id or not comment.author_id.user_ids:  # only comment posted by users can be converted
             return False
 
         # karma-based action check: must check the message's author to know if own / all
-        karma_convert = comment.author_id.id == user.partner_id.id and post.forum_id.karma_comment_convert_own or post.forum_id.karma_comment_convert_all
-        can_convert = uid == SUPERUSER_ID or user.karma >= karma_convert
+        karma_convert = comment.author_id.id == self.env.user.partner_id.id and post.forum_id.karma_comment_convert_own or post.forum_id.karma_comment_convert_all
+        can_convert = self.env.user.karma >= karma_convert
         if not can_convert:
             raise KarmaError('Not enough karma to convert a comment to an answer')
 
@@ -525,34 +412,34 @@ class Post(osv.Model):
             'parent_id': question.id,
         }
         # done with the author user to have create_uid correctly set
-        new_post_id = self.pool['forum.post'].create(cr, post_create_uid.id, post_values, context=context)
+        new_post = self.sudo(post_create_uid.id).create(post_values)
 
         # delete comment
-        self.pool['mail.message'].unlink(cr, SUPERUSER_ID, [comment.id], context=context)
+        comment.unlink()
 
-        return new_post_id
+        return new_post
 
-    def unlink_comment(self, cr, uid, id, message_id, context=None):
-        comment = self.pool['mail.message'].browse(cr, SUPERUSER_ID, message_id, context=context)
-        post = self.pool['forum.post'].browse(cr, uid, id, context=context)
-        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
-        if not comment.model == 'forum.post' or not comment.res_id == id:
+    @api.one
+    def unlink_comment(self, message_id):
+        user = self.env.user
+        comment = self.env['mail.message'].sudo().browse(message_id)
+        if not comment.model == 'forum.post' or not comment.res_id == self.id:
             return False
-
         # karma-based action check: must check the message's author to know if own or all
-        karma_unlink = comment.author_id.id == user.partner_id.id and post.forum_id.karma_comment_unlink_own or post.forum_id.karma_comment_unlink_all
-        can_unlink = uid == SUPERUSER_ID or user.karma >= karma_unlink
+        karma_unlink = comment.author_id.id == user.partner_id.id and self.forum_id.karma_comment_unlink_own or self.forum_id.karma_comment_unlink_all
+        can_unlink = user.karma >= karma_unlink
         if not can_unlink:
             raise KarmaError('Not enough karma to unlink a comment')
+        return comment.unlink()
 
-        return self.pool['mail.message'].unlink(cr, SUPERUSER_ID, [message_id], context=context)
-
-    def set_viewed(self, cr, uid, ids, context=None):
-        cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (tuple(ids),))
+    @api.multi
+    def set_viewed(self):
+        self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
         return True
 
-    def _get_access_link(self, cr, uid, mail, partner, context=None):
-        post = self.pool['forum.post'].browse(cr, uid, mail.res_id, context=context)
+    @api.model
+    def _get_access_link(self, mail, partner):
+        post = self.browse(mail.res_id)
         res_id = post.parent_id and "%s#answer-%s" % (post.parent_id.id, post.id) or post.id
         return "/forum/%s/question/%s" % (post.forum_id.id, res_id)
 
@@ -564,37 +451,34 @@ class Post(osv.Model):
             else:
                 post_id = thread_id
             post = self.browse(cr, uid, post_id, context=context)
+            # TDE FIXME: trigger browse because otherwise the function field is not compted - check with RCO
+            tmp1, tmp2 = post.karma_comment, post.can_comment
+            user = self.pool['res.users'].browse(cr, uid, uid)
+            tmp3 = user.karma
+            # TDE END FIXME
             if not post.can_comment:
                 raise KarmaError('Not enough karma to comment')
         return super(Post, self).message_post(cr, uid, thread_id, type=type, subtype=subtype, context=context, **kwargs)
 
 
-class PostReason(osv.Model):
+class PostReason(models.Model):
     _name = "forum.post.reason"
     _description = "Post Closing Reason"
     _order = 'name'
-    _columns = {
-        'name': fields.char('Post Reason', required=True, translate=True),
-    }
+
+    name = fields.Char(string='Closing Reason', required=True, translate=True)
 
 
-class Vote(osv.Model):
+class Vote(models.Model):
     _name = 'forum.post.vote'
     _description = 'Vote'
-    _columns = {
-        'post_id': fields.many2one('forum.post', 'Post', ondelete='cascade', required=True),
-        'user_id': fields.many2one('res.users', 'User', required=True),
-        'vote': fields.selection([('1', '1'), ('-1', '-1'), ('0', '0')], 'Vote', required=True),
-        'create_date': fields.datetime('Create Date', select=True, readonly=True),
 
-        # TODO master: store these two
-        'forum_id': fields.related('post_id', 'forum_id', type='many2one', relation='forum.forum', string='Forum'),
-        'recipient_id': fields.related('post_id', 'create_uid', type='many2one', relation='res.users', string='To', help="The user receiving the vote"),
-    }
-    _defaults = {
-        'user_id': lambda self, cr, uid, ctx: uid,
-        'vote': lambda *args: '1',
-    }
+    post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
+    user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid)
+    vote = fields.Selection([('1', '1'), ('-1', '-1'), ('0', '0')], string='Vote', required=True, default='1')
+    create_date = fields.Datetime('Create Date', select=True, readonly=True)
+    forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True)
+    recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True)
 
     def _get_karma_value(self, old_vote, new_vote, up_karma, down_karma):
         _karma_upd = {
@@ -604,9 +488,9 @@ class Vote(osv.Model):
         }
         return _karma_upd[old_vote][new_vote]
 
-    def create(self, cr, uid, vals, context=None):
-        vote_id = super(Vote, self).create(cr, uid, vals, context=context)
-        vote = self.browse(cr, uid, vote_id, context=context)
+    @api.model
+    def create(self, vals):
+        vote = super(Vote, self).create(vals)
 
         # own post check
         if vote.user_id.id == vote.post_id.create_uid.id:
@@ -617,17 +501,17 @@ class Vote(osv.Model):
         elif vote.vote == '-1' and not vote.post_id.can_downvote:
             raise KarmaError('Not enough karma to downvote.')
 
-        # karma update
         if vote.post_id.parent_id:
             karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
         else:
             karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_question_upvote, vote.forum_id.karma_gen_question_downvote)
-        self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [vote.recipient_id.id], karma_value, context=context)
-        return vote_id
+        vote.recipient_id.sudo().add_karma(karma_value)
+        return vote
 
-    def write(self, cr, uid, ids, values, context=None):
+    @api.multi
+    def write(self, values):
         if 'vote' in values:
-            for vote in self.browse(cr, uid, ids, context=context):
+            for vote in self:
                 # own post check
                 if vote.user_id.id == vote.post_id.create_uid.id:
                     raise Warning('Not allowed to vote for its own post')
@@ -642,33 +526,24 @@ class Vote(osv.Model):
                     karma_value = self._get_karma_value(vote.vote, values['vote'], vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
                 else:
                     karma_value = self._get_karma_value(vote.vote, values['vote'], vote.forum_id.karma_gen_question_upvote, vote.forum_id.karma_gen_question_downvote)
-                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [vote.recipient_id.id], karma_value, context=context)
-        res = super(Vote, self).write(cr, uid, ids, values, context=context)
+                vote.recipient_id.sudo().add_karma(karma_value)
+        res = super(Vote, self).write(values)
         return res
 
 
-class Tags(osv.Model):
+class Tags(models.Model):
     _name = "forum.tag"
-    _description = "Tag"
+    _description = "Forum Tag"
     _inherit = ['website.seo.metadata']
 
-    def _get_posts_count(self, cr, uid, ids, field_name, arg, context=None):
-        return dict((tag_id, self.pool['forum.post'].search_count(cr, uid, [('tag_ids', 'in', tag_id)], context=context)) for tag_id in ids)
+    name = fields.Char('Name', required=True)
+    create_uid = fields.Many2one('res.users', string='Created by', readonly=True)
+    forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
+    post_ids = fields.Many2many('forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_id', string='Posts')
+    posts_count = fields.Integer('Number of Posts', compute='_get_posts_count', store=True)
 
-    def _get_tag_from_post(self, cr, uid, ids, context=None):
-        return list(set(
-            [tag.id for post in self.pool['forum.post'].browse(cr, SUPERUSER_ID, ids, context=context) for tag in post.tag_ids]
-        ))
-
-    _columns = {
-        'name': fields.char('Name', required=True),
-        'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
-        'post_ids': fields.many2many('forum.post', 'forum_tag_rel', 'tag_id', 'post_id', 'Posts'),
-        'posts_count': fields.function(
-            _get_posts_count, type='integer', string="Number of Posts",
-            store={
-                'forum.post': (_get_tag_from_post, ['tag_ids'], 10),
-            }
-        ),
-        'create_uid': fields.many2one('res.users', 'Created by', readonly=True),
-    }
+    @api.multi
+    @api.depends("post_ids.tag_ids")
+    def _get_posts_count(self):
+        for tag in self:
+            tag.posts_count = len(tag.post_ids)
