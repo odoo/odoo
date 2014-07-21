@@ -9,11 +9,20 @@
     </t>
     <t t-name="Linkedin.popup">
         <div>
-            <h2 style="margin-top:-10px;">People</h2>
-            <div class="oe_linkedin_pop_p"></div>
+            <h2 style="margin-top:-10px;">Contacts</h2>
+            <div class="oe_linkedin_pop_p">
+                <div class="oe_linkedin_people_entities"></div>
+                <div class="oe_linkedin_show_more"></div>
+            </div>
             <h2>Companies</h2>
-            <div class="oe_linkedin_pop_c"></div>
+            <div class="oe_linkedin_pop_c">
+                <div class="oe_linkedin_company_entities"></div>
+                <div class="oe_linkedin_show_more"></div>
+            </div>
         </div>
+    </t>
+    <t t-name="Linkedin.show_more">
+        <button t-attf-class="#{class} oe_button">Show more... (<span class="oe_linkedin_remaining"><t t-esc="remaining"></t></span> remaining)</button>
     </t>
     <t t-name="Linkedin.EntityWidget">
         <div class="oe_linkedin_entity">
@@ -38,10 +47,30 @@
         <div class="oe_linkedin_authentified">If "<b><t t-raw="firstName"/> <t t-raw="lastName"/></b>" is not your account, <a class="oe_linkedin_logout">please click here to logout</a>.</div>
     </t>
     <t t-name="LinkedIn.AdvancedSearch">
-        <t t-raw="title"/>
-        <div class="oe_linkedin_advanced_search">
-            Search by url or keywords : <input name="search"/> <button>Search</button>
+        <div class="oe_linkedin_search_title">
+            <img class="oe_linkedin_img_search" t-att-src='_s + "/web_linkedin/static/src/img/Linkedin_blue.png"' />
+            <span>Search</span>
+        </div>
+        <div class="oe_linkedin_advanced_search input-group">
+             <input name="search" placeholder="Search by url or keywords..." class="form-control"/>
+             <span class="input-group-addon oe_linkedin_search" title="Search"></span>
         </div>
     </t>
 
+    <t t-name="LinkedIn.InitialDialog">
+        <div class="oe_linkedin_initial_dialog_button">
+            Well done! You can use Web Linkedin Integration now, 
+            If you still not set API key and Secret key of linkedin application then follow the tutorial by clicking button Set API Key,
+            If you already set the API key and Secret key then you can import your Linkedin contacts here by clicking Import Contact button.   
+        </div>
+    </t>
+
+    <t t-name="KanbanView.linkedinButton">
+        <t t-if="widget.is_action_enabled('create')">
+            <span class="oe_fade">or</span>
+        </t>
+        <div class="oe_kanban_import_contact">
+            <a href="#" class="oe_bold">Import Contacts from Linkedin</a>
+        </div>
+    </t>
 </templates>

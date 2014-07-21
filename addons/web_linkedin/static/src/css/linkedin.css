@@ -1,4 +1,6 @@
-
+.openerp .oe_kanban_import_contact {
+    display: inline;
+}
 
 .openerp .oe_linkedin_img {
     float: right;
@@ -52,13 +54,37 @@
 .openerp .oe_linkedin_advanced_search {
     margin: auto;
     position: absolute;
-    right: 60px;
-    top: 16px;
+    right: 50px;
+    top: 12px;
     line-height: 12px;
     font-size: 12px;
+    width: 250px;
+    font-weight: normal;
 }
 
-.openerp .oe_linkedin_advanced_search button {
-    line-height: 12px;
-    font-size: 12px;
+.openerp .oe_linkedin_advanced_search .oe_linkedin_search:before {
+    content: "r";
+    font: 18px "mnmliconsRegular";
+}
+
+.openerp .oe_linkedin_advanced_search .oe_linkedin_search {
+    cursor: pointer;
+    background: #287bbc;
+    color: #ffffff;
+}
+
+.openerp .oe_linkedin_img_search {
+    width: 2em;
+    margin-top: -4px;
+}
+
+.openerp .oe_linkedin_search_title span {
+    color: #287bbc;
+}
+
+.openerp .oe_linkedin_show_more {
+    //display: table-row;
+    width: 100%;
+    clear: both;
+    text-align: center;
 }

@@ -24,7 +24,7 @@
                 <div name="LinkedIn" position="inside">
                     <div attrs="{'invisible':[('module_web_linkedin','=',False)]}">
                         <p>
-                            To use the LinkedIn module with this database, an API Key is required. Please follow this procedure:
+                            To use the LinkedIn module with this database, an API Key and Secret key is required. Please follow this procedure:
                         </p>
                         <ul>
                             <li>Go to this URL: 
@@ -34,17 +34,30 @@
                             <li>Add a new application and fill the form:
                                 <ul>
                                     <li>Website URL: <field name="server_domain" readonly="1" style="width:0;white-space: nowrap;"/></li>
-                                    <li>The programming tool is Javascript</li>
-                                    <li>Website URL inside "JavaScript API Domains" field</li>
+                                    <li>Website URL inside "Oauth2 Redirect URL" field</li>
                                 </ul>
                             </li>
-                            <li>Copy the <strong>API key</strong> here:
+                            <li>Copy the <strong>API key and Secret key</strong> here:
                                 <field name="api_key" attrs="{'required':[('module_web_linkedin','=',True)]}" class="oe_inline"/>
+                                <field name="secret_key" attrs="{'required':[('module_web_linkedin','=',True)]}" class="oe_inline"/>
                             </li>
                         </ul>
                     </div>
                 </div>
             </field>
+        </record>
+
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_crm_client" model="ir.actions.client">
+            <field name="name">CRM Client Action</field>
+            <field name="tag">crm.linkedin.dialog</field>
+            <field name="params" eval="{'menu_id': ref('base.menu_partner_form')}"/>
+        </record>
+
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_crm_client"/>
+            <field name="type">automatic</field>
+            <field name="state">open</field>
         </record>
         
    </data>
