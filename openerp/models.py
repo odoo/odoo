@@ -857,7 +857,7 @@ class BaseModel(object):
                 "table %s is not an ordinary table."
                 % (self._name, self._table))
         ir_model_data = self.sudo().env['ir.model.data']
-        data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
+        data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)], limit=1)
         if data:
             if data[0].module:
                 return '%s.%s' % (data[0].module, data[0].name)
@@ -1192,7 +1192,10 @@ class BaseModel(object):
                 'to': index + len(record_span) - 1
             }}
             index += len(record_span)
-    
+
+    # Will be used in export to xml
+    extract_records = _extract_records
+
     def _convert_records(self, cr, uid, records,
                          context=None, log=lambda a: None):
         """ Converts records from the source iterable (recursive dicts of

@@ -18,6 +18,7 @@ import sys
 import time
 import urllib2
 import zlib
+import lxml.etree as Etree
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -34,6 +35,7 @@ import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
+from openerp.models import fix_import_export_id_paths, itemgetter_tuple
 from openerp import http
 
 from openerp.http import request, serialize_exception as _serialize_exception
@@ -1285,16 +1287,19 @@ class Action(http.Controller):
 class Export(http.Controller):
 
     @http.route('/web/export/formats', type='json', auth="user")
-    def formats(self):
+    def formats(self, import_compat=True):
         """ Returns all valid export formats
 
         :returns: for each export format, a pair of identifier and printable name
         :rtype: [(str, str)]
         """
-        return [
+        formats = [
             {'tag': 'csv', 'label': 'CSV'},
             {'tag': 'xls', 'label': 'Excel', 'error': None if xlwt else "XLWT required"},
         ]
+        if import_compat:
+            formats.append({'tag': 'xml', 'label': 'XML'})
+        return formats
 
     def fields_get(self, model):
         Model = request.session.model(model)
@@ -1329,6 +1334,9 @@ class Export(http.Controller):
                     if all(dict(attrs).get('readonly', True)
                            for attrs in field.get('states', {}).values()):
                         continue
+                # skip the fields which are related and not stored
+                if field.get('depends', False) and not field.get('store'):
+                    continue
             if not field.get('exportable', True):
                 continue
 
@@ -1467,7 +1475,7 @@ class ExportFormat(object):
             columns_headers = [val['label'].strip() for val in fields]
 
 
-        return request.make_response(self.from_data(columns_headers, import_data),
+        return request.make_response(self.from_data(columns_headers, import_data, model),
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model))),
                      ('Content-Type', self.content_type)],
@@ -1487,7 +1495,7 @@ class CSVExport(ExportFormat, http.Controller):
     def filename(self, base):
         return base + '.csv'
 
-    def from_data(self, fields, rows):
+    def from_data(self, fields, rows, model):
         fp = StringIO()
         writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
 
@@ -1527,7 +1535,7 @@ class ExcelExport(ExportFormat, http.Controller):
     def filename(self, base):
         return base + '.xls'
 
-    def from_data(self, fields, rows):
+    def from_data(self, fields, rows, model):
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet('Sheet 1')
 
@@ -1552,6 +1560,71 @@ class ExcelExport(ExportFormat, http.Controller):
 
         fp = StringIO()
         workbook.save(fp)
+        fp.seek(0)
+        data = fp.read()
+        fp.close()
+        return data
+
+class XMLExport(ExportFormat, http.Controller):
+
+    @http.route('/web/export/xml', type='http', auth="user")
+    @serialize_exception
+    def index(self, data, token):
+        return self.base(data, token)
+
+    @property
+    def content_type(self):
+        return 'text/xml;charset=utf8'
+
+    def filename(self, base):
+        return base + '.xml'
+
+    def from_data(self, fields, rows, model):
+        fp = StringIO()
+        root = Etree.Element("openerp")
+        data_root = Etree.SubElement(root, "data")
+
+        def _generate_xml_record(model, record, rel_field=None):
+            """Generate new Odoo compitable xml records"""
+            new_record = Etree.SubElement(data_root, "record")
+            new_record.set("model", model)
+            field_details = request.session.model(model).fields_get(record.keys())
+            for field, value in record.iteritems():
+                # Only fileds which contain data should be exported
+                if value:
+                    if field == 'id':
+                        new_record.set("id", value)
+                        continue
+                    elif field_details[field]['type'] == 'one2many':
+                        for child_record in value:
+                            child_record.update({field_details[field]['relation_field']: [{'id': record['id']}]})
+                            _generate_xml_record(field_details[field]['relation'], child_record, field_details[field]['relation_field'])
+                        continue
+                    new_record_element = Etree.SubElement(new_record, "field")
+                    new_record_element.set("name", field)
+                    # Note: For Special case where relational filed is integer instead of regular m2o. 
+                    # eg: res_id of ir.mode.data used as relational field of o2m at many palces.
+                    # To handle this special case 'or' condition is added here.
+                    if field_details[field]['type'] == 'many2one' or (rel_field == field and field_details[field]['type'] == 'integer'):
+                        new_record_element.set("ref", value[0]['id'])
+                    elif field_details[field]['type'] == 'many2many':
+                        eval = '[]'
+                        for m2m_id in value[0]['id'].split(','):
+                            eval = eval[:-1] + "(4, ref('%s')), ]" % m2m_id
+                        new_record_element.set("eval", eval)
+                    elif field_details[field]['type'] == 'selection':
+                        new_value = [selection[0] for selection in field_details[field]['selection'] if selection[1] == value]
+                        new_record_element.text = new_value and new_value[0] or value
+                    else:
+                        new_record_element.text = value
+            return True
+
+        fields = map(fix_import_export_id_paths, fields)
+        records = [subrecord for subrecord, _subinfo in request.session.model(model).extract_records(fields, rows)]
+        for record in records:
+            _generate_xml_record(model, record)
+        xml = Etree.tostring(root, encoding='utf-8', xml_declaration=True, pretty_print=True)
+        fp.write(xml)
         fp.seek(0)
         data = fp.read()
         fp.close()
