@@ -20,6 +20,7 @@ function openerp_pos_db(instance, module){
             this.product_by_ean13 = {};
             this.product_by_category_id = {};
             this.product_by_reference = {};
+            this.product_attributes_by_id = {};
 
             this.partners_sorted = [];
             this.partner_by_id = {};
@@ -107,6 +108,16 @@ function openerp_pos_db(instance, module){
             }
             make_ancestors(this.root_category_id, []);
         },
+        /* add a list of attributes to the local storage */
+        add_product_attributes: function(attributes) {
+            if (!attributes instanceof Array) {
+				attributes = [attributes];
+			}
+            for (var i = 0, len = attributes.length; i < len; i++) {
+				var attribute = attributes[i];
+				this.product_attributes_by_id[attribute.id] = attribute.name;
+			}
+        },
         /* loads a record store from the database. returns default if nothing is found */
         load: function(store,deft){
             if(this.cache[store] !== undefined){
@@ -151,8 +162,12 @@ function openerp_pos_db(instance, module){
                 var product = products[i];
                 var search_string = this._product_search_string(product);
                 var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
-                if (product.variants){
-                    product.name = product.name+" ("+product.variants+")";
+                if (product.product_variant_count > 1) {
+                    var self = this;
+                    var variants = $.map(product.attribute_value_ids, function(id){
+                        return self.product_attributes_by_id[id];
+                    }).join(', ');
+                    product.name = product.name+" ("+variants+")";
                 }
                 product.product_tmpl_id = product.product_tmpl_id[0];
                 if(!stored_categories[categ_id]){
