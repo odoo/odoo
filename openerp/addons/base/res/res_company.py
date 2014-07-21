@@ -202,7 +202,7 @@ class res_company(osv.osv):
 
     def on_change_country(self, cr, uid, ids, country_id, context=None):
         res = {'domain': {'state_id': []}}
-        currency_id = self._get_euro(cr, uid, context=context)
+        currency_id = self._get_base_currancy(cr, uid, context=context)
         if country_id:
             currency_id = self.pool.get('res.country').browse(cr, uid, country_id, context=context).currency_id.id
             res['domain'] = {'state_id': [('country_id','=',country_id)]}
@@ -286,10 +286,15 @@ class res_company(osv.osv):
         self.cache_restart(cr)
         return super(res_company, self).write(cr, uid, ids, values, context=context)
 
-    def _get_euro(self, cr, uid, context=None):
+    def _get_base_currancy(self, cr, uid, context=None):
         rate_obj = self.pool.get('res.currency.rate')
         rate_id = rate_obj.search(cr, uid, [('rate', '=', 1)], context=context)
         return rate_id and rate_obj.browse(cr, uid, rate_id[0], context=context).currency_id.id or False
+
+    def _get_company_currency(self, cr, uid, ids, context=None):
+        res_user_obj = self.pool.get('res.users')
+        company_id = res_user_obj._get_company(cr, uid, context)
+        return self.browse(cr, uid, [company_id], context=context)[0].currency_id.id or False
 
     def _get_logo(self, cr, uid, ids):
         return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
@@ -397,7 +402,7 @@ class res_company(osv.osv):
         return self.pool.get("res.font").font_scan(cr, uid, context=context)
 
     _defaults = {
-        'currency_id': _get_euro,
+        'currency_id': _get_base_currancy,
         'rml_paper_format': 'a4',
         'rml_header':_get_header,
         'rml_header2': _header2,

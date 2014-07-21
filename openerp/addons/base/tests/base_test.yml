@@ -153,7 +153,7 @@
     !python {model: res.currency}: |
         from openerp.tools import float_repr
         from math import log10
-        currency = self.browse(cr, uid, ref('base.EUR'))
+        currency = self.browse(cr, uid, ref('base.USD'))
         def try_round(amount, expected, self=self, cr=cr, currency=currency, float_repr=float_repr,
                       log10=log10):
             digits = max(0,-int(log10(currency.rounding)))
@@ -274,7 +274,7 @@
     "Float precision tests: check that proper rounding is performed for float persistence"
 -
     !python {model: res.currency}: |
-        currency = self.browse(cr, uid, ref('base.EUR'))
+        currency = self.browse(cr, uid, ref('base.USD'))
         res_currency_rate = self.pool.get('res.currency.rate')
         from openerp.tools import float_compare, float_is_zero, float_round, float_repr
         def try_roundtrip(value, expected, self=self, cr=cr, currency=currency,
