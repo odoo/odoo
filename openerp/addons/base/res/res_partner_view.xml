@@ -148,8 +148,8 @@
 
                     <group>
                         <group>
-                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
-                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
+                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
+                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type" groups="base.group_no_one">
                                 <field class="oe_inline"
                                     name="type"/>
                             </div>
@@ -273,8 +273,8 @@
                                             <field name="use_parent_address"/><label for="use_parent_address"/>
                                         </div>
                                         <group>
-                                            <label for="type"/>
-                                            <div name="div_type">
+                                            <label for="type" groups="base.group_no_one"/>
+                                            <div name="contact_div_type" groups="base.group_no_one">
                                                 <field class="oe_inline" name="type"/>
                                             </div>
                                             <label for="street" string="Address" attrs="{'invisible': [('use_parent_address','=', True)]}"/>

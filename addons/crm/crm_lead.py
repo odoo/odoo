@@ -203,7 +203,7 @@ class crm_lead(format_address, osv.osv):
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Subject', required=True, select=1),
+        'name': fields.char('Opportunity', required=True, select=1),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
