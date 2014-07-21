@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+<template id="comman_table1">
+    <table class="table table-condensed" style="margin-left:-80px;">
+        <tr>
+            <td><strong>Total</strong></td>
+            <td style="text-align:center;"><strong t-esc="formatLang(sum_debit(o.period_id.id, o.journal_id.id), currency_obj=res_company.currency_id)"/></td>
+            <td ><strong t-esc="formatLang(sum_credit(o.period_id.id, o.journal_id.id), currency_obj=res_company.currency_id)"/></td>
+        </tr>
+    </table>
+</template>
+
+<template id="comman_table2">
+    <table class="table table-condensed">
+        <tr>
+            <td><strong>Total</strong></td>
+            <td style="text-align:center;"><strong t-esc="formatLang(sum_debit(o.period_id.id, o.journal_id.id), currency_obj=res_company.currency_id)"/></td>
+            <td style="text-align:center;"><strong t-esc="formatLang(sum_credit(o.period_id.id, o.journal_id.id), currency_obj=res_company.currency_id)"/></td>
+        </tr>
+    </table>
+</template>
+
 <template id="report_salepurchasejournal">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
@@ -45,40 +65,68 @@
                                 <th>Date</th>
                                 <th>Account</th>
                                 <th>Partner</th>
-                                <th>Label</th>
-                                <th>Tax</th>
+                                <t t-if="data['form'].get('grouped') != True">
+                                    <th>Label</th>
+                                    <th>Tax</th>
+                                </t>
                                 <th>Debit</th>
                                 <th>Credit</th>
                                 <th t-if="display_currency(data)">Currency</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="lines(o.period_id.id, o.journal_id.id)" t-as="line">
-                                <td><span t-esc="line.move_id.name &lt;&gt; '/' and line.move_id.name or ('*'+str(line.move_id.id))"/></td>
-                                <td><span t-esc="formatLang(line.date,date=True)"/></td> 
-                                <td><span t-field="line.account_id.code"/></td>
-                                <td><span t-esc="line.partner_id and line.partner_id.name[:23]"/></td>
-                                <td><span t-esc="line.name[:35]"/></td>
-                                <td><span t-esc="line.tax_amount and formatLang(line.tax_amount, currency_obj=res_company.currency_id)"/></td>
-                                <td><span t-esc="formatLang(line.debit, currency_obj=res_company.currency_id)"/></td>
-                                <td><span t-esc="formatLang(line.credit, currency_obj=res_company.currency_id)"/></td>
-                                <td t-if="display_currency(data)">
-                                    <span t-esc="formatLang(line.amount_currency, currency_obj=line.currency_id) if line.amount_currency else ''"/>
-                                </td>
+                            <tr t-foreach="lines(o.period_id.id, o.journal_id.id, data['form']['grouped'])" t-as="line">
+                                <t t-if="data['form'].get('grouped') == True and line['flag'] > 1">
+	                                <td><b><span t-esc="line['move_name']"/></b></td>
+	                                <td><b><span t-esc="formatLang(line['date'], date=True)"/></b></td>
+	                                <td><b><span t-esc="line['code']"/></b></td>
+	                                <td><b><span t-esc="line['partner_name']"/></b></td>
+	                                <td><b><span t-esc="formatLang(line['debit'], currency_obj=res_company.currency_id)"/></b></td>
+	                                <td><b><span t-esc="formatLang(line['credit'], currency_obj=res_company.currency_id)"/></b></td>
+	                                <td t-if="display_currency(data)">
+	                                    <b><span t-esc="formatLang(line['amount_currency'], currency_obj=line['currency_id']) if line['amount_currency'] else ''"/></b>
+	                                </td>
+                                </t>
+                                <t t-if="(data['form'].get('grouped') == True and line['flag'] &lt;= 1) or data['form'].get('grouped') == False">
+                                    <td><span t-esc="line['move_name']"/></td>
+                                    <td><span t-esc="formatLang(line['date'], date=True)"/></td>
+                                    <td><span t-esc="line['code']"/></td>
+                                    <td><span t-esc="line['partner_name']"/></td>
+                                    <t t-if="data['form'].get('grouped') != True">
+                                        <td><span t-esc="line['name']"/></td>
+                                        <td><span t-esc="line['tax_amount'] and formatLang(line['tax_amount'], currency_obj=res_company.currency_id)"/></td>
+                                    </t>
+                                    <td><span t-esc="formatLang(line['debit'], currency_obj=res_company.currency_id)"/></td>
+                                    <td><span t-esc="formatLang(line['credit'], currency_obj=res_company.currency_id)"/></td>
+                                    <td t-if="display_currency(data)">
+                                        <span t-esc="formatLang(line['amount_currency'], currency_obj=line['currency_id']) if line['amount_currency'] else ''"/>
+                                    </td>
+                                </t>
                             </tr>
                         </tbody>
                     </table>
 
                     <div class="row">
-                        <div class="col-xs-4 pull-right">
-                            <table class="table table-condensed">
-                                <tr>
-                                    <td><strong>Total</strong></td>
-                                    <td><strong t-esc="formatLang(sum_debit(o.period_id.id, o.journal_id.id), currency_obj=res_company.currency_id)"/></td>
-                                    <td><strong t-esc="formatLang(sum_credit(o.period_id.id, o.journal_id.id), currency_obj=res_company.currency_id)"/></td>
-                                </tr>
-                            </table>
-                        </div>
+                        <t t-if="(data['form'].get('grouped') == False and not display_currency(data))">
+                            <div class="pull-right col-xs-4">
+                                <t t-call="account.comman_table2"/>
+                            </div>
+                        </t>
+                        <t t-if="data['form'].get('grouped') == False and display_currency(data)">
+                            <div class="pull-right col-xs-4">
+                                <t t-call="account.comman_table1"/>
+                            </div>
+                        </t>
+                        <t t-if="data['form'].get('grouped') == True and display_currency(data)">
+                            <div class="pull-right col-xs-5">
+                                <t t-call="account.comman_table1"/>
+                            </div>
+                        </t>
+                        <t t-if="data['form'].get('grouped') == True and not display_currency(data)">
+                            <div class="pull-right col-xs-5">
+                                <t t-call="account.comman_table2"/>
+                            </div>
+                        </t>
                     </div>
 
                     <div class="row">
@@ -97,7 +145,6 @@
                             </table>
                         </div>
                     </div>
-
                 </div>
             </t>
         </t>

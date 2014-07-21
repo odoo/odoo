@@ -36,6 +36,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         self.last_move_id = False
         self.journal_ids = []
         self.sort_selection = 'am.name'
+        self.context = context
         self.localcontext.update({
             'time': time,
             'lines': self.lines,
@@ -150,22 +151,36 @@ class journal_print(report_sxw.rml_parse, common_report_header):
                         (tuple(move_state), tuple(period_id), tuple(journal_id)))
         return self.cr.fetchone()[0] or 0.0
 
-    def lines(self, period_id, journal_id=False):
+    def lines(self, period_id, journal_id=False, group=False):
         if not journal_id:
             journal_id = self.journal_ids
         else:
             journal_id = [journal_id]
-        obj_mline = self.pool.get('account.move.line')
         self.cr.execute('update account_journal_period set state=%s where journal_id IN %s and period_id=%s and state=%s', ('printed', self.journal_ids, period_id, 'draft'))
         self.pool.get('account.journal.period').invalidate_cache(self.cr, self.uid, ['state'], context=self.context)
 
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
-
-        self.cr.execute('SELECT l.id FROM account_move_line l, account_move am WHERE l.move_id=am.id AND am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ORDER BY '+ self.sort_selection + ', l.move_id',(tuple(move_state), period_id, tuple(journal_id) ))
-        ids = map(lambda x: x[0], self.cr.fetchall())
-        return obj_mline.browse(self.cr, self.uid, ids)
+        select_str = 'SELECT am.name as move_name, l.date, a.code, rp.name as partner_name, l.currency_id, l.amount_currency,'
+        join_str = 'FROM account_move_line l \
+                        LEFT JOIN account_move am ON (l.move_id=am.id) \
+                        LEFT JOIN account_account a ON (l.account_id=a.id) \
+                        LEFT JOIN res_partner rp ON (l.partner_id=rp.id) \
+                        LEFT JOIN res_currency c on (l.currency_id=c.id) \
+                     WHERE am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause
+        order_by_str = ' ORDER BY ' + self.sort_selection + ', l.move_id'
+        if group:
+            query = ('%s %s %s %s %s')  % (select_str, 'Count(*) AS flag, sum(l.debit) as debit, sum(l.credit) as credit'\
+                                 , join_str\
+                                 ,'GROUP BY l.account_id, l.move_id, a.code, am.name, rp.name, l.amount_currency, l.currency_id, l.date' \
+                                 , order_by_str)
+        else:
+            query = ('%s %s %s %s') % (select_str, 'l.debit, l.credit, l.tax_amount, l.name'\
+                                 , join_str\
+                                 , order_by_str)
+        self.cr.execute(query, (tuple(move_state), period_id, tuple(journal_id)))
+        return self.cr.dictfetchall()
 
     def _set_get_account_currency_code(self, account_id):
         self.cr.execute("SELECT c.symbol AS code "\

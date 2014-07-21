@@ -33,6 +33,7 @@ class account_print_journal(osv.osv_memory):
                                             ('am.name', 'Journal Entry Number'),],
                                             'Entries Sorted by', required=True),
         'journal_ids': fields.many2many('account.journal', 'account_print_journal_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
+        'grouped': fields.boolean('Group By Account', help="If selected, for each journal entries, journal items will be grouped by account.")
     }
 
     _defaults = {
@@ -65,7 +66,7 @@ class account_print_journal(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['sort_selection'], context=context)[0])
+        data['form'].update(self.read(cr, uid, ids, ['sort_selection', 'grouped'], context=context)[0])
         if context.get('sale_purchase_only'):
             return self.pool['report'].get_action(cr, uid, [], 'account.report_salepurchasejournal', data=data, context=context)
         else:
