@@ -58,6 +58,8 @@ class project_configuration(osv.osv_memory):
         'group_manage_delegation_task': fields.boolean("Allow task delegation",
             implied_group='project.group_delegate_task',
             help="Allows you to delegate tasks to other users."),
+        'generate_project_alias': fields.boolean("Automatically generate an email alias at the project creation",
+            help="Allow to generate an email alias at the project creation."),
     }
 
     def get_default_time_unit(self, cr, uid, fields, context=None):
@@ -73,5 +75,11 @@ class project_configuration(osv.osv_memory):
         if group_time_work_estimation_tasks or module_project_timesheet:
             return {'value': {'group_tasks_work_on_tasks': True}}
         return {}
+    
+    def set_default_generate_project_alias(self, cr, uid, ids, context=None):
+        ir_values = self.pool.get('ir.values')
+        config = self.browse(cr, uid, ids[0], context)
+        ir_values.set_default(cr, uid, 'project.config.settings', 'generate_project_alias',
+            config.generate_project_alias  or False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

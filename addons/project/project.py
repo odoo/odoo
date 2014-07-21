@@ -22,7 +22,7 @@
 from datetime import datetime, date
 from lxml import etree
 import time
-
+import pickle
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.addons.resource.faces import task as Task
@@ -531,7 +531,10 @@ def Project():
 
         project_id = super(project, self).create(cr, uid, vals, context=create_context)
         project_rec = self.browse(cr, uid, project_id, context=context)
-        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], {'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}, context)
+        ir_values=self.pool.get('ir.values')
+        search_ids= ir_values.search(cr, uid,  [('name', '=', 'generate_project_alias'),])
+        if pickle.loads(ir_values.browse(cr, uid, search_ids[0]).value): 
+            self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], {'alias_parent_thread_id': project_id, 'alias_name': vals['name'], 'alias_defaults': {'project_id': project_id}}, context)
         return project_id
 
     def write(self, cr, uid, ids, vals, context=None):
