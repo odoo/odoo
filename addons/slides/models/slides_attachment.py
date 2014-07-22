@@ -21,24 +21,49 @@
 import openerp
 from openerp.osv import fields, osv
 
+class ir_attachment_tags(osv.osv):
+    _name = 'ir.attachment.tag'
+    _columns = {
+        'name': fields.char('Name')
+    }
 
-class slides_attachment(osv.osv):	
-    _inherit = 'ir.attachment'
+class document_directory(osv.osv):   
+    _inherit = 'document.directory'
 
     _columns = {
-        'is_slide': fields.boolean('Is Slide')
+        'website_published': fields.boolean(
+            'Publish', help="Publish on the website", copy=False,
+        ),
     }
+
+class ir_attachment(osv.osv):
+    _inherit = 'ir.attachment'
+    #_inherits = ['mail.thread', 'ir.needaction_mixin']
+
     _order = "id desc"
+    _columns = {
+        'is_slide': fields.boolean('Is Slide'),
+        'slide_type': fields.selection([('ppt', 'Presentation'), ('doc', 'Document'), ('video', 'Video')], 'Type'),
+        'tag_ids': fields.many2many('ir.attachment.tag', 'rel_attachments_tags', 'attachment_id', 'tag_id', 'Tags'),
+        'image': fields.binary('Thumb'),
+        'website_published': fields.boolean(
+            'Publish', help="Publish on the website", copy=False,
+        ),
+    }
+    
+    def _get_slide_setting(self, cr, uid, context):
+        return context.get('is_slide', False)
    
-   
-    def create(self, cr, uid, values, context=None):        
-        values['is_slide']=True
-        values['url']="/slides/"+values['datas_fname']
-        return super(slides_attachment, self).create(cr, uid, values, context)
-        
-    def read(self, cr, uid, ids, fields_to_read=None, context=None, load=None):
-        ids = self.search(cr,uid,[('is_slide','=','TRUE')],context=context)
-        #print ">>>>>>>>>>>>>>>>>>>>>>>>>>",ids
-        return super(slides_attachment, self).read(cr, uid, ids, fields_to_read=None, context=None, load=None)
-        
-        
+    def _get_slide_type(self, cr, uid, context):
+        return context.get('slide_type', 'ppt')
+
+    _defaults = {
+        'is_slide': _get_slide_setting,
+        'slide_type':_get_slide_type
+    }
+    
+    def create(self, cr, uid, values, context=None):
+        if values.get('is_slide', False) and values.get('datas_fname', False):
+            values['url']="/slides/"+values['datas_fname']
+        id = super(ir_attachment, self).create(cr, uid, values, context)
+        return id
