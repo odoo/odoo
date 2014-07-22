@@ -375,22 +375,6 @@
                                     '/web/css/website.assets_editor/' + (new Date().getTime())],
                             attributes: { 'role': 'listbox', 'aria-label': label },
                         },
-                        onRender: function () {
-                            var self = this;
-                            editor.on('selectionChange', function (e) {
-                                var path = e.data.path, el;
-                                if (!(e = (path.contains('p') || path.contains('span') || path.contains('font'))) || e.isReadOnly()) {
-                                    self.disable();
-                                    return;
-                                }
-                                self.enable();
-                            });
-                            // no hook where item is available, so wait
-                            // "some time" after render.
-                            setTimeout(function () {
-                                self.disable();
-                            }, 0);
-                        },
                         enable: function () {
                             this.setState(CKEDITOR.TRISTATE_OFF);
                         },
