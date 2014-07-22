@@ -42,6 +42,10 @@
                     <button class="oe_inline oe_stat_button" name="open_timesheets" type="object" attrs="{'invisible':[('invoice_on_timesheets','=',False)]}"
                         icon="fa-calendar" string="Timesheets"/>
                 </xpath>
+                <xpath expr='//field[@name="partner_id"]' position='after'>
+                    <newline/>
+                    <field name="pricelist_id" invisible="1"/>
+                </xpath>
             </field>
         </record>
 
