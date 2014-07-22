@@ -61,7 +61,7 @@ class hr_attendance(osv.osv):
                     ('employee_id', '=', obj.employee_id.id),
                     ('name', '<', obj.name), ('action', '=', 'sign_in')
                 ], limit=1, order='name DESC')
-                if last_signin:
+                if last_signin_id:
                     last_signin = self.browse(cr, uid, last_signin_id, context=context)[0]
 
                     # Compute time elapsed between sign-in and sign-out
