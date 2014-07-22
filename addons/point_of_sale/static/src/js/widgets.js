@@ -797,6 +797,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.$('.button.reference').click(function(){
                 self.pos.barcode_reader.scan(self.$('input.ean').val());
             });
+            this.$('.button.show_orders').click(function(){
+                self.pos.pos_widget.screen_selector.show_popup('unsent-orders');
+            });
             _.each(this.eans, function(ean, name){
                 self.$('.button.'+name).click(function(){
                     self.$('input.ean').val(ean);
@@ -1088,6 +1091,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.confirm_popup = new module.ConfirmPopupWidget(this,{});
             this.confirm_popup.appendTo(this.$el);
 
+            this.unsent_orders_popup = new module.UnsentOrdersPopupWidget(this,{});
+            this.unsent_orders_popup.appendTo(this.$el);
+
             // --------  Misc ---------
 
             this.close_button = new module.HeaderButtonWidget(this,{
@@ -1144,6 +1150,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'error-invoice-transfer': this.error_invoice_transfer_popup,
                     'error-traceback': this.error_traceback_popup,
                     'confirm': this.confirm_popup,
+                    'unsent-orders': this.unsent_orders_popup,
                 },
                 default_screen: 'products',
                 default_mode: 'cashier',

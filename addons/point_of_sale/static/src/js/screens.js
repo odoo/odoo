@@ -418,6 +418,18 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         template: 'ErrorInvoiceTransferPopupWidget',
     });
 
+    module.UnsentOrdersPopupWidget = module.PopUpWidget.extend({
+        template: 'UnsentOrdersPopupWidget',
+        show: function(options){
+            var self = this;
+            this._super(options);
+            this.renderElement();
+            this.$('.button.confirm').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+            });
+        },
+    });
+
     module.ScaleScreenWidget = module.ScreenWidget.extend({
         template:'ScaleScreenWidget',
 
