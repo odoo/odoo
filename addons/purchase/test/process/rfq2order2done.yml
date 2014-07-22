@@ -3,8 +3,10 @@
 -
   I check the total untaxed amount of the RFQ is correctly computed
 -
-  !assert {model: purchase.order, id: purchase_order_1, string: The amount of RFQ is not correctly computed}:
-    - round(sum([l.price_subtotal for l in order_line]), 2) == round(amount_untaxed, 2)
+  !python {model: purchase.order}: |
+    from openerp.tools import float_compare
+    po = self.browse(cr, uid, ref('purchase_order_1'))
+    assert float_compare(sum([l.price_subtotal for l in po.order_line]), po.amount_untaxed, precision_digits=2) == 0, "The amount of RFQ is not correctly computed"
 -
   I confirm the RFQ.
 -
@@ -18,6 +20,7 @@
   I check that the invoice details which is generated after confirmed RFQ.
 -
   !python {model: purchase.order}: |
+    from openerp.tools import float_compare
     purchase_order = self.browse(cr, uid, ref("purchase_order_1"))
     assert len(purchase_order.invoice_ids) >= 1, "Invoice is not generated more or less than one"
     for invoice in purchase_order.invoice_ids:
@@ -28,9 +31,9 @@
       assert invoice.currency_id.id == purchase_order.pricelist_id.currency_id.id ,"Invoice currency is not correspond with purchase order"
       assert invoice.origin == purchase_order.name,"Invoice origin is not correspond with purchase order"
       assert invoice.company_id.id == purchase_order.company_id.id ,"Invoice company is not correspond with purchase order"
-      assert invoice.amount_untaxed == purchase_order.amount_untaxed, "Invoice untaxed amount is not correspond with purchase order"
-      assert invoice.amount_tax == purchase_order.amount_tax, "Invoice tax amount is not correspond with purchase order"
-      assert invoice.amount_total == purchase_order.amount_total, "Invoice total amount is not correspond with purchase order"
+      assert float_compare(invoice.amount_untaxed, purchase_order.amount_untaxed, precision_digits=2) == 0, "Invoice untaxed amount is not correspond with purchase order"
+      assert float_compare(invoice.amount_tax, purchase_order.amount_tax, precision_digits=2) == 0, "Invoice tax amount is not correspond with purchase order"
+      assert float_compare(invoice.amount_total, purchase_order.amount_total, precision_digits=2) == 0, "Invoice total amount is not correspond with purchase order"
       assert len(invoice.invoice_line) == len(purchase_order.order_line), "Lines of Invoice and Purchase Order are not correspond"
 -
   I check that Reception details after confirmed RFQ.
