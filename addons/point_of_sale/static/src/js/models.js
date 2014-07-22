@@ -451,7 +451,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.db.remove_order(order.id);
                 });
                 return server_ids;
-            }).fail(function (unused, event){
+            }).fail(function (error, event){
+                if(error.code === 200 ){    // Business Logic Error, not a connection problem
+                    self.pos_widget.screen_selector.show_popup('error-traceback',{
+                        message: error.data.message,
+                        comment: error.data.debug
+                    });
+                }
                 // prevent an error popup creation by the rpc failure
                 // we want the failure to be silent as we send the orders in the background
                 event.preventDefault();
