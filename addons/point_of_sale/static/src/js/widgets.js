@@ -800,6 +800,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.$('.button.show_orders').click(function(){
                 self.pos.pos_widget.screen_selector.show_popup('unsent-orders');
             });
+            this.$('.button.delete_orders').click(function(){
+                self.pos.pos_widget.screen_selector.show_popup('confirm',{
+                    message: _t('Delete Unsent Orders ?'),
+                    comment: _t('This operation will permanently destroy all unsent orders from the local storage. You will lose all the data. This operation cannot be undone.'),
+                    confirm: function(){
+                        self.pos.db.remove_all_orders();
+                        self.pos.set({synch: { state:'connected', pending: 0 }});
+                    },
+                });
+            });
             _.each(this.eans, function(ean, name){
                 self.$('.button.'+name).click(function(){
                     self.$('input.ean').val(ean);
