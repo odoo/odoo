@@ -1086,6 +1086,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_invoice_transfer_popup = new module.ErrorInvoiceTransferPopupWidget(this, {});
             this.error_invoice_transfer_popup.appendTo(this.$el);
 
+            this.error_traceback_popup = new module.ErrorTracebackPopupWidget(this,{});
+            this.error_traceback_popup.appendTo(this.$el);
+
             this.confirm_popup = new module.ConfirmPopupWidget(this,{});
             this.confirm_popup.appendTo(this.$el);
 
@@ -1146,6 +1149,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'choose-receipt': this.choose_receipt_popup,
                     'error-no-client': this.error_no_client_popup,
                     'error-invoice-transfer': this.error_invoice_transfer_popup,
+                    'error-traceback': this.error_traceback_popup,
                     'confirm': this.confirm_popup,
                     'fullscreen': this.fullscreen_popup,
                 },
