@@ -818,7 +818,12 @@ class purchase_order(osv.osv):
 
     def action_picking_create(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids):
-            picking_id = self.pool.get('stock.picking').create(cr, uid, {'picking_type_id': order.picking_type_id.id, 'partner_id': order.dest_address_id.id or order.partner_id.id}, context=context)
+            picking_vals = {
+                'picking_type_id': order.picking_type_id.id,
+                'partner_id': order.dest_address_id.id or order.partner_id.id,
+                'date': max([l.date_planned for l in order.order_line])
+            }
+            picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
 
     def picking_done(self, cr, uid, ids, context=None):
