@@ -2,7 +2,8 @@
 <openerp>
     <data>
         <!-- Attachment -->
-        <menuitem id="main_slides" name="slides"/>
+        <menuitem id="main_slides" parent="knowledge.menu_document" name="Odoo Presentations"/>
+
         <record model="ir.ui.view" id="view_slides_attachment_kanban">
             <field name="name">ir.attachment kanban</field>
             <field name="model">ir.attachment</field>
@@ -36,77 +37,86 @@
                 </kanban>
             </field>
         </record>
+
+        <!--record model="ir.ui.view" id="view_document_directory_form">
+        <field name="name">document.directory</field>
+        <field name="model">document.directory</field>
+        <field name="inherit_id" ref="document.view_document_directory_form"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+            </field>
+            <form string="Directories" col="4">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
+                </group>
+            </form>
+        </field-->
         
         <record id="view_slides_attachment_form" model="ir.ui.view">
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
                 <form string="Attachments">
                    <sheet>
-                    <label for="name" class="oe_edit_only"/>
-                    <h1>
-                        <field name="name"/>
-                    </h1>
+                    <field name="image" widget="image" class="oe_left oe_avatar" options="{'preview_image': 'image_medium', 'size': [90, 90]}"/>
+                    <div class="oe_title oe_left">
+                        <div class="oe_edit_only">
+                            <label for="name" string="Name"/>
+                        </div>
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Name"/>
+                        </h1>
+                        <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
+                    </div>
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <field name="website_published" class="pull-right" widget="website_button"/>
+                    </div>
                     <group>
                         <group string="Data">                            
-                            <field name="datas" filename="datas_fname" />
-                            <field name="datas_fname" invisible="1" class="oe_inline oe_right"/>
+                            <field name="datas" filename="datas_fname" attrs="{'invisible':[('slide_type','=','video')]}"/>
+                            <field name="datas_fname" invisible="1" class="oe_inline oe_right" />
                             <field name="url" widget="url" />
                         </group>
+                        <group string="Categorization">
+                            <field name="parent_id" string="Directory"/>
+                        </group>
+                        <group string="Others" invisible="1">
+                            <field name="is_slide"/>
+                            <field name="slide_type"/>
+                        </group>
+                    </group>
+                    <group name="description_group" string="Description" colspan="4">
+                        <field name="description" nolabel="1"/>
                     </group>
                   </sheet>
                 </form>
             </field>
         </record>
+
         <record id="view_slides_attachment_tree" model="ir.ui.view">
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
                 <tree string="Attachments">
-                    <field name="name"/>
+                    <field name="name" string="Name"/>
                     <field name="datas_fname"/>
-                    <field name="type"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="create_uid"/>
                     <field name="create_date"/>
                 </tree>
             </field>
         </record>
-        <record id="view_slides_attachment_search" model="ir.ui.view">
-            <field name="model">ir.attachment</field>
-            <field name="arch" type="xml">
-                <search string="Attachments">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('datas_fname','ilike',self)]" string="Attachment"/>
-                    <field name="create_date"/>
-                    <filter icon="terp-stage"
-                        string="URL"
-                        domain="[('type','=','url')]"/>
-                    <filter icon="terp-stock_align_left_24"
-                        string="Binary"
-                        domain="[('type','=','binary')]"/>
-                    <separator/>
-                    <filter name="my_documents_filter" 
-                        string="My Document(s)"
-                        icon="terp-personal"
-                        domain="[('create_uid','=',uid)]"
-                        help="Filter on my documents"/>
-                    <field name="create_uid"/>
-                    <field name="type"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
-                        <filter string="Company" icon="terp-gtk-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
+
         <record id="action_slides_attachment" model="ir.actions.act_window">
-            <field name="name">Attachments</field>
+            <field name="name">Presentations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.attachment</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" eval="False"/>
-            <field name="search_view_id" ref="view_slides_attachment_search"/>
+            <field name="domain">[('is_slide','=',True), ('slide_type','=','ppt')]</field>
+            <field name="context">{'is_slide':True, 'slide_type':'ppt'}</field>
+            <field name="search_view_id" ref="base.view_attachment_search"/>
         </record>
         <record id="action_slides_attachment_tree_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -114,15 +124,63 @@
             <field name="view_id" ref="view_slides_attachment_tree"/>
             <field name="act_window_id" ref="action_slides_attachment"/>
         </record>
-
         <record id="action_slides_attachment_tree_view2" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_slides_attachment_form"/>
             <field name="act_window_id" ref="action_slides_attachment"/>
         </record>
-        <menuitem id="menu_slides_attachment" name="Attachment" parent="main_slides"/>
-        <menuitem action="action_slides_attachment" id="submenu_slides_attachment" parent="menu_slides_attachment"/>
+        <menuitem action="action_slides_attachment" id="submenu_slides_attachment" parent="main_slides"/>
 
+
+        <record id="action_slides_document" model="ir.actions.act_window">
+            <field name="name">Documents</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.attachment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="domain">[('is_slide','=',True), ('slide_type','=','doc')]</field>
+            <field name="context">{'is_slide':True, 'slide_type':'doc'}</field>
+            <field name="search_view_id" ref="base.view_attachment_search"/>
+        </record>
+        <record id="action_slides_document_tree_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_slides_attachment_tree"/>
+            <field name="act_window_id" ref="action_slides_document"/>
+        </record>
+        <record id="action_slides_document_tree_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_slides_attachment_form"/>
+            <field name="act_window_id" ref="action_slides_document"/>
+        </record>
+        <menuitem action="action_slides_document" id="submenu_slides_document" parent="main_slides"/>
+
+        <record id="action_slides_video" model="ir.actions.act_window">
+            <field name="name">Videos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.attachment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="domain">[('is_slide','=',True), ('slide_type','=','video')]</field>
+            <field name="context">{'is_slide':True, 'slide_type':'video'}</field>
+            <field name="search_view_id" ref="base.view_attachment_search"/>
+        </record>
+        <record id="action_slides_video_tree_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_slides_attachment_tree"/>
+            <field name="act_window_id" ref="action_slides_video"/>
+        </record>
+        <record id="action_slides_video_tree_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_slides_attachment_form"/>
+            <field name="act_window_id" ref="action_slides_video"/>
+        </record>
+        <menuitem action="action_slides_video" id="submenu_action_slides_video" parent="main_slides"/>
     </data>
 </openerp>
