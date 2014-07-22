@@ -196,7 +196,7 @@ class delivery_grid(osv.osv):
         for line in order.order_line:
             if not line.product_id:
                 continue
-            q = product_uom_obj._compute_qty(cr, uid, line.product_uom.id, line.product_uos_qty, line.product_id.uom_id.id)
+            q = product_uom_obj._compute_qty(cr, uid, line.product_uom.id, line.product_uom_qty, line.product_id.uom_id.id)
             total += line.price_subtotal or 0.0
             weight += (line.product_id.weight or 0.0) * q
             volume += (line.product_id.volume or 0.0) * q
