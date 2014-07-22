@@ -738,9 +738,12 @@ class account_bank_statement_line(osv.osv):
         move_id = am_obj.create(cr, uid, move_vals, context=context)
 
         # Create the move line for the statement line
-        ctx = context.copy()
-        ctx['date'] = st_line.date
-        amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount, context=ctx)
+        if st_line.statement_id.currency.id != company_currency.id:
+            ctx = context.copy()
+            ctx['date'] = st_line.date
+            amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount_currency, context=ctx)
+        else:
+            amount = st_line.amount
         bank_st_move_vals = bs_obj._prepare_bank_move_line(cr, uid, st_line, move_id, amount, company_currency.id, context=context)
         aml_obj.create(cr, uid, bank_st_move_vals, context=context)
         # Complete the dicts
