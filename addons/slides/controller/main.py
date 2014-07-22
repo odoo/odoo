@@ -25,7 +25,7 @@ class main(http.Controller):
     	objattachment = request.registry['ir.attachment']
     	attachment = objattachment.search_read(request.cr, request.uid, [("mimetype","=","application/pdf"),("is_slide","=","TRUE"),("name","like",search)],[])
     	
-    	pprint.pprint(attachment)    	
+    	#pprint.pprint(attachment)    	
         return request.website.render('slides.home', {"attachment" : attachment})
        
         

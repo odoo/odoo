@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Attachment -->
+        <menuitem id="main_slides" name="slides"/>
+        <record model="ir.ui.view" id="view_slides_attachment_kanban">
+            <field name="name">ir.attachment kanban</field>
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="file_type_icon"/>
+                    <field name="url"/>
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_vignette">
+                                    <div class="oe_attachment">
+                                        <div t-if="record.file_type_icon.value != 'webimage'">
+                                            <img t-att-src="'/mail/static/src/img/mimetypes/' + record.file_type_icon.value + '.png'"></img>
+                                        </div>
+                                        <div t-if="record.file_type_icon.value == 'webimage' and !record.url.value">
+                                            <img t-att-src="kanban_image('ir.attachment', 'datas', record.id.value)"/>
+                                        </div>
+                                        <div t-if="record.file_type_icon.value and record.url.value">
+                                            <img t-att-src="record.url.value"/>
+                                        </div>
+                                        <div class="oe_name">
+                                            <field name="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
+        <record id="view_slides_attachment_form" model="ir.ui.view">
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <form string="Attachments">
+                   <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group string="Data">                            
+                            <field name="datas" filename="datas_fname" />
+                            <field name="datas_fname" invisible="1" class="oe_inline oe_right"/>
+                            <field name="url" widget="url" />
+                        </group>
+                    </group>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_slides_attachment_tree" model="ir.ui.view">
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <tree string="Attachments">
+                    <field name="name"/>
+                    <field name="datas_fname"/>
+                    <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="create_uid"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_slides_attachment_search" model="ir.ui.view">
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <search string="Attachments">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('datas_fname','ilike',self)]" string="Attachment"/>
+                    <field name="create_date"/>
+                    <filter icon="terp-stage"
+                        string="URL"
+                        domain="[('type','=','url')]"/>
+                    <filter icon="terp-stock_align_left_24"
+                        string="Binary"
+                        domain="[('type','=','binary')]"/>
+                    <separator/>
+                    <filter name="my_documents_filter" 
+                        string="My Document(s)"
+                        icon="terp-personal"
+                        domain="[('create_uid','=',uid)]"
+                        help="Filter on my documents"/>
+                    <field name="create_uid"/>
+                    <field name="type"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
+                        <filter string="Company" icon="terp-gtk-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_slides_attachment" model="ir.actions.act_window">
+            <field name="name">Attachments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.attachment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_slides_attachment_search"/>
+        </record>
+        <record id="action_slides_attachment_tree_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_slides_attachment_tree"/>
+            <field name="act_window_id" ref="action_slides_attachment"/>
+        </record>
+
+        <record id="action_slides_attachment_tree_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_slides_attachment_form"/>
+            <field name="act_window_id" ref="action_slides_attachment"/>
+        </record>
+        <menuitem id="menu_slides_attachment" name="Attachment" parent="main_slides"/>
+        <menuitem action="action_slides_attachment" id="submenu_slides_attachment" parent="menu_slides_attachment"/>
+
+    </data>
+</openerp>
