@@ -686,6 +686,29 @@
         </div>
     </t>
 
+    <t t-name="UnsentOrdersPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-unsent-orders">
+                <p class="message">Unsent Orders</p>
+                <t t-if='widget.pos.db.get_orders().length === 0'>
+                    <p class='comment'>
+                        There are no unsent orders
+                    </p>
+                </t>
+                <t t-if='widget.pos.db.get_orders().length > 0'>
+                    <p class='comment traceback'>
+                        <t t-esc='JSON.stringify(widget.pos.db.get_orders(),null,2)' />
+                    </p>
+                </t>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="Product">
         <span class='product' t-att-data-product-id="product.id">
             <div class="product-img">
@@ -791,6 +814,11 @@
                     <li class="button unknown_product">Unknown Product</li>
                     <li class="button invalid_ean">Invalid Ean</li>
                     <li class="button reference">Reference</li>
+                </ul>
+
+                <p class="category">Unsent Orders</p>
+                <ul>
+                    <li class="button show_orders">Show All Unsent Orders</li>
                 </ul>
 
                 <p class="category">Hardware Status</p>
