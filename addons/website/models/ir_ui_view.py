@@ -13,12 +13,10 @@ _logger = logging.getLogger(__name__)
 
 
 class view(osv.osv):
-    _inherit = "ir.ui.view"
+    _name = "ir.ui.view"
+    _inherit = ["ir.ui.view", "website.seo.metadata"]
     _columns = {
         'page': fields.boolean("Whether this view is a web page template (complete)"),
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
-        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
         'customize_show': fields.boolean("Show As Optional Inherit"),
         'website_id': fields.many2one('website', ondelete='cascade', string="Website"),
     }
