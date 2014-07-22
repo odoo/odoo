@@ -492,6 +492,8 @@ class pos_session(osv.osv):
             pos_order_obj._create_account_move_line(cr, uid, order_ids, session, move_id, context=local_context)
 
             for order in session.order_ids:
+                if order.state == 'done':
+                    continue
                 if order.state not in ('paid', 'invoiced'):
                     raise osv.except_osv(
                         _('Error!'),
@@ -811,6 +813,16 @@ class pos_order(osv.osv):
             'name': order.name + ': ' + (data.get('payment_name', '') or ''),
             'partner_id': order.partner_id and order.partner_id.id or None,
         }
+        account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
+        args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable \
+                             and order.partner_id.property_account_receivable.id) or (account_def and account_def.id) or False
+
+        if not args['account_id']:
+            if not args['partner_id']:
+                msg = _('There is no receivable account defined to make payment.')
+            else:
+                msg = _('There is no receivable account defined to make payment for the partner: "%s" (id:%d).') % (order.partner_id.name, order.partner_id.id,)
+            raise osv.except_osv(_('Configuration Error!'), msg)
 
         context.pop('pos_session_id', False)
 
@@ -830,10 +842,10 @@ class pos_order(osv.osv):
             raise osv.except_osv(_('Error!'), _('You have to open at least one cashbox.'))
 
         args.update({
-            'statement_id' : statement_id,
-            'pos_statement_id' : order_id,
-            'journal_id' : journal_id,
-            'ref' : order.session_id.name,
+            'statement_id': statement_id,
+            'pos_statement_id': order_id,
+            'journal_id': journal_id,
+            'ref': order.session_id.name,
         })
 
         statement_line_obj.create(cr, uid, args, context=context)
