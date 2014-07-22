@@ -29,13 +29,16 @@
                         <li t-foreach="deliveries" t-as="delivery">
                             <label>
                                 <input t-att-value="delivery.id" type="radio" name="delivery_type"
-                                    t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
+                                    t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" 
+                                    t-att-disabled="delivery.available and '0' or '1'"/>
                                 <span t-field="delivery.name"/>
-                                <span class="badge" t-field="delivery.price"
-                                    t-field-options='{
-                                        "widget": "monetary",
-                                        "display_currency": "website.pricelist_id.currency_id"
-                                    }'/>
+                                <t t-if="delivery.available">
+                                    <span class="badge" t-field="delivery.price"
+                                        t-field-options='{
+                                            "widget": "monetary",
+                                            "display_currency": "website.pricelist_id.currency_id"
+                                        }'/>
+                                </t>
                             </label>
                         </li>
                     </ul>
