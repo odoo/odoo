@@ -40,7 +40,7 @@
                     $option.removeAttr('id');
                     $option.data('input', $input);
                     $input.on('update', function () {
-                        $option.attr('selected', $(this).is(":checked"));
+                        $option.attr('selected', $(this).prop("checked"));
                     });
                     self.$el.append($input);
                 });
@@ -49,7 +49,7 @@
             });
             $selects.change(function () {
                 var $option = $(this).find('option:selected');
-                $(this).data("value").data("input").attr("checked", true).change();
+                $(this).data("value").data("input").prop("checked", true).change();
                 $(this).data("value", $option);
                 $option.data("input").change();
             });
@@ -61,10 +61,10 @@
                 }).then(function (data) {
                     self.$inputs.filter('[data-xmlid]').each(function () {
                         if (!_.difference(self.get_xml_ids($(this)), data[1]).length) {
-                            $(this).attr("checked", false).change();
+                            $(this).prop("checked", false).change();
                         }
                         if (!_.difference(self.get_xml_ids($(this)), data[0]).length) {
-                            $(this).attr("checked", true).change();
+                            $(this).prop("checked", true).change();
                         }
                     });
                 });
@@ -83,6 +83,7 @@
         },
         compute_stylesheets: function () {
             var self = this;
+            self.has_error = false;
             $('link[href*=".assets_"]').attr('data-loading', true);
             function theme_customize_css_onload() {
                 if ($('link[data-loading]').size()) {
@@ -91,31 +92,46 @@
                 } else {
                     $('body').removeClass('theme_customize_css_loading');
                     self.$el.removeClass("loading");
+
+                    if (window.getComputedStyle($('button[data-toggle="collapse"]:first')[0]).getPropertyValue('position') === 'static' ||
+                        window.getComputedStyle($('#theme_customize_modal')[0]).getPropertyValue('display') === 'none') {
+                        if (self.has_error) {
+                            window.location.hash = "theme=true";
+                            window.location.reload();
+                        } else {
+                            self.has_error = true;
+                            $('link[href*=".assets_"][data-error]').removeAttr('data-error').attr('data-loading', true);
+                            self.update_stylesheets();
+                            setTimeout(theme_customize_css_onload, 50);
+                        }
+                    }
                 }
             }
             theme_customize_css_onload();
         },
+        update_stylesheets: function () {
+            $('link[href*=".assets_"]').each(function update () {
+                var $style = $(this);
+                var href = $style.attr("href").replace(/[^\/]+$/, new Date().getTime());
+                var $asset = $('<link rel="stylesheet" href="'+href+'"/>');
+                $asset.attr("onload", "$(this).prev().attr('disable', true).remove(); $(this).removeAttr('onload').removeAttr('onerror');");
+                $asset.attr("onerror", "$(this).prev().removeAttr('data-loading').attr('data-error','loading'); $(this).attr('disable', true).remove();");
+                $style.after($asset);
+            });
+        },
         update_style: function (enable, disable, reload) {
+            var self = this;
             if (this.$el.hasClass("loading")) return;
             this.$el.addClass("loading");
 
-            var $assets = $('link[href*=".assets_"]');
-            if (!reload && $assets.size()) {
+            if (!reload && $('link[href*=".assets_"]').size()) {
                 this.compute_stylesheets();
-
                 return openerp.jsonRpc('/website/theme_customize', 'call', {
                         'enable': enable,
                         'disable': disable
                     }).then(function () {
-                    $assets.each(function () {
-                        var href = $(this).attr("href").replace(/[^\/]+$/, new Date().getTime());
-                        var $asset = $('<link rel="stylesheet" href="'+href+'"/>');
-                        var clear_link = "$(this).prev().attr('disable', true).remove(); $(this).removeAttr('onload').removeAttr('onerror');";
-                        $asset.attr("onload", clear_link);
-                        $asset.attr("onerror", clear_link);
-                        $(this).after($asset);
+                        self.update_stylesheets();
                     });
-                });
             } else {
                 var href = '/website/theme_customize_reload'+
                     '?href='+encodeURIComponent(window.location.href)+
@@ -128,7 +144,7 @@
         enable_disable: function (data, enable) {
             if (!data) return;
             this.$('#'+data.split(",").join(", #")).each(function () {
-                var check = $(this).is(":checked");
+                var check = $(this).prop("checked");
                 var $label = $(this).closest("label");
                 $(this).attr("checked", enable);
                 if (enable) $label.addClass("checked");
@@ -143,7 +159,7 @@
             if (this.$el.hasClass("loading")) return;
 
             var $option = $(event.target),
-                checked = $option.is(":checked");
+                checked = $option.prop("checked");
 
             if (checked) {
                 this.enable_disable($option.data('enable'), true);
@@ -152,7 +168,7 @@
             } else {
                 $option.closest("label").removeClass("checked");
             }
-            $option.attr("checked", checked);
+            $option.prop("checked", checked);
 
             var $enable = this.$inputs.filter('[data-xmlid]:checked');
             $enable.closest("label").addClass("checked");
@@ -165,18 +181,18 @@
                 var checked = true;
                 if ($set.data("enable")) {
                     self.get_inputs($(this).data("enable")).each(function () {
-                        if ($(this).is(":not(:checked)")) checked = false;
+                        if (!$(this).prop("checked")) checked = false;
                     });
                 }
                 if ($set.data("disable")) {
                     self.get_inputs($(this).data("disable")).each(function () {
-                        if ($(this).is(":checked")) checked = false;
+                        if ($(this).prop("checked")) checked = false;
                     });
                 }
                 if (checked) {
-                    $set.attr("checked", true).closest("label").addClass("checked");
+                    $set.prop("checked", true).closest("label").addClass("checked");
                 } else {
-                    $set.attr("checked", false).closest("label").removeClass("checked");
+                    $set.prop("checked", false).closest("label").removeClass("checked");
                 }
                 $set.trigger('update');
             });
@@ -204,8 +220,30 @@
         }
     });
 
+    function themeError(message) {
+        var _t = openerp._t;
+
+        if (message.indexOf('lessc')) {
+            message = '<span class="text-muted">' + message + "</span><br/><br/>" + _t("Please install or update node-less");
+        }
+
+        var $error = $( openerp.qweb.render('website.error_dialog', {
+            title: _t("Theme Error"),
+            message: message
+        }));
+        $error.appendTo("body").modal();
+        $error.on('hidden.bs.modal', function () {
+            $(this).remove();
+        });
+    }
+
+
     openerp.website.ready().done(function() {
         function theme_customize() {
+            var error = window.getComputedStyle(document.body, ':before').getPropertyValue('content');
+            if (error && error !== 'none') {
+                return themeError(eval(error));
+            }
             var Theme = openerp.website.Theme;
             if (Theme.open && !Theme.open.isDestroyed()) return;
             Theme.open = new Theme();

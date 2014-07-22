@@ -412,12 +412,12 @@
                             var block = this._.panel._.panel._.blocks[id];
                             var $root = $(block.element.$);
                             $root.find("button").map(function () {
-                                classes.push( btnID === "BGColor" ? $(this).attr("class") : $(this).attr("class").replace(/^bg_/i, 'text_') );
+                                classes.push( btnID === "BGColor" ? $(this).attr("class") : $(this).attr("class").replace(/^bg-/i, 'text-') );
                             });
                             return classes;
                         },
                         getClass: function (button) {
-                            return btnID === "BGColor" ? $(button).attr("class") : $(button).attr("class").replace(/^bg_/i, 'text_');
+                            return btnID === "BGColor" ? $(button).attr("class") : $(button).attr("class").replace(/^bg-/i, 'text-');
                         },
                         clicked: function (button) {
                             var className = this.getClass(button);

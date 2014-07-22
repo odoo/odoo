@@ -492,23 +492,46 @@ $infobar_height: 20px
     display: block
     .modal-dialog
         top: 75px
-        width: 410px
+        width: auto
         margin: 0
         position: absolute
         right: 10px
+        font-family: 'Lato-Regular'
+        font-weight: normal
+        text-transform: capitalize
+        letter-spacing: normal
+    .modal-h5
+        color: #ffffff
+        font-family: 'Lato-Regular'
+        font-weight: normal
+        text-transform: uppercase
+        letter-spacing: normal
+        font-size: 14px
+        color: white
+        padding: 4px 0 4px 4px
+        background-color: #bdc3c7
     table
         width: 100%
+        margin-bottom: 8px
     label
         display: block
+        text-align: center
+        > div, > img
+            border: 1px solid #fff
+            line-height: 30px
+            font-size: 0.9em
+            margin: 2px 4px
+        &.checked
+            > div, > img
+                box-shadow: 2px 2px 3px #888
+                border: 1px solid #666
         img
-            width: 120px
-            height: 70px
+            width: 60px
+            height: 35px
             margin: 2px
             border: 1px solid rgba(136, 136, 136, 0.5)
         input
             display: none
-    label.checked
-        background: #00FF00
     .loading_backdrop
         display: none
     &.loading

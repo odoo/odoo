@@ -569,28 +569,52 @@ ul.oe_menu_editor .disclose {
 }
 #theme_customize_modal .modal-dialog {
   top: 75px;
-  width: 410px;
+  width: auto;
   margin: 0;
   position: absolute;
   right: 10px;
+  font-family: "Lato-Regular";
+  font-weight: normal;
+  text-transform: capitalize;
+  letter-spacing: normal;
+}
+#theme_customize_modal .modal-h5 {
+  color: white;
+  font-family: "Lato-Regular";
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: normal;
+  font-size: 14px;
+  color: white;
+  padding: 4px 0 4px 4px;
+  background-color: #bdc3c7;
 }
 #theme_customize_modal table {
   width: 100%;
+  margin-bottom: 8px;
 }
 #theme_customize_modal label {
   display: block;
+  text-align: center;
+}
+#theme_customize_modal label > div, #theme_customize_modal label > img {
+  border: 1px solid white;
+  line-height: 30px;
+  font-size: 0.9em;
+  margin: 2px 4px;
+}
+#theme_customize_modal label.checked > div, #theme_customize_modal label.checked > img {
+  box-shadow: 2px 2px 3px #888888;
+  border: 1px solid #666666;
 }
 #theme_customize_modal label img {
-  width: 120px;
-  height: 70px;
+  width: 60px;
+  height: 35px;
   margin: 2px;
   border: 1px solid rgba(136, 136, 136, 0.5);
 }
 #theme_customize_modal label input {
   display: none;
-}
-#theme_customize_modal label.checked {
-  background: lime;
 }
 #theme_customize_modal .loading_backdrop {
   display: none;
