@@ -635,6 +635,20 @@
         </div>
     </t>
 
+    <t t-name="ErrorTracebackPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-error">
+                <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
+                <p class="comment traceback"><t t-esc=" widget.comment || '' "/></p>
+                <div class="footer">
+                    <div class="button">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ErrorBarcodePopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-barcode">

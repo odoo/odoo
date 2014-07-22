@@ -367,6 +367,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
+    module.ErrorTracebackPopupWidget = module.ErrorPopupWidget.extend({
+        template:'ErrorTracebackPopupWidget',
+    });
 
     module.ErrorSessionPopupWidget = module.ErrorPopupWidget.extend({
         template:'ErrorSessionPopupWidget',
