@@ -61,7 +61,7 @@
                 <separator/>
                 <filter icon="terp-dolar" string="Invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]" help="Customer And Supplier Invoices"/>
                 <filter icon="terp-dolar_ok!" string="Refund" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]" help="Customer And Supplier Refunds"/>
-                <field name="partner_id"/>
+                <field name="partner_id" operator="child_of"/>
                 <field name="user_id" />
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                 <group expand="1" string="Group By...">
