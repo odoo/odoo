@@ -3136,7 +3136,7 @@ class BaseModel(object):
         if field not in self._cache:
             for values in result:
                 record = self.browse(values.pop('id'))
-                record._cache.update(record._convert_to_cache(values))
+                record._cache.update(record._convert_to_cache(values, validate=False))
             if field not in self._cache:
                 e = AccessError("No value found for %s.%s" % (self, field.name))
                 self._cache[field] = FailedValue(e)
@@ -3215,7 +3215,7 @@ class BaseModel(object):
             # store result in cache for POST fields
             for vals in result:
                 record = self.browse(vals['id'])
-                record._cache.update(record._convert_to_cache(vals))
+                record._cache.update(record._convert_to_cache(vals, validate=False))
 
             # determine the fields that must be processed now
             fields_post = [f for f in field_names if not self._columns[f]._classic_write]
@@ -3256,7 +3256,7 @@ class BaseModel(object):
         # store result in cache
         for vals in result:
             record = self.browse(vals.pop('id'))
-            record._cache.update(record._convert_to_cache(vals))
+            record._cache.update(record._convert_to_cache(vals, validate=False))
 
         # store failed values in cache for the records that could not be read
         fetched = self.browse(ids)
@@ -3596,7 +3596,6 @@ class BaseModel(object):
         if not self:
             return True
 
-        cr, uid, context = self.env.args
         self._check_concurrency(self._ids)
         self.check_access_rights('write')
 
@@ -5098,11 +5097,11 @@ class BaseModel(object):
         context = dict(args[0] if args else self._context, **kwargs)
         return self.with_env(self.env(context=context))
 
-    def _convert_to_cache(self, values):
+    def _convert_to_cache(self, values, validate=True):
         """ Convert the `values` dictionary into cached values. """
         fields = self._fields
         return {
-            name: fields[name].convert_to_cache(value, self.env)
+            name: fields[name].convert_to_cache(value, self.env, validate=validate)
             for name, value in values.iteritems()
             if name in fields
         }
@@ -5555,7 +5554,7 @@ class BaseModel(object):
                 return
             if 'value' in method_res:
                 method_res['value'].pop('id', None)
-                self.update(self._convert_to_cache(method_res['value']))
+                self.update(self._convert_to_cache(method_res['value'], validate=False))
             if 'domain' in method_res:
                 result.setdefault('domain', {}).update(method_res['domain'])
             if 'warning' in method_res:
