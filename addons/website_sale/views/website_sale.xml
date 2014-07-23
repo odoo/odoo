@@ -794,14 +794,14 @@
 
                   <div class="clearfix"/>
 
-                  <div class="form-group col-lg-6" groups="sale.group_delivery_invoice_address">
+                  <div class="form-group col-lg-6">
                       <label>
                           <input type="checkbox" name="shipping_different" t-att-checked="shipping"/>
                           <span>Ship to a different address</span>
                       </label>
                   </div>
               </div>
-              <div class="js_shipping row mb16" t-att-style="not shipping and 'display:none' or ''" groups="sale.group_delivery_invoice_address">
+              <div class="js_shipping row mb16" t-att-style="not shipping and 'display:none' or ''">
                   <h3 class="oe_shipping col-lg-12 mt16">Shipping Information</h3>
 
                   <div t-attf-class="form-group #{error.get('shipping_name') and 'has-error' or ''} col-lg-6">
@@ -945,7 +945,7 @@
                 <div>
                   <a href="/shop/checkout"><span class="fa fa-arrow-right"/> Change Address</a>
                 </div>
-                <t groups="sale.group_delivery_invoice_address">
+                <t>
                     <h4 class="mt32">Ship To:</h4>
                     <t t-if="website_sale_order.partner_shipping_id and website_sale_order.partner_shipping_id.id != website_sale_order.partner_invoice_id.id">
                       <div t-field="order.partner_shipping_id" t-field-options='{
@@ -1034,7 +1034,7 @@
                     "widget": "contact",
                     "fields": ["address", "name", "phone", "email"]
                     }'/>
-                <t groups="sale.group_delivery_invoice_address">
+                <t>
                     <h4 class="mt32">Ship To:</h4>
                     <t t-if="order.partner_shipping_id and order.partner_shipping_id.id != order.partner_invoice_id.id">
                       <div t-field="order.partner_shipping_id" t-field-options='{
