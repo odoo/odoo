@@ -26,7 +26,7 @@ class contactus(http.Controller):
         values.update(kwargs=kwargs.items())
         return request.website.render("website.contactus", values)
 
-    def create_lead(self, request, values):
+    def create_lead(self, request, values, kwargs):
         """ Allow to be overrided """
         return request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, values, request.context)
 
@@ -83,7 +83,7 @@ class contactus(http.Controller):
             post_description.append("%s: %s" % ("REFERER", environ.get("HTTP_REFERER")))
             values['description'] += dict_to_str(_("Environ Fields: "), post_description)
 
-        lead_id = self.create_lead(request, values)
+        lead_id = self.create_lead(request, values, kwargs)
         if lead_id:
             for field_value in post_file:
                 attachment_value = {
