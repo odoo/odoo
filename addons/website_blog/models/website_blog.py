@@ -58,7 +58,7 @@ class BlogPost(osv.Model):
         'tag_ids': fields.many2many(
             'blog.tag', string='Tags',
         ),
-        'content': fields.html('Content', translate=True),
+        'content': fields.html('Content', translate=True, sanitize=False),
         # website control
         'website_published': fields.boolean(
             'Publish', help="Publish on the website"
