@@ -3,6 +3,7 @@
 from datetime import datetime
 
 import openerp
+from openerp import api, fields as new_fields
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
@@ -114,25 +115,25 @@ class Post(osv.Model):
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = "is_correct DESC, vote_count DESC, write_date DESC"
 
-    def _get_user_vote(self, cr, uid, ids, field_name, arg, context):
-        res = dict.fromkeys(ids, 0)
-        vote_ids = self.pool['forum.post.vote'].search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
-        for vote in self.pool['forum.post.vote'].browse(cr, uid, vote_ids, context=context):
+    @api.multi
+    def _get_user_vote(self):
+        res = dict.fromkeys(self.ids, 0)
+        for vote in self.env['forum.post.vote'].search([('post_id', 'in', self.ids), ('user_id', '=', self.env.uid)]):
             res[vote.post_id.id] = vote.vote
-        return res
+        for post in self:
+            post.user_vote = res[post.id]
 
-    def _get_vote_count(self, cr, uid, ids, field_name, arg, context):
-        res = dict.fromkeys(ids, 0)
-        for post in self.browse(cr, uid, ids, context=context):
-            for vote in post.vote_ids:
-                res[post.id] += int(vote.vote)
-        return res
+    @api.multi
+    @api.depends('vote_ids')
+    def _get_vote_count(self):
+        for post in self:
+            post.vote_count = sum(int(vote.vote) for vote in post.vote_ids)
 
-    def _get_post_from_vote(self, cr, uid, ids, context=None):
-        result = {}
-        for vote in self.pool['forum.post.vote'].browse(cr, uid, ids, context=context):
-            result[vote.post_id.id] = True
-        return result.keys()
+    # def _get_post_from_vote(self, cr, uid, ids, context=None):
+    #     result = {}
+    #     for vote in self.pool['forum.post.vote'].browse(cr, uid, ids, context=context):
+    #         result[vote.post_id.id] = True
+    #     return result.keys()
 
     def _get_user_favourite(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, False)
@@ -212,8 +213,17 @@ class Post(osv.Model):
             })
         return res
 
+    name = new_fields.Char('Title')
+    # put other fields here ...
+    # vote fields
+    vote_ids = new_fields.One2many(
+        'forum.post.vote', 'post_id',
+        string='Votes')
+    user_vote = new_fields.Integer('My Vote', compute='_get_user_vote')
+    vote_count = new_fields.Integer('Votes', store=True, compute='_get_vote_count')
+    # put other fields here ...
+
     _columns = {
-        'name': fields.char('Title'),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
         'content': fields.html('Content'),
         'tag_ids': fields.many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tags'),
@@ -233,15 +243,6 @@ class Post(osv.Model):
         'create_uid': fields.many2one('res.users', 'Created by', select=True, readonly=True),
         'write_date': fields.datetime('Update on', select=True, readonly=True),
         'write_uid': fields.many2one('res.users', 'Updated by', select=True, readonly=True),
-        # vote fields
-        'vote_ids': fields.one2many('forum.post.vote', 'post_id', 'Votes'),
-        'user_vote': fields.function(_get_user_vote, string='My Vote', type='integer'),
-        'vote_count': fields.function(
-            _get_vote_count, string="Votes", type='integer',
-            store={
-                'forum.post': (lambda self, cr, uid, ids, c={}: ids, ['vote_ids'], 10),
-                'forum.post.vote': (_get_post_from_vote, [], 10),
-            }),
         # favorite fields
         'favourite_ids': fields.many2many('res.users', string='Favourite'),
         'user_favourite': fields.function(_get_user_favourite, string="My Favourite", type='boolean'),
@@ -391,29 +392,27 @@ class Post(osv.Model):
                 self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [uid], post.forum_id.karma_gen_answer_accept * -1, context=context)
         return super(Post, self).unlink(cr, uid, ids, context=context)
 
-    def vote(self, cr, uid, ids, upvote=True, context=None):
-        posts = self.browse(cr, uid, ids, context=context)
-
-        if upvote and any(not post.can_upvote for post in posts):
+    @api.multi
+    def vote(self, upvote=True):
+        if upvote and any(not post.can_upvote for post in self):
             raise KarmaError('Not enough karma to upvote.')
-        elif not upvote and any(not post.can_downvote for post in posts):
+        elif not upvote and any(not post.can_downvote for post in self):
             raise KarmaError('Not enough karma to downvote.')
 
-        Vote = self.pool['forum.post.vote']
-        vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], limit=1, context=context)
-        new_vote = 0
-        if vote_ids:
-            for vote in Vote.browse(cr, uid, vote_ids, context=context):
-                if upvote:
-                    new_vote = '0' if vote.vote == '-1' else '1'
-                else:
-                    new_vote = '0' if vote.vote == '1' else '-1'
-                Vote.write(cr, uid, vote_ids, {'vote': new_vote}, context=context)
-        else:
-            for post_id in ids:
-                new_vote = '1' if upvote else '-1'
-                Vote.create(cr, uid, {'post_id': post_id, 'vote': new_vote}, context=context)
-        return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]], 'user_vote': new_vote}
+        voted_post_ids = set()
+        votes = self.env['forum.post.vote'].search([('post_id', 'in', self.ids), ('user_id', '=', self.env.uid)], limit=1)
+        new_vote = '1' if upvote else '-1'
+        for vote in votes:
+            if upvote:
+                new_vote = '0' if vote.vote == '-1' else '1'
+            else:
+                new_vote = '0' if vote.vote == '1' else '-1'
+            vote.post_id.write({'vote_ids': [(1, vote.id, {'vote': new_vote})]})
+            voted_post_ids.add(vote.post_id.id)
+        for post in self:
+            if post.id not in voted_post_ids:
+                post.write({'vote_ids': [(0, 0, {'post_id': post.id, 'vote': new_vote})]})
+        return {'vote_count': self[0].vote_count, 'user_vote': new_vote}
 
     def convert_answer_to_comment(self, cr, uid, id, context=None):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
@@ -539,8 +538,8 @@ class Vote(osv.Model):
         }
         return _karma_upd[old_vote][new_vote]
 
-    def create(self, cr, uid, vals, context=None):
-        vote_id = super(Vote, self).create(cr, uid, vals, context=context)
+    def create(self, cr, uid, values, context=None):
+        vote_id = super(Vote, self).create(cr, uid, values, context=context)
         vote = self.browse(cr, uid, vote_id, context=context)
         if vote.post_id.parent_id:
             karma_value = self._get_karma_value('0', vote.vote, vote.post_id.forum_id.karma_gen_answer_upvote, vote.post_id.forum_id.karma_gen_answer_downvote)
