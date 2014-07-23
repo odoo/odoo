@@ -304,7 +304,7 @@ class sale_order(osv.osv):
         r = {'value': {}}
         if not fiscal_position:
             if not company_id:
-                company_id = self._get_default_company(cr, uid, context=context)
+                company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=context)
             fiscal_position = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, delivery_id, context=context)
             if fiscal_position:
                 r['value']['fiscal_position'] = fiscal_position
