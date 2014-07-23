@@ -957,20 +957,17 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             } else {
                 var fields = _.keys(self.fields_view.fields);
                 fields.push('display_name');
-                // Use of search_read instead of read to check if we can still read the record (security rules)
-                return self.dataset.call('search_read', [[['id', '=', self.dataset.ids[self.dataset.index]]], fields],
+                return self.dataset.read_index(fields,
                     {
                         context: {
                             'bin_size': true,
                             'future_display_name': true
-                        }
+                        },
+                        check_access_rule: true
                     }).then(function(r) {
-                        if (_.isEmpty(r)){
-                            self.do_action('history_back');
-                        }
-                        else{
-                            self.trigger('load_record', r[0]);
-                        }
+                        self.trigger('load_record', r);
+                    }).fail(function (){
+                        self.do_action('history_back');
                     });
             }
         });
