@@ -2405,8 +2405,8 @@ class stock_move(osv.osv):
                 # Downstream move should only be triggered if this move is the last pending upstream move
                 other_upstream_move_ids = self.search(cr, uid, [('id','not in',move_ids),('state','not in',['done','cancel']),
                                             ('move_dest_id','=',move.move_dest_id.id)], context=context)
+                self.write(cr, uid, [move.id], {'move_history_ids': [(4, move.move_dest_id.id)]})
                 if not other_upstream_move_ids:
-                    self.write(cr, uid, [move.id], {'move_history_ids': [(4, move.move_dest_id.id)]})
                     if move.move_dest_id.state in ('waiting', 'confirmed'):
                         self.force_assign(cr, uid, [move.move_dest_id.id], context=context)
                         if move.move_dest_id.picking_id:
