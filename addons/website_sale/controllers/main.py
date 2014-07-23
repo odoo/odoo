@@ -660,7 +660,7 @@ class website_sale(http.Controller):
         if not order:
             return {
                 'state': 'error',
-                'message': '<p>There seems to be an error with your request.</p>',
+                'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
             }
 
         tx_ids = request.registry['payment.transaction'].search(
@@ -672,7 +672,7 @@ class website_sale(http.Controller):
             if order.amount_total:
                 return {
                     'state': 'error',
-                    'message': '<p>There seems to be an error with your request.</p>',
+                    'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
                 }
             else:
                 state = 'done'
@@ -682,15 +682,15 @@ class website_sale(http.Controller):
             tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
             state = tx.state
             if state == 'done':
-                message = '<p>Your payment has been received.</p>'
+                message = '<p>%s</p>' % _('Your payment has been received.')
             elif state == 'cancel':
-                message = '<p>The payment seems to have been canceled.</p>'
+                message = '<p>%s</p>' % _('The payment seems to have been canceled.')
             elif state == 'pending' and tx.acquirer_id.validation == 'manual':
-                message = '<p>Your transaction is waiting confirmation.</p>'
+                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
                 if tx.acquirer_id.post_msg:
                     message += tx.acquirer_id.post_msg
             else:
-                message = '<p>Your transaction is waiting confirmation.</p>'
+                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
             validation = tx.acquirer_id.validation
 
         return {

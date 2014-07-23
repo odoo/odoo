@@ -632,7 +632,7 @@ class sale_order(osv.osv):
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
             compose_form_id = False 
-        ctx = dict(context)
+        ctx = dict()
         ctx.update({
             'default_model': 'sale.order',
             'default_res_id': ids[0],
