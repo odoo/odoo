@@ -25,6 +25,10 @@ class contactus(http.Controller):
         values.update(kwargs=kwargs.items())
         return request.website.render("website.contactus", values)
 
+    def create_lead(self, request, values):
+        """ Allow to be overrided """
+        return request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, values, request.context)
+
     @http.route(['/crm/contactus'], type='http', auth="public", website=True)
     def contactus(self, **kwargs):
         def dict_to_str(title, dictvar):
@@ -41,12 +45,10 @@ class contactus(http.Controller):
         post_description = []  # Info to add after the message
         values = {}
 
-        lead_model = request.registry['crm.lead']
-
         for field_name, field_value in kwargs.items():
             if hasattr(field_value, 'filename'):
                 post_file.append(field_value)
-            elif field_name in lead_model._all_columns and field_name not in _BLACKLIST:
+            elif field_name in request.registry['crm.lead']._all_columns and field_name not in _BLACKLIST:
                 values[field_name] = field_value
             elif field_name not in _TECHNICAL:  # allow to add some free fields or blacklisted field like ID
                 post_description.append("%s: %s" % (field_name, field_value))
@@ -80,7 +82,7 @@ class contactus(http.Controller):
             post_description.append("%s: %s" % ("REFERER", environ.get("HTTP_REFERER")))
             values['description'] += dict_to_str(_("Environ Fields: "), post_description)
 
-        lead_id = lead_model.create(request.cr, SUPERUSER_ID, dict(values, user_id=False), request.context)
+        lead_id = self.create_lead(request, dict(values, user_id=False))
         if lead_id:
             for field_value in post_file:
                 attachment_value = {
