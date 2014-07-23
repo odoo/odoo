@@ -1017,12 +1017,10 @@
         },
         clean_for_save: function () {
             this._super();
-            $(".carousel").find(".item").removeClass("next prev left right active");
-            this.$indicators.find('li').removeClass('active');
-            this.$indicators.find('li:first').addClass('active');
-            if(!this.$target.find(".item.active").length) {
-                this.$target.find(".item:first").addClass("active");
-            }
+            this.$target.find(".item").removeClass("next prev left right active")
+                .first().addClass("active");
+            this.$indicators.find('li').removeClass('active')
+                .first().addClass("active");
         },
         start : function () {
             var self = this;

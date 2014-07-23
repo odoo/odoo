@@ -56,9 +56,10 @@
         },
         load_xml_data: function (xml_ids) {
             var self = this;
+            $('#theme_error').remove();
             return openerp.jsonRpc('/website/theme_customize_get', 'call', {
                     'xml_ids': this.get_xml_ids(this.$inputs)
-                }).then(function (data) {
+                }).done(function (data) {
                     self.$inputs.filter('[data-xmlid]').each(function () {
                         if (!_.difference(self.get_xml_ids($(this)), data[1]).length) {
                             $(this).prop("checked", false).change();
@@ -67,6 +68,8 @@
                             $(this).prop("checked", true).change();
                         }
                     });
+                }).fail(function (d, error) {
+                    $('body').prepend($('<div id="theme_error"/>').text(error.data.message));
                 });
         },
         get_inputs: function (string) {
@@ -213,6 +216,7 @@
         },
         close: function () {
             var self = this;
+            $('#theme_error').remove();
             $('link[href*=".assets_"]').removeAttr('data-loading');
             this.$el.removeClass('in');
             this.$el.addClass('out');

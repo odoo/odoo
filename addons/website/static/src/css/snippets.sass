@@ -506,14 +506,19 @@
 
 .colorpicker
     margin: 0 auto
-    td > *
-        width: 16px
-        height: 16px
-        border-radius: 2px
-        margin: 3px
+    background: transparent
+    border: 0
+    td
         padding: 0
-        border-width: 1px
-        display: block
+        background: transparent
+        > *
+            width: 16px
+            height: 16px
+            border-radius: 2px
+            margin: 3px
+            padding: 0
+            border-width: 1px
+            display: block
     .only-text
         display: none
     .automatic-color
