@@ -292,7 +292,8 @@ class mrp_production(osv.osv):
             todo = po.move_lines
             dt = datetime.strptime(po.date_start,'%Y-%m-%d %H:%M:%S')
             while todo:
-                l = todo.pop(0)
+                l = todo[0]
+                todo=todo[1:]
                 if l.state in ('done','cancel','draft'):
                     continue
                 todo += l.move_dest_id_lines
