@@ -2777,7 +2777,8 @@ class BaseModel(object):
         m2m_tbl, col1, col2 = f._sql_names(self)
         # do not create relations for custom fields as they do not belong to a module
         # they will be automatically removed when dropping the corresponding ir.model.field
-        if not f.string.startswith('x_'):
+        # table name for custom relation all starts with x_, see __init__
+        if not m2m_tbl.startswith('x_'):
             self._save_relation_table(cr, m2m_tbl)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():

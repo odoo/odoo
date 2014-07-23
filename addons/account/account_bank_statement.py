@@ -736,6 +736,8 @@ class account_bank_statement_line(osv.osv):
         st_line_currency_rate = st_line.currency_id and statement_currency.id == company_currency.id and (st_line.amount_currency / st_line.amount) or False
         to_create = []
         for mv_line_dict in mv_line_dicts:
+            if mv_line_dict.get('is_tax_line'):
+                continue
             mv_line_dict['ref'] = move_name
             mv_line_dict['move_id'] = move_id
             mv_line_dict['period_id'] = st_line.statement_id.period_id.id

@@ -1374,7 +1374,7 @@ class mail_thread(osv.AbstractModel):
             return result
         if partner and partner in obj.message_follower_ids:  # recipient already in the followers -> skip
             return result
-        if partner and partner in [val[0] for val in result[obj.id]]:  # already existing partner ID -> skip
+        if partner and partner.id in [val[0] for val in result[obj.id]]:  # already existing partner ID -> skip
             return result
         if partner and partner.email:  # complete profile: id, name <email>
             result[obj.id].append((partner.id, '%s<%s>' % (partner.name, partner.email), reason))
