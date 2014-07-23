@@ -9,154 +9,100 @@
 			<field name="sequence" type="int">25</field>
 		</record>
 
-		<template id='headersearch' name="slide">
-			<t t-call="website.layout">
-				<div class="container mt16">
-					<div class="navbar navbar-default">
-						<div class="navbar-header">
-							<button data-target="#oe-help-navbar-collapse"
-								data-toggle="collapse" type="button" class="navbar-toggle collapsed">
-								<span class="sr-only">Toggle navigation</span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-							<span class="navbar-brand">slides</span>
-						</div>
-						<div id="oe-help-navbar-collapse" class="collapse navbar-collapse">
-							<form action="/slides" role="search" class="navbar-form navbar-right"
-								method="post">
-								<div class="form-group">
-									<input name="search" placeholder="Search query..." class="form-control"
-										type="search" />
-									<button type="submit" class="btn btn-default">Search</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-				<t t-raw="0" />
-			</t>
-		</template>
-		
 		<template id='home' name="slide">
 			<t t-set="head">
-				<style type="text/css">
-					
-					.item.list-group-item.thumbnail
-					{
-					margin-bottom: 20px;
-					padding: 0px;
-					-webkit-border-radius: 0px;
-					-moz-border-radius: 0px;
-					border-radius: 0px;
-					}
-					
-					.item.list-group-item
-					{
-					float: none;
-					width: 100%;
-					background-color: #fff;
-					margin-bottom:
-					10px;
-					border: none;
-					}
-
-					.item.list-group-item .list-group-image
-					{
-					margin-right: 10px;
-					max-height:250px;
-					}
-					.item.list-group-item .thumbnail
-					{
-					margin-bottom: 0px;
-					}
-					.item.list-group-item .caption
-					{
-					padding: 9px
-					9px 0px 9px;
-					}
-
-					.item.list-group-item:before,
-					.item.list-group-item:after
-					{
-					display: table;
-					content: " ";
-					}
-
-					.item.list-group-item img
-					{
-					float: left;
-					}
-					.item.list-group-item:after
-					{
-					clear: both;
-					}
-					.list-group-item-text
-					{
-					margin: 0 0 11px;
-					}
-
-				</style>
-				<script type="text/javascript">
-					$(document).ready(function() {
-					$('#list').click(function(event){event.preventDefault();$('#products .item').addClass('list-group-item');});
-					$('#grid').click(function(event){event.preventDefault();$('#products .item').removeClass('list-group-item');
-					$('#products .item').addClass('grid-group-item');});
-					});
-				</script>
+				<link href="/slides/static/src/css/slides.css" rel="stylesheet" />
+				<script type="text/javascript" src="/slides/static/src/js/slides.js"></script>
 			</t>
-			<t t-call="slides.headersearch">
+			<t t-call="website.layout">
+				<div class="container">
+					<div class="row-fluid">
+						<ol class="breadcrumb">
+							<li>
+								<a href="/slides">
+									<span class="glyphicon glyphicon-home"></span>
+								</a>
+							</li>
+						</ol>
+					</div>
+				</div>
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-9">
-							<div class="page-header mt0">
-								<div class="btn-group">
-									<a href="#" id="list" class="btn btn-default btn-sm">
+
+							<h1 class="page-header mt0">
+								<t t-esc="len(attachment)" />
+								<span>Results</span>
+								<small class="dropdown">
+									<a class="dropdown-toggle" href="#" data-toggle="dropdown">
+										All
+										by activity date
+										<b class="caret"></b>
+									</a>
+									<ul class="dropdown-menu">
+										<li class="dropdown-header">Filter on</li>
+										<li class="active">
+											<a href="?filters=all">All</a>
+										</li>
+										<li>
+											<a href="?filters=unanswered">Unanswered</a>
+										</li>
+										<li>
+											<a href="?filters=followed">Followed</a>
+										</li>
+										<li class="dropdown-header">Tags</li>
+
+										<li class="dropdown-header">Sort by</li>
+										<li class="active">
+											<a href="?sorting=date">Last activity date</a>
+										</li>
+										<li>
+											<a href="?sorting=creation">Newest</a>
+										</li>
+										<li>
+											<a href="?sorting=answered">Most answered</a>
+										</li>
+										<li>
+											<a href="?sorting=vote">Most voted</a>
+										</li>
+									</ul>
+								</small>
+								<div class="btn-group pull-right">
+									<a href="javascript:void(0);" id="list" class="btn btn-default btn-sm">
 										<span class="glyphicon glyphicon-th-list">
 										</span>
 										List
 									</a>
-									<a href="#" id="grid" class="btn btn-default btn-sm">
+									<a href="javascript:void(0);" id="grid" class="btn btn-default btn-sm">
 										<span class="glyphicon glyphicon-th"></span>
 										Grid
 									</a>
 								</div>
-								<span class="text-muted pull-right"><t t-esc="len(attachment)" /> results are found</span>
-							</div>
-
+							</h1>
 							<div id="products" class="row list-group">
-								<div class="item  col-md-3" t-foreach="attachment"
-									t-as="file">
+								<div class="item  col-md-4" t-foreach="attachment" t-as="file">
 									<div class="thumbnail">
 										<a t-attf-href="/slides/view/#{file['id']}">
-											<img class="group list-group-image" src="/slides/static/description/icon.png"
-												alt="" />
+											<img class="img-responsive group list-group-image" src="/slides/static/description/icon.png"
+												t-attf-alt="file['name']" height="250" width="250"/>
 										</a>
 										<div class="caption">
 											<h4 class="group inner list-group-item-heading">
 												<t t-esc="file['name']" />
 											</h4>
 											<p class="group inner list-group-item-text">
-												Lorem ipsum dolor sit amet,
-												consectetuer
-												adipiscing
-												elit,
-												sed diam
-												nonummy nibh euismod
-												tincidunt ut laoreet dolore
-												magna
-												aliquam erat volutpat.
+												<t t-esc="file['name']" />
 											</p>
 											<div class="row">
 												<div class="col-xs-12 col-md-6">
 													<p class="lead">
-														$21.000
+														<a t-attf-href="/slides/download/#{file['id']}" class="btn btn-primary">
+															<span class="glyphicon glyphicon-cloud-download"></span>
+														</a>
 													</p>
 												</div>
 												<div class="col-xs-12 col-md-6">
-													<a t-attf-href="/slides/download/#{file['id']}" class="btn btn-success">
-														<span class="glyphicon glyphicon-cloud-download"></span>
-													</a>
+													<a class="btn btn-primary" href="javascript:void(0);">published</a>
 												</div>
 											</div>
 										</div>
@@ -165,14 +111,17 @@
 							</div>
 						</div>
 						<div class="col-sm-3">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h3 class="panel-title">tag cloud</h3>
+							<form action="/slides" role="search" method="post">
+								<div class="input-group">
+									<input type="text" class="form-control" name="search"
+										placeholder="submit query" />
+									<span class="input-group-btn">
+										<button class="btn btn-primary" type="submit">
+											<span class="glyphicon glyphicon-search"></span>
+										</button>
+									</span>
 								</div>
-								<div class="panel-body">
-									tags
-								</div>
-							</div>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -181,7 +130,18 @@
 
 
 		<template id='view' name="slide">
-			<t t-call="slides.headersearch">
+			<t t-call="website.layout">
+				<div class="container">
+					<div class="row-fluid">
+						<ol class="breadcrumb">
+							<li>
+								<a href="/slides">
+									<span class="glyphicon glyphicon-home"></span>
+								</a>
+							</li>
+						</ol>
+					</div>
+				</div>
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-9">
@@ -191,14 +151,17 @@
 								webkitallowfullscreen="true"></iframe>
 						</div>
 						<div class="col-sm-3">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h3 class="panel-title">tag cloud</h3>
+							<form action="/slides" role="search" method="post">
+								<div class="input-group">
+									<input type="text" class="form-control" name="search"
+										placeholder="submit query" />
+									<span class="input-group-btn">
+										<button class="btn btn-primary" type="submit">
+											<span class="glyphicon glyphicon-search"></span>
+										</button>
+									</span>
 								</div>
-								<div class="panel-body">
-									tags
-								</div>
-							</div>
+							</form>
 						</div>
 					</div>
 				</div>
