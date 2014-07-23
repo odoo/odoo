@@ -244,6 +244,10 @@
                                 $(".only-text", block.element.$).css("display", "block");
                                 $(".only-bg", block.element.$).css("display", "none");
                             }
+                            var $body = $(block.element.$).parents("body");
+                            setTimeout(function () {
+                                $body.css('background-color', '#fff');
+                            }, 0);
                         },
                         getClasses: function () {
                             var self = this;
