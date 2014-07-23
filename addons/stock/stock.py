@@ -1487,7 +1487,7 @@ class stock_production_lot(osv.osv):
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
     _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, ref)', 'The combination of Serial Number and internal reference must be unique !'),
+        ('name_ref_uniq', 'unique (name, ref, product_id, company_id)', 'The combination of Serial Number, internal reference, Product and Company must be unique !'),
     ]
     def action_traceability(self, cr, uid, ids, context=None):
         """ It traces the information of a product
