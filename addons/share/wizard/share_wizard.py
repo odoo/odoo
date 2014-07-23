@@ -82,7 +82,7 @@ class share_wizard(osv.TransientModel):
             values['name'] = action.name
         return super(share_wizard,self).create(cr, uid, values, context=context)
 
-    def share_url_template(self, cr, uid, _ids, context=None):
+    def share_url_template(self, cr, uid, ids, context=None):
         # NOTE: take _ids in parameter to allow usage through browse_record objects
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
         if base_url:
@@ -103,7 +103,7 @@ class share_wizard(osv.TransientModel):
         return result
 
     def _generate_embedded_code(self, wizard, options=None):
-        cr, uid, context = self.env.args
+        cr, uid, context = wizard.env.args
         if options is None:
             options = {}
 
