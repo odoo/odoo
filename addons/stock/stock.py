@@ -1531,9 +1531,9 @@ class stock_move(osv.osv):
         res = dict.fromkeys(ids, False)
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'done':
-                res[move.id] = [q.id for q in move.quant_ids]
+                res[move.id] = [q.lot_id.id for q in move.quant_ids if q.lot_id]
             else:
-                res[move.id] = [q.id for q in move.reserved_quant_ids]
+                res[move.id] = [q.lot_id.id for q in move.reserved_quant_ids if q.lot_id]
         return res
 
     def _get_product_availability(self, cr, uid, ids, field_name, args, context=None):
@@ -1688,7 +1688,7 @@ class stock_move(osv.osv):
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
         'inventory_id': fields.many2one('stock.inventory', 'Inventory'),
-        'lot_ids': fields.function(_get_lot_ids, type='many2many', relation='stock.quant', string='Lots'),
+        'lot_ids': fields.function(_get_lot_ids, type='many2many', relation='stock.production.lot', string='Lots'),
         'origin_returned_move_id': fields.many2one('stock.move', 'Origin return move', help='move that created the return move', copy=False),
         'returned_move_ids': fields.one2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move'),
         'reserved_availability': fields.function(_get_reserved_availability, type='float', string='Quantity Reserved', readonly=True, help='Quantity that has already been reserved for this move'),
