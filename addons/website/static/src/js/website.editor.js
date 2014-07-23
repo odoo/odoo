@@ -389,19 +389,26 @@
                             $(block.element.$).on('click', 'button', function () {
                                 self.clicked(this);
                             });
+                            if (btnID === "TextColor") {
+                                $(".only-text", block.element.$).css("display", "block");
+                                $(".only-bg", block.element.$).css("display", "none");
+                            }
                         },
                         getClasses: function () {
+                            var self = this;
                             var classes = [];
                             var id = this._.id;
                             var block = this._.panel._.panel._.blocks[id];
                             var $root = $(block.element.$);
                             $root.find("button").map(function () {
-                                classes.push( btnID === "BGColor" ? $(this).attr("class") : $(this).attr("class").replace(/^bg-/i, 'text-') );
+                                var color = self.getClass(this);
+                                if(color) classes.push( color );
                             });
                             return classes;
                         },
                         getClass: function (button) {
-                            return btnID === "BGColor" ? $(button).attr("class") : $(button).attr("class").replace(/^bg-/i, 'text-');
+                            var color = btnID === "BGColor" ? $(button).attr("class") : $(button).attr("class").replace(/^bg-/i, 'text-');
+                            return color.length && color;
                         },
                         clicked: function (button) {
                             var className = this.getClass(button);
@@ -413,7 +420,16 @@
 
                             // remove style
                             var classes = [];
-                            $(ancestor.$).find('font').filter("."+this.getClasses().join(",.")).map(function () {
+                            var $ancestor = $(ancestor.$);
+                            var $fonts = $(ancestor.$).find('font');
+                            if (!ancestor.$.tagName) {
+                                $ancestor = $ancestor.parent();
+                            }
+                            if ($ancestor.is('font')) {
+                                $fonts = $fonts.add($ancestor[0]);
+                            }
+
+                            $fonts.filter("."+this.getClasses().join(",.")).map(function () {
                                 var className = $(this).attr("class");
                                 if (classes.indexOf(className) === -1) {
                                     classes.push(className);
