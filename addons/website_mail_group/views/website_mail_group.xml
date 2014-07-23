@@ -31,6 +31,9 @@
             </section>
         </div>
         <div class="container mt32">
+            <div t-if="'unsubscribe' in request.params" class="col-md-offset-9 col-md-3 alert alert-info">
+               <h3>Need to unsubscribe? It's right here! <span class="fa fa-2x fa-arrow-down pull-right"></span></h3>
+            </div>
             <div class="row mt8" t-foreach="groups" t-as="group">
                 <div class="col-md-3">
                     <img t-att-src="'/website/image?model=mail.group&amp;field=image_small&amp;id='+str(group['id'])" class="pull-left"/>

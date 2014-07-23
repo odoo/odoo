@@ -389,6 +389,7 @@ class product_attribute_price(osv.osv):
 
 class product_attribute_line(osv.osv):
     _name = "product.attribute.line"
+    _rec_name = 'attribute_id'
     _columns = {
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
         'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True),

@@ -79,7 +79,7 @@ class WebsiteForum(http.Controller):
         forum_id = request.registry['forum.forum'].create(request.cr, request.uid, {
             'name': forum_name,
         }, context=request.context)
-        return request.redirect("/forum/%s" % slug(forum_id))
+        return request.redirect("/forum/%s" % forum_id)
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
     def notification_read(self, **kwargs):
