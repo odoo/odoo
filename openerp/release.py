@@ -34,8 +34,8 @@ version_info = (9, 0, 0, ALPHA, 1)
 version = '.'.join(map(str, version_info[:2])) + RELEASE_LEVELS_DISPLAY[version_info[3]] + str(version_info[4] or '')
 series = serie = major_version = '.'.join(map(str, version_info[:2]))
 
-description = 'OpenERP Server'
-long_desc = '''OpenERP is a complete ERP and CRM. The main features are accounting (analytic
+description = 'Odoo Server'
+long_desc = '''Odoo is a complete ERP and CRM. The main features are accounting (analytic
 and financial), stock management, sales and purchases management, tasks
 automation, marketing campaigns, help desk, POS, etc. Technical features include
 a distributed server, flexible workflows, an object database, a dynamic GUI,

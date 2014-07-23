@@ -38,7 +38,7 @@ class simple(render.render):
 
         title = parser.documentElement.tagName
         doc = SimpleDocTemplate(self.result, pagesize=A4, title=title,
-          author='OpenERP, Fabien Pinckaers', leftmargin=10*mm, rightmargin=10*mm)
+          author='Odoo, Fabien Pinckaers', leftmargin=10*mm, rightmargin=10*mm)
 
         styles = reportlab.lib.styles.getSampleStyleSheet()
         title_style = copy.deepcopy(styles["Heading1"])

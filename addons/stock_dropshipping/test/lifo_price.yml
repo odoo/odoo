@@ -57,7 +57,7 @@
   !assert {model: purchase.order, id: purchase_order_lifo1}:
     - state == 'approved'
 - 
-  Process the reception of purchase order 1
+  Process the receipt of purchase order 1
 -
   !python {model: stock.picking}: |
     order = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_lifo1"), context=context).picking_ids[0]
@@ -72,7 +72,7 @@
 - 
   !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_lifo2}
 -
-  Process the reception of purchase order 2
+  Process the receipt of purchase order 2
 - 
   !python {model: stock.picking}: |
     order = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_lifo2"), context=context).picking_ids[0]
@@ -81,7 +81,7 @@
   Check the standard price should not have changed
 - 
   !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_lifo_icecream")).standard_price == 70.0, 'Standard price as lifo price of second reception incorrect!'
+    assert self.browse(cr, uid, ref("product_lifo_icecream")).standard_price == 70.0, 'Standard price as lifo price of second receipt incorrect!'
 - 
   Let us send some goods
 - 

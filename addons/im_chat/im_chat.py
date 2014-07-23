@@ -136,7 +136,8 @@ class im_chat_session(osv.Model):
             if session_id:
                 # get the image of the user
                 res = self.pool["res.users"].read(cr, uid, [user_id], ["image_small"])[0]
-                image_b64 = res["image_small"]
+                if res["image_small"]:
+                    image_b64 = res["image_small"]
         return image_b64
 
 class im_chat_message(osv.Model):
