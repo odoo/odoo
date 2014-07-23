@@ -83,7 +83,11 @@ class sale_order_line(osv.osv):
         if product:
             product_res = self.pool.get('product.product').browse(cr, uid, product, context=context)
             if product_res.event_ok:
-                res['value'].update({'event_type_id': product_res.event_type_id.id, 'event_ok':product_res.event_ok})
+                res['value'].update(event_type_id=product_res.event_type_id.id,
+                                    event_ok=product_res.event_ok)
+            else:
+                res['value'].update(event_type_id=False,
+                                    event_ok=False)
         return res
 
     def button_confirm(self, cr, uid, ids, context=None):
@@ -186,7 +190,7 @@ class event_ticket(osv.osv):
         'deadline': fields.date("Sales End"),
         'is_expired': fields.function(_is_expired, type='boolean', string='Is Expired'),
         'price': fields.float('Price'),
-        'seats_max': fields.integer('Maximum Avalaible Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )"),
+        'seats_max': fields.integer('Maximum Available Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )"),
         'seats_reserved': fields.function(_get_seats, string='Reserved Seats', type='integer', multi='seats_reserved'),
         'seats_available': fields.function(_get_seats, string='Available Seats', type='integer', multi='seats_reserved'),
         'seats_unconfirmed': fields.function(_get_seats, string='Unconfirmed Seat Reservations', type='integer', multi='seats_reserved'),

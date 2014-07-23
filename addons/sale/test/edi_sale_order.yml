@@ -35,6 +35,7 @@
   "Then I import a sample EDI document of a purchase order (v7.0)"
 -
   !python {model: edi.edi}: |
+    from openerp.tools import float_compare
     sale_order_pool = self.pool.get('sale.order')
     edi_document = {
         "__id": "purchase:5af12v70-dv70-1v70-bv70-701a04e25v70.purchase_order_test",
@@ -103,17 +104,17 @@
     assert bank_info.acc_number == "Another bank: 032465700-156700", 'Expected "Another bank: 032465700-156700", got %s' % bank_info.acc_number
 
     assert order_new.pricelist_id.name == 'Public Pricelist' , "Public Price list was not automatically assigned"
-    assert order_new.amount_total == 350, "Amount total is wrong"
-    assert order_new.amount_untaxed == 350, "Untaxed amount is wrong"
+    assert float_compare(order_new.amount_total, 350, precision_digits=2) == 0, "Amount total is wrong"
+    assert float_compare(order_new.amount_untaxed, 350, precision_digits=2) == 0, "Untaxed amount is wrong"
     assert len(order_new.order_line) == 2, "Sale order lines mismatch"
     for sale_line in order_new.order_line:
         if sale_line.name == 'PC Assemble SC234':
             assert sale_line.product_uom.name == "Unit" , "uom is not same"
-            assert sale_line.price_unit == 150 , "unit price is not same, got %s, expected 150"%(sale_line.price_unit,)
+            assert float_compare(sale_line.price_unit, 150 , precision_digits=2) == 0, "unit price is not same, got %s, expected 150"%(sale_line.price_unit,)
             assert sale_line.product_uom_qty == 1 , "product qty is not same"
         elif sale_line.name == 'PC on Demand':
             assert sale_line.product_uom.name == "Unit" , "uom is not same"
-            assert sale_line.price_unit == 100 , "unit price is not same, got %s, expected 100"%(sale_line.price_unit,)
+            assert float_compare(sale_line.price_unit, 100, precision_digits=2) == 0, "unit price is not same, got %s, expected 100"%(sale_line.price_unit,)
             assert sale_line.product_uom_qty == 2 , "product qty is not same"
         else:
             raise AssertionError('unknown order line: %s' % sale_line)
@@ -121,6 +122,7 @@
   "Then I import a sample EDI document of a purchase order (v6.1 - to test backwards compatibility)"
 -
   !python {model: edi.edi}: |
+    from openerp.tools import float_compare
     sale_order_pool = self.pool.get('sale.order')
     edi_document = {
         "__id": "purchase:5af1272e-dd26-11e0-b65e-701a04e25543.purchase_order_test",
@@ -199,17 +201,17 @@
     assert bank_info.acc_number == "Ladies bank: 032465789-156113", 'Expected "Ladies bank: 032465789-156113", got %s' % bank_info.acc_number
 
     assert order_new.pricelist_id.name == 'Public Pricelist' , "Public Price list was not automatically assigned"
-    assert order_new.amount_total == 350, "Amount total is wrong"
-    assert order_new.amount_untaxed == 350, "Untaxed amount is wrong"
+    assert float_compare(order_new.amount_total, 350, precision_digits=2) == 0, "Amount total is wrong"
+    assert float_compare(order_new.amount_untaxed, 350, precision_digits=2) == 0, "Untaxed amount is wrong"
     assert len(order_new.order_line) == 2, "Sale order lines mismatch"
     for sale_line in order_new.order_line:
         if sale_line.name == 'Basic PC':
             assert sale_line.product_uom.name == "PCE" , "uom is not same"
-            assert sale_line.price_unit == 150 , "unit price is not same, got %s, expected 150"%(sale_line.price_unit,)
+            assert float_compare(sale_line.price_unit, 150, precision_digits=2) == 0, "unit price is not same, got %s, expected 150"%(sale_line.price_unit,)
             assert sale_line.product_uom_qty == 1 , "product qty is not same"
         elif sale_line.name == 'Medium PC':
             assert sale_line.product_uom.name == "PCE" , "uom is not same"
-            assert sale_line.price_unit == 100 , "unit price is not same, got %s, expected 100"%(sale_line.price_unit,)
+            assert float_compare(sale_line.price_unit, 100 , precision_digits=2) == 0, "unit price is not same, got %s, expected 100"%(sale_line.price_unit,)
             assert sale_line.product_uom_qty == 2 , "product qty is not same"
         else:
             raise AssertionError('unknown order line: %s' % sale_line)

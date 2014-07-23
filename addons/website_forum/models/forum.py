@@ -112,7 +112,7 @@ class Post(osv.Model):
     _name = 'forum.post'
     _description = 'Forum Post'
     _inherit = ['mail.thread', 'website.seo.metadata']
-    _order = "is_correct DESC, vote_count DESC"
+    _order = "is_correct DESC, vote_count DESC, write_date DESC"
 
     def _get_user_vote(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0)
@@ -401,6 +401,7 @@ class Post(osv.Model):
 
         Vote = self.pool['forum.post.vote']
         vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], limit=1, context=context)
+        new_vote = 0
         if vote_ids:
             for vote in Vote.browse(cr, uid, vote_ids, context=context):
                 if upvote:
@@ -412,7 +413,7 @@ class Post(osv.Model):
             for post_id in ids:
                 new_vote = '1' if upvote else '-1'
                 Vote.create(cr, uid, {'post_id': post_id, 'vote': new_vote}, context=context)
-        return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]]}
+        return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]], 'user_vote': new_vote}
 
     def convert_answer_to_comment(self, cr, uid, id, context=None):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).

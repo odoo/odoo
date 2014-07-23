@@ -701,9 +701,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.trigger("save", result);
             self.reload().then(function() {
                 self.to_view_mode();
-                var parent = self.ViewManager.ActionManager.getParent();
-                if(parent){
-                    parent.menu.do_reload_needaction();
+                var menu = instance.webclient.menu;
+                if (menu) {
+                    menu.do_reload_needaction();
                 }
             });
         }).always(function(){

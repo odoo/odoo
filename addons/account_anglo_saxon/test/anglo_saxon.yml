@@ -132,13 +132,17 @@
 -
   I check the Stock Interim account (Received) is credited successfully.
 -
-  !assert {model: account.account, id : account_anglo_stock_input, string : Stock Interim account (Received) is not credited successfully.}:
-    - credit == 9
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    credit = self.browse(cr, uid, ref('account_anglo_stock_input')).credit
+    float_compare(credit, 9, precision_digits=2) == 0, "Stock Interim account (Received) is not credited successfully."
 -
   I check the Stock valuation account is debited sucessfully.
 -
-  !assert {model: account.account, id : account_anglo_stock_valuation, string : Stock valuation account is not debited successfully.}:
-    - debit == 9
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    debit = self.browse(cr, uid, ref('account_anglo_stock_valuation')).debit
+    float_compare(debit, 9, precision_digits=2) == 0, "Stock valuation account is not debited successfully."
 -
   I Validate Invoice of Purchase Order.
 -
@@ -148,18 +152,24 @@
 -
   I check the Stock Interim account (Received) is debited sucessfully when Invoice validated.
 -
-  !assert {model: account.account, id : account_anglo_stock_input, string : Stock Interim account (Received) is not debited successfully.}:
-    - debit == 9
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    debit = self.browse(cr, uid, ref('account_anglo_stock_input')).debit
+    float_compare(debit, 9, precision_digits=2) == 0, "Stock Interim account (Received) is not debited successfully."
 -
   I check the Price difference creditor Account is debited sucessfully when Invoice validated.
 -
-  !assert {model: account.account, id : account_anglo_price_difference, string : Price difference creditor Account is not debited successfully.}:
-    - debit == 1
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    debit = self.browse(cr, uid, ref('account_anglo_price_difference')).debit
+    float_compare(debit, 1, precision_digits=2) == 0, "Price difference creditor Account is not debited successfully."
 -
   I check Payable(creditor) Account is Credited sucessfully when Invoice validated.
 -
-  !assert {model: account.account, id : account_anglo_payable, string : Payable(creditor) Account is not Credited successfully.}:
-    - credit == 10
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    credit = self.browse(cr, uid, ref('account_anglo_payable')).credit
+    float_compare(credit, 10, precision_digits=2) == 0, "Payable(creditor) Account is not Credited successfully."
 -
   I open the Invoice.
 -
@@ -179,13 +189,17 @@
 -
   I check Payable(Creditors) Account is Debited sucessfully after invoice paid.
 -
-  !assert {model: account.account, id : account_anglo_payable, string : Payable(Creditors) Account is not Debited successfully.}:
-    - debit == 10
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    debit = self.browse(cr, uid, ref('account_anglo_payable')).debit
+    assert float_compare(debit, 10, precision_digits=2) == 0, "Payable(Creditors) Account is not Debited successfully."
 -
   I check Bank/Cash account is credited sucessfully after invoice paid.
 -
-  !assert {model: account.account, id : account_anglo_cash, string: Bank/Cash account is not credited successfully.}:
-    - credit == 10
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    credit = self.browse(cr, uid, ref('account_anglo_cash')).credit
+    float_compare(credit, 10, precision_digits=2) == 0, "Bank/Cash account is not credited successfully."
 -
   I create an Outgoing Picking order
 -
@@ -225,13 +239,17 @@
 - 
   I check Stock Interim account (Delivery) is debited successfully.
 -
-  !assert {model: account.account, id : account_anglo_stock_output, string : Stock Interim account (Delivery) is not debited successfully.}:
-    - debit == 9
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    debit = self.browse(cr, uid, ref('account_anglo_stock_output')).debit
+    float_compare(debit, 9, precision_digits=2) == 0, "Stock Interim account (Delivery) is not debited successfully."
 -
   I check the Stock valuation account is credited sucessfully.
 -
-  !assert {model: account.account, id : account_anglo_stock_valuation, string : Stock valuation account is not credited successfully.}: 
-    - credit == 9
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    credit = self.browse(cr, uid, ref('account_anglo_stock_valuation')).credit
+    float_compare(credit, 9, precision_digits=2) == 0, "Stock valuation account is not credited successfully."
 -
   As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
 -
@@ -256,23 +274,31 @@
 -
   I check Income Account is Credited sucessfully when Invoice validated.
 -
-  !assert {model: account.account, id : account_anglo_income, string : Income Account is not Credited successfully.}:
-    - credit == 20
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    credit = self.browse(cr, uid, ref('account_anglo_income')).credit
+    float_compare(credit, 20, precision_digits=2) == 0, "Income Account is not Credited successfully."
 -
   I check Cost of goods sold account for debit.
 -
-  !assert {model: account.account, id : account_anglo_cogs, string : Cost of goods sale is not Debited successfully.}:
-    - debit == 9
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    debit = self.browse(cr, uid, ref('account_anglo_cogs')).debit
+    float_compare(debit, 9, precision_digits=2) == 0, "Cost of goods sale is not Debited successfully."
 -
   I check Stock Interim account (Delivery)
 -
-  !assert {model: account.account, id : account_anglo_stock_output, string : Stock Interim account (Delivery) is not credited successfully.}:
-    - credit == 9
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    credit = self.browse(cr, uid, ref('account_anglo_stock_output')).credit
+    float_compare(credit, 9, precision_digits=2) == 0, "Stock Interim account (Delivery) is not credited successfully."
 -
   I check Receivable(Debtor) Account for debit.
 -
-  !assert {model: account.account, id : account_anglo_receivable, string : Receivable(Debtors) Account is not Debited successfully.}: 
-    - debit == 20
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    debit = self.browse(cr, uid, ref('account_anglo_receivable')).debit
+    float_compare(debit, 20, precision_digits=2) == 0, "Receivable(Debtors) Account is not Debited successfully."
 -
   I pay the invoice.
 -
@@ -289,10 +315,14 @@
 -
   I check Receivable(Debtor) Account for credit.
 -
-  !assert {model: account.account, id : account_anglo_receivable, string : Receivable(Debtors) Account is not Credited successfully.}: 
-    - credit == 20
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    credit = self.browse(cr, uid, ref('account_anglo_receivable')).credit
+    float_compare(credit, 20, precision_digits=2) == 0, "Receivable(Debtors) Account is not Credited successfully."
 -
   I check Bank/Cash account is debited sucessfully after invoice paid.
 -
-  !assert {model: account.account, id : account_anglo_cash, string: Bank/Cash account is not successfully credited.}:
-    - debit == 20
+  !python {model: account.account}: |
+    from openerp.tools import float_compare
+    debit = self.browse(cr, uid, ref('account_anglo_cash')).debit
+    float_compare(debit, 20, precision_digits=2) == 0, "Bank/Cash account is not successfully credited."

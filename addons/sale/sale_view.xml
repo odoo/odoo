@@ -76,18 +76,18 @@
                     <header>
                         <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" groups="base.group_user"/>
                         <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" groups="base.group_user"/>
+                        <button name="action_button_confirm" states="sent" string="Confirm Sale" class="oe_highlight" type="object" groups="base.group_user"/>
                         <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
                         <button name="action_quotation_send" string="Send by Email" type="object" states="sent,progress,manual" groups="base.group_user"/>
                         <button name="print_quotation" string="Print" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
                         <button name="print_quotation" string="Print" type="object" states="sent,progress,manual" groups="base.group_user"/>
                         <button name="action_button_confirm" states="draft" string="Confirm Sale" type="object" groups="base.group_user"/>
-                        <button name="action_button_confirm" states="sent" string="Confirm Sale" class="oe_highlight" type="object" groups="base.group_user"/>
                         <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
                             attrs="{'invisible': [('invoice_exists', '=', False)]}" groups="base.group_user"/>
                         <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
                             type="action" states="manual" class="oe_highlight" groups="base.group_user"/>
                         <button name="copy_quotation" states="cancel" string="New Copy of Quotation" type="object"/>
-                        <button name="cancel" states="draft,sent" string="Cancel Quotation" groups="base.group_user"/>
+                        <button name="cancel" states="draft,sent" string="Cancel" groups="base.group_user"/>
                         <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" groups="base.group_user"/>
                         <button name="invoice_cancel" states="invoice_except" string="Cancel Order" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,done" statusbar_colors='{"invoice_except":"red","waiting_date":"blue"}'/>
@@ -107,7 +107,6 @@
                         </group>
                         <group>
                             <field name="date_order"/>
-                            <field name="client_order_ref"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
@@ -203,6 +202,7 @@
                                     <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'base.group_sale_salesman_all_leads']}"/>
                                     <field name="section_id" options="{'no_create': True}" groups="base.group_multi_salesteams"/>
                                     <field groups="base.group_no_one" name="origin"/>
+                                    <field name="client_order_ref"/>
                                 </group>
                                 <group name="sale_pay">
                                     <field name="payment_term" options="{'no_create': True}"/>
