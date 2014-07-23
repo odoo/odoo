@@ -66,6 +66,7 @@ class attributes_value(osv.Model):
 class attributes_product(osv.Model):
     _name = "product.attribute.line"
     _order = 'attribute_id, value_id, value'
+    _rec_name = 'attribute_id'
     _columns = {
         'value': fields.float('Numeric Value'),
         'value_id': fields.many2one('product.attribute.value', 'Textual Value'),
