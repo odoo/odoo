@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import openerp
 from openerp import http
-from openerp import SUPERUSER_ID
 from openerp.http import request
 import openerp.addons.website_sale.controllers.main
+
 
 class website_sale(openerp.addons.website_sale.controllers.main.website_sale):
 
@@ -21,3 +21,8 @@ class website_sale(openerp.addons.website_sale.controllers.main.website_sale):
 
         res = super(website_sale, self).payment(**post)
         return res
+
+    def order_lines_2_google_api(self, order_lines):
+        """ Transforms a list of order lines into a dict for google analytics """
+        order_lines_not_delivery = [line for line in order_lines if not line.is_delivery]
+        return super(website_sale, self).order_lines_2_google_api(order_lines_not_delivery)
