@@ -710,7 +710,7 @@ class groups_view(osv.osv):
         view = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.user_groups_view', context=context)
         if view and view.exists() and view._name == 'ir.ui.view':
             xml1, xml2 = [], []
-            xml1.append(E.separator(string=_('Application'), colspan="4"))
+            xml1.append(E.separator(string=_('Application Roles'), colspan="4"))
             for app, kind, gs in self.get_groups_by_application(cr, uid, context):
                 # hide groups in category 'Hidden' (except to group_no_one)
                 attrs = {'groups': 'base.group_no_one'} if app and app.xml_id == 'base.module_category_hidden' else {}
