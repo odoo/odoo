@@ -114,180 +114,238 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return done;
         },
 
-        // helper function to load data from the server
+        // helper function to load data from the server. Obsolete use the models loader below.
         fetch: function(model, fields, domain, ctx){
             this._load_progress = (this._load_progress || 0) + 0.05; 
             this.pos_widget.loading_message(_t('Loading')+' '+model,this._load_progress);
             return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
         },
 
+        // Server side model loaders. This is the list of the models that need to be loaded from
+        // the server. The models are loaded one by one by this list's order. The 'loaded' callback
+        // is used to store the data in the appropriate place once it has been loaded. This callback
+        // can return a deferred that will pause the loading of the next module. 
+        // a shared temporary dictionary is available for loaders to communicate private variables
+        // used during loading such as object ids, etc. 
+        models: [
+        {
+            model:  'res.users',
+            fields: ['name','company_id'],
+            domain: function(self){ return [['id','=',self.session.uid]]; },
+            loaded: function(self,users){ self.user = users[0]; },
+        },{ 
+            model:  'res.company',
+            fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' ],
+            domain: function(self){ return [['id','=',self.user.company_id[0]]]; },
+            loaded: function(self,companies){ self.company = companies[0]; },
+        },{
+            model:  'product.uom',
+            fields: [],
+            domain: null,
+            loaded: function(self,units){
+                self.units = units;
+                var units_by_id = {};
+                for(var i = 0, len = units.length; i < len; i++){
+                    units_by_id[units[i].id] = units[i];
+                    units[i].groupable = ( units[i].category_id[0] === 1 );
+                    units[i].is_unit   = ( units[i].id === 1 );
+                }
+                self.units_by_id = units_by_id;
+            }
+        },{
+            model:  'res.users',
+            fields: ['name','ean13'],
+            domain: null,
+            loaded: function(self,users){ self.users = users; },
+        },{
+            model:  'res.partner',
+            fields: ['name','street','city','country_id','phone','zip','mobile','email','ean13'],
+            domain: null,
+            loaded: function(self,partners){
+                self.partners = partners;
+                self.db.add_partners(partners);
+            },
+        },{
+            model:  'account.tax',
+            fields: ['name','amount', 'price_include', 'type'],
+            domain: null,
+            loaded: function(self,taxes){ self.taxes = taxes; },
+        },{
+            model:  'pos.session',
+            fields: ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number'],
+            domain: function(self){ return [['state','=','opened'],['user_id','=',self.session.uid]]; },
+            loaded: function(self,pos_sessions){ self.pos_session = pos_sessions[0]; },
+        },{
+            model: 'pos.config',
+            fields: [],
+            domain: function(self){ return [['id','=', self.pos_session.config_id[0]]]; },
+            loaded: function(self,configs){
+                self.config = configs[0];
+                self.config.use_proxy = self.config.iface_payment_terminal || 
+                                        self.config.iface_electronic_scale ||
+                                        self.config.iface_print_via_proxy  ||
+                                        self.config.iface_scan_via_proxy   ||
+                                        self.config.iface_cashdrawer;
+                
+                self.barcode_reader.add_barcode_patterns({
+                    'product':  self.config.barcode_product,
+                    'cashier':  self.config.barcode_cashier,
+                    'client':   self.config.barcode_customer,
+                    'weight':   self.config.barcode_weight,
+                    'discount': self.config.barcode_discount,
+                    'price':    self.config.barcode_price,
+                });
+            },
+        },{
+            model: 'stock.location',
+            fields: [],
+            domain: function(self){ return [['id','=', self.config.stock_location_id[0]]]; },
+            loaded: function(self, locations){ self.shop = locations[0]; },
+        },{
+            model:  'product.pricelist',
+            fields: ['currency_id'],
+            domain: function(self){ return [['id','=',self.config.pricelist_id[0]]]; },
+            loaded: function(self, pricelists){ self.pricelist = pricelists[0]; },
+        },{
+            model: 'res.currency',
+            fields: ['symbol','position','rounding','accuracy'],
+            domain: function(self){ return [['id','=',self.pricelist.currency_id[0]]]; },
+            loaded: function(self, currencies){
+                self.currency = currencies[0];
+            },
+        },{
+            model: 'product.packaging',
+            fields: ['ean','product_tmpl_id'],
+            domain: null,
+            loaded: function(self, packagings){ 
+                self.db.add_packagings(packagings);
+            },
+        },{
+            model:  'pos.category',
+            fields: ['id','name','parent_id','child_id','image'],
+            domain: null,
+            loaded: function(self, categories){
+                self.db.add_categories(categories);
+            },
+        },{
+            model:  'product.product',
+            fields: ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 'variants',
+                     'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
+                     'product_tmpl_id'],
+            domain:  function(self){ return [['sale_ok','=',true],['available_in_pos','=',true]]; },
+            context: function(self){ return { pricelist: self.pricelist.id }; },
+            loaded: function(self, products){
+                self.db.add_products(products);
+            },
+        },{
+            model:  'account.bank.statement',
+            fields: ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
+            domain: function(self){ return [['state', '=', 'open'],['pos_session_id', '=', self.pos_session.id]]; },
+            loaded: function(self, bankstatements, tmp){
+                self.bankstatements = bankstatements;
+
+                tmp.journals = [];
+                _.each(bankstatements,function(statement){
+                    tmp.journals.push(statement.journal_id[0]);
+                });
+            },
+        },{
+            model:  'account.journal',
+            fields: [],
+            domain: function(self,tmp){ return [['id','in',tmp.journals]]; },
+            loaded: function(self, journals){
+                self.journals = journals;
+
+                // associate the bank statements with their journals. 
+                var bankstatements = self.bankstatements;
+                for(var i = 0, ilen = bankstatements.length; i < ilen; i++){
+                    for(var j = 0, jlen = journals.length; j < jlen; j++){
+                        if(bankstatements[i].journal_id[0] === journals[j].id){
+                            bankstatements[i].journal = journals[j];
+                            bankstatements[i].self_checkout_payment_method = journals[j].self_checkout_payment_method;
+                        }
+                    }
+                }
+                self.cashregisters = bankstatements;
+            },
+        },{
+            loaded: function(self){
+                self.company_logo = new Image();
+                self.company_logo.crossOrigin = 'anonymous';
+                var  logo_loaded = new $.Deferred();
+                self.company_logo.onload = function(){
+                    var img = self.company_logo;
+                    var ratio = 1;
+                    var targetwidth = 300;
+                    var maxheight = 150;
+                    if( img.width !== targetwidth ){
+                        ratio = targetwidth / img.width;
+                    }
+                    if( img.height * ratio > maxheight ){
+                        ratio = maxheight / img.height;
+                    }
+                    var width  = Math.floor(img.width * ratio);
+                    var height = Math.floor(img.height * ratio);
+                    var c = document.createElement('canvas');
+                        c.width  = width;
+                        c.height = height
+                    var ctx = c.getContext('2d');
+                        ctx.drawImage(self.company_logo,0,0, width, height);
+                    
+                    self.company_logo_base64 = c.toDataURL();
+                    window.logo64 = self.company_logo_base64;
+                    logo_loaded.resolve();
+                };
+                self.company_logo.onerror = function(){
+                    logo_loaded.reject();
+                };
+                self.company_logo.src = window.location.origin + '/web/binary/company_logo';
+
+                return logo_loaded;
+            },
+        },
+        ],
+
         // loads all the needed data on the sever. returns a deferred indicating when all the data has loaded. 
         load_server_data: function(){
             var self = this;
+            var loaded = new $.Deferred();
+            var progress = 0;
+            var progress_step = 1.0 / self.models.length;
+            var tmp = {}; // this is used to share a temporary state between models loaders
 
-            var loaded = self.fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
-                .then(function(users){
-                    self.user = users[0];
-
-                    return self.fetch('res.company',
-                    [
-                        'currency_id',
-                        'email',
-                        'website',
-                        'company_registry',
-                        'vat',
-                        'name',
-                        'phone',
-                        'partner_id',
-                    ],
-                    [['id','=',users[0].company_id[0]]],
-                    {show_address_only: true});
-                }).then(function(companies){
-                    self.company = companies[0];
-
-                    return self.fetch('product.uom', null, null);
-                }).then(function(units){
-                    self.units = units;
-                    var units_by_id = {};
-                    for(var i = 0, len = units.length; i < len; i++){
-                        units_by_id[units[i].id] = units[i];
-                        units[i].groupable = ( units[i].category_id[0] === 1 );
-                        units[i].is_unit   = ( units[i].id === 1 );
-                    }
-                    self.units_by_id = units_by_id;
+            function load_model(index){
+                if(index >= self.models.length){
+                    loaded.resolve();
+                }else{
+                    var model = self.models[index];
+                    self.pos_widget.loading_message(_t('Loading')+' '+(model.model || ''), progress);
+                    var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
+                    var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
+                    var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context; 
+                    progress += progress_step;
                     
-                    return self.fetch('res.users', ['name','ean13'], [['ean13', '!=', false]]);
-                }).then(function(users){
-                    self.users = users;
-
-                    return self.fetch('res.partner', ['name','street','city','country_id','phone','zip','mobile','email','ean13']);
-                }).then(function(partners){
-                    self.partners = partners;
-                    self.db.add_partners(partners);
-
-                    return self.fetch('account.tax', ['name','amount', 'price_include', 'type']);
-                }).then(function(taxes){
-                    self.taxes = taxes;
-
-                    return self.fetch(
-                        'pos.session', 
-                        ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number'],
-                        [['state', '=', 'opened'], ['user_id', '=', self.session.uid]]
-                    );
-                }).then(function(pos_sessions){
-                    self.pos_session = pos_sessions[0];
-
-                    return self.fetch('pos.config',[],[['id','=', self.pos_session.config_id[0]]]);
-                }).then(function(configs){
-                    self.config = configs[0];
-                    self.config.use_proxy = self.config.iface_payment_terminal || 
-                                            self.config.iface_electronic_scale ||
-                                            self.config.iface_print_via_proxy  ||
-                                            self.config.iface_scan_via_proxy   ||
-                                            self.config.iface_cashdrawer;
-                    
-                    self.barcode_reader.add_barcode_patterns({
-                        'product':  self.config.barcode_product,
-                        'cashier':  self.config.barcode_cashier,
-                        'client':   self.config.barcode_customer,
-                        'weight':   self.config.barcode_weight,
-                        'discount': self.config.barcode_discount,
-                        'price':    self.config.barcode_price,
-                    });
-                    return self.fetch('stock.location',[],[['id','=', self.config.stock_location_id[0]]]);
-                }).then(function(shops){
-                    self.shop = shops[0];
-
-                    return self.fetch('product.pricelist',['currency_id'],[['id','=',self.config.pricelist_id[0]]]);
-                }).then(function(pricelists){
-                    self.pricelist = pricelists[0];
-
-                    return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.pricelist.currency_id[0]]]);
-                }).then(function(currencies){
-                    self.currency = currencies[0];
-
-                    return self.fetch('product.packaging',['ean','product_tmpl_id']);
-                }).then(function(packagings){
-                    self.db.add_packagings(packagings);
-
-                    return self.fetch('pos.category', ['id','name','parent_id','child_id','image']);
-                }).then(function(categories){
-                    self.db.add_categories(categories);
-
-                    return self.fetch(
-                        'product.product',
-                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 'variants',
-                         'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
-                         'product_tmpl_id'],
-                        [['sale_ok','=',true],['available_in_pos','=',true]],
-                        {pricelist: self.pricelist.id} // context for price
-                    );
-                }).then(function(products){
-                    self.db.add_products(products);
-
-                    return self.fetch(
-                        'account.bank.statement',
-                        ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
-                        [['state','=','open'],['pos_session_id', '=', self.pos_session.id]]
-                    );
-                }).then(function(bankstatements){
-                    var journals = [];
-                    _.each(bankstatements,function(statement) {
-                        journals.push(statement.journal_id[0]);
-                    });
-                    self.bankstatements = bankstatements;
-                    return self.fetch('account.journal', undefined, [['id','in', journals]]);
-                }).then(function(journals){
-                    self.journals = journals; 
-
-                    // associate the bank statements with their journals. 
-                    var bankstatements = self.bankstatements;
-                    for(var i = 0, ilen = bankstatements.length; i < ilen; i++){
-                        for(var j = 0, jlen = journals.length; j < jlen; j++){
-                            if(bankstatements[i].journal_id[0] === journals[j].id){
-                                bankstatements[i].journal = journals[j];
-                                bankstatements[i].self_checkout_payment_method = journals[j].self_checkout_payment_method;
-                            }
-                        }
+                    if( model.model ){
+                        new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
+                            .then(function(result){
+                                $.when(model.loaded(self,result,tmp))
+                                    .then(function(){ load_model(index + 1); },
+                                          function(err){ loaded.reject(err); });
+                            },function(err){
+                                loaded.reject(err);
+                            });
+                    }else if( model.loaded ){
+                        $.when(model.loaded(self,tmp))
+                            .then(  function(){ load_model(index +1); },
+                                    function(err){ loaded.reject(err); });
+                    }else{
+                        load_model(index + 1);
                     }
-                    self.cashregisters = bankstatements;
+                }
+            }
+            
+            load_model(0);
 
-                    // Load the company Logo
-
-                    self.company_logo = new Image();
-                    self.company_logo.crossOrigin = 'anonymous';
-                    var  logo_loaded = new $.Deferred();
-                    self.company_logo.onload = function(){
-                        var img = self.company_logo;
-                        var ratio = 1;
-                        var targetwidth = 300;
-                        var maxheight = 150;
-                        if( img.width !== targetwidth ){
-                            ratio = targetwidth / img.width;
-                        }
-                        if( img.height * ratio > maxheight ){
-                            ratio = maxheight / img.height;
-                        }
-                        var width  = Math.floor(img.width * ratio);
-                        var height = Math.floor(img.height * ratio);
-                        var c = document.createElement('canvas');
-                            c.width  = width;
-                            c.height = height
-                        var ctx = c.getContext('2d');
-                            ctx.drawImage(self.company_logo,0,0, width, height);
-                        
-                        self.company_logo_base64 = c.toDataURL();
-                        window.logo64 = self.company_logo_base64;
-                        logo_loaded.resolve();
-                    };
-                    self.company_logo.onerror = function(){
-                        logo_loaded.reject();
-                    };
-                    self.company_logo.src = window.location.origin + '/web/binary/company_logo';
-
-                    return logo_loaded;
-                });
-        
             return loaded;
         },
 
