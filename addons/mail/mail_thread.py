@@ -554,7 +554,7 @@ class mail_thread(osv.AbstractModel):
         email_from = decode_header(message, 'From')
         email_to = decode_header(message, 'To')
         references = decode_header(message, 'References')
-        in_reply_to = decode_header(message, 'In-Reply-To')
+        in_reply_to = decode_header(message, 'In-Reply-To').strip()
 
         # 1. Verify if this is a reply to an existing thread
         thread_references = references or in_reply_to
