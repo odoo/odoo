@@ -328,23 +328,35 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     if( model.model ){
                         new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
                             .then(function(result){
-                                $.when(model.loaded(self,result,tmp))
-                                    .then(function(){ load_model(index + 1); },
-                                          function(err){ loaded.reject(err); });
+                                try{    // catching exceptions in model.loaded(...)
+                                    $.when(model.loaded(self,result,tmp))
+                                        .then(function(){ load_model(index + 1); },
+                                              function(err){ loaded.reject(err); });
+                                }catch(err){
+                                    loaded.reject(err);
+                                }
                             },function(err){
                                 loaded.reject(err);
                             });
                     }else if( model.loaded ){
-                        $.when(model.loaded(self,tmp))
-                            .then(  function(){ load_model(index +1); },
-                                    function(err){ loaded.reject(err); });
+                        try{    // catching exceptions in model.loaded(...)
+                            $.when(model.loaded(self,tmp))
+                                .then(  function(){ load_model(index +1); },
+                                        function(err){ loaded.reject(err); });
+                        }catch(err){
+                            loaded.reject(err);
+                        }
                     }else{
                         load_model(index + 1);
                     }
                 }
             }
-            
-            load_model(0);
+
+            try{
+                load_model(0);
+            }catch(err){
+                loaded.reject(err);
+            }
 
             return loaded;
         },
