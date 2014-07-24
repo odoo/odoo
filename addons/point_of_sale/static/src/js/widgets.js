@@ -1020,16 +1020,39 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 self.pos.push_order();
 
-            }).fail(function(){   // error when loading models data from the backend
-                return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_session_opening']], ['res_id'])
-                    .pipe( _.bind(function(res){
-                        return instance.session.rpc('/web/action/load', {'action_id': res[0]['res_id']})
-                            .pipe(_.bind(function(result){
-                                var action = result.result;
-                                this.do_action(action);
-                            }, this));
-                    }, self));
+            }).fail(function(err){   // error when loading models data from the backend
+                self.loading_error(err);
             });
+        },
+        loading_error: function(err){
+            var self = this;
+
+            var message = err.message;
+            var comment = err.stack;
+
+            if(err.message === 'XmlHttpRequestError '){
+                message = 'Network Failure (XmlHttpRequestError)';
+                comment = 'The Point of Sale could not be loaded due to a network problem.\n Please check your internet connection.';
+            }else if(err.message === 'OpenERP Server Error'){
+                message = err.data.message;
+                comment = err.data.debug;
+            }
+
+            if( typeof comment !== 'string' ){
+                comment = 'Traceback not available.';
+            }
+
+            var popup = $(QWeb.render('ErrorTracebackPopupWidget',{
+                widget: { message: message, comment: comment },
+            }));
+
+            popup.find('.button').click(function(){
+                self.close();
+            });
+
+            popup.css({ zindex: 9001 });
+
+            popup.appendTo(this.$el);
         },
         loading_progress: function(fac){
             this.$('.loader .loader-feedback').removeClass('oe_hidden');
