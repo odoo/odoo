@@ -1,8 +1,14 @@
 import pprint
+import urllib2
+import werkzeug
+import werkzeug.urls
+import werkzeug.wrappers
+
+from openerp import tools
+from openerp import SUPERUSER_ID
+
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-
-import urllib2
 
 
 class main(http.Controller):
@@ -20,22 +26,28 @@ class main(http.Controller):
             return "attachment; filename*=UTF-8''%s" % escaped
         
          
-    @http.route('/slides', type="http" , website=True,)
+    @http.route('/slides', type="http", auth="public", website=True,)
     def slides(self ,search=""):
-    	objattachment = request.registry['ir.attachment']
-    	attachment = objattachment.search_read(request.cr, request.uid, [("mimetype","=","application/pdf"),("is_slide","=","TRUE"),("name","like",search)],[])
-    	
-    	#pprint.pprint(attachment)    	
+    	attachment_obj = request.registry['ir.attachment']
+    	attachment_ids = attachment_obj.search(request.cr, request.uid, [("mimetype","=","application/pdf"),("is_slide","=","TRUE"),("name","like",search)],[])
+    	attachment = attachment_obj.browse(request.cr, request.uid, attachment_ids)	
         return request.website.render('slides.home', {"attachment" : attachment})
        
         
-    @http.route('/slides/download/<model("ir.attachment"):slide>', type='http', website=True,)
+    @http.route('/slides/download/<model("ir.attachment"):slide>', type='http', auth="public", website=True,)
     def download(self, slide):        
         return request.make_response(slide.url,[('Content-Type', 'application/octet-stream'),('Content-Disposition',self.content_disposition(slide.datas_fname))])
             
             
-    @http.route('/slides/view/<model("ir.attachment"):slide>', type="http" , website=True)
+    @http.route('/slides/view/<model("ir.attachment"):slide>', type="http", auth="public", website=True)
     def view(self ,slide):
         return request.website.render('slides.view', {"slide" : slide})
-        
-        
+
+    @http.route(['/slides/<int:document_id>/thumb'], type='http', auth="public", website=True)
+    def slide_thumb(self, document_id=0, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        response = werkzeug.wrappers.Response()
+        Files = request.registry['ir.attachment']
+        Website = request.registry['website']
+        user = Files.browse(cr, SUPERUSER_ID, document_id, context=context)
+        return Website._image(cr, SUPERUSER_ID, 'ir.attachment', user.id, 'image', response, max_height=250)

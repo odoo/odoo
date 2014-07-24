@@ -1,13 +1,44 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
-		<!-- Website menu -->
-		<record id="website_menu" model="website.menu">
-			<field name="name">Slides</field>
-			<field name="url">/slides</field>
-			<field name="parent_id" ref="website.main_menu" />
-			<field name="sequence" type="int">25</field>
-		</record>
+
+		<template id="sidebar" name="sidebar">
+			<div class="col-sm-3 pull-right">
+				<form action="/slides" role="search" method="post">
+					<div class="input-group">
+						<input type="text" class="form-control" name="search"
+							placeholder="Search Presentation" />
+						<span class="input-group-btn">
+							<button class="btn btn-primary" type="submit">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+						</span>
+					</div>
+				</form>
+			</div>
+		</template>
+
+		<template id="thumbnail" name="sidebar">
+			<div class="thumbnail" style="max-height: 350px;">
+				<a t-attf-href="/slides/view/#{file.id}">
+					<img t-attf-src="/slides/#{file.id}/thumb" class="img-responsive" style="margin-top: 5px;"/>
+				</a>
+				<div class="caption">
+					<a t-attf-href="/slides/view/#{file.id}">
+						<p class="group inner list-group-item-heading">
+							<t t-esc="file.name" />
+						</p>
+					</a>
+					<div>
+						<p class="group inner list-group-item-text">
+							<small class="text-muted"><t t-esc="file.create_date" /></small>
+							<br/><small class="text-muted">5000 Views</small>
+						</p>
+					</div>
+				</div>
+			</div>
+		</template>
+
 
 		<template id='home' name="slide">
 			<t t-set="head">
@@ -15,153 +46,72 @@
 				<script type="text/javascript" src="/slides/static/src/js/slides.js"></script>
 			</t>
 			<t t-call="website.layout">
+				<br/>
 				<div class="container">
-					<div class="row-fluid">
-						<ol class="breadcrumb">
-							<li>
-								<a href="/slides">
-									<span class="glyphicon glyphicon-home"></span>
+					<div class="col-sm-12">
+						<h1 class="page-header mt0">
+							<t t-esc="len(attachment)" />
+							<span>Presentations</span>
+							<small class="dropdown">
+								<a class="dropdown-toggle" href="#" data-toggle="dropdown">
+									All
+									by activity date
+									<b class="caret"></b>
 								</a>
-							</li>
-						</ol>
-					</div>
-				</div>
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-9">
+								<ul class="dropdown-menu">
+									<li class="dropdown-header">Filter on</li>
+									<li class="active">
+										<a href="?filters=all">All</a>
+									</li>
+									<li>
+										<a href="?filters=unanswered">Presentations</a>
+									</li>
+									<li>
+										<a href="?filters=followed">Videos</a>
+									</li>
+									<li>
+										<a href="?filters=followed">Documents</a>
+									</li>
 
-							<h1 class="page-header mt0">
-								<t t-esc="len(attachment)" />
-								<span>Results</span>
-								<small class="dropdown">
-									<a class="dropdown-toggle" href="#" data-toggle="dropdown">
-										All
-										by activity date
-										<b class="caret"></b>
-									</a>
-									<ul class="dropdown-menu">
-										<li class="dropdown-header">Filter on</li>
-										<li class="active">
-											<a href="?filters=all">All</a>
-										</li>
-										<li>
-											<a href="?filters=unanswered">Unanswered</a>
-										</li>
-										<li>
-											<a href="?filters=followed">Followed</a>
-										</li>
-										<li class="dropdown-header">Tags</li>
+									<li class="dropdown-header">Sort by</li>
+									<li class="active">
+										<a href="?sorting=date">Latest Published</a>
+									</li>
+									<li>
+										<a href="?sorting=creation">Most Viewed</a>
+									</li>
+								</ul>
+								<t t-call="slides.sidebar" class="pull-right"/>
+							</small>
+						</h1>
 
-										<li class="dropdown-header">Sort by</li>
-										<li class="active">
-											<a href="?sorting=date">Last activity date</a>
-										</li>
-										<li>
-											<a href="?sorting=creation">Newest</a>
-										</li>
-										<li>
-											<a href="?sorting=answered">Most answered</a>
-										</li>
-										<li>
-											<a href="?sorting=vote">Most voted</a>
-										</li>
-									</ul>
-								</small>
-								<div class="btn-group pull-right">
-									<a href="javascript:void(0);" id="list" class="btn btn-default btn-sm">
-										<span class="glyphicon glyphicon-th-list">
-										</span>
-										List
-									</a>
-									<a href="javascript:void(0);" id="grid" class="btn btn-default btn-sm">
-										<span class="glyphicon glyphicon-th"></span>
-										Grid
-									</a>
-								</div>
-							</h1>
-							<div id="products" class="row list-group">
-								<div class="item  col-md-4" t-foreach="attachment" t-as="file">
-									<div class="thumbnail">
-										<a t-attf-href="/slides/view/#{file['id']}">
-											<img class="img-responsive group list-group-image" src="/slides/static/description/icon.png"
-												t-attf-alt="file['name']" height="250" width="250"/>
-										</a>
-										<div class="caption">
-											<h4 class="group inner list-group-item-heading">
-												<t t-esc="file['name']" />
-											</h4>
-											<p class="group inner list-group-item-text">
-												<t t-esc="file['name']" />
-											</p>
-											<div class="row">
-												<div class="col-xs-12 col-md-6">
-													<p class="lead">
-														<a t-attf-href="/slides/download/#{file['id']}" class="btn btn-primary">
-															<span class="glyphicon glyphicon-cloud-download"></span>
-														</a>
-													</p>
-												</div>
-												<div class="col-xs-12 col-md-6">
-													<a class="btn btn-primary" href="javascript:void(0);">published</a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
+						<div id="products" class="row list-group">
+							<div class="item  col-md-3" t-foreach="attachment" t-as="file">
+								<t t-call="slides.thumbnail"/>
 							</div>
-						</div>
-						<div class="col-sm-3">
-							<form action="/slides" role="search" method="post">
-								<div class="input-group">
-									<input type="text" class="form-control" name="search"
-										placeholder="submit query" />
-									<span class="input-group-btn">
-										<button class="btn btn-primary" type="submit">
-											<span class="glyphicon glyphicon-search"></span>
-										</button>
-									</span>
-								</div>
-							</form>
 						</div>
 					</div>
 				</div>
 			</t>
 		</template>
 
-
 		<template id='view' name="slide">
 			<t t-call="website.layout">
-				<div class="container">
-					<div class="row-fluid">
-						<ol class="breadcrumb">
-							<li>
-								<a href="/slides">
-									<span class="glyphicon glyphicon-home"></span>
-								</a>
-							</li>
-						</ol>
-					</div>
-				</div>
+				<br/>
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-9">
 							<iframe id="viewer"
 								t-attf-src="/slides/static/src/viewerjs/index.html&#35;#{slide.url}"
 								width='100%' height='500' allowfullscreen="true"
-								webkitallowfullscreen="true"></iframe>
-						</div>
-						<div class="col-sm-3">
-							<form action="/slides" role="search" method="post">
-								<div class="input-group">
-									<input type="text" class="form-control" name="search"
-										placeholder="submit query" />
-									<span class="input-group-btn">
-										<button class="btn btn-primary" type="submit">
-											<span class="glyphicon glyphicon-search"></span>
-										</button>
-									</span>
-								</div>
-							</form>
+								webkitallowfullscreen="true">
+							</iframe>
+							<h1 class="page-header mt0">
+								<t t-esc="slide.name" />
+								<small class="pull-right">
+									<p>Viewed 5000</p>
+								</small>
+							</h1>
 						</div>
 					</div>
 				</div>
