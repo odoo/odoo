@@ -163,6 +163,8 @@ class sale_order(osv.osv):
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
     def action_wait(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         res = super(sale_order, self).action_wait(cr, uid, ids, context=context)
         for o in self.browse(cr, uid, ids):
             noprod = self.test_no_product(cr, uid, o, context)
