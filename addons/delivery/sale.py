@@ -48,6 +48,7 @@ class sale_order(osv.osv):
         grid_obj = self.pool.get('delivery.grid')
         carrier_obj = self.pool.get('delivery.carrier')
         acc_fp_obj = self.pool.get('account.fiscal.position')
+        product_obj = self.pool.get('product.product')
         for order in self.browse(cr, uid, ids, context=context):
             grid_id = carrier_obj.grid_get(cr, uid, [order.carrier_id.id], order.partner_shipping_id.id)
             if not grid_id:
@@ -58,9 +59,9 @@ class sale_order(osv.osv):
 
             grid = grid_obj.browse(cr, uid, grid_id, context=context)
 
-            taxes = grid.carrier_id.product_id.taxes_id
             fpos = order.fiscal_position or False
-            taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes)
+            taxes_ids = product_obj.get_taxes_ids(cr, uid, [grid.carrier_id.product_id.id], fpos, context=context)
+
             #create the sale order line
             line_obj.create(cr, uid, {
                 'order_id': order.id,

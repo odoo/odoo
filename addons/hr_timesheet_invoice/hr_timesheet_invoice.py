@@ -257,15 +257,17 @@ class account_analytic_line(osv.osv):
                         if factor.customer_name:
                             factor_name += ' - ' + factor.customer_name
 
+                        fpos = account.partner_id.property_account_position
                         general_account = product.property_account_income or product.categ_id.property_account_income_categ
+                        general_account = fiscal_pos_obj.map_account(cr, uid, fpos, general_account)
+
                         if not general_account:
                             raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
-                        taxes = product.taxes_id or general_account.tax_ids
-                        tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+
+                        taxes = product_obj.get_taxes_ids(cr, uid, [product_id], fpos, context=context)
                         curr_line.update({
-                            'invoice_line_tax_id': [(6,0,tax )],
                             'name': factor_name,
-                            'invoice_line_tax_id': [(6,0,tax)],
+                            'invoice_line_tax_id': [(6, 0, taxes)],
                             'account_id': general_account.id,
                         })
                     #

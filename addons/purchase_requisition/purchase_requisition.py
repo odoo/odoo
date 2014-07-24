@@ -130,6 +130,8 @@ class purchase_requisition(osv.osv):
         purchase_order_line = self.pool.get('purchase.order.line')
         res_partner = self.pool.get('res.partner')
         fiscal_position = self.pool.get('account.fiscal.position')
+        product_obj = self.pool.get('product.product')
+
         supplier = res_partner.browse(cr, uid, partner_id, context=context)
         supplier_pricelist = supplier.property_product_pricelist_purchase or False
         res = {}
@@ -152,8 +154,9 @@ class purchase_requisition(osv.osv):
             for line in requisition.line_ids:
                 product = line.product_id
                 seller_price, qty, default_uom_po_id, date_planned = self._seller_details(cr, uid, line, supplier, context=context)
-                taxes_ids = product.supplier_taxes_id
-                taxes = fiscal_position.map_tax(cr, uid, supplier.property_account_position, taxes_ids)
+
+                taxes = product_obj.get_supplier_taxes_ids(cr, uid, [product.id], supplier.property_account_position, context=context)
+
                 purchase_order_line.create(cr, uid, {
                     'order_id': purchase_id,
                     'name': product.partner_ref,

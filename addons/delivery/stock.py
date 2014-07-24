@@ -80,6 +80,7 @@ class stock_picking(osv.osv):
         """
         carrier_obj = self.pool.get('delivery.carrier')
         grid_obj = self.pool.get('delivery.grid')
+        product_obj = self.pool.get('product.product')
         if not picking.carrier_id or \
             any(inv_line.product_id.id == picking.carrier_id.product_id.id
                 for inv_line in invoice.invoice_line):
@@ -99,13 +100,13 @@ class stock_picking(osv.osv):
             account_id = picking.carrier_id.product_id.categ_id\
                     .property_account_income_categ.id
 
-        taxes = picking.carrier_id.product_id.taxes_id
         partner = picking.partner_id or False
+
         if partner:
-            account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
-            taxes_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, taxes)
+            fpos = partner.property_account_position,
         else:
-            taxes_ids = [x.id for x in taxes]
+            fpos = False
+        taxes_ids = product_obj.get_taxes_ids(cr, uid, [picking.carrier_id.product_id.id], fpos, context=context)
 
         return {
             'name': picking.carrier_id.name,

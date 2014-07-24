@@ -293,15 +293,7 @@ class hr_expense_expense(osv.osv):
                 fpos_obj = self.pool.get('account.fiscal.position')
                 fpos = fposition_id and fpos_obj.browse(cr, uid, fposition_id, context=context) or False
                 product = line.product_id
-                taxes = product.supplier_taxes_id
-                #If taxes are not related to the product, maybe they are in the account
-                if not taxes:
-                    a = product.property_account_expense.id #Why is not there a check here?
-                    if not a:
-                        a = product.categ_id.property_account_expense_categ.id
-                    a = fpos_obj.map_account(cr, uid, fpos, a)
-                    taxes = a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False
-                tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
+                taxes = self.pool.get('product.product').get_supplier_taxes(cr, uid, [product.id], fpos, context=context)
             if not taxes:
                 continue
             #Calculating tax on the line and creating move?
