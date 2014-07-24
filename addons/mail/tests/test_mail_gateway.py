@@ -533,7 +533,7 @@ class TestMailgateway(TestMailBase):
 
         # 1. In-Reply-To header
         reply_msg2 = format(MAIL_TEMPLATE, to='erroneous@example.com',
-                                extra='In-Reply-To: %s' % msg1.message_id,
+                                extra='In-Reply-To:\r\n\t%s' % msg1.message_id,
                                 msg_id='<1198923581.41972151344608186760.JavaMail.3@agrolait.com>')
         self.mail_group.message_process(cr, uid, None, reply_msg2)
 
