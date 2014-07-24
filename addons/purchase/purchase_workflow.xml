@@ -218,7 +218,7 @@
         <record id="trans_invoice_end_done" model="workflow.transition">
             <field name="act_from" ref="act_invoice_end"/>
             <field name="act_to" ref="act_done"/>
-            <field name="condition">invoiced</field>
+            <field name="condition">paid()</field>
         </record>
 
     </data>
