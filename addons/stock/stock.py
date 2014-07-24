@@ -1011,7 +1011,6 @@ class stock_picking(osv.osv):
             'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
             'comment': (comment and (invoice.comment and invoice.comment + "\n" + comment or comment)) or (invoice.comment and invoice.comment or ''),
             'date_invoice': context.get('date_inv', False),
-            'user_id': uid,
         }
 
     def _prepare_invoice(self, cr, uid, picking, partner, inv_type, journal_id, context=None):
