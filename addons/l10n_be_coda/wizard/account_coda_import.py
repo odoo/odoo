@@ -39,10 +39,9 @@ class account_bank_statement_import(osv.TransientModel):
     _description = 'Import CODA File'
     _columns = {
         'file_type': fields.selection(coda_ibs._IMPORT_FILE_TYPE, 'File Type'),
-        'note': fields.text('Log'),
     }
 
-    def process_coda(self, cr, uid, codafile=None, journal_id=False, account_id=False, context=None):
+    def process_coda(self, cr, uid, codafile=None, journal_id=False, context=None):
         if context is None:
             context = {}
         recordlist = unicode(base64.decodestring(codafile), 'windows-1252', 'strict').split('\n')
@@ -107,7 +106,7 @@ class account_bank_statement_import(osv.TransientModel):
                     raise osv.except_osv(_('Error') + ' R1004', _("No matching Bank Account (with Account Journal) found.\n\nPlease set-up a Bank Account with as Account Number '%s' and as Currency '%s' and an Account Journal.") % (statement['acc_number'], statement['currency']))
                 statement['description'] = rmspaces(line[90:125])
                 statement['balance_start'] = float(rmspaces(line[43:58])) / 1000
-                if line[42] == '1':    #1 = Debit, the starting balance is negative
+                if line[42] == '1':  # 1 = Debit, the starting balance is negative
                     statement['balance_start'] = - statement['balance_start']
                 statement['balance_start_date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[58:64]), '%d%m%y'))
                 statement['accountHolder'] = rmspaces(line[64:90])
@@ -237,7 +236,7 @@ class account_bank_statement_import(osv.TransientModel):
                 ORDER BY date DESC,id DESC LIMIT 1', (statement['journal_id'].id, balance_start_check_date))
             res = cr.fetchone()
             balance_start_check = res and res[0]
-            if balance_start_check == None:
+            if balance_start_check is None:
                 if statement['journal_id'].default_debit_account_id and (statement['journal_id'].default_credit_account_id == statement['journal_id'].default_debit_account_id):
                     balance_start_check = statement['journal_id'].default_debit_account_id.balance
                 else:
@@ -246,7 +245,7 @@ class account_bank_statement_import(osv.TransientModel):
                 statement['coda_note'] = _("The CODA Statement %s Starting Balance (%.2f) does not correspond with the previous Closing Balance (%.2f) in journal %s!") % (statement['description'] + ' #' + statement['paperSeqNumber'], statement['balance_start'], balance_start_check, statement['journal_id'].name)
             if not(statement.get('period_id')):
                 raise osv.except_osv(_('Error') + ' R3006', _(' No transactions or no period in coda file !'))
-            data = {
+            statement_data = {
                 'name': statement['paperSeqNumber'],
                 'date': statement['date'],
                 'journal_id': statement['journal_id'].id,
@@ -313,9 +312,9 @@ class account_bank_statement_import(osv.TransientModel):
                     }
                     statement_line.append((0, 0, line_data))
             if statement['coda_note'] != '':
-                data.update({'coda_note': statement['coda_note']})
-            data.update({'journal_id': journal_id, 'line_ids' : statement_line})
-        return data
+                statement_data.update({'coda_note': statement['coda_note']})
+            statement_data.update({'journal_id': journal_id, 'line_ids': statement_line})
+        return [statement_data]
 
 
 def rmspaces(s):
