@@ -29,7 +29,7 @@ class main(http.Controller):
     @http.route('/slides', type="http", auth="public", website=True,)
     def slides(self ,search=""):
     	attachment_obj = request.registry['ir.attachment']
-    	attachment_ids = attachment_obj.search(request.cr, request.uid, [("mimetype","=","application/pdf"),("is_slide","=","TRUE"),("name","like",search)],[])
+    	attachment_ids = attachment_obj.search(request.cr, request.uid, [("is_slide","=","TRUE"),("name","like",search)],[])
     	attachment = attachment_obj.browse(request.cr, request.uid, attachment_ids)	
         return request.website.render('slides.home', {"attachment" : attachment})
        
@@ -43,7 +43,7 @@ class main(http.Controller):
     def view(self ,slide):
         return request.website.render('slides.view', {"slide" : slide})
 
-    @http.route(['/slides/<int:document_id>/thumb'], type='http', auth="public", website=True)
+    @http.route(['/slides/thumb/<int:document_id>'], type='http', auth="public", website=True)
     def slide_thumb(self, document_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         response = werkzeug.wrappers.Response()
