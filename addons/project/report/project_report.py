@@ -50,7 +50,6 @@ class report_project_task_user(osv.osv):
         'nbr': fields.integer('# of tasks', readonly=True),
         'priority': fields.selection([('4', 'Very Low'), ('3', 'Low'), ('2', 'Medium'), ('1', 'Urgent'), ('0', 'Very urgent')],
             string='Priority', readonly=True),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'Status', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Contact', readonly=True),
         'stage_id': fields.many2one('project.task.type', 'Stage'),
