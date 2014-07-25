@@ -51,3 +51,9 @@ class main(http.Controller):
         Website = request.registry['website']
         user = Files.browse(cr, SUPERUSER_ID, document_id, context=context)
         return Website._image(cr, SUPERUSER_ID, 'ir.attachment', user.id, 'image', response, max_height=250)
+
+    @http.route('/set_slide_thumbnail/', type='http', auth="public", website=True)
+    def set_slide_thumbnail(self,**post):
+        if post.get('id'):
+            request.registry['ir.attachment'].write(request.cr, request.uid, int(post['id']), {'image' : post['dataURL'][22:]}, context=request.context) 
+        return ""
