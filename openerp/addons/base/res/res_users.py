@@ -226,11 +226,14 @@ class res_users(osv.osv):
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
             uid2 = uid
-        # use read method to compute default values to don't create browse record and fetch all fields
-        # browse crash for install or update module
-        user = self.pool['res.users'].read(cr, uid, uid2, ['company_id'], context)
-        company_id = user['company_id'] and user['company_id'][0] or False
-        return company_id
+        # Use read() to compute default company, and pass load=_classic_write to
+        # avoid useless name_get() calls. This will avoid prefetching fields
+        # while computing default values for new db columns, as the
+        # db backend may not be fully initialized yet.
+        user_data = self.pool['res.users'].read(cr, uid, uid2, ['company_id'],
+                                                context=context, load='_classic_write')
+        comp_id = user_data['company_id']
+        return comp_id or False
 
     def _get_companies(self, cr, uid, context=None):
         c = self._get_company(cr, uid, context)
