@@ -277,7 +277,7 @@ class res_partner(osv.osv):
             return False
         return check == int(vat[8])
 
-    # PerÃº RUC verification, contributed by Vauxoo
+    # Peruvian VAT validation, contributed by Vauxoo
     def check_vat_pe(self,vat):
 
         vat_type,vat = vat and len(vat)>=2 and (vat[0], vat[1:]) or (False, False)
