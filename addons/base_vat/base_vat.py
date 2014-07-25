@@ -150,6 +150,8 @@ class res_partner(osv.osv):
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
         if default_vat_check(vat_country, vat_number):
             vat_no = _ref_vat[vat_country] if vat_country in _ref_vat else vat_no
+            if self.pool['res.users'].browse(cr, uid, uid).company_id.vat_check_vies:
+                return '\n' + _('This VAT number either failed the VIES VAT validation check or did not respect the expected format %s.') % vat_no
         return '\n' + _('This VAT number does not seem to be valid.\nNote: the expected format is %s') % vat_no
 
     _constraints = [(check_vat, _construct_constraint_msg, ["vat"])]
