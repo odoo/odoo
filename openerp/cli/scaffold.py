@@ -25,7 +25,7 @@ class Scaffold(Command):
         parser.add_argument(
             '-t', '--template', type=template, default=template('default'),
             help="Use a custom module template, can be a template name or the"
-                 " path to a module template")
+                 " path to a module template (default: %(default)s)")
         parser.add_argument('name', help="Name of the module to create")
         parser.add_argument(
             'dest', default='.', nargs='?',
@@ -41,10 +41,10 @@ class Scaffold(Command):
             {'name': args.name})
 
     def epilog(self):
-        return "Built-in templates available are: %s\n" % ('\n* '.join(
+        return "Built-in templates available are: %s" % ', '.join(
             d for d in os.listdir(builtins())
             if d != 'base'
-        ))
+        )
 
 builtins = lambda *args: os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
@@ -62,6 +62,11 @@ def snake(s):
     s = re.sub(r'(?<=[^A-Z])\B([A-Z])', r' \1', s)
     # lowercase everything, split on whitespace and join
     return '_'.join(s.lower().split())
+def pascal(s):
+    return ''.join(
+        ss.capitalize()
+        for ss in re.sub('[_\s]+', ' ', s).split()
+    )
 
 def directory(p, create=False):
     expanded = os.path.abspath(
@@ -75,12 +80,16 @@ def directory(p, create=False):
 
 env = jinja2.Environment()
 env.filters['snake'] = snake
+env.filters['pascal'] = pascal
 class template(object):
     def __init__(self, identifier):
         # TODO: directories, archives (zipfile, tarfile)
         self.id = identifier
         if not os.path.isdir(self.path):
             die("{} is not a valid module template".format(identifier))
+
+    def __str__(self):
+        return self.id
 
     @property
     def path(self):

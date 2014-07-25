@@ -23,9 +23,11 @@
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',
+        'templates.xml',
     ],
 
     'demo': [
+        'demo.xml',
     ],
 
     'tests': [
