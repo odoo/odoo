@@ -88,8 +88,8 @@ class crm_lead_report(osv.osv):
                     id,
                     c.date_deadline,
 
-                    to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
-                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
+                    date(c.date_open) as opening_date,
+                    date(c.date_closed) as date_closed,
 
                     date_trunc('day',c.date_last_stage_update) as date_last_stage_update,
 
