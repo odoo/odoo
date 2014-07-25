@@ -1138,11 +1138,14 @@ class survey_user_input_line(osv.Model):
             vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
         else:
             vals.update({'answer_type': None, 'skipped': True})
-        self.create(cr, uid, vals, context=context)
+
+        # '-1' indicates 'comment count as an answer' so do not need to record it
+        if post.get(answer_tag) and post.get(answer_tag) != '-1':
+            self.create(cr, uid, vals, context=context)
 
         comment_answer = post.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False})
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False, 'value_suggested': False})
             self.create(cr, uid, vals, context=context)
 
         return True
@@ -1166,10 +1169,12 @@ class survey_user_input_line(osv.Model):
         comment_answer = ca.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if len(ca) > 0:
             for a in ca:
-                vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a]})
-                self.create(cr, uid, vals, context=context)
+                # '-1' indicates 'comment count as an answer' so do not need to record it
+                if a != ('%s_%s' % (answer_tag, '-1')):
+                    vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a]})
+                    self.create(cr, uid, vals, context=context)
         if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer})
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'value_suggested': False})
             self.create(cr, uid, vals, context=context)
         if not ca and not comment_answer:
             vals.update({'answer_type': None, 'skipped': True})
