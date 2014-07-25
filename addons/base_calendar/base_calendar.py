@@ -1724,6 +1724,8 @@ class virtual_report_spool(web_services.report_spool):
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
         """
+        if not datas:
+            datas={}
 
         if object == 'printscreen.list':
             return super(virtual_report_spool, self).exp_report(db, uid, \
