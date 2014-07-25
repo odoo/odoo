@@ -504,10 +504,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     // In case of a o2m virtual id, we should pass an empty ids list
                     ids.push(self.datarecord.id);
                 }
-                if (ids.length) {
-                    def = self.alive(new instance.web.Model(self.dataset.model).call(
-                        "onchange", [ids, values, trigger_field_name, onchange_specs, context]));
-                }
+                def = self.alive(new instance.web.Model(self.dataset.model).call(
+                    "onchange", [ids, values, trigger_field_name, onchange_specs, context]));
             }
             return def.then(function(response) {
                 if (widget && widget.field['change_default']) {
