@@ -11,7 +11,8 @@ import pytz
 from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.tools.misc import DEFAULT_SERVER_DATE_FORMAT,\
-                               DEFAULT_SERVER_DATETIME_FORMAT
+                               DEFAULT_SERVER_DATETIME_FORMAT,\
+                               ustr
 from openerp.tools import html_sanitize
 
 REFERENCING_FIELDS = set([None, 'id', '.id'])
@@ -256,6 +257,7 @@ class ir_fields_converter(orm.Model):
             #        Or just copy context & remove lang?
             selection = selection(model, cr, uid, context=None)
         for item, label in selection:
+            label = ustr(label)
             labels = self._get_translations(
                 cr, uid, ('selection', 'model', 'code'), label, context=context)
             labels.append(label)
@@ -264,8 +266,8 @@ class ir_fields_converter(orm.Model):
         raise ValueError(
             _(u"Value '%s' not found in selection field '%%(field)s'") % (
                 value), {
-                'moreinfo': [label or unicode(item) for item, label in selection
-                             if label or item]
+                'moreinfo': [_label or unicode(item) for item, _label in selection
+                             if _label or item]
             })
 
 
