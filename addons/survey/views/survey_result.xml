@@ -115,6 +115,28 @@
         <t t-call="survey.pagination" />
     </template>
 
+    <!-- Result for comments -->
+    <template id="result_comments" name="Text Result">
+        <!-- a 'comments' variable must be set an must contain a list of browse records of user input lines -->
+        <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="comments" t-as="user_input">
+                    <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
+                        <td>
+                            <span t-field="user_input.value_text"></span><br/>
+                        </td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+
     <!-- Result for simple_choice and multiple_choice -->
     <template id="result_choice" name="Choice Result">
         <div>
@@ -154,7 +176,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="prepare_result" t-as="user_input">
+                            <tr t-foreach="prepare_result['answers']" t-as="user_input">
                                 <td>
                                     <p t-esc="user_input['text']"></p>
                                 </td>
@@ -168,6 +190,14 @@
                     </table>
                 </div>
             </div>
+            <!-- handle comments -->
+            <div>
+                <t t-set="comments" t-value="prepare_result['comments']" />
+                <t t-if="comments">
+                    <t t-call="survey.result_comments" />
+                </t>
+            </div>
+
         </div>
     </template>
 
@@ -216,6 +246,13 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <!-- handle comments to matrix -->
+            <div>
+                <t t-set="comments" t-value="matrix_result['comments']" />
+                <t t-if="comments">
+                    <t t-call="survey.result_comments" />
+                </t>
             </div>
         </div>
     </template>

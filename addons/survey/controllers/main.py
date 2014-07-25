@@ -394,9 +394,10 @@ class WebsiteSurvey(http.Controller):
         result = []
         if question.type == 'multiple_choice':
             result.append({'key': str(question.question),
-                           'values': survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)})
+                           'values': survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)['answers']
+                           })
         if question.type == 'simple_choice':
-            result = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)
+            result = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)['answers']
         if question.type == 'matrix':
             data = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)
             for answer in data['answers']:

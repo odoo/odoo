@@ -345,16 +345,20 @@ class survey_survey(osv.Model):
             context = {}
         #Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:
-            result_summary = {}
-            [result_summary.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
+            answers = {}
+            comments = []
+            [answers.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
             for input_line in question.user_input_line_ids:
-                if input_line.answer_type == 'suggestion' and result_summary.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    result_summary[input_line.value_suggested.id]['count'] += 1
-            result_summary = result_summary.values()
+                if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    answers[input_line.value_suggested.id]['count'] += 1
+                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    comments.append(input_line)
+            result_summary = {'answers': answers.values(), 'comments': comments}
 
         #Calculate and return statistics for matrix
         if question.type == 'matrix':
             rows, answers, res = {}, {}, {}
+            comments = []
             [rows.update({label.id: label.value}) for label in question.labels_ids_2]
             [answers.update({label.id: label.value}) for label in question.labels_ids]
             for cell in product(rows.keys(), answers.keys()):
@@ -362,7 +366,9 @@ class survey_survey(osv.Model):
             for input_line in question.user_input_line_ids:
                 if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
-            result_summary = {'answers': answers, 'rows': rows, 'result': res}
+                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    comments.append(input_line)
+            result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
 
         #Calculate and return statistics for free_text, textbox, datetime
         if question.type in ['free_text', 'textbox', 'datetime']:
