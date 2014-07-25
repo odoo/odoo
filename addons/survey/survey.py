@@ -282,7 +282,7 @@ class survey_survey(osv.Model):
             else:
                 return (pages[current_page_index + 1][1], current_page_index + 1, False)
 
-    def filter_input_ids(self, cr, uid, filters, finished=False, context=None):
+    def filter_input_ids(self, cr, uid, survey, filters, finished=False, context=None):
         '''If user applies any filters, then this function returns list of
            filtered user_input_id and label's strings for display data in web.
            :param filters: list of dictionary (having: row_id, ansewr_id)
@@ -311,7 +311,7 @@ class survey_survey(osv.Model):
         if finished:
             user_input = self.pool.get('survey.user_input')
             if not filtered_input_ids:
-                current_filters = user_input.search(cr, uid, [], context=context)
+                current_filters = user_input.search(cr, uid, [('survey_id', '=', survey.id)], context=context)
                 user_input_objs = user_input.browse(cr, uid, current_filters, context=context)
             else:
                 user_input_objs = user_input.browse(cr, uid, filtered_input_ids, context=context)

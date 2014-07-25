@@ -298,7 +298,11 @@ class WebsiteSurvey(http.Controller):
                 type='http', auth='user', multilang=True, website=True)
     def survey_reporting(self, survey, token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
-        result_template, current_filters, filter_display_data, filter_finish = 'survey.result', [], [], False
+        result_template ='survey.result'
+        current_filters = []
+        filter_display_data = []
+        filter_finish = False
+
         survey_obj = request.registry['survey.survey']
         if not survey.user_input_ids or not [input_id.id for input_id in survey.user_input_ids if input_id.state != 'new']:
             result_template = 'survey.no_result'
@@ -307,7 +311,7 @@ class WebsiteSurvey(http.Controller):
             filter_finish = True
         if post or filter_finish:
             filter_data = self.get_filter_data(post)
-            current_filters = survey_obj.filter_input_ids(request.cr, request.uid, filter_data, filter_finish, context=request.context)
+            current_filters = survey_obj.filter_input_ids(request.cr, request.uid, survey, filter_data, filter_finish, context=request.context)
             filter_display_data = survey_obj.get_filter_display_data(request.cr, request.uid, filter_data, context=request.context)
         return request.website.render(result_template,
                                       {'survey': survey,
