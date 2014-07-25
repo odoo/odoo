@@ -59,13 +59,10 @@ class TestOfxFile(TransactionCase):
 
     def test_ofx_file_import(self):
         cr, uid = self.cr, self.uid
-        bank_temp_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'account', 'conf_bnk')
-        self.bank_temp_id = bank_temp_ref and bank_temp_ref[1] or False
         bank_statement_id = self.statement_import_model.create(cr, uid, dict(
-                            file_type = 'ofx',
-                            data_file = ofx_file,
-                            account_id = self.bank_temp_id
-                             ))
+                            file_type='ofx',
+                            data_file=ofx_file,
+                            ))
         self.statement_import_model.parse_file(cr, uid, [bank_statement_id])
         statement_id = self.bank_statement_model.search(cr, uid, [('name', '=', '000000123')])[0]
         bank_st_record = self.bank_statement_model.browse(cr, uid, statement_id)
