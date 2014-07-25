@@ -2415,13 +2415,14 @@ class BaseModel(object):
             if column_name in defaults:
                 default = field.convert_to_write(defaults[column_name])
 
-        if default is not None:
-            _logger.debug("Table '%s': setting default value of new column %s",
-                          self._table, column_name)
-            ss = self._columns[column_name]._symbol_set
+        ss = self._columns[column_name]._symbol_set
+        store_default = ss[1](default)
+        if store_default is not None:
+            _logger.debug("Table '%s': setting default value of new column %s to %r",
+                          self._table, column_name, default)
             query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (
                 self._table, column_name, ss[0], column_name)
-            cr.execute(query, (ss[1](default),))
+            cr.execute(query, (store_default,))
             # this is a disgrace
             cr.commit()
 
