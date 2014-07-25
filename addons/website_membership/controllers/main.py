@@ -50,7 +50,7 @@ class WebsiteMembership(http.Controller):
                                       ('partner.website_description', 'ilike', post_name)]
 
         # group by country, based on all customers (base domain)
-        membership_line_ids = membership_line_obj.search(cr, uid, base_line_domain, context=context)
+        membership_line_ids = membership_line_obj.search(cr, SUPERUSER_ID, base_line_domain, context=context)
         countries = partner_obj.read_group(
             cr, uid, [('member_lines', 'in', membership_line_ids), ("website_published", "=", True)], ["id", "country_id"],
             groupby="country_id", orderby="country_id", context=request.context)
@@ -72,8 +72,14 @@ class WebsiteMembership(http.Controller):
             'country_id': (0, _("All Countries"))
         })
 
+        # format domain for group_by and memberships
+        membership_ids = product_obj.search(cr, uid, [('membership', '=', True)], order="website_sequence", context=context)
+        memberships = product_obj.browse(cr, uid, membership_ids, context=context)
+        # make sure we don't access to lines with unpublished membershipts
+        line_domain.append(('membership_id', 'in', membership_ids))
+
         # displayed membership lines
-        membership_line_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
+        membership_line_ids = membership_line_obj.search(cr, SUPERUSER_ID, line_domain, context=context)
         membership_lines = membership_line_obj.browse(cr, uid, membership_line_ids, context=context)
         membership_lines.sort(key=lambda x: x.membership_id.website_sequence)
         partner_ids = [m.partner and m.partner.id for m in membership_lines]
@@ -82,10 +88,6 @@ class WebsiteMembership(http.Controller):
         partners_data = {}
         for partner in partner_obj.read(cr, openerp.SUPERUSER_ID, partner_ids, request.website.get_partner_white_list_fields(), context=context):
             partners_data[partner.get("id")] = partner
-
-        # format domain for group_by and memberships
-        membership_ids = product_obj.search(cr, uid, [('membership', '=', True)], order="website_sequence", context=context)
-        memberships = product_obj.browse(cr, uid, membership_ids, context=context)
 
         # request pager for lines
         pager = request.website.pager(url="/members/", total=len(membership_line_ids), page=page, step=self._references_per_page, scope=7, url_args=post)
