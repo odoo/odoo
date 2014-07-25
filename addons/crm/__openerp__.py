@@ -63,6 +63,7 @@ Dashboard for CRM will include:
         'crm_data.xml',
         'crm_lead_data.xml',
         'crm_phonecall_data.xml',
+        'crm_tip_data.xml',
 
         'security/crm_security.xml',
         'security/ir.model.access.csv',

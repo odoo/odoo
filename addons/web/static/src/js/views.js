@@ -344,6 +344,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
             });
         }
 
+        instance.web.bus.trigger('action', action);
+
         // Ensure context & domain are evaluated and can be manipulated/used
         var ncontext = new instance.web.CompoundContext(options.additional_context, action.context || {});
         action.context = instance.web.pyeval.eval('context', ncontext);
@@ -725,6 +727,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
                 views.push(mode);
             }
+            instance.web.bus.trigger('view_switch_mode', self, mode);
         });
         var item = _.extend({
             widget: this,
@@ -1481,6 +1484,7 @@ instance.web.View = instance.web.Widget.extend({
     },
     do_show: function () {
         this.$el.show();
+        instance.web.bus.trigger('view_shown', this);
     },
     do_hide: function () {
         this.$el.hide();
