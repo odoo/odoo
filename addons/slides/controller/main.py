@@ -9,10 +9,12 @@ from openerp import SUPERUSER_ID
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+from openerp.addons.website.models.website import slug
 
 
 class main(http.Controller):
-	
+    _slides_per_page = 10
+
     def content_disposition(self,filename):
         filename = filename.encode('utf8')
         escaped = urllib2.quote(filename)
@@ -24,16 +26,65 @@ class main(http.Controller):
             return "attachment; filename=%s" % filename
         else:
             return "attachment; filename*=UTF-8''%s" % escaped
+
+
+    @http.route(['/slides',
+                 '/slides/page/<int:page>',
+                 ], type='http', auth="public", website=True)
+    def slides(self, page=1, filters='all', sorting='creation', search=''):
+        cr, uid, context = request.cr, request.uid, request.context
+        attachment = request.registry['ir.attachment']
+
+        domain = [("is_slide","=","TRUE")]
+        if search:
+            domain += [('name', 'ilike', search)]
         
-         
-    @http.route('/slides', type="http", auth="public", website=True,)
-    def slides(self ,search=""):
-    	attachment_obj = request.registry['ir.attachment']
-    	attachment_ids = attachment_obj.search(request.cr, request.uid, [("is_slide","=","TRUE"),("name","like",search)],[])
-    	attachment = attachment_obj.browse(request.cr, request.uid, attachment_ids)	
-        return request.website.render('slides.home', {"attachment" : attachment})
-       
+        if filters == 'ppt':
+            domain += [('slide_type', '=', 'ppt')]
+        elif filters == 'doc':
+            domain += [('slide_type', '=', 'doc')]
+        elif filters == 'video':
+            domain += [('slide_type', '=', 'video')]
+        else:
+            filters = 'all'
         
+        if sorting == 'date':
+            order = 'write_date desc'
+        elif sorting == 'view':
+            order = 'slide_views desc'
+        else:
+            sorting = 'creation'
+            order = 'create_date desc'
+
+        attachment_count = attachment.search(cr, uid, domain, count=True, context=context)
+        url = "/slides"
+
+        url_args = {}
+        if search:
+            url_args['search'] = search
+        if filters:
+            url_args['filters'] = filters
+        if sorting:
+            url_args['sorting'] = sorting
+        pager = request.website.pager(url=url, total=attachment_count, page=page,
+                                      step=self._slides_per_page, scope=self._slides_per_page,
+                                      url_args=url_args)
+
+        obj_ids = attachment.search(cr, uid, domain, limit=self._slides_per_page, offset=pager['offset'], order=order, context=context)
+        attachment_ids = attachment.browse(cr, uid, obj_ids, context=context)
+        print ">>>>>>>>",attachment_ids,domain,order
+        values = {}
+        values.update({
+            'attachment_ids': attachment_ids,
+            'attachment_count': attachment_count,
+            'pager': pager,
+            'filters': filters,
+            'sorting': sorting,
+            'search': search,
+        })
+        return request.website.render('slides.home', values)
+
+
     @http.route('/slides/download/<model("ir.attachment"):slide>', type='http', auth="public", website=True,)
     def download(self, slide):        
         return request.make_response(slide.url,[('Content-Type', 'application/octet-stream'),('Content-Disposition',self.content_disposition(slide.datas_fname))])
@@ -41,6 +92,9 @@ class main(http.Controller):
             
     @http.route('/slides/view/<model("ir.attachment"):slide>', type="http", auth="public", website=True)
     def view(self ,slide):
+        cr, uid, context = request.cr, request.uid, request.context
+        # increment view counter
+        request.registry['ir.attachment'].set_viewed(cr, SUPERUSER_ID, [slide.id], context=context)
         return request.website.render('slides.view', {"slide" : slide})
 
     @http.route(['/slides/thumb/<int:document_id>'], type='http', auth="public", website=True)

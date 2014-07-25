@@ -20,10 +20,6 @@
 ##############################################################################
 import openerp
 from openerp.osv import fields, osv
-from urlparse import urlparse,parse_qs
-import urllib2
-import json
-
 
 class ir_attachment_tags(osv.osv):
     _name = 'ir.attachment.tag'
@@ -50,7 +46,7 @@ class ir_attachment(osv.osv):
         'slide_type': fields.selection([('ppt', 'Presentation'), ('doc', 'Document'), ('video', 'Video')], 'Type'),
         'tag_ids': fields.many2many('ir.attachment.tag', 'rel_attachments_tags', 'attachment_id', 'tag_id', 'Tags'),
         'image': fields.binary('Thumb'),
-        'views': fields.integer('Total Views'),
+        'slide_views': fields.integer('Number of Views'),
         'youtube_id': fields.char(string="Youtube Video ID"),
         'website_published': fields.boolean(
             'Publish', help="Publish on the website", copy=False,
@@ -62,11 +58,34 @@ class ir_attachment(osv.osv):
    
     def _get_slide_type(self, cr, uid, context):
         return context.get('slide_type', 'ppt')
-
+    
+    def _get_slide_views(self, cr, uid, context):
+        return context.get('slide_views', 0)
+    
     _defaults = {
         'is_slide': _get_slide_setting,
-        'slide_type':_get_slide_type
+        'slide_type':_get_slide_type,
+        'slide_views':_get_slide_views
     }
+    
+    def set_viewed(self, cr, uid, ids, context=None):
+        cr.execute("""UPDATE ir_attachment SET slide_views = slide_views+1 WHERE id IN %s""", (tuple(ids),))
+        return True
+    
+    def create(self, cr, uid, values, context=None):
+        if values.get('is_slide', False) and values.get('datas_fname', False):
+            values['url']="/slides/"+values['datas_fname']
+        if values.get('slide_type') == 'video' and values.get('url'):
+            values["youtube_id"] = self.extract_youtube_id(values['url'])
+            statistics = self.youtube_statistics(values["youtube_id"])
+            if statistics:
+                if statistics['items'][0].get('snippet').get('thumbnails') and statistics['items'][0]['snippet'].get('thumbnails'):
+                    values['image'] = statistics['items'][0]['snippet']['thumbnails']['medium']['url']
+                if statistics['items'][0].get('statistics'):
+                    values['views'] = statistics['items'][0]['statistics']['viewCount']
+        return super(ir_attachment, self).create(cr, uid, values, context)
+        
+        
     def extract_youtube_id(self,url):
         youtube_id = ""
         query = urlparse(url)
@@ -90,16 +109,3 @@ class ir_attachment(osv.osv):
         except urllib2.HTTPError:
             return False
         return json.loads(content)
-                    
-    def create(self, cr, uid, values, context=None):
-        if values.get('is_slide', False) and values.get('datas_fname', False):
-            values['url']="/slides/"+values['datas_fname']
-        if values.get('slide_type') == 'video' and values.get('url'):
-            values["youtube_id"] = self.extract_youtube_id(values['url'])
-            statistics = self.youtube_statistics(values["youtube_id"])
-            if statistics:
-                if statistics['items'][0].get('snippet').get('thumbnails') and statistics['items'][0]['snippet'].get('thumbnails'):
-                    values['image'] = statistics['items'][0]['snippet']['thumbnails']['medium']['url']
-                if statistics['items'][0].get('statistics'):
-                    values['views'] = statistics['items'][0]['statistics']['viewCount']
-        return super(ir_attachment, self).create(cr, uid, values, context)
