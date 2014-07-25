@@ -105,89 +105,44 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
             super(ThreadedWSGIServerReloadable, self).server_activate()
 
 #----------------------------------------------------------
-# AutoReload watcher
+# FileSystem Watcher for autoreload and orm cache void
 #----------------------------------------------------------
-
-class AutoReload(object):
-    def __init__(self, server):
-        self.server = server
-        self.files = {}
-        self.modules = {}
-        import pyinotify
-        class EventHandler(pyinotify.ProcessEvent):
-            def __init__(self, autoreload):
-                self.autoreload = autoreload
-
-            def process_IN_CREATE(self, event):
-                _logger.debug('File created: %s', event.pathname)
-                self.autoreload.files[event.pathname] = 1
-
-            def process_IN_MODIFY(self, event):
-                _logger.debug('File modified: %s', event.pathname)
-                self.autoreload.files[event.pathname] = 1
-
-        self.wm = pyinotify.WatchManager()
-        self.handler = EventHandler(self)
-        self.notifier = pyinotify.Notifier(self.wm, self.handler, timeout=0)
-        mask = pyinotify.IN_MODIFY | pyinotify.IN_CREATE  # IN_MOVED_FROM, IN_MOVED_TO ?
+class FSWatcher(object):
+    def __init__(self):
+        # TODO: check if debian package is available
+        from watchdog.observers import Observer
+        self.observer = Observer()
         for path in openerp.modules.module.ad_paths:
             _logger.info('Watching addons folder %s', path)
-            self.wm.add_watch(path, mask, rec=True)
+            self.observer.schedule(self, path, recursive=True)
 
-    def process_data(self, files):
-        xml_files = [i for i in files if i.endswith('.xml')]
-        for i in xml_files:
-            for path in openerp.modules.module.ad_paths:
-                if i.startswith(path):
-                    # find out wich addons path the file belongs to
-                    # and extract it's module name
-                    right = i[len(path) + 1:].split('/')
-                    if len(right) < 2:
-                        continue
-                    module = right[0]
-                    self.modules[module] = 1
-        if self.modules:
-            _logger.info('autoreload: xml change detected, autoreload activated')
-            restart()
-
-    def process_python(self, files):
-        # process python changes
-        py_files = [i for i in files if i.endswith('.py')]
-        py_errors = []
-        # TODO keep python errors until they are ok
-        if py_files:
-            for i in py_files:
-                try:
-                    source = open(i, 'rb').read() + '\n'
-                    compile(source, i, 'exec')
-                except SyntaxError:
-                    py_errors.append(i)
-            if py_errors:
-                _logger.info('autoreload: python code change detected, errors found')
-                for i in py_errors:
-                    _logger.info('autoreload: SyntaxError %s', i)
-            else:
-                _logger.info('autoreload: python code updated, autoreload activated')
-                restart()
-
-    def check_thread(self):
-        # Check if some files have been touched in the addons path.
-        # If true, check if the touched file belongs to an installed module
-        # in any of the database used in the registry manager.
-        while 1:
-            while self.notifier.check_events(1000):
-                self.notifier.read_events()
-                self.notifier.process_events()
-            l = self.files.keys()
-            self.files.clear()
-            self.process_data(l)
-            self.process_python(l)
+    def dispatch(self, event):
+        # TODO: check if debian package is available
+        from watchdog.events import FileCreatedEvent, FileModifiedEvent
+        if isinstance(event, (FileCreatedEvent, FileModifiedEvent)):
+            if not event.is_directory:
+                path = event.src_path
+                if path.endswith('.xml'):
+                    _logger.info('autoreload: xml change detected, voiding orm cache')
+                    # TODO: void orm caches
+                elif config['auto_reload'] and path.endswith('.py'):
+                    try:
+                        source = open(path, 'rb').read() + '\n'
+                        compile(source, path, 'exec')
+                    except SyntaxError:
+                        _logger.info('autoreload: python code change detected, SyntaxError in %s', path)
+                    else:
+                        _logger.info('autoreload: python code updated, autoreload activated')
+                        restart()
 
     def run(self):
-        t = threading.Thread(target=self.check_thread)
-        t.setDaemon(True)
-        t.start()
+        self.observer.start()
         _logger.info('AutoReload watcher running')
+
+    def stop(self):
+        # TODO: properly stop observer
+        self.observer.stop()
+        self.observer.join()
 
 #----------------------------------------------------------
 # Servers: Threaded, Gevented and Prefork
@@ -926,9 +881,8 @@ def start(preload=None, stop=False):
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
-    if config['auto_reload']:
-        autoreload = AutoReload(server)
-        autoreload.run()
+    watcher = FSWatcher()
+    watcher.run()
 
     rc = server.run(preload, stop)
 
@@ -936,7 +890,9 @@ def start(preload=None, stop=False):
     if getattr(openerp, 'phoenix', False):
         modules = []
         if config['auto_reload']:
-            modules = autoreload.modules.keys()
+            # WIP: make it work
+            # modules = autoreload.modules.keys()
+            pass
         _reexec(modules)
 
     return rc if rc else 0
