@@ -1,135 +1,158 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
+    <data>
+        <!-- Layout add nav and footer -->
+        <template id="slide_footer" inherit_id="website.footer_default"
+            name="Footer Slides Link">
+            <xpath expr="//div[@id='info']//ul[@class='list-unstyled']"
+                position="inside">
+                <li>
+                    <a href="/slides">Slides</a>
+                </li>
+            </xpath>
+        </template>
+        <!-- Layout add nav and footer -->
 
-		<template id="header" name="header">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<h1 class="page-header">
-							<t t-esc="len(attachment)" />
-							<span>Slides</span>
-							<small class="dropdown">
-								<a class="dropdown-toggle" href="#" data-toggle="dropdown">
-									All
-									by activity date
-									<b class="caret"></b>
-								</a>
-								<ul class="dropdown-menu">
-									<li class="dropdown-header">Filter on</li>
-									<li class="active">
-										<a href="?filters=all">All</a>
-									</li>
-									<li>
-										<a href="?filters=unanswered">Presentations</a>
-									</li>
-									<li>
-										<a href="?filters=followed">Videos</a>
-									</li>
-									<li>
-										<a href="?filters=followed">Documents</a>
-									</li>
+        <template id="header" name="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <h1 class="page-header">
+                            <t t-esc="attachment_count" />
+                            <span>Slides</span>
+                            <t t-esc="search" />
+                            <small class="dropdown" t-if="filters in ('all', 'ppt','doc','video')">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <t t-if="filters == 'all'">All</t>
+                                    <t t-if="filters == 'ppt'">Presentations</t>
+                                    <t t-if="filters == 'doc'">Documents</t>
+                                    <t t-if="filters == 'video'">Videos</t>
+                                    <t t-if="sorting == 'creation'"> by Latest Published</t>
+                                    <t t-if="sorting == 'date'"> by Last Activity date</t>
+                                    <t t-if="sorting == 'view'"> by Most viewed</t>
+                                    <b class="caret" />
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-header">Filter on</li>
+                                    <li t-att-class="filters == 'all' and 'active' or '' ">
+                                        <a
+                                            t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')">All</a>
+                                    </li>
+                                    <li t-att-class="filters == 'ppt' and 'active' or '' ">
+                                        <a
+                                            t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='ppt')">Presentations</a>
+                                    </li>
+                                    <li t-if="uid" t-att-class="filters == 'doc' and 'active' or '' ">
+                                        <a
+                                            t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='doc')">Documents</a>
+                                    </li>
+                                    <li t-if="uid" t-att-class="filters == 'video' and 'active' or '' ">
+                                        <a
+                                            t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='video')">Videos</a>
+                                    </li>
+                                    <li class="dropdown-header">Sort by</li>
+                                    <li t-att-class="sorting == 'creation' and 'active' or '' ">
+                                        <a
+                                            t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='creation')">Latest Published</a>
+                                    </li>
+                                    <li t-att-class="sorting == 'date' and 'active' or '' ">
+                                        <a
+                                            t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='date')">Last Activity date</a>
+                                    </li>
+                                    <li t-att-class="sorting == 'view' and 'active' or '' ">
+                                        <a
+                                            t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='view')">Most viewed</a>
+                                    </li>
+                                </ul>
+                            </small>
+                            <div class="pull-right">
+                                <form action="/slides" role="search" method="get">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="search"
+                                            placeholder="Search Slides..." t-att-value="search" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="submit">
+                                                <span class="glyphicon glyphicon-search"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </template>
 
-									<li class="dropdown-header">Sort by</li>
-									<li class="active">
-										<a href="?sorting=date">Latest Published</a>
-									</li>
-									<li>
-										<a href="?sorting=creation">Most Viewed</a>
-									</li>
-								</ul>
-							</small>
-							<div class="pull-right">
-								<form action="/slides" role="search" method="post">
-									<div class="input-group">
-										<input type="text" class="form-control" name="search"
-											placeholder="Search Slides..." />
-										<span class="input-group-btn">
-											<button class="btn btn-primary" type="submit">
-												<span class="glyphicon glyphicon-search"></span>
-											</button>
-										</span>
-									</div>
-								</form>
-							</div>
-						</h1>
-					</div>
-				</div>
-			</div>
-		</template>
+        <template id='home' name="slide">
+            <t t-set="head">
+                <link href="/slides/static/src/css/slides.css" rel="stylesheet" />
+                <script type="text/javascript" src="/slides/static/src/js/slides.js"></script>
+            </t>
+            <t t-call="website.layout">
+                <t t-call="slides.header"></t>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 oe-slides-grid"
+                            t-foreach="attachment_ids" t-as="attachment">
+                            <div class="thumbnail">
+                                <div class="oe-slides-grid-img">
+                                    <a t-attf-href="/slides/view/#{attachment.id}">
+                                        <img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive" />
+                                    </a>
+                                </div>
+                                <a t-attf-href="/slides/view/#{attachment.id}">
+                                    <h4>
+                                        <t t-esc="attachment.name" />
+                                    </h4>
+                                </a>
+                                <p>
+                                    <small class="text-muted">
+                                        <t t-esc="attachment.create_date" />
+                                    </small>
+                                    <br />
+                                    <small class="text-muted">
+                                        <t t-esc="attachment.slide_views" />
+                                        Views
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <t t-call="website.pager" />
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
 
-		<template id='home' name="slide">
-			<t t-set="head">
-				<link href="/slides/static/src/css/slides.css" rel="stylesheet" />
-				<script type="text/javascript" src="/slides/static/src/js/slides.js"></script>
-			</t>
-			<t t-call="website.layout">
-				<t t-call="slides.header"></t>
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 oe-slides-grid"
-							t-foreach="attachment" t-as="file">
-							<div class="thumbnail">
-								<div class="oe-slides-frame">
-									<a t-attf-href="/slides/view/#{file.id}">
-                                        <t t-if="not file.youtube_id">
-                                            <img t-attf-src="/slides/thumb/#{file.id}" class="img img-responsive shadow oe-slides-grid-img" />
-                                        </t>
-                                        <t t-if="file.youtube_id">
-                                            <div>
-                                                <i class="fa fa-play-circle-o fa-3x play_button"></i>
-                                            </div>
-                                            <img t-att-src="file.image" class="img img-responsive shadow oe-slides-grid-img" />
-                                        </t>
-									</a>
-								</div>
-								<a t-attf-href="/slides/view/#{file.id}">
-									<h4>
-										<t t-esc="file.name" />
-									</h4>
-								</a>
-								<p>
-									<small class="text-muted">
-										<t t-esc="file.create_date" />
-									</small>
-									<br />
-									<small class="text-muted">5000 Views</small>
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</t>
-		</template>
-
-		<template id='view' name="slide">
-			<t t-call="website.layout">
-				<br />
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-9">
-    						<t t-if="slide.datas">
-							     <iframe id="viewer"
-								    t-attf-src="/slides/static/src/pdfjs/web/viewer.html?file=#{slide.url}&amp;create_thumb=1&amp;id=#{slide.id}"
-								    width='100%' height='500' allowfullscreen="true"
-								    webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
-							</t>
-							<t t-if="slide.youtube_id">
-                                 <iframe id="viewer"
-                                    t-attf-src="//www.youtube.com/embed/#{slide.youtube_id}?theme=light"
-                                    width='100%' height='500' allowfullscreen="true"
-                                    webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
-                            </t>
-							<h1 class="page-header mt0">
-								<t t-esc="slide.name" />
-								<small class="pull-right">
-									<p>Viewed 5000</p>
-								</small>
-							</h1>
-						</div>
-					</div>
-				</div>
-			</t>
-		</template>
-	</data>
+        <template id='view' name="slide">
+            <t t-call="website.layout">
+                <br />
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <iframe id="viewer"
+                                t-attf-src="/slides/static/src/pdfjs/web/viewer.html?file=#{slide.url}"
+                                width='100%' height='500' allowfullscreen="true"
+                                webkitallowfullscreen="true" style="overflow:hidden;"></iframe>
+                            <h1 class="page-header mt0">
+                                <t t-esc="slide.name" />
+                                <small class="pull-right">
+                                    <p>
+                                        Viewed
+                                        <t t-esc="slide.slide_views" />
+                                    </p>
+                                </small>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
 </openerp>
