@@ -13,7 +13,6 @@
                             <field name="file_type" required="1"/>
                             <field name="data_file" attrs="{'invisible':[('file_type','=',False)]}"/>
                             <field name="journal_id" domain="[('type', '=', 'bank')]" attrs="{'invisible':[('file_type','=',False)]}" context="{'default_type':'bank'}"/>
-                            <field name="account_id" attrs="{'invisible':[('file_type','=',False)]}"/>
                         </group>
                         <group>
                             <b colspan="2"> How to import your bank statement in OpenERP.</b>

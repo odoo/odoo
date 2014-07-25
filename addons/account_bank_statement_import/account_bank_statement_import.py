@@ -9,15 +9,22 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-_IMPORT_FILE_TYPE = []
+_IMPORT_FILE_TYPE = [('none', _('No Import Format Available'))]
+
+def add_file_type(selection_value):
+    global _IMPORT_FILE_TYPE
+    if _IMPORT_FILE_TYPE[0][0] == 'none':
+        _IMPORT_FILE_TYPE = [selection_value]
+    else:
+        _IMPORT_FILE_TYPE.append(selection_value)
+
 try:
     from ofxparse import OfxParser as ofxparser
-    _IMPORT_FILE_TYPE = [('ofx', 'OFX')]
+    add_file_type(('ofx', 'OFX'))
 except ImportError:
     _logger.warning("OFX parser partially unavailable because the `ofxparse` Python library cannot be found. "
                     "It can be easily download and install from this `https://pypi.python.org/pypi/ofxparse`.")
     ofxparser = None
-
 
 class account_bank_statement_import(osv.TransientModel):
     _name = 'account.bank.statement.import'
@@ -34,7 +41,7 @@ class account_bank_statement_import(osv.TransientModel):
         return journal_ids and journal_ids[0] or False
 
     _defaults = {
-        'file_type': _IMPORT_FILE_TYPE and 'ofx' or False,
+        'file_type': _IMPORT_FILE_TYPE[0][0],
         'journal_id': _get_default_journal,
     }
 
@@ -43,6 +50,9 @@ class account_bank_statement_import(osv.TransientModel):
         for vals in bank_statement_vals:
             statement_ids.append(self.pool.get('account.bank.statement').create(cr, uid, vals, context=context))
         return statement_ids
+
+    def process_none(self, cr, uid, data_file, journal_id=False, context=None):
+        raise osv.except_osv(_('Error'), _('No available format for importing bank statement. You can install the `ofxparse` Python library on the server to enable the import of OFX files, or install one of the other file format available through the module installation.'))
 
     def process_ofx(self, cr, uid, data_file, journal_id=False, context=None):
         try:

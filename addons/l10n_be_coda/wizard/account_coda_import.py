@@ -32,7 +32,7 @@ _logger = logging.getLogger(__name__)
 
 from openerp.addons.account_bank_statement_import import account_bank_statement_import as coda_ibs
 
-coda_ibs._IMPORT_FILE_TYPE.append(('coda', 'CODA'))
+coda_ibs.add_file_type(('coda', 'CODA'))
 
 class account_bank_statement_import(osv.TransientModel):
     _inherit = "account.bank.statement.import"
