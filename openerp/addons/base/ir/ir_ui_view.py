@@ -901,7 +901,9 @@ class view(osv.osv):
     #------------------------------------------------------
     # QWeb template views
     #------------------------------------------------------
-    @tools.ormcache_context(accepted_keys=('lang','inherit_branding', 'editable', 'translatable'))
+    @tools.conditional(
+        not config['dev_mode'],
+        tools.ormcache_context(accepted_keys=('lang','inherit_branding', 'editable', 'translatable')))
     def read_template(self, cr, uid, xml_id, context=None):
         if isinstance(xml_id, (int, long)):
             view_id = xml_id
