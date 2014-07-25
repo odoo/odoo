@@ -20,6 +20,10 @@
 ##############################################################################
 import openerp
 from openerp.osv import fields, osv
+from urlparse import urlparse,parse_qs
+import urllib2
+import json
+
 
 class ir_attachment_tags(osv.osv):
     _name = 'ir.attachment.tag'
@@ -46,6 +50,8 @@ class ir_attachment(osv.osv):
         'slide_type': fields.selection([('ppt', 'Presentation'), ('doc', 'Document'), ('video', 'Video')], 'Type'),
         'tag_ids': fields.many2many('ir.attachment.tag', 'rel_attachments_tags', 'attachment_id', 'tag_id', 'Tags'),
         'image': fields.binary('Thumb'),
+        'views': fields.integer('Total Views'),
+        'youtube_id': fields.char(string="Youtube Video ID"),
         'website_published': fields.boolean(
             'Publish', help="Publish on the website", copy=False,
         ),
@@ -61,9 +67,39 @@ class ir_attachment(osv.osv):
         'is_slide': _get_slide_setting,
         'slide_type':_get_slide_type
     }
+    def extract_youtube_id(self,url):
+        youtube_id = ""
+        query = urlparse(url)
+        if query.hostname == 'youtu.be':
+            youtube_id = query.path[1:]
+        elif query.hostname in ('www.youtube.com', 'youtube.com'):
+            if query.path == '/watch':
+                p = parse_qs(query.query)
+                youtube_id = p['v'][0]
+            elif query.path[:7] == '/embed/':
+                youtube_id = query.path.split('/')[2]
+            elif query.path[:3] == '/v/':
+                youtube_id = query.path.split('/')[2]
+        return youtube_id
     
+    def youtube_statistics(self,video_id):
+        request_url = "https://www.googleapis.com/youtube/v3/videos?id=%s&key=AIzaSyBKDzf7KjjZqwPWAME6JOeHzzBlq9nrpjk&part=snippet,statistics&fields=items(id,snippet,statistics)" % (video_id)
+        try:
+            req = urllib2.Request(request_url)
+            content = urllib2.urlopen(req).read()
+        except urllib2.HTTPError:
+            return False
+        return json.loads(content)
+                    
     def create(self, cr, uid, values, context=None):
         if values.get('is_slide', False) and values.get('datas_fname', False):
             values['url']="/slides/"+values['datas_fname']
-        id = super(ir_attachment, self).create(cr, uid, values, context)
-        return id
+        if values.get('slide_type') == 'video' and values.get('url'):
+            values["youtube_id"] = self.extract_youtube_id(values['url'])
+            statistics = self.youtube_statistics(values["youtube_id"])
+            if statistics:
+                if statistics['items'][0].get('snippet').get('thumbnails') and statistics['items'][0]['snippet'].get('thumbnails'):
+                    values['image'] = statistics['items'][0]['snippet']['thumbnails']['medium']['url']
+                if statistics['items'][0].get('statistics'):
+                    values['views'] = statistics['items'][0]['statistics']['viewCount']
+        return super(ir_attachment, self).create(cr, uid, values, context)

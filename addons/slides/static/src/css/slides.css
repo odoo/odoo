@@ -1,7 +1,22 @@
 .oe-slides-grid {
   margin-bottom: 10px;
-  min-height:250px;
+  min-height:13.5em;
 }
 .oe-slides-grid-img {
-  min-height:250px;
+  max-height:13.5em;
+}
+.oe-slides-frame {
+  min-height:15em;
+}
+.play_button {
+  position:absolute;
+  left:45%;
+  top:20%;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  .oe-slides-grid-img {
+        max-height:20em;
+    }
 }

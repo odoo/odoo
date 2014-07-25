@@ -70,9 +70,17 @@
 						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 oe-slides-grid"
 							t-foreach="attachment" t-as="file">
 							<div class="thumbnail">
-								<div class="oe-slides-grid-img">
+								<div class="oe-slides-frame">
 									<a t-attf-href="/slides/view/#{file.id}">
-										<img t-attf-src="/slides/thumb/#{file.id}" class="img-responsive" />
+                                        <t t-if="not file.youtube_id">
+                                            <img t-attf-src="/slides/thumb/#{file.id}" class="img img-responsive shadow oe-slides-grid-img" />
+                                        </t>
+                                        <t t-if="file.youtube_id">
+                                            <div>
+                                                <i class="fa fa-play-circle-o fa-3x play_button"></i>
+                                            </div>
+                                            <img t-att-src="file.image" class="img img-responsive shadow oe-slides-grid-img" />
+                                        </t>
 									</a>
 								</div>
 								<a t-attf-href="/slides/view/#{file.id}">
@@ -100,10 +108,18 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-9">
-							<iframe id="viewer"
-								t-attf-src="/slides/static/src/pdfjs/web/viewer.html?file=#{slide.url}"
-								width='100%' height='500' allowfullscreen="true"
-								webkitallowfullscreen="true" style="overflow:hidden;"></iframe>
+    						<t t-if="slide.datas">
+							     <iframe id="viewer"
+								    t-attf-src="/slides/static/src/pdfjs/web/viewer.html?file=#{slide.url}&amp;create_thumb=1&amp;id=#{slide.id}"
+								    width='100%' height='500' allowfullscreen="true"
+								    webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
+							</t>
+							<t t-if="slide.youtube_id">
+                                 <iframe id="viewer"
+                                    t-attf-src="//www.youtube.com/embed/#{slide.youtube_id}?theme=light"
+                                    width='100%' height='500' allowfullscreen="true"
+                                    webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
+                            </t>
 							<h1 class="page-header mt0">
 								<t t-esc="slide.name" />
 								<small class="pull-right">

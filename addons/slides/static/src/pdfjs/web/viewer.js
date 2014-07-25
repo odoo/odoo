@@ -23,6 +23,9 @@
 
 'use strict';
 
+
+var UPLOAD_THUMB = false;
+var DOC_ID = false;
 var DEFAULT_URL = '';
 var DEFAULT_SCALE = 'page-fit';
 var DEFAULT_SCALE_DELTA = 1.1;
@@ -3327,6 +3330,14 @@ var PDFView = {
 
     pagesPromise.then(function() {
       if (PDFView.supportsPrinting) {
+        if(UPLOAD_THUMB && DOC_ID){
+            var canvas = document.getElementById('page1');
+            var dataURL = canvas.toDataURL('image/png');
+            $.post('/set_slide_thumbnail/',{'id':DOC_ID,'dataURL':dataURL}, function (col) {
+                console.log("Thumbnail Uploaded")
+            });
+            
+        }
         pdfDocument.getJavaScript().then(function(javaScript) {
           if (javaScript.length) {
             console.warn('Warning: JavaScript is not supported');
@@ -5158,6 +5169,8 @@ function webViewerLoad(evt) {
 function webViewerInitialized() {
   var params = PDFView.parseQueryString(document.location.search.substring(1));
   var file = 'file' in params ? params.file : DEFAULT_URL;
+  UPLOAD_THUMB = 'create_thumb' in params ? true : false;
+  DOC_ID = 'id' in params ? params.id : false;
 
   var fileInput = document.createElement('input');
   fileInput.id = 'fileInput';
