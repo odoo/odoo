@@ -126,6 +126,7 @@ class res_groups(osv.osv):
                         _('The name of the group can not start with "-"'))
         res = super(res_groups, self).write(cr, uid, ids, vals, context=context)
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
+        self.pool['res.users'].has_group.clear_cache(self.pool['res.users'])
         return res
 
 class res_users(osv.osv):
@@ -225,8 +226,11 @@ class res_users(osv.osv):
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
             uid2 = uid
-        user = self.pool['res.users'].browse(cr, uid, uid2, context)
-        return user.company_id.id
+        # use read method to compute default values to don't create browse record and fetch all fields
+        # browse crash for install or update module
+        user = self.pool['res.users'].read(cr, uid, uid2, ['company_id'], context)
+        company_id = user['company_id'] and user['company_id'][0] or False
+        return company_id
 
     def _get_companies(self, cr, uid, context=None):
         c = self._get_company(cr, uid, context)
@@ -326,11 +330,12 @@ class res_users(osv.osv):
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
         self.context_get.clear_cache(self)
+        self.has_group.clear_cache(self)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         if 1 in ids:
-            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)'))
+            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         db = cr.dbname
         if db in self._uid_cache:
             for id in ids:
@@ -508,6 +513,7 @@ class res_users(osv.osv):
             'target': 'new',
         }
 
+    @tools.ormcache(skiparg=2)
     def has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
 

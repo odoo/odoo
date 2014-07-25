@@ -232,7 +232,7 @@ class purchase_order(osv.osv):
                                        "to 'Confirmed'. Then the supplier must confirm the order to change "
                                        "the status to 'Approved'. When the purchase order is paid and "
                                        "received, the status becomes 'Done'. If a cancel action occurs in "
-                                       "the invoice or in the reception of goods, the status becomes "
+                                       "the invoice or in the receipt of goods, the status becomes "
                                        "in exception.",
                                   select=True, copy=False),
         'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines',
@@ -244,7 +244,7 @@ class purchase_order(osv.osv):
         'invoice_ids': fields.many2many('account.invoice', 'purchase_invoice_rel', 'purchase_id',
                                         'invoice_id', 'Invoices', copy=False,
                                         help="Invoices generated for a purchase order"),
-        'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking List', help="This is the list of reception operations that have been generated for this purchase order."),
+        'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking List', help="This is the list of receipts that have been generated for this purchase order."),
         'shipped':fields.boolean('Received', readonly=True, select=True, copy=False,
                                  help="It indicates that a picking has been done"),
         'shipped_rate': fields.function(_shipped_rate, string='Received Ratio', type='float'),
@@ -255,7 +255,7 @@ class purchase_order(osv.osv):
             readonly=True, states={'draft':[('readonly',False)], 'sent':[('readonly',False)]},
             help="Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n" \
                 "Based on generated invoice: create a draft invoice you can validate later.\n" \
-                "Based on incoming shipments: let you create an invoice when receptions are validated."
+                "Based on incoming shipments: let you create an invoice when receipts are validated."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
@@ -678,7 +678,7 @@ class purchase_order(osv.osv):
                 if pick.state not in ('draft', 'cancel'):
                     raise osv.except_osv(
                         _('Unable to cancel the purchase order %s.') % (purchase.name),
-                        _('First cancel all receptions related to this purchase order.'))
+                        _('First cancel all receipts related to this purchase order.'))
             self.pool.get('stock.picking') \
                 .signal_workflow(cr, uid, map(attrgetter('id'), purchase.picking_ids), 'button_cancel')
             for inv in purchase.invoice_ids:
@@ -818,7 +818,12 @@ class purchase_order(osv.osv):
 
     def action_picking_create(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids):
-            picking_id = self.pool.get('stock.picking').create(cr, uid, {'picking_type_id': order.picking_type_id.id, 'partner_id': order.dest_address_id.id or order.partner_id.id}, context=context)
+            picking_vals = {
+                'picking_type_id': order.picking_type_id.id,
+                'partner_id': order.dest_address_id.id or order.partner_id.id,
+                'date': max([l.date_planned for l in order.order_line])
+            }
+            picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
 
     def picking_done(self, cr, uid, ids, context=None):
@@ -1391,14 +1396,22 @@ class product_template(osv.Model):
         for template in self.browse(cr, uid, ids, context=context):
             res[template.id] = sum([p.purchase_count for p in template.product_variant_ids])
         return res
+
     _columns = {
         'purchase_ok': fields.boolean('Can be Purchased', help="Specify if the product can be selected in a purchase order line."),
         'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
     }
+
     _defaults = {
         'purchase_ok': 1,
         'route_ids': _get_buy_route,
     }
+
+    def action_view_purchases(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'purchase.action_purchase_line_product_tree', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        return result
 
 class product_product(osv.Model):
     _name = 'product.product'
@@ -1430,7 +1443,7 @@ class mail_compose_message(osv.Model):
 
 class account_invoice(osv.Model):
     """ Override account_invoice to add Chatter messages on the related purchase
-        orders, logging the invoice reception or payment. """
+        orders, logging the invoice receipt or payment. """
     _inherit = 'account.invoice'
 
     def invoice_validate(self, cr, uid, ids, context=None):
@@ -1474,10 +1487,6 @@ class account_invoice_line(osv.Model):
             'Purchase Order Line', ondelete='set null', select=True,
             readonly=True),
     }
-
-class product_template(osv.osv):
-    _inherit = "product.template"
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

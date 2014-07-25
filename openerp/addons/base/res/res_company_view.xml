@@ -55,7 +55,7 @@
                                     <div>
                                         <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
                                     </div>
-                                    <field name="website" widget="url" placeholder="e.g. www.openerp.com"
+                                    <field name="website" widget="url" placeholder="e.g. www.odoo.com"
                                         on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
                                 </group>
                                 <group>
@@ -132,7 +132,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.company</field>
             <field name="view_type">form</field>
-            <field name="help">Create and manage the companies that will be managed by OpenERP from here. Shops or subsidiaries can be created and maintained from here.</field>
+            <field name="help">Create and manage the companies that will be managed by Odoo from here. Shops or subsidiaries can be created and maintained from here.</field>
         </record>
         <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_res_company_global"/>
         <record id="action_res_company_tree" model="ir.actions.act_window">

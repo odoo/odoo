@@ -25,7 +25,7 @@
     'version': '1.1',
     'category': 'Purchase Management',
     'sequence': 19,
-    'summary': 'Purchase Orders, Receptions, Supplier Invoices',
+    'summary': 'Purchase Orders, Receipts, Supplier Invoices',
     'description': """
 Manage goods requirement by Purchase Orders easily
 ==================================================
@@ -40,7 +40,7 @@ Dashboard / Reports for Purchase Management will include:
 * Request for Quotations
 * Purchase Orders Waiting Approval
 * Monthly Purchases by Category
-* Receptions Analysis
+* Receipt Analysis
 * Purchase Analysis
     """,
     'author': 'OpenERP SA',

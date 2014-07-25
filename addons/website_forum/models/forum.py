@@ -400,8 +400,9 @@ class Post(osv.Model):
             raise KarmaError('Not enough karma to downvote.')
 
         Vote = self.pool['forum.post.vote']
-        vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], limit=1, context=context)
-        new_vote = 0
+        vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
+        new_vote = '1' if upvote else '-1'
+        voted_forum_ids = set()
         if vote_ids:
             for vote in Vote.browse(cr, uid, vote_ids, context=context):
                 if upvote:
@@ -409,9 +410,9 @@ class Post(osv.Model):
                 else:
                     new_vote = '0' if vote.vote == '1' else '-1'
                 Vote.write(cr, uid, vote_ids, {'vote': new_vote}, context=context)
-        else:
+                voted_forum_ids.add(vote.post_id.id)
+        for post_id in set(ids) - voted_forum_ids:
             for post_id in ids:
-                new_vote = '1' if upvote else '-1'
                 Vote.create(cr, uid, {'post_id': post_id, 'vote': new_vote}, context=context)
         return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]], 'user_vote': new_vote}
 
