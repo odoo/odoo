@@ -209,22 +209,22 @@ class account_analytic_line(osv.osv):
                 last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
                 invoices.append(last_invoice)
 
-                cr.execute("""SELECT product_id, user_id, to_invoice, sum(amount), sum(unit_amount), product_uom_id
+                cr.execute("""SELECT product_id, to_invoice, sum(amount), sum(unit_amount), product_uom_id
                         FROM account_analytic_line as line LEFT JOIN account_analytic_journal journal ON (line.journal_id = journal.id)
                         WHERE account_id = %s
                             AND line.id IN %s AND journal.type = %s AND to_invoice IS NOT NULL
-                        GROUP BY product_id, user_id, to_invoice, product_uom_id""", (account.id, tuple(ids), journal_type))
+                        GROUP BY product_id, to_invoice, product_uom_id""", (account.id, tuple(ids), journal_type))
 
-                for product_id, user_id, factor_id, total_price, qty, uom in cr.fetchall():
+                for product_id, factor_id, total_price, qty, uom in cr.fetchall():
                     context2.update({'uom': uom})
 
                     if data.get('product'):
                         # force product, use its public price
                         product_id = data['product'][0]
-                        unit_price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, context2)
+                        unit_price = self._get_invoice_price(cr, uid, account, product_id, qty, context2)
                     elif journal_type == 'general' and product_id:
                         # timesheets, use sale price
-                        unit_price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, context2)
+                        unit_price = self._get_invoice_price(cr, uid, account, product_id, qty, context2)
                     else:
                         # expenses, using price from amount field
                         unit_price = total_price*-1.0 / qty
