@@ -19,13 +19,18 @@
 ##############################################################################
 {
     'name': 'Tips',
+    'category': 'Usability',
+    'description': """
+OpenERP Web tips.
+========================
+
+""",
     'version': '0.1',
     'author': 'OpenERP SA',
-    'category': 'Usability',
     'depends': ['web'],
-    'description': "Tips",
     'data': [
         'security/ir.model.access.csv',
         'views/tip.xml'
-    ]
+    ],
+    'auto_install': True
 }
