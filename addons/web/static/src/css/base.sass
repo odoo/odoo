@@ -863,13 +863,15 @@ $sheet-padding: 16px
                 text-decoration: underline
             &:focus
                 outline: none
+		h3
+            padding-left: 15px
         .oe_logo
-            margin-left: -6px
+            margin-left: 5px
         .oe_bottom
             text-shadow: 0 1px 1px #999999
             @include vertical-gradient(#b41616, #600606)
             color: #eee
-            padding: 0 16px
+            padding: 5px 15px
             @include radius(0 0 2px 2px)
             a
                 color: #eee
@@ -882,6 +884,8 @@ $sheet-padding: 16px
         height: 100%
         a
             color: $link-color
+			.oe_activate_debug_mode
+				margin: 15px
         > div
             position: relative
             height: 100%
