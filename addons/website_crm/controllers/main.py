@@ -30,7 +30,16 @@ class contactus(http.Controller):
         """ Allow to be overrided """
         return request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, values, request.context)
 
-    @http.route(['/crm/contactus'], type='http', auth="public", website=True, multilang=True)
+    def preRenderThanks(self, request, values, kwargs):
+        """ Allow to be overrided """
+        company = request.website.company_id
+        return {
+            'google_map_url': self.generate_google_map_url(company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or ''),
+            '_values': values,
+            '_kwargs': kwargs,
+        }
+
+    @http.route(['/crm/contactus'], type='http', auth="public", website=True)
     def contactus(self, **kwargs):
         def dict_to_str(title, dictvar):
             ret = "\n\n%s" % title
@@ -38,13 +47,13 @@ class contactus(http.Controller):
                 ret += "\n%s" % field
             return ret
 
-        _TECHNICAL = ['show_info']  # Only use for behavior, don't stock it
+        _TECHNICAL = ['show_info', 'view_from', 'view_callback']  # Only use for behavior, don't stock it
         _BLACKLIST = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date', 'user_id', 'active']  # Allow in description
         _REQUIRED = ['name', 'contact_name', 'email_from', 'description']  # Could be improved including required from model
 
         post_file = []  # List of file to add to ir_attachment once we have the ID
         post_description = []  # Info to add after the message
-        values = {'user_id': False}
+        values = {}
 
         for field_name, field_value in kwargs.items():
             if hasattr(field_value, 'filename'):
@@ -57,12 +66,12 @@ class contactus(http.Controller):
         if "name" not in kwargs and values.get("contact_name"):  # if kwarg.name is empty, it's an error, we cannot copy the contact_name
             values["name"] = values.get("contact_name")
         # fields validation : Check that required field from model crm_lead exists
-        error = set(field for field in _REQUIRED if not kwargs.get(field))
+        error = set(field for field in _REQUIRED if not values.get(field))
 
         values = dict(values, error=error)
         if error:
             values.update(kwargs=kwargs.items())
-            return request.website.render("website.contactus", values)
+            return request.website.render(kwargs.get("view_from", "website.contactus"), values)
 
         try:
             values['channel_id'] = request.registry['ir.model.data'].get_object_reference(request.cr, SUPERUSER_ID, 'crm', 'crm_case_channel_website')[1]
@@ -96,8 +105,5 @@ class contactus(http.Controller):
                 }
                 request.registry['ir.attachment'].create(request.cr, SUPERUSER_ID, attachment_value, context=request.context)
 
-        company = request.website.company_id
-        values = {
-            'google_map_url': self.generate_google_map_url(company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or ''),
-        }
-        return request.website.render("website_crm.contactus_thanks", values)
+        values = self.preRenderThanks(request, values, kwargs)
+        return request.website.render(kwargs.get("view_callback", "website_crm.contactus_thanks"), values)
