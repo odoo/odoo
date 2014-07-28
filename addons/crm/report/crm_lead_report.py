@@ -60,7 +60,7 @@ class crm_lead_report(osv.osv):
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
 
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-       'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
+        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
