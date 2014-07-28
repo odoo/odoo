@@ -32,13 +32,13 @@
             <field name="model">crm.claim.report</field>
             <field name="arch" type="xml">
                 <search string="Search">
+                    <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                     <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)" groups="base.group_multi_salesteams"/>
                     <separator/>
                     <!-- A 'My Company' filter makes no sense regarding record rules, and is not possible to do (uid is not a company): remove me in 8.0 -->
                     <filter string="My Company" icon="terp-go-home" context="{'invisible_section': False}" domain="[]" help="My company"
                         invisible="1"/>
                     <separator/>
-                    <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="user_id" string="Salesperson"/>
                     <field name="section_id" string="Sales Team" context="{'invisible_section': False}"
