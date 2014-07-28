@@ -32,14 +32,15 @@ class project_issue_report(osv.osv):
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
         'month':fields.selection(fields.date.MONTHS, 'Month', readonly=True),
+        'year_month':fields.char('Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'opening_date': fields.date('Date of Opening', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
         'date_closed': fields.date('Date of Closing', readonly=True),
-        'date_last_stage_update': fields.date('Last Stage Update', readonly=True),
+        'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
         'stage_id': fields.many2one('project.task.type', 'Stage'),
-        'nbr': fields.integer('# of Issues', readonly=True),
+        'nbr': fields.integer('Quantity', readonly=True),
         'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True, group_operator="avg"),
         'working_hours_close': fields.float('Avg. Working Hours to Close', readonly=True, group_operator="avg"),
         'delay_open': fields.float('Avg. Delay to Open', digits=(16,2), readonly=True, group_operator="avg",
@@ -55,6 +56,7 @@ class project_issue_report(osv.osv):
         'channel': fields.char('Channel', readonly=True, help="Communication Channel."),
         'task_id': fields.many2one('project.task', 'Task'),
         'email': fields.integer('# Emails', size=128, readonly=True),
+        'reviewer_id': fields.many2one('res.users', 'Reviewer', readonly=True),
     }
 
     def init(self, cr):
@@ -65,6 +67,7 @@ class project_issue_report(osv.osv):
                     c.id as id,
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
+                    to_char(c.create_date, 'YYYY-MM') as year_month,
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
@@ -86,10 +89,12 @@ class project_issue_report(osv.osv):
                     date_trunc('day',c.create_date) as create_date,
                     c.day_open as delay_open,
                     c.day_close as delay_close,
-                    (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email
+                    (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email,
+                    t.reviewer_id
 
                 FROM
                     project_issue c
+                LEFT JOIN project_task t on c.task_id = t.id
                 WHERE c.active= 'true'
             )""")
 

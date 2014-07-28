@@ -42,7 +42,7 @@ class crm_helpdesk_report(osv.osv):
         'name': fields.char('Year', required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'nbr': fields.integer('# of Cases', readonly=True),
+        'nbr': fields.integer('Quantity', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'Status', readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
@@ -50,6 +50,7 @@ class crm_helpdesk_report(osv.osv):
                                   ('07', 'July'), ('08', 'August'),\
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'year_month': fields.char('Month', readonly=True),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
@@ -82,6 +83,7 @@ class crm_helpdesk_report(osv.osv):
                     min(c.id) as id,
                     to_char(c.date, 'YYYY') as name,
                     to_char(c.date, 'MM') as month,
+                    to_char(c.date, 'YYYY-MM') as year_month,
                     to_char(c.date, 'YYYY-MM-DD') as day,
                     to_char(c.create_date, 'YYYY-MM-DD') as create_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,

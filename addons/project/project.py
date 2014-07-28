@@ -531,7 +531,11 @@ def Project():
 
         project_id = super(project, self).create(cr, uid, vals, context=create_context)
         project_rec = self.browse(cr, uid, project_id, context=context)
-        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], {'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}, context)
+        ir_values = self.pool.get('ir.values').get_default( cr, uid, 'project.config.settings', 'generate_project_alias' )
+        values = { 'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}
+        if ir_values:
+            values = dict(values, alias_name=vals['name'])
+        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], values, context=context)
         return project_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -695,10 +699,10 @@ class task(osv.osv):
         if default is None:
             default = {}
         if not default.get('name'):
-            current = self.browse(cr, uid, id, context=context)       
+            current = self.browse(cr, uid, id, context=context)
             default['name'] = _("%s (copy)") % current.name
         return super(task, self).copy_data(cr, uid, id, default, context)
-    
+
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -788,7 +792,7 @@ class task(osv.osv):
         'partner_id': lambda self, cr, uid, ctx=None: self._get_default_partner(cr, uid, context=ctx),
     }
     _order = "priority, sequence, date_start, name, id"
-    
+
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
             visited_branch = set()
@@ -1287,6 +1291,7 @@ class project_task_history(osv.osv):
 
     _columns = {
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select=True),
+        'quantity': fields.integer('Quantity', readonly=True),
         'type_id': fields.many2one('project.task.type', 'Stage'),
         'kanban_state': fields.selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], 'Kanban State', required=False),
         'date': fields.date('Date', select=True),
@@ -1325,11 +1330,16 @@ class project_task_history_cumulative(osv.osv):
                     h.id AS history_id,
                     h.date+generate_series(0, CAST((coalesce(h.end_date, DATE 'tomorrow')::date - h.date) AS integer)-1) AS date,
                     h.task_id, h.type_id, h.user_id, h.kanban_state,
+                    count(h.task_id) as quantity,
                     greatest(h.remaining_hours, 1) AS remaining_hours, greatest(h.planned_hours, 1) AS planned_hours,
                     t.project_id
                 FROM
                     project_task_history AS h
                     JOIN project_task AS t ON (h.task_id = t.id)
+                GROUP BY
+                  h.id,
+                  h.task_id,
+                  t.project_id
 
             ) AS history
         )

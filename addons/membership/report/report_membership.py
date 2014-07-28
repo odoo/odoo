@@ -48,6 +48,7 @@ class report_membership(osv.osv):
                                   ('07', 'July'), ('08', 'August'),\
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'year_month': fields.char("Month", readonly=True),
         'date_from': fields.datetime('Start Date', readonly=True, help="Start membership date"),
         'date_to': fields.datetime('End Date', readonly=True, help="End membership date"),
         'num_waiting': fields.integer('# Waiting', readonly=True),
@@ -60,7 +61,8 @@ class report_membership(osv.osv):
         'membership_id': fields.many2one('product.product', 'Membership Product', readonly=True),
         'membership_state': fields.selection(STATE, 'Current Membership State', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True)
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'quantity': fields.integer("Quantity", readonly=True),
         }
 
     def init(self, cr):
@@ -71,6 +73,7 @@ class report_membership(osv.osv):
         SELECT
         MIN(id) AS id,
         partner_id,
+        count(membership_id) as quantity,
         user_id,
         membership_state,
         associate_member_id,
@@ -79,6 +82,7 @@ class report_membership(osv.osv):
         date_to,
         year,
         month,
+        year_month,
         COUNT(num_waiting) AS num_waiting,
         COUNT(num_invoiced) AS num_invoiced,
         COUNT(num_paid) AS num_paid,
@@ -97,6 +101,7 @@ class report_membership(osv.osv):
             TO_CHAR(p.membership_start, 'YYYY-MM-DD') AS date_from,
             TO_CHAR(p.membership_stop, 'YYYY-MM-DD') AS date_to,
             TO_CHAR(p.membership_start, 'YYYY') AS year,
+            TO_CHAR(p.membership_start, 'YYYY-MM') AS year_month,
             TO_CHAR(p.membership_start,'MM') AS month,
             CASE WHEN ml.state = 'waiting'  THEN ml.id END AS num_waiting,
             CASE WHEN ml.state = 'invoiced' THEN ml.id END AS num_invoiced,
@@ -128,6 +133,7 @@ class report_membership(osv.osv):
         GROUP BY
             year,
             month,
+            year_month,
             date_from,
             date_to,
             partner_id,

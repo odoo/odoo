@@ -7,15 +7,37 @@
             <field name="arch" type="xml">
                 <graph string="Purchase Orders Statistics" type="pivot">
                     <field name="partner_id" type="row"/>
-                    <field name="product_id" type="row"/>
-                    <field name="nbr" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                    <field name="price_total" type="measure"/>
                     <field name="quantity" type="measure"/>
                     <field name="price_average" type="measure"/>
-                    <field name="price_standard" type="measure"/>
-                    <field name="price_total" type="measure"/>
                 </graph>
             </field>
         </record>
+
+        <!-- Custom reports (aka filters) -->
+        <record id="filter_purchase_order_monthly_purchases" model="ir.filters">
+            <field name="name">Monthly Purchases</field>
+            <field name="model_id">purchase.report</field>
+            <field name="domain">[('state','&lt;&gt;','cancel')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['category_id'], 'col_group_by': ['date:month'], 'search_default_quotes': 1, 'search_default_orders': 1, 'measure': ['quantity', 'duration']}</field>
+        </record>
+        <record id="filter_purchase_order_price_per_supplier" model="ir.filters">
+            <field name="name">Price Per Supplier</field>
+            <field name="model_id">purchase.report</field>
+            <field name="domain">[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['partner_id'], 'col_group_by': ['product_id'], 'search_default_orders': 1, 'measure': ['price_average']}</field>
+        </record>
+        <record id="filter_purchase_order_average_delivery_time" model="ir.filters">
+            <field name="name">Average Delivery Time</field>
+            <field name="model_id">purchase.report</field>
+            <field name="domain">[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['partner_id'], 'search_default_orders': 1, 'measure': ['delay_pass']}</field>
+        </record>
+
 
         <record id="view_purchase_order_search" model="ir.ui.view">
         <field name="name">report.purchase.order.search</field>
@@ -39,17 +61,10 @@
                 <group expand="1" string="Group By">
                     <filter string="Supplier" name="group_partner_id" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <filter string="Responsible" name="Responsible" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <filter string="Validated by" icon="terp-personal" context="{'group_by':'validator'}"/>
-                    <filter string="Product" name="group_product_id" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                    <filter string="Category" name="group_category_id" icon="terp-stock_symbol-selection" context="{'group_by':'category_id'}"/>
-                    <filter string="Warehouse" icon="terp-go-home" context="{'group_by':'picking_type_id'}"/>
-                    <filter string="Reference UOM" name="group_product_uom" icon="terp-mrp" context="{'group_by':'product_uom'}"/>
-                    <filter string="Destination" icon="terp-gtk-jump-to-ltr" context="{'group_by':'location_id'}"/>
+                    <filter string="Category of product" name="group_category_id" icon="terp-stock_symbol-selection" context="{'group_by':'category_id'}"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Order Date (day)" icon="terp-go-today" context="{'group_by':'date:day'}" help="Order of Day"/>
                     <filter string="Order Date (month)" icon="terp-go-month" context="{'group_by':'date:month'}" help="Order of Day"/>
-                    <filter string="Order Date (year)" icon="terp-go-year" context="{'group_by':'date:year'}" help="Order of Day"/>
                 </group>
             </search>
         </field>

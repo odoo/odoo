@@ -50,8 +50,9 @@ class crm_lead_report(osv.osv):
         'date_deadline': fields.date('Exp. Closing', readonly=True, help="Expected Closing"),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'opening_date': fields.date('Assignation Date', readonly=True),
-        'date_closed': fields.date('Close Date', readonly=True),
+        'date_closed': fields.datetime('Close Date', readonly=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
+        'quantity': fields.integer("Quantity", readonly=True),
 
         # durations
         'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
@@ -87,10 +88,10 @@ class crm_lead_report(osv.osv):
                 SELECT
                     id,
                     c.date_deadline,
-
+                    count(id) as quantity,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
-                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
 
+                    date_trunc('day',c.date_closed) as date_closed,
                     date_trunc('day',c.date_last_stage_update) as date_last_stage_update,
 
                     c.user_id,
@@ -114,6 +115,7 @@ class crm_lead_report(osv.osv):
                 FROM
                     crm_lead c
                 WHERE c.active = 'true'
+                GROUP BY c.id
             )""")
 
 

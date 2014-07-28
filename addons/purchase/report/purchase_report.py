@@ -31,7 +31,7 @@ class purchase_report(osv.osv):
     _description = "Purchases Orders"
     _auto = False
     _columns = {
-        'date': fields.date('Order Date', readonly=True, help="Date on which this document has been created"),
+        'date': fields.datetime('Order Date', readonly=True, help="Date on which this document has been created"),
         'state': fields.selection([('draft', 'Request for Quotation'),
                                      ('confirmed', 'Waiting Supplier Ack'),
                                       ('approved', 'Approved'),
@@ -52,7 +52,7 @@ class purchase_report(osv.osv):
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
         'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),
         'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True),
-        'quantity': fields.float('Quantity', readonly=True),
+        'quantity': fields.integer('Quantity', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),

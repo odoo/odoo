@@ -58,7 +58,7 @@
                     <field name="employee_id"/>
                     <group expand="0" string="Group By">
                         <filter name="employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter name="name" string="Date" icon="terp-personal" domain="[]" context="{'group_by':'name'}"/>
+                        <filter name="name" string="Date (month)" icon="terp-personal" domain="[]" context="{'group_by':'name'}"/>
                     </group>
                 </search>
             </field>
@@ -152,7 +152,7 @@
                 <field name="active" position="before">
                     <label for="state" groups="base.group_hr_attendance"/>
                     <div groups="base.group_hr_attendance">
-                        <field name="state" class="oe_inline"/> - 
+                        <field name="state" class="oe_inline"/> -
                         <button class="oe_link" name="attendance_action_change" states="present" string="Sign Out" type="object" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
                         <button class="oe_link" name="attendance_action_change" states="absent" string="Sign In" type="object" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
                     </div>
@@ -162,5 +162,3 @@
 
     </data>
 </openerp>
-
-

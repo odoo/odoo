@@ -40,13 +40,14 @@ class crm_claim_report(osv.osv):
         'name': fields.char('Year', required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'nbr': fields.integer('# of Cases', readonly=True),
+        'nbr': fields.integer('Quantity', readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
                                   ('07', 'July'), ('08', 'August'),\
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'year_month': fields.char("Month", readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'day': fields.char('Day', size=128, readonly=True),
@@ -62,7 +63,8 @@ class crm_claim_report(osv.osv):
         'date_closed': fields.date('Close Date', readonly=True, select=True),
         'date_deadline': fields.date('Deadline', readonly=True, select=True),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
-        'email': fields.integer('# Emails', size=128, readonly=True)
+        'email': fields.integer('# Emails', size=128, readonly=True),
+        'subject': fields.char('Claim Subject', readonly=True)
     }
 
     def init(self, cr):
@@ -78,6 +80,7 @@ class crm_claim_report(osv.osv):
                     min(c.id) as id,
                     to_char(c.date, 'YYYY') as name,
                     to_char(c.date, 'MM') as month,
+                    to_char(c.date, 'YYYY-MM') as year_month,
                     to_char(c.date, 'YYYY-MM-DD') as day,
                     to_char(c.date_closed, 'YYYY-MM-DD') as date_closed,
                     to_char(c.date_deadline, 'YYYY-MM-DD') as date_deadline,
@@ -87,6 +90,7 @@ class crm_claim_report(osv.osv):
                     c.partner_id,
                     c.company_id,
                     c.categ_id,
+                    c.name as subject,
                     count(*) as nbr,
                     c.priority as priority,
                     c.type_action as type_action,
