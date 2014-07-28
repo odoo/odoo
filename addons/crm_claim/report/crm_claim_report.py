@@ -40,7 +40,7 @@ class crm_claim_report(osv.osv):
         'name': fields.char('Year', required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'nbr': fields.integer('Quantity', readonly=True),
+        'nbr': fields.integer('# of Claims', readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \

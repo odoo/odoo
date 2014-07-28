@@ -40,7 +40,7 @@ class hr_expense_report(osv.osv):
         'year_month': fields.char('Month', size=64, readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Force Journal', readonly=True),
-        'product_qty':fields.float('Qty', readonly=True),
+        'product_qty':fields.float('Product Quantity', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee's Name", readonly=True),
         'date_confirm': fields.date('Confirmation Date', readonly=True),
         'date_valid': fields.date('Validation Date', readonly=True),

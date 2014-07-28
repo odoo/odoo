@@ -40,7 +40,7 @@ class pos_order_report(osv.osv):
         'location_id':fields.many2one('stock.location', 'Location', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
-        'product_qty':fields.integer('# of Qty', readonly=True),
+        'product_qty':fields.integer('Product Quantity', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'delay_validation': fields.integer('Delay Validation'),
         'product_categ_id': fields.many2one('product.category', 'Product Category', readonly=True),
