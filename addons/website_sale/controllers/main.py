@@ -820,9 +820,22 @@ class website_sale(http.Controller):
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)
         return product.write({'website_size_x': x, 'website_size_y': y})
 
+    def order_lines_2_google_api(self, order_lines):
+        """ Transforms a list of order lines into a dict for google analytics """
+        ret = []
+        for line in order_lines:
+            ret.append({
+                'id': line.order_id and line.order_id.id,
+                'name': line.product_id.categ_id and line.product_id.categ_id.name or '-',
+                'sku': line.product_id.id,
+                'quantity': line.product_uom_qty,
+                'price': line.price_unit,
+            })
+        return ret
+
     @http.route(['/shop/tracking_last_order'], type='json', auth="public")
     def tracking_cart(self, **post):
-        """ return JS code for google analytics"""
+        """ return data about order in JSON needed for google analytics"""
         cr, uid, context = request.cr, request.uid, request.context
         ret = {}
         sale_order_id = request.session.get('sale_last_order_id')
@@ -834,16 +847,7 @@ class website_sale(http.Controller):
                 'revenue': order.amount_total,
                 'currency': order.currency_id.name
             }
-            ret['lines'] = []
-            for line in order.order_line:
-                if not line.is_delivery:
-                    ret['lines'].append({
-                        'id': line.order_id and line.order_id.id,
-                        'name': line.product_id.categ_id and line.product_id.categ_id.name or '-',
-                        'sku': line.product_id.id,
-                        'quantity': line.product_uom_qty,
-                        'price': line.price_unit,
-                    })
+            ret['lines'] = self.order_lines_2_google_api(order.order_line)
         return ret
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
