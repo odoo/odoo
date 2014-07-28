@@ -313,8 +313,8 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
             var container = $("#" + this.element_id + '_view_' + view_type);
             view_promise = controller.appendTo(container);
             this.views[view_type].controller = controller;
-            this.views[view_type].deferred.resolve(view_type);
             $.when(view_promise).then(function() {
+                self.views[view_type].deferred.resolve(view_type);
                 self.on_controller_inited(view_type, controller);
                 if (self.searchview
                         && self.flags.auto_search
@@ -701,7 +701,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             );
         } 
 
-        $.when(defs).then(function() {
+        $.when(this.views[this.active_view] ? this.views[this.active_view].deferred : $.when(), defs).then(function() {
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
