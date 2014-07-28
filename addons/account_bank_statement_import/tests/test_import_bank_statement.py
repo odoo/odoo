@@ -58,6 +58,11 @@ class TestOfxFile(TransactionCase):
         self.bank_statement_model = self.registry('account.bank.statement')
 
     def test_ofx_file_import(self):
+        try:
+            from ofxparse import OfxParser as ofxparser
+        except ImportError:
+            #the Python library isn't installed on the server, the OFX import is unavailable and the test cannot be run
+            return True
         cr, uid = self.cr, self.uid
         bank_statement_id = self.statement_import_model.create(cr, uid, dict(
                             file_type='ofx',

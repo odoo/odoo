@@ -31,7 +31,7 @@ class account_bank_statement_import(osv.TransientModel):
     _description = 'Import Bank Statement'
     _columns = {
         'data_file': fields.binary('Bank Statement File', required=True, help='Select bank statement file to import in OpenERP. .OFX, .QIF or CODA are accepted.'),
-        'file_type': fields.selection(_IMPORT_FILE_TYPE, 'File Type'),
+        'file_type': fields.selection(_IMPORT_FILE_TYPE, 'File Type', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
     }
 
