@@ -67,7 +67,8 @@ class pos_order_report(osv.osv):
                     l.product_id as product_id
                 from pos_order_line as l
                     left join pos_order s on (s.id=l.order_id)
-                    left join product_template pt on (pt.id=l.product_id)
+                    left join product_product p on (l.product_id=p.id)
+                    left join product_template pt on (p.product_tmpl_id=pt.id)
                     left join product_uom u on (u.id=pt.uom_id)
                 group by
                     s.date_order, s.partner_id,s.state,

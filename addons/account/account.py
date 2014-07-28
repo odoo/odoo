@@ -1753,6 +1753,7 @@ class account_tax_code(osv.osv):
     _name = 'account.tax.code'
     _description = 'Tax Code'
     _rec_name = 'code'
+    _order = 'sequence, code'
     _columns = {
         'name': fields.char('Tax Case Name', required=True, translate=True),
         'code': fields.char('Case Code', size=64),
@@ -2653,7 +2654,7 @@ class account_tax_code_template(osv.osv):
 
     _name = 'account.tax.code.template'
     _description = 'Tax Code Template'
-    _order = 'code'
+    _order = 'sequence, code'
     _rec_name = 'code'
     _columns = {
         'name': fields.char('Tax Case Name', required=True),
@@ -2663,6 +2664,11 @@ class account_tax_code_template(osv.osv):
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),
         'sign': fields.float('Sign For Parent', required=True),
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any tax related to this tax Code to appear on invoices."),
+        'sequence': fields.integer(
+            'Sequence', help=(
+                "Determine the display order in the report 'Accounting "
+                "\ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
+            ),
     }
 
     _defaults = {
@@ -2695,6 +2701,7 @@ class account_tax_code_template(osv.osv):
                 'parent_id': tax_code_template.parent_id and ((tax_code_template.parent_id.id in tax_code_template_ref) and tax_code_template_ref[tax_code_template.parent_id.id]) or False,
                 'company_id': company_id,
                 'sign': tax_code_template.sign,
+                'sequence': tax_code_template.sequence,
             }
             #check if this tax code already exists
             rec_list = obj_tax_code.search(cr, uid, [('name', '=', vals['name']),('code', '=', vals['code']),('company_id', '=', vals['company_id'])], context=context)

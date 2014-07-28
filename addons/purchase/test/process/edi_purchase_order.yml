@@ -37,6 +37,7 @@
   Then I import a sample EDI document of a sale order (v7.0)
 -
   !python {model: edi.edi}: |
+    from openerp.tools import float_compare
     purchase_order_pool = self.pool.get('purchase.order')
     edi_document = {
         "__id": "sale:724f9v70-dv70-1v70-8v70-701a04e25v70.sale_order_test", 
@@ -53,7 +54,7 @@
                 "code": "EUR",
                 "symbol": "€",
         },
-        "date_order": "2011-09-13", 
+        "date_order": "2011-09-13 12:00:00", 
         "partner_id": ["sale:724f9v70-dv70-1v70-8v70-701a04e25v70.res_partner_test22", "Junjun wala"],
         "partner_address": {
                 "__id": "base:724f9v70-dv70-1v70-8v70-701a04e25v70.res_partner_address_7wdsjasdjh",
@@ -120,17 +121,17 @@
     assert bank_info.acc_number == "Guys bank: 123477777-156113", 'Expected "Guys bank: 123477777-156113", got %s' % bank_info.acc_number
 
     assert order_new.pricelist_id.name == 'Default Purchase Pricelist' , "Default Purchase Pricelist was not automatically assigned"
-    assert order_new.amount_total == 350, "Amount total is not same"
-    assert order_new.amount_untaxed == 350, "untaxed amount is not same"
+    assert float_compare(order_new.amount_total, 350, precision_digits=2) == 0, "Amount total is not same"
+    assert float_compare(order_new.amount_untaxed, 350, precision_digits=2) == 0, "untaxed amount is not same"
     assert len(order_new.order_line) == 2, "Purchase order lines number mismatch"
     for purchase_line in order_new.order_line:
         if purchase_line.name == 'PC Assemble SC234':
             assert purchase_line.product_uom.name == "Unit" , "uom is not same"
-            assert purchase_line.price_unit == 150 , "unit price is not same, got %s, expected 150"%(purchase_line.price_unit,)
+            assert float_compare(purchase_line.price_unit, 150 , precision_digits=2) == 0, "unit price is not same, got %s, expected 150"%(purchase_line.price_unit,)
             assert purchase_line.product_qty == 1 , "product qty is not same"
         elif purchase_line.name == 'PC on Demand':
             assert purchase_line.product_uom.name == "Unit" , "uom is not same"
-            assert purchase_line.price_unit == 20 , "unit price is not same, got %s, expected 20"%(purchase_line.price_unit,)
+            assert float_compare(purchase_line.price_unit, 20 , precision_digits=2) == 0, "unit price is not same, got %s, expected 20"%(purchase_line.price_unit,)
             assert purchase_line.product_qty == 10 , "product qty is not same"
         else:
             raise AssertionError('unknown order line: %s' % purchase_line)
@@ -138,6 +139,7 @@
   "Then I import a sample EDI document of a sale order (v6.1 - to test backwards compatibility)"
 -
   !python {model: edi.edi}: |
+    from openerp.tools import float_compare
     purchase_order_pool = self.pool.get('purchase.order')
     edi_document = { 
         "__id": "sale:724f93ec-ddd0-11e0-88ec-701a04e25543.sale_order_test",
@@ -154,7 +156,7 @@
                 "code": "EUR",
                 "symbol": "€",
         },  
-        "date_order": "2011-09-13",
+        "date_order": "2011-09-13 12:00:00",
         "partner_id": ["sale:724f93ec-ddd0-11e0-88ec-701a04e25543.res_partner_test22", "Junjun wala"],
         "partner_address": {
                 "__id": "base:724f93ec-ddd0-11e0-88ec-701a04e25543.res_partner_address_7wdsjasdjh",
@@ -221,17 +223,17 @@
     assert bank_info.acc_number == "Another bank: 123477700-156113", 'Expected "Another bank: 123477700-156113", got %s' % bank_info.acc_number
 
     assert order_new.pricelist_id.name == 'Default Purchase Pricelist' , "Default Purchase Pricelist was not automatically assigned"
-    assert order_new.amount_total == 350, "Amount total is not same"
-    assert order_new.amount_untaxed == 350, "untaxed amount is not same"
+    assert float_compare(order_new.amount_total, 350, precision_digits=2) == 0, "Amount total is not same"
+    assert float_compare(order_new.amount_untaxed, 350, precision_digits=2) == 0, "untaxed amount is not same"
     assert len(order_new.order_line) == 2, "Purchase order lines number mismatch"
     for purchase_line in order_new.order_line:
         if purchase_line.name == 'Basic PC':
             assert purchase_line.product_uom.name == "PCE" , "uom is not same"
-            assert purchase_line.price_unit == 150 , "unit price is not same, got %s, expected 150"%(purchase_line.price_unit,)
+            assert float_compare(purchase_line.price_unit, 150 , precision_digits=2) == 0, "unit price is not same, got %s, expected 150"%(purchase_line.price_unit,)
             assert purchase_line.product_qty == 1 , "product qty is not same"
         elif purchase_line.name == 'Medium PC':
             assert purchase_line.product_uom.name == "PCE" , "uom is not same"
-            assert purchase_line.price_unit == 20 , "unit price is not same, got %s, expected 20"%(purchase_line.price_unit,)
+            assert float_compare(purchase_line.price_unit, 20 , precision_digits=2) == 0, "unit price is not same, got %s, expected 20"%(purchase_line.price_unit,)
             assert purchase_line.product_qty == 10 , "product qty is not same"
         else:
             raise AssertionError('unknown order line: %s' % purchase_line)

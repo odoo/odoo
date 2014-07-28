@@ -531,7 +531,11 @@ def Project():
 
         project_id = super(project, self).create(cr, uid, vals, context=create_context)
         project_rec = self.browse(cr, uid, project_id, context=context)
-        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], {'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}, context)
+        ir_values = self.pool.get('ir.values').get_default( cr, uid, 'project.config.settings', 'generate_project_alias' )
+        values = { 'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}
+        if ir_values:
+            values = dict(values, alias_name=vals['name'])
+        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], values, context=context)
         return project_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1151,12 +1155,12 @@ class project_work(osv.osv):
                 task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
+    def unlink(self, cr, uid, ids, context=None):
         task_obj = self.pool.get('project.task')
         for work in self.browse(cr, uid, ids):
             cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
             task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
-        return super(project_work,self).unlink(cr, uid, ids,*args, **kwargs)
+        return super(project_work,self).unlink(cr, uid, ids, context=context)
 
 
 class account_analytic_account(osv.osv):

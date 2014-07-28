@@ -38,11 +38,11 @@ $(document).ready(function () {
                     }
                 } else {
                     $link.parent().find("#vote_count").html(data['vote_count']);
-                    if (data['vote_count'] == 0) {
+                    if (data['user_vote'] == 0) {
                         $link.parent().find(".text-success").removeClass("text-success");
                         $link.parent().find(".text-warning").removeClass("text-warning");
                     } else {
-                        if (data['vote_count'] == 1) {
+                        if (data['user_vote'] == 1) {
                             $link.addClass("text-success");
                         } else {
                             $link.addClass("text-warning");

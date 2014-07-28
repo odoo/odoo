@@ -2,7 +2,6 @@
 import cStringIO
 import datetime
 import functools
-import operator
 import itertools
 import time
 

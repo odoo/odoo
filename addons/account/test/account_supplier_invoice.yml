@@ -62,6 +62,7 @@
   I verify that account move is created
 -
   !python {model: account.invoice}: |
+    from openerp.tools import float_compare
     move_obj = self.pool.get('account.move')
     inv = self.browse(cr, uid, ref('account_invoice_supplier0'))
     move = inv.move_id
@@ -73,7 +74,7 @@
     amt_compute = move_obj._amount_compute(cr, uid, list(ids), 'amount', None, {'lang': u'en_US', 'active_model': 'ir.ui.menu',
       'active_ids': [ref('menu_action_move_journal_line_form')], 'tz': False, 'active_id': ref('menu_action_move_journal_line_form')}, where ='')
     move_amount = amt_compute.values()
-    assert(inv.move_id and move.period_id.id == get_period and move_amount[0] == 3100.0), ('Journal Entries has not been created')
+    assert(inv.move_id and move.period_id.id == get_period and float_compare(move_amount[0], 3100.0, precision_digits=2) == 0), ('Journal Entries has not been created')
 -
   I cancel the account move which is in posted state and verifies that it gives warning message
 -
@@ -92,5 +93,6 @@
   I verify that 'Period Sum' and 'Year sum' of the tax code are the expected values 
 -
   !python {model: account.tax.code}: |
+    from openerp.tools import float_compare
     tax_code = self.browse(cr, uid, ref('tax_case'))
-    assert(tax_code.sum_period == 100.0 and tax_code.sum == 100.0), "Incorrect 'Period Sum' / 'Year sum' expected twice 100.0, got period=%r and year=%r)" % (tax_code.sum_period,tax_code.sum)
+    assert(float_compare(tax_code.sum_period, 100.0, precision_digits=2) == 0 and float_compare(tax_code.sum, 100.0, precision_digits=2) == 0), "Incorrect 'Period Sum' / 'Year sum' expected twice 100.0, got period=%r and year=%r)" % (tax_code.sum_period,tax_code.sum)
