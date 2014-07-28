@@ -172,6 +172,7 @@ setuptools.setup(
           'psycopg2 >= 2.2',
           'pydot',
           'pyparsing < 2',
+          'pypdf',
           'pyserial',
           'python-dateutil < 2',
           'python-ldap', # optional
