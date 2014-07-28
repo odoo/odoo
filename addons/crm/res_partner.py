@@ -98,6 +98,14 @@ class res_partner(osv.osv):
             'default_partner_ids': partner_ids,
         }
         return res
-
+        
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm', 'crm_help')[1]
+        res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base_setup', 'action_sale_config')[1]
+        key = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.linkedin.apikey") or ""
+        ir_model_install = self.pool.get('ir.module.module').search(cr, uid, ['&', ('state', '=', 'installed'), ('name', '=', 'web_linkedin')], context=None)
+        if ir_model_install and key:
+            return super(res_partner, self).get_empty_list_help(cr, uid, help, context=context)
+        return self.pool.get('ir.ui.view').render(cr, uid, template_id, {'res_id':res_id}, engine='ir.qweb', context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -25,6 +25,18 @@
 
         <menuitem id="base.next_id_64" name="Sales"
             parent="base.menu_reporting" sequence="1"/>
+            
+        <template id="crm_help">
+            <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+                <a t-attf-href="/web?#action=#{res_id}">Configure linkedin to import contact</a>
+            </p>
+            <p>
+                OpenERP helps you easily track all activities related to
+                a customer; discussions, history of business opportunities,
+                documents, etc.
+            </p>
+        </template>
 
         <!-- crm.tracking.medium -->
         <record id="crm_tracking_medium_view_tree" model="ir.ui.view">
