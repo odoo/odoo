@@ -30,7 +30,6 @@ class TestCodaFile(TransactionCase):
         bank_statement_id = self.statement_import_model.create(cr, uid, dict(
                         file_type = 'coda',
                         data_file = coda_file,
-                        account_id = self.bank_temp_id
                          ))
         self.statement_import_model.parse_file(cr, uid, [bank_statement_id])
         statement_id = self.bank_statement_model.search(cr, uid, [('name', '=', '135')])[0]
