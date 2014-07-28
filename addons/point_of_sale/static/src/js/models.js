@@ -406,7 +406,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 var flushed = self._flush_orders(self.db.get_orders());
 
                 flushed.always(function(ids){
-                    console.log('pushed orders:',ids);
                     pushed.resolve();
                 });
             });
