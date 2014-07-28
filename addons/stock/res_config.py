@@ -82,10 +82,10 @@ This installs the module product_expiry."""),
         'group_uom': fields.boolean("Manage different units of measure for products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_uos': fields.boolean("Invoice products in a different unit of measure than the sales order",
+        'group_uos': fields.boolean("Store products in a different unit of measure than the sales order",
             implied_group='product.group_uos',
-            help='Allows you to sell units of a product, but invoice based on a different unit of measure.\n'
-                 'For instance, you can sell pieces of meat that you invoice based on their weight.'),
+            help='Allows you to store units of a product, but sell and invoice based on a different unit of measure.\n'
+                 'For instance, you can store pieces of meat that you sell and invoice based on their weight.'),
         'group_stock_packaging': fields.boolean("Allow to define several packaging methods on products",
             implied_group='product.group_stock_packaging',
             help="""Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."""),
