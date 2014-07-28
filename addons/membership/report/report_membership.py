@@ -53,7 +53,8 @@ class report_membership(osv.osv):
         'membership_id': fields.many2one('product.product', 'Membership Product', readonly=True),
         'membership_state': fields.selection(STATE, 'Current Membership State', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True)
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'quantity': fields.integer("Quantity", readonly=True),
         }
 
     def init(self, cr):
@@ -64,6 +65,7 @@ class report_membership(osv.osv):
         SELECT
         MIN(id) AS id,
         partner_id,
+        count(membership_id) as quantity,
         user_id,
         membership_state,
         associate_member_id,

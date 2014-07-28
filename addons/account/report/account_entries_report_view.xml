@@ -36,10 +36,11 @@
          <field name="model">account.entries.report</field>
          <field name="arch" type="xml">
              <graph string="Entries Analysis" type="pivot">
-                <field name="partner_id" type="row"/>
-                <field name="debit" operator="+"/>
-                <field name="credit" operator="+"/>
-                <field name="balance" operator="+"/>
+                <field name="user_type" type="row"/>
+                <field name="period_id" type="col"/>
+                <field name="debit" type="measure"/>
+                <field name="credit" type="measure"/>
+                <field name="balance" type="measure"/>
              </graph>
          </field>
     </record>
@@ -82,16 +83,11 @@
                 </group>
                 <group expand="1" string="Group By">
                     <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
-                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':['product_id','product_uom_id'], 'quantity_visible':1}"/>
-                    <filter string="Currency" name="group_currency" icon="terp-dolar" context="{'group_by':'currency_id', 'currency_id_visible':1, 'amount_currency_visible':1}"/>
                     <filter string="Journal" name="group_journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
-                    <filter string="Account" name="group_account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
                     <filter string="Acc.Type" icon="terp-stock_symbol-selection" context="{'group_by':'user_type'}" name="usertype"/>
                     <filter string="Int.Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <filter string="Entries Month" icon="terp-go-today" context="{'group_by':'date'}" help="Entries Date by Month"/>
-                    <filter string="Period" icon="terp-go-month" name="group_period" context="{'group_by':'period_id'}"/>
-                    <filter string="Fiscal Year" icon="terp-go-year" context="{'group_by':'fiscalyear_id'}"/>
                  </group>
             </search>
         </field>

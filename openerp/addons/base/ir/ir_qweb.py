@@ -887,7 +887,7 @@ class Contact(orm.AbstractModel):
 
         val = {
             'name': value.split("\n")[0],
-            'address': escape("\n".join(value.split("\n")[1:])),
+            'address': escape("\n".join(value.split("\n")[1:])).strip(),
             'phone': field_browse.phone,
             'mobile': field_browse.mobile,
             'fax': field_browse.fax,

@@ -23,8 +23,8 @@
                             domain="[]" context="{'group_by':'membership_state'}"/>
                         <filter string="Company" icon="terp-go-home"
                             domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Date" name="start_date" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'start_date:year'}"/>
+                        <filter string="Month" name="start_date" icon="terp-go-year"
+                            domain="[]" context="{'group_by':'start_date:month'}"/>
                     </group>
                 </search>
             </field>
@@ -35,7 +35,11 @@
             <field name="model">report.membership</field>
             <field name="arch" type="xml">
                 <graph string="Membership" type="pivot">
+                    <field name="membership_id" type="row"/>
+                    <field name="start_date" interval="month" type="col"/>
+                    <field name="quantity" type="measure"/>
                     <field name="num_paid" type="measure"/>
+                    <field name="num_invoiced" type="measure"/>
                     <field name="tot_earned" type="measure"/>
                 </graph>
             </field>

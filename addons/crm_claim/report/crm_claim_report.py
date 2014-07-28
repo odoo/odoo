@@ -55,7 +55,8 @@ class crm_claim_report(osv.osv):
         'date_closed': fields.date('Close Date', readonly=True, select=True),
         'date_deadline': fields.date('Deadline', readonly=True, select=True),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
-        'email': fields.integer('# Emails', size=128, readonly=True)
+        'email': fields.integer('# Emails', size=128, readonly=True),
+        'subject': fields.char('Claim Subject', readonly=True)
     }
 
     def init(self, cr):
@@ -78,6 +79,7 @@ class crm_claim_report(osv.osv):
                     c.partner_id,
                     c.company_id,
                     c.categ_id,
+                    c.name as subject,
                     count(*) as nbr,
                     c.priority as priority,
                     c.type_action as type_action,

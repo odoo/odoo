@@ -28,7 +28,7 @@ class hr_evaluation_report(osv.Model):
     _description = "Evaluations Statistics"
     _auto = False
     _columns = {
-        'create_date': fields.date('Create Date', readonly=True),
+        'create_date': fields.datetime('Create Date', readonly=True),
         'delay_date': fields.float('Delay to Start', digits=(16, 2), readonly=True),
         'overpass_delay': fields.float('Overpassed Deadline', digits=(16, 2), readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
@@ -97,4 +97,3 @@ class hr_evaluation_report(osv.Model):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

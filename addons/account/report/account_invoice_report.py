@@ -73,7 +73,7 @@ class account_invoice_report(osv.osv):
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'user_currency_price_average': fields.function(_compute_amounts_in_user_currency, string="Average Price", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'currency_rate': fields.float('Currency Rate', readonly=True),
-        'nbr':fields.integer('# of Lines', readonly=True),
+        'nbr':fields.integer('Quantity', readonly=True),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
@@ -226,7 +226,7 @@ class account_invoice_report(osv.osv):
                                     OR (sub.date IS NULL AND cr2.name <= NOW()))
                           ORDER BY name DESC LIMIT 1)
         )""" % (
-                    self._table, 
+                    self._table,
                     self._select(), self._sub_select(), self._from(), self._group_by()))
 
 

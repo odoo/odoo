@@ -7,15 +7,15 @@
         <field name="model">asset.asset.report</field>
         <field name="arch" type="xml">
             <graph string="Assets Analysis" type="pivot">
-                <field name="asset_id" type="row"/>
-                <field name="nbr" type="measure"/>
+                <field name="asset_category_id" type="row"/>
+                <field name="purchase_date" type="col"/>
+                <field name="posted_value" type="measure"/>
                 <field name="gross_value" type="measure"/>
                 <field name="depreciation_value" type="measure"/>
-                <field name="posted_value" type="measure"/>
             </graph>
         </field>
     </record>
-    
+
     <record id="view_asset_asset_report_search" model="ir.ui.view">
         <field name="name">asset.asset.report.search</field>
         <field name="model">asset.asset.report</field>
@@ -42,17 +42,17 @@
                     <filter string="Depreciation Month" icon="terp-go-today"
                             domain="[]" context="{'group_by':'depreciation_date'}" help="Date of depreciation"/>
                 </group>
-            </search>    
+            </search>
         </field>
     </record>
-    
-    <record model="ir.actions.act_window" id="action_asset_asset_report">    
+
+    <record model="ir.actions.act_window" id="action_asset_asset_report">
         <field name="name">Assets Analysis</field>
         <field name="res_model">asset.asset.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph</field>
         <field name="search_view_id" ref="view_asset_asset_report_search"/>
-        <field name="context">{'search_default_year':1,'search_default_this_month':1,'search_default_asset_category':1, 'search_default_posted':1, 'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="context">{'group_by':[], 'group_by_no_leaf':1}</field>
         <field name="help" type="html">
           <p>
             From this report, you can have an overview on all depreciation. The
@@ -61,7 +61,7 @@
           </p>
         </field>
     </record>
-    
+
     <menuitem action="action_asset_asset_report"
               id="menu_action_asset_asset_report"
               parent="account.menu_finance_reporting"/>

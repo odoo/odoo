@@ -10,7 +10,8 @@
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Helpdesk" type="pivot" stacked="True">
                     <field name="state" type="row"/>
-                    <field name="user_id" type="row"/>
+                    <field name="section_id" type="col"/>
+                    <field name="date" interval="month" type="col"/>
                     <field name="nbr" type="measure"/>
                 </graph>
             </field>
@@ -33,7 +34,7 @@
                     <separator/>
                     <filter string="My Company" icon="terp-go-home" context="{'invisible_section': False}" domain="[('section_id.user_id.company_id','=',uid)]" help="My company"/>
                     <field name="user_id" string="Salesperson"/>
-                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>   
+                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <group expand="0" string="Extended Filters..."  groups="base.group_no_one">
@@ -46,10 +47,9 @@
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}" />
-                        <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
                         <filter string="Company" icon="terp-go-home" domain="[]" groups="base.group_multi_company" context="{'group_by':'company_id'}" />
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Month of helpdesk requests"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date:month'}" help="Month of helpdesk requests"/>
                     </group>
                 </search>
             </field>
@@ -80,4 +80,3 @@
 
     </data>
 </openerp>
-
