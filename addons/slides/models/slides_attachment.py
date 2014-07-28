@@ -20,6 +20,10 @@
 ##############################################################################
 import openerp
 from openerp.osv import fields, osv
+from urlparse import urlparse,parse_qs
+import urllib2
+import json
+
 
 class ir_attachment_tags(osv.osv):
     _name = 'ir.attachment.tag'
@@ -82,7 +86,7 @@ class ir_attachment(osv.osv):
                 if statistics['items'][0].get('snippet').get('thumbnails') and statistics['items'][0]['snippet'].get('thumbnails'):
                     values['image'] = statistics['items'][0]['snippet']['thumbnails']['medium']['url']
                 if statistics['items'][0].get('statistics'):
-                    values['views'] = statistics['items'][0]['statistics']['viewCount']
+                    values['slide_views'] = statistics['items'][0]['statistics']['viewCount']
         return super(ir_attachment, self).create(cr, uid, values, context)
         
         
