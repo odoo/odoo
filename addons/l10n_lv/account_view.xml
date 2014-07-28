@@ -2,6 +2,19 @@
 <openerp>
     <data>
 
+    <!-- Account Chart Template -->
+
+        <record id="view_account_chart_template_form_inherit_l10n_lv" model="ir.ui.view">
+            <field name="name">account.chart.template.form.inherit.l10n_lv</field>
+            <field name="model">account.chart.template</field>
+            <field name="inherit_id" ref="account.view_account_chart_template_form"/>
+            <field name="arch" type="xml">
+                <field name="bank_account_view_id" position="after">
+                    <field name="cash_account_view_id"/>
+                </field>
+            </field>
+        </record>
+
 	<!-- Tax Codes -->
 
         <record id="view_tax_code_search_inherit_l10n_lv" model="ir.ui.view">

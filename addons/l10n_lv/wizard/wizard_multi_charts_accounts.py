@@ -28,17 +28,6 @@ import openerp.addons
 import os
 from openerp.tools.translate import _
 
-class account_chart_template(osv.osv):
-    _inherit = 'account.chart.template'
-
-    _columns = {
-        'cash_account_view_id': fields.many2one('account.account.template', 'Cash Account')
-    }
-
-    _defaults = {
-        'code_digits': 4
-    }
-
 class wizard_multi_charts_accounts(osv.osv_memory):
     _inherit = 'wizard.multi.charts.accounts'
 
