@@ -515,6 +515,13 @@
         </body>
         </t>
   </template>
-
+  <template id="website_quote_report_sale_layouted" inherit_id="sale.report_saleorder_document">
+      <xpath expr="//div/div[@t-if='o.payment_term']" position="before">
+          <div t-if="o.validity_date" class="col-xs-3">
+              <strong>Validity Date:</strong>
+              <p t-field="o.validity_date"/>
+          </div>
+      </xpath>
+  </template>
 </data>
 </openerp>

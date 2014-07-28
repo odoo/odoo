@@ -45,10 +45,6 @@
                     <strong>Salesperson:</strong>
                     <p t-field="o.user_id.name"/>
                 </div>
-                <div t-if="o.validity_date and o.state in ['draft','sent']" class="col-xs-3">
-                    <strong>Expiration Date:</strong>
-                    <p t-field="o.validity_date"/>
-                </div>
                 <div t-if="o.payment_term" class="col-xs-3">
                     <strong>Payment Term:</strong>
                     <p t-field="o.payment_term"/>
