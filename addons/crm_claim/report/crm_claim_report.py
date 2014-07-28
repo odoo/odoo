@@ -39,7 +39,7 @@ class crm_claim_report(osv.osv):
     _columns = {
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'nbr': fields.integer('# of Cases', readonly=True),
+        'nbr': fields.integer('# of Claims', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'claim_date': fields.datetime('Claim Date', readonly=True),

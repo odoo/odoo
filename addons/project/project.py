@@ -1291,7 +1291,7 @@ class project_task_history(osv.osv):
 
     _columns = {
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select=True),
-        'quantity': fields.integer('Quantity', readonly=True),
+        'quantity': fields.integer('# of Tasks', readonly=True),
         'type_id': fields.many2one('project.task.type', 'Stage'),
         'kanban_state': fields.selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], 'Kanban State', required=False),
         'date': fields.date('Date', select=True),

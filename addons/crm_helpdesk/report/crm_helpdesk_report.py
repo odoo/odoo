@@ -42,7 +42,7 @@ class crm_helpdesk_report(osv.osv):
         'date': fields.datetime('Date', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'nbr': fields.integer('Quantity', readonly=True),
+        'nbr': fields.integer('# of Requests', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'Status', readonly=True),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),

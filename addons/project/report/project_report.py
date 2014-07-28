@@ -48,7 +48,6 @@ class report_project_task_user(osv.osv):
         'opening_days': fields.float('Days to Assign', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to Open the task"),
         'delay_endings_days': fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
-        'nbr': fields.integer('Quantity', readonly=True),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')],
             string='Priority', size=1, readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'Status', readonly=True),

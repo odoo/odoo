@@ -40,7 +40,7 @@ class analytic_entries_report(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'amount': fields.float('Amount', readonly=True),
-        'unit_amount': fields.integer('Quantity', readonly=True),
+        'unit_amount': fields.integer('Unit Amount', readonly=True),
         'nbr': fields.integer('# Entries', readonly=True),
     }
     def init(self, cr):
