@@ -115,6 +115,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.init_dialog();
         }
         this.$buttons.insertAfter(this.$dialog_box.find(".modal-body"));
+        $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal is opened
         //add to list of currently opened modal
         opened_modal.push(this.$dialog_box);
         return this;
