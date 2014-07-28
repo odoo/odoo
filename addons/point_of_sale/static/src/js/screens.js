@@ -73,8 +73,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         load_saved_screen:  function(){
             this.close_popup();
             var selectedOrder = this.pos.get('selectedOrder');
-            // this.set_current_screen(selectedOrder.get_screen_data('screen') || this.default_screen,null,'refresh');
-            this.set_current_screen(this.default_screen,null,'refresh');
+            // FIXME : this changing screen behaviour is sometimes confusing ... 
+            this.set_current_screen(selectedOrder.get_screen_data('screen') || this.default_screen,null,'refresh');
+            //this.set_current_screen(this.default_screen,null,'refresh');
             
         },
         set_user_mode: function(user_mode){
