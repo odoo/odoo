@@ -32,7 +32,7 @@
     Designers can add their own html block in the "snippet_options" (/website/views/snippets.xml).
     Structure:
 
-        <div data-snippet-option-id='...'           <!-- Required: javascript object id (but javascript
+        <div data-snippet-id='...'           <!-- Required: javascript object id (but javascript
                                                         for this option object is not required) -->
             data-selector="..."                     <!-- Required: jQuery selector.
                                                         Apply options on all The part of html who 
@@ -56,13 +56,10 @@
                                                         class is automaticcally added or removed to
                                                         the html content when the user select this item. -->
                 ...
-                <li class="dropdown-submenu"                <!-- Optional: html li list exemple. !-->
-                    data-required="true">                   <!-- Optional: if only one item can be selected
-                                                                and can't be unselect. !-->
+                <li class="dropdown-submenu">                <!-- Optional: html li list exemple. !-->
                     <a tabindex="-1" href="#">...</a>       <!-- bootstrap dropdown button !-->
                     <ul class="dropdown-menu">
-                        <li data-value="text_only"><a>...</a></li>      <!-- by default data-value is apply
-                                                                            like a class to html block !-->
+                        <li data-your_js_method="your_value"><a>...</a></li>
                     </ul>
                 </li>
         </div>
@@ -109,13 +106,7 @@
             // @variables: next_previous = {$next, $prev}
             //      $next = next item selected or false
             //      $prev = previous item selected or false
-            select: function (event, next_previous) {}
-
-            // preview is called when a user is on mouse over or mouse out of an item
-            // variables: next_previous = {$next, $prev}
-            //      $next = next item selected or false
-            //      $prev = previous item selected or false
-            preview: function (event, next_previous) {}
+            select: function (event, next, previous) {}
 
             // clean_for_save
             // clean_for_save is called just before to save the vue
@@ -178,7 +169,7 @@
     });
 
     if (!website.snippet) website.snippet = {};
-    website.snippet.templateOptions = {};
+    website.snippet.templateOptions = [];
     website.snippet.globalSelector = "";
     website.snippet.selector = [];
     website.snippet.BuildingBlock = openerp.Widget.extend({
@@ -258,19 +249,19 @@
                     var $html = $(html);
 
                     var selector = [];
-                    var $styles = $html.find("[data-snippet-option-id]");
+                    var $styles = $html.find("[data-snippet-id]");
                     $styles.each(function () {
                         var $style = $(this);
-                        var style_id = $style.data('snippet-option-id');
-                        website.snippet.templateOptions[style_id] = {
-                            'snippet-option-id' : style_id,
+                        var style_id = $style.data('snippet-id');
+                        website.snippet.templateOptions.push({
+                            'snippet-id' : style_id,
                             'selector': $style.data('selector'),
                             '$el': $style,
                             'selector-siblings': $style.data('selector-siblings'),
                             'selector-children': $style.data('selector-children'),
                             'selector-vertical-children': $style.data('selector-vertical-children'),
                             'data': $style.data()
-                        };
+                        });
                         selector.push($style.data('selector'));
                     });
                     $styles.addClass("hidden");
@@ -364,12 +355,14 @@
             var self = this;
             var options = website.snippet.options;
             var template = website.snippet.templateOptions;
-            for (var k in options) {
-                if (template[k] && options[k].prototype.clean_for_save !== dummy) {
-                    var $snippet = this.dom_filter(template[k].selector);
-                    $snippet.each(function () {
-                        new options[k](self, null, $(this), k).clean_for_save();
-                    });
+            for (var k in template) {
+                var snippet_id = template[k]['snippet-id'];
+                var Option = options[snippet_id];
+                if (Option && Option.prototype.clean_for_save !== dummy) {
+                    this.dom_filter(template[k].selector)
+                        .each(function () {
+                            new Option(self, null, $(this), k).clean_for_save();
+                        });
                 }
             }
             $("*[contentEditable], *[attributeEditable]")
@@ -733,88 +726,56 @@
     website.snippet.options = {};
     website.snippet.Option = openerp.Class.extend({
         // initialisation (don't overwrite)
-        init: function (BuildingBlock, editor, $target, snippet_id) {
+        init: function (BuildingBlock, editor, $target, option_id) {
             this.BuildingBlock = BuildingBlock;
             this.editor = editor;
             this.$target = $target;
-            var styles = this.$target.data("snippet-option-ids") || {};
+            var option = website.snippet.templateOptions[option_id];
+            var styles = this.$target.data("snippet-ids") || {};
+            var snippet_id = option['snippet-id'];
             styles[snippet_id] = this;
-            this.$target.data("snippet-option-ids", styles);
+            this.$target.data("snippet-ids", styles);
             this.$overlay = this.$target.data('overlay');
-            this['snippet-option-id'] = snippet_id;
-            var $option = website.snippet.templateOptions[snippet_id].$el;
-            this.$el = $option.find(">li").clone();
-            this.data = $option.data();
-
-            this.required = this.$el.data("required");
+            this['snippet-id'] = snippet_id;
+            this.$el = option.$el.find(">li").clone();
+            this.data = option.$el.data();
 
             this.set_active();
-            this.$el.find('li[data-value] a').on('mouseenter mouseleave click', _.bind(this._mouse, this));
-            this.$el.not(':not([data-value])').find("a").on('mouseenter mouseleave click', _.bind(this._mouse, this));
+            this.$el.find('li:not(.dropdown-submenu)').add(this.$el).filter(function () {
+                    return !!_.toArray($(this).data()).length;
+                }).children()
+                .on('mouseenter click', _.bind(this._mouse, this))
+                .parent().on('mouseleave', _.bind(this.reset, this));
             this.$target.on('snippet-style-reset', _.bind(this.set_active, this));
 
             this.start();
         },
+        
+        /**
+         * this method handles mouse:over and mouse:leave on the snippet editor menu
+         */
+         _time_mouseleave: null,
         _mouse: function (event) {
-            var self = this;
-
-            if (event.type === 'mouseleave') {
-                if (!this.over) return;
-                this.over = false;
-            } else if (event.type === 'click') {
-                this.over = false;
-            }else {
-                this.over = true;
-            }
-
-            var $prev, $next;
-            if (event.type === 'mouseleave') {
-                $prev = $(event.currentTarget).parent();
-                $next = this.$el.find("li[data-value].active");
-            } else {
-                $prev = this.$el.find("li[data-value].active");
-                $next = $(event.currentTarget).parent();
-            }
-            if (!$prev.length) {
-                $prev = false;
-            }
-            if ($prev && $prev[0] === $next[0]) {
-                $next = false;
-                if (this.required) {
-                    return;
-                }
-            }
-
-            var np = {'$next': $next, '$prev': $prev};
-
+            var $next = $(event.currentTarget).parent();
+            // triggers preview or apply methods if a menu item has been clicked
+            this.select(event.type === "click" ? "click" : "over", $next);
             if (event.type === 'click') {
-                setTimeout(function () {
-                    self.set_active();
-                    self.$target.trigger("snippet-style-change", [self, np]);
-                },0);
-                this.select({'$next': $next, '$prev': $prev});
+                this.set_active();
+                this.$target.trigger("snippet-style-change", [this]);
             } else {
-                setTimeout(function () {
-                    self.$target.trigger("snippet-style-preview", [self, np]);
-                },0);
-                this.preview(np);
+                this.$target.trigger("snippet-style-preview", [this]);
             }
         },
-        /* set_active
+        /* 
         *  select and set item active or not (add highlight item and his parents)
         *  called before start
         */
         set_active: function () {
-            var self = this;
-            this.$el.find('li').removeClass("active");
-            var $active = this.$el.find('li[data-value]')
-                .filter(function () {
-                    var $li = $(this);
-                    return  ($li.data('value') && self.$target.hasClass($li.data('value')));
-                })
-                .first()
-                .addClass("active");
-            this.$el.find('li:has(li[data-value].active)').addClass("active");
+            var classes = _.uniq((this.$target.attr("class") || '').split(/\s+/));
+            this.$el.find('[data-check_class], [data-select_class]')
+                .removeClass("active")
+                .filter('[data-check_class="' + classes.join('"], [data-check_class="') + '"] ,'+
+                    '[data-select_class="' + classes.join('"], [data-select_class="') + '"]').addClass("active");
         },
 
         start: function () {
@@ -835,110 +796,129 @@
         drop_and_build_snippet: function () {
         },
 
-        select: function (np) {
+        resetTime: null,
+        reset: function (event) {
             var self = this;
-            // add or remove html class
-            if (np.$prev && this.required) {
-                this.$target.removeClass(np.$prev.data('value' || ""));
-            }
-            if (np.$next) {
-                this.$target.addClass(np.$next.data('value') || "");
-            }
+            var $li = $(event.currentTarget);
+            clearTimeout(this.resetTime);
+            this.resetTime = setTimeout(function () {
+                self.select("reset", $li);
+            },0);
         },
 
-        preview: function (np) {
-            var self = this;
+        // call data-method args as method
+        select: function (type, $li) {
+            var self = this,
+                $methods = [],
+                el = $li[0],
+                $el;
+            clearTimeout(this.resetTime);
 
-            // add or remove html class
-            if (np.$prev) {
-                this.$target.removeClass(np.$prev.data('value') || "");
+            while (el && this.$el.is(el) || _.some(this.$el.map(function () {return $.contains(this, el);}).get()) ) {
+                if (_.size($(el).data())) {
+                    $methods.push(el);
+                }
+                el = el.parentNode;
             }
-            if (np.$next) {
-                this.$target.addClass(np.$next.data('value') || "");
+
+            _.each($methods, function (el) {
+                var $el = $(el);
+                var methods = $el.data();
+                for (var k in methods) {
+                    if (self[k]) {
+                        var value = methods[k];
+                        if (type === 'reset') {
+                            $el = self.$el.find('[data-'+k+'].active, [data-'+k+']:has(.active)').last();
+                            value = $el.data(k) || null;
+                        }
+                        self[k](type, value, $el);
+                    } else {
+                        console.error("'"+self['snippet-id']+"' snippet have not method '"+k+"'");
+                    }
+                }
+            });
+        },
+
+        // default method for snippet
+        check_class: function (type, value, $li) {
+            var classes = " "+this.$el.find('[data-check_class]')
+                .map(function () {return $(this).data("check_class");}).get().join(" ")+" ";
+            var active_classes = " "+this.$el.find('[data-check_class].active, [data-check_class]:has(.active)')
+                .map(function () {return $(this).data("check_class");}).get().join(" ")+" ";
+
+            this.$target.removeClass(classes);
+            this.$target.addClass(active_classes);
+
+            if (type !== 'reset') {
+                this.$target.toggleClass(value);
             }
+        },
+        select_class: function (type, value, $li) {
+            var classes = this.$el.find('[data-select_class]').map(function () {return $(this).data('select_class');}).get();
+            this.$target.removeClass(classes.join(" "));
+            if(value) this.$target.addClass(value);
         },
 
         clean_for_save: dummy
     });
-
     website.snippet.options.background = website.snippet.Option.extend({
-        _get_bg: function () {
-            return this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
-        },
-        _set_bg: function (src) {
-            this.$target.css("background-image", src && src !== "" ? 'url(' + src + ')' : "");
-        },
         start: function () {
             this._super();
-            var src = this._get_bg();
-            this.$el.find("li[data-value].active.oe_custom_bg").data("src", src);
+            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
+            if (this.$target.hasClass('oe_custom_bg')) {
+                this.$el.find('li[data-method="choose_image"]').data("background", src);
+            }
         },
-        select: function(np) {
-            var self = this;
-            this._super(np);
-            if (np.$next) {
-                if (np.$next.hasClass("oe_custom_bg")) {
-                    var $image = $('<img class="hidden"/>');
-                    $image.attr("src", np.$prev ? np.$prev.data("src") : '');
-                    $image.appendTo(self.$target);
-
-                    self.element = new CKEDITOR.dom.element($image[0]);
-                    var editor = new website.editor.MediaDialog(self, self.element);
-                    editor.appendTo(document.body);
-                    editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
-
-                    $image.on('saved', self, function (o) {
-                        var src = $image.attr("src");
-                        self._set_bg(src);
-                        np.$next.data("src", src);
-                        self.$target.trigger("snippet-style-change", [self, np]);
-                        $image.remove();
-                    });
-                    editor.on('cancel', self, function () {
-                        if (!np.$prev || np.$prev.data("src") === "") {
-                            self.$target.removeClass(np.$next.data("value"));
-                            self.$target.trigger("snippet-style-change", [self, np]);
-                        }
-                        $image.remove();
-                    });
-                } else {
-                    this._set_bg(np.$next.data("src"));
-                }
+        background: function(type, value, $li) {
+            if (value == null) return;
+            if (value.length) {
+                this.$target.css("background-image", 'url(' + value + ')');
             } else {
-                this._set_bg(false);
-                this.$target.removeClass(np.$prev.data("value"));
+                this.$target.css("background-image", "").removeClass("oe_img_bg");
             }
         },
-        preview: function (np) {
-            this._super(np);
-            if (np.$next) {
-                this._set_bg(np.$next.data("src"));
-            }
+        choose_image: function(type, value, $li) {
+            if(type !== "click") return;
+
+            var self = this;
+            var $image = $('<img class="hidden"/>');
+            $image.attr("src", value);
+            $image.appendTo(self.$target);
+
+            self.element = new CKEDITOR.dom.element($image[0]);
+            var editor = new website.editor.MediaDialog(self, self.element);
+            editor.appendTo(document.body);
+            editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
+
+            $image.on('saved', self, function (o) {
+                var value = $image.attr("src");
+                self.$target.css("background-image", 'url(' + value + ')');
+                self.$el.find('li[data-select_class="oe_custom_bg"]').data("src", value);
+                self.$target.trigger("snippet-style-change", [self]);
+                $image.remove();
+                self.$target.addClass('oe_custom_bg').removeClass('oe_img_bg');
+                self.set_active();
+            });
+            editor.on('cancel', self, function () {
+                self.$target.removeClass("oe_img_bg")
+                    .trigger("snippet-style-change", [self]);
+                $image.remove();
+            });
         },
         set_active: function () {
-            var self = this;
-            var bg = self.$target.css("background-image");
-            this.$el.find('li').removeClass("active");
-            this.$el.find('li').removeClass("btn-primary");
-            var $active = this.$el.find('li[data-value]')
-                .filter(function () {
-                    var $li = $(this);
-                    return  ($li.data('src') && bg.indexOf($li.data('src')) >= 0) ||
-                            (!$li.data('src') && self.$target.hasClass($li.data('value')));
-                })
-                .first();
-            if (!$active.length) {
-                $active = this.$target.css("background-image") !== 'none' ?
-                    this.$el.find('li[data-value].oe_custom_bg') :
-                    this.$el.find('li[data-value=""]');
-            }
+            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
 
-            //don't set active on an OpenDialog link, else it not possible to click on it again after.
-            // TODO in Saas-4 - Once bootstrap is in less
-            //      - add a class active-style to get the same display but without the active behaviour used by bootstrap in JS.
-            var classStr = _.string.contains($active[0].className, "oe_custom_bg") ? "btn-primary" : "active";
-            $active.addClass(classStr);
-            this.$el.find('li:has(li[data-value].active)').addClass(classStr);
+            this.$el.find('li[data-background]')
+                .removeClass("active")
+                .each(function () {
+                    var background = $(this).data("background");
+                    if ((src.length && background.length && src.indexOf(background) !== -1) || (!src.length && !background.length)) {
+                        $(this).addClass("active");
+                    }
+                });
+            if (this.$target.hasClass('oe_custom_bg')) {
+                this.$el.find('li[data-choose_image]').addClass("active");
+            }
         }
     });
 
@@ -982,7 +962,6 @@
                 });
         }
     });
-
 
     website.snippet.options.slider = website.snippet.Option.extend({
         unique_id: function () {
@@ -1029,14 +1008,12 @@
             this.id = this.$target.attr("id");
             this.$inner = this.$target.find('.carousel-inner');
             this.$indicators = this.$target.find('.carousel-indicators');
-
-            this.$el.find(".js_add").on('click', function () {self.on_add_slide(); return false;});
-            this.$el.find(".js_remove").on('click', function () {self.on_remove_slide(); return false;});
-
             this.$target.carousel('pause');
             this.rebind_event();
         },
-        on_add_slide: function () {
+        add_slide: function (type, value) {
+            if(type !== "click") return;
+
             var self = this;
             var cycle = this.$inner.find('.item').length;
             var $active = this.$inner.find('.item.active, .item.prev, .item.next').first();
@@ -1054,7 +1031,9 @@
             },0);
             return $clone;
         },
-        on_remove_slide: function () {
+        remove_slide: function (type, value) {
+            if(type !== "click") return;
+
             if (this.remove_process) {
                 return;
             }
@@ -1083,6 +1062,13 @@
                 this.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
             }
         },
+        interval : function(type, value) {
+            this.$target.attr("data-interval", value);
+        },
+        set_active: function () {
+            this.$el.find('li[data-interval]').removeClass("active")
+                .filter('li[data-interval='+this.$target.attr("data-interval")+']').addClass("active");
+        },
     });
     website.snippet.options.carousel = website.snippet.options.slider.extend({
         getSize: function () {
@@ -1092,8 +1078,7 @@
         },
         clean_for_save: function () {
             this._super();
-            this.$target.css("background-image", "");
-            this.$target.removeClass(this._class);
+            this.$target.removeClass('oe_img_bg ' + this._class).css("background-image", "");
         },
         load_style_options : function () {
             this._super();
@@ -1108,18 +1093,18 @@
                 if (c) self._class = (self._class || "").replace(new RegExp("[ ]+" + c.replace(" ", "|[ ]+")), '') + ' ' + c;
                 return self._class || "";
             };
-            this.$target.on('snippet-style-change snippet-style-preview', function (event, style, np) {
+            this.$target.on('snippet-style-change snippet-style-preview', function (event, style, $dropdown, $next, $prev) {
                 var $active = self.$target.find(".item.active");
-                if (style['snippet-option-id'] === "size") return;
-                if (style['snippet-option-id'] === "background") {
+                if (style['snippet-id'] === "size") return;
+                if (style['snippet-id'] === "background") {
                     $active.css("background-image", self.$target.css("background-image"));
                 }
-                if (np.$prev) {
-                    $active.removeClass(np.$prev.data("value"));
+                if ($prev) {
+                    $active.removeClass($prev.data("value"));
                 }
-                if (np.$next) {
-                    $active.addClass(np.$next.data("value"));
-                    add_class(np.$next.data("value"));
+                if ($next) {
+                    $active.addClass($next.data("value"));
+                    add_class($next.data("value"));
                 }
             });
             this.$target.on('slid', function () { // slide.bs.carousel
@@ -1134,20 +1119,21 @@
             });
             this.$target.trigger('slid');
         },
-        on_add_slide: function () {
-            var $clone = this._super();
+        add_slide: function (type, data) {
+            if(type !== "click") return;
 
+            var $clone = this._super(type, data);
             // choose an other background
-            var bg = this.$target.data("snippet-option-ids").background;
+            var bg = this.$target.data("snippet-ids").background;
             if (!bg) return $clone;
 
-            var $styles = bg.$el.find("li[data-value]:not(.oe_custom_bg)");
-            var styles_index = $styles.index($styles.filter(".active")[0]);
-            $styles.removeClass("active");
-            var $select = $($styles[styles_index >= $styles.length-1 ? 0 : styles_index+1]);
+            var $styles = bg.$el.find("li[data-background]");
+            var $select = $styles.filter(".active").removeClass("active").next("li[data-background]");
+            if (!$select.length) {
+                $select = $styles.first();
+            }
             $select.addClass("active");
-            $clone.css("background-image", $select.data("src") ? "url('"+ $select.data("src") +"')" : "");
-            $clone.addClass($select.data("value") || "");
+            $clone.css("background-image", $select.data("background") ? "url('"+ $select.data("background") +"')" : "");
 
             return $clone;
         },
@@ -1162,7 +1148,6 @@
             this._super();
         },
     });
-
     website.snippet.options.marginAndResize = website.snippet.Option.extend({
         start: function () {
             var self = this;
@@ -1441,7 +1426,7 @@
         },
     });
 
-    website.snippet.options["resize"] = website.snippet.options.marginAndResize.extend({
+    website.snippet.options.resize = website.snippet.options.marginAndResize.extend({
         getSize: function () {
             this.grid = this._super();
             this.grid.size = 8;
@@ -1474,21 +1459,14 @@
 
             this.$target.find('> div > div:not(.oe_structure) > .oe_structure').attr('contentEditable', 'true');
         },
-        scroll: function () {
-            var self = this;
-            var $ul = this.$el.find('ul[name="parallax-scroll"]');
-            var $li = $ul.find("li");
-            var speed = this.$target.data('scroll-background-ratio') || 0.6 ;
-            $ul.find('[data-value="' + speed + '"]').addClass('active');
-            $li.on('click', function (event) {
-                $li.removeClass("active");
-                $(this).addClass("active");
-                var speed =  $(this).data('value');
-                self.$target.attr('data-scroll-background-ratio', speed);
-                self.$target.data("snippet-view").set_values();
-                return false;
-            });
+        scroll: function (type, value) {
+            this.$target.attr('data-scroll-background-ratio', value);
             this.$target.data("snippet-view").set_values();
+        },
+        set_active: function () {
+            var value = this.$target.attr('data-scroll-background-ratio') || 0;
+            this.$el.find('[data-scroll]').removeClass("active")
+                .filter('[data-scroll="' + (this.$target.attr('data-scroll-background-ratio') || 0) + '"]').addClass("active");
         },
         clean_for_save: function () {
             this._super();
@@ -1502,23 +1480,21 @@
         start: function () {
             var self = this;
             this._super();
-
-            this.$el.find(".clear-style").click(function (event) {
-                self.$target.removeClass("fa-spin").attr("style", "");
-                self.resetTransfo();
-            });
-
-            this.$el.find(".style").click(function (event) {
-                var settings = self.$target.data("transfo").settings;
-                self.$target.transfo({ hide: (settings.hide = !settings.hide) });
-            });
-
             this.$overlay.find('.oe_snippet_clone, .oe_handles').addClass('hidden');
-
             this.$overlay.find('[data-toggle="dropdown"]')
                 .on("mousedown", function () {
                     self.$target.transfo("hide");
                 });
+        },
+        style: function (type, value) {
+            if (type !== 'click') return;
+            var settings = this.$target.data("transfo").settings;
+            this.$target.transfo({ hide: (settings.hide = !settings.hide) });
+        },
+        clear_style: function (type, value) {
+            if (type !== 'click') return;
+            this.$target.removeClass("fa-spin").attr("style", "");
+            this.resetTransfo();
         },
         resetTransfo: function () {
             var self = this;
@@ -1581,7 +1557,6 @@
             }
         },
     });
-
 
     website.snippet.Editor = openerp.Class.extend({
         init: function (BuildingBlock, dom) {
@@ -1700,7 +1675,7 @@
             this.selector_siblings = [];
             this.selector_children = [];
             this.selector_vertical_children = [];
-            _.each(website.snippet.templateOptions, function (val) {
+            _.each(website.snippet.templateOptions, function (val, option_id) {
                 if (!self.$target.is(val.selector)) {
                     return;
                 }
@@ -1708,9 +1683,9 @@
                 if (val['selector-children']) self.selector_children.push(val['selector-children']);
                 if (val['selector-vertical-children']) self.selector_vertical_children.push(val['selector-vertical-children']);
 
-                var style = val['snippet-option-id'];
+                var style = val['snippet-id'];
                 var Editor = website.snippet.options[style] || website.snippet.Option;
-                var editor = self.styles[style] = new Editor(self.BuildingBlock, self, self.$target, style);
+                var editor = self.styles[style] = new Editor(self.BuildingBlock, self, self.$target, option_id);
                 $ul.append(editor.$el.addClass("snippet-style-" + style));
             });
             this.selector_siblings = this.selector_siblings.join(",");

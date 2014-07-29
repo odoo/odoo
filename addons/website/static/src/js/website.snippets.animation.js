@@ -69,7 +69,7 @@
     website.snippet.animationRegistry.slider = website.snippet.Animation.extend({
         selector: ".carousel",
         start: function () {
-            this.$target.carousel({interval: 10000});
+            this.$target.carousel();
         },
         stop: function () {
             this.$target.carousel('pause');

@@ -18,7 +18,7 @@
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_banner.png"/>
             <span class="oe_snippet_thumbnail_title">Banner</span>
         </div>
-        <div id="myCarousel" class="oe_snippet_body carousel slide mb32" style="height: 320px;">
+        <div id="myCarousel" class="oe_snippet_body carousel slide mb32" data-interval="10000" style="height: 320px;">
             <!-- Indicators -->
             <ol class="carousel-indicators hidden">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -365,36 +365,32 @@
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_image_gallery.png"/>
             <span class="oe_snippet_thumbnail_title">Image Gallery</span>
         </div>
-        <section class="oe_snippet_body">
+        <section class="oe_snippet_body o_gallery o_nomode o_spc-none">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12 text-center mt16 mb32">
-                        <h2>Our Customer References</h2>
-                        <h4 class="text-muted">More than 500 successful projects</h4>
+                    <div class="col-md-6">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/desert.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/china_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/deers_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/desert_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/china_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/deers_thumb.jpg"/>
                     </div>
                     <div class="col-md-6">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/desert.jpg"/>
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/landscape.jpg"/>
                     </div>
                     <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/deers_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/desert_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/deers_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-6">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/landscape.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/china_thumb.jpg"/>
                     </div>
                 </div>
             </div>
@@ -641,7 +637,7 @@
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quotes_slider.png"/>
             <span class="oe_snippet_thumbnail_title">Quotes Slider</span>
         </div>
-        <div id="myQuoteCarousel" class="oe_snippet_body carousel quotecarousel slide mb0">
+        <div id="myQuoteCarousel" class="oe_snippet_body carousel quotecarousel slide mb0" data-interval="10000">
             <!-- Indicators -->
             <ol class="carousel-indicators mb0">
                 <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
@@ -770,7 +766,7 @@
                  style="background-image: url('/website/static/src/img/parallax/quote.png')"
                 data-scroll-background-ratio="0.3">
             <div><div><div class="oe_structure">
-                    <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0">
+                    <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0" data-interval="10000">
                         <!-- Indicators -->
                         <ol class="carousel-indicators mb0">
                             <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
@@ -834,48 +830,113 @@
 
 <template id="snippet_options">
 
-    <div data-snippet-option-id='blog-style'
-        data-selector="section:not(.carousel):not(.parallax)">
+    <div data-option='blog-style'
+        data-selector="section:not(.carousel):not(.parallax):not(.o_gallery)">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Style</a>
             <ul class="dropdown-menu">
-                <li data-value="para_large"><a>Bigger Text</a></li>
-                <li data-value="readable"><a>Narrow</a></li>
+                <li data-check_class="para_large"><a>Bigger Text</a></li>
+                <li data-check_class="readable"><a>Narrow</a></li>
             </ul>
         </li>
     </div>
 
-    <div data-snippet-option-id='background'
-        data-selector="section, .carousel, .parallax">
-        <li class="dropdown-submenu" data-required="true">
+    <div data-option='background'
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
+        <li class="dropdown-submenu" data-select_class="oe_img_bg" data-background="">
             <a tabindex="-1" href="#">Background</a>
             <ul class="dropdown-menu">
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/parallax/parallax_bg.jpg"><a>Sunflower</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/mountains.jpg"><a>Mountains</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/orange_red.jpg"><a>Orange Red</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
-                <li data-value="oe_img_bg" data-src="/website/static/src/img/parallax/quote.png"><a>Quote</a></li>
-                <li data-value=""><a>None</a></li>
+                <li data-background="/website/static/src/img/parallax/parallax_bg.jpg"><a>Sunflower</a></li>
+                <li data-background="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
+                <li data-background="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
+                <li data-background="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
+                <li data-background="/website/static/src/img/banner/mountains.jpg"><a>Mountains</a></li>
+                <li data-background="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
+                <li data-background="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
+                <li data-background="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
+                <li data-background="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
+                <li data-background="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
+                <li data-background="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
+                <li data-background="/website/static/src/img/banner/orange_red.jpg"><a>Orange Red</a></li>
+                <li data-background="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
+                <li data-background="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
+                <li data-background="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
+                <li data-background="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
+                <li data-background="/website/static/src/img/parallax/quote.png"><a>Quote</a></li>
+                <li data-select_class=""><a>None</a></li>
                 <li><a style="background: none; padding: 5px; border-top: 1px solid #ddd;"></a></li>
-                <li class="oe_custom_bg" data-value="oe_img_bg"><a><b>Choose an image...</b></a></li>
+                <li data-select_class="oe_custom_bg" data-choose_image="choose_image" data-background=""><a><b>Choose an image...</b></a></li>
             </ul>
         </li>
     </div>
+     
+    <div data-option='gallery' data-selector=".o_gallery">
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Mode</a>
+            
+            <ul class="dropdown-menu">
+                <li data-mode="nomode"   > <a>None</a></li>
+                <li data-mode="masonry"  > <a>Masonry</a> </li>
+                <li data-mode="grid"     > <a>Grid</a> </li>
+                <li data-mode="slideshow"> <a>Slideshow</a> </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Slideshow speed</a>
+            <ul class="dropdown-menu">
+                 <li data-interval="1000"> <a>1s</a> </li>
+                 <li data-interval="2000"> <a>2s</a> </li>
+                 <li data-interval="3000"> <a>3s</a> </li>
+                 <li data-interval="5000"> <a>5s</a> </li>
+                 <li data-interval="10000"> <a>10s</a></li>
+                 <li data-interval="0"   > <a>Disable autoplay</a> </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Columns</a>
+            
+            <ul class="dropdown-menu">
+                <li data-columns="1"  > <a>1</a> </li>
+                <li data-columns="2"  > <a>2</a> </li>
+                <li data-columns="3"  > <a>3</a> </li>
+                <li data-columns="4"  > <a>4</a> </li>
+                <li data-columns="6"  > <a>6</a> </li>
+                <li data-columns="12" > <a>12</a> </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Images spacing</a>
 
-    <div data-snippet-option-id='colorpicker'
-        data-selector="section, .carousel, .parallax">
+            <ul class="dropdown-menu">
+                <li data-select_class="o_spc-none"  > <a>None</a>   </li>
+                <li data-select_class="o_spc-small" > <a>Small</a>  </li>
+                <li data-select_class="o_spc-medium"> <a>Medium</a> </li>
+                <li data-select_class="o_spc-big"   > <a>Big</a>    </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+           <a tabindex="-2" href="#">Album</a>
+           
+           <ul class="dropdown-menu">
+               <li data-albumimages="images_add"> <a>Add images</a></li>
+               <li data-albumimages="images_rm"><a>Remove all images</a></li>
+           </ul>
+        </li>
+        <li class="dropdown-submenu">
+           <a tabindex="-2" href="#">Styling</a>
+           
+           <ul class="dropdown-menu">
+               <li data-styling="img-rounded"   ><a>Rounded corners</a></li>
+               <li data-styling="img-thumbnail" ><a>Thumbnails</a></li>
+               <li data-styling="img-circle"    ><a>Circle</a></li>
+               <li data-styling="shadow"        ><a>Shadows</a></li>
+               <li data-styling="fa-spin"       ><a>Spinning</a></li>
+           </ul>
+        </li>
+    </div>
+
+    <div data-option='colorpicker'
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Color</a>
             <ul class="dropdown-menu">
@@ -884,76 +945,83 @@
         </li>
     </div>
 
-    <div data-snippet-option-id='carousel'
-        data-selector=".carousel">
+    <div data-option='carousel'
+        data-selector=":not(.o_gallery > .container) > .carousel">
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Slideshow speed</a>
+            <ul class="dropdown-menu">
+                 <li data-interval="1000"> <a>1s</a> </li>
+                 <li data-interval="2000"> <a>2s</a> </li>
+                 <li data-interval="3000"> <a>3s</a> </li>
+                 <li data-interval="5000"> <a>5s</a> </li>
+                 <li data-interval="10000"> <a>10s</a></li>
+                 <li data-interval="0"   > <a>Disable autoplay</a> </li>
+            </ul>
+        </li>
         <li class="divider"></li>
-        <li>
-            <a href="#" class="button js_add">Add Slide</a>
-        </li>
-        <li>
-            <a href="#" class="button js_remove">Remove Slide</a>
-        </li>
+        <li data-add_slide="true"> <a href="#">Add Slide</a> </li>
+        <li data-remove_slide="true"> <a href="#" >Remove Slide</a></li>
     </div>
 
-    <div data-snippet-option-id='margin-y'
-        data-selector="section, .row > [class*='col-md-'], .carousel, .parallax, hr">
+    <div data-option='margin-y'
+        data-selector="section, .row > [class*='col-md-'], :not(.o_gallery > .container) > .carousel, .parallax, hr">
     </div>
 
-    <div data-snippet-option-id='resize'
-        data-selector="section, .carousel, .parallax"
-        data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div data-option='resize'
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
+        data-drop-in=".oe_structure, [data-oe-type=html]">
     </div>
 
-    <div data-snippet-option-id='margin-x'
+    <div data-option='margin-x'
         data-selector=".row > [class*='col-md-']"
-        data-selector-vertical-children='.row'>
+        data-drop-in-vertical='.row'>
     </div>
 
-    <div data-snippet-option-id='content'
+    <div data-option='content'
         data-selector="blockquote, .well, .panel, .oe_share"
-        data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel, .oe_share"
-        data-selector-children=".content">
+        data-drop-near="p, h1, h2, h3, blockquote, .well, .panel, .oe_share"
+        data-drop-in=".content">
     </div>
 
-    <div data-snippet-option-id='separator'
+    <div data-option='separator'
         data-selector="hr"
-        data-selector-children=".oe_structure, [data-oe-type=html]">
+        data-drop-in=".oe_structure, [data-oe-type=html]">
     </div>
 
-    <div data-snippet-option-id='parallax'
+    <div data-option='parallax'
         data-selector=".parallax">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Scroll Speed</a>
             <ul class="dropdown-menu" name="parallax-scroll">
-                <li data-value="0"><a>Static</a></li>
-                <li data-value="0.3"><a>Very Slow</a></li>
-                <li data-value="0.6"><a>Slow</a></li>
-                <li data-value="1"><a>Fixed</a></li>
-                <li data-value="1.4"><a>Fast</a></li>
-                <li data-value="1.7"><a>Very Fast</a></li>
+                <li data-scroll="0"><a>Static</a></li>
+                <li data-scroll="0.3"><a>Very Slow</a></li>
+                <li data-scroll="0.6"><a>Slow</a></li>
+                <li data-scroll="1"><a>Fixed</a></li>
+                <li data-scroll="1.4"><a>Fast</a></li>
+                <li data-scroll="1.7"><a>Very Fast</a></li>
             </ul>
         </li>
     </div>
 
-    <div data-snippet-option-id='media'
+    <div data-option='media'
         data-selector="img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa, .glyphicon">
         <li><a href="#" class="edition">Change...</a></li>
     </div>
 
-    <div data-snippet-option-id='transform'
+    <div data-option='transform'
         data-selector="img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Style</a>
             <ul class="dropdown-menu" name="parallax-scroll">
-                <li data-value="img-rounded"><a>Rounded corners</a></li>
-                <li data-value="img-thumbnail"><a>Box</a></li>
-                <li data-value="img-circle"><a>Circle</a></li>
-                <li data-value="shadow"><a>Shadow</a></li>
-                <li data-value="fa-spin"><a>Spin</a></li>
+                <li data-select_class="img-rounded"><a>Rounded corners</a></li>
+                <li data-select_class="img-thumbnail"><a>Box</a></li>
+                <li data-select_class="img-circle"><a>Circle</a></li>
+                <li data-select_class="shadow"><a>Shadow</a></li>
+                <li data-select_class="fa-spin"><a>Spin</a></li>
             </ul>
         </li>
-        <li><a href="#" class="style">Transform</a></li>
-        <li><a href="#" class="clear-style">Reset Transformation</a></li>
+        <li data-style=""><a>Transform</a></li>
+        <li data-clear_style=""><a>Reset Transformation</a></li>
     </div>
 
 </template>
