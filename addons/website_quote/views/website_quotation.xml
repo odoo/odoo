@@ -355,11 +355,11 @@
                       </div>
 
                       <a id="offer"/>
-                      <div t-field="quotation.website_description"/>
+                      <div t-field="quotation.website_description" class="oe_no_empty"/>
 
                       <t t-foreach="quotation.order_line" t-as="line">
                           <a t-att-id="line.id"/>
-                          <div t-field="line.website_description"/>
+                          <div t-field="line.website_description" class="oe_no_empty"/>
                       </t>
     
                       <div class="oe_structure"/>
@@ -486,7 +486,7 @@
                                 table of content automatically.
                             </p>
                         </div>
-                        <div id="template_introduction" t-field="template.website_description"/>
+                        <div id="template_introduction" t-field="template.website_description" class="oe_no_empty"/>
                         <t t-foreach="template.quote_line" t-as="line">
                             <div class="alert alert-info alert-dismissable" t-ignore="True">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
@@ -494,7 +494,7 @@
                                 this content will appear on the quotation only if this
                                 product is put on the quote.
                             </div>
-                            <div t-field="line.website_description"/>
+                            <div t-field="line.website_description" class="oe_no_empty"/>
                         </t>
                         <t t-foreach="template.options" t-as="option_line">
                             <div class="alert alert-info alert-dismissable" t-ignore="True">
@@ -503,7 +503,7 @@
                                 this content will appear on the quotation only if this
                                 product is used in the quote.
                             </div>
-                            <div t-field="option_line.website_description"/>
+                            <div t-field="option_line.website_description" class="oe_no_empty"/>
                         </t>
                         <section id="terms" class="container" t-if="template.note">
                             <h1 class="page-header" t-ignore="True">Terms &amp; Conditions</h1>
