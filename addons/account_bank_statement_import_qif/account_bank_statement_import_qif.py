@@ -49,7 +49,7 @@ class account_bank_statement_import(osv.TransientModel):
                     continue
                 if line[0] == 'D':  # date of transaction
                     vals_line['date'] = dateutil.parser.parse(line[1:], fuzzy=True).date()
-                    if vals_line.get('date'):
+                    if vals_line.get('date') and not vals_bank_statement.get('period_id'):
                         period_ids = self.pool.get('account.period').find(cr, uid, vals_line['date'], context=context)
                         vals_bank_statement.update({'period_id': period_ids and period_ids[0] or False})
                 elif line[0] == 'T':  # Total amount
@@ -58,7 +58,12 @@ class account_bank_statement_import(osv.TransientModel):
                 elif line[0] == 'N':  # Check number
                     vals_line['ref'] = line[1:]
                 elif line[0] == 'P':  # Payee
-                    vals_line['name'] = line[1:]
+                    bank_account_id, partner_id = self._detect_partner(cr, uid, line[1:], identifying_field='owner_name', context=context)
+                    vals_line['partner_id'] = partner_id
+                    vals_line['bank_account_id'] = bank_account_id
+                    vals_line['name'] = 'name' in vals_line and line[1:] + ': ' + vals_line['name'] or line[1:]
+                elif line[0] == 'M':  # Memo
+                    vals_line['name'] = 'name' in vals_line and vals_line['name'] + ': ' + line[1:] or line[1:]
                 elif line[0] == '^':  # end of item
                     line_ids.append((0, 0, vals_line))
                     vals_line = {}

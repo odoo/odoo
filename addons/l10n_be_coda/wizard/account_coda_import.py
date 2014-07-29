@@ -284,7 +284,7 @@ class account_bank_statement_import(osv.TransientModel):
                     bank_account_id = False
                     partner_id = False
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
-                        bank_account_id, partner_id = self._detect_partner(cr, uid, str(line['counterpartyNumber']), context=context)
+                        bank_account_id, partner_id = self._detect_partner(cr, uid, str(line['counterpartyNumber']), identifying_field='acc_number', context=context)
                     if 'communication' in line and line['communication'] != '':
                         note.append(_('Communication') + ': ' + line['communication'])
                     line_data = {

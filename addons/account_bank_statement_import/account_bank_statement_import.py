@@ -45,11 +45,11 @@ class account_bank_statement_import(osv.TransientModel):
         'journal_id': _get_default_journal,
     }
 
-    def _detect_partner(self, cr, uid, identifying_string, context=None):
+    def _detect_partner(self, cr, uid, identifying_string, identifying_field='acc_number', context=None):
         partner_id = False
         bank_account_id = False
         if identifying_string:
-            ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', identifying_string)], context=context)
+            ids = self.pool.get('res.partner.bank').search(cr, uid, [(identifying_field, '=', identifying_string)], context=context)
             if ids:
                 bank_account_id = ids[0]
                 partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
@@ -62,7 +62,13 @@ class account_bank_statement_import(osv.TransientModel):
                     bank_code = type_id.code
                 except ValueError:
                     bank_code = 'bank'
-                bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, {'acc_number': identifying_string, 'state': bank_code}, context=context)
+                acc_number = identifying_field == 'acc_number' and identifying_string or _('Undefined')
+                bank_account_vals = {
+                    'acc_number': acc_number,
+                    'state': bank_code,
+                }
+                bank_account_vals[identifying_field] = identifying_string
+                bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, bank_account_vals, context=context)
         return bank_account_id, partner_id
 
     def import_bank_statement(self, cr, uid, bank_statement_vals=False, context=None):
@@ -88,7 +94,7 @@ class account_bank_statement_import(osv.TransientModel):
         total_amt = 0.00
         try:
             for transaction in ofx.account.statement.transactions:
-                bank_account_id, partner_id = self._detect_partner(cr, uid, transaction.payee, context=context)
+                bank_account_id, partner_id = self._detect_partner(cr, uid, transaction.payee, identifying_field='owner_name', context=context)
                 vals_line = {
                     'date': transaction.date,
                     'name': transaction.payee + ': ' + transaction.memo,
