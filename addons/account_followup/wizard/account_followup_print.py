@@ -25,6 +25,7 @@ import time
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class account_followup_stat_by_partner(osv.osv):
     _name = "account_followup.stat.by.partner"
@@ -38,7 +39,7 @@ class account_followup_stat_by_partner(osv.osv):
         'date_followup':fields.date('Latest follow-up', readonly=True),
         'max_followup_id': fields.many2one('account_followup.followup.line',
                                     'Max Follow Up Level', readonly=True, ondelete="cascade"),
-        'balance':fields.float('Balance', readonly=True),
+        'balance':fields.float('Balance', readonly=True, digits_compute=dp.get_precision('Amount')),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
 

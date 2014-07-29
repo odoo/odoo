@@ -31,7 +31,7 @@ class stock_move_scrap(osv.osv_memory):
 
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Quantity'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'restrict_lot_id': fields.many2one('stock.production.lot', 'Lot'),

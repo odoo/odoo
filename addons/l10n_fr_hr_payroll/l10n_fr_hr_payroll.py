@@ -27,9 +27,9 @@ class res_company(osv.osv):
     _inherit = 'res.company'
 
     _columns = {
-        'plafond_secu': fields.float('Plafond de la Securite Sociale', digits_compute=dp.get_precision('Payroll')),
+        'plafond_secu': fields.float('Plafond de la Securite Sociale', digits_compute=dp.get_precision('Price')),
         'nombre_employes': fields.integer('Nombre d\'employes'),
-        'cotisation_prevoyance': fields.float('Cotisation Patronale Prevoyance', digits_compute=dp.get_precision('Payroll')),
+        'cotisation_prevoyance': fields.float('Cotisation Patronale Prevoyance', digits_compute=dp.get_precision('Price')),
         'org_ss': fields.char('Organisme de securite sociale'),
         'conv_coll': fields.char('Convention collective'),
     }

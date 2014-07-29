@@ -58,11 +58,11 @@ class account_cashbox_line(osv.osv):
         return {'value' : {'subtotal_closing' : (pieces * number) or 0.0 }}
 
     _columns = {
-        'pieces': fields.float('Unit of Currency', digits_compute=dp.get_precision('Account')),
+        'pieces': fields.float('Unit of Currency', digits_compute=dp.get_precision('Amount')),
         'number_opening' : fields.integer('Number of Units', help='Opening Unit Numbers'),
         'number_closing' : fields.integer('Number of Units', help='Closing Unit Numbers'),
-        'subtotal_opening': fields.function(_sub_total, string='Opening Subtotal', type='float', digits_compute=dp.get_precision('Account'), multi='subtotal'),
-        'subtotal_closing': fields.function(_sub_total, string='Closing Subtotal', type='float', digits_compute=dp.get_precision('Account'), multi='subtotal'),
+        'subtotal_opening': fields.function(_sub_total, string='Opening Subtotal', type='float', digits_compute=dp.get_precision('Amount'), multi='subtotal'),
+        'subtotal_closing': fields.function(_sub_total, string='Closing Subtotal', type='float', digits_compute=dp.get_precision('Amount'), multi='subtotal'),
         'bank_statement_id' : fields.many2one('account.bank.statement', ondelete='cascade'),
      }
 
@@ -349,7 +349,7 @@ class account_journal_cashbox_line(osv.osv):
     _name = 'account.journal.cashbox.line'
     _rec_name = 'pieces'
     _columns = {
-        'pieces': fields.float('Values', digits_compute=dp.get_precision('Account')),
+        'pieces': fields.float('Values', digits_compute=dp.get_precision('Amount')),
         'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1, ondelete="cascade"),
     }
 

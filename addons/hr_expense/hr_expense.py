@@ -81,7 +81,7 @@ class hr_expense_expense(osv.osv):
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', copy=True,
                                     readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
-        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account'), 
+        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Amount'), 
             store={
                 'hr.expense.line': (_get_expense_from_line, ['unit_amount','unit_quantity'], 10)
             }),
@@ -410,9 +410,9 @@ class hr_expense_line(osv.osv):
         'name': fields.char('Expense Note', required=True),
         'date_value': fields.date('Date', required=True),
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
-        'total_amount': fields.function(_amount, string='Total', digits_compute=dp.get_precision('Account')),
-        'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Product Price')),
-        'unit_quantity': fields.float('Quantities', digits_compute= dp.get_precision('Product Unit of Measure')),
+        'total_amount': fields.function(_amount, string='Total', digits_compute=dp.get_precision('Amount')),
+        'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Price')),
+        'unit_quantity': fields.float('Quantities', digits_compute= dp.get_precision('Quantity')),
         'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)]),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'description': fields.text('Description'),

@@ -26,7 +26,7 @@ class bid_line_qty(osv.osv_memory):
     _name = "bid.line.qty"
     _description = "Change Bid line quantity"
     _columns = {
-        'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'qty': fields.float('Quantity', digits_compute=dp.get_precision('Quantity'), required=True),
     }
 
     def change_qty(self, cr, uid, ids, context=None):

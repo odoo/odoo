@@ -80,7 +80,7 @@ class hr_payslip(osv.osv):
     def process_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
         period_pool = self.pool.get('account.period')
-        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Payroll')
+        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Amount')
         timenow = time.strftime('%Y-%m-%d')
 
         for slip in self.browse(cr, uid, ids, context=context):
