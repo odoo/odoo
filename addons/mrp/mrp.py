@@ -241,7 +241,7 @@ class mrp_bom(osv.osv):
             properties = []
         domain = None
         if product_id:
-            domain = ['|',('product_id', '=', product_id),('product_tmpl_id.product_variant_ids', '=', product_id)]
+            domain = [('product_id', '=', product_id)]
         else:
             domain = [('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]
         if product_uom:
