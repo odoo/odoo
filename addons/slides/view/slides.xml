@@ -80,7 +80,7 @@
 										t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'tags', sorting='view')">Most viewed</a>
 								</li>
 							</ul>
-						</small>				
+						</small>
 					</div>
 					<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 pull-right">						
 						<form action="/slides" role="search" method="get">
@@ -110,7 +110,7 @@
 				<div class="container">
 					<div class="row">
 						<t t-if="slideview"><t t-call="slides.view"></t></t>
-						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 oe-slides-grid"
+						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
 							t-foreach="attachment_ids" t-as="attachment">
 							<div class="thumbnail oe-slides-grid-thumbnail">
 								<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
@@ -165,7 +165,7 @@
 					<iframe id="viewer"
 						t-attf-src="/slides/static/src/pdfjs/web/viewer.html?file=#{slideview.url}"
 						width='100%' height='588' allowfullscreen="true"
-						webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
+						webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;" scrolling="no"></iframe>
 				</t>
 				<t t-if="slideview.youtube_id">
 					<iframe id="viewer"
@@ -173,7 +173,27 @@
 						width='100%' height='588' allowfullscreen="true"
 						webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
 				</t>
+				<h2 class="page-header">
+					<span t-field="slideview.name"/>
+					<div t-if="slideview.tag_ids" class="pull-right">
+						<t t-foreach="slideview.tag_ids" t-as="att_tag">
+							<a t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=att_tag.name)">
+								<span t-attf-class="badge #{tags and tags == att_tag.name and 'badge-active' ''}" t-field="att_tag.name"
+	        style="margin-right: 4px;"/>
+							</a>
+						</t>
+					</div>
+					<span class="text-muted">
+						<span t-esc="slideview.slide_views"/> Views
+					</span>
+					<br/>
+				</h2>
+				<p class="text-muted">Presentation Transcript</p>
+				<p>
+					<p t-field="slideview.index_content"/>
+				</p>
 			</div>
+			<div class="oe_structure"/>
 		</template>
 	</data>
 </openerp>
