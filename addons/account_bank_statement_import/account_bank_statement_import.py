@@ -45,6 +45,26 @@ class account_bank_statement_import(osv.TransientModel):
         'journal_id': _get_default_journal,
     }
 
+    def _detect_partner(self, cr, uid, identifying_string, context=None):
+        partner_id = False
+        bank_account_id = False
+        if identifying_string:
+            ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', identifying_string)], context=context)
+            if ids:
+                bank_account_id = ids[0]
+                partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
+            else:
+                #create the bank account, not linked to any partner. The reconciliation will link the partner manually
+                #chosen at the bank statement final confirmation time.
+                try:
+                    type_model, type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'bank_normal')
+                    type_id = self.pool.get('res.partner.bank.type').browse(cr, uid, type_id, context=context)
+                    bank_code = type_id.code
+                except ValueError:
+                    bank_code = 'bank'
+                bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, {'acc_number': identifying_string, 'state': bank_code}, context=context)
+        return bank_account_id, partner_id
+
     def import_bank_statement(self, cr, uid, bank_statement_vals=False, context=None):
         statement_ids = []
         for vals in bank_statement_vals:
@@ -68,11 +88,14 @@ class account_bank_statement_import(osv.TransientModel):
         total_amt = 0.00
         try:
             for transaction in ofx.account.statement.transactions:
+                bank_account_id, partner_id = self._detect_partner(cr, uid, transaction.payee, context=context)
                 vals_line = {
                     'date': transaction.date,
-                    'name': transaction.memo,
+                    'name': transaction.payee + ': ' + transaction.memo,
                     'ref': transaction.id,
                     'amount': transaction.amount,
+                    'partner_id': partner_id,
+                    'bank_account_id': bank_account_id,
                 }
                 total_amt += float(transaction.amount)
                 line_ids.append((0, 0, vals_line))

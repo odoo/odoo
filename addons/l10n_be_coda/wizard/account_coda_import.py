@@ -278,26 +278,13 @@ class account_bank_statement_import(osv.TransientModel):
                     if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
                     line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
-                    partner_id = None
                     structured_com = ""
-                    bank_account_id = False
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
                         structured_com = line['communication']
+                    bank_account_id = False
+                    partner_id = False
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
-                        ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
-                        if ids:
-                            bank_account_id = ids[0]
-                            partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
-                        else:
-                            #create the bank account, not linked to any partner. The reconciliation will link the partner manually
-                            #chosen at the bank statement final confirmation time.
-                            try:
-                                type_model, type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'bank_normal')
-                                type_id = self.pool.get('res.partner.bank.type').browse(cr, uid, type_id, context=context)
-                                bank_code = type_id.code
-                            except ValueError:
-                                bank_code = 'bank'
-                            bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, {'acc_number': str(line['counterpartyNumber']), 'state': bank_code}, context=context)
+                        bank_account_id, partner_id = self._detect_partner(cr, uid, str(line['counterpartyNumber']), context=context)
                     if 'communication' in line and line['communication'] != '':
                         note.append(_('Communication') + ': ' + line['communication'])
                     line_data = {
