@@ -115,6 +115,7 @@ def py2exe_options():
                         "xlwt",
                         "xml", "xml.dom",
                         "yaml",
+                        "pyPdf",
                     ],
                     "excludes" : ["Tkconstants","Tkinter","tcl"],
                 }
@@ -188,6 +189,7 @@ setuptools.setup(
           'vobject',
           'werkzeug',
           'xlwt',
+          'pyPdf',
       ],
       extras_require = {
           'SSL' : ['pyopenssl'],
