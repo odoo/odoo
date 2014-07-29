@@ -285,6 +285,90 @@ ul.nav-stacked > li > a
 .hr
     padding: 4px 0
 
+/* gallery */
+
+.gallery
+    &.grid, &.masonry
+        &.spc-none
+            div.row
+                margin: 0
+            div.row > *
+                padding: 0
+        &.spc-small
+            div.row
+                margin: 5px 0
+            div.row > *
+                padding: 0 5px
+        &.spc-medium
+            div.row
+                margin: 10px 0
+            div.row > *
+                padding: 0 10px
+        &.spc-big
+            div.row
+                margin: 15px 0
+            div.row > *
+                padding: 0 15px
+    &.grid
+        &.size-auto .row
+            height: auto
+        &.size-small .row
+            height: 100px
+        &.size-medium .row
+            height: 250px
+        &.size-big .row
+            height: 400px
+        &.size-small, &.size-medium, &.size-big
+            .img
+                height: 100%
+    &.nomode
+        &.spc-none
+            .img
+                padding: 0
+        &.spc-small
+            .img
+                padding: 5px
+        &.spc-medium
+            .img
+                padding: 10px
+        &.spc-big
+            .img
+                padding: 15px
+
+    &.slideshow .carousel ul.carousel-indicators li
+        border: 1px solid #aaa
+    .carousel-inner .item img
+        max-width: none
+
+.gallery.slideshow .carousel, .modal-body.slideshow
+    img
+        display: inline-block
+        text-align: center
+        height: 100%
+    ul.carousel-indicators
+        display: block
+        height: auto
+        padding: 0
+        border-width: 0
+        position: absolute
+        li
+            list-style-image: none
+            display: inline-block
+            width: 35px
+            height: 35px
+            margin: 0 0px 5px 5px
+            padding: 0
+            border: 1px solid #aaa
+            text-indent: initial
+            background-size: cover
+            opacity: 0.5
+            background-color: #000
+        li.active
+            opacity: 1
+    .carousel-control.left, .carousel-control.right
+        background-image: none
+        background-color: transparent
+
 /* Parallax Theme */
 
 div.carousel

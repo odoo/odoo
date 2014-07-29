@@ -944,6 +944,60 @@
             </ul>
         </li>
     </div>
+     
+    <div data-snippet-id='gallery' data-selector=".gallery">
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Mode</a>
+            
+            <ul class="dropdown-menu">
+                <li data-mode="nomode"   > <a>None</a></li>
+                <li data-mode="masonry"  > <a>Masonry</a> </li>
+                <li data-mode="grid"     > <a>Grid</a> </li>
+                <li data-mode="slideshow"> <a>Slideshow</a> </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Columns</a>
+            
+            <ul class="dropdown-menu">
+                <li data-columns="1"  > <a>1</a> </li>
+                <li data-columns="2"  > <a>2</a> </li>
+                <li data-columns="3"  > <a>3</a> </li>
+                <li data-columns="4"  > <a>4</a> </li>
+                <li data-columns="6"  > <a>6</a> </li>
+                <li data-columns="12" > <a>12</a> </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Images spacing</a>
+
+            <ul class="dropdown-menu">
+                <li data-select_class="spc-none"  > <a>None</a>   </li>
+                <li data-select_class="spc-small" > <a>Small</a>  </li>
+                <li data-select_class="spc-medium"> <a>Medium</a> </li>
+                <li data-select_class="spc-big"   > <a>Big</a>    </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+           <a tabindex="-2" href="#">Album</a>
+           
+           <ul class="dropdown-menu">
+               <li data-albumimages="images_add"> <a>Add images</a></li>
+               <li data-albumimages="images_rm"><a>Remove all images</a></li>
+           </ul>
+        </li>
+        <li class="dropdown-submenu">
+           <a tabindex="-2" href="#">Styling</a>
+           
+           <ul class="dropdown-menu">
+               <li data-styling="img-rounded"   ><a>Rounded corners</a></li>
+               <li data-styling="img-thumbnail" ><a>Thumbnails</a></li>
+               <li data-styling="img-circle"    ><a>Circle</a></li>
+               <li data-styling="shadow"        ><a>Shadows</a></li>
+               <li data-styling="fa-spin"       ><a>Spinning</a></li>
+           </ul>
+        </li>
+    </div>
 
     <div data-option='carousel'
         data-selector=":not(.o_gallery > .container) > .carousel">

@@ -356,6 +356,98 @@ ul.nav-stacked > li > a {
   padding: 4px 0;
 }
 
+/* gallery */
+.gallery.grid.spc-none div.row, .gallery.masonry.spc-none div.row {
+  margin: 0;
+}
+.gallery.grid.spc-none div.row > *, .gallery.masonry.spc-none div.row > * {
+  padding: 0;
+}
+.gallery.grid.spc-small div.row, .gallery.masonry.spc-small div.row {
+  margin: 5px 0;
+}
+.gallery.grid.spc-small div.row > *, .gallery.masonry.spc-small div.row > * {
+  padding: 0 5px;
+}
+.gallery.grid.spc-medium div.row, .gallery.masonry.spc-medium div.row {
+  margin: 10px 0;
+}
+.gallery.grid.spc-medium div.row > *, .gallery.masonry.spc-medium div.row > * {
+  padding: 0 10px;
+}
+.gallery.grid.spc-big div.row, .gallery.masonry.spc-big div.row {
+  margin: 15px 0;
+}
+.gallery.grid.spc-big div.row > *, .gallery.masonry.spc-big div.row > * {
+  padding: 0 15px;
+}
+.gallery.grid.size-auto .row {
+  height: auto;
+}
+.gallery.grid.size-small .row {
+  height: 100px;
+}
+.gallery.grid.size-medium .row {
+  height: 250px;
+}
+.gallery.grid.size-big .row {
+  height: 400px;
+}
+.gallery.grid.size-small .img, .gallery.grid.size-medium .img, .gallery.grid.size-big .img {
+  height: 100%;
+}
+.gallery.nomode.spc-none .img {
+  padding: 0;
+}
+.gallery.nomode.spc-small .img {
+  padding: 5px;
+}
+.gallery.nomode.spc-medium .img {
+  padding: 10px;
+}
+.gallery.nomode.spc-big .img {
+  padding: 15px;
+}
+.gallery.slideshow .carousel ul.carousel-indicators li {
+  border: 1px solid #aaaaaa;
+}
+.gallery .carousel-inner .item img {
+  max-width: none;
+}
+
+.gallery.slideshow .carousel img, .modal-body.slideshow img {
+  display: inline-block;
+  text-align: center;
+  height: 100%;
+}
+.gallery.slideshow .carousel ul.carousel-indicators, .modal-body.slideshow ul.carousel-indicators {
+  display: block;
+  height: auto;
+  padding: 0;
+  border-width: 0;
+  position: absolute;
+}
+.gallery.slideshow .carousel ul.carousel-indicators li, .modal-body.slideshow ul.carousel-indicators li {
+  list-style-image: none;
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+  margin: 0 0px 5px 5px;
+  padding: 0;
+  border: 1px solid #aaaaaa;
+  text-indent: initial;
+  background-size: cover;
+  opacity: 0.5;
+  background-color: black;
+}
+.gallery.slideshow .carousel ul.carousel-indicators li.active, .modal-body.slideshow ul.carousel-indicators li.active {
+  opacity: 1;
+}
+.gallery.slideshow .carousel .carousel-control.left, .gallery.slideshow .carousel .carousel-control.right, .modal-body.slideshow .carousel-control.left, .modal-body.slideshow .carousel-control.right {
+  background-image: none;
+  background-color: transparent;
+}
+
 /* Parallax Theme */
 div.carousel .carousel-indicators li {
   border: 1px solid grey;
