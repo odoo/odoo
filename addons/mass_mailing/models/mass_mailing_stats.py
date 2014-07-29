@@ -33,7 +33,7 @@ class MailMailStats(osv.Model):
     _order = 'message_id'
 
     _columns = {
-        'mail_mail_id': fields.many2one('mail.mail', 'Mail ID', ondelete='set null'),
+        'mail_mail_id': fields.many2one('mail.mail', 'Mail ID', ondelete='restrict'),
         'message_id': fields.char('Message-ID'),
         'model': fields.char('Document model'),
         'res_id': fields.integer('Document ID'),
