@@ -38,22 +38,6 @@
             </field>
         </record>
 
-        <!--record model="ir.ui.view" id="view_document_directory_form">
-        <field name="name">document.directory</field>
-        <field name="model">document.directory</field>
-        <field name="inherit_id" ref="document.view_document_directory_form"/>
-        <field name="arch" type="xml">
-            <field name="user_id" position="after">
-            </field>
-            <form string="Directories" col="4">
-                <group col="4">
-                    <field name="name"/>
-                    <field name="parent_id"/>
-                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
-                </group>
-            </form>
-        </field-->
-        
         <record id="view_slides_attachment_form" model="ir.ui.view">
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
@@ -73,17 +57,17 @@
                         <field name="website_published" class="pull-right" widget="website_button"/>
                     </div>
                     <group>
-                        <group string="Data">                            
+                        <group string="Data">
                             <field name="datas" filename="datas_fname" attrs="{'invisible':[('slide_type','=','video')]}"/>
                             <field name="datas_fname" invisible="1" class="oe_inline oe_right" />
                             <field name="url" widget="url" />
                         </group>
-                        <group string="Categorization">
-                            <field name="parent_id" string="Directory"/>
-                        </group>
-                        <group string="Others" invisible="1">
+                        <group string="Others">
                             <field name="is_slide"/>
                             <field name="slide_type"/>
+                        </group>
+                        <group string="Categorization">
+                            <field name="parent_id" string="Directory"/>
                         </group>
                     </group>
                     <group name="description_group" string="Description" colspan="4">
@@ -114,7 +98,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" eval="False"/>
-            <field name="domain">[('is_slide','=',True), ('slide_type','=','ppt')]</field>
+            <field name="domain">[('is_slide','=',True)]</field>
             <field name="context">{'is_slide':True, 'slide_type':'ppt'}</field>
             <field name="search_view_id" ref="base.view_attachment_search"/>
         </record>
@@ -132,55 +116,5 @@
         </record>
         <menuitem action="action_slides_attachment" id="submenu_slides_attachment" parent="main_slides"/>
 
-
-        <record id="action_slides_document" model="ir.actions.act_window">
-            <field name="name">Documents</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.attachment</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" eval="False"/>
-            <field name="domain">[('is_slide','=',True), ('slide_type','=','doc')]</field>
-            <field name="context">{'is_slide':True, 'slide_type':'doc'}</field>
-            <field name="search_view_id" ref="base.view_attachment_search"/>
-        </record>
-        <record id="action_slides_document_tree_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_slides_attachment_tree"/>
-            <field name="act_window_id" ref="action_slides_document"/>
-        </record>
-        <record id="action_slides_document_tree_view2" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_slides_attachment_form"/>
-            <field name="act_window_id" ref="action_slides_document"/>
-        </record>
-        <menuitem action="action_slides_document" id="submenu_slides_document" parent="main_slides"/>
-
-        <record id="action_slides_video" model="ir.actions.act_window">
-            <field name="name">Videos</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.attachment</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" eval="False"/>
-            <field name="domain">[('is_slide','=',True), ('slide_type','=','video')]</field>
-            <field name="context">{'is_slide':True, 'slide_type':'video'}</field>
-            <field name="search_view_id" ref="base.view_attachment_search"/>
-        </record>
-        <record id="action_slides_video_tree_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_slides_attachment_tree"/>
-            <field name="act_window_id" ref="action_slides_video"/>
-        </record>
-        <record id="action_slides_video_tree_view2" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_slides_attachment_form"/>
-            <field name="act_window_id" ref="action_slides_video"/>
-        </record>
-        <menuitem action="action_slides_video" id="submenu_action_slides_video" parent="main_slides"/>
     </data>
 </openerp>
