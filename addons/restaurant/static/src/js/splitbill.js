@@ -122,6 +122,19 @@ function openerp_restaurant_splitbill(instance, module){
                 }
                 neworder.addPaymentline(cashregister);
                 neworder.set_screen_data('screen','payment');
+
+                // for the kitchen printer we assume that everything
+                // has already been sent to the kitchen before splitting 
+                // the bill. So we save all changes both for the old 
+                // order and for the new one. This is not entirely correct 
+                // but avoids flooding the kitchen with unnecessary orders. 
+                // Not sure what to do in this case.
+
+                if ( neworder.saveChanges ) { 
+                    order.saveChanges();
+                    neworder.saveChanges();
+                }
+
                 this.pos.get('orders').add(neworder);
                 this.pos.set('selectedOrder',neworder);
             }
