@@ -40,44 +40,44 @@
 								<li class="dropdown-header">Filter on</li>
 								<li t-att-class="filters == 'all' and 'active' or '' ">
 									<a
-										t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'tags', filters='all')">All</a>
+										t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'sorting', 'tags', filters='all')">All</a>
 								</li>
 								<li t-att-class="filters == 'ppt' and 'active' or '' ">
 									<a
-										t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'tags', filters='ppt')">Presentations</a>
+										t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'sorting', 'tags', filters='ppt')">Presentations</a>
 								</li>
 								<li t-att-class="filters == 'doc' and 'active' or '' ">
 									<a
-										t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'tags', filters='doc')">Documents</a>
+										t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'sorting', 'tags', filters='doc')">Documents</a>
 								</li>
 								<li t-att-class="filters == 'video' and 'active' or '' ">
 									<a
-										t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'tags', filters='video')">Videos</a>
+										t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'sorting', 'tags', filters='video')">Videos</a>
 								</li>
 								<li class="dropdown-header">Search</li>
 								<li t-if="search" t-att-class="search and 'active' or '' ">
-									<a t-att-href="url_for('') + '?' + keep_query('filters', 'tags', 'sorting', search='')">
+									<a t-att-href="url_for('/slides') + '?' + keep_query('filters', 'tags', 'sorting', search='')">
 										<span class="glyphicon glyphicon-remove"></span><t t-esc="search" />
 									</a>
 								</li>
 								<li class="dropdown-header">Tags</li>
 								<li t-if="tags" t-att-class="tags and 'active' or '' ">
-									<a t-att-href="url_for('') + '?' + keep_query('filters', 'sorting', 'search', tags='')">
+									<a t-att-href="url_for('/slides') + '?' + keep_query('filters', 'sorting', 'search', tags='')">
 										<span class="glyphicon glyphicon-remove"></span><t t-esc="tags" />
 									</a>
 								</li>
 								<li class="dropdown-header">Sort by</li>
 								<li t-att-class="sorting == 'creation' and 'active' or '' ">
 									<a
-										t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', 'tags', sorting='creation')">Latest Published</a>
+										t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'tags', sorting='creation')">Latest Published</a>
 								</li>
 								<li t-att-class="sorting == 'date' and 'active' or '' ">
 									<a
-										t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', 'tags', sorting='date')">Last Activity date</a>
+										t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'tags', sorting='date')">Last Activity date</a>
 								</li>
 								<li t-att-class="sorting == 'view' and 'active' or '' ">
 									<a
-										t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', 'tags', sorting='view')">Most viewed</a>
+										t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'tags', sorting='view')">Most viewed</a>
 								</li>
 							</ul>
 						</small>				
@@ -106,13 +106,14 @@
 				<script type="text/javascript" src="/slides/static/src/js/slides.js"></script>
 			</t>
 			<t t-call="website.layout">
-				<t t-call="slides.header"></t>
+				<t t-call="slides.header"></t>				
 				<div class="container">
 					<div class="row">
+						<t t-if="slideview"><t t-call="slides.view"></t></t>
 						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 oe-slides-grid"
 							t-foreach="attachment_ids" t-as="attachment">
 							<div class="thumbnail oe-slides-grid-thumbnail">								
-								<a t-attf-href="/slides/view/#{attachment.id}">
+								<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
 									<t t-if="not attachment.youtube_id">
 										<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive"/>
 									</t>
@@ -121,7 +122,7 @@
 										<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive"/>
 									</t>
 								</a>
-								<a t-attf-href="/slides/view/#{attachment.id}">
+								<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
 									<h4>
 										<t t-esc="attachment.name" />
 									</h4>
@@ -143,7 +144,7 @@
 									<ul class="dropdown-menu">
 										<li t-foreach="attachment.tag_ids" t-as="tag">
 											<a
-												t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=tag.name)">
+												t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=tag.name)">
 												<t t-esc="tag.name" />
 											</a>
 										</li>
@@ -163,37 +164,21 @@
 			</t>
 		</template>
 
-		<template id='view' name="slide">
-			<t t-call="website.layout">
-				<br />
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-9">
-							<t t-if="slide.datas">
-								<iframe id="viewer"
-									t-attf-src="/slides/static/src/pdfjs/web/viewer.html?file=#{slide.url}"
-									width='100%' height='500' allowfullscreen="true"
-									webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
-							</t>
-							<t t-if="slide.youtube_id">
-								<iframe id="viewer"
-									t-attf-src="//www.youtube.com/embed/#{slide.youtube_id}?theme=light"
-									width='100%' height='500' allowfullscreen="true"
-									webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
-							</t>
-							<h1 class="page-header mt0">
-								<t t-esc="slide.name" />
-								<small class="pull-right">
-									<p>
-										Viewed
-										<t t-esc="slide.slide_views" />
-									</p>
-								</small>
-							</h1>
-						</div>
-					</div>
-				</div>
-			</t>
+		<template id='view' name="slide">							
+			<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">								
+				<t t-if="slideview.datas">
+					<iframe id="viewer"
+						t-attf-src="/slides/static/src/pdfjs/web/viewer.html?file=#{slideview.url}"
+						width='100%' height='588' allowfullscreen="true"
+						webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
+				</t>
+				<t t-if="slideview.youtube_id">
+					<iframe id="viewer"
+						t-attf-src="//www.youtube.com/embed/#{slideview.youtube_id}?theme=light"
+						width='100%' height='588' allowfullscreen="true"
+						webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
+				</t>					
+			</div>			
 		</template>
 	</data>
 </openerp>

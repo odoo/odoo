@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import pprint
 import openerp
 from openerp.osv import fields, osv
 from urlparse import urlparse,parse_qs
@@ -81,9 +82,9 @@ class ir_attachment(osv.osv):
             values['url']="/slides/"+values['datas_fname']
         if values.get('slide_type') == 'video' and values.get('url'):
             values["youtube_id"] = self.extract_youtube_id(values['url'])
-            statistics = self.youtube_statistics(values["youtube_id"])
+            statistics = self.youtube_statistics(values["youtube_id"])            
             if statistics:
-                if statistics['items'][0].get('snippet').get('thumbnails') and statistics['items'][0]['snippet'].get('thumbnails'):
+                if statistics['items'][0].get('snippet').get('thumbnails') and statistics['items'][0]['snippet'].get('thumbnails'):                                                            
                     values['image'] = statistics['items'][0]['snippet']['thumbnails']['medium']['url']
                 if statistics['items'][0].get('statistics'):
                     values['slide_views'] = statistics['items'][0]['statistics']['viewCount']

@@ -1,3 +1,23 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 import pprint
 import urllib2
 import werkzeug
@@ -30,8 +50,9 @@ class main(http.Controller):
 
     @http.route(['/slides',
                  '/slides/page/<int:page>',
+                 '/slides/view/<model("ir.attachment"):slideview>'
                  ], type='http', auth="public", website=True)
-    def slides(self, page=1, filters='all', sorting='creation', search='', tags=''):
+    def slides(self, page=1, filters='all', sorting='creation', search='', tags='', slideview=''):
         cr, uid, context = request.cr, request.uid, request.context
         attachment = request.registry['ir.attachment']
 
@@ -70,7 +91,7 @@ class main(http.Controller):
         if sorting:
             url_args['sorting'] = sorting
         if tags:
-            url_args['tags'] = tags
+            url_args['tags'] = tags        
         pager = request.website.pager(url=url, total=attachment_count, page=page,
                                       step=self._slides_per_page, scope=self._slides_per_page,
                                       url_args=url_args)
@@ -87,6 +108,7 @@ class main(http.Controller):
             'sorting': sorting,
             'search': search,
             'tags':tags,
+            'slideview':slideview,
         })
         return request.website.render('slides.home', values)
 
@@ -96,12 +118,12 @@ class main(http.Controller):
         return request.make_response(slide.url,[('Content-Type', 'application/octet-stream'),('Content-Disposition',self.content_disposition(slide.datas_fname))])
             
             
-    @http.route('/slides/view/<model("ir.attachment"):slide>', type="http", auth="public", website=True)
-    def view(self ,slide):
-        cr, uid, context = request.cr, request.uid, request.context
-        # increment view counter
-        request.registry['ir.attachment'].set_viewed(cr, SUPERUSER_ID, [slide.id], context=context)
-        return request.website.render('slides.view', {"slide" : slide})
+    # @http.route('/slides/view/<model("ir.attachment"):slide>', type="http", auth="public", website=True)
+    # def view(self ,slide):
+    #     cr, uid, context = request.cr, request.uid, request.context
+    #     # increment view counter
+    #     request.registry['ir.attachment'].set_viewed(cr, SUPERUSER_ID, [slide.id], context=context)
+    #     return request.website.render('slides.view', {"slide" : slide})
 
 
     @http.route(['/slides/thumb/<int:document_id>'], type='http', auth="public", website=True)
