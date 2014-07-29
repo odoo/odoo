@@ -19,7 +19,7 @@ class TestCodaFile(TransactionCase):
         self.partner_id = partner_id_ref and partner_id_ref[1] or False
         self.company_id = company_id_ref and company_id_ref[1] or False
         coda_file_path = get_module_resource('l10n_be_coda', 'test_coda_file', 'Ontvangen_CODA.2013-01-11-18.59.15.txt')
-        coda_file = open(coda_file_path, 'rb').read().encode('base64')
+        coda_file = open(coda_file_path, 'rb').read()
         bank_account_id = self.registry('res.partner.bank').create(cr, uid, dict(
                         state = 'bank',
                         acc_number = 'BE33737018595246',
