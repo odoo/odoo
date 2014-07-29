@@ -87,7 +87,9 @@ class crm_tracking_mixin(osv.AbstractModel):
                 if value:
                     Model = self.pool[column._obj]
                     rel_id = Model.name_search(cr, uid, value, context=context)
-                    if not rel_id:
+                    if rel_id:
+                        rel_id = Model.name_search(cr, uid, value, context=context)[0][0]
+                    else:
                         rel_id = Model.create(cr, uid, {'name': value}, context=context)
                 vals[field] = rel_id
             # Here the code for other cases that many2one
