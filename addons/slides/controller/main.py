@@ -13,7 +13,7 @@ from openerp.addons.website.models.website import slug
 
 
 class main(http.Controller):
-    _slides_per_page = 10
+    _slides_per_page = 8
 
     def content_disposition(self,filename):
         filename = filename.encode('utf8')
@@ -31,13 +31,16 @@ class main(http.Controller):
     @http.route(['/slides',
                  '/slides/page/<int:page>',
                  ], type='http', auth="public", website=True)
-    def slides(self, page=1, filters='all', sorting='creation', search=''):
+    def slides(self, page=1, filters='all', sorting='creation', search='', tags=''):
         cr, uid, context = request.cr, request.uid, request.context
         attachment = request.registry['ir.attachment']
 
         domain = [("is_slide","=","TRUE")]
         if search:
             domain += [('name', 'ilike', search)]
+        
+        if tags:
+            domain += [('tag_ids.name', 'like', tags)]
         
         if filters == 'ppt':
             domain += [('slide_type', '=', 'ppt')]
@@ -66,6 +69,8 @@ class main(http.Controller):
             url_args['filters'] = filters
         if sorting:
             url_args['sorting'] = sorting
+        if tags:
+            url_args['tags'] = tags
         pager = request.website.pager(url=url, total=attachment_count, page=page,
                                       step=self._slides_per_page, scope=self._slides_per_page,
                                       url_args=url_args)
@@ -81,6 +86,7 @@ class main(http.Controller):
             'filters': filters,
             'sorting': sorting,
             'search': search,
+            'tags':tags,
         })
         return request.website.render('slides.home', values)
 
@@ -97,6 +103,7 @@ class main(http.Controller):
         request.registry['ir.attachment'].set_viewed(cr, SUPERUSER_ID, [slide.id], context=context)
         return request.website.render('slides.view', {"slide" : slide})
 
+
     @http.route(['/slides/thumb/<int:document_id>'], type='http', auth="public", website=True)
     def slide_thumb(self, document_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -105,6 +112,7 @@ class main(http.Controller):
         Website = request.registry['website']
         user = Files.browse(cr, SUPERUSER_ID, document_id, context=context)
         return Website._image(cr, SUPERUSER_ID, 'ir.attachment', user.id, 'image', response, max_height=225)
+
 
     @http.route('/set_slide_thumbnail/', type='http', auth="public", website=True)
     def set_slide_thumbnail(self,**post):

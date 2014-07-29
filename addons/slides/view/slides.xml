@@ -7,7 +7,10 @@
 			<xpath expr="//div[@id='info']//ul[@class='list-unstyled']"
 				position="inside">
 				<li>
-					<a href="/slides">Slides</a>
+					<a href="/slides?filters=ppt">Presentations</a>
+				</li>
+				<li>
+					<a href="/slides?filters=video">Videos</a>
 				</li>
 			</xpath>
 		</template>
@@ -15,71 +18,84 @@
 
 		<template id="header" name="header">
 			<div class="container">
-				<div class="row">
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<h1 class="page-header">
-							<t t-esc="attachment_count" />
-							<span>Slides</span>
-							<t t-esc="search" />
-							<small class="dropdown" t-if="filters in ('all', 'ppt','doc','video')">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-									<t t-if="filters == 'all'">All</t>
-									<t t-if="filters == 'ppt'">Presentations</t>
-									<t t-if="filters == 'doc'">Documents</t>
-									<t t-if="filters == 'video'">Videos</t>
-									<t t-if="sorting == 'creation'"> by Latest Published</t>
-									<t t-if="sorting == 'date'"> by Last Activity date</t>
-									<t t-if="sorting == 'view'"> by Most viewed</t>
-									<b class="caret" />
-								</a>
-								<ul class="dropdown-menu">
-									<li class="dropdown-header">Filter on</li>
-									<li t-att-class="filters == 'all' and 'active' or '' ">
-										<a
-											t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')">All</a>
-									</li>
-									<li t-att-class="filters == 'ppt' and 'active' or '' ">
-										<a
-											t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='ppt')">Presentations</a>
-									</li>
-									<li t-if="uid" t-att-class="filters == 'doc' and 'active' or '' ">
-										<a
-											t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='doc')">Documents</a>
-									</li>
-									<li t-if="uid" t-att-class="filters == 'video' and 'active' or '' ">
-										<a
-											t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='video')">Videos</a>
-									</li>
-									<li class="dropdown-header">Sort by</li>
-									<li t-att-class="sorting == 'creation' and 'active' or '' ">
-										<a
-											t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='creation')">Latest Published</a>
-									</li>
-									<li t-att-class="sorting == 'date' and 'active' or '' ">
-										<a
-											t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='date')">Last Activity date</a>
-									</li>
-									<li t-att-class="sorting == 'view' and 'active' or '' ">
-										<a
-											t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='view')">Most viewed</a>
-									</li>
-								</ul>
-							</small>
-							<div class="pull-right">
-								<form action="/slides" role="search" method="get">
-									<div class="input-group">
-										<input type="text" class="form-control" name="search"
-											placeholder="Search Slides..." t-att-value="search" />
-										<span class="input-group-btn">
-											<button class="btn btn-primary" type="submit">
-												<span class="glyphicon glyphicon-search"></span>
-											</button>
-										</span>
-									</div>
-								</form>
-							</div>
-						</h1>
+				<div class="row page-header">
+					<h1>
+					<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">						
+						<t t-esc="attachment_count" />
+						<span>Slides</span>
+						<small class="dropdown" t-if="filters in ('all', 'ppt','doc','video')">
+							<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+								<t t-if="filters == 'all'">All</t>
+								<t t-if="filters == 'ppt'">Presentations</t>
+								<t t-if="filters == 'doc'">Documents</t>
+								<t t-if="filters == 'video'">Videos</t>
+								<t t-if="search"><t t-esc="search" /></t>
+								<t t-if="tags"><t t-esc="tags" /></t>
+								<t t-if="sorting == 'creation'"> by Latest Published</t>
+								<t t-if="sorting == 'date'"> by Last Activity date</t>
+								<t t-if="sorting == 'view'"> by Most viewed</t>
+								<b class="caret" />
+							</a>
+							<ul class="dropdown-menu">
+								<li class="dropdown-header">Filter on</li>
+								<li t-att-class="filters == 'all' and 'active' or '' ">
+									<a
+										t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'tags', filters='all')">All</a>
+								</li>
+								<li t-att-class="filters == 'ppt' and 'active' or '' ">
+									<a
+										t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'tags', filters='ppt')">Presentations</a>
+								</li>
+								<li t-att-class="filters == 'doc' and 'active' or '' ">
+									<a
+										t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'tags', filters='doc')">Documents</a>
+								</li>
+								<li t-att-class="filters == 'video' and 'active' or '' ">
+									<a
+										t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'tags', filters='video')">Videos</a>
+								</li>
+								<li class="dropdown-header">Search</li>
+								<li t-if="search" t-att-class="search and 'active' or '' ">
+									<a t-att-href="url_for('') + '?' + keep_query('filters', 'tags', 'sorting', search='')">
+										<span class="glyphicon glyphicon-remove"></span><t t-esc="search" />
+									</a>
+								</li>
+								<li class="dropdown-header">Tags</li>
+								<li t-if="tags" t-att-class="tags and 'active' or '' ">
+									<a t-att-href="url_for('') + '?' + keep_query('filters', 'sorting', 'search', tags='')">
+										<span class="glyphicon glyphicon-remove"></span><t t-esc="tags" />
+									</a>
+								</li>
+								<li class="dropdown-header">Sort by</li>
+								<li t-att-class="sorting == 'creation' and 'active' or '' ">
+									<a
+										t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', 'tags', sorting='creation')">Latest Published</a>
+								</li>
+								<li t-att-class="sorting == 'date' and 'active' or '' ">
+									<a
+										t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', 'tags', sorting='date')">Last Activity date</a>
+								</li>
+								<li t-att-class="sorting == 'view' and 'active' or '' ">
+									<a
+										t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', 'tags', sorting='view')">Most viewed</a>
+								</li>
+							</ul>
+						</small>				
 					</div>
+					<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 pull-right">						
+						<form action="/slides" role="search" method="get">
+							<div class="input-group">
+								<input type="text" class="form-control" name="search"
+									placeholder="Search Slides..." t-att-value="search" />
+								<span class="input-group-btn">
+									<button class="btn btn-primary" type="submit">
+										<span class="glyphicon glyphicon-search"></span>
+									</button>
+								</span>
+							</div>
+						</form>						
+					</div>
+					</h1>					
 				</div>
 			</div>
 		</template>
@@ -95,42 +111,51 @@
 					<div class="row">
 						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 oe-slides-grid"
 							t-foreach="attachment_ids" t-as="attachment">
-							<div class="thumbnail">
-								<div class="oe-slides-grid-img">
-									<a t-attf-href="/slides/view/#{attachment.id}">
-										<t t-if="not attachment.youtube_id">
-											<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive" />
-										</t>
-										<t t-if="attachment.youtube_id">
-											<div>
-												<i class="fa fa-play-circle-o fa-3x play_button"></i>
-											</div>
-											<img t-att-src="attachment.image" class="img-responsive" />
-										</t>
-									</a>
-								</div>
+							<div class="thumbnail oe-slides-grid-thumbnail">								
+								<a t-attf-href="/slides/view/#{attachment.id}">
+									<t t-if="not attachment.youtube_id">
+										<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive"/>
+									</t>
+									<t t-if="attachment.youtube_id">										
+										<i class="fa fa-play-circle-o fa-3x play_button"></i>
+										<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive"/>
+									</t>
+								</a>
 								<a t-attf-href="/slides/view/#{attachment.id}">
 									<h4>
 										<t t-esc="attachment.name" />
 									</h4>
 								</a>
-								<p>
-									<small class="text-muted">
-										<t t-esc="attachment.create_date" />
-									</small>
-									<br />
-									<small class="text-muted">
-										<t t-esc="attachment.slide_views" />
-										Views
-									</small>
-								</p>
+								<small class="text-muted">
+									<t t-esc="attachment.create_date" />
+								</small>
+								<br />
+								<small class="text-muted">
+									<t t-esc="attachment.slide_views" />
+									Views
+								</small>
+								<small t-if="attachment.tag_ids" class="pull-right">
+									<a href="javascript:void(0);" class="dropdown-toggle"
+										data-toggle="dropdown">
+										tags
+										<b class="caret" />
+									</a>
+									<ul class="dropdown-menu">
+										<li t-foreach="attachment.tag_ids" t-as="tag">
+											<a
+												t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=tag.name)">
+												<t t-esc="tag.name" />
+											</a>
+										</li>
+									</ul>
+								</small>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="container">
 					<div class="row">
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
 							<t t-call="website.pager" />
 						</div>
 					</div>
