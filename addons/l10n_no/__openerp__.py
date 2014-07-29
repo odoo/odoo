@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+﻿# -*- encoding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
@@ -22,7 +22,7 @@
 {
     "name" : "Norway - Chart of Accounts",
     "version" : "1.0",
-    "author" : "Rolv R�en",
+    "author" : "Rolv Råen",
     "category" : "Localisation/Account Charts",
     "description": "This is the module to manage the accounting chart for Norway in Open ERP.",
     "depends" : ["account", "base_iban", "base_vat", "account_chart"],
