@@ -1,8 +1,5 @@
 from openerp.tests.common import TransactionCase
-
-qif_file = """IVR5cGU6QmFuawpEOC8xMi8xNApULTEsMDAwLjAwClBGcmFua3MgUGx1bWJpbmcKXgpEOC8xNS8xNApULTc1L
-              jQ2ClBXYWx0cyBEcnVncwpeCkQzLzMvMTQKVC0zNzkuMDAKUENJVFkgT0YgU1BSSU5HRklFTEQKXgpEMy80LzE0ClQtMjAuM
-              jgKUFlPVVIgTE9DQUwgU1VQRVJNQVJLRVQKXgpEMy8zLzE0ClQtNDIxLjM1ClBTUFJJTkdGSUVMRCBXQVRFUiBVVElMSVRZCl4K"""
+from openerp.modules.module import get_module_resource
 
 class TestQifFile(TransactionCase):
     """Tests for import bank statement qif file format (account.bank.statement.import)
@@ -17,6 +14,8 @@ class TestQifFile(TransactionCase):
     def test_qif_file_import(self):
         from openerp.tools import float_compare
         cr, uid = self.cr, self.uid
+        qif_file_path = get_module_resource('account_bank_statement_import_qif', 'test_qif_file', 'test_qif.txt')
+        qif_file = open(qif_file_path, 'rb').read()
         bank_statement_id = self.statement_import_model.create(cr, uid, dict(
                             file_type='qif',
                             data_file=qif_file,
