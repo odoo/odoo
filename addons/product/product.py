@@ -418,13 +418,7 @@ class product_template(osv.osv):
         return self.is_product_variant(cr, uid, ids, name, arg, context=context)
 
     def is_product_variant(self, cr, uid, ids, name, arg, context=None):
-        prod = self.pool.get('product.product')
-        res = dict.fromkeys(ids, False)
-        ctx = dict(context, active_test=True)
-        for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = prod.search(cr, uid, [('product_tmpl_id','=',product.id)], context=ctx, count=True) == 1
-        return res
-
+        return dict.fromkeys(ids, False)
 
     def _product_template_price(self, cr, uid, ids, name, arg, context=None):
         plobj = self.pool.get('product.pricelist')
