@@ -95,7 +95,7 @@
 							</div>
 						</form>						
 					</div>
-					</h1>					
+					</h1>
 				</div>
 			</div>
 		</template>
@@ -112,7 +112,7 @@
 						<t t-if="slideview"><t t-call="slides.view"></t></t>
 						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 oe-slides-grid"
 							t-foreach="attachment_ids" t-as="attachment">
-							<div class="thumbnail oe-slides-grid-thumbnail">								
+							<div class="thumbnail oe-slides-grid-thumbnail">
 								<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
 									<t t-if="not attachment.youtube_id">
 										<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive"/>
@@ -127,28 +127,23 @@
 										<t t-esc="attachment.name" />
 									</h4>
 								</a>
+								<t t-if="not slideview">
+									<div t-if="attachment.tag_ids" class="pull-left">
+										<t t-foreach="attachment.tag_ids" t-as="att_tag">
+											<a t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=att_tag.name)">
+												<span t-attf-class="badge #{tags and tags == att_tag.name and 'badge-active' ''}" t-field="att_tag.name"
+	                        style="margin-right: 4px;"/>
+											</a>
+										</t>
+									</div>
+									<br/>
+								</t>
 								<small class="text-muted">
 									<t t-esc="attachment.create_date" />
 								</small>
-								<br />
-								<small class="text-muted">
+								<small class="text-muted pull-right">
 									<t t-esc="attachment.slide_views" />
 									Views
-								</small>
-								<small t-if="attachment.tag_ids" class="pull-right">
-									<a href="javascript:void(0);" class="dropdown-toggle"
-										data-toggle="dropdown">
-										tags
-										<b class="caret" />
-									</a>
-									<ul class="dropdown-menu">
-										<li t-foreach="attachment.tag_ids" t-as="tag">
-											<a
-												t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=tag.name)">
-												<t t-esc="tag.name" />
-											</a>
-										</li>
-									</ul>
 								</small>
 							</div>
 						</div>
@@ -164,8 +159,8 @@
 			</t>
 		</template>
 
-		<template id='view' name="slide">							
-			<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">								
+		<template id='view' name="slide">
+			<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 				<t t-if="slideview.datas">
 					<iframe id="viewer"
 						t-attf-src="/slides/static/src/pdfjs/web/viewer.html?file=#{slideview.url}"
@@ -177,8 +172,8 @@
 						t-attf-src="//www.youtube.com/embed/#{slideview.youtube_id}?theme=light"
 						width='100%' height='588' allowfullscreen="true"
 						webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
-				</t>					
-			</div>			
+				</t>
+			</div>
 		</template>
 	</data>
 </openerp>

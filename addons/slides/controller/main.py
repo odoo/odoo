@@ -98,7 +98,7 @@ class main(http.Controller):
 
         obj_ids = attachment.search(cr, uid, domain, limit=self._slides_per_page, offset=pager['offset'], order=order, context=context)
         attachment_ids = attachment.browse(cr, uid, obj_ids, context=context)
-        print ">>>>>>>>",attachment_ids,domain,order
+
         values = {}
         values.update({
             'attachment_ids': attachment_ids,
@@ -112,18 +112,9 @@ class main(http.Controller):
         })
         return request.website.render('slides.home', values)
 
-
     @http.route('/slides/download/<model("ir.attachment"):slide>', type='http', auth="public", website=True,)
     def download(self, slide):        
         return request.make_response(slide.url,[('Content-Type', 'application/octet-stream'),('Content-Disposition',self.content_disposition(slide.datas_fname))])
-            
-            
-    # @http.route('/slides/view/<model("ir.attachment"):slide>', type="http", auth="public", website=True)
-    # def view(self ,slide):
-    #     cr, uid, context = request.cr, request.uid, request.context
-    #     # increment view counter
-    #     request.registry['ir.attachment'].set_viewed(cr, SUPERUSER_ID, [slide.id], context=context)
-    #     return request.website.render('slides.view', {"slide" : slide})
 
 
     @http.route(['/slides/thumb/<int:document_id>'], type='http', auth="public", website=True)
