@@ -36,7 +36,7 @@
                             <div class='subwindow-container'>
                                 <div class='subwindow-container-fix pads'>
                                     <div class="control-buttons oe_hidden"></div>
-                                    <div class="placeholder-PaypadWidget"></div>
+                                    <div class="placeholder-ActionpadWidget"></div>
                                     <div class="placeholder-NumpadWidget"></div>
                                 </div>
                             </div>
@@ -144,8 +144,14 @@
         <div>There are pending operations that could not be saved into the database, are you sure you want to exit?</div>
     </t>
 
-    <t t-name="PaypadWidget">
-        <div class="paypad touch-scrollable">
+    <t t-name="ActionpadWidget">
+        <div class='actionpad'>
+            <button class='button set-customer'>
+                <i class='fa fa-user' /> Set Customer
+            </button>
+            <button class="button pay">
+                <i class='fa fa-dollar' /> Payment
+            </button>
         </div>
     </t>
 
@@ -904,12 +910,6 @@
                 <span class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></span>
             </td>
         </tr>
-    </t>
-
-    <t t-name="PaypadButtonWidget">
-        <button class="paypad-button" t-att-cash-register-id="widget.cashregister.id">
-            <t t-esc="widget.cashregister.journal.name"/>
-        </button>
     </t>
 
     <t t-name="OrderButtonWidget">

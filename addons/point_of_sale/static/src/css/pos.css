@@ -502,20 +502,20 @@ td {
     color: inherit;
 }
 
-/*  ********* The paypad contains the payment buttons ********* */
+/*  ********* The actionpad (payment, set customer) ********* */
 
-.pos .paypad {
-    padding: 8px 4px 8px 8px;
+.pos .actionpad{
+    padding: 8px 3px 8px 19px;
     display: inline-block;
     text-align: center;
     vertical-align: top;
-    width: 205px;
+    width: 183px;
     max-height: 350px;
     overflow-y: auto;
     overflow-x: hidden;
 }
-.pos .paypad button {
-    height: 39px;
+.pos .actionpad .button {
+    height: 50px;
     display: block;
     width: 100%;
     margin: 0px -6px 4px -2px;
@@ -524,13 +524,19 @@ td {
     color: #555555;
     font-size: 14px;
 }
-.pos .paypad button:active, 
-.pos .numpad button:active, 
-.pos .numpad .selected-mode, 
-.pos .popup  button:active{
-    border: none;
+.pos .actionpad .button.pay {
+    height: 158px;
+}
+.pos .actionpad .button.pay .fa {
+    display: block;
+    font-size: 32px;
+    line-height: 60px;
+    background: rgb(86, 86, 86);
     color: white;
-    background: #7f82ac;
+    width: 60px;
+    margin: auto;
+    border-radius: 30px;
+    margin-bottom: 10px;
 }
 
 /*  ********* The Numpad ********* */
@@ -543,7 +549,7 @@ td {
 .pos .numpad button {
     height: 50px;
     width: 50px;
-    margin: 0px 0px 4px 0px;
+    margin: 0px 3px 4px 0px;
     font-weight: bold;
     vertical-align: middle;
     color: #555555;

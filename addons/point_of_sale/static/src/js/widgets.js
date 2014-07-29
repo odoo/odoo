@@ -83,44 +83,19 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    // The paypad allows to select the payment method (cashregisters) 
-    // used to pay the order.
-    module.PaypadWidget = module.PosBaseWidget.extend({
-        template: 'PaypadWidget',
+    // The action pads contains the payment button and the customer selection button.
+    module.ActionpadWidget = module.PosBaseWidget.extend({
+        template: 'ActionpadWidget',
         renderElement: function() {
             var self = this;
             this._super();
-
-            _.each(this.pos.cashregisters,function(cashregister) {
-                var button = new module.PaypadButtonWidget(self,{
-                    pos: self.pos,
-                    pos_widget : self.pos_widget,
-                    cashregister: cashregister,
-                });
-                button.appendTo(self.$el);
+            this.$('.pay').click(function(){
+                self.pos.pos_widget.screen_selector.set_current_screen('payment');
+            });
+            this.$('.set-customer').click(function(){
+                self.pos.pos_widget.screen_selector.set_current_screen('clientlist');
             });
         }
-    });
-
-    module.PaypadButtonWidget = module.PosBaseWidget.extend({
-        template: 'PaypadButtonWidget',
-        init: function(parent, options){
-            this._super(parent, options);
-            this.cashregister = options.cashregister;
-        },
-        renderElement: function() {
-            var self = this;
-            this._super();
-
-            this.$el.click(function(){
-                if (self.pos.get('selectedOrder').get('screen') === 'receipt'){  //TODO Why ?
-                    console.warn('TODO should not get there...?');
-                    return;
-                }
-                self.pos.get('selectedOrder').addPaymentline(self.cashregister);
-                self.pos_widget.screen_selector.set_current_screen('payment');
-            });
-        },
     });
 
     module.OrderWidget = module.PosBaseWidget.extend({
@@ -1156,8 +1131,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.action_bar = new module.ActionBarWidget(this);
             this.action_bar.replace(this.$(".placeholder-RightActionBar"));
 
-            this.paypad = new module.PaypadWidget(this, {});
-            this.paypad.replace(this.$('.placeholder-PaypadWidget'));
+            this.actionpad = new module.ActionpadWidget(this, {});
+            this.actionpad.replace(this.$('.placeholder-ActionpadWidget'));
 
             this.numpad = new module.NumpadWidget(this);
             this.numpad.replace(this.$('.placeholder-NumpadWidget'));
@@ -1216,10 +1191,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.numpad_visible = visible;
                 if(visible){
                     this.numpad.show();
-                    this.paypad.show();
+                    this.actionpad.show();
                 }else{
                     this.numpad.hide();
-                    this.paypad.hide();
+                    this.actionpad.hide();
                 }
             }
         },
