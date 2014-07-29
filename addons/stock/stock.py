@@ -1005,7 +1005,6 @@ class stock_picking(osv.osv):
             'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
             'comment': (comment and (invoice.comment and invoice.comment + "\n" + comment or comment)) or (invoice.comment and invoice.comment or ''),
             'date_invoice': context.get('date_inv', False),
-            'user_id': uid,
         }
 
     def _prepare_invoice(self, cr, uid, picking, partner, inv_type, journal_id, context=None):
@@ -1480,7 +1479,7 @@ class stock_production_lot(osv.osv):
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
     _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, ref)', 'The combination of Serial Number and internal reference must be unique !'),
+        ('name_ref_uniq', 'unique (name, ref, product_id, company_id)', 'The combination of Serial Number, internal reference, Product and Company must be unique !'),
     ]
     def action_traceability(self, cr, uid, ids, context=None):
         """ It traces the information of a product
