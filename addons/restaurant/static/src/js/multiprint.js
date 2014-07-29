@@ -150,6 +150,7 @@ function openerp_restaurant_multiprint(instance,module){
                 'cancelled': rem,
                 'table': json.table || 'unknown table',
                 'name': json.name  || 'unknown order',
+                'sequence_number': json.sequence_number || 0,
             };
             
         },

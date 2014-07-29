@@ -18,7 +18,8 @@
             value-thousands-separator=''
             value-autoint='on' 
         >
-            <div><t t-esc="changes.name" /></div>
+            <div>#<t t-esc="changes.sequence_number" /></div>
+            <div size='normal'><t t-esc="changes.name" /></div>
             <br />
             <br />
             <t t-if="changes.cancelled.length > 0">
