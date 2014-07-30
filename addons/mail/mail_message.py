@@ -77,7 +77,8 @@ class mail_message(osv.Model):
 
     def default_get(self, cr, uid, fields, context=None):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
-        if context and context.get('default_type') and context.get('default_type') not in self._columns['type'].selection:
+        if context and context.get('default_type') and context.get('default_type') not in [
+                val[0] for val in self._columns['type'].selection]:
             context = dict(context, default_type=None)
         return super(mail_message, self).default_get(cr, uid, fields, context=context)
 
