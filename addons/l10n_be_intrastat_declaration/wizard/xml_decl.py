@@ -156,9 +156,9 @@ class xml_decl(osv.TransientModel):
         location_mod = self.pool['stock.location']
         product_mod = self.pool['product.product']
         purchaseorder_mod = self.pool['purchase.order']
-        region_mod = self.pool['l10n_be_intrastat_declaration.regions']
+        region_mod = self.pool['report.intrastat.regions']
         saleorder_mod = self.pool['sale.order']
-        trans_mod = self.pool['l10n_be_intrastat_declaration.transport_mode']
+        trans_mod = self.pool['report.intrastat.transport_mode']
         warehouse_mod = self.pool['stock.warehouse']
 
         if dispatchmode:

@@ -31,12 +31,15 @@ This module gives the details of the goods traded between the countries of
 European Union.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'product', 'stock', 'sale', 'purchase'],
+    'depends': ['base', 'product', 'purchase', 'sale_stock'],
     'data': [
+        'security/groups.xml',
         'security/ir.model.access.csv',
         'report_intrastat_view.xml',
         'intrastat_report.xml',
-        'report_intrastat_data.xml',
+        'data/country.xml',
+        'data/transaction.codes.xml',
+        'data/transport.modes.xml',
         'views/report_intrastatinvoice.xml'
     ],
     'demo': [],
