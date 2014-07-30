@@ -62,7 +62,7 @@
         <ul class="dropdown-menu multi-level" role="menu">
 	    	<t t-foreach="fields" t-as="field">
                 <t t-if="(field.type === 'date') || (field.type === 'datetime')">
-                    <li class="dropdown-submenu">
+                    <li class="graph-dropdown-submenu">
                         <a class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'month'" href="#">
                             <t t-esc="field.value"/>
                         </a>
