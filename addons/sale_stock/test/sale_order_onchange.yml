@@ -25,6 +25,8 @@
 -
   I verify that the onchange of product on sale order line was correctly triggered
 -
-  !assert {model: sale.order, id: sale_order_onchange1, string: The onchange function of product was not correctly triggered}:
-    - order_line[0].name == u'Devil Worship Book'
-    - order_line[0].price_unit == 66.6
+  !python {model: sale.order}: |
+    from openerp.tools import float_compare
+    order_line = self.browse(cr, uid, ref('sale_order_onchange1')).order_line
+    assert order_line[0].name == u'Devil Worship Book', "The onchange function of product was not correctly triggered"
+    assert float_compare(order_line[0].price_unit, 66.6, precision_digits=2) == 0, "The onchange function of product was not correctly triggered"

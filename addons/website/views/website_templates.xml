@@ -129,7 +129,7 @@
                                     <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
-                                                <span t-esc="user_id.name"/>
+                                                <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') or user_id.name"/>
                                                 <span class="caret"></span>
                                             </b>
                                         </a>
@@ -507,7 +507,7 @@
                         <t t-if="'expression' in qweb_exception.qweb">and evaluating the following expression: <code t-esc="qweb_exception.qweb['expression']"/></t>
                     </p>
                     <t t-if="'node' in qweb_exception.qweb">
-                        <pre id="exception_node" t-esc="qweb_exception.qweb['node'].toxml()"/>
+                        <pre id="exception_node" t-esc="qweb_exception.pretty_xml()"/>
                     </t>
                 </div>
             </div>
