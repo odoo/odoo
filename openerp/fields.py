@@ -622,7 +622,7 @@ class Field(object):
                 be computed using :meth:`BaseModel.name_get`, if relevant
                 for the field
         """
-        return value
+        return False if value is None else value
 
     def convert_to_write(self, value, target=None, fnames=None):
         """ convert `value` from the cache to a valid value for method
