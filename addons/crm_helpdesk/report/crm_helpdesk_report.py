@@ -42,7 +42,7 @@ class crm_helpdesk_report(osv.osv):
         'date': fields.datetime('Date', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'nbr': fields.integer('# of Requests', readonly=True),
+        'nbr_requests': fields.integer('# of Requests', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'Status', readonly=True),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
@@ -86,7 +86,7 @@ class crm_helpdesk_report(osv.osv):
                     c.categ_id,
                     c.channel_id,
                     c.planned_cost,
-                    count(*) as nbr,
+                    count(*) as nbr_requests,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     (SELECT count(id) FROM mail_message WHERE model='crm.helpdesk' AND res_id=c.id AND type = 'email') AS email,
                     abs(avg(extract('epoch' from (c.date_deadline - c.date_closed)))/(3600*24)) as delay_expected

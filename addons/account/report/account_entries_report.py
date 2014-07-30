@@ -27,9 +27,9 @@ class account_entries_report(osv.osv):
     _name = "account.entries.report"
     _description = "Journal Items Analysis"
     _auto = False
-    _rec_name = 'date'
+    _rec_name = 'date_effective'
     _columns = {
-        'date': fields.date('Effective Date', readonly=True),
+        'date_effective': fields.date('Effective Date', readonly=True),
         'date_created': fields.date('Date Created', readonly=True),
         'date_maturity': fields.date('Date Maturity', readonly=True),
         'ref': fields.char('Reference', readonly=True),
@@ -67,7 +67,7 @@ class account_entries_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
 
-    _order = 'date desc'
+    _order = 'date_effective desc'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -110,7 +110,7 @@ class account_entries_report(osv.osv):
             create or replace view account_entries_report as (
             select
                 l.id as id,
-                am.date as date,
+                am.date as date_effective,
                 l.date_maturity as date_maturity,
                 l.date_created as date_created,
                 am.ref as ref,

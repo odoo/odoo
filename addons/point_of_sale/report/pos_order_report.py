@@ -39,7 +39,7 @@ class pos_order_report(osv.osv):
         'average_price': fields.float('Average Price', readonly=True,group_operator="avg"),
         'location_id':fields.many2one('stock.location', 'Location', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'nbr':fields.integer('# of Lines', readonly=True),
+        'nbr_lines':fields.integer('# of Lines', readonly=True),
         'product_qty':fields.integer('Product Quantity', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'delay_validation': fields.integer('Delay Validation'),
@@ -53,7 +53,7 @@ class pos_order_report(osv.osv):
             create or replace view report_pos_order as (
                 select
                     min(l.id) as id,
-                    count(*) as nbr,
+                    count(*) as nbr_lines,
                     s.date_order as date,
                     sum(l.qty * u.factor) as product_qty,
                     sum(l.qty * l.price_unit) as price_total,

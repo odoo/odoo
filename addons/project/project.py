@@ -1291,7 +1291,7 @@ class project_task_history(osv.osv):
 
     _columns = {
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select=True),
-        'quantity': fields.integer('# of Tasks', readonly=True),
+        'nbr_tasks': fields.integer('# of Tasks', readonly=True),
         'type_id': fields.many2one('project.task.type', 'Stage'),
         'kanban_state': fields.selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], 'Kanban State', required=False),
         'date': fields.date('Date', select=True),
@@ -1330,7 +1330,7 @@ class project_task_history_cumulative(osv.osv):
                     h.id AS history_id,
                     h.date+generate_series(0, CAST((coalesce(h.end_date, DATE 'tomorrow')::date - h.date) AS integer)-1) AS date,
                     h.task_id, h.type_id, h.user_id, h.kanban_state,
-                    count(h.task_id) as quantity,
+                    count(h.task_id) as nbr_tasks,
                     greatest(h.remaining_hours, 1) AS remaining_hours, greatest(h.planned_hours, 1) AS planned_hours,
                     t.project_id
                 FROM
