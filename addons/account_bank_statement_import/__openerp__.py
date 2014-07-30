@@ -9,6 +9,9 @@
     'data' : [
         'views/account_bank_statement_import_view.xml',
     ],
+    'demo': [
+        'demo/fiscalyear_period.xml',
+    ],
     'auto_install': False,
     'installable': True,
 }
