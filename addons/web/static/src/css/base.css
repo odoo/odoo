@@ -134,7 +134,6 @@
   vertical-align: top;
 }
 .openerp .oe_title {
-  width: 38%;
   float: left;
 }
 .openerp .oe_title:after {
@@ -992,6 +991,9 @@
 .openerp .oe_about a {
   color: #7c7bad;
 }
+.openerp .oe_about a.oe_activate_debug_mode {
+  margin: 15px;
+}
 .openerp .oe_about a:hover {
   text-decoration: underline;
 }
@@ -999,7 +1001,10 @@
   outline: none;
 }
 .openerp .oe_about .oe_logo {
-  margin-left: -6px;
+    margin-left: 5px;
+}
+.openerp .oe_about h3 {
+    padding-left: 15px;
 }
 .openerp .oe_about .oe_bottom {
   text-shadow: 0 1px 1px #999999;
@@ -1011,7 +1016,7 @@
   background-image: -o-linear-gradient(top, #b41616, #600606);
   background-image: linear-gradient(to bottom, #b41616, #600606);
   color: #eeeeee;
-  padding: 0 16px;
+  padding: 5px 15px;
   -moz-border-radius: 0 0 2px 2px;
   -webkit-border-radius: 0 0 2px 2px;
   border-radius: 0 0 2px 2px;
@@ -2209,10 +2214,10 @@
   width: 7em;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_date input {
-  width: 100px;
+  width: 170px;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_datetime input {
-  width: 150px;
+  width: 170px;
 }
 .openerp .oe_hidden_input_file {
   position: relative;
