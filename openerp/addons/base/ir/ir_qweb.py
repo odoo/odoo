@@ -289,7 +289,7 @@ class QWeb(orm.AbstractModel):
             result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
 
         if element.tail:
-            result += element.tail
+            result += element.tail.encode('utf-8')
 
         if isinstance(result, unicode):
             return result.encode('utf-8')

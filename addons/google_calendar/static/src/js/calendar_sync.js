@@ -25,35 +25,37 @@ openerp.google_calendar = function(instance) {
                 local_context: context
             }).done(function(o) {
                 if (o.status === "need_auth") {
-                    alert(_t("You will be redirected on gmail to authorize your OpenErp to access your calendar !"));
+                    alert(_t("You will be redirected to Google to authorize access to your calendar!"));
                     instance.web.redirect(o.url);
                 }
                 else if (o.status === "need_config_from_admin"){
                     if (!_.isUndefined(o.action) && parseInt(o.action)){
-                        if (confirm(_t("An admin need to configure Google Synchronization before to use it, do you want to configure it now ? !"))){
+                        if (confirm(_t("The Google Synchronization needs to be configured before you can use it, do you want to do it now?"))) {
                             self.do_action(o.action);
                         }
                     }
                     else{
-                        alert(_t("An admin need to configure Google Synchronization before to use it !"));
+                        alert(_t("An administrator needs to configure Google Synchronization before you can use it!"));
                     }
                 }
                 else if (o.status === "need_refresh"){
                     self.$calendar.fullCalendar('refetchEvents');
                 }
                 else if (o.status === "need_reset"){
-                    if (confirm(_t("The account that you are trying to synchronize (" + o.info.new_name + "), is not the same that the last one used \
-(" + o.info.old_name + "! )" + "\r\n\r\nDo you want remove all references from the old account ?"))){
-
+                    var confirm_text1 = _t("The account you are trying to synchronize (%s) is not the same as the last one used (%s)!");
+                    var confirm_text2 = _t("In order to do this, you first need to disconnect all existing events from the old account.");
+                    var confirm_text3 = _t("Do you want to do this now?");
+                    var text = _.str.sprintf(confirm_text1 + "\n" + confirm_text2 + "\n\n" + confirm_text3, o.info.new_name, o.info.old_name);
+                    if (confirm(text)) {
                         self.rpc('/google_calendar/remove_references', {
                             model:res.model,
                             local_context:context
                         }).done(function(o) {
                             if (o.status === "OK") {
-                                alert(_t("All old references have been deleted. You can now restart the synchronization"));
+                                alert(_t("All events have been disconnected from your previous account. You can now restart the synchronization"));
                             }
                             else if (o.status === "KO") {
-                                alert(_t("An error has occured when we was removing all old references. Please retry or contact your administrator."));
+                                alert(_t("An error occured while disconnecting events from your previous account. Please retry or contact your administrator."));
                             }
                             //else NOP
                         });

@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 import openerp
@@ -115,6 +116,7 @@ class res_users(osv.Model):
             thread_id = thread_id[0]
         return self.browse(cr, SUPERUSER_ID, thread_id).partner_id.id
 
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         """ Redirect the posting of message on res.users to the related partner.
             This is done because when giving the context of Chatter on the

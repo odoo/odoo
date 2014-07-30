@@ -822,7 +822,7 @@ class share_wizard(osv.TransientModel):
             if wizard_data.message:
                 body += "%s\n\n" % (wizard_data.message)
             if result_line.newly_created:
-                body += _("The documents are not attached, you can view them online directly on my OpenERP server at:\n    %s\n\n") % (result_line.share_url)
+                body += _("The documents are not attached, you can view them online directly on my Odoo server at:\n    %s\n\n") % (result_line.share_url)
                 body += _("These are your credentials to access this protected area:\n")
                 body += "%s: %s" % (_("Username"), result_line.user_id.login) + "\n"
                 body += "%s: %s" % (_("Password"), result_line.password) + "\n"
@@ -830,7 +830,7 @@ class share_wizard(osv.TransientModel):
             body += _("The documents have been automatically added to your subscriptions.\n\n")
             body += '%s\n\n' % ((user.signature or ''))
             body += "--\n"
-            body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
+            body += _("Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
             msg_id = message_obj.schedule_with_attach(cr, uid, user.email, [email_to], subject, body, model='', context=context)
             notification_obj.create(cr, uid, {'user_id': result_line.user_id.id, 'message_id': msg_id}, context=context)
@@ -851,7 +851,7 @@ class share_wizard(osv.TransientModel):
             subject = wizard_data.name
             body = _("Hello,\n\n")
             body += _("I've shared %s with you!\n\n") % wizard_data.name
-            body += _("The documents are not attached, you can view them online directly on my OpenERP server at:\n    %s\n\n") % (result_line.share_url)
+            body += _("The documents are not attached, you can view them online directly on my Odoo server at:\n    %s\n\n") % (result_line.share_url)
             if wizard_data.message:
                 body += '%s\n\n' % (wizard_data.message)
             if result_line.newly_created:
@@ -860,11 +860,11 @@ class share_wizard(osv.TransientModel):
                 body += "%s: %s\n" % (_("Password"), result_line.password)
                 body += "%s: %s\n" % (_("Database"), cr.dbname)
             else:
-                body += _("The documents have been automatically added to your current OpenERP documents.\n")
+                body += _("The documents have been automatically added to your current Odoo documents.\n")
                 body += _("You may use your current login (%s) and password to view them.\n") % result_line.user_id.login
             body += "\n\n%s\n\n" % ( (user.signature or '') )
             body += "--\n"
-            body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
+            body += _("Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
             mail_ids.append(mail_mail.create(cr, uid, {
                     'email_from': user.email,

@@ -378,7 +378,10 @@ class mail_thread(osv.AbstractModel):
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
-            self.message_post(cr, uid, thread_id, body=_('%s created') % (self._description), context=context)
+            ir_model_pool = self.pool['ir.model']
+            ids = ir_model_pool.search(cr, uid, [('model', '=', self._name)], context=context)
+            name = ir_model_pool.read(cr, uid, ids, ['name'], context=context)[0]['name']
+            self.message_post(cr, uid, thread_id, body=_('%s created') % name, context=context)
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
@@ -1660,7 +1663,10 @@ class mail_thread(osv.AbstractModel):
         if user_ids is None:
             user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
-        return self.message_subscribe(cr, uid, ids, partner_ids, subtype_ids=subtype_ids, context=context)
+        result = self.message_subscribe(cr, uid, ids, partner_ids, subtype_ids=subtype_ids, context=context)
+        if partner_ids and result:
+            self.pool['ir.ui.menu'].clear_cache()
+        return result
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
@@ -1720,7 +1726,10 @@ class mail_thread(osv.AbstractModel):
         if user_ids is None:
             user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
-        return self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
+        result = self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
+        if partner_ids and result:
+            self.pool['ir.ui.menu'].clear_cache()
+        return result
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Remove partners from the records followers. """
