@@ -11,7 +11,7 @@
 <template name="Sponsors" id="event_sponsor" optional="enabled" inherit_id="website_event.layout">
     <xpath expr="//div[@id='wrap']" position="inside">
         <div class="container mt32 mb16 hidden-print" t-if="event.sponsor_ids">
-            <section data-snippet-id="title">
+            <section>
                 <h2 class="text-center mb32">Our Sponsors</h2>
             </section>
             <div class="row">
@@ -267,7 +267,7 @@
     <t t-call="website_event.layout">
         <div class="oe_structure"/>
         <div class="container">
-            <section data-snippet-id="title">
+            <section>
                 <h1 class="text-center mb0">Call for Proposals</h1>
                 <h2 class="text-center text-muted mb32" t-esc="event.name"></h2>
             </section>
@@ -280,7 +280,7 @@
             <section class="row">
                 <div class="col-md-8">
                     <div class="oe_structure">
-                        <section data-snippet-id="text">
+                        <section>
                             <h3 class="page-header mt16">
                                 Introduction
                             </h3>
@@ -294,7 +294,7 @@
                                 inclusion in the programme.
                             </p>
                         </section>
-                        <section data-snippet-id="text">
+                        <section>
                             <h3 class="page-header">Application</h3>
                             <p>
                                 Fill this form to propose your talk.

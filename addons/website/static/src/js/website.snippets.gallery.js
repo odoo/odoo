@@ -17,8 +17,8 @@
       ------------------------------------------------------------------------*/
     website.snippet.options.gallery = website.snippet.Option.extend({
         start  : function() {
-            var self = this;
             this._super();
+            this.bind_change();
         },
         styling  : function(type, value) {
             var classes = this.$el.find('li[data-styling]').map(function () {
@@ -36,10 +36,19 @@
             if (this.block) return;
             modes.forEach(function(mode) {
                 if (classes.indexOf(mode) != -1) {
-                    self[mode]();
+                    self.mode("reapply", mode);
                     return;
                 }
             });
+        },
+        bind_change: function () {
+            var self = this;
+            return this.$target.find("img").off('saved').on('saved', function (event, img) {
+                    $(img).parent().addClass("saved_active");
+                    var index = self.$target.find(".item.saved_active").index();
+                    self.reapply();
+                    self.$target.find(".carousel:first li[data-target]:eq("+index+")").click();
+                });
         },
         get_imgs: function () {
             return this.$target.find("img").addClass("img img-thumbnail img-responsive mb8 mt8").detach();
@@ -49,6 +58,7 @@
             if (!value) value = 'nomode';
             this[value]();
             this.$target.removeClass('nomode masonry grid slideshow').addClass(value);
+            this.bind_change();
         },
         replace: function ($content) {
             var $container = this.$target.find(".container:first");
@@ -290,7 +300,9 @@
                 .removeClass("active")
                 .filter('[data-styling="' + classes.join('"], [data-styling="') + '"]').addClass("active");
 
-            this.$el.find('[data-columns]:first, [data-select_class="spc-none"]').parent().parent().toggle(["grid", "masonry"].indexOf(mode) !== -1);
+            this.$el.find('li[data-interval]').removeClass("active")
+                .filter('li[data-interval='+this.$target.find(".carousel:first").attr("data-interval")+']')
+                .addClass("active");
 
             var interval = this.$target.find('.carousel:first').attr("data-interval");
             var $li = this.$el.find('[data-interval]')
@@ -301,6 +313,10 @@
             var $li = this.$el.find('[data-columns]')
                 .removeClass("active")
                 .filter('[data-columns=' + columns + ']').addClass("active");
+
+            this.$el.find('[data-columns]:first, [data-select_class="spc-none"]')
+                .parent().parent().toggle(["grid", "masonry"].indexOf(mode) !== -1);
+            this.$el.find('[data-interval]:first').parent().parent().toggle(mode === "slideshow");
         },
     }); // website.snippet.Option.extend
 

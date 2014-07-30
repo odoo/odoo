@@ -399,15 +399,6 @@
             this.cover_target($snippet.data('overlay'), $snippet);
         },
 
-        path_eval: function(path){
-            var obj = window;
-            path = path.split('.');
-            do{
-                obj = obj[path.shift()];
-            }while(path.length && obj);
-            return obj;
-        },
-
         // activate drag and drop for the snippets in the snippet toolbar
         make_snippet_draggable: function($snippets){
             var self = this;
@@ -432,14 +423,13 @@
                     dropped = false;
                     // snippet_selectors => to get selector-siblings, selector-children, selector-vertical-children
                     $snippet = $(this);
-                    $toInsert = $snippet.find('.oe_snippet_body').clone();
-
+                    var $base_body = $snippet.find('.oe_snippet_body');
                     var selector = [];
                     var selector_siblings = [];
                     var selector_children = [];
                     var selector_vertical_children = [];
                     for (var k in website.snippet.templateOptions) {
-                        if ($toInsert.is(website.snippet.templateOptions[k].selector)) {
+                        if ($base_body.is(website.snippet.templateOptions[k].selector)) {
                             selector.push(website.snippet.templateOptions[k].selector);
                             if (website.snippet.templateOptions[k]['selector-siblings'])
                                 selector_siblings.push(website.snippet.templateOptions[k]['selector-siblings']);
@@ -450,12 +440,13 @@
                         }
                     }
 
+                    $toInsert = $base_body.clone();
                     action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
 
                     if( action === 'insert'){
                         if (!selector_siblings.length && !selector_children.length && !selector_vertical_children.length) {
-                            console.debug($snippet.data("snippet-id") + " have oe_snippet_body class and have not for insert action"+
-                                "data-selector-siblings, data-selector-children or data-selector-vertical-children tag for mutate action");
+                            console.debug($snippet.find(".oe_snippet_thumbnail_title").text() + " have not insert action: "+
+                                "data-selector-siblings, data-selector-children or data-selector-vertical-children");
                             return;
                         }
                         self.activate_insertion_zones({
@@ -515,20 +506,6 @@
                             $("#oe_snippets").trigger('snippet-dropped', $target);
 
                             website.snippet.start_animation(true, $target);
-                            // drop_and_build_snippet
-                            self.create_overlay($target);
-                            if ($target.data("snippet-editor")) {
-                                $target.data("snippet-editor").drop_and_build_snippet();
-                            }
-                            for (var k in website.snippet.templateOptions) {
-                                $target.find(website.snippet.templateOptions[k].selector).each(function () {
-                                    var $snippet = $(this);
-                                    self.create_overlay($snippet);
-                                    if ($snippet.data("snippet-editor")) {
-                                        $snippet.data("snippet-editor").drop_and_build_snippet();
-                                    }
-                                });
-                            }
 
                             // reset snippet for rte
                             $target.removeData("snippet-editor");
@@ -544,7 +521,22 @@
                                     $snippet.removeData("overlay");
                                 }
                             });
+                            // end
+
+                            // drop_and_build_snippet
                             self.create_overlay($target);
+                            if ($target.data("snippet-editor")) {
+                                $target.data("snippet-editor").drop_and_build_snippet();
+                            }
+                            for (var k in website.snippet.templateOptions) {
+                                $target.find(website.snippet.templateOptions[k].selector).each(function () {
+                                    var $snippet = $(this);
+                                    self.create_overlay($snippet);
+                                    if ($snippet.data("snippet-editor")) {
+                                        $snippet.data("snippet-editor").drop_and_build_snippet();
+                                    }
+                                });
+                            }
                             // end
 
                             self.make_active($target);
@@ -712,9 +704,14 @@
                     $target.on("DOMNodeInserted DOMNodeRemoved DOMSubtreeModified", function () {
                         self.cover_target($zone, $target);
                     });
-                    $('body').on("resize", function () {
-                        self.cover_target($zone, $target);
-                    });
+                    var resize = function () {
+                        if ($zone.parent().length) {
+                            self.cover_target($zone, $target);
+                        } else {
+                            $('body').off("resize", resize);
+                        }
+                    };
+                    $('body').on("resize", resize);
                 }
                 self.cover_target($target.data('overlay'), $target);
             });
@@ -741,12 +738,15 @@
             this.data = option.$el.data();
 
             this.set_active();
-            this.$el.find('li:not(.dropdown-submenu)').add(this.$el).filter(function () {
+            var $li = this.$el.find('li:not(.dropdown-submenu)').add(this.$el).filter(function () {
                     return !!_.toArray($(this).data()).length;
-                }).children()
-                .on('mouseenter click', _.bind(this._mouse, this))
-                .parent().on('mouseleave', _.bind(this.reset, this));
+                }).children();
+            $li.on('mouseenter click', _.bind(this._mouse, this));
+            this.$el.find("ul").add(this.$el).on('mouseleave', _.bind(this.reset, this));
             this.$target.on('snippet-style-reset', _.bind(this.set_active, this));
+
+            this.reset_methods = [];
+            this.reset_time = null;
 
             this.start();
         },
@@ -757,6 +757,7 @@
          _time_mouseleave: null,
         _mouse: function (event) {
             var $next = $(event.currentTarget).parent();
+
             // triggers preview or apply methods if a menu item has been clicked
             this.select(event.type === "click" ? "click" : "over", $next);
             if (event.type === 'click') {
@@ -796,13 +797,19 @@
         drop_and_build_snippet: function () {
         },
 
-        resetTime: null,
         reset: function (event) {
             var self = this;
-            var $li = $(event.currentTarget);
-            clearTimeout(this.resetTime);
-            this.resetTime = setTimeout(function () {
-                self.select("reset", $li);
+            clearTimeout(this.reset_time);
+            this.reset_time = setTimeout(function () {
+                var $el, method;
+                for (var k in self.reset_methods) {
+                    method = self.reset_methods[k];
+                    self.$el.find('[data-'+method+'].active, [data-'+method+']:has(.active)').each(function () {
+                        self.select("reset", $(this));
+                    });
+                }
+                self.reset_methods = [];
+                self.$target.trigger("snippet-style-reset", [this]);
             },0);
         },
 
@@ -812,7 +819,7 @@
                 $methods = [],
                 el = $li[0],
                 $el;
-            clearTimeout(this.resetTime);
+            clearTimeout(this.reset_time);
 
             while (el && this.$el.is(el) || _.some(this.$el.map(function () {return $.contains(this, el);}).get()) ) {
                 if (_.size($(el).data())) {
@@ -826,12 +833,10 @@
                 var methods = $el.data();
                 for (var k in methods) {
                     if (self[k]) {
-                        var value = methods[k];
-                        if (type === 'reset') {
-                            $el = self.$el.find('[data-'+k+'].active, [data-'+k+']:has(.active)').last();
-                            value = $el.data(k) || null;
+                        if (self.reset_methods.indexOf(k) === -1) {
+                            self.reset_methods.push(k);
                         }
-                        self[k](type, value, $el);
+                        self[k](type, methods[k], $el);
                     } else {
                         console.error("'"+self['snippet-id']+"' snippet have not method '"+k+"'");
                     }
@@ -870,8 +875,7 @@
             }
         },
         background: function(type, value, $li) {
-            if (value == null) return;
-            if (value.length) {
+            if (value && value.length) {
                 this.$target.css("background-image", 'url(' + value + ')');
             } else {
                 this.$target.css("background-image", "").removeClass("oe_img_bg");
@@ -1093,31 +1097,14 @@
                 if (c) self._class = (self._class || "").replace(new RegExp("[ ]+" + c.replace(" ", "|[ ]+")), '') + ' ' + c;
                 return self._class || "";
             };
-            this.$target.on('snippet-style-change snippet-style-preview', function (event, style, $dropdown, $next, $prev) {
-                var $active = self.$target.find(".item.active");
-                if (style['snippet-id'] === "size") return;
-                if (style['snippet-id'] === "background") {
-                    $active.css("background-image", self.$target.css("background-image"));
+            this.$target.on('slid.bs.carousel', function () {
+                if(self.editor.styles.background) {
+                    self.editor.styles.background.$target = self.$target.find(".item.active");
+                    self.editor.styles.background.set_active();
                 }
-                if ($prev) {
-                    $active.removeClass($prev.data("value"));
-                }
-                if ($next) {
-                    $active.addClass($next.data("value"));
-                    add_class($next.data("value"));
-                }
-            });
-            this.$target.on('slid', function () { // slide.bs.carousel
-                var $active = self.$target.find(".item.active");
-                self.$target
-                    .css("background-image", $active.css("background-image"))
-                    .removeClass(add_class($active.attr("class")))
-                    .addClass($active.attr("class"))
-                    .trigger("snippet-style-reset");
-
                 self.$target.carousel("pause");
             });
-            this.$target.trigger('slid');
+            this.$target.trigger('slid.bs.carousel');
         },
         add_slide: function (type, data) {
             if(type !== "click") return;

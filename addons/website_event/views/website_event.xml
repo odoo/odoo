@@ -229,7 +229,7 @@
 
 <template id="template_location">
     <t t-call="website_event.layout">
-        <section class="container" data-snippet-id="title">
+        <section class="container">
             <h1 class="text-center">Event Location</h1>
         </section>
         <div class="oe_structure oe_empty"/>
@@ -238,7 +238,7 @@
 
 <template id="template_intro">
     <t t-call="website_event.layout">
-        <section class="container" data-snippet-id="title">
+        <section class="container">
             <h1 class="text-center">Event Introduction</h1>
         </section>
         <div class="oe_structure oe_empty"/>
@@ -382,7 +382,7 @@
         </div>
     </xpath>
     <xpath expr="//div[@id='snippet_options']" position="inside">
-        <div data-snippet-option-id='country_events'
+        <div data-snippet-id='country_events'
             data-selector=".oe_country_events"
             data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
             data-selector-children=".content"

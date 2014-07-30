@@ -167,7 +167,7 @@
     inside a gallery 
    -------------------------------------------------------------------------*/
     website.snippet.animationRegistry.gallery = website.snippet.Animation.extend({
-        selector: ".gallery img",
+        selector: ".gallery:not(.slideshow) img",
         start: function() {
             var self = this;
             this.$el.on("click", this.click_handler);
@@ -197,7 +197,9 @@
                 $images.each(function() {
                     urls.push($(this).attr("src"));
                 });
-                idx = ($cur.is("img") === true) ? $cur.index() : $cur.closest("img").index();
+                var $img = ($cur.is("img") === true) ? $cur : $cur.closest("img");
+                idx = urls.indexOf($img.attr("src"));
+
                 milliseconds = $cur.closest(".gallery").data("interval") || false;
                 var params = {
                     srcs : urls,
