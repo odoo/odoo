@@ -14,8 +14,8 @@ class TestQifFile(TransactionCase):
     def test_qif_file_import(self):
         from openerp.tools import float_compare
         cr, uid = self.cr, self.uid
-        qif_file_path = get_module_resource('account_bank_statement_import_qif', 'test_qif_file', 'test_qif.txt')
-        qif_file = open(qif_file_path, 'rb').read()
+        qif_file_path = get_module_resource('account_bank_statement_import_qif', 'test_qif_file', 'test_qif.qif')
+        qif_file = open(qif_file_path, 'rb').read().encode('base64')
         bank_statement_id = self.statement_import_model.create(cr, uid, dict(
                             file_type='qif',
                             data_file=qif_file,
