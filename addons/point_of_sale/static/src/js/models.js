@@ -49,6 +49,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.units_by_id = {};
             this.pricelist = null;
             this.order_sequence = 1;
+            this.fidelity = null;
             window.posmodel = this;
 
             // these dynamic attributes can be watched for change by other models or widgets
@@ -160,7 +161,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(users){
                     self.users = users;
 
-                    return self.fetch('res.partner', ['name','street','city','country_id','phone','zip','mobile','email','ean13']);
+                    return self.fetch('res.partner', ['name','street','city','country_id','phone','zip','mobile','email','ean13','fidpoints']);
                 }).then(function(partners){
                     self.partners = partners;
                     self.db.add_partners(partners);
@@ -206,6 +207,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(currencies){
                     self.currency = currencies[0];
 
+                    return self.fetch('pos.fidelity',[],[['id','=',self.config.fidelity_id[0] || -1]]);
+                }).then(function(fidelity){
+                    if(fidelity.length){
+                        self.fidelity = fidelity[0];
+                    }
+
                     return self.fetch('product.packaging',['ean','product_tmpl_id']);
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
@@ -218,7 +225,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'product.product',
                         ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 'variants',
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
-                         'product_tmpl_id'],
+                         'product_tmpl_id','fidpoints','fidpoints_override'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
                         {pricelist: self.pricelist.id} // context for price
                     );
@@ -832,6 +839,38 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.get('orderLines').add(line);
             this.selectLine(this.getLastOrderline());
         },
+        getWonFidpoints: function(){
+            if(!this.pos.fidelity){
+                return 0;
+            }
+            
+            var orderLines = this.get('orderLines').models;
+            var rounding   = this.pos.fidelity.rounding;
+            
+            var product_sold    = 0;
+            var total_sold      = 0;
+            var total_fidpoints = 0;
+
+            for(var i = 0; i < orderLines.length; i++){
+                var line = orderLines[i];
+                if( !line.product.fidpoints_override ){
+                    if( line.get_unit().groupable ){
+                        product_sold += line.get_quantity();
+                    }else{
+                        // a bag of 5Kg of oranges only count as one product sold
+                        product_sold += 1;
+                    }
+                    total_sold += line.get_price_with_tax();
+                }
+                total_fidpoints += round_pr( line.get_quantity() * line.product.fidpoints, rounding );
+            }
+
+            total_fidpoints += round_pr( total_sold * this.pos.fidelity.currency, rounding );
+            total_fidpoints += round_pr( product_sold * this.pos.fidelity.product, rounding );
+            total_fidpoints += round_pr( this.pos.fidelity.order, rounding );
+
+            return total_fidpoints;
+        },
         addProduct: function(product, options){
             options = options || {};
             var attr = JSON.parse(JSON.stringify(product));
@@ -954,6 +993,18 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         getDueLeft: function() {
             return this.getTotalTaxIncluded() - this.getPaidTotal();
         },
+        isPaid: function(){
+            var delta = 0.000001;
+            var total = this.getTotalTaxIncluded();
+            return total < delta || this.getPaidTotal() + delta >= total;
+        },
+        validate: function(){
+            var client = this.get('client');
+            if( client ){
+                client.fidpoints += this.getWonFidpoints();
+            }
+            this.destroy();
+        },
         // sets the type of receipt 'receipt'(default) or 'invoice'
         set_receipt_type: function(type){
             this.receipt_type = type;
@@ -1022,6 +1073,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 cashier: cashier ? cashier.name : null,
                 header: this.pos.config.receipt_header || '',
                 footer: this.pos.config.receipt_footer || '',
+                fidpoints:   this.getWonFidpoints(),
                 precision: {
                     price: 2,
                     money: 2,
@@ -1076,6 +1128,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
                 uid: this.uid,
                 sequence_number: this.sequence_number,
+                fidpoints:   this.getWonFidpoints(),
             };
         },
         getSelectedLine: function(){

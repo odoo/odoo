@@ -90,6 +90,7 @@ class pos_config(osv.osv):
         'barcode_price':    fields.char('Price Barcodes',   size=64, help='The pattern that identifies a product with a barcode encoded price'),
         'barcode_weight':   fields.char('Weight Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded weight'),
         'barcode_discount': fields.char('Discount Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded discount'),
+        'fidelity_id': fields.many2one('pos.fidelity','Fidelity Card', help='The type of fidelity card available for this point_of_sale'),
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -187,6 +188,32 @@ class pos_config(osv.osv):
             if obj.sequence_id:
                 obj.sequence_id.unlink()
         return super(pos_config, self).unlink(cr, uid, ids, context=context)
+
+class pos_fidelity(osv.osv):
+    """
+    This model represents a fidelity card system, and contains the rules used to compute
+    how fidelity points are won by clients. It is activated when it is linked in the pos
+    configuration. It is likely that there will only be one fidelity card system per shop
+    and it is a separate object mainly to prevent having to duplicate the rules on each pos
+    configuration.
+    """
+    _name = 'pos.fidelity'
+
+    _columns = {
+        'name' : fields.char('Fidelity Card Name', size=32, select=1,
+             required=True, help="An internal identification for the fidelity card configuration"),
+        'currency': fields.float('Points per paid currency',help="How many fidelity points are given to the customer by sold currency"),
+        'product':  fields.float('Points per sold product',help="How many fidelity points are given to the customer by product sold"),
+        'order':     fields.float('Points per order',help="How many fidelity points are given to the customer for each sale or order"),
+        'rounding': fields.float('Rounding', help="The Fidelity Points amount are rounded to multiples of this value.")
+    }
+
+    _defaults = {
+        'currency': 0,
+        'product':  0,
+        'order':     0,
+        'rounding': 1,
+    }
 
 class pos_session(osv.osv):
     _name = 'pos.session'
@@ -531,6 +558,7 @@ class pos_order(osv.osv):
             'lines':        ui_order['lines'],
             'pos_reference':ui_order['name'],
             'partner_id':   ui_order['partner_id'] or False,
+            'fidpoints':    ui_order['fidpoints'],
         }
 
     def _payment_fields(self, cr, uid, ui_paymentline, context=None):
@@ -563,6 +591,10 @@ class pos_order(osv.osv):
             if session.sequence_number <= order['sequence_number']:
                 session.write({'sequence_number': order['sequence_number'] + 1})
                 session.refresh()
+
+            if order['fidpoints'] and order['partner_id']:
+                partner = self.pool.get('res.partner').browse(cr, uid, order['partner_id'], context=context)
+                partner.write({'fidpoints': partner['fidpoints'] + order['fidpoints']})
 
             if order['amount_return']:
                 cash_journal = session.cash_journal_id
@@ -657,6 +689,7 @@ class pos_order(osv.osv):
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
         'sequence_number': fields.integer('Sequence Number', help='A session-unique sequence number for the order'),
+        'fidpoints':    fields.integer('Won Fidelity Points ', help='The Fidelity Points the client won with this order'),
 
         'session_id' : fields.many2one('pos.session', 'Session', 
                                         #required=True,
@@ -706,6 +739,7 @@ class pos_order(osv.osv):
         'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'nb_print': 0,
         'sequence_number': 1,
+        'fidpoints': 0,
         'session_id': _default_session,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'pricelist_id': _default_pricelist,
@@ -1357,11 +1391,16 @@ class product_template(osv.osv):
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
         'to_weight' : fields.boolean('To Weigh', help="Check if the product should be weighted (mainly used with self check-out interface)."),
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category', help="Those categories are used to group similar products for point of sale."),
+        'fidpoints_override': fields.boolean('Ignore Fidelity Rules', help='This product will not be counted in the rules used to compute fidelity points such a number of product sold, or total sale amount. But extra fidelity points are taken into account'),
+        'fidpoints': fields.float('Extra Fidelity Points', help='This product will win an extra amount of Fidelity Point. This amount can also be set negative to make the product cost fidelity points'),
+
     }
 
     _defaults = {
         'to_weight' : False,
         'available_in_pos': True,
+        'fidpoints_override': False,
+        'fidpoints': 0,
     }
 
     def edit_ean(self, cr, uid, ids, context):

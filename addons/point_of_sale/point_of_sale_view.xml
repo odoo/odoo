@@ -535,6 +535,10 @@
                         <field name="income_pdt"/>
                         <field name="expense_pdt"/>
                     </group>
+                    <group name="pos" string="Fidelity">
+                        <field name="fidpoints_override"/>
+                        <field name="fidpoints"/>
+                    </group>
                 </group>
                 <field name="ean13" position="after">
                     <button colspan="2" name="edit_ean" type="object" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
@@ -672,6 +676,9 @@
                             <field name="receipt_header" placeholder="A custom receipt header message"/>
                             <field name="receipt_footer" placeholder="A custom receipt header footage"/>
                         </group>
+                        <group string="Fidelity Cards" col="4" >
+                            <field name="fidelity_id" />
+                        </group>
                         <group string="Barcode Types" col="4">
                             <field name="barcode_product" />
                             <field name="barcode_cashier" />
@@ -710,6 +717,60 @@
                 </search>
             </field>
         </record>
+
+        <!-- Fidelity Cards -->
+
+        <record model="ir.ui.view" id="view_pos_fidelity_form">
+            <field name="name">pos.fidelity.form.view</field>
+            <field name="model">pos.fidelity</field>
+            <field name="arch" type="xml">
+                <form string="Fidelity Card">
+
+                    <group col="2">
+                        <field name="name" />
+                        <field name="currency" />
+                        <field name="product" />
+                        <field name="order" />
+                        <field name="rounding" />
+                    </group>
+
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_pos_fidelity_tree">
+            <field name="name">pos.fidelity.form.view</field>
+            <field name="model">pos.fidelity</field>
+            <field name="arch" type="xml">
+                <tree string="Fidelity Cards">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_pos_fidelity_form">
+            <field name="name">Fidelity Cards</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.fidelity</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a Fidelity Card System
+                </p><p>
+                    Fidelity card system allows you customer to earn points
+                    and rewards when doing business at your shops.
+                </p>
+            </field>
+        </record>
+
+        <menuitem
+            parent="point_of_sale.menu_point_config_product"
+            action="action_pos_fidelity_form"
+            id="menu_pos_fidelity"
+            sequence="30"
+            groups="point_of_sale.group_pos_manager" />
+
 
         <!-- Sessions -->
 
