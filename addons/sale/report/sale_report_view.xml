@@ -8,7 +8,7 @@
          <field name="arch" type="xml">
              <graph string="Sales Analysis" type="pivot" stacked="True">
                  <field name="section_id" type="row"/>
-                 <field name="date" interval="month" type="col"/>
+                 <field name="date_order" interval="month" type="col"/>
                  <field name="price_total" type="measure"/>
              </graph>
          </field>
@@ -49,7 +49,7 @@
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
             <search string="Sales Analysis">
-                <field name="date"/>
+                <field name="date_order"/>
                 <field name="date_confirm"/>
                 <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <filter name="Quotations" domain="[('state','in',('draft','sent'))]"/>
@@ -70,7 +70,7 @@
                     <filter string="Category of Product" icon="terp-stock_symbol-selection" name="Category" context="{'group_by':'categ_id'}"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <filter string="Company" icon="terp-go-home" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
-                    <filter string="Order Month" icon="terp-go-today" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
+                    <filter string="Order Month" icon="terp-go-today" context="{'group_by':'date_order:month'}" help="Ordered date of the sales order"/>
 
                 </group>
             </search>

@@ -52,7 +52,7 @@ class crm_lead_report(osv.osv):
         'opening_date': fields.date('Assignation Date', readonly=True),
         'date_closed': fields.datetime('Close Date', readonly=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
-        'quantity': fields.integer("# of Cases", readonly=True),
+        'nbr_cases': fields.integer("# of Cases", readonly=True),
 
         # durations
         'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
@@ -88,7 +88,7 @@ class crm_lead_report(osv.osv):
                 SELECT
                     id,
                     c.date_deadline,
-                    count(id) as quantity,
+                    count(id) as nbr_cases,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
 
                     date_trunc('day',c.date_closed) as date_closed,

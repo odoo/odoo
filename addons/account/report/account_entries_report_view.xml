@@ -6,7 +6,7 @@
         <field name="model">account.entries.report</field>
         <field name="arch" type="xml">
             <tree colors="blue:move_state == 'draft';black:move_state == 'posted'" create="false" string="Entries Analysis">
-                <field name="date" invisible="1"/>
+                <field name="date_effective" invisible="1"/>
                 <field name="date_created" invisible="1"/>
                 <field name="date_maturity" invisible="1"/>
                 <field name="ref" invisible="1"/>
@@ -64,7 +64,7 @@
         <field name="model">account.entries.report</field>
         <field name="arch" type="xml">
             <search string="Entries Analysis">
-                <field name="date"/>
+                <field name="date_effective"/>
                 <field name="date_created"/>
                 <field name="date_maturity"/>
                 <filter icon="terp-go-year" string="This F.Year" name="thisyear" context="{'year':'current_year'}" help="Journal Entries with period in current year"/>
@@ -90,7 +90,7 @@
                     <filter string="Acc.Type" icon="terp-stock_symbol-selection" context="{'group_by':'user_type'}" name="usertype"/>
                     <filter string="Int.Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Entries Month" icon="terp-go-today" context="{'group_by':'date:month'}" help="Entries Date by Month"/>
+                    <filter string="Entries Month" icon="terp-go-today" context="{'group_by':'date_effective:month'}" help="Entries Date by Month"/>
                  </group>
             </search>
         </field>

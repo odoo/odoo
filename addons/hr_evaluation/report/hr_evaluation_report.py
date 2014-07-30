@@ -48,7 +48,7 @@ class hr_evaluation_report(osv.Model):
             ('3', 'Exceeds expectations'),
             ('4', 'Significantly exceeds expectations'),
         ], "Overall Rating", readonly=True),
-        'nbr': fields.integer('# of Requests', readonly=True),
+        'nbr_requests': fields.integer('# of Requests', readonly=True),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('wait', 'Plan In Progress'),
@@ -83,7 +83,7 @@ class hr_evaluation_report(osv.Model):
                      s.date_close as closed,
                      to_char(s.create_date, 'YYYY') as year,
                      to_char(s.create_date, 'MM') as month,
-                     count(l.*) as nbr,
+                     count(l.*) as nbr_requests,
                      s.state,
                      avg(extract('epoch' from age(s.create_date,CURRENT_DATE)))/(3600*24) as  delay_date,
                      avg(extract('epoch' from age(s.date,CURRENT_DATE)))/(3600*24) as overpass_delay

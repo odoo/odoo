@@ -50,12 +50,12 @@ class crm_lead_report_assign(osv.osv):
         'opening_date': fields.date('Opening Date', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
         'date_closed': fields.date('Close Date', readonly=True),
-        'nbr': fields.integer('# of Cases', readonly=True),
+        'nbr_cases': fields.integer('# of Cases', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'type':fields.selection([
             ('lead','Lead'),
-            ('opportunity','Opportunity') 
+            ('opportunity','Opportunity')
         ],'Type', help="Type is used to separate Leads and Opportunities"),
     }
     def init(self, cr):
@@ -87,8 +87,8 @@ class crm_lead_report_assign(osv.osv):
                     c.partner_assigned_id,
                     p.grade_id,
                     p.date as partner_date,
-                    c.planned_revenue*(c.probability/100) as probable_revenue, 
-                    1 as nbr,
+                    c.planned_revenue*(c.probability/100) as probable_revenue,
+                    1 as nbr_cases,
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.write_date-c.create_date))/(3600*24) as  delay_close,
                     extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected,
