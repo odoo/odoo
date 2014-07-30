@@ -56,12 +56,15 @@ class main(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         attachment = request.registry['ir.attachment']
 
+        if slideview:
+            attachment.set_viewed(cr, SUPERUSER_ID, [slideview.id], context=context)
+
         domain = [("is_slide","=","TRUE")]
         if search:
             domain += [('name', 'ilike', search)]
         
         if tags:
-            domain += [('tag_ids.name', 'like', tags)]
+            domain += [('tag_ids.name', '=', tags)]
         
         if filters == 'ppt':
             domain += [('slide_type', '=', 'ppt')]
