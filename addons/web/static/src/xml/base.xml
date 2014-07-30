@@ -461,7 +461,7 @@
                 <t t-set="debug" t-value="__debug__ ? '&amp;debug' : ''"/>
                 <a class="oe_logo" t-attf-href="/?ts=#{Date.now()}#{debug}">
                     <span class="oe_logo_edit">Edit Company data</span>
-                    <img t-att-src='widget.session.url("/web/binary/company_logo")'/>
+                    <img />
                 </a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
