@@ -99,10 +99,11 @@ class view(osv.osv):
 
         if value is not None:
             # TODO: batch writes?
-            Model.write(cr, uid, [int(el.get('data-oe-id'))], {
+            ids = [int(el.get('data-oe-id'))]
+            Model.write(cr, uid, ids, {
                 field: value
             }, context=context)
-            self.__translation_resync(cr, uid, el.get('data-oe-model'), [res_id], field, context=context)
+            self.__translation_resync(cr, uid, el.get('data-oe-model'), ids, field, context=context)
 
     def to_field_ref(self, cr, uid, el, context=None):
         # filter out meta-information inserted in the document
@@ -226,12 +227,12 @@ class view(osv.osv):
     def __translation_resync(self, cr, uid, model, ids, field, context=None):
         context = context or {}
         model_obj = self.pool.get(model)
-        translate = model_obj._all_columns[field].translate
+        translate = model_obj._all_columns[field].column.translate
         if (not translate) or (translate is True):
             return
 
         for record in model_obj.browse(cr, uid, ids, context=context):
-            origins = list(model_obj._all_columns[field].translate( getattr(record, field)))
+            origins = list(translate( getattr(record, field)))
 
             trans_obj = self.pool.get('ir.translation')
             trans_ids = trans_obj.search(cr, uid, [
