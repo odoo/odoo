@@ -591,7 +591,7 @@ class BaseModel(object):
 
             depends = dict(parent_class._depends)
             for m, fs in cls._depends.iteritems():
-                depends.setdefault(m, []).extend(fs)
+                depends[m] = depends.get(m, []) + fs
 
             old_constraints = parent_class._constraints
             new_constraints = cls._constraints
