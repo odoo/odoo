@@ -102,6 +102,7 @@ class view(osv.osv):
             Model.write(cr, uid, [int(el.get('data-oe-id'))], {
                 field: value
             }, context=context)
+            self.__translation_resync(cr, uid, el.get('data-oe-model'), [res_id], field, context=context)
 
     def to_field_ref(self, cr, uid, el, context=None):
         # filter out meta-information inserted in the document
@@ -211,7 +212,38 @@ class view(osv.osv):
         self.write(cr, uid, res_id, {
             'arch': self._pretty_arch(arch)
         }, context=context)
+        self.__translation_resync(cr, uid, 'ir.ui.view', [res_id], 'arch', context=context)
+
 
         view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
         if view.model_data_id:
             view.model_data_id.write({'noupdate': True})
+
+    # When the english version of a field is modified, the algorythm tries to
+    # resync translation if the distance between modified strings is not too
+    # big. It allows to not retranslate data where a typo has been fixed in
+    # the english version.
+    def __translation_resync(self, cr, uid, model, ids, field, context=None):
+        context = context or {}
+        model_obj = self.pool.get(model)
+        translate = model_obj._all_columns[field].translate
+        if (not translate) or (translate is True):
+            return
+
+        for record in model_obj.browse(cr, uid, ids, context=context):
+            origins = list(model_obj._all_columns[field].translate( getattr(record, field)))
+
+            trans_obj = self.pool.get('ir.translation')
+            trans_ids = trans_obj.search(cr, uid, [
+                            ('name','=',model+','+field),('type','=','model'),
+                            ('res_id', '=', record.id)], context=context)
+
+            for term in trans_obj.browse(cr, uid, trans_ids, context=context):
+                if term.src not in origins:
+                    newsrc = difflib.get_close_matches(term.src, origins, 1, 0.9)
+                    if newsrc:
+                        trans_obj.write(cr, uid, term.id, {'src': newsrc}, context=context)
+
+        return True
+
+

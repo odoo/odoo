@@ -691,13 +691,17 @@ def trans_generate(lang, modules, cr):
                     _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
         for field_name, field_def in obj._columns.items():
+            name = model + "," + field_name
             if field_def.translate:
-                name = model + "," + field_name
                 try:
                     trad = getattr(obj, field_name) or ''
                 except:
-                    trad = ''
-                push_translation(module, 'model', name, xml_name, encode(trad))
+                    continue
+                if field_def.translate is True:
+                    push_translation(module, 'model', name, xml_name, encode(trad))
+                elif field_def.translate:
+                    for t in field_def.translate(trad):
+                        push_translation(module, 'model', name, xml_name, encode(t))
 
         # End of data for ir.model.data query results
 

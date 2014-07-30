@@ -123,8 +123,8 @@ def xml_chunk(attr=['string', 'help', 'sum', 'confirm', 'placeholder']):
                 if de.get(attr):
                     yield de.get(attr).encode("utf8")
             for n in de:
-                _xml_parse(n)
-        print type(data), data
+                for val in _xml_parse(n):
+                    yield val
         de = etree.XML(data)    # encode(data) ?
         return _xml_parse(de)
     return xml_chunk_translate
