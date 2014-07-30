@@ -74,7 +74,7 @@ class hr_holidays_status(osv.osv):
     _columns = {
         'name': fields.char('Leave Type', size=64, required=True, translate=True),
         'categ_id': fields.many2one('calendar.event.type', 'Meeting Type',
-            help='Once a leave is validated, OpenERP will create a corresponding meeting of this type in the calendar.'),
+            help='Once a leave is validated, Odoo will create a corresponding meeting of this type in the calendar.'),
         'color_name': fields.selection([('red', 'Red'),('blue','Blue'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Department.'),
         'limit': fields.boolean('Allow to Override Limit', help='If you select this check box, the system allows the employees to take more leaves than the available ones for this type and will not take them into account for the "Remaining Legal Leaves" defined on the employee form.'),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
@@ -500,7 +500,7 @@ class hr_employee(osv.osv):
         if diff > 0:
             leave_id = holiday_obj.create(cr, uid, {'name': _('Allocation for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
         elif diff < 0:
-            leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
+            raise osv.except_osv(_('Warning!'), _('You cannot reduce validated allocation requests'))
         else:
             return False
         for sig in ('confirm', 'validate', 'second_validate'):

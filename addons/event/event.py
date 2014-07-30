@@ -185,12 +185,15 @@ class event_event(models.Model):
             for reg in self.registration_ids
         )
 
-    @api.one
+    @api.multi
     @api.depends('name', 'date_begin', 'date_end')
-    def _compute_display_name(self):
-        dates = [dt.split(' ')[0] for dt in [self.date_begin, self.date_end] if dt]
-        dates = sorted(set(dates))
-        self.display_name = '%s (%s)' % (self.name, ' - '.join(dates))
+    def name_get(self):
+        result = []
+        for event in self:
+            dates = [dt.split(' ')[0] for dt in [event.date_begin, event.date_end] if dt]
+            dates = sorted(set(dates))
+            result.append((event.id, '%s (%s)' % (event.name, ' - '.join(dates))))
+        return result
 
     @api.one
     @api.constrains('seats_max', 'seats_available')

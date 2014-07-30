@@ -55,7 +55,7 @@
     })
     backorder.do_transfer()
 -
-  I check incomming shipment after reception.
+  I check incomming shipment after receipt.
 -
   !python {model: stock.picking}: |
     shipment = self.browse(cr, uid, self.search(cr, uid, [('backorder_id', '=', ref("incomming_shipment"))]))[0]
