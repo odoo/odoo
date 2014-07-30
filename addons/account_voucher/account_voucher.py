@@ -941,6 +941,8 @@ class account_voucher(osv.osv):
             # refresh to make sure you don't unlink an already removed move
             voucher.refresh()
             for line in voucher.move_ids:
+                # refresh to make sure you don't unreconcile an already unreconciled entry
+                line.refresh()
                 if line.reconcile_id:
                     move_lines = [move_line.id for move_line in line.reconcile_id.line_id]
                     move_lines.remove(line.id)

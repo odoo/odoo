@@ -282,7 +282,7 @@ class survey_survey(osv.Model):
             else:
                 return (pages[current_page_index + 1][1], current_page_index + 1, False)
 
-    def filter_input_ids(self, cr, uid, filters, finished=False, context=None):
+    def filter_input_ids(self, cr, uid, survey, filters, finished=False, context=None):
         '''If user applies any filters, then this function returns list of
            filtered user_input_id and label's strings for display data in web.
            :param filters: list of dictionary (having: row_id, ansewr_id)
@@ -311,7 +311,7 @@ class survey_survey(osv.Model):
         if finished:
             user_input = self.pool.get('survey.user_input')
             if not filtered_input_ids:
-                current_filters = user_input.search(cr, uid, [], context=context)
+                current_filters = user_input.search(cr, uid, [('survey_id', '=', survey.id)], context=context)
                 user_input_objs = user_input.browse(cr, uid, current_filters, context=context)
             else:
                 user_input_objs = user_input.browse(cr, uid, filtered_input_ids, context=context)
@@ -345,16 +345,20 @@ class survey_survey(osv.Model):
             context = {}
         #Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:
-            result_summary = {}
-            [result_summary.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
+            answers = {}
+            comments = []
+            [answers.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
             for input_line in question.user_input_line_ids:
-                if input_line.answer_type == 'suggestion' and result_summary.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    result_summary[input_line.value_suggested.id]['count'] += 1
-            result_summary = result_summary.values()
+                if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    answers[input_line.value_suggested.id]['count'] += 1
+                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    comments.append(input_line)
+            result_summary = {'answers': answers.values(), 'comments': comments}
 
         #Calculate and return statistics for matrix
         if question.type == 'matrix':
             rows, answers, res = {}, {}, {}
+            comments = []
             [rows.update({label.id: label.value}) for label in question.labels_ids_2]
             [answers.update({label.id: label.value}) for label in question.labels_ids]
             for cell in product(rows.keys(), answers.keys()):
@@ -362,7 +366,9 @@ class survey_survey(osv.Model):
             for input_line in question.user_input_line_ids:
                 if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
-            result_summary = {'answers': answers, 'rows': rows, 'result': res}
+                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    comments.append(input_line)
+            result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
 
         #Calculate and return statistics for free_text, textbox, datetime
         if question.type in ['free_text', 'textbox', 'datetime']:
@@ -1138,11 +1144,14 @@ class survey_user_input_line(osv.Model):
             vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
         else:
             vals.update({'answer_type': None, 'skipped': True})
-        self.create(cr, uid, vals, context=context)
+
+        # '-1' indicates 'comment count as an answer' so do not need to record it
+        if post.get(answer_tag) and post.get(answer_tag) != '-1':
+            self.create(cr, uid, vals, context=context)
 
         comment_answer = post.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False})
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False, 'value_suggested': False})
             self.create(cr, uid, vals, context=context)
 
         return True
@@ -1166,10 +1175,12 @@ class survey_user_input_line(osv.Model):
         comment_answer = ca.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if len(ca) > 0:
             for a in ca:
-                vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a]})
-                self.create(cr, uid, vals, context=context)
+                # '-1' indicates 'comment count as an answer' so do not need to record it
+                if a != ('%s_%s' % (answer_tag, '-1')):
+                    vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a]})
+                    self.create(cr, uid, vals, context=context)
         if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer})
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'value_suggested': False})
             self.create(cr, uid, vals, context=context)
         if not ca and not comment_answer:
             vals.update({'answer_type': None, 'skipped': True})

@@ -298,7 +298,11 @@ class WebsiteSurvey(http.Controller):
                 type='http', auth='user', website=True)
     def survey_reporting(self, survey, token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
-        result_template, current_filters, filter_display_data, filter_finish = 'survey.result', [], [], False
+        result_template ='survey.result'
+        current_filters = []
+        filter_display_data = []
+        filter_finish = False
+
         survey_obj = request.registry['survey.survey']
         if not survey.user_input_ids or not [input_id.id for input_id in survey.user_input_ids if input_id.state != 'new']:
             result_template = 'survey.no_result'
@@ -307,7 +311,7 @@ class WebsiteSurvey(http.Controller):
             filter_finish = True
         if post or filter_finish:
             filter_data = self.get_filter_data(post)
-            current_filters = survey_obj.filter_input_ids(request.cr, request.uid, filter_data, filter_finish, context=request.context)
+            current_filters = survey_obj.filter_input_ids(request.cr, request.uid, survey, filter_data, filter_finish, context=request.context)
             filter_display_data = survey_obj.get_filter_display_data(request.cr, request.uid, filter_data, context=request.context)
         return request.website.render(result_template,
                                       {'survey': survey,
@@ -317,11 +321,48 @@ class WebsiteSurvey(http.Controller):
                                        'filter_display_data': filter_display_data,
                                        'filter_finish': filter_finish
                                        })
+        # Quick retroengineering of what is injected into the template for now:
+        # (TODO: flatten and simplify this)
+        #
+        #     survey: a browse record of the survey
+        #     survey_dict: very messy dict containing all the info to display answers
+        #         {'page_ids': [
+        #
+        #             ...
+        #
+        #                 {'page': browse record of the page,
+        #                  'question_ids': [
+        #
+        #                     ...
+        #
+        #                     {'graph_data': data to be displayed on the graph
+        #                      'input_summary': number of answered, skipped...
+        #                      'prepare_result': {
+        #                                         answers displayed in the tables
+        #                                         }
+        #                      'question': browse record of the question_ids
+        #                     }
+        #
+        #                     ...
+        #
+        #                     ]
+        #                 }
+        #
+        #             ...
+        #
+        #             ]
+        #         }
+        #
+        #     page_range: pager helper function
+        #     current_filters: a list of ids
+        #     filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
+        #     filter_finish: boolean => only finished surveys or not
+        #
 
     def prepare_result_dict(self,survey, current_filters=[]):
         """Returns dictionary having values for rendering template"""
         survey_obj = request.registry['survey.survey']
-        result = {'survey':survey, 'page_ids': []}
+        result = {'page_ids': []}
         for page in survey.page_ids:
             page_dict = {'page': page, 'question_ids': []}
             for question in page.question_ids:
@@ -353,9 +394,10 @@ class WebsiteSurvey(http.Controller):
         result = []
         if question.type == 'multiple_choice':
             result.append({'key': str(question.question),
-                           'values': survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)})
+                           'values': survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)['answers']
+                           })
         if question.type == 'simple_choice':
-            result = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)
+            result = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)['answers']
         if question.type == 'matrix':
             data = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)
             for answer in data['answers']:
