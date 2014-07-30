@@ -113,15 +113,15 @@ def xml_chunk(attr=['string', 'help', 'sum', 'confirm', 'placeholder']):
     def xml_chunk_translate(data):
         def _xml_parse(de):
             if not isinstance(de, SKIPPED_ELEMENT_TYPES) and de.text and de.text.strip():
-                yield de.text.strip().encode("utf8")
+                yield de.text.strip()
             if de.tail and de.tail.strip():
-                yield de.tail.strip().encode("utf8")
+                yield de.tail.strip()
             if de.tag == 'attribute' and de.get("name") == 'string':
                 if de.text:
-                    yield de.text.encode("utf8")
+                    yield de.text
             for attr in ('string', 'help', 'sum', 'confirm', 'placeholder'):
                 if de.get(attr):
-                    yield de.get(attr).encode("utf8")
+                    yield de.get(attr)
             for n in de:
                 for val in _xml_parse(n):
                     yield val
