@@ -18,8 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pprint
-import openerp
 from openerp.osv import fields, osv
 from urlparse import urlparse,parse_qs
 import urllib2
@@ -32,7 +30,8 @@ class ir_attachment_tags(osv.osv):
         'name': fields.char('Name')
     }
 
-class document_directory(osv.osv):   
+
+class document_directory(osv.osv):
     _inherit = 'document.directory'
 
     _columns = {
@@ -41,9 +40,9 @@ class document_directory(osv.osv):
         ),
     }
 
+
 class ir_attachment(osv.osv):
     _inherit = 'ir.attachment'
-    #_inherits = ['mail.thread', 'ir.needaction_mixin']
 
     _order = "id desc"
     _columns = {
@@ -57,40 +56,39 @@ class ir_attachment(osv.osv):
             'Publish', help="Publish on the website", copy=False,
         ),
     }
-    
+
     def _get_slide_setting(self, cr, uid, context):
         return context.get('is_slide', False)
-   
+
     def _get_slide_type(self, cr, uid, context):
         return context.get('slide_type', 'ppt')
-    
+
     def _get_slide_views(self, cr, uid, context):
         return context.get('slide_views', 0)
-    
+
     _defaults = {
         'is_slide': _get_slide_setting,
         'slide_type':_get_slide_type,
         'slide_views':_get_slide_views
     }
-    
+
     def set_viewed(self, cr, uid, ids, context=None):
         cr.execute("""UPDATE ir_attachment SET slide_views = slide_views+1 WHERE id IN %s""", (tuple(ids),))
         return True
-    
+
     def create(self, cr, uid, values, context=None):
         if values.get('is_slide', False) and values.get('datas_fname', False):
-            values['url']="/slides/"+values['datas_fname']
+            values['url'] = "/slides/" + values['datas_fname']
         if values.get('slide_type') == 'video' and values.get('url'):
             values["youtube_id"] = self.extract_youtube_id(values['url'])
-            statistics = self.youtube_statistics(values["youtube_id"])            
+            statistics = self.youtube_statistics(values["youtube_id"])
             if statistics:
-                if statistics['items'][0].get('snippet').get('thumbnails') and statistics['items'][0]['snippet'].get('thumbnails'):                                                            
+                if statistics['items'][0].get('snippet').get('thumbnails') and statistics['items'][0]['snippet'].get('thumbnails'):
                     values['image'] = statistics['items'][0]['snippet']['thumbnails']['medium']['url']
                 if statistics['items'][0].get('statistics'):
                     values['slide_views'] = statistics['items'][0]['statistics']['viewCount']
         return super(ir_attachment, self).create(cr, uid, values, context)
-        
-        
+
     def extract_youtube_id(self,url):
         youtube_id = ""
         query = urlparse(url)
@@ -105,7 +103,7 @@ class ir_attachment(osv.osv):
             elif query.path[:3] == '/v/':
                 youtube_id = query.path.split('/')[2]
         return youtube_id
-    
+
     def youtube_statistics(self,video_id):
         request_url = "https://www.googleapis.com/youtube/v3/videos?id=%s&key=AIzaSyBKDzf7KjjZqwPWAME6JOeHzzBlq9nrpjk&part=snippet,statistics&fields=items(id,snippet,statistics)" % (video_id)
         try:

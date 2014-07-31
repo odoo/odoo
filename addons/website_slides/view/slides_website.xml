@@ -102,15 +102,15 @@
 
 		<template id='home' name="slide">
 			<t t-set="head">
-				<link href="/slides/static/src/css/slides.css" rel="stylesheet" />
-				<script type="text/javascript" src="/slides/static/src/js/slides.js"></script>
+				<link href="/website_slides/static/src/css/slides.css" rel="stylesheet" />
+				<script type="text/javascript" src="/website_slides/static/src/js/slides.js"></script>
 			</t>
 			<t t-call="website.layout">
-				<t t-call="slides.header"></t>				
+				<t t-call="website_slides.header"></t>
 				<div class="container">
 					<div class="row">
-						<t t-if="slideview"><t t-call="slides.detailview"></t></t>
-						<t t-if="not slideview"><t t-call="slides.gridview"></t></t>
+						<t t-if="slideview"><t t-call="website_slides.detailview"></t></t>
+						<t t-if="not slideview"><t t-call="website_slides.gridview"></t></t>
 					</div>
 				</div>
 				<t t-if="not slideview">
@@ -167,7 +167,7 @@
 			<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 				<t t-if="slideview.datas">
 					<iframe id="viewer"
-						t-attf-src="/slides/static/src/pdfjs/web/viewer.html?file=#{slideview.url}"
+						t-attf-src="/website_slides/static/lib/pdfjs/web/viewer.html?file=#{slideview.url}"
 						width='100%' height='588' allowfullscreen="true"
 						webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;" scrolling="no"></iframe>
 				</t>

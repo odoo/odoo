@@ -36,8 +36,8 @@ You can link and publish documents and slides to the event and talks also you ca
     'website': 'http://www.openerp.com',
     'depends': ['website', 'document'],
     'data': [
-        'view/slides.xml',
-        'view/slides_attachment.xml',
+        'view/slides_website.xml',
+        'view/slides_backend.xml',
     ],   
     'installable': True,
     'auto_install': False,   

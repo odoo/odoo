@@ -101,7 +101,7 @@ class main(http.Controller):
             'tags':tags,
             'slideview':slideview,
         })
-        return request.website.render('slides.home', values)
+        return request.website.render('website_slides.home', values)
 
 
     @http.route('/slides/thumb/<int:document_id>', type='http', auth="public", website=True)
