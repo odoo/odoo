@@ -793,7 +793,10 @@ class account_invoice(models.Model):
                 continue
 
             ctx = dict(self._context, lang=inv.partner_id.lang)
-            date_invoice = inv.date_invoice or fields.Date.context_today(self)
+
+            if not inv.date_invoice:
+                inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
+            date_invoice = inv.date_invoice
 
             company_currency = inv.company_id.currency_id
             # create the analytical lines, one move line per invoice line
@@ -906,7 +909,6 @@ class account_invoice(models.Model):
             move = account_move.with_context(ctx).create(move_vals)
             # make the invoice point to that move
             vals = {
-                'date_invoice': date_invoice,
                 'move_id': move.id,
                 'period_id': period.id,
                 'move_name': move.name,
