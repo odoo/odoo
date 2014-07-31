@@ -32,8 +32,8 @@ class hr_evaluation_report(osv.Model):
         'delay_date': fields.float('Delay to Start', digits=(16, 2), readonly=True),
         'overpass_delay': fields.float('Overpassed Deadline', digits=(16, 2), readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
-        'request_id': fields.many2one('survey.user_input', 'Request_id', readonly=True),
-        'closed': fields.date("closed", readonly=True),
+        'request_id': fields.many2one('survey.user_input', 'Request ID', readonly=True),
+        'close_date': fields.date("Close Date", readonly=True),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee", readonly=True),
         'rating': fields.selection([
@@ -68,13 +68,13 @@ class hr_evaluation_report(osv.Model):
             create or replace view hr_evaluation_report as (
                  select
                      min(l.id) as id,
-                     date(s.create_date) as create_date,
+                     s.create_date as create_date,
                      s.employee_id,
                      l.request_id,
                      s.plan_id,
                      s.rating,
                      s.date as deadline,
-                     s.date_close as closed,
+                     s.date_close as close_date,
                      count(l.*) as nbr_requests,
                      s.state,
                      avg(extract('epoch' from age(s.create_date,CURRENT_DATE)))/(3600*24) as  delay_date,

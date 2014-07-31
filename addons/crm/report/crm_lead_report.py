@@ -49,7 +49,7 @@ class crm_lead_report(osv.osv):
     _columns = {
         'date_deadline': fields.date('Exp. Closing', readonly=True, help="Expected Closing"),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'opening_date': fields.date('Assignation Date', readonly=True),
+        'opening_date': fields.datetime('Assignation Date', readonly=True),
         'date_closed': fields.datetime('Close Date', readonly=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
         'nbr_cases': fields.integer("# of Cases", readonly=True),
@@ -90,8 +90,8 @@ class crm_lead_report(osv.osv):
                     c.date_deadline,
                     count(id) as nbr_cases,
 
-                    date(c.date_open) as opening_date,
-                    date(c.date_closed) as date_closed,
+                    c.date_open as opening_date,
+                    c.date_closed as date_closed,
 
                     c.date_last_stage_update as date_last_stage_update,
 

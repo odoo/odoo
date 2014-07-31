@@ -41,7 +41,7 @@
                         <filter string="Event Month" domain="[]" context="{'group_by':'event_date:month'}" help="Event Beginning Date"/>
                     </group>
                     <group expand="0" string="Display">
-                        <filter icon="terp-camera_test" string="Show Confirmed Registrations"
+                        <filter icon="terp-camera_test" string="Show Confirmed Registrations" domain="[('event_state','&lt;&gt;','draft')]"
                               help="Registrations in confirmed or done state" context="{'no_of_draft_invisible':1}"/>
                     </group>
                 </search>
