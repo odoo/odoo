@@ -26,7 +26,9 @@
             </div>
             <div class="oe_msg_center">
                 <div class="oe_msg_content">
-                    <button class="oe_full" title="Open the full mail composer"><i class='fa fa-pencil-square-o'/></button>
+                    <t t-if="!widget.is_log">
+                        <button class="oe_full" title="Open the full mail composer"><i class='fa fa-pencil-square-o'/></button>
+                    </t>
                     <t t-call="mail.thread.list_recipients"/>
                     <textarea class="field_text"></textarea>
                 </div>
@@ -182,7 +184,10 @@
                     <div class="oe-cp-search-view col-md-6" />
                 </div>
                 <div class="row">
-                    <div class="col-sm-6 col-sm-offset-6">
+                    <div class="col-md-6">
+                        <div class="mark_all_read hide btn btn-primary btn-sm">Mark all as read</div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="oe-search-options btn-group"/>
                     </div>
                 </div>
