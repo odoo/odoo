@@ -168,6 +168,13 @@
         }
     });
 
+    $.extend($.expr[':'],{
+        hasArch: function(a,i,m){
+            var $a = $(a);
+            return $a.is(m[3]) || $a.closest(m[3]).size();
+        }
+    });
+
     if (!website.snippet) website.snippet = {};
     website.snippet.templateOptions = [];
     website.snippet.globalSelector = "";
@@ -189,25 +196,6 @@
                 subtree: true,
             });
         },
-        dom_filter: function (dom, sibling) {
-            if (typeof dom === "string") {
-                var include = "[data-oe-model]";
-                var sdom = dom.split(',');
-                dom = "";
-                _.each(sdom, function (val) {
-                    val = val.replace(/^\s+|\s+$/g, '');
-                    dom += include + " " + val + ", ";
-                    if (!sibling) {
-                        val = val.split(" ");
-                        dom += val.shift() + include + val.join(" ") + ", ";
-                    }
-                });
-                dom = dom.replace(/,\s*$/g, '');
-                return $(dom);
-            } else {
-                return (!sibling && $(dom).is("[data-oe-model]")) || $(dom).parents("[data-oe-model]").length ? $(dom) : $("");
-            }
-        },
         start: function() {
             var self = this;
 
@@ -215,18 +203,16 @@
                 .prependTo(this.parent.$("#website-top-edit ul"))
                 .find("button");
 
-            this.$button.click(function () {
-                self.make_active(false);
-                self.$el.toggleClass("hidden");
-            });
-            $("#wrapwrap").click(function () {
+            this.$button.click(_.bind(this.show_blocks, this));
+
+            this.$snippet = $("#oe_snippets");
+            this.$wrapwrap = $("#wrapwrap");
+            this.$wrapwrap.click(function () {
                 self.$el.addClass("hidden");
             });
 
             this.fetch_snippet_templates();
-
             this.bind_snippet_click_editor();
-
             this.$el.addClass("hidden");
 
             $(document).on('click', '.dropdown-submenu a[tabindex]', function (e) {
@@ -236,7 +222,46 @@
             this.getParent().on('change:height', this, function (editor) {
                 self.$el.css('top', editor.get('height'));
             });
-            self.$el.css('top', this.parent.get('height'));
+            this.$el.css('top', this.parent.get('height'));
+        },
+        show_blocks: function () {
+            var self = this;
+            this.make_active(false);
+            this.$el.toggleClass("hidden");
+            this.$snippets.addClass("disable");
+            this.enable_snippets( this.$snippet.find(".tab-pane.active") );
+            var categories = this.$snippet.find(".tab-pane:not(.active)").get();
+            function enable() {
+                self.enable_snippets( $(categories.pop()) );
+                if (categories.length) {
+                    setTimeout(enable,0);
+                }
+            }
+            setTimeout(enable,0);
+        },
+        enable_snippets: function ($category) {
+            var self = this;
+            var snippets = 0;
+            $category.find(".oe_snippet_body").each(function () {
+                var $snippet = $(this);
+                for (var k in website.snippet.templateOptions) {
+                    var option = website.snippet.templateOptions[k];
+                    if ($snippet.is(option.base_selector)) {
+
+                        var dropzone = [];
+                        if (option['selector-siblings']) dropzone.push(option['selector-siblings']);
+                        if (option['selector-children']) dropzone.push(option['selector-children']);
+                        if (option['selector-vertical-children']) dropzone.push(option['selector-vertical-children']);
+
+                        if (dropzone.length && self.$wrapwrap.find(dropzone.join(":first, ") + ":first").size()) {
+                            $snippet.closest(".oe_snippet").removeClass("disable");
+                            snippets++;
+                            return;
+                        }
+                    }
+                }
+            });
+            $('#oe_snippets .scroll a[data-toggle="tab"][href="#' + $category.attr("id") + '"]').toggle(!!snippets);
         },
         _get_snippet_url: function () {
             return '/website/snippets';
@@ -248,35 +273,41 @@
                 .then(function (html) {
                     var $html = $(html);
 
+                    function selector_compute (selector, check) {
+                        var data = selector.split(",");
+                        var selectors = [];
+                        for (var k in data) {
+                            selectors.push(data[k].replace(/^\s+|\s+$/g, '') + ":hasArch(" + check + ")");
+                        }
+                        return selectors.join(", ");
+                    }
+
                     var selector = [];
-                    var $styles = $html.find("[data-snippet-id]");
+                    var $styles = $html.find("[data-snippet-id], [data-selector]");
                     $styles.each(function () {
                         var $style = $(this);
                         var style_id = $style.data('snippet-id');
-                        website.snippet.templateOptions.push({
+                        var check = $style.data('check') || '[data-oe-model]';
+                        var option = {
                             'snippet-id' : style_id,
-                            'selector': $style.data('selector'),
+                            'base_selector': $style.data('selector'),
+                            'selector': selector_compute($style.data('selector'), check),
                             '$el': $style,
-                            'selector-siblings': $style.data('selector-siblings'),
-                            'selector-children': $style.data('selector-children'),
-                            'selector-vertical-children': $style.data('selector-vertical-children'),
+                            'selector-siblings': $style.data('selector-siblings') && selector_compute($style.data('selector-siblings'), check),
+                            'selector-children': $style.data('selector-children') && selector_compute($style.data('selector-children'), check),
+                            'selector-vertical-children': $style.data('selector-vertical-children') && selector_compute($style.data('selector-vertical-children'), check),
+                            'check': check,
                             'data': $style.data()
-                        });
-                        selector.push($style.data('selector'));
+                        };
+                        website.snippet.templateOptions.push(option);
+                        selector.push(option.selector);
                     });
                     $styles.addClass("hidden");
                     website.snippet.globalSelector = selector.join(",");
 
                     self.$snippets = $html.find(".tab-content > div > div").addClass("oe_snippet");
+
                     self.$el.append($html);
-
-
-                    var snippets = 0;
-                    self.$snippets.each(function () {
-                        if (self.snippet_have_dropzone($(this)))
-                            snippets++;
-                    });
-                    if (!snippets) self.$button.css("display", "none");
 
                     self.make_snippet_draggable(self.$snippets);
                 });
@@ -301,17 +332,10 @@
         hide: function () {
             this.$el.addClass("hidden");
         },
-
-        snippet_have_dropzone: function ($snippet) {
-            return (($snippet.data('selector-siblings') && this.dom_filter($snippet.data('selector-siblings')).size() > 0) ||
-                    ($snippet.data('selector-children') && this.dom_filter($snippet.data('selector-children')).size() > 0) ||
-                    ($snippet.data('selector-vertical-children') && this.dom_filter($snippet.data('selector-vertical-children')).size() > 0));
-        },
-
         bind_snippet_click_editor: function () {
             var self = this;
             var snipped_event_flag;
-            $("#wrapwrap").on('click', function (event) {
+            self.$wrapwrap.on('click', function (event) {
                 if (snipped_event_flag || !event.srcElement) {
                     return;
                 }
@@ -328,9 +352,6 @@
                     $target = $target.parents(website.snippet.globalSelector).first();
                 }
 
-                if (!self.dom_filter($target).length) {
-                    $target = false;
-                }
                 if (self.$active_snipped_id && self.$active_snipped_id.is($target)) {
                     return;
                 }
@@ -359,13 +380,12 @@
                 var snippet_id = template[k]['snippet-id'];
                 var Option = options[snippet_id];
                 if (Option && Option.prototype.clean_for_save !== dummy) {
-                    this.dom_filter(template[k].selector)
-                        .each(function () {
-                            new Option(self, null, $(this), k).clean_for_save();
-                        });
+                    self.$wrapwrap.find(template[k].selector).each(function () {
+                        new Option(self, null, $(this), k).clean_for_save();
+                    });
                 }
             }
-            $("*[contentEditable], *[attributeEditable]")
+            self.$wrapwrap.find("*[contentEditable], *[attributeEditable]")
                 .removeAttr('contentEditable')
                 .removeAttr('attributeEditable');
         },
@@ -385,7 +405,7 @@
                 this.create_overlay(this.$active_snipped_id);
                 this.snippet_focus($snippet);
             }
-            $("#oe_snippets").trigger('snippet-activated', $snippet);
+            this.$snippet.trigger('snippet-activated', $snippet);
             if ($snippet) {
                 $snippet.trigger('snippet-activated', $snippet);
             }
@@ -429,8 +449,8 @@
                     var selector_children = [];
                     var selector_vertical_children = [];
                     for (var k in website.snippet.templateOptions) {
-                        if ($base_body.is(website.snippet.templateOptions[k].selector)) {
-                            selector.push(website.snippet.templateOptions[k].selector);
+                        if ($base_body.is(website.snippet.templateOptions[k].base_selector)) {
+                            selector.push(website.snippet.templateOptions[k].base_selector);
                             if (website.snippet.templateOptions[k]['selector-siblings'])
                                 selector_siblings.push(website.snippet.templateOptions[k]['selector-siblings']);
                             if (website.snippet.templateOptions[k]['selector-children'])
@@ -488,22 +508,22 @@
                 stop: function(ev, ui){
                     $toInsert.removeClass('oe_snippet_body');
                     
-                    if (action === 'insert' && ! dropped && $('.oe_drop_zone') && ui.position.top > 3) {
-                        var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
+                    if (action === 'insert' && ! dropped && self.$wrapwrap.find('.oe_drop_zone') && ui.position.top > 3) {
+                        var el = self.$wrapwrap.find('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
                         if (el.length) {
                             el.after($toInsert);
                             dropped = true;
                         }
                     }
 
-                    $('.oe_drop_zone').droppable('destroy').remove();
+                    self.$wrapwrap.find('.oe_drop_zone').droppable('destroy').remove();
                     
                     if (dropped) {
                         var $target = false;
                         $target = $toInsert;
 
                         setTimeout(function () {
-                            $("#oe_snippets").trigger('snippet-dropped', $target);
+                            self.$snippet.trigger('snippet-dropped', $target);
 
                             website.snippet.start_animation(true, $target);
 
@@ -569,7 +589,7 @@
             var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
 
             if(child_selector){
-                self.dom_filter(child_selector).each(function (){
+                self.$wrapwrap.find(child_selector).each(function (){
                     var $zone = $(this);
                     $zone.find('> *:not(.oe_drop_zone):visible').after(zone_template);
                     $zone.prepend(zone_template);
@@ -577,7 +597,7 @@
             }
 
             if(vertical_child_selector){
-                self.dom_filter(vertical_child_selector).each(function (){
+                self.$wrapwrap.find(vertical_child_selector).each(function (){
                     var $zone = $(this);
                     var $template = $(zone_template).addClass("oe_vertical");
                     var nb = 0;
@@ -608,7 +628,7 @@
             }
 
             if(sibling_selector){
-                self.dom_filter(sibling_selector, true).each(function (){
+                self.$wrapwrap.find(sibling_selector, true).each(function (){
                     var $zone = $(this);
                     if($zone.prev('.oe_drop_zone:visible').length === 0){
                         $zone.before(zone_template);
@@ -626,13 +646,13 @@
                 // count += $zones.length;
                 // $zones.remove();
 
-                $zones = $('.oe_drop_zone > .oe_drop_zone:not(.oe_vertical)').remove();   // no recursive zones
+                $zones = self.$wrapwrap.find('.oe_drop_zone > .oe_drop_zone:not(.oe_vertical)').remove();   // no recursive zones
                 count += $zones.length;
                 $zones.remove();
             } while (count > 0);
 
             // Cleaning up zones placed between floating or inline elements. We do not like these kind of zones.
-            var $zones = $('.oe_drop_zone:not(.oe_vertical)');
+            var $zones = self.$wrapwrap.find('.oe_drop_zone:not(.oe_vertical)');
             $zones.each(function (){
                 var zone = $(this);
                 var prev = zone.prev();
@@ -656,13 +676,8 @@
         // generate drop zones covering the elements selected by the selector
         // we generate overlay drop zones only to get an idea of where the snippet are, the drop
         activate_overlay_zones: function(selector){
-            var $targets = this.dom_filter(selector);
+            var $targets = typeof selector === "string" ? this.$wrapwrap.find(selector) : selector;
             var self = this;
-
-            if (typeof selector !== 'string' && !$targets.length) {
-                console.debug( "A good node must have a [data-oe-model] attribute or must have at least one parent with [data-oe-model] attribute.");
-                console.debug( "Wrong node(s): ", selector);
-            }
 
             function is_visible($el){
                 return     $el.css('display')    != 'none'
@@ -738,19 +753,23 @@
             this.data = option.$el.data();
 
             this.set_active();
-            var $li = this.$el.find('li:not(.dropdown-submenu)').add(this.$el).filter(function () {
-                    return !!_.toArray($(this).data()).length;
-                }).children();
-            $li.on('mouseenter click', _.bind(this._mouse, this));
-            this.$el.find("ul").add(this.$el).on('mouseleave', _.bind(this.reset, this));
             this.$target.on('snippet-style-reset', _.bind(this.set_active, this));
-
-            this.reset_methods = [];
-            this.reset_time = null;
+            this._bind_li_menu();
 
             this.start();
         },
-        
+
+        _bind_li_menu: function () {
+            var $li = this.$el.find('li:not(.dropdown-submenu)').add(this.$el).filter(function () {
+                    return !!_.toArray($(this).data()).length;
+                }).children();
+            $li.off('mouseenter click').on('mouseenter click', _.bind(this._mouse, this));
+            this.$el.find("ul").add(this.$el).off('mouseleave').on('mouseleave', _.bind(this.reset, this));
+
+            this.reset_methods = [];
+            this.reset_time = null;
+        },
+
         /**
          * this method handles mouse:over and mouse:leave on the snippet editor menu
          */
@@ -783,6 +802,7 @@
         },
 
         onFocus : function () {
+            this._bind_li_menu();
         },
 
         onBlur : function () {
@@ -1686,7 +1706,7 @@
                 this.selector_vertical_children = false;
 
             if (!this.selector_siblings && !this.selector_children && !this.selector_vertical_children) {
-                this.$overlay.find(".oe_snippet_move").addClass('hidden');
+                this.$overlay.find(".oe_snippet_move, .oe_snippet_clone, .oe_snippet_remove").addClass('hidden');
             }
 
 
