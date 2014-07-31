@@ -28,6 +28,12 @@ class view(osv.osv):
         if unmet_dependencies:
             raise osv.except_osv(_('Error !'), _("Unmet module dependencies: %s" % ', '.join(unmet_dependencies)))
 
+        mods_toInstall_ids = self.search(cr, uid, [('name', 'in', terp['depends']),('state', '!=', 'installed')])
+        if mods_toInstall_ids and not force:
+            mods_toInstall = self.browse(cr, uid, mods_toInstall_ids)
+            mods_toInstall_names = tuple([m.name for m in mods_toInstall])
+            raise osv.except_osv('Error !', "Install dependencies: %s" % ', '.join(mods_toInstall_names))
+
         if mod:
             self.write(cr, uid, mod.id, values)
             mode = 'update' if not force else 'init'
