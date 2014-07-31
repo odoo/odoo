@@ -22,6 +22,7 @@ class account_bank_statement_import(osv.TransientModel):
     }
 
     def process_qif(self, cr, uid, data_file, journal_id=False, context=None):
+        """ Import a file in the .QIF format"""
         try:
             fileobj = TemporaryFile('wb+')
             fileobj.write(base64.b64decode(data_file))

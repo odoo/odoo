@@ -7,15 +7,11 @@
 Module to import QIF bank statements.
 ======================================
 
-The machine readable QIF Files are parsed and stored in human readable format in 
-Bank Statements. Also Bank Statements are generated containing a subset of 
-the QIF information (only those transaction lines that are required for the 
-creation of the Financial Accounting records). The Bank Statement is a 
-'read-only' object, hence remaining a reliable representation of the original
-QIF file whereas the Bank Statement will get modified as required by accounting 
-business processes.
+This module allows you to import the machine readable QIF Files in Odoo: they are parsed and stored in human readable format in 
+Accounting \ Bank and Cash \ Bank Statements.
 
-QIF Bank Accounts configured as type 'QIF' will only generate QIF Bank Statements.
+Bank Statements may be generated containing a subset of the QIF information (only those transaction lines that are required for the 
+creation of the Financial Accounting records). 
 ''',
     'images' : [],
     'depends': ['account_bank_statement_import'],
