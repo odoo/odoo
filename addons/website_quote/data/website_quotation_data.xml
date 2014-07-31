@@ -1,6 +1,18 @@
 <openerp>
-    <data>
+    <data noupdate="1">
 
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_quote_menu" model="ir.actions.client">
+            <field name="name">Open Quote Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('sale.menu_sale_quotations')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_quote_menu"/>
+            <field name="state">open</field>
+        </record>
+    </data>
+    <data>
         <!--
             Update Email template to send right quote url
         -->
