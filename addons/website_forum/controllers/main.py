@@ -4,6 +4,7 @@ import werkzeug.urls
 import werkzeug.wrappers
 import simplejson
 import lxml
+from datetime import datetime
 from urllib2 import urlopen
 
 from openerp import tools
@@ -161,6 +162,15 @@ class WebsiteForum(http.Controller):
         })
         return request.website.render("website_forum.forum_index", values)
 
+    @http.route(['/forum/<model("forum.forum"):forum>/<model("forum.post"):post>/share'], type='json', auth='user',method=['POST'], website=True)
+    def forum_share(self, forum, post, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        vals = {
+            'media' : kwargs['media'],
+            'post_id' : post.id
+        }
+        return request.env['forum.post.share'].create(vals).id
+
     @http.route(['/forum/<model("forum.forum"):forum>/faq'], type='http', auth="public", website=True)
     def forum_faq(self, forum, **post):
         values = self._prepare_forum_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
@@ -193,6 +203,20 @@ class WebsiteForum(http.Controller):
         arch = lxml.html.parse(urlopen(kwargs.get('url')))
         return arch.find(".//title").text
 
+    @http.route([
+        '''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>/<string:dialog>''',
+        '''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>/answer/<model("forum.post"):answer>/<string:dialog>/<string:author>''',
+    ], type='http', auth="public", website=True)
+    def answer(self, forum, question, answer=False, dialog=None, author=None, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        values = {
+            'question': question,
+            'answer' : answer,
+            'is_dialog' : True if dialog == 'dialog' else False,
+            'is_author' : True if author == 'author' else False,
+        }
+        return request.website.render("website_forum.answer_share", values)
+
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -203,6 +227,12 @@ class WebsiteForum(http.Controller):
             redirect_url = "/forum/%s/question/%s" % (slug(forum), slug(question.parent_id))
             return werkzeug.utils.redirect(redirect_url, 301)
 
+        question_ask_date = datetime.strptime(question.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        time_diff = datetime.now() - question_ask_date
+        if (time_diff.days >= 10) and (uid != request.website.user_id.id) and (question.child_count == 0):
+            promote_share = True
+        else :
+            promote_share = False
         filters = 'question'
         values = self._prepare_forum_values(forum=forum, searches=post)
         values.update({
@@ -211,6 +241,7 @@ class WebsiteForum(http.Controller):
             'header': {'question_data': True},
             'filters': filters,
             'reversed': reversed,
+            'promote_sharing' : promote_share,
         })
         return request.website.render("website_forum.post_description_full", values)
 
@@ -303,8 +334,7 @@ class WebsiteForum(http.Controller):
                     post_tag_ids.append((4, tag_ids[0]))
                 else:
                     post_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
-
-        new_question_id = request.registry['forum.post'].create(cr, uid, {
+        new_post_id = request.registry['forum.post'].create(cr, uid, {
                 'forum_id': forum.id,
                 'name': post.get('post_name', ''),
                 'content': post.get('content', False),
@@ -313,7 +343,31 @@ class WebsiteForum(http.Controller):
                 'tag_ids': post_tag_ids,
                 'type': post_parent and post_parent.type or post_type,
             }, context=context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), post_parent and slug(post_parent) or new_question_id))
+
+        if not post_parent:
+            forumdata = request.registry['forum.forum'].browse(cr, uid, [forum.id], context=context)
+            if forumdata.probability_shared_questions > 65:
+                stat_data = {forum.id: dict([('probability',forumdata.probability_shared_questions), ('average',forumdata.average_response_time), ('percentage',forumdata.percentage_shared_questions)])}
+            else :
+                stat_data = {forum.id: dict([('probability',65), ('average',3), ('percentage',45)])}
+            res = {
+                'forum_id': forum.id,
+                'question_id': new_post_id,
+                'stat_data': stat_data,
+            }
+        else:
+            if post_parent.child_count == 1:
+                post_create_date = datetime.strptime(post_parent.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                total_seconds = (datetime.now() - post_create_date).total_seconds()
+                post_parent['min_response_time'] = total_seconds
+
+            res = {
+                'forum_id': forum.id,
+                'question_id': post_parent.id,
+                'answer_id': new_post_id,
+                'karma': forum.karma_gen_answer_accepted,
+            }
+        return simplejson.dumps(res)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="public", methods=['POST'], website=True)
     def post_comment(self, forum, post, **kwargs):
