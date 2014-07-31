@@ -18,6 +18,7 @@ chat operators.
         "security/im_livechat_security.xml",
         "security/ir.model.access.csv",
         "im_livechat_view.xml",
+        "res_config_view.xml",
     ],
     'demo': [
         "im_livechat_demo.xml",

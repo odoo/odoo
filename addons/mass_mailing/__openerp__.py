@@ -41,6 +41,7 @@ professional emails and reuse templates in a few clicks.
         'wizard/mail_compose_message_view.xml',
         'wizard/mail_mass_mailing_create_segment.xml',
         'mass_mailing_view.xml',
+        'res_config_view.xml',
         'security/ir.model.access.csv',
     ],
     'js': [

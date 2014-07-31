@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_mass_mailing" model="ir.actions.client">
+            <field name="name">Open Mass Mailing Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('menu_email_campaigns')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_mass_mailing"/>
+            <field name="state">open</field>
+        </record>
+    </data>
+</openerp>
