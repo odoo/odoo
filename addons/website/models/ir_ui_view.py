@@ -220,10 +220,10 @@ class view(osv.osv):
         if view.model_data_id:
             view.model_data_id.write({'noupdate': True})
 
-    # When the english version of a field is modified, the algorythm tries to
+    # When the English version of a field is modified, the algorithm tries to
     # resync translation if the distance between modified strings is not too
     # big. It allows to not retranslate data where a typo has been fixed in
-    # the english version.
+    # the English version.
     def __translation_resync(self, cr, uid, model, ids, field, context=None):
         context = context or {}
         model_obj = self.pool.get(model)
