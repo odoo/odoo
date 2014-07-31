@@ -79,7 +79,7 @@ class WebsiteForum(http.Controller):
         forum_id = request.registry['forum.forum'].create(request.cr, request.uid, {
             'name': forum_name,
         }, context=request.context)
-        return request.redirect("/forum/%s" % slug(forum_id))
+        return request.redirect("/forum/%s" % forum_id)
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
     def notification_read(self, **kwargs):
@@ -120,7 +120,7 @@ class WebsiteForum(http.Controller):
 
         question_count = Post.search(cr, uid, domain, count=True, context=context)
         if tag:
-            url = "/forum/%s/%s/questions" % (slug(forum), slug(tag))
+            url = "/forum/%s/tag/%s/questions" % (slug(forum), slug(tag))
         else:
             url = "/forum/%s" % slug(forum)
 
@@ -208,11 +208,15 @@ class WebsiteForum(http.Controller):
             }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), new_question_id))
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0])]"):question>'''], type='http', auth="public", website=True)
+    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
         cr, uid, context = request.cr, request.uid, request.context
         # increment view counter
         request.registry['forum.post'].set_viewed(cr, SUPERUSER_ID, [question.id], context=context)
+
+        if question.parent_id:
+            redirect_url = "/forum/%s/question/%s" % (slug(forum), slug(question.parent_id))
+            return werkzeug.utils.redirect(redirect_url, 301)
 
         filters = 'question'
         values = self._prepare_forum_values(forum=forum, searches=post)
@@ -588,7 +592,7 @@ class WebsiteForum(http.Controller):
             'website': kwargs.get('website'),
             'email': kwargs.get('email'),
             'city': kwargs.get('city'),
-            'country_id': int(kwargs.get('country')),
+            'country_id': int(kwargs.get('country')) if kwargs.get('country') else False,
             'website_description': kwargs.get('description'),
         }, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), user.id))

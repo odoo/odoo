@@ -17,7 +17,7 @@ class WebsiteResPartner(osv.Model):
             'Website Partner Full Description'
         ),
         'website_short_description': fields.text(
-            'Website artner Short Description'
+            'Website Partner Short Description'
         ),
         # hack to allow using plain browse record in qweb views
         'self': fields.function(_get_ids, type='many2one', relation=_name),

@@ -69,7 +69,7 @@ class Post(osv.Model):
     _name = 'forum.post'
     _description = 'Forum Post'
     _inherit = ['mail.thread', 'website.seo.metadata']
-    _order = "is_correct DESC, vote_count DESC"
+    _order = "is_correct DESC, vote_count DESC, write_date DESC"
 
     def _get_user_vote(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0)
@@ -254,6 +254,8 @@ class Post(osv.Model):
     def vote(self, cr, uid, ids, upvote=True, context=None):
         Vote = self.pool['forum.post.vote']
         vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
+        new_vote = '1' if upvote else '-1'
+        voted_forum_ids = set()
         if vote_ids:
             for vote in Vote.browse(cr, uid, vote_ids, context=context):
                 if upvote:
@@ -261,9 +263,9 @@ class Post(osv.Model):
                 else:
                     new_vote = '0' if vote.vote == '1' else '-1'
                 Vote.write(cr, uid, vote_ids, {'vote': new_vote}, context=context)
-        else:
+                voted_forum_ids.add(vote.post_id.id)
+        for post_id in set(ids) - voted_forum_ids:
             for post_id in ids:
-                new_vote = '1' if upvote else '-1'
                 Vote.create(cr, uid, {'post_id': post_id, 'vote': new_vote}, context=context)
         return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]]}
 
@@ -302,11 +304,18 @@ class Vote(osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         vote_id = super(Vote, self).create(cr, uid, vals, context=context)
-        if vals.get('vote', '1') == '1':
-            karma = self.pool['forum.forum']._karma_upvote
-        elif vals.get('vote', '1') == '-1':
-            karma = self.pool['forum.forum']._karma_downvote
         post = self.pool['forum.post'].browse(cr, uid, vals['post_id'], context=context)
+        karma = 0
+        if vals.get('vote', '1') == '1':
+            if post.parent_id:
+                karma = self.pool['forum.forum']._karma_gen_upvote_ans
+            else:
+                karma = self.pool['forum.forum']._karma_gen_upvote_quest
+        elif vals.get('vote', '1') == '-1':
+            if post.parent_id:
+                karma = self.pool['forum.forum']._karma_gen_downvote_ans
+            else:
+                karma = self.pool['forum.forum']._karma_gen_downvote_quest
         self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id], karma, context=context)
         return vote_id
 

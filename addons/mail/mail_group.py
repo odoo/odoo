@@ -24,7 +24,7 @@ import openerp.tools as tools
 from openerp.osv import osv
 from openerp.osv import fields
 from openerp import SUPERUSER_ID
-
+from openerp.tools.translate import _
 
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
@@ -166,6 +166,12 @@ class mail_group(osv.Model):
         mail_alias = self.pool.get('mail.alias')
         alias_ids = [group.alias_id.id for group in groups if group.alias_id]
         # Delete mail_group
+        try:
+            all_emp_group = self.pool['ir.model.data'].get_object_reference(cr, uid, 'mail', 'group_all_employees')[1]
+        except ValueError:
+            all_emp_group = None
+        if all_emp_group and all_emp_group in ids:
+            raise osv.except_osv(_('Warning!'), _('You cannot delete those groups, as the Whole Company group is required by other modules.'))
         res = super(mail_group, self).unlink(cr, uid, ids, context=context)
         # Delete alias
         mail_alias.unlink(cr, SUPERUSER_ID, alias_ids, context=context)
@@ -211,3 +217,20 @@ class mail_group(osv.Model):
             return []
         else:
             return super(mail_group, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)
+
+    def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
+        res = super(mail_group, self).message_get_email_values(cr, uid, id, notif_mail=notif_mail, context=context)
+        group = self.browse(cr, uid, id, context=context)
+        headers = res.setdefault('headers', {})
+        headers['Precedence'] = 'list'
+        # avoid out-of-office replies from MS Exchange
+        # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx
+        headers['X-Auto-Response-Suppress'] = 'OOF'
+        if group.alias_domain:
+            headers['List-Id'] = '%s.%s' % (group.alias_name, group.alias_domain)
+            headers['List-Post'] = '<mailto:%s@%s>' % (group.alias_name, group.alias_domain)
+            # Avoid users thinking it was a personal message
+            # X-Forge-To: will replace To: after SMTP envelope is determined by ir.mail.server
+            list_to = '"%s" <%s@%s>' % (group.name, group.alias_name, group.alias_domain)
+            headers['X-Forge-To'] = list_to
+        return res

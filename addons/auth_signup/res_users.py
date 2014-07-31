@@ -201,6 +201,14 @@ class res_users(osv.Model):
             partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
 
             partner_user = partner.user_ids and partner.user_ids[0] or False
+
+            # avoid overwriting existing (presumably correct) values with geolocation data
+            if partner.country_id or partner.zip or partner.city:
+                values.pop('city', None)
+                values.pop('country_id', None)
+            if partner.lang:
+                values.pop('lang', None)
+
             if partner_user:
                 # user exists, modify it according to values
                 values.pop('login', None)

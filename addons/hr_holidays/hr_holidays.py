@@ -99,7 +99,7 @@ class hr_holidays_status(osv.osv):
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name
             if not record.limit:
-                name = name + ('  (%d/%d)' % (record.leaves_taken or 0.0, record.max_leaves or 0.0))
+                name = name + ('  (%g/%g)' % (record.leaves_taken or 0.0, record.max_leaves or 0.0))
             res.append((record.id, name))
         return res
 
@@ -522,8 +522,8 @@ class hr_employee(osv.osv):
             where
                 h.state='validate' and
                 s.limit=False and
-                h.employee_id in (%s)
-            group by h.employee_id"""% (','.join(map(str,ids)),) )
+                h.employee_id in %s
+            group by h.employee_id""", (tuple(ids),))
         res = cr.dictfetchall()
         remaining = {}
         for r in res:

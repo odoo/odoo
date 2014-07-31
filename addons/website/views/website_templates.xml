@@ -93,6 +93,17 @@
             <t t-call-assets="website.assets_frontend"/>
 
             <t t-raw="head or ''" name='layout_head'/>
+            <t t-if="website.google_analytics_key">
+                <script>
+                    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                    })(window,document,'script','//www.google-analytics.com/analytics.js','_gaw');
+
+                    _gaw('create',_.str.trim('<t t-esc="website.google_analytics_key"/>'));
+                    _gaw('send','pageview');
+                </script>
+            </t>
         </head>
         <body>
             <div id="wrapwrap">
@@ -113,8 +124,8 @@
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu"/>
                                     </t>
-                                    <li class="divider" groups="base.group_user,base.group_portal" t-ignore="true"/>
-                                    <li class="dropdown" t-ignore="true" groups="base.group_user,base.group_portal">
+                                    <li class="divider" t-ignore="true" t-if="website.user_id != user_id"/>
+                                    <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
                                                 <span t-esc="user_id.name"/>
@@ -207,17 +218,6 @@
                     </div>
                 </footer>
             </div>
-            <t t-if="website.google_analytics_key">
-                <script>
-                    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-                    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-                    e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-                    e.src='//www.google-analytics.com/analytics.js';
-                    r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-                    ga('create',_.str.trim('<t t-esc="website.google_analytics_key"/>'));
-                    ga('send','pageview');
-                </script>
-            </t>
         </body>
     </html>
 </template>
@@ -426,7 +426,7 @@
     <table class="table js_kanban">
         <thead>
             <tr>
-                <t t-set="width" t-value="str(round(100.0 / len(objects), 2)) + '%'"/>
+                <t t-set="width" t-value="str(round(100.0 / (len(objects) if objects else 1), 2)) + '%'"/>
                 <t t-foreach="objects">
                     <th t-att-width="width">
                         <div t-field="column_id.name" class="text-center"></div>

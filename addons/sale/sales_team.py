@@ -3,6 +3,7 @@
 import calendar
 from datetime import date
 from dateutil import relativedelta
+import json
 
 from openerp import tools
 from openerp.osv import fields, osv
@@ -20,9 +21,9 @@ class crm_case_section(osv.osv):
         for id in ids:
             res[id] = dict()
             created_domain = [('section_id', '=', id), ('state', '=', 'draft'), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
-            res[id]['monthly_quoted'] = self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context)
+            res[id]['monthly_quoted'] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context))
             validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent', 'cancel']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
-            res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context)
+            res[id]['monthly_confirmed'] = json.dumps(self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context))
         return res
 
     def _get_invoices_data(self, cr, uid, ids, field_name, arg, context=None):
@@ -33,11 +34,11 @@ class crm_case_section(osv.osv):
         date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
             created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', date_begin), ('date', '<=', date_end)]
-            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context)
+            res[id] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context))
         return res
 
     _columns = {
-        'use_quotations': fields.boolean('Opportunities', help="Check this box to manage quotations in this sales team."),
+        'use_quotations': fields.boolean('Quotations', help="Check this box to manage quotations in this sales team."),
         'invoiced_forecast': fields.integer(string='Invoice Forecast',
             help="Forecast of the invoice revenue for the current month. This is the amount the sales \n"
                     "team should invoice this month. It is used to compute the progression ratio \n"

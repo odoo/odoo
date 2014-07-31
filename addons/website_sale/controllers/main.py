@@ -55,7 +55,7 @@ class table_compute(object):
                     self.table[(pos/PPR)+y2][(pos%PPR)+x2] = False
             self.table[pos/PPR][pos%PPR] = {
                 'product': p, 'x':x, 'y': y,
-                'class': " ".join(map(lambda x: x.html_class, p.website_style_ids))
+                'class': " ".join(map(lambda x: x.html_class or '', p.website_style_ids))
             }
             if index<=PPG:
                 maxy=max(maxy,y+(pos/PPR))
@@ -169,7 +169,7 @@ class website_sale(http.Controller):
 
         values = {
             'search': search,
-            'category': category and int(category),
+            'category': category,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'pager': pager,
@@ -237,6 +237,12 @@ class website_sale(http.Controller):
                 subtype='mt_comment',
                 context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
+
+    @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
+    def pricelist(self, promo, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        request.website.sale_get_order(code=promo, context=context)
+        return request.redirect("/shop/cart")
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
@@ -599,7 +605,7 @@ class website_sale(http.Controller):
         if not order:
             return {
                 'state': 'error',
-                'message': '<p>There seems to be an error with your request.</p>',
+                'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
             }
 
         tx_ids = request.registry['payment.transaction'].search(
@@ -611,7 +617,7 @@ class website_sale(http.Controller):
             if order.amount_total:
                 return {
                     'state': 'error',
-                    'message': '<p>There seems to be an error with your request.</p>',
+                    'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
                 }
             else:
                 state = 'done'
@@ -621,15 +627,15 @@ class website_sale(http.Controller):
             tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
             state = tx.state
             if state == 'done':
-                message = '<p>Your payment has been received.</p>'
+                message = '<p>%s</p>' % _('Your payment has been received.')
             elif state == 'cancel':
-                message = '<p>The payment seems to have been canceled.</p>'
+                message = '<p>%s</p>' % _('The payment seems to have been canceled.')
             elif state == 'pending' and tx.acquirer_id.validation == 'manual':
-                message = '<p>Your transaction is waiting confirmation.</p>'
+                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
                 if tx.acquirer_id.post_msg:
                     message += tx.acquirer_id.post_msg
             else:
-                message = '<p>Your transaction is waiting confirmation.</p>'
+                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
             validation = tx.acquirer_id.validation
 
         return {
@@ -759,5 +765,34 @@ class website_sale(http.Controller):
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)
         return product.write({'website_size_x': x, 'website_size_y': y})
 
+    def order_lines_2_google_api(self, order_lines):
+        """ Transforms a list of order lines into a dict for google analytics """
+        ret = []
+        for line in order_lines:
+            ret.append({
+                'id': line.order_id and line.order_id.id,
+                'name': line.product_id.categ_id and line.product_id.categ_id.name or '-',
+                'sku': line.product_id.id,
+                'quantity': line.product_uom_qty,
+                'price': line.price_unit,
+            })
+        return ret
+
+    @http.route(['/shop/tracking_last_order'], type='json', auth="public")
+    def tracking_cart(self, **post):
+        """ return data about order in JSON needed for google analytics"""
+        cr, uid, context = request.cr, request.uid, request.context
+        ret = {}
+        sale_order_id = request.session.get('sale_last_order_id')
+        if sale_order_id:
+            order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
+            ret['transaction'] = {
+                'id': sale_order_id,
+                'affiliation': order.company_id.name,
+                'revenue': order.amount_total,
+                'currency': order.currency_id.name
+            }
+            ret['lines'] = self.order_lines_2_google_api(order.order_line)
+        return ret
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

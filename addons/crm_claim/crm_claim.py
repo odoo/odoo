@@ -164,6 +164,13 @@ class crm_claim(osv.osv):
         # context: no_log, because subtype already handle this
         return super(crm_claim, self).create(cr, uid, vals, context=context)
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        claim = self.browse(cr, uid, id, context=context)
+        default = dict(default or {},
+            stage_id = self._get_default_stage_id(cr, uid, context=context),
+            name = _('%s (copy)') % claim.name)
+        return super(crm_claim, self).copy(cr, uid, id, default, context=context)
+
     # -------------------------------------------------------
     # Mail gateway
     # -------------------------------------------------------

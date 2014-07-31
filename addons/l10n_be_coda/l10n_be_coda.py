@@ -56,7 +56,7 @@ class account_bank_statement_line(osv.osv):
         """
             Same as create function above, but for write function
         """
-        if 'partner_id' in vals:
+        if vals.get('partner_id'):
             for line in self.pool.get('account.bank.statement.line').browse(cr, uid, ids, context=context):
                 if line.coda_account_number:
                     acc_number_ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', line.coda_account_number)])
