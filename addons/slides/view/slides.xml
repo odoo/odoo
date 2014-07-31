@@ -131,26 +131,26 @@
 				<div class="thumbnail oe-slides-grid-thumbnail">
 					<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
 						<t t-if="not attachment.youtube_id">
-							<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive"/>
+							<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive shadow"/>
 						</t>
 						<t t-if="attachment.youtube_id">										
 							<i class="fa fa-play-circle-o fa-3x play_button"></i>
-							<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive"/>
+							<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive shadow"/>
 						</t>
 					</a>
 					<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
-						<h4>
+						<h4 class="oe-slides-text-truncation">
 							<t t-esc="attachment.name"/>
 						</h4>
 					</a>					
-					<div t-if="attachment.tag_ids" class="pull-left">
+					<p t-if="attachment.tag_ids" class="oe-slides-text-truncation">
+						<i class="fa fa-tags"></i>
 						<t t-foreach="attachment.tag_ids" t-as="att_tag">
 							<a t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=att_tag.name)">
 								<span t-attf-class="badge #{tags and tags == att_tag.name and 'badge-active' ''}" t-field="att_tag.name"/>
 							</a>
-						</t>
-					</div>
-					<br/>
+						</t>						
+					</p>									
 					<small class="text-muted">
 						<t t-esc="attachment.create_date" />
 					</small>
@@ -199,22 +199,26 @@
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding:0px;">
 						<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
 							<t t-if="not attachment.youtube_id">
-								<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive"/>
+								<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive shadow"/>
 							</t>
 							<t t-if="attachment.youtube_id">										
 								<i class="fa fa-play-circle-o fa-3x play_button"></i>
-								<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive"/>
+								<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive shadow"/>
 							</t>
 						</a>
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 						<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
-							<h5>
+							<h5 class="oe-slides-text-truncation">
 								<t t-esc="attachment.name"/>
 							</h5>
 						</a>
-						<small class="text-muted">							
-							<t t-esc="attachment.slide_views" /> Views
+						<small class="text-muted">
+							<t t-esc="attachment.create_date" />
+						</small>
+						<small class="text-muted">
+							<t t-esc="attachment.slide_views" />
+							Views
 						</small>						
 					</div>				
 				</div>
