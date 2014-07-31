@@ -79,11 +79,13 @@ class account_analytic_line(osv.osv):
         prod = product_obj.browse(cr, uid, prod_id, context=context)
         result = 0.0
         if prod_id:
-            unit_obj = product_uom_obj.browse(cr, uid, unit, context=context)
-            if prod.uom_id.category_id.id != unit_obj.category_id.id:
+            unit_obj = False
+            if unit:
+                unit_obj = product_uom_obj.browse(cr, uid, unit, context=context)
+            if not unit_obj or prod.uom_id.category_id.id != unit_obj.category_id.id:
                 unit = prod.uom_id.id
             if j_id.type == 'purchase':
-                if prod.uom_po_id.category_id.id != unit_obj.category_id.id:
+                if not unit_obj or prod.uom_po_id.category_id.id != unit_obj.category_id.id:
                     unit = prod.uom_po_id.id
         if j_id.type <> 'sale':
             a = prod.property_account_expense.id
