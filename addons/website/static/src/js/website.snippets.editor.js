@@ -228,37 +228,47 @@
             var self = this;
             this.make_active(false);
             this.$el.toggleClass("hidden");
-            this.$snippets.addClass("disable");
-            this.enable_snippets( this.$snippet.find(".tab-pane.active") );
-            var categories = this.$snippet.find(".tab-pane:not(.active)").get();
+            if (this.$el.hasClass("hidden")) {
+                return;
+            }
+
+            //this.enable_snippets( this.$snippet.find(".tab-pane.active") );
+            var categories = this.$snippet.find(".tab-pane.active")
+                .add(this.$snippet.find(".tab-pane:not(.active)"))
+                .get().reverse();
             function enable() {
                 self.enable_snippets( $(categories.pop()) );
                 if (categories.length) {
-                    setTimeout(enable,0);
+                    setTimeout(enable,10);
                 }
             }
             setTimeout(enable,0);
         },
         enable_snippets: function ($category) {
             var self = this;
-            var snippets = 0;
             $category.find(".oe_snippet_body").each(function () {
                 var $snippet = $(this);
-                for (var k in website.snippet.templateOptions) {
-                    var option = website.snippet.templateOptions[k];
-                    if ($snippet.is(option.base_selector)) {
 
-                        var dropzone = [];
-                        if (option['selector-siblings']) dropzone.push(option['selector-siblings']);
-                        if (option['selector-children']) dropzone.push(option['selector-children']);
-                        if (option['selector-vertical-children']) dropzone.push(option['selector-vertical-children']);
+                if (!$snippet.data('selectors')) {
+                    var selectors = [];
+                    for (var k in website.snippet.templateOptions) {
+                        var option = website.snippet.templateOptions[k];
+                        if ($snippet.is(option.base_selector)) {
 
-                        if (dropzone.length && self.$wrapwrap.find(dropzone.join(":first, ") + ":first").size()) {
-                            $snippet.closest(".oe_snippet").removeClass("disable");
-                            snippets++;
-                            return;
+                            var dropzone = [];
+                            if (option['selector-siblings']) dropzone.push(option['selector-siblings']);
+                            if (option['selector-children']) dropzone.push(option['selector-children']);
+                            if (option['selector-vertical-children']) dropzone.push(option['selector-vertical-children']);
+                            selectors = selectors.concat(dropzone);
                         }
                     }
+                    $snippet.data('selectors', selectors.length ? selectors.join(":first, ") + ":first" : "");
+                }
+
+                if ($snippet.data('selectors').length && self.$wrapwrap.find($snippet.data('selectors')).size()) {
+                    $snippet.closest(".oe_snippet").removeClass("disable");
+                } else {
+                    $snippet.closest(".oe_snippet").addClass("disable");
                 }
             });
             $('#oe_snippets .scroll a[data-toggle="tab"][href="#' + $category.attr("id") + '"]').toggle(!!snippets);
