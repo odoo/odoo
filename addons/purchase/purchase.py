@@ -49,8 +49,10 @@ class purchase_order(osv.osv):
                 val1 += line.price_subtotal
                 line_price = line_obj._calc_line_base_price(cr, uid, line,
                                                             context=context)
+                line_qty = line_obj._calc_line_quantity(cr, uid, line,
+                                                        context=context)
                 for c in self.pool['account.tax'].compute_all(
-                        cr, uid, line.taxes_id, line_price, line.product_qty,
+                        cr, uid, line.taxes_id, line_price, line_qty,
                         line.product_id, order.partner_id)['taxes']:
                     val += c.get('amount', 0.0)
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
@@ -952,6 +954,9 @@ class purchase_order_line(osv.osv):
     def _calc_line_base_price(self, cr, uid, line, context=None):
         return line.price_unit
 
+    def _calc_line_quantity(self, cr, uid, line, context=None):
+        return line.product_qty
+
     def _amount_line(self, cr, uid, ids, prop, arg, context=None):
         res = {}
         cur_obj=self.pool.get('res.currency')
@@ -959,8 +964,10 @@ class purchase_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             line_price = self._calc_line_base_price(cr, uid, line,
                                                     context=context)
+            line_qty = self._calc_line_quantity(cr, uid, line,
+                                                context=context)
             taxes = tax_obj.compute_all(cr, uid, line.taxes_id, line_price,
-                                        line.product_qty, line.product_id,
+                                        line_qty, line.product_id,
                                         line.order_id.partner_id)
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
