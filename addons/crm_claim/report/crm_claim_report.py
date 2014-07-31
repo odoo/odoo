@@ -52,7 +52,7 @@ class crm_claim_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
-        'date_closed': fields.date('Close Date', readonly=True, select=True),
+        'date_closed': fields.datetime('Close Date', readonly=True, select=True),
         'date_deadline': fields.date('Deadline', readonly=True, select=True),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
         'email': fields.integer('# Emails', size=128, readonly=True),
@@ -71,7 +71,7 @@ class crm_claim_report(osv.osv):
                 select
                     min(c.id) as id,
                     c.date as claim_date,
-                    date(c.date_closed) as date_closed,
+                    c.date_closed as date_closed,
                     c.date_deadline as date_deadline,
                     c.user_id,
                     c.stage_id,

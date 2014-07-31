@@ -31,9 +31,9 @@ class project_issue_report(osv.osv):
     _columns = {
         'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'opening_date': fields.date('Date of Opening', readonly=True),
-        'create_date': fields.date('Create Date', readonly=True),
-        'date_closed': fields.date('Date of Closing', readonly=True),
+        'opening_date': fields.datetime('Date of Opening', readonly=True),
+        'create_date': fields.datetime('Create Date', readonly=True),
+        'date_closed': fields.datetime('Date of Closing', readonly=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
         'stage_id': fields.many2one('project.task.type', 'Stage'),
         'nbr_issues': fields.integer('# of Issues', readonly=True),
@@ -61,9 +61,9 @@ class project_issue_report(osv.osv):
             CREATE OR REPLACE VIEW project_issue_report AS (
                 SELECT
                     c.id as id,
-                    date(c.date_open) as opening_date,
-                    date(c.create_date) as create_date,
-                    date(c.date_last_stage_update) as date_last_stage_update,
+                    c.date_open as opening_date,
+                    c.create_date as create_date,
+                    c.date_last_stage_update as date_last_stage_update,
                     c.user_id,
                     c.working_hours_open,
                     c.working_hours_close,

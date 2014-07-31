@@ -55,8 +55,8 @@ class crm_helpdesk_report(osv.osv):
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"),
         'planned_cost': fields.float('Planned Costs'),
-        'create_date': fields.date('Creation Date' , readonly=True, select=True),
-        'date_closed': fields.date('Close Date', readonly=True, select=True),
+        'create_date': fields.datetime('Creation Date' , readonly=True, select=True),
+        'date_closed': fields.datetime('Close Date', readonly=True, select=True),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
         'email': fields.integer('# Emails', size=128, readonly=True),
     }
@@ -74,8 +74,8 @@ class crm_helpdesk_report(osv.osv):
                 select
                     min(c.id) as id,
                     c.date as date,
-                    date(c.create_date) as create_date,
-                    date(c.date_closed) as date_closed,
+                    c.create_date,
+                    c.date_closed,
                     c.state,
                     c.user_id,
                     c.section_id,

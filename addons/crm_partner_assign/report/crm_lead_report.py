@@ -47,8 +47,8 @@ class crm_lead_report_assign(osv.osv):
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Customer' , readonly=True),
-        'opening_date': fields.date('Opening Date', readonly=True),
-        'date_closed': fields.date('Close Date', readonly=True),
+        'opening_date': fields.datetime('Opening Date', readonly=True),
+        'date_closed': fields.datetime('Close Date', readonly=True),
         'nbr_cases': fields.integer('# of Cases', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
@@ -68,8 +68,8 @@ class crm_lead_report_assign(osv.osv):
             CREATE OR REPLACE VIEW crm_lead_report_assign AS (
                 SELECT
                     c.id,
-                    date(c.date_open) as opening_date,
-                    date(c.date_closed) as date_closed,
+                    c.date_open as opening_date,
+                    c.date_closed as date_closed,
                     c.date_assign,
                     c.user_id,
                     c.probability,

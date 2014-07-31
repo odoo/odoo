@@ -54,8 +54,8 @@ class crm_phonecall_report(osv.osv):
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'opening_date': fields.date('Opening Date', readonly=True, select=True),
-        'date_closed': fields.date('Close Date', readonly=True, select=True),
+        'opening_date': fields.datetime('Opening Date', readonly=True, select=True),
+        'date_closed': fields.datetime('Close Date', readonly=True, select=True),
     }
 
     def init(self, cr):
@@ -68,8 +68,8 @@ class crm_phonecall_report(osv.osv):
             create or replace view crm_phonecall_report as (
                 select
                     id,
-                    date(c.date_open) as opening_date,
-                    date(c.date_closed) as date_closed,
+                    c.date_open as opening_date,
+                    c.date_closed as date_closed,
                     c.state,
                     c.user_id,
                     c.section_id,
