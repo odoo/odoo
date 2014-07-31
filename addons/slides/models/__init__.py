@@ -1,1 +1,0 @@
-import slides_attachment
