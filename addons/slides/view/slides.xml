@@ -152,7 +152,7 @@
 						</t>						
 					</p>									
 					<small class="text-muted">
-						<t t-esc="attachment.create_date" />
+						<timeago class="timeago" t-att-title="attachment.create_date"></timeago>
 					</small>
 					<small class="text-muted pull-right">
 						<t t-esc="attachment.slide_views" />
@@ -214,11 +214,8 @@
 							</h5>
 						</a>
 						<small class="text-muted">
-							<t t-esc="attachment.create_date" />
-						</small>
-						<small class="text-muted">
-							<t t-esc="attachment.slide_views" />
-							Views
+							<p><timeago class="timeago" t-att-title="attachment.create_date"></timeago></p>
+							<p><t t-esc="attachment.slide_views" /> Views</p>
 						</small>						
 					</div>				
 				</div>
