@@ -34,30 +34,18 @@ from openerp.addons.website.models.website import slug
 
 class main(http.Controller):
     _slides_per_page = 8
-
-    def content_disposition(self,filename):
-        filename = filename.encode('utf8')
-        escaped = urllib2.quote(filename)
-        browser = request.httprequest.user_agent.browser
-        version = int((request.httprequest.user_agent.version or '0').split('.')[0])
-        if browser == 'msie' and version < 9:
-            return "attachment; filename=%s" % escaped
-        elif browser == 'safari':
-            return "attachment; filename=%s" % filename
-        else:
-            return "attachment; filename*=UTF-8''%s" % escaped
-
+    
 
     @http.route(['/slides',
                  '/slides/page/<int:page>',
                  '/slides/view/<model("ir.attachment"):slideview>'
                  ], type='http', auth="public", website=True)
     def slides(self, page=1, filters='all', sorting='creation', search='', tags='', slideview=''):
-        cr, uid, context = request.cr, request.uid, request.context
+        cr, uid, context = request.cr, SUPERUSER_ID, request.context
         attachment = request.registry['ir.attachment']
 
         if slideview:
-            attachment.set_viewed(cr, SUPERUSER_ID, [slideview.id], context=context)
+            attachment.set_viewed(cr, uid, [slideview.id], context=context)
 
         domain = [("is_slide","=","TRUE")]
         if search:
@@ -115,23 +103,14 @@ class main(http.Controller):
         })
         return request.website.render('slides.home', values)
 
-    @http.route('/slides/download/<model("ir.attachment"):slide>', type='http', auth="public", website=True,)
-    def download(self, slide):        
-        return request.make_response(slide.url,[('Content-Type', 'application/octet-stream'),('Content-Disposition',self.content_disposition(slide.datas_fname))])
 
-
-    @http.route(['/slides/thumb/<int:document_id>'], type='http', auth="public", website=True)
+    @http.route('/slides/thumb/<int:document_id>', type='http', auth="public", website=True)
     def slide_thumb(self, document_id=0, **post):
-        cr, uid, context = request.cr, request.uid, request.context
+        cr, uid, context = request.cr, SUPERUSER_ID, request.context
         response = werkzeug.wrappers.Response()
         Files = request.registry['ir.attachment']
         Website = request.registry['website']
-        user = Files.browse(cr, SUPERUSER_ID, document_id, context=context)
-        return Website._image(cr, SUPERUSER_ID, 'ir.attachment', user.id, 'image', response, max_height=225)
+        user = Files.browse(cr, uid, document_id, context=context)
+        return Website._image(cr, uid, 'ir.attachment', user.id, 'image', response, max_height=225)
 
-
-    @http.route('/set_slide_thumbnail/', type='http', auth="public", website=True)
-    def set_slide_thumbnail(self,**post):
-        if post.get('id'):
-            request.registry['ir.attachment'].write(request.cr, request.uid, int(post['id']), {'image' : post['dataURL'][22:]}, context=request.context) 
-        return ""
+        
