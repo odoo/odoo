@@ -246,7 +246,7 @@ class view(osv.osv):
                 if term.src not in origins:
                     newsrc = difflib.get_close_matches(term.src, origins, 1, 0.9)
                     if newsrc:
-                        trans_obj.write(cr, uid, term.id, {'src': newsrc}, context=context)
+                        trans_obj.write(cr, uid, term.id, {'src': newsrc[0]}, context=context)
                     elif translate is True:
                         trans_obj.write(cr, uid, term.id, {'state': 'to_translate', 'src': val}, context=context)
         return True
