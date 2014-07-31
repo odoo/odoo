@@ -11,6 +11,7 @@
     ],
     'demo': [
         'demo/fiscalyear_period.xml',
+        'demo/partner_bank.xml',
     ],
     'auto_install': False,
     'installable': True,
