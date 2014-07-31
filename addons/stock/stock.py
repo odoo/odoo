@@ -2434,7 +2434,6 @@ class stock_move(osv.osv):
                 todo.append(move.id)
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
-            todo = []
 
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ['done','cancel']:
