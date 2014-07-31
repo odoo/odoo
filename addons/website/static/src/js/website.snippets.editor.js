@@ -1128,7 +1128,7 @@
                 return self._class || "";
             };
             this.$target.on('slid.bs.carousel', function () {
-                if(self.editor.styles.background) {
+                if(self.editor && self.editor.styles.background) {
                     self.editor.styles.background.$target = self.$target.find(".item.active");
                     self.editor.styles.background.set_active();
                 }
