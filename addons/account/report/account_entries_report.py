@@ -50,7 +50,7 @@ class account_entries_report(osv.osv):
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconciliation number', readonly=True),
         'partner_id': fields.many2one('res.partner','Partner', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),
+        'product_quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),
         'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
         'type': fields.selection([
             ('receivable', 'Receivable'),
@@ -129,7 +129,7 @@ class account_entries_report(osv.osv):
                 a.type as type,
                 a.user_type as user_type,
                 1 as nbr,
-                l.quantity as quantity,
+                l.quantity as product_quantity,
                 l.currency_id as currency_id,
                 l.amount_currency as amount_currency,
                 l.debit as debit,

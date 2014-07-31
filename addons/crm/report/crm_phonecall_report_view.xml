@@ -23,7 +23,7 @@
             <field name="model_id">crm.phonecall.report</field>
             <field name="domain">[('state','=','done')]</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['categ_id'], 'search_default_held': 1, 'measure': ['quantity', 'duration']}</field>
+            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['categ_id'], 'search_default_held': 1, 'measure': ['nbr_cases', 'duration']}</field>
         </record>
         <record id="filter_crm_phonecall_delay_to_close" model="ir.filters">
             <field name="name">Delay To Close</field>
@@ -37,7 +37,7 @@
             <field name="model_id">crm.phonecall.report</field>
             <field name="domain">[('state','in',('draft','open'))]</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['section_id'], 'search_default_todo': 1, 'measure': ['quantity']}</field>
+            <field name="context">{'group_by': ['section_id'], 'search_default_todo': 1, 'measure': ['nbr_cases']}</field>
         </record>
 
 

@@ -38,7 +38,7 @@
             <field name="model_id">mrp.workorder</field>
             <field name="domain">[('state','=','startworking')]</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['workcenter_id'], 'col_group_by': ['product_id'], 'search_default_started': 1, 'measure': ['quantity', 'total_hours']}</field>
+            <field name="context">{'group_by': ['workcenter_id'], 'col_group_by': ['product_id'], 'search_default_started': 1, 'measure': ['product_qty', 'total_hours']}</field>
         </record>
 
         <record id="view_report_mrp_workorder_filter" model="ir.ui.view">

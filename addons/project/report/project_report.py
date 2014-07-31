@@ -54,6 +54,7 @@ class report_project_task_user(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Contact', readonly=True),
         'stage_id': fields.many2one('project.task.type', 'Stage'),
+        'nbr_tasks': fields.integer('# of Tasks', readonly=True),
     }
     _order = 'name desc, project_id'
 
@@ -62,7 +63,7 @@ class report_project_task_user(osv.osv):
         cr.execute("""
             CREATE view report_project_task_user as
               SELECT
-                    (select 1 ) AS nbr,
+                    (select 1 ) AS nbr_tasks,
                     t.id as id,
                     t.date_start as date_start,
                     t.date_end as date_end,

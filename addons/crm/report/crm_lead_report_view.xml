@@ -74,14 +74,14 @@
             <field name="model_id">crm.lead.report</field>
             <field name="domain">[('type','=','opportunity'), ('probability', '=', 100), ('stage_id.on_change', '=', 1)]</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['date_last_stage_update:month'], 'search_default_opportunity': 1, 'search_default_won': 1, 'measure': ['quantity', 'delay_close']}</field>
+            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['date_last_stage_update:month'], 'search_default_opportunity': 1, 'search_default_won': 1, 'measure': ['nbr_cases', 'delay_close']}</field>
         </record>
         <record id="filter_leads_opportunities_to_win" model="ir.filters">
             <field name="name">Opportunities To Win</field>
             <field name="model_id">crm.lead.report</field>
             <field name="domain">[('type','=','opportunity'), ('probability', '=', 0), ('stage_id.sequence', '=', 1)]</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['partner_id'], 'search_default_opportunity': 1, 'search_default_new': 1, 'measure': ['quantity','probability','planned_revenue']}</field>
+            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['partner_id'], 'search_default_opportunity': 1, 'search_default_new': 1, 'measure': ['nbr_cases','probability','planned_revenue']}</field>
         </record>
         <record id="filter_leads_salesperson" model="ir.filters">
             <field name="name">By Salespersons</field>
