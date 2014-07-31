@@ -22,17 +22,17 @@ try:
     from ofxparse import OfxParser as ofxparser
     add_file_type(('ofx', 'OFX'))
 except ImportError:
-    _logger.warning("OFX parser partially unavailable because the `ofxparse` Python library cannot be found. "
-                    "It can be easily download and install from this `https://pypi.python.org/pypi/ofxparse`.")
+    _logger.warning("OFX parser partially unavailable because the `ofxparse` Python library cannot be found."
+                    "It can be easily downloaded and installed from `https://pypi.python.org/pypi/ofxparse`.")
     ofxparser = None
 
 class account_bank_statement_import(osv.TransientModel):
     _name = 'account.bank.statement.import'
     _description = 'Import Bank Statement'
     _columns = {
-        'data_file': fields.binary('Bank Statement File', required=True, help='Select bank statement file to import in OpenERP. .OFX, .QIF or CODA are accepted.'),
+        'data_file': fields.binary('Bank Statement File', required=True, help='Get you bank statements in electronic format from your bank and select them here.'),
         'file_type': fields.selection(_IMPORT_FILE_TYPE, 'File Type', required=True),
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True),
+        'journal_id': fields.many2one('account.journal', 'Journal', required=True, help="The journal for which the bank statements will be created"),
     }
 
     def _get_default_journal(self, cr, uid, context=None):
@@ -46,6 +46,12 @@ class account_bank_statement_import(osv.TransientModel):
     }
 
     def _detect_partner(self, cr, uid, identifying_string, identifying_field='acc_number', context=None):
+        """Try to find a bank account and its related partner for the given 'identifying_string', looking on the field 'identifying_field'.
+
+           :param identifying_string: varchar
+           :param identifying_field: varchar corresponding to the name of a field of res.partner.bank
+           :returns: tuple(ID of the bank account found or False, ID of the partner for the bank account found or False)
+        """
         partner_id = False
         bank_account_id = False
         if identifying_string:
@@ -72,6 +78,7 @@ class account_bank_statement_import(osv.TransientModel):
         return bank_account_id, partner_id
 
     def import_bank_statement(self, cr, uid, bank_statement_vals=False, context=None):
+        """ Get a list of values to pass to the create() of account.bank.statement object, and returns a list of ID created using those values"""
         statement_ids = []
         for vals in bank_statement_vals:
             statement_ids.append(self.pool.get('account.bank.statement').create(cr, uid, vals, context=context))
@@ -81,6 +88,7 @@ class account_bank_statement_import(osv.TransientModel):
         raise osv.except_osv(_('Error'), _('No available format for importing bank statement. You can install the `ofxparse` Python library on the server to enable the import of OFX files, or install one of the other file format available through the module installation.'))
 
     def process_ofx(self, cr, uid, data_file, journal_id=False, context=None):
+        """ Import a file in the .OFX format"""
         try:
             tempfile = open("temp.ofx", "w+")
             tempfile.write(base64.decodestring(data_file))
@@ -126,6 +134,7 @@ class account_bank_statement_import(osv.TransientModel):
         return [vals_bank_statement]
 
     def parse_file(self, cr, uid, ids, context=None):
+        """ Process the file chosen in the wizard and returns a list view of the imported bank statements"""
         data = self.browse(cr, uid, ids[0], context=context)
         vals = getattr(self, "process_%s" % data.file_type)(cr, uid, data.data_file, data.journal_id.id, context=context)
         statement_ids = self.import_bank_statement(cr, uid, vals, context=context)

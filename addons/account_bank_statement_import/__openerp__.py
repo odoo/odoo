@@ -5,9 +5,9 @@
     'author': 'OpenERP SA',
     'depends': ['account'],
     'demo': [],
-    'description' : """Generic Wizard to Import Bank Statements""",
+    'description' : """Generic Wizard to Import Bank Statements. Includes the import of files in .OFX format""",
     'data' : [
-        'views/account_bank_statement_import_view.xml',
+        'account_bank_statement_import_view.xml',
     ],
     'demo': [
         'demo/fiscalyear_period.xml',
