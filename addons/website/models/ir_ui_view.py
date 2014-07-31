@@ -234,7 +234,9 @@ class view(osv.osv):
         chunk = (lambda x: [x]) if (translate is True) else translate
 
         for record in model_obj.browse(cr, uid, ids, context=context):
-            origins = list(chunk( getattr(record, field)))
+            val = getattr(record, field)
+            if not val: continue
+            origins = list(chunk(val))
 
             trans_ids = trans_obj.search(cr, uid, [
                             ('name','=',model+','+field),('type','=','model'),
@@ -246,8 +248,7 @@ class view(osv.osv):
                     if newsrc:
                         trans_obj.write(cr, uid, term.id, {'src': newsrc}, context=context)
                     elif translate is True:
-                        trans_obj.write(cr, uid, term.id, {'state': 'to_translate'}, context=context)
-
+                        trans_obj.write(cr, uid, term.id, {'state': 'to_translate', 'src': val}, context=context)
         return True
 
 
