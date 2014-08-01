@@ -343,11 +343,21 @@
             </field>
         </record>
 
+        <record id="view_mail_mass_mailing_graph" model="ir.ui.view">
+            <field name="name">mail.mass_mailing.graph</field>
+            <field name="model">mail.mass_mailing</field>
+            <field name="arch" type="xml">
+                <graph string="Mass Mailing" type="bar" stacked="True">
+                    <field name="mass_mailing_campaign_id" type="row"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="action_view_mass_mailings" model="ir.actions.act_window">
             <field name="name">Mass Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree,form,graph</field>
             <field name="help" type="html">
 <p class="oe_view_nocontent_create">
     Click here to create a new mailing.
@@ -362,7 +372,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{
-                'search_default_mass_mailing_campaign_id': [active_id], 
+                'search_default_mass_mailing_campaign_id': [active_id],
                 'default_mass_mailing_campaign_id': active_id,
             }
             </field>
