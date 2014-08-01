@@ -977,7 +977,7 @@ class calendar_event(osv.Model):
         """
         value = {}
 
-        if checkallday != allday:
+        if checkallday != allday or not (start and end):
             return value
 
         value['allday'] = checkallday  # Force to be rewrited
