@@ -952,9 +952,19 @@ class purchase_order(osv.osv):
 
 class purchase_order_line(osv.osv):
     def _calc_line_base_price(self, cr, uid, line, context=None):
+        """Return the base price of the line to be used for tax calculation.
+
+        This function can be extended by other modules to modify this base
+        price (adding a discount, for example).
+        """
         return line.price_unit
 
     def _calc_line_quantity(self, cr, uid, line, context=None):
+        """Return the base quantity of the line to be used for the subtotal.
+
+        This function can be extended by other modules to modify this base
+        quantity (adding for example offers 3x2 and so on).
+        """
         return line.product_qty
 
     def _amount_line(self, cr, uid, ids, prop, arg, context=None):
