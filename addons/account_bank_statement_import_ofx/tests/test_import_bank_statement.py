@@ -17,7 +17,7 @@ class TestOfxFile(TransactionCase):
             #the Python library isn't installed on the server, the OFX import is unavailable and the test cannot be run
             return True
         cr, uid = self.cr, self.uid
-        ofx_file_path = get_module_resource('account_bank_statement_import', 'test_ofx_file', 'test_ofx.ofx')
+        ofx_file_path = get_module_resource('account_bank_statement_import_ofx', 'test_ofx_file', 'test_ofx.ofx')
         ofx_file = open(ofx_file_path, 'rb').read().encode('base64')
         bank_statement_id = self.statement_import_model.create(cr, uid, dict(
                             file_type='ofx',

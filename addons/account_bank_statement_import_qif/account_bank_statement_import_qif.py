@@ -18,7 +18,7 @@ class account_bank_statement_import(osv.TransientModel):
     _inherit = "account.bank.statement.import"
 
     _columns = {
-        'file_type': fields.selection(ibs._IMPORT_FILE_TYPE, 'File Type'),
+        'file_type': fields.selection(ibs._IMPORT_FILE_TYPE, 'File Type', required=True),
     }
 
     def process_qif(self, cr, uid, data_file, journal_id=False, context=None):
