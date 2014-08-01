@@ -392,7 +392,7 @@ class account_invoice(osv.osv):
                 if inv.type in ('in_invoice', 'in_refund'):
                     ref = inv.reference
                 else:
-                    ref = self._convert_ref(cr, uid, inv.number)
+                    ref = self._convert_ref(inv.number)
                 obj_move_line = acct_ins_obj.browse(cr, uid, il['analytics_id'], context=context)
                 ctx = context.copy()
                 ctx.update({'date': inv.date_invoice})
