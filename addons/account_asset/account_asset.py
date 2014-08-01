@@ -32,7 +32,7 @@ class account_asset_category(osv.osv):
     _description = 'Asset category'
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=1),
+        'name': fields.char('Name', required=True, select=1),
         'note': fields.text('Note'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
         'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True, domain=[('type','=','other')]),
@@ -246,7 +246,7 @@ class account_asset_asset(osv.osv):
     _columns = {
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
         'entry_count': fields.function(_entry_count, string='# Asset Entries', type='integer'),
-        'name': fields.char('Asset Name', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'name': fields.char('Asset Name', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'code': fields.char('Reference', size=32, readonly=True, states={'draft':[('readonly',False)]}),
         'purchase_value': fields.float('Gross Value', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -254,9 +254,9 @@ class account_asset_asset(osv.osv):
         'note': fields.text('Note'),
         'category_id': fields.many2one('account.asset.category', 'Asset Category', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=True, states={'draft':[('readonly',False)]}),
-        'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
+        'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets', copy=True),
         'purchase_date': fields.date('Purchase Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', required=True,
+        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', required=True, copy=False,
                                   help="When an asset is created, the status is 'Draft'.\n" \
                                        "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n" \
                                        "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."),
@@ -329,23 +329,13 @@ class account_asset_asset(osv.osv):
             res['value'] = {'prorata': False}
         return res
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        if context is None:
-            context = {}
-        default.update({'depreciation_line_ids': [], 'account_move_line_ids': [], 'history_ids': [], 'state': 'draft'})
-        return super(account_asset_asset, self).copy(cr, uid, id, default, context=context)
-
     def _compute_entries(self, cr, uid, ids, period_id, context=None):
         result = []
         period_obj = self.pool.get('account.period')
         depreciation_obj = self.pool.get('account.asset.depreciation.line')
         period = period_obj.browse(cr, uid, period_id, context=context)
         depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids), ('depreciation_date', '<=', period.date_stop), ('depreciation_date', '>=', period.date_start), ('move_check', '=', False)], context=context)
-        if context is None:
-            context = {}
-        context.update({'depreciation_date':period.date_stop})
+        context = dict(context or {}, depreciation_date=period.date_stop)
         return depreciation_obj.create_move(cr, uid, depreciation_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -354,9 +344,7 @@ class account_asset_asset(osv.osv):
         return asset_id
     
     def open_entries(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        context.update({'search_default_asset_id': ids, 'default_asset_id': ids})
+        context = dict(context or {}, search_default_asset_id=ids, default_asset_id=ids)
         return {
             'name': _('Journal Items'),
             'view_type': 'form',
@@ -379,7 +367,7 @@ class account_asset_depreciation_line(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Depreciation Name', size=64, required=True, select=1),
+        'name': fields.char('Depreciation Name', required=True, select=1),
         'sequence': fields.integer('Sequence', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, ondelete='cascade'),
         'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
@@ -392,9 +380,8 @@ class account_asset_depreciation_line(osv.osv):
     }
 
     def create_move(self, cr, uid, ids, context=None):
+        context = dict(context or {})
         can_close = False
-        if context is None:
-            context = {}
         asset_obj = self.pool.get('account.asset.asset')
         period_obj = self.pool.get('account.period')
         move_obj = self.pool.get('account.move')
@@ -466,15 +453,13 @@ class account_move_line(osv.osv):
     _inherit = 'account.move.line'
     _columns = {
         'asset_id': fields.many2one('account.asset.asset', 'Asset', ondelete="restrict"),
-        'entry_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
-
     }
 
 class account_asset_history(osv.osv):
     _name = 'account.asset.history'
     _description = 'Asset history'
     _columns = {
-        'name': fields.char('History name', size=64, select=1),
+        'name': fields.char('History name', select=1),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date': fields.date('Date', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),

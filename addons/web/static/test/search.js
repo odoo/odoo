@@ -171,9 +171,12 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
             dummy: {type: 'char', string: 'Dummy'}
         };
     };
+    instance.client = { action_manager: { inner_action: undefined } };
 
     var dataset = new instance.web.DataSet(null, 'dummy.model');
-    var view = new instance.web.SearchView(null, dataset, false, defaults);
+    var mock_parent = {getParent: function () {return null;}};
+
+    var view = new instance.web.SearchView(mock_parent, dataset, false, defaults);
     var self = this;
     view.on('invalid_search', self, function () {
         ok(false, JSON.stringify([].slice(arguments)));
@@ -556,7 +559,20 @@ openerp.testing.section('search.completions', {
                       new Date(2012, 4, 21, 21, 21, 21).getTime());
             });
     });
-    test("M2O", {asserts: 13}, function (instance, $s, mock) {
+    test("M2O complete", {asserts: 4}, function (instance, $s, mock) {
+        var view = {inputs: [], dataset: {get_context: function () {}}};
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
+        return f.complete("bob")
+            .done(function (c) {
+                equal(c.length, 1, "should return one line");
+                var bob = c[0];
+                ok(bob.expand, "should return an expand callback");
+                ok(bob.facet, "should have a facet");
+                ok(bob.label, "should have a label");
+            });
+    });
+    test("M2O expand", {asserts: 11}, function (instance, $s, mock) {
         mock('dummy.model:name_search', function (args, kwargs) {
             deepEqual(args, []);
             strictEqual(kwargs.name, 'bob');
@@ -566,21 +582,18 @@ openerp.testing.section('search.completions', {
         var view = {inputs: [], dataset: {get_context: function () {}}};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
-        return f.complete("bob")
+        return f.expand("bob")
             .done(function (c) {
-                equal(c.length, 3, "should return results + title");
-                var title = c[0];
-                equal(title.label, f.attrs.string, "title should match field name");
-                ok(!title.facet, "title should not have a facet");
+                equal(c.length, 2, "should return results");
 
-                var f1 = new instance.web.search.Facet(c[1].facet);
-                equal(c[1].label, "choice 1");
+                var f1 = new instance.web.search.Facet(c[0].facet);
+                equal(c[0].label, "choice 1");
                 equal(f1.get('category'), f.attrs.string);
                 equal(f1.get('field'), f);
                 deepEqual(f1.values.toJSON(), [{label: 'choice 1', value: 42}]);
 
-                var f2 = new instance.web.search.Facet(c[2].facet);
-                equal(c[2].label, "choice @");
+                var f2 = new instance.web.search.Facet(c[1].facet);
+                equal(c[1].label, "choice @");
                 equal(f2.get('category'), f.attrs.string);
                 equal(f2.get('field'), f);
                 deepEqual(f2.values.toJSON(), [{label: 'choice @', value: 43}]);
@@ -595,7 +608,7 @@ openerp.testing.section('search.completions', {
         var view = {inputs: [], dataset: {get_context: function () {}}};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
-        return f.complete("bob")
+        return f.expand("bob")
             .done(function (c) {
                 ok(!c, "no match should yield no completion");
             });
@@ -618,9 +631,9 @@ openerp.testing.section('search.completions', {
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy', domain: '[["foo", "=", "bar"]]'}},
             {relation: 'dummy.model'}, view);
-        return f.complete("bob");
+        return f.expand("bob");
     });
-    test("M2O custom operator", {asserts: 10}, function (instance, $s, mock) {
+    test("M2O custom operator", {asserts: 8}, function (instance, $s, mock) {
         mock('dummy.model:name_search', function (args, kwargs) {
             deepEqual(args, [], "should have no positional arguments");
             // the operator is meant for the final search term generation, not the autocompletion
@@ -633,15 +646,12 @@ openerp.testing.section('search.completions', {
             {attrs: {string: 'Dummy', operator: 'ilike'}},
             {relation: 'dummy.model'}, view);
 
-        return f.complete('bob')
+        return f.expand('bob')
             .done(function (c) {
-                equal(c.length, 2, "should return result + title");
-                var title = c[0];
-                equal(title.label, f.attrs.string, "title should match field name");
-                ok(!title.facet, "title should not have a facet");
+                equal(c.length, 1, "should return result");
 
-                var f1 = new instance.web.search.Facet(c[1].facet);
-                equal(c[1].label, "Match");
+                var f1 = new instance.web.search.Facet(c[0].facet);
+                equal(c[0].label, "Match");
                 equal(f1.get('category'), f.attrs.string);
                 equal(f1.get('field'), f);
                 deepEqual(f1.values.toJSON(), [{label: 'Match', value: 42}]);
@@ -1071,10 +1081,10 @@ openerp.testing.section('search.filters', {
         return view.appendTo($fix)
             .done(function () {
                 var $fs = $fix.find('.oe_searchview_filters ul');
-                // 3 filters, 1 filtergroup, 1 custom filters widget,
-                // 1 advanced and 1 Filters widget
-                equal(view.inputs.length, 7,
-                      'view should have 7 inputs total');
+                // 3 filters, 1 filtergroup, 1 custom report widget,
+                // 1 Filters, 1 SaveFilter widget, and 1 advanced 
+                equal(view.drawer.inputs.length, 8,
+                      'view should have 8 inputs total');
                 equal($fs.children().length, 3,
                       "drawer should have a filter group with 3 filters");
                 equal(_.str.strip($fs.children().eq(0).text()), "Foo1",
@@ -1159,14 +1169,15 @@ openerp.testing.section('search.groupby', {
         return view.appendTo($fix)
         .done(function () {
             // 3 filters, 1 filtergroup group, 1 custom filter, 1 advanced, 1 Filters
-            equal(view.inputs.length, 7,
-                  'should have 7 inputs total');
-            var group = _.find(view.inputs, function (f) {
+            // and 1 SaveFilter widget
+            equal(view.drawer.inputs.length, 8,
+                  'should have 8 inputs total');
+            var group = _.find(view.drawer.inputs, function (f) {
                 return f instanceof instance.web.search.GroupbyGroup;
             });
             ok(group, "should have a GroupbyGroup input");
-            ok(group.getParent() === view,
-                "group's parent should be view");
+            ok(group.getParent() === view.drawer,
+                "group's parent should be the drawer");
 
             group.toggle(group.filters[0]);
             group.toggle(group.filters[2]);
@@ -1207,12 +1218,14 @@ openerp.testing.section('search.groupby', {
         var view = makeSearchView(instance);
         return view.appendTo($fix)
         .done(function () {
-            // 3 filters, 3 filtergroups, 1 custom filter, 1 advanced, 1 Filters
-            equal(view.inputs.length, 9, "should have 9 inputs total");
+            // 3 filters, 3 filtergroups, 1 custom filter, 1 advanced, 1 Filters,
+            // and 1 SaveFilter widget
+            equal(view.drawer.inputs.length, 10, "should have 10 inputs total");
 
-            var groups = _.filter(view.inputs, function (f) {
+            var groups = _.filter(view.drawer.inputs, function (f) {
                 return f instanceof instance.web.search.GroupbyGroup;
             });
+
             equal(groups.length, 3, "should have 3 GroupbyGroups");
 
             groups[0].toggle(groups[0].filters[0]);
@@ -1242,10 +1255,10 @@ openerp.testing.section('search.filters.saved', {
 
         return view.appendTo($fix)
             .done(function () {
-                var $row = $fix.find('.oe_searchview_custom li:first').click();
+                var $span = $fix.find('.oe_searchview_custom_list span:first').click();
 
-                ok($row.hasClass('oe_selected'), "should check/select the filter's row");
-                ok($row.hasClass("oe_searchview_custom_private"),
+                ok($span.hasClass('badge'), "should check/select the filter's row");
+                ok($span.hasClass("oe_searchview_custom_private"),
                     "should have private filter note/class");
                 equal(view.query.length, 1, "should have only one facet");
                 var values = view.query.at(0).values;
@@ -1268,7 +1281,7 @@ openerp.testing.section('search.filters.saved', {
                 var $row = $fix.find('.oe_searchview_custom li:first').click();
 
                 view.query.remove(view.query.at(0));
-                ok(!$row.hasClass('oe_selected'),
+                ok(!$row.hasClass('badge'),
                     "should not be checked anymore");
             });
     });
@@ -1280,7 +1293,7 @@ openerp.testing.section('search.filters.saved', {
 
         return view.appendTo($fix)
             .done(function () {
-                var $row = $fix.find('.oe_searchview_custom li:first').click();
+                var $row = $fix.find('.oe_searchview_custom_list span:first').click();
                 equal(view.query.length, 1, "should have one facet");
                 $row.click();
                 equal(view.query.length, 0, "should have removed facet");
@@ -1296,13 +1309,13 @@ openerp.testing.section('search.filters.saved', {
         });
         return view.appendTo($fix)
             .done(function () {
-                $fix.find('.oe_searchview_custom li:eq(0)').click();
+                $fix.find('.oe_searchview_custom_list span:eq(0)').click();
                 equal(view.query.length, 1, "should have one facet");
                 deepEqual(
                     view.query.at(0).get('field').get_context(),
                     {'private': 1},
                     "should have selected first filter");
-                $fix.find('.oe_searchview_custom li:eq(1)').click();
+                $fix.find('.oe_searchview_custom_list span:eq(1)').click();
                 equal(view.query.length, 1, "should have one facet");
                 deepEqual(
                     view.query.at(0).get('field').get_context(),
@@ -1325,10 +1338,10 @@ openerp.testing.section('search.filters.saved', {
         });
         return view.appendTo($fix)
         .then(function () {
-            $fix.find('.oe_searchview_custom input#oe_searchview_custom_input')
+            $fix.find('.oe_searchview_savefilter input#oe_searchview_custom_input')
                     .val("filter name")
                 .end()
-                .find('.oe_searchview_custom button').click();
+                .find('.oe_searchview_savefilter button').click();
             return done.promise();
         });
     });
@@ -1529,10 +1542,10 @@ openerp.testing.section('search.invisible', {
         ].join(''));
         return view.appendTo($fix)
         .then(function () {
-            strictEqual($fix.find('.oe_searchview_filters h3').length,
+            strictEqual($fix.find('.oe_searchview_filters dt').length,
                         1,
                         "should only display one group");
-            strictEqual($fix.find('.oe_searchview_filters h3').text(),
+            strictEqual($fix.find('.oe_searchview_filters dt').text(),
                         'w Visibles',
                         "should only display the Visibles group (and its icon char)");
 
@@ -1545,10 +1558,11 @@ openerp.testing.section('search.invisible', {
             var done = $.Deferred();
             view.complete_global_search({term: 'filter'}, function (compls) {
                 done.resolve();
-                strictEqual(compls.length, 2,
-                            "should have 2 completions");
+                console.log("completions", compls);
+                strictEqual(compls.length, 5,
+                            "should have 5 completions"); // 2 filters and 3 separators
                 deepEqual(_.pluck(compls, 'label'),
-                          ['Field 0', 'Filter on: Filter 0'],
+                          [undefined, 'Field 0', 'Filter on: Filter 0', undefined, undefined],
                           "should complete on field 0 and filter 0");
             });
             return done;
@@ -1588,3 +1602,4 @@ openerp.testing.section('search.invisible', {
         });
     });
 });
+

@@ -35,7 +35,7 @@
                    <t t-if="(filters_value.value != -1) &amp;&amp; filters_value.avatar_model ">
                        <img t-att-src="'/web/binary/image?model=' + filters_value.avatar_model + '&amp;field=image_small&amp;id=' + filters_value.value"  class="cal_avatar"/>     
                    </t>
-                   <span t-attf-class="cal_opacity underline_color_#{filters_value.color}" ><t t-esc="filters_value.label" /></span>
+                   <span id="color_filter" t-attf-class="cal_opacity underline_color_#{filters_value.color}" ><t t-esc="filters_value.label" /></span>
                </t>
            </div>
        </div>
@@ -53,13 +53,6 @@
       </t>
     </t>
   </div>
-  
-  <div t-name="CalendarView.sidebar.button_add_contact" class="oe_calendar_buttons_add_contact">
-        <button class='oe_button oe_form_button oe_link add_contacts_link_btn' style='margin-top:10px'>
-            <span class='add_contacts_link'>See Employee's Meeting</span>
-        </button>
-  </div>
-
 
   <div t-name="CalendarView.quick_create" class="oe_calendar_quick_create openerp">
     

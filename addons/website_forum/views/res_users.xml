@@ -11,6 +11,10 @@
                 <field name="signature" position="after">
                     <field name="karma" string="Forum Karma"/>
                 </field>
+                <xpath expr="//div[contains(@class, 'oe_right oe_button_box')]" position="inside">
+                    <br/>
+                    <field name="website_published" class="pull-right" widget="website_button"/>
+                </xpath>
             </field>
         </record>
 

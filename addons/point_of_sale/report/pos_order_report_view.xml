@@ -32,14 +32,12 @@
                     <field name="user_id"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <group expand="1" string="Group By...">
+                    <group expand="1" string="Group By">
                         <filter string="Salesperson" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                         <filter string="Customer" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                         <filter string="Stock Location" context="{'group_by': 'location_id'}"/>
-                        <filter string="Order Date (day)" icon="terp-go-today" context="{'group_by':'date:day'}" help="Day of order date"/>
-                        <filter string="Order Date (month)" icon="terp-go-month" context="{'group_by':'date:month'}" help="Month of order date"/>
-                        <filter string="Order Date (year)" icon="terp-go-year" context="{'group_by':'date:year'}" help="Year of order date"/>
+                        <filter string="Order Date" icon="terp-go-month" context="{'group_by':'date:month'}" help="Month of order date"/>
                     </group>
                 </search>
             </field>

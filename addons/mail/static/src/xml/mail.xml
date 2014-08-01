@@ -191,8 +191,15 @@
             </tr>
           </tbody>
         </table>
-        <div class="oe_mail-placeholder"></div>
-        <aside class="oe_mail_wall_aside"></aside>
+        <div class="oe_view_manager_wrapper">
+            <div>
+                <div class="oe_view_manager_body">
+                    <div class="oe_searchview_drawer_container"/>
+                    <div class="oe_mail-placeholder"></div>
+                    <aside class="oe_mail_wall_aside"></aside>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!--
@@ -328,23 +335,13 @@
         </div>
     </t>
 
-    <!--
-        mail.compose_message.button_top_bar
-        render of the button on the user bar for open wizard compose message
-        -->
-    <t t-name="mail.ComposeMessageTopButton">
-        <div title='Compose new Message' class="oe_topbar_item oe_topbar_compose_full_email">
-            <button class="oe_e">%</button>
-        </div>
-    </t>
-
     <!-- mail.thread.message.vote
         Template used to display Like/Unlike in a mail.message
     -->
     <span t-name="mail.thread.message.vote">
         <span class="oe_mail_vote_count" t-if='widget.vote_nb > 0'>
             <t t-esc='widget.vote_nb' />
-            <span class='oe_e'>8</span>
+            <i class="fa fa-thumbs-o-up"></i>
         </span>
         <a href='#' class="oe_msg_vote">
             <t t-if="!widget.has_voted">like</t>

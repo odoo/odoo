@@ -46,14 +46,39 @@ class stock_move(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
+        default = default or {}
+        context = context or {}
         if not default.get('split_from'):
             #we don't want to propagate the link to the purchase order line except in case of move split
-            default.update({
-                'purchase_line_id': False,
-            })
+            default['purchase_line_id'] = False
         return super(stock_move, self).copy(cr, uid, id, default, context)
+
+
+    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
+        invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
+        if move.purchase_line_id:
+            purchase_line = move.purchase_line_id
+            self.pool.get('purchase.order.line').write(cr, uid, [purchase_line.id], {
+                'invoice_lines': [(4, invoice_line_id)]
+            }, context=context)
+            self.pool.get('purchase.order').write(cr, uid, [purchase_line.order_id.id], {
+                'invoice_ids': [(4, invoice_line_vals['invoice_id'])],
+            })
+        return invoice_line_id
+
+    def _get_master_data(self, cr, uid, move, company, context=None):
+        if move.purchase_line_id:
+            purchase_order = move.purchase_line_id.order_id
+            return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.pricelist_id.currency_id.id
+        return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
+
+    def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
+        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+        if move.purchase_line_id:
+            purchase_line = move.purchase_line_id
+            res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
+            res['price_unit'] = purchase_line.price_unit
+        return res
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
@@ -77,7 +102,7 @@ class stock_picking(osv.osv):
 
     _columns = {
         'reception_to_invoice': fields.function(_get_to_invoice, type='boolean', string='Invoiceable on incoming shipment?',
-               help='Does the picking contains some moves related to a purchase order invoiceable on the reception?',
+               help='Does the picking contains some moves related to a purchase order invoiceable on the receipt?',
                store={
                    'stock.move': (_get_picking_to_recompute, ['purchase_line_id', 'picking_id'], 10),
                }),

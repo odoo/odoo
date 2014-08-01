@@ -18,11 +18,10 @@
                       <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
                       <separator />
                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                      <field name="creation_date"/>
                       <field name="opening_date"/>
                       <field name="date_closed"/>
                     </group>
-                    <group  expand="1" string="Group By...">
+                    <group  expand="1" string="Group By">
                         <filter string="Salesperson" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_assigned_id'}" />
@@ -35,9 +34,7 @@
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" />
-                        <filter string="Assign Date (day)" icon="terp-go-today" domain="[]" context="{'group_by':'date_assign:day'}"/>
-                        <filter string="Assign Date (month)" icon="terp-go-month" domain="[]" context="{'group_by':'date_assign:month'}"/>
-                        <filter string="Assign Date (year)" icon="terp-go-year" domain="[]" context="{'group_by':'date_assign:year'}"/>
+                        <filter string="Assign Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_assign:month'}"/>
                     </group>
                 </search>
             </field>

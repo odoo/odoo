@@ -6,7 +6,7 @@
             <field name="name">sale_journal.invoice.type.form</field>
             <field name="model">sale_journal.invoice.type</field>
             <field name="arch" type="xml">
-                <form string="Invoice Type" version="7.0">
+                <form string="Invoice Type">
                     <group col="4">
                         <field name="name"/>
                         <field name="invoicing_method"/>
@@ -90,12 +90,13 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page string="Sales &amp; Purchases" position="inside">
-                    <group colspan="2" col="2" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
-                        <separator string="Invoicing" colspan="2"/>
-                        <field name="property_invoice_type"/>
+                <group name="invoicing" position="replace">
+                    <group string="Invoicing">
+                        <group cols="2" colspan="2" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                            <field name="property_invoice_type"/>
+                        </group>
                     </group>
-                </page>
+                </group>
             </field>
         </record>
 

@@ -48,14 +48,13 @@ class crm_lead_report_assign(osv.osv):
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Customer' , readonly=True),
         'opening_date': fields.date('Opening Date', readonly=True),
-        'creation_date': fields.date('Creation Date', readonly=True),
         'date_closed': fields.date('Close Date', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'type':fields.selection([
             ('lead','Lead'),
-            ('opportunity','Opportunity'),
+            ('opportunity','Opportunity') 
         ],'Type', help="Type is used to separate Leads and Opportunities"),
     }
     def init(self, cr):
@@ -69,9 +68,8 @@ class crm_lead_report_assign(osv.osv):
             CREATE OR REPLACE VIEW crm_lead_report_assign AS (
                 SELECT
                     c.id,
-                    to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
-                    to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
-                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
+                    date(c.date_open) as opening_date,
+                    date(c.date_closed) as date_closed,
                     c.date_assign,
                     c.user_id,
                     c.probability,
@@ -89,7 +87,7 @@ class crm_lead_report_assign(osv.osv):
                     p.date as partner_date,
                     c.planned_revenue*(c.probability/100) as probable_revenue, 
                     1 as nbr,
-                    date_trunc('day',c.create_date) as create_date,
+                    c.create_date as create_date,
                     extract('epoch' from (c.write_date-c.create_date))/(3600*24) as  delay_close,
                     extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open

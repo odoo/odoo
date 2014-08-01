@@ -28,10 +28,11 @@
   I check sale order after added delivery cost.
 -
   !python {model: sale.order.line}: |
+    from openerp.tools import float_compare
     line_ids = self.search(cr, uid, [('order_id','=', ref('sale_normal_delivery_charges')), ('product_id','=', ref('product_product_delivery'))])
     assert len(line_ids), "Delivery cost is not Added"
     line_data = self.browse(cr ,uid ,line_ids[0] ,context)
-    assert line_data.price_subtotal == 10, "Delivey cost is not correspond."
+    assert float_compare(line_data.price_subtotal, 10, precision_digits=2) == 0, "Delivey cost is not correspond."
 -
   I confirm the sale order.
 -
@@ -79,10 +80,11 @@
   I check sale order after added delivery cost.
 -
   !python {model: sale.order.line}: |
+    from openerp.tools import float_compare
     line_ids = self.search(cr, uid, [('order_id','=', ref('sale_free_delivery_charges')), ('product_id','=', ref('product_product_delivery'))])
     assert len(line_ids), "Delivery cost is not Added"
     line_data = self.browse(cr ,uid ,line_ids[0] ,context)
-    assert line_data.price_subtotal == 0, "Delivey cost is not correspond."
+    assert float_compare(line_data.price_subtotal, 0, precision_digits=2) == 0, "Delivey cost is not correspond."
 
 -
   I set default delivery policy.

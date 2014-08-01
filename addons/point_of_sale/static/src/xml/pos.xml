@@ -12,9 +12,9 @@
                 </div>
                 <div class="pos-rightheader">
                     <div class="order-selector">
-                        <button class="order-button square neworder-button"><img src='/point_of_sale/static/src/img/plus.png' /></button>
-                        <button class="order-button square deleteorder-button"><img src='/point_of_sale/static/src/img/minus.png' /></button>
                         <span class="orders"></span>
+                        <span class="order-button square neworder-button"><i class='fa fa-plus' /></span>
+                        <span class="order-button square deleteorder-button"><i class='fa fa-minus' /></span>
                     </div>
                     <!-- here goes header buttons -->
                 </div>
@@ -35,6 +35,7 @@
                         <div class='subwindow collapsed'>
                             <div class='subwindow-container'>
                                 <div class='subwindow-container-fix pads'>
+                                    <div class="control-buttons oe_hidden"></div>
                                     <div class="placeholder-PaypadWidget"></div>
                                     <div class="placeholder-NumpadWidget"></div>
                                 </div>
@@ -258,28 +259,131 @@
 
     <t t-name="ScaleScreenWidget">
         <div class="scale-screen screen">
-            <div class="display">
-                <span class="weight">
-                    <p>
-                        <span class='js-weight'>
-                            <t t-esc="widget.get_product_weight_string()" />
-                        </span>
-                    </p>
-                </span>
-                <span class="product-name">
-                    <t t-esc="widget.get_product_name()" />
-                </span>
-                <div class="product-picture">
-                    <span class="product-price">
+            <div class="screen-content">
+                <div class="top-content">
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                    <h1 class='product-name'><t t-esc="widget.get_product_name()" /></h1>
+                </div>
+                <div class="centered-content">
+                    <div class='weight js-weight'>
+                        <t t-esc="widget.get_product_weight_string()" />
+                    </div>
+                    <div class='product-price'>
                         <t t-esc="widget.format_currency(widget.get_product_price()) + '/Kg'" />
-                    </span> 
-                    <t t-if="widget.get_product()">
-                        <img t-att-src="widget.get_product_image_url()" />
-                    </t>
+                    </div>
+                    <div class='computed-price'>
+                        123.14 €
+                    </div>
+                    <div class='buy-product'>
+                        Order
+                        <i class='fa fa-angle-double-right'></i>
+                    </div>
                 </div>
             </div>
         </div>
     </t>
+
+    <t t-name="ClientLine">
+        <tr class='client-line' t-att-data-id='partner.id'>
+            <td><t t-esc='partner.name' /></td>
+            <td><t t-esc='partner.address' /></td>
+        </tr>
+    </t>
+
+    <t t-name="ClientDetails">
+        <section class='client-details'>
+            <div class='client-picture'>
+                <img t-att-src='widget.partner_icon_url(partner.id)' />
+                <!--<img src='http://static.fjcdn.com/gifs/Aku_c019d6_2548127.gif' />-->
+            </div>
+            <div class='client-name'><t t-esc='partner.name' /></div>
+            <div class='client-details-box clearfix'>
+                <div class='client-details-left'>
+                    <div class='client-detail'>
+                        <span class='label'>Address</span>
+                        <span class='detail client-address'><t t-esc='partner.address' /></span>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>email</span>
+                        <span class='detail client-email'><t t-esc='partner.email' /></span>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>phone</span>
+                        <t t-if='partner.phone'>
+                            <span class='detail client-phone'><t t-esc='partner.phone' /></span>
+                        </t>
+                        <t t-if='!partner.phone'>
+                            <span class='detail client-phone empty'>N/A</span>
+                        </t>
+                    </div>
+                </div>
+                <div class='client-details-right'>
+                    <div class='client-detail'>
+                        <span class='label'>ID</span>
+                        <t t-if='partner.ean13'>
+                            <span class='detail client-id'><t t-esc='partner.ean13'/></span>
+                        </t>
+                        <t t-if='!partner.ean13'>
+                            <span class='detail client-id empty'>N/A</span>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+
+    <t t-name="ClientListScreenWidget">
+        <div class="clientlist-screen screen">
+            <div class="screen-content">
+                <section class="top-content">
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Cancel
+                    </span>
+                    <span class='searchbox'>
+                        <input placeholder='Search Customers' />
+                        <span class='search-clear'></span>
+                    </span>
+                    <span class='searchbox'></span>
+                    <span class='button next oe_hidden highlight'>
+                        Select Customer
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </section>
+                <section class="full-content">
+                    <div class='window'>
+                        <section class='subwindow collapsed'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix client-details-contents'>
+                                </div>
+                            </div>
+                        </section>
+                        <section class='subwindow'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix touch-scrollable scrollable-y'>
+                                    <table class='client-list'>
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Address</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class='client-list-contents'>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+
+        
 
     <t t-name="PaymentScreenWidget">
         <div class="payment-screen screen touch-scrollable">
@@ -330,6 +434,9 @@
                 <br/>
             </t>
             <div font='b'>
+                <t t-if='receipt.shop.name'>
+                    <div><t t-esc='receipt.shop.name' /></div>
+                </t>
                 <t t-if='receipt.company.contact_address'>
                     <div><t t-esc='receipt.company.contact_address' /></div>
                 </t>
@@ -373,7 +480,7 @@
                         </t>
                         <line indent='1'>
                             <left>
-                                <value value-decimals='3' autoint='on'>
+                                <value value-decimals='3' value-autoint='on'>
                                     <t t-esc='line.quantity' />
                                 </value>
                                 <t t-if='line.unit_name !== "Unit(s)"'>
@@ -465,61 +572,9 @@
         </receipt>
     </t>
 
-    <t t-name="WelcomeScreenWidget">
-        <div class="welcome-screen screen">
-            <header class='rightpane-header'><h2>Welcome</h2></header>
-            <div class="dialog">
-            <img src="/point_of_sale/static/src/img/scan.png" />
-            <p> Please scan an item or your member card </p>
-            </div>
-        </div>
-        <div class="goodbye-message">
-            <p>Thank you for shopping with us.</p>
-        </div>
-    </t>
-
-
-    <t t-name="ScanProductScreenWidget">
-        <div class="scan-product-screen screen touch-scrollable">
-            <header class='rightpane-header'><h2>Please scan an item</h2></header>
-            <img src="/point_of_sale/static/src/img/scan.png" />
-        </div>
-    </t>
-
-    <t t-name="ClientPaymentScreenWidget">
-        <div class="scan-product-screen screen">
-            <header class='rightpane-header'><h2>Payment</h2></header>
-            <div class="dialog">
-                <img src="/point_of_sale/static/src/img/bancontact.png" />
-                <p>Please insert your card in the reader and follow the instructions to complete
-            your purchase</p>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ScaleInviteScreenWidget">
-        <div class="scale-invite-screen screen">
-            <header class='rightpane-header'><h2>Please put your product on the scale</h2></header>
-            <img src="/point_of_sale/static/src/img/scale.png" />
-        </div>
-    </t>
-
-    <t t-name="HelpPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-help">
-                <p class="message">Please be patient, help is on the way</p>
-                <div class="footer">
-                    <div class="button">
-                        Cancel
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="ChooseReceiptPopupWidget">
         <div class="modal-dialog">
-            <div class="popup popup-help">
+            <div class="popup popup-receipt">
                 <p class="message">Welcome <t t-esc="widget.get_client_name()" /><br /> Choose your type of receipt:</p>
                 <div class = "button big-left receipt">
                     Ticket
@@ -531,38 +586,17 @@
         </div>
     </t>
 
-    <t t-name="ProductErrorPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-help">
-                <p class="message">The scanned product was not recognized<br /> Please wait, a cashier is on the way</p>
-                <div class="footer">
-                    <div class="button">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="ErrorSessionPopupWidget">
         <div class="modal-dialog">
-            <div class="popup popup-help">
+            <div class="popup popup-nosession">
                 <p class="message">Sorry, we could not create a session for this user.</p>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ErrorNegativePricePopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-help">
-                <p class="message">Your order has to be validated by a cashier.</p>
             </div>
         </div>
     </t>
 
     <t t-name="ErrorNoClientPopupWidget">
         <div class="modal-dialog">
-            <div class="popup popup-help">
+            <div class="popup popup-noclient">
                 <p class="message">An anonymous order cannot be invoiced</p>
                 <div class="footer">
                     <div class="button">
@@ -575,7 +609,7 @@
 
     <t t-name="ErrorInvoiceTransferPopupWidget">
         <div class="modal-dialog">
-            <div class="popup popup-help">
+            <div class="popup popup-invoice">
                 <p class="message">The Order could not be sent to the server for invoicing. Invoices cannot be generated
                     in offline mode. Please check your internet connection and try again.</p>
                 <div class="footer">
@@ -589,9 +623,51 @@
 
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
-            <div class="popup popup-help">
+            <div class="popup popup-error">
                 <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
                 <p class="comment"><t t-esc=" widget.comment || '' "/></p>
+                <div class="footer">
+                    <div class="button">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ErrorBarcodePopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-barcode">
+                <p class="message">Unknown Barcode
+                    <br />
+                    <span class='barcode'></span>
+                </p>
+                <p class="comment">
+                    The Point of Sale could not find any product, client, employee
+                    or action associated with the scanned barcode.
+                </p>
+                <div class="footer">
+                    <div class="button">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ConfirmPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-confirm">
+                <p class="message"><t t-esc=" widget.message || 'Confirm ?' " /></p>
+                <p class="comment"><t t-esc=" widget.comment || '' "/></p>
+                <div class="footer">
+                    <div class="button confirm">
+                        Confirm 
+                    </div>
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
             </div>
         </div>
     </t>
@@ -615,84 +691,6 @@
                 <t t-esc="product.name"/>
             </div>
         </span>
-    </t>
-
-    <t t-name="OrderWidget">
-        <div class="order-container">
-            <div class="order-scroller touch-scrollable">
-                <div class="order">
-                    <ul class="orderlines">
-                        <t t-if="orderlines.length === 0">
-                            <li class="orderline empty">
-                                Your shopping cart is empty
-                            </li>
-                        </t>
-                    </ul>
-                    <div class="summary clearfix">
-                        <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
-                            <div class='entry total'>
-                                <span class="label">Total: </span> <span class="value">0.00 €</span>
-                                <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
-                            </div>
-                        </div>
-                        <div class='clear'></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="DebugWidget">
-        <div class="debug-widget">
-            <h1>Debug Window</h1>
-            <div class="toggle">▾</div>
-            <div class="content">
-                <p class="category">Payment Terminal</p>
-
-                <ul>
-                    <li class="button accept_payment">Accept Payment</li>
-                    <li class="button reject_payment">Reject Payment</li>
-                </ul>
-                <p class="category">Electronic Scale</p>
-                <ul>
-                    <li><input type="text" class="weight"></input></li>
-                    <li class="button set_weight">Set Weight</li>
-                    <li class="button reset_weight">Reset</li>
-                </ul>
-
-                <p class="category">Barcode Scanner</p>
-                <ul>
-                    <li><input type="text" class="ean"></input></li>
-                    <li class="button custom_ean">Custom Ean13</li>
-                    <li class="button admin_badge">Admin Badge</li>
-                    <li class="button client_badge">Client Badge</li>
-                    <li class="button soda_33cl">Soda 33cl</li>
-                    <li class="button oranges_kg">3.141Kg Oranges</li>
-                    <li class="button lemon_price">1.54€ Lemon</li>
-                    <li class="button unknown_product">Unknown Product</li>
-                    <li class="button invalid_ean">Invalid Ean</li>
-                    <li class="button reference">Reference</li>
-                </ul>
-
-                <p class="category">Hardware Status</p>
-                <ul>
-                    <li class="status help_needed">Help needed</li>
-                    <li class="status weighting">Weighting</li>
-                    <li class="status transaction">In Transaction</li>
-                </ul>
-                <p class="category">Hardware Events</p>
-                <ul>
-                    <li class="event scan_item_success">Scan Item Success</li>
-                    <li class="event scan_item_error_unrecognized">Scan Item Unrecognized</li>
-                    <li class="event payment_request">Payment Request</li>
-                    <li class="event payment_status">Payment Status</li>
-                    <li class="event open_cashbox">Open Cashbox</li>
-                    <li class="event print_receipt">Print Receipt</li>
-                    <li class="event print_pdf_invoice">Print Invoice</li>
-                    <li class="event scale_read">Read Weighting Scale</li>
-                </ul>
-            </div>
-        </div>
     </t>
 
     <t t-name="Orderline">
@@ -729,6 +727,73 @@
         </li>
     </t>
 
+    <t t-name="OrderWidget">
+        <div class="order-container">
+            <div class="order-scroller touch-scrollable">
+                <div class="order">
+                    <ul class="orderlines">
+                        <t t-if="orderlines.length === 0">
+                            <li class="orderline empty">
+                                Your shopping cart is empty
+                            </li>
+                        </t>
+                    </ul>
+                    <div class="summary clearfix">
+                        <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
+                            <div class='entry total'>
+                                <span class="label">Total: </span> <span class="value">0.00 €</span>
+                                <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+
+
+    <t t-name="DebugWidget">
+        <div class="debug-widget">
+            <h1>Debug Window</h1>
+            <div class="toggle">▾</div>
+            <div class="content">
+                <p class="category">Electronic Scale</p>
+                <ul>
+                    <li><input type="text" class="weight"></input></li>
+                    <li class="button set_weight">Set Weight</li>
+                    <li class="button reset_weight">Reset</li>
+                </ul>
+
+                <p class="category">Barcode Scanner</p>
+                <ul>
+                    <li><input type="text" class="ean"></input></li>
+                    <li class="button custom_ean">Custom Ean13</li>
+                    <li class="button admin_badge">Admin Badge</li>
+                    <li class="button client_badge">Client Badge</li>
+                    <li class="button soda_33cl">Soda 33cl</li>
+                    <li class="button oranges_kg">3.141Kg Oranges</li>
+                    <li class="button lemon_price">1.54€ Lemon</li>
+                    <li class="button unknown_product">Unknown Product</li>
+                    <li class="button invalid_ean">Invalid Ean</li>
+                    <li class="button reference">Reference</li>
+                </ul>
+
+                <p class="category">Hardware Status</p>
+                <ul>
+                    <li class="status weighting">Weighting</li>
+                </ul>
+                <p class="category">Hardware Events</p>
+                <ul>
+                    <li class="event open_cashbox">Open Cashbox</li>
+                    <li class="event print_receipt">Print Receipt</li>
+                    <li class="event scale_read">Read Weighting Scale</li>
+                </ul>
+            </div>
+        </div>
+    </t>
+
+
     <t t-name="Paymentline">
         <div t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
             <div class='paymentline-name'>
@@ -760,7 +825,22 @@
     </t>
 
     <t t-name="OrderButtonWidget">
-        <button class="order-button select-order"><t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'') + widget.order.get('creationDate').toString('t')"/></button>
+        <span class="order-button select-order">
+            <t t-if='widget.selected'>
+                <span class='order-sequence'>
+                    <t t-esc='widget.order.sequence_number' />
+                </span>
+                <t t-if="widget.order.get_client()">
+                    <i class='fa fa-user'/>
+                </t>
+                <t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'Unknown Customer: ') + widget.order.get('creationDate').toString('t')"/>
+            </t>
+            <t t-if='!widget.selected'>
+                <span class='order-sequence'>
+                    <t t-esc='widget.order.sequence_number' />
+                </span>
+            </t>
+        </span>
     </t>
 
     <t t-name="UsernameWidget">
@@ -778,6 +858,7 @@
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
             User: <t t-esc="widget.pos.user.name"/><br />
+            Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
             <t t-if="widget.pos.config.receipt_header">
                 <div style='text-align:center'>

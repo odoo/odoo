@@ -93,6 +93,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             product = ir_model_data.xmlid_to_object(cr, uid, 'product.product_product_consultant')
             if product and product.exists():
                 res['time_unit'] = product.uom_id.id
+        res['timesheet'] = res.get('module_account_analytic_analysis')
         return res
 
     def _get_default_time_unit(self, cr, uid, context=None):
@@ -122,7 +123,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):
         return {'value': {
             'module_project_timesheet': task_work,
-            'module_project_mrp': task_work,
+            'module_sale_service': task_work,
         }}
 
     def onchange_timesheet(self, cr, uid, ids, timesheet, context=None):

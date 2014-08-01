@@ -66,7 +66,7 @@ class share_wizard(osv.TransientModel):
             model, group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, group_xml_id)
         except ValueError:
             return False
-        return group_id in self.pool.get('res.users').read(cr, uid, uid, ['groups_id'], context=context)['groups_id']
+        return group_id in self.pool.get('res.users').read(cr, uid, [uid], ['groups_id'], context=context)[0]['groups_id']
 
     def has_share(self, cr, uid, unused_param, context=None):
         return self.has_group(cr, uid, module='share', group_xml_id='group_share_user', context=context)
@@ -103,9 +103,7 @@ class share_wizard(osv.TransientModel):
         return result
 
     def _generate_embedded_code(self, wizard, options=None):
-        cr = wizard._cr
-        uid = wizard._uid
-        context = wizard._context
+        cr, uid, context = self.env.args
         if options is None:
             options = {}
 
@@ -160,8 +158,8 @@ class share_wizard(osv.TransientModel):
     _columns = {
         'action_id': fields.many2one('ir.actions.act_window', 'Action to share', required=True,
                 help="The action that opens the screen containing the data you wish to share."),
-        'view_type': fields.char('Current View Type', size=32, required=True),
-        'domain': fields.char('Domain', size=256, help="Optional domain for further data filtering"),
+        'view_type': fields.char('Current View Type', required=True),
+        'domain': fields.char('Domain', help="Optional domain for further data filtering"),
         'user_type': fields.selection(lambda s, *a, **k: s._user_type_selection(*a, **k),'Sharing method', required=True,
                      help="Select the type of user(s) you would like to share data with."),
         'new_users': fields.text("Emails"),
@@ -172,17 +170,17 @@ class share_wizard(osv.TransientModel):
         'access_mode': fields.selection([('readonly','Can view'),('readwrite','Can edit')],'Access Mode', required=True,
                                         help="Access rights to be granted on the shared documents."),
         'result_line_ids': fields.one2many('share.wizard.result.line', 'share_wizard_id', 'Summary', readonly=True),
-        'share_root_url': fields.function(_share_root_url, string='Share Access URL', type='char', size=512, readonly=True,
+        'share_root_url': fields.function(_share_root_url, string='Share Access URL', type='char', readonly=True,
                                 help='Main access page for users that are granted shared access'),
-        'name': fields.char('Share Title', size=64, required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
-        'record_name': fields.char('Record name', size=128, help="Name of the shared record, if sharing a precise record"),
+        'name': fields.char('Share Title', required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
+        'record_name': fields.char('Record name', help="Name of the shared record, if sharing a precise record"),
         'message': fields.text("Personal Message", help="An optional personal message, to be included in the email notification."),
         'embed_code': fields.function(_embed_code, type='text', string='Code',
             help="Embed this code in your documents to provide a link to the "\
                   "shared document."),
         'embed_option_title': fields.boolean('Display title'),
         'embed_option_search': fields.boolean('Display search view'),
-        'embed_url': fields.function(_embed_url, string='Share URL', type='char', size=512, readonly=True),
+        'embed_url': fields.function(_embed_url, string='Share URL', size=512, type='char', readonly=True),
     }
     _defaults = {
         'view_type': 'page',
@@ -204,7 +202,7 @@ class share_wizard(osv.TransientModel):
             raise osv.except_osv(_('No email address configured'),
                                  _('You must configure your email address in the user preferences before using the Share button.'))
         model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
-        action = self.pool[model].read(cr, uid, res_id, context=context)
+        action = self.pool[model].read(cr, uid, [res_id], context=context)[0]
         action['res_id'] = ids[0]
         action.pop('context', '')
         return action
@@ -223,8 +221,7 @@ class share_wizard(osv.TransientModel):
            for the password field, so they can receive it by email.
            Returns the ids of the created users, and the ids of the
            ignored, existing ones."""
-        if context is None:
-            context = {}
+        context = dict(context or {})
         user_obj = self.pool.get('res.users')
         current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
         # modify context to disable shortcuts when creating share users
@@ -825,7 +822,7 @@ class share_wizard(osv.TransientModel):
             if wizard_data.message:
                 body += "%s\n\n" % (wizard_data.message)
             if result_line.newly_created:
-                body += _("The documents are not attached, you can view them online directly on my OpenERP server at:\n    %s\n\n") % (result_line.share_url)
+                body += _("The documents are not attached, you can view them online directly on my Odoo server at:\n    %s\n\n") % (result_line.share_url)
                 body += _("These are your credentials to access this protected area:\n")
                 body += "%s: %s" % (_("Username"), result_line.user_id.login) + "\n"
                 body += "%s: %s" % (_("Password"), result_line.password) + "\n"
@@ -833,7 +830,7 @@ class share_wizard(osv.TransientModel):
             body += _("The documents have been automatically added to your subscriptions.\n\n")
             body += '%s\n\n' % ((user.signature or ''))
             body += "--\n"
-            body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
+            body += _("Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
             msg_id = message_obj.schedule_with_attach(cr, uid, user.email, [email_to], subject, body, model='', context=context)
             notification_obj.create(cr, uid, {'user_id': result_line.user_id.id, 'message_id': msg_id}, context=context)
@@ -854,7 +851,7 @@ class share_wizard(osv.TransientModel):
             subject = wizard_data.name
             body = _("Hello,\n\n")
             body += _("I've shared %s with you!\n\n") % wizard_data.name
-            body += _("The documents are not attached, you can view them online directly on my OpenERP server at:\n    %s\n\n") % (result_line.share_url)
+            body += _("The documents are not attached, you can view them online directly on my Odoo server at:\n    %s\n\n") % (result_line.share_url)
             if wizard_data.message:
                 body += '%s\n\n' % (wizard_data.message)
             if result_line.newly_created:
@@ -863,11 +860,11 @@ class share_wizard(osv.TransientModel):
                 body += "%s: %s\n" % (_("Password"), result_line.password)
                 body += "%s: %s\n" % (_("Database"), cr.dbname)
             else:
-                body += _("The documents have been automatically added to your current OpenERP documents.\n")
+                body += _("The documents have been automatically added to your current Odoo documents.\n")
                 body += _("You may use your current login (%s) and password to view them.\n") % result_line.user_id.login
             body += "\n\n%s\n\n" % ( (user.signature or '') )
             body += "--\n"
-            body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
+            body += _("Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
             mail_ids.append(mail_mail.create(cr, uid, {
                     'email_from': user.email,

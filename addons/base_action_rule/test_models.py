@@ -1,4 +1,5 @@
 from openerp.osv import fields, osv
+from openerp import api
 
 AVAILABLE_STATES = [
     ('draft', 'New'),
@@ -12,7 +13,7 @@ class lead_test(osv.Model):
     _name = "base.action.rule.lead.test"
 
     _columns = {
-        'name': fields.char('Subject', size=64, required=True, select=1),
+        'name': fields.char('Subject', required=True, select=1),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'state': fields.selection(AVAILABLE_STATES, string="Status", readonly=True),
         'active': fields.boolean('Active', required=False),
@@ -25,6 +26,7 @@ class lead_test(osv.Model):
         'active' : True,
     }
 
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         pass
 

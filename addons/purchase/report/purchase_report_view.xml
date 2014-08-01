@@ -26,7 +26,7 @@
                 <filter icon="terp-gtk-jump-to-rtl" string="Orders" name="orders" domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
-                <group expand="0" string="Extended Filters...">
+                <group expand="0" string="Extended Filters">
                     <field name="user_id"/>
                     <field name="validator"/>
                     <field name="location_id"/>
@@ -36,8 +36,7 @@
                     <field name="date_approve"/>
                     <field name="expected_date"/>
                 </group>
-                <newline/>
-                <group expand="1" string="Group By...">
+                <group expand="1" string="Group By">
                     <filter string="Supplier" name="group_partner_id" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <filter string="Responsible" name="Responsible" icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <filter string="Validated by" icon="terp-personal" context="{'group_by':'validator'}"/>
@@ -48,9 +47,7 @@
                     <filter string="Destination" icon="terp-gtk-jump-to-ltr" context="{'group_by':'location_id'}"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Order Date (day)" icon="terp-go-today" context="{'group_by':'date:day'}" help="Order of Day"/>
-                    <filter string="Order Date (month)" icon="terp-go-month" context="{'group_by':'date:month'}" help="Order of Day"/>
-                    <filter string="Order Date (year)" icon="terp-go-year" context="{'group_by':'date:year'}" help="Order of Day"/>
+                    <filter string="Order Date" icon="terp-go-month" context="{'group_by':'date:month'}" help="Order of Day"/>
                 </group>
             </search>
         </field>

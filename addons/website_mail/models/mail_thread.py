@@ -36,6 +36,3 @@ class MailThread(osv.AbstractModel):
         ),
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        default['website_message_ids'] = []
-        return super(MailThread, self).copy(cr, uid, id, default=default, context=context)

@@ -38,7 +38,7 @@
             <field name="name">crm.case.section.kanban</field>
             <field name="model">crm.case.section</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_background_grey">
+                <kanban class="oe_background_grey">
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="member_ids"/>
@@ -56,7 +56,7 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <h4 class="oe_center" name="name"><field name="name"/></h4>
+                                    <h4 class="text-center" name="name"><strong><field name="name"/></strong></h4>
                                     <div class="oe_clear"></div>
                                     <div class="oe_kanban_salesteams_avatars">
                                         <t t-foreach="record.member_ids.raw_value.slice(0,10)" t-as="member">
@@ -116,7 +116,7 @@
             <field name="name">crm.case.section.form</field>
             <field name="model">crm.case.section</field>
             <field name="arch" type="xml">
-                <form string="Sales Team" version="7.0">
+                <form string="Sales Team">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Sales team"/>
@@ -206,6 +206,8 @@
                 <script type="text/javascript" src="/sales_team/static/src/js/sales_team.js"></script>
             </xpath>
         </template>
+
+        <menuitem id="base.next_id_64" name="Sales" parent="base.menu_reporting" sequence="1" groups="base.group_sale_manager"/>
 
     </data>
 </openerp>

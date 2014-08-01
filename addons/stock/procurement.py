@@ -78,7 +78,7 @@ class procurement_rule(osv.osv):
 class procurement_order(osv.osv):
     _inherit = "procurement.order"
     _columns = {
-        'location_id': fields.many2one('stock.location', 'Procurement Location'),  # not required because task may create procurements that aren't linked to a location with project_mrp
+        'location_id': fields.many2one('stock.location', 'Procurement Location'),  # not required because task may create procurements that aren't linked to a location with sale_service
         'partner_dest_id': fields.many2one('res.partner', 'Customer Address', help="In case of dropshipping, we need to know the destination address more precisely"),
         'move_ids': fields.one2many('stock.move', 'procurement_id', 'Moves', help="Moves created by the procurement"),
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Move which caused (created) the procurement"),
@@ -222,27 +222,18 @@ class procurement_order(osv.osv):
         '''
         if procurement.rule_id and procurement.rule_id.action == 'move':
             uom_obj = self.pool.get('product.uom')
-            done_test_list = []
-            done_cancel_test_list = []
-            qty_done = 0
-            for move in procurement.move_ids:
-                done_test_list.append(move.state == 'done')
-                done_cancel_test_list.append(move.state in ('done', 'cancel'))
-                qty_done += move.product_qty if move.state == 'done' else 0
-            qty_done = uom_obj._compute_qty(cr, uid, procurement.product_id.uom_id.id, qty_done, procurement.product_uom.id)
-            at_least_one_done = any(done_test_list)
+            cancel_test_list = [x.state == 'cancel' for x in procurement.move_ids]
+            done_cancel_test_list = [x.state in ('done', 'cancel') for x in procurement.move_ids]
+            at_least_one_cancel = any(cancel_test_list)
             all_done_or_cancel = all(done_cancel_test_list)
+            all_cancel = all(cancel_test_list)
             if not all_done_or_cancel:
                 return False
-            elif all_done_or_cancel and procurement.product_qty == qty_done:
+            elif all_done_or_cancel and not all_cancel:
                 return True
-            elif at_least_one_done:
-                #some move cancelled and some validated
-                self.message_post(cr, uid, [procurement.id], body=_('Some stock moves have been cancelled for this procurement. Run the procurement again to trigger a move for the remaining quantity or change the procurement quantity to finish it directly'), context=context)
-            else:
-                #all move are cancelled
+            elif all_cancel:
                 self.message_post(cr, uid, [procurement.id], body=_('All stock moves have been cancelled for this procurement.'), context=context)
-            self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)    
+            self.write(cr, uid, [procurement.id], {'state': 'cancel'}, context=context)
             return False
 
         return super(procurement_order, self)._check(cr, uid, procurement, context)
@@ -261,7 +252,7 @@ class procurement_order(osv.osv):
         result['domain'] = "[('group_id','in',[" + ','.join(map(str, list(group_ids))) + "])]"
         return result
 
-    def run_scheduler(self, cr, uid, use_new_cursor=False, context=None):
+    def run_scheduler(self, cr, uid, use_new_cursor=False, company_id=False, context=None):
         '''
         Call the scheduler in order to check the running procurements (super method), to check the minimum stock rules
         and the availability of moves. This function is intended to be run for all the companies at the same time, so
@@ -286,8 +277,7 @@ class procurement_order(osv.osv):
             move_obj = self.pool.get('stock.move')
 
             #Minimum stock rules
-            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-            self._procure_orderpoint_confirm(cr, SUPERUSER_ID, use_new_cursor=False, company_id=company.id, context=context)
+            self._procure_orderpoint_confirm(cr, SUPERUSER_ID, use_new_cursor=False, company_id=company_id, context=context)
 
             #Search all confirmed stock_moves and try to assign them
             confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc', context=context)
@@ -331,7 +321,7 @@ class procurement_order(osv.osv):
                 [order_point.product_id.id],
                 context={'location': order_point.location_id.id})[order_point.product_id.id]['virtual_available']
 
-    def _procure_orderpoint_confirm(self, cr, uid, use_new_cursor=False, company_id=False, context=None):
+    def _procure_orderpoint_confirm(self, cr, uid, use_new_cursor=False, company_id = False, context=None):
         '''
         Create procurement based on Orderpoint
 
@@ -341,14 +331,15 @@ class procurement_order(osv.osv):
         if context is None:
             context = {}
         if use_new_cursor:
-            cr = openerp.registry(cr.dbname).db.cursor()
+            cr = openerp.registry(cr.dbname).cursor()
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
 
         procurement_obj = self.pool.get('procurement.order')
         offset = 0
         ids = [1]
+        dom = company_id and [('company_id', '=', company_id)] or []
         while ids:
-            ids = orderpoint_obj.search(cr, uid, [('company_id', '=', company_id)], offset=offset, limit=100)
+            ids = orderpoint_obj.search(cr, uid, dom, offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
                 prods = self._product_virtual_get(cr, uid, op)
                 if prods is None:

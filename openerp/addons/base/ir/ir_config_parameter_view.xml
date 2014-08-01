@@ -16,17 +16,19 @@
                 <tree string="System Parameters">
                     <field name="key"/>
                     <field name="value"/>
+                    <field name="group_ids"/>
                 </tree>
             </field>
         </record>
         <record model="ir.ui.view" id="view_ir_config_form">
             <field name="model">ir.config_parameter</field>
             <field name="arch" type="xml">
-                <form string="System Parameters" version="7.0">
+                <form string="System Parameters">
                   <sheet>
                     <group>
                         <field name="key"/>
                         <field name="value"/>
+                        <field name="group_ids" widget="many2many_tags"/>
                     </group>
                   </sheet>
                 </form>

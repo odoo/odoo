@@ -33,8 +33,8 @@ from openerp.report import report_sxw
 class vat_listing_clients(osv.osv_memory):
     _name = 'vat.listing.clients'
     _columns = {
-        'name': fields.char('Client Name', size=32),
-        'vat': fields.char('VAT', size=64),
+        'name': fields.char('Client Name'),
+        'vat': fields.char('VAT'),
         'turnover': fields.float('Base Amount'),
         'vat_amount': fields.float('VAT Amount'),
     }
@@ -121,7 +121,7 @@ class partner_vat_list(osv.osv_memory):
     _name = "partner.vat.list"
     _columns = {
         'partner_ids': fields.many2many('vat.listing.clients', 'vat_partner_rel', 'vat_id', 'partner_id', 'Clients', help='You can remove clients/partners which you do not want to show in xml file'),
-        'name': fields.char('File Name', size=32),
+        'name': fields.char('File Name'),
         'file_save' : fields.binary('Save File', readonly=True),
         'comments': fields.text('Comments'),
     }

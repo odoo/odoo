@@ -6,11 +6,18 @@
             <field name="name">account.fiscal.position.form</field>
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
-                <form string="Fiscal Position" version="7.0">
+                <form string="Fiscal Position">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    </group>
+                    <group>
+                        <field name="auto_apply"/>
+                        <field name="sequence"/>
+                        <field name="vat_required" attrs="{'readonly': [('auto_apply', '=', False)]}"/>
+                        <field name="country_id" attrs="{'readonly': ['|', ('country_group_id','!=',False), ('auto_apply', '=', False)]}" />
+                        <field name="country_group_id" attrs="{'readonly': ['|', ('country_id','!=',False), ('auto_apply', '=', False)]}"/>
                     </group>
                     <separator string="Taxes Mapping"/>
                     <field name="tax_ids" widget="one2many_list">
@@ -44,6 +51,7 @@
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
                 <tree string="Fiscal Position">
+                    <field name="sequence"/>
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
@@ -66,6 +74,7 @@
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action" 
                         class="oe_stat_button"
+                        id="invoice_button"
                         icon="fa-pencil-square-o"
                         name="%(account.action_invoice_tree)d" 
                         attrs="{'invisible': [('customer', '=', False)]}" 
@@ -105,7 +114,7 @@
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page name="sales_purchases" position="after" version="7.0">
+                <page name="sales_purchases" position="after">
                 <page string="Accounting" col="4" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice">
                     <group>
                         <group>

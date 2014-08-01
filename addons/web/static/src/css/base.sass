@@ -55,7 +55,7 @@ $sheet-padding: 16px
     background-image: -webkit-radial-gradient(circle, $gradient)
     background-image: -moz-radial-gradient($gradient)
     background-image: -ms-radial-gradient($gradient)
-    background-image: radial-gradient($gradient)
+    background-image: radial-gradient(circle, $gradient)
 
 @mixin radius($radius: 5px)
     -moz-border-radius: $radius
@@ -143,6 +143,52 @@ $sheet-padding: 16px
 
 // }}}
 
+#oe_main_menu_navbar
+    min-height: 34px
+    z-index: 1001
+    border-radius: 0
+    li a, li button
+        padding: 4px 8px 4px 8px
+        margin-top: 2px
+        font-size: 13px
+    .oe_topbar_avatar
+        max-height: 18px
+        width: auto
+        
+#oe_main_menu_navbar.navbar
+    margin-bottom: 0px
+
+.oe_systray
+    margin-right: 0px !important
+
+// Notifications {{{
+.oe_notification
+    z-index: 1600
+    
+.oe_webclient_timezone_notification
+    a
+        color: white
+        text-decoration: underline
+    p
+        margin-top: 1em
+    dt
+        font-weight: bold
+.oe_timezone_systray
+    span
+        margin-top: 1px
+        background-color: #f6cf3b
+// }}}
+// Top Menu {{{
+.navbar
+    .oe_topbar_name
+        max-width: 150px
+        display: inline-block
+        height: 15px // Customize to manage caret when topbar_name is over sized.
+        text-overflow: ellipsis
+        white-space: nowrap
+        overflow: hidden // Customize to bring ellipsis when topbar_name is over sized.
+// }}}
+
 .openerp
     // Global style {{{
     padding: 0
@@ -152,7 +198,10 @@ $sheet-padding: 16px
     font-size: 13px
     background: white
     &.openerp_webclient_container
-        height: 100%
+        height: calc(100% - 34px)
+    @media (max-width: 768px)
+        &.openerp_webclient_container
+            height: calc(100% - 52px)
     // }}}
     //Placeholder style{{{
     \:-moz-placeholder
@@ -190,8 +239,7 @@ $sheet-padding: 16px
     td
         vertical-align: top
     .oe_title
-        width: 38%
-        float: left    
+        float: left
     .oe_title:after
         content: "."
         display: block
@@ -330,6 +378,14 @@ $sheet-padding: 16px
             @include box-shadow(none)
             &:hover
                 background: #ED6F6A
+    .oe_warning_redirect
+        border: none !important
+        padding: 0 !important
+        margin-left: 20px !important
+        background: #f5f7f9 !important
+        box-shadow: none !important
+        &:hover
+            text-decoration: underline !important
     .oe_stat_button
         font-weight: normal
         width: 132px !important
@@ -649,7 +705,7 @@ $sheet-padding: 16px
     // Loading {{{
     .oe_loading
         display: none
-        z-index: 100
+        z-index: 1001
         position: fixed
         top: 0
         right: 50%
@@ -663,23 +719,6 @@ $sheet-padding: 16px
         -moz-border-radius-bottomleft: 8px
         border-bottom-right-radius: 8px
         border-bottom-left-radius: 8px
-    // }}}
-    // Notifications {{{
-    .oe_notification
-        z-index: 1500
-        
-    .oe_webclient_timezone_notification
-        a
-            color: white
-            text-decoration: underline
-        p
-            margin-top: 1em
-        dt
-            font-weight: bold
-    .oe_timezone_systray
-        span
-            margin-top: 1px
-            background-color: #f6cf3b
     // }}}
     // CrashManager {{{
     .oe_dialog_warning
@@ -712,131 +751,6 @@ $sheet-padding: 16px
         .oe_topbar, .oe_leftbar
             display: none
     // }}}
-    // Top Menu {{{
-
-    .navbar
-        .oe_topbar_anonymous_login
-            background-color: #dc5f59
-            color: #eeeeee
-            @include vertical-gradient(#FC8787, #800000)
-            a
-                display: block
-                padding: 5px 10px 7px
-                line-height: 20px
-                height: 30px
-                text-decoration: none
-                color: white
-                background: transparent
-                @include transition(all 0.2s ease-out)
-            a:hover
-                background: rgba(0,0,0,0.1)
-                color: white
-                text-shadow: 0px 0px 3px rgba(0,0,0,0.2)
-                @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
-        .oe_topbar_item
-            display: block
-            padding: 5px 10px 26px
-            line-height: 20px
-            height: 20px
-            text-decoration: none
-            color: #eee
-            vertical-align: top
-            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-            @include transition(all 0.2s ease-out)
-            &:hover
-                background: rgba(0,0,0,0.2)
-                text-shadow: black 0px 0px 3px
-                color: white
-                @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
-
-        .oe_topbar_avatar
-            width: 24px
-            height: 24px
-            margin: -2px 2px 0 0
-            @include radius(3px)
-        .oe_topbar_avatar
-            vertical-align: top
-        .oe_dropdown_arrow:after
-            border-top: 4px solid white
-        .dropdown_menu
-            top: 32px
-            background: #333
-            background: rgba(37,37,37,0.9)
-            border-color: #999
-            border-color: rgba(0, 0, 0, 0.2)
-            border-style: solid
-            border-width: 0 2px 1px
-            @include radius(0 0 6px 6px)
-            @include background-clip()
-            li
-                float: none
-                padding: 3px 12px
-                a
-                    color: #eee
-                &:hover
-                    @include vertical-gradient(#292929, #191919)
-                    @include box-shadow(none)
-        .oe_topbar_name
-            max-width: 150px
-            display: inline-block
-            height: 15px // Customize to manage caret when topbar_name is over sized.
-            text-overflow: ellipsis
-            white-space: nowrap
-            overflow: hidden // Customize to bring ellipsis when topbar_name is over sized.
-
-    // oe menu is the list of the buttons on the left side of the bar.
-    // So why aren't the buttons oe_topbar_items ? This sad state of affairs
-    // is a leftover from an uncomplete refactoring when the left and top menu
-    // were merged. You are welcome to refactor and clean this up
-    .navbar-nav
-        float: left
-        padding: 0
-        margin: 0
-        font-size: 13px
-        > li
-            list-style-type: none
-            padding: 0
-            margin: 0
-            float: left
-            display: block
-            color: #eeeeee
-            > a
-                display: block
-                padding: 5px 10px 26px !important
-                line-height: 20px
-                height: 20px
-                text-decoration: none
-                color: #eee !important
-                vertical-align: top
-                text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-                @include transition(all 0.2s ease-out)
-                &:hover
-                    background: rgba(0,0,0,0.2)
-                    text-shadow: black 0px 0px 3px
-                    color: white
-                    @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
-            > .active
-                background: rgba(0,0,0,0.30)
-                text-shadow: black 0px 0px 3px
-                @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
-
-    .oe_user_menu
-        float: right
-        padding: 0
-        margin: 0
-        li
-            list-style-type: none
-            float: left
-        .oe_dropdown_menu
-            right: -1px
-
-    .oe_systray > div
-        float: left
-        padding: 0 4px 0 4px
-    .oe_systray
-        float: right
-
-    // }}}
     // Webclient.leftbar {{{
     .oe_leftbar
         display: none
@@ -844,40 +758,53 @@ $sheet-padding: 16px
         background: #f0eeee
         border-right: 1px solid $tag-border
         text-shadow: none
-        padding-bottom: 16px
-    a.oe_logo
-        position: relative
-        width: 220px
-        display: block
-        text-align: center
-        img
-            margin: 14px 0
-            border: 0
-        .oe_logo_edit
-            margin: 14px 0
-            position: absolute
-            top: 1px
-            padding: 4px
-            width: 100%
-            display: none
-            text-align: center
-            color: #eee
-            background: rgba(37,37,37,0.9)
-            @include box-sizing(border)
-        &:hover .oe_logo_edit_admin
-            display: block
-    .oe_footer
-        position: fixed
-        bottom: 0
-        padding: 4px 0
-        background: #f0eeee
-        width: 220px
-        text-align: center
-        a
-            font-weight: bold
-            color: black
-            span
-                color: #a24689
+        > div
+            height: 100%
+            display: table
+            width: 220px
+            position: relative
+            a.oe_logo
+                display: table-row
+                text-align: center
+                img
+                    margin: 14px 0
+                    border: 0
+                .oe_logo_edit
+                    margin: 14px 0
+                    position: absolute
+                    top: 1px
+                    padding: 4px
+                    width: 100%
+                    display: none
+                    text-align: center
+                    color: #eee
+                    background: rgba(37,37,37,0.9)
+                    @include box-sizing(border)
+                &:hover .oe_logo_edit_admin
+                    display: block
+            > div
+                display: table-row
+                height: 100%
+                > div
+                    position: relative
+                    height: 100%
+                    > div.oe_secondary_menus_container
+                        position: absolute
+                        position: static\9
+                        top: 0
+                        bottom: 0
+                        left: 0
+                        right: 0
+                        overflow-x: hidden
+                        overflow-y: auto
+            .oe_footer
+                background: #f0eeee
+                text-align: center
+                a
+                    font-weight: bold
+                    color: black
+                    span
+                        color: #a24689
     // }}}
     // Webclient.leftbar items {{{
 
@@ -955,7 +882,25 @@ $sheet-padding: 16px
         a
             color: $link-color
         > div
+            position: relative
             height: 100%
+            > .oe_view_manager
+                > .oe_view_manager_wrapper
+                    display: table-row
+                    height: 100%
+                    > div
+                        position: relative
+                        height: 100%
+                        > .oe_view_manager_body
+                            position: absolute
+                            position: static\9
+                            top: 0
+                            bottom: 0
+                            left: 0
+                            right: 0
+                            overflow: auto
+
+
         .oe_breadcrumb_item:not(:last-child)
             max-width: 7em
             white-space: nowrap
@@ -970,10 +915,8 @@ $sheet-padding: 16px
         display: table
         height: inherit
         width: 100%
-        .oe_view_manager_body
-            height: inherit
         .oe_view_manager_view_kanban:not(:empty)
-            height: inherit
+            height: 100%
         &[data-view-type=kanban]
             .oe_view_manager_body
                 display: table-row
@@ -1150,7 +1093,7 @@ $sheet-padding: 16px
         float: right
         padding: 1px 0
         line-height: 18px
-        width: 400px
+        min-width: 400px
         border: 1px solid #ababab
         background: white
         @include radius(13px)
@@ -1277,188 +1220,215 @@ $sheet-padding: 16px
                         background: #8786b7
                         text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
                         @include radius(2px)
-        &.oe_searchview_open_drawer
-            .oe_searchview_drawer
+
+        .oe-autocomplete
+            display: none
+            position: absolute
+            width: 300px
+            background-color: white
+            border: 1px solid #afafb6
+            z-index: 666
+            margin-top: 2px
+            cursor: default
+            @include radius(3px)
+            @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3))
+            ul
+                list-style-type: none
+                padding-left: 0
+                margin: 5px 0px
+                li
+                    padding-left: 20px
+                    text-shadow: 0 0 0 white
+                    span:first-child
+                        margin-right: 5px
+                    span.oe-expand
+                        cursor: pointer
+                li.oe-indent
+                    margin-left: 20px
+                li.oe-selection-focus
+                    background-color: #7c7bad
+                    color: white
+                li.oe-separator
+                    margin-top: 2px
+                    margin-bottom: 2px
+                    border-top: 1px solid #afafb6
+                li.oe-separator:last-child
+                    display: none
+
+
+    .oe_searchview_drawer_container
+        overflow: auto
+    .oe_searchview_drawer
+        display: none
+        width: 100%
+        cursor: default
+        display: none
+        overflow: hidden
+        border-bottom: 1px solid $tag-border
+        text-align: left
+        padding: 8px 0
+        .badge
+            font-size: 12px
+            line-height: 12px
+        > div:first-child
+            border: none
+            padding-left: 0
+            li:hover:not(.badge)
+                background-color: $hover-background
+        .col-md-5
+            padding-left: 0
+        dl 
+            margin-bottom: 0
+        dt
+            color: $section-title-color
+            font-size: 13px
+            line-height: 24px
+        dd
+            line-height: 24px
+            font-size: 13px
+            padding-top: 3px
+        h4, h4 *
+            margin: 0 0 0 2px
+            padding-left: 20px
+            cursor: pointer
+            font-weight: normal
+            display: inline-block
+            &:hover
+                background-color: $hover-background
+        h4:before
+            content: "▸ "
+            color: #a3a3a3
+        button
+            margin: 4px 0
+        .button
+            border: none
+            background: transparent
+            padding: 0 2px
+            @include box-shadow(none)
+            @include radius(0)
+        .oe_searchview_section
+            ul
+                margin: 0 8px 
+                padding: 0
+                list-style: none
+                display: inline
+            li
+                display: inline-block
+                cursor: pointer
+                position: relative
+                margin-right: 8px
+                > span
+                    display: inline-block
+                    max-width: 250px
+                    text-overflow: ellipsis
+                    vertical-align: bottom
+                    overflow: hidden
+        form
+            margin-left: 12px
+            p
+                margin: 4px 0
+                line-height: 18px
+            button
+                margin: 0 0 8px -3px // Managed margin-left according bootstrap3
+        .oe_searchview_savefilter
+            form
+                display: none
+        .oe_searchview_custom
+            display: none
+            li
+                cursor: pointer
+                position: relative
+                line-height: 14px
+                margin-right: 0
+                button
+                    position: absolute
+                    top: 0
+                    right: 5px
+                a
+                    margin-left: 10px
+                    position: inherit
+                    visibility: hidden
+                    display: inline-block
+                span:hover:not(.badge)
+                    background-color: $hover-background
+            li:hover a
+                visibility: visible
+            //Customize for searchview label
+            label
+                font-weight: normal
+            //End of Customize
+        .oe_searchview_dashboard
+            form
+                display: none
+                margin-top: 2px
+
+        .oe_searchview_advanced
+            overflow: auto
+            form
+                display: none
+                margin-top: 8px
+            button.oe_add_condition:before
+                content: "Z"
+                font-family: "entypoRegular" !important
+                font-size: 24px
+                font-weight: 300 !important
+                margin-right: 4px
+            ul
+                list-style: none
+                padding: 0
+            li
+                position: relative
+                list-style: none
+                margin: 0
+                white-space: nowrap
+                &:first-child .searchview_extended_prop_or
+                    visibility: hidden
+                    margin-left: -14px
+            .searchview_extended_prop_or
+                opacity: 0.5
+                margin-left: -14px //Customize 'or' in searchview
+        .oe_opened
+            h4:before
+                content: "▾ "
+                position: relative
+                top: -1px
+            form
                 display: block
 
-        .oe_searchview_drawer
-            cursor: default
-            position: absolute
-            z-index: 2
-            // detach drawer from field slightly
-            margin-top: 4px
-            top: 100%
-            right: -1px
-            background-color: white
-            min-width: 100%
+        // delete buttons
+        .oe_searchview_custom_delete, .searchview_extended_delete_prop
+            display: inline-block
+            width: 12px
+            height: 12px
+            line-height: 12px
+            padding: 1px
+            color: #8786b7
+            line-height: 8px
+            text-align: center
+            font-weight: bold
+            text-shadow: 0 1px 1px white
+            &:hover
+                text-decoration: none
+                color: white
+                background: #8786b7
+                text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                @include radius(2px)
+        .oe_searchview_custom_delete
             display: none
-            border: 1px solid $tag-border
-            text-align: left
-            @include radius(4px)
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-            > div
-                border-top: 1px solid #ccc
-                margin: 0
-                padding: 8px
-            > div:first-child
-                border-top: none
-                margin: 0
-            h3
-                margin: 8px 4px 4px 0px
-                color: $section-title-color
-                font-size: 13px
-            h4, h4 *
-                margin: 0 0 0 2px
-                cursor: pointer
-                font-weight: normal
-                display: inline-block
-                &:hover
-                    background-color: $hover-background
-            h4:before
-                content: "▸ "
-                color: #a3a3a3
-            button
-                margin: 4px 0
-            .button
-                border: none
-                background: transparent
-                padding: 0 2px
-                @include box-shadow(none)
-                @include radius(0)
-            .oe_searchview_section
-                display: table
-                width: 100%
-                > div
-                    @include box-sizing(border)
-                    display: table-cell
-                    width: 50%
-                    padding-left: 2px // Managed padding-left according bootstrap3
-                ul
-                    margin: 0 8px 8px
-                    padding: 0
-                    list-style: none
-                li
-                    list-style: none
-                    padding: 2px 4px 2px 20px
-                    line-height: 14px
-                    color: inherit
-                    cursor: pointer
-                    position: relative
-                    &.oe_selected:before
-                        content: "W"
-                        font-family: "entypoRegular" !important
-                        font-size: 24px
-                        font-weight: 300 !important
-                        color: #a3a3a3
-                        position: absolute
-                        left: 4px
-                        top: -2px
-                    // after oe_selected so background color is not overridden
-                    &:hover
-                        background-color: $hover-background
-            form
-                margin-left: 12px
-                p
-                    margin: 4px 0
-                    line-height: 18px
-                button
-                    margin: 0 0 8px -3px // Managed margin-left according bootstrap3
-            .oe_searchview_custom
-                padding: 0 8px 8px 8px
-                div
-                    padding: 0
-                    h4
-                        margin: 0
-                form
-                    display: none
-                li
-                    cursor: pointer
-                    position: relative
-                    line-height: 14px
-                    padding: 2px 4px 2px 20px
-                    &:hover
-                        background-color: $hover-background
-                    button
-                        position: absolute
-                        top: 0
-                        right: 5px
-                //Customize for searchview label
-                label
-                    font-weight: normal
-                //End of Customize
-            .oe_searchview_dashboard
-                form
-                    display: none
-                    margin-top: 2px
-
-            .oe_searchview_advanced
-                form
-                    display: none
-                    margin-top: 8px
-                button.oe_add_condition:before
-                    content: "Z"
-                    font-family: "entypoRegular" !important
-                    font-size: 24px
-                    font-weight: 300 !important
-                    margin-right: 4px
-                ul
-                    list-style: none
-                    padding: 0
-                li
-                    position: relative
-                    list-style: none
-                    margin: 0
-                    white-space: nowrap
-                    &:first-child .searchview_extended_prop_or
-                        visibility: hidden
-                        margin-left: -14px
-                .searchview_extended_prop_or
-                    opacity: 0.5
-                    margin-left: -14px //Customize 'or' in searchview
-            .oe_opened
-                h4:before
-                    content: "▾ "
-                    position: relative
-                    top: -1px
-                form
-                    display: block
-
-            // delete buttons
-            .oe_searchview_custom_delete, .searchview_extended_delete_prop
-                display: inline-block
-                width: 12px
-                height: 12px
-                line-height: 12px
-                padding: 1px
-                color: #8786b7
-                line-height: 8px
-                text-align: center
-                font-weight: bold
-                text-shadow: 0 1px 1px white
-                &:hover
-                    text-decoration: none
-                    color: white
-                    background: #8786b7
-                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
-                    @include radius(2px)
-            .oe_searchview_custom_delete
-                display: none
-                position: absolute
-                bottom: 1px
-                right: 4px
-            .oe_searchview_custom_private, .oe_searchview_custom_public
-                &:hover
-                    .oe_searchview_custom_delete
-                        display: inline-block
-            .oe_searchview_custom_public:after
-                content: ","
-                font-family: "entypoRegular" !important
-                font-size: 22px
-                font-weight: 300 !important
-                margin: 0 0 0 4px
-                padding: 0
-
-
+            position: absolute
+            bottom: 1px
+            right: 4px
+        .oe_searchview_custom_private, .oe_searchview_custom_public
+            &:hover
+                .oe_searchview_custom_delete
+                    display: inline-block
+        .oe_searchview_custom_public:after
+            content: ","
+            font-family: "entypoRegular" !important
+            font-size: 22px
+            font-weight: 300 !important
+            margin: 0 0 0 4px
+            padding: 0
     // }}}
     // Views Common {{{
     .oe_view_nocontent
@@ -1881,7 +1851,7 @@ $sheet-padding: 16px
             .oe_form_field_image_controls
                 position: absolute
                 top: 1px
-                padding: 4px 0
+                padding: 6px 0
                 width: 100%
                 display: none
                 text-align: center
@@ -1918,7 +1888,7 @@ $sheet-padding: 16px
                 text-shadow: none
                 .oe_e
                     position: relative
-                    top: -1px
+                    top: -10px
                     left: -9px                    
             input.oe_form_binary_file
                 display: inline-block
@@ -2117,7 +2087,7 @@ $sheet-padding: 16px
     .oe_list_editable .oe_list_content td.oe_list_field_cell
         padding: 4px 6px 3px
     .oe_list.oe_list_editable.oe_editing
-        .oe_edition .oe_list_field_cell:not(.oe_readonly)
+        .oe_edition .oe_list_field_cell
             *
                 visibility: hidden
             color: transparent
@@ -2129,6 +2099,11 @@ $sheet-padding: 16px
         .oe_input_icon
             margin-top: 5px
         .oe_form_field
+            &.oe_list_field_handle
+                color: transparent
+            &.oe_readonly
+                padding: 4px 6px 3px
+                text-align: left
             min-width: 0
             max-width: none
             input, textarea
@@ -2139,9 +2114,13 @@ $sheet-padding: 16px
             input, textarea, select
                 min-width: 0
             &.oe_form_field_float,&.oe_form_view_integer
-                input
+                &.oe_readonly
+                    padding: 6px 0px 0px
                     text-align: right
+                    max-width: 100px
+                input
                     width: 100% !important
+                    text-align: right
             &.oe_form_field_datetime,&.oe_form_field_date
                 input.oe_datepicker_master
                     width: 100% !important
@@ -2366,28 +2345,6 @@ $sheet-padding: 16px
         line-height: 1.2em
     // }}}
     // Bootstrap HACKS {{{
-    .navbar
-        min-height: 32px
-        margin-bottom: 0px
-        border: none
-        z-index: 1
-        position: static
-        background-color: #414141
-        @include vertical-gradient(#646060, #262626)
-    .navbar-default
-        .navbar-nav
-            li
-                a:hover,a:focus
-                    background: rgba(0, 0, 0, 0.3)
-            .open > a,a:hover,a:focus
-                background: rgba(0, 0, 0, 0.3) !important
-            .dropdown > a .caret
-                border-top-color: #777 !important
-                border-bottom-color: #777 !important
-    .navbar-nav
-        li
-            a
-                padding: 4px 32px 4px 12px
     .oe_navbar .dropdown-menu
         font-size: 13px
         padding: 4px 0
@@ -2410,11 +2367,11 @@ $sheet-padding: 16px
             font-weight: normal
 
     // Customize bootstrap3 for leftbar
-    .nav
+    .nav-pills
         li > a
-            padding: 3px 4px 2px 18px
+            padding: 6px 4px 2px 18px
             color: #4c4c4c
-        nav-pills.nav-stacked > li > ul
+        .nav-stacked > li > ul
             padding-left: 16px
     .nav-pills > li.active,a.list-group-item.active
         > a
@@ -2670,6 +2627,8 @@ body.oe_single_form
             > .arrow span
                 background-color: #729fcf !important
 
+    .oe_webclient
+        height: auto !important
 // }}}
 
 // @media print {{{
@@ -2719,6 +2678,7 @@ body.oe_single_form
     background: white
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5)
     background-color: transparent
+    z-index: 1800
     .tooltip-inner
         text-align: left !important
         max-width: 350px
@@ -2778,6 +2738,35 @@ input[type="radio"], input[type="checkbox"]
     background-color: black
     opacity: 0.6000000238418579
 
+/* ---- EDITOR TOUR ---- {{{ */
 
+div.tour-backdrop
+    z-index: 2009
+.popover.tour
+    &.orphan .arrow
+        display: none
+    .popover-navigation
+        padding: 9px 14px
+        *[data-role="end"]
+            float: right
+        *[data-role="next"],*[data-role="end"]
+            cursor: pointer
+.popover.fixed
+    position: fixed
+.tour-backdrop
+    position: fixed
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 1100
+    background-color: #000
+    opacity: 0.8
+
+
+// }}}
+
+body
+    overflow: auto
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

@@ -33,7 +33,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='do_partial_open_barcode']" position="after">
                     <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|',('state','&lt;&gt;','done'),('invoice_state','&lt;&gt;','2binvoiced')]}" type="action" class="oe_highlight" groups="base.group_user"/>
-                    <button name="%(action_stock_invoice_onshipping)d" string="Refund Invoice" attrs="{'invisible': ['|',('state','&lt;&gt;','done'),('invoice_state','&lt;&gt;','invoiced')]}" type="action" class="oe_highlight" groups="base.group_user" context="{'inv_type': 'out_refund'}"/>
                 </xpath>
                 <xpath expr="//field[@name='move_type']" position="after">
                     <field name="invoice_state" groups="account.group_account_invoice"/>

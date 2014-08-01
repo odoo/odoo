@@ -24,7 +24,7 @@
         <field name="name">mrp.repair.form</field>
         <field name="model">mrp.repair</field>
         <field name="arch" type="xml">
-            <form string="Repair Order" version="7.0">
+            <form string="Repair Order">
                <header>
                    <button name="repair_confirm" states="draft" string="Confirm Repair" class="oe_highlight"/>
                    <button name="repair_ready" states="confirmed,ready" string="Start Repair" class="oe_highlight"/>
@@ -63,7 +63,7 @@
                 <notebook>
                     <page string="Operations">
                         <field name="operations" context="{'default_product_uom_qty': product_qty}">
-                            <form string="Operations" version="7.0">
+                            <form string="Operations">
                                 <notebook>
                                     <page string="Repair Line">
                                         <group col="4">
@@ -131,7 +131,7 @@
                         <!-- <field name="invoice_id"/> -->
                         <separator string="Fees"/>
                         <field name="fees_lines" attrs="{'readonly': [('invoice_method','=', 'none')]}">
-                            <form string="Fees" version="7.0">
+                            <form string="Fees">
                                 <label for="name" class="oe_edit_only"/>
                                 <h2>
                                     <field name="name"/>
@@ -213,7 +213,7 @@
                   <filter icon="terp-dolar" string="Invoiced" domain="[('invoiced','=',True)]"/>
                   <field name="product_id"/>
                   <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
-                  <group expand="0" string="Group By...">
+                  <group expand="0" string="Group By">
                       <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                       <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                       <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>

@@ -45,7 +45,7 @@
             <field name="name">account.invoice.line.form</field>
             <field name="model">account.invoice.line</field>
             <field name="arch" type="xml">
-                <form string="Invoice Line" version="7.0">
+                <form string="Invoice Line">
                     <group>
                         <group>
                             <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
@@ -61,7 +61,7 @@
                         <group>
                             <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)" groups="account.group_account_user"/>
                             <field name="invoice_line_tax_id" context="{'type':parent.get('type')}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]" widget="many2many_tags"/>
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)], ('state','not in',('close','cancelled'))]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
@@ -90,12 +90,12 @@
             <field name="name">account.invoice.tax.form</field>
             <field name="model">account.invoice.tax</field>
             <field name="arch" type="xml">
-                <form string="Manual Invoice Taxes" version="7.0">
+                <form string="Manual Invoice Taxes">
                     <group col="4">
                         <field name="name"/>
                         <field name="sequence"/>
                         <field name="account_id" groups="account.group_account_user"/>
-                        <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                        <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled')]" groups="analytic.group_analytic_accounting"/>
                         <field name="manual"/>
                         <field name="amount"/>
                         <field name="base" readonly="0"/>
@@ -142,7 +142,7 @@
             <field name="model">account.invoice</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form string="Supplier Invoice" version="7.0">
+                <form string="Supplier Invoice">
                 <header>
                         <button name="invoice_open" states="draft,proforma2" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
                         <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' states='open,paid' groups="account.group_account_invoice"/>
@@ -165,7 +165,7 @@
                     <group>
                         <group>
                             <field string="Supplier" name="partner_id"
-                              on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
+                              on_change="onchange_partner_id(type, partner_id, date_invoice, payment_term, partner_bank_id, company_id, context)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
                             <field name="fiscal_position" options="{'no_create': True}"/>
@@ -183,7 +183,7 @@
                             <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
                                 name="account_id" groups="account.group_account_user"/>
                             <field name="journal_id" groups="account.group_account_user"
-                                on_change="onchange_journal_id(journal_id, context)" options="{'no_create': True}"/>
+                                on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="check_total" groups="account.group_supplier_inv_check_total"/>
                         </group>
@@ -201,7 +201,7 @@
                                         domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '=', 'other')]"
                                         on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                                        domain="[('type','!=','view'), ('company_id', '=', parent.company_id)]"/>
+                                        domain="[('type','!=','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]"/>
                                     <field name="quantity"/>
                                     <field name="uos_id" groups="product.group_uom"
                                         on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
@@ -258,7 +258,7 @@
                                 <group>
                                     <field name="move_id" groups="account.group_account_user"/>
                                     <field name="period_id" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]" groups="account.group_account_user"/>
-                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id,context)" widget="selection" groups="base.group_multi_company"/>
+                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                                 </group>
                             </group>
                         </page>
@@ -291,7 +291,7 @@
             <field name="name">account.invoice.form</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <form string="Invoice" version="7.0">
+                <form string="Invoice">
                 <header>
                     <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight" groups="base.group_user"/>
                     <button name="invoice_print" string="Print" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight" groups="base.group_user"/>
@@ -320,7 +320,7 @@
                     <group>
                         <group>
                             <field string="Customer" name="partner_id"
-                                on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
+                                on_change="onchange_partner_id(type, partner_id, date_invoice, payment_term, partner_bank_id, company_id, context)"
                                 context="{'search_default_customer':1, 'show_address': 1}"
                                 options='{"always_reload": True}'
                                 domain="[('customer', '=', True)]"/>
@@ -329,7 +329,7 @@
                         <group>
                             <field name="date_invoice"/>
                             <field name="journal_id" groups="account.group_account_user"
-                                on_change="onchange_journal_id(journal_id, context)" options="{'no_create': True}"/>
+                                on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"/>
                             <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]"
                                 name="account_id" groups="account.group_account_user"/>
 
@@ -358,7 +358,7 @@
                                         domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '=', 'other')]"
                                         on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                                        domain="[('type','!=','view'), ('company_id', '=', parent.company_id)]"/>
+                                        domain="[('type','!=','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]"/>
                                     <field name="quantity"/>
                                     <field name="uos_id" groups="product.group_uom"
                                         on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
@@ -393,7 +393,7 @@
                         <page string="Other Info">
                             <group col="4">
                                 <group>
-                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id,context)" widget="selection" groups="base.group_multi_company"/>
+                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                                     <field name="user_id" groups="base.group_user" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
                                     <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"/>
                                     <field name="period_id" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]"
@@ -462,7 +462,7 @@
                     <field name="period_id" string="Period"/>
                     <separator/>
                     <filter domain="[('user_id','=',uid)]" help="My Invoices"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                     	<filter name="group_by_partner_id" string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                     	<filter name="commercial_partner_id" string="Commercial Partner" domain="[]" context="{'group_by':'commercial_partner_id'}"/>
                         <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
@@ -523,7 +523,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a customer invoice.
               </p><p>
-                OpenERP's electronic invoicing allows to ease and fasten the
+                Odoo's electronic invoicing allows to ease and fasten the
                 collection of customer payments. Your customer receives the
                 invoice by email and he can pay online and/or import it
                 in his own system.
@@ -564,7 +564,7 @@
                 Click to record a new supplier invoice.
               </p><p>
                 You can control the invoice from your supplier according to
-                what you purchased or received. OpenERP can also generate
+                what you purchased or received. Odoo can also generate
                 draft invoices automatically from purchase orders or receipts.
               </p>
             </field>

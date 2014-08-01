@@ -17,6 +17,7 @@ class WebsiteEmailDesigner(http.Controller):
            'email' not in model_cols and 'email_from' not in model_cols or \
            'name' not in model_cols and 'subject' not in model_cols:
             return request.redirect('/')
+        res_id = int(res_id)
         obj_ids = request.registry[model].exists(request.cr, request.uid, [res_id], context=request.context)
         if not obj_ids:
             return request.redirect('/')
@@ -33,7 +34,6 @@ class WebsiteEmailDesigner(http.Controller):
             body_field = 'body_html'
 
         cr, uid, context = request.cr, request.uid, request.context
-        res_id = int(res_id)
         record = request.registry[model].browse(cr, uid, res_id, context=context)
 
         values = {

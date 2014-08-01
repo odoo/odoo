@@ -40,8 +40,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url=='/')):
                     return request.redirect(first_menu.url)
                 if first_menu.url.startswith('/page/'):
-                    page = first_menu.url[6:]
-
+                    return request.registry['ir.http'].reroute(first_menu.url)
         return self.page(page)
 
     @http.route(website=True, auth="public")
@@ -49,7 +48,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         # TODO: can't we just put auth=public, ... in web client ?
         return super(Website, self).web_login(*args, **kw)
 
-    @http.route('/page/<path:page>', type='http', auth="public", website=True)
+    @http.route('/page/<page:page>', type='http', auth="public", website=True)
     def page(self, page, **opt):
         values = {
             'path': page,
@@ -192,21 +191,27 @@ class Website(openerp.addons.web.controllers.main.Home):
         modules_to_update = []
         for temp_id in templates:
             view = request.registry['ir.ui.view'].browse(request.cr, request.uid, int(temp_id), context=request.context)
+            if view.page:
+                continue
             view.model_data_id.write({
                 'noupdate': False
             })
             if view.model_data_id.module not in modules_to_update:
                 modules_to_update.append(view.model_data_id.module)
-        module_obj = request.registry['ir.module.module']
-        module_ids = module_obj.search(request.cr, request.uid, [('name', 'in', modules_to_update)], context=request.context)
-        module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
+
+        if modules_to_update:
+            module_obj = request.registry['ir.module.module']
+            module_ids = module_obj.search(request.cr, request.uid, [('name', 'in', modules_to_update)], context=request.context)
+            if module_ids:
+                module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
         return request.redirect(redirect)
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, xml_id, full=False):
+    def customize_template_get(self, xml_id, full=False, bundles=False):
         """ Lists the templates customizing ``xml_id``. By default, only
         returns optional templates (which can be toggled on and off), if
         ``full=True`` returns all templates customizing ``xml_id``
+        ``bundles=True`` returns also the asset bundles
         """
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(
@@ -217,7 +222,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         user_groups = set(user.groups_id)
 
         views = request.registry["ir.ui.view"]\
-            ._views_get(request.cr, request.uid, xml_id, context=request.context)
+            ._views_get(request.cr, request.uid, xml_id, bundles=bundles, context=request.context)
         done = set()
         result = []
         for v in views:
@@ -413,7 +418,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             action = ServerActions.browse(cr, uid, action_id, context=context)
             if action.state == 'code' and action.website_published:
                 action_res = ServerActions.run(cr, uid, [action_id], context=context)
-                if isinstance(action_res, Response):
+                if isinstance(action_res, werkzeug.wrappers.Response):
                     res = action_res
         if res:
             return res

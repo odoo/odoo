@@ -2,16 +2,16 @@
 <openerp>
     <data>
         <record id="view_report_designer_installer" model="ir.ui.view">
-            <field name="name">Form View: OpenERP Report Designer Installation</field>
+            <field name="name">Form View: Odoo Report Designer Installation</field>
             <field name="model">base_report_designer.installer</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
                 <data>
-                    <form position="attributes" version="7.0">
-                        <attribute name="string">OpenERP Report Designer Configuration</attribute>
+                    <form position="attributes">
+                        <attribute name="string">Odoo Report Designer Configuration</attribute>
                     </form>
                     <separator string="title" position="before">
-                        <label string="This plug-in allows you to create/modify OpenERP Reports into OpenOffice Writer."/>
+                        <label string="This plug-in allows you to create/modify Odoo Reports into OpenOffice Writer."/>
                     </separator>
                     <xpath expr="//button[@string='Install Modules']" position="replace">
                         <button name="action_next" type="object" string="Configure" invisible="context.get('menu',False)" class="oe_highlight"/>
@@ -30,13 +30,13 @@
                         </group>
                     </xpath>
                     <separator string="title" position="attributes">
-                        <attribute name="string">OpenERP Report Designer</attribute>
+                        <attribute name="string">Odoo Report Designer</attribute>
                     </separator>
                 </data>
             </field>
         </record>
         <record id="action_report_designer_installer" model="ir.actions.act_window">
-            <field name="name">OpenERP Report Designer Installation</field>
+            <field name="name">Odoo Report Designer Installation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base_report_designer.installer</field>
             <field name="view_id" ref="view_report_designer_installer"/>
@@ -50,7 +50,7 @@
             <field name="type">automatic</field>
         </record>
         <record id="action_report_designer_wizard" model="ir.actions.act_window">
-            <field name="name">OpenERP Report Designer</field>
+            <field name="name">Odoo Report Designer</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base_report_designer.installer</field>
             <field name="view_id" ref="view_report_designer_installer"/>

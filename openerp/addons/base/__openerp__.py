@@ -39,7 +39,6 @@ The kernel of OpenERP, needed for all installation.
         'res/res_country_data.xml',
         'security/base_security.xml',
         'base_menu.xml',
-        'res/res_security.xml',
         'res/res_config.xml',
         'res/res.country.state.csv',
         'ir/ir_actions.xml',
@@ -82,7 +81,7 @@ The kernel of OpenERP, needed for all installation.
         'res/res_users_view.xml',
         'res/res_partner_data.xml',
         'res/ir_property_view.xml',
-        'security/base_security.xml',
+        'res/res_security.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [

@@ -11,7 +11,7 @@
                 <field name="account_id" groups="analytic.group_analytic_accounting"/>
                 <field name="product_id" />
                 <field name="user_id"/>
-                <group expand="0" string="Group By...">
+                <group expand="0" string="Group By">
                     <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                     <filter string="Account" name="Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
@@ -20,9 +20,7 @@
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                     <filter string="Product Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom_id'}"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Date (day)" icon="terp-go-today" context="{'group_by':'date:day'}"/>
-                    <filter string="Date (month)" name="Month" icon="terp-go-month" context="{'group_by':'date:month'}"/>
-                    <filter string="Date (year)" icon="terp-go-year" context="{'group_by':'date:year'}"/>
+                    <filter string="Date" name="Month" icon="terp-go-month" context="{'group_by':'date:month'}"/>
                 </group>
             </search>
         </field>

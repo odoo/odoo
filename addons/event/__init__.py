@@ -23,3 +23,4 @@ import event
 import wizard
 import report
 import res_partner
+import res_config

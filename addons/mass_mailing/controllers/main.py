@@ -67,8 +67,7 @@ class MassMailController(http.Controller):
 
         contact_ids = Contacts.search(cr, SUPERUSER_ID, [('list_id', '=', int(list_id)), ('email', '=', email)], context=context)
         if not contact_ids:
-            contact_ng = Contacts.name_create(cr, SUPERUSER_ID, email, context=context)
-            Contacts.write(cr, SUPERUSER_ID, [contact_ng[0]], {'list_id': int(list_id)}, context=context)
+            Contacts.add_to_list(cr, SUPERUSER_ID, email, int(list_id), context=context)
         # add email to session
         request.session['mass_mailing_email'] = email
         return True

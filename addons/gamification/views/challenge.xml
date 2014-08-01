@@ -32,7 +32,7 @@
             <field name="name">Challenge Form</field>
             <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
-                <form string="Goal definitions" version="7.0">
+                <form string="Goal definitions">
                     <header>
                         <button string="Refresh Challenge" type="object" name="action_check" states="inprogress"/>
                         <button string="Send Report" type="object" name="action_report_progress" states="inprogress,done" groups="base.group_no_one"/>
@@ -76,7 +76,7 @@
                         <notebook>
                             <page string="Goals">
                                 <field name="line_ids" nolabel="1" colspan="4">
-                                    <tree string="Line List" version="7.0" editable="bottom" >
+                                    <tree string="Line List" editable="bottom" >
                                         <field name="sequence" widget="handle"/>
                                         <field name="definition_id" on_change="on_change_definition_id(definition_id)" />
                                         <field name="condition"/>
@@ -136,7 +136,7 @@
             <field name="name">Challenge Kanban</field>
             <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
-                <kanban string="Challenges" class="oe_background_grey" version="7.0">
+                <kanban string="Challenges" class="oe_background_grey">
                     <field name="line_ids"/>
                     <field name="user_ids"/>
                     <templates>
@@ -149,14 +149,15 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-
-                                    <h4><field name="name"/></h4>
-                                    <div class="oe_kanban_project_list">
-                                        <a type="action" name="%(goals_from_challenge_act)d" style="margin-right: 10px"> 
-                                            <span t-if="record.line_ids.raw_value.length gt 1"><t t-esc="record.line_ids.raw_value.length"/> Goals</span>
-                                            <span t-if="record.line_ids.raw_value.length lt 2"><t t-esc="record.line_ids.raw_value.length"/> Goal</span>
-                                        </a>
-                                    </div>
+                                   <strong>
+                                       <h4 class="text-center"><field name="name"/></h4>
+                                       <div class="oe_kanban_project_list text-center">
+                                           <a type="action" name="%(goals_from_challenge_act)d" style="margin-right: 10px"> 
+                                               <span t-if="record.line_ids.raw_value.length gt 1"><t t-esc="record.line_ids.raw_value.length"/> Goals</span>
+                                               <span t-if="record.line_ids.raw_value.length lt 2"><t t-esc="record.line_ids.raw_value.length"/> Goal</span>
+                                           </a>
+                                       </div>
+                                   </strong>
                                     <div class="oe_kanban_badge_avatars">
                                         <t t-foreach="record.user_ids.raw_value.slice(0,11)" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
@@ -223,7 +224,7 @@
                     <filter name="hr_challenges" string="HR Challenges"
                         domain="[('category', '=', 'hr')]"/>
                     <field name="name"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="State" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Period" domain="[]" context="{'group_by':'period'}"/>
                     </group>
@@ -236,7 +237,7 @@
             <field name="name">Challenge Wizard</field>
             <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
-                <form string="Challenge" version="7.0">
+                <form string="Challenge">
                     <field name="reward_failure" invisible="1"/>
                     <div class="oe_title">
                         <h1><field name="name" nolabel="1" readonly="1"/></h1>
@@ -250,7 +251,7 @@
                     </group>
                     <group string="Goals">
                         <field name="line_ids" nolabel="1" readonly="1" colspan="4">
-                            <tree string="Challenge Lines" version="7.0" editable="bottom" >
+                            <tree string="Challenge Lines" editable="bottom" >
                                 <field name="sequence" widget="handle"/>
                                 <field name="definition_id"/>
                                 <field name="condition"/>

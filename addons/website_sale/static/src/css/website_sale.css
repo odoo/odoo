@@ -1,4 +1,3 @@
-@charset "utf-8";
 /* ---- Default Styles ---- */
 .oe_product {
   border: 1px solid rgba(100, 100, 100, 0.2);
@@ -53,7 +52,7 @@
   right: 0;
   bottom: 0;
   overflow: hidden;
-  padding: 0 15px 24px 0;
+  padding: 0 15px 24px 10px;
   min-height: 56px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.75);
@@ -298,14 +297,32 @@
   margin: 6px;
 }
 
-.js_add_cart_variants option.css_not_available {
+.css_not_available_msg {
+  display: none;
+}
+
+.css_not_available.js_product > *:nth-child(4) > * {
+  display: none;
+}
+.css_not_available.js_product .product_price, .css_not_available.js_product .css_quantity {
+  display: none;
+}
+.css_not_available.js_product .css_not_available_msg {
+  display: block;
+}
+
+option.css_not_available {
   color: #cccccc;
 }
-.js_add_cart_variants label.css_not_available {
-  opacity: 0.3;
+
+label.css_not_available {
+  opacity: 0.6;
 }
-.js_add_cart_variants label.css_not_available input {
-  opacity: 0;
+
+label.css_attribute_color.css_not_available {
+  opacity: 1;
+  background-image: url("/website_sale/static/src/img/redcross.png");
+  background-size: cover;
 }
 
 .product_detail_img {
@@ -313,6 +330,14 @@
   margin-right: auto;
   display: block;
   max-height: 500px;
+}
+
+.oe_default_price {
+  display: none;
+}
+
+.discount .oe_default_price {
+  display: block;
 }
 
 /* ---- Publish managment and options ---- */

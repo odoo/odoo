@@ -1,0 +1,237 @@
+
+
+
+.openerp_style { /* base style of openerp */
+  font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
+  color: #4c4c4c;
+  font-size: 13px;
+  background: white;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* button */
+
+.oe_chat_button {
+    position: fixed;
+    bottom: 0px;
+    right: 6px;
+    display: inline-block;
+    min-width: 100px;
+    background-color: rgba(60, 60, 60, 0.6);
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px;
+    color: white;
+    text-shadow: rgb(59, 76, 88) 1px 1px 0px;
+    border: 1px solid rgb(80, 80, 80);
+    border-bottom: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: pointer;
+    z-index:500;
+}
+
+/* conversations */
+
+.oe_im_chatview {
+    position: fixed;
+    overflow: hidden;
+    margin-bottom: 5px;
+    margin-right: 6px;
+    background: rgba(60, 60, 60, 0.8);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: 0 0 3px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.3);
+    width: 240px;
+    z-index:500;
+}
+.oe_im_chatview .oe_im_chatview_disconnected {
+    display:none;
+    z-index: 100;
+    width: 100%;
+    background: #E8EBEF;
+    padding: 5px;
+    font-size: 11px;
+    color: #999;
+    line-height: 14px;
+    height: 28px;
+    overflow: hidden;
+}
+.oe_im_chatview.oe_im_chatview_disconnected_status .oe_im_chatview_disconnected {
+    display: block;
+}
+.oe_im_chatview .oe_im_chatview_header {
+    padding: 3px 6px 2px;
+    background: #DEDEDE;
+    background: -moz-linear-gradient(#FCFCFC, #DEDEDE);
+    background: -webkit-gradient(linear, left top, left bottom, from(#FCFCFC), to(#DEDEDE));
+    -moz-border-radius: 3px 3px 0 0;
+    -webkit-border-radius: 3px 3px 0 0;
+    border-radius: 3px 3px 0 0;
+    border-bottom: 1px solid #AEB9BD;
+    cursor: pointer;
+}
+
+.oe_im_chatview .oe_im_chatview_header_name{
+    max-width: 75%;
+    word-wrap: break-word;
+    display: inline-block;
+    height: 15px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.oe_im_chatview .oe_im_chatview_right {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    float: right;
+    color: gray ;
+}
+.oe_im_chatview .oe_im_chatview_right div, .oe_im_chatview .oe_im_chatview_right button{
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    margin-left: 5px;
+    -webkit-appearance: none;
+    font-size: 18px;
+    line-height: 16px;
+    font-weight: bold;
+    text-shadow: 0 1px 0 white;
+    opacity: 0.9;
+    display: inline-block;
+}
+.oe_im_chatview .oe_im_chatview_content {
+    overflow: auto;
+    height: 287px;
+    width: 240px;
+}
+.oe_im_chatview.oe_im_chatview_disconnected_status .oe_im_chatview_content {
+    height: 249px;
+}
+.oe_im_chatview .oe_im_chatview_footer {
+    position: relative;
+    padding: 3px;
+    border-top: 1px solid #AEB9BD;
+    background: #DEDEDE;
+    background: -moz-linear-gradient(#FCFCFC, #DEDEDE);
+    background: -webkit-gradient(linear, left top, left bottom, from(#FCFCFC), to(#DEDEDE));
+    -moz-border-radius: 0 0 3px 3px;
+    -webkit-border-radius: 0 0 3px 3px;
+    border-radius: 0 0 3px 3px;
+}
+.oe_im_chatview .oe_im_chatview_input {
+    width: 222px;
+    font-family: Lato, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #333;
+    padding: 1px 5px;
+    border: 1px solid #AEB9BD;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+.oe_im_chatview .oe_im_chatview_message_bubble {
+    background: white;
+    position: relative;
+    min-height: 32px;
+    padding: 3px;
+    margin: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.oe_im_chatview .oe_im_chatview_message_bubble .smiley{
+    font-size: 18px;
+}
+
+.oe_im_chatview .oe_im_chatview_technical_bubble {
+    background: #D8D8D8;
+    position: relative;
+    min-height: 32px;
+    padding: 3px;
+    margin: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+
+    font-style:italic;
+}
+
+.oe_im_chatview .oe_im_chatview_clip {
+    position: relative;
+    float: left;
+    width: 26px;
+    height: 26px;
+    margin-right: 4px;
+    -moz-box-shadow: 0 0 2px 1px rgba(0,0,0,0.25);
+    -webkit-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.25);
+}
+.oe_im_chatview .oe_im_chatview_avatar {
+    float: left;
+    width: 26px;
+    height: auto;
+    clip: rect(0, 26px, 26px, 0);
+    max-width: 100%;
+    width: auto 9;
+    height: auto;
+    vertical-align: middle;
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+}
+.oe_im_chatview .oe_im_chatview_time {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    margin: 3px;
+    text-align: right;
+    line-height: 13px;
+    font-size: 11px;
+    color: #999;
+    width: 60px;
+    overflow: hidden;
+}
+.oe_im_chatview .oe_im_chatview_from {
+    margin: 0 0 2px 0;
+    line-height: 14px;
+    font-weight: bold;
+    font-size: 12px;
+    width: 140px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #3A87AD;
+}
+.oe_im_chatview .oe_im_chatview_bubble_list {
+}
+.oe_im_chatview .oe_im_chatview_bubble_item {
+    margin: 0 0 2px 30px;
+    line-height: 14px;
+    word-wrap: break-word;
+}
+
+.oe_im_chatview_online {
+    margin-top: -4px;
+    width: 11px;
+    height: 11px;
+}
+
+.oe_im_chatview .oe_im_chatview_date_separator {
+    background: transparent;
+    position: relative;
+    padding: 3px;
+    color: #aaa;
+    margin: 3px;
+    text-align: right;
+    font-size: 12px;
+}

@@ -122,9 +122,9 @@ class SyncEvent(object):
                 self.OP = Delete('OE', 'Update or delete from GOOGLE')
             else:
                 if not modeFull:
-                    self.OP = Delete('GG', 'Deleted from OpenERP, need to delete it from Gmail if already created')
+                    self.OP = Delete('GG', 'Deleted from Odoo, need to delete it from Gmail if already created')
                 else:
-                    self.OP = NothingToDo("", "Already Deleted in gmail and unlinked in OpenERP")
+                    self.OP = NothingToDo("", "Already Deleted in gmail and unlinked in Odoo")
         elif self.GG.found and not self.OE.found:
             tmpSrc = 'GG'
             if not self.GG.status and not self.GG.isInstance:
@@ -630,8 +630,7 @@ class google_calendar(osv.AbstractModel):
         return new_ids
 
     def update_events(self, cr, uid, lastSync=False, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         calendar_event = self.pool['calendar.event']
         user_obj = self.pool['res.users']
@@ -699,7 +698,7 @@ class google_calendar(osv.AbstractModel):
         for att in att_obj.browse(cr, uid, my_att_ids, context=context):
             event = att.event_id
 
-            base_event_id = att.google_internal_event_id.split('_')[0]
+            base_event_id = att.google_internal_event_id.rsplit('_', 1)[0]
 
             if base_event_id not in event_to_synchronize:
                 event_to_synchronize[base_event_id] = {}
@@ -721,7 +720,7 @@ class google_calendar(osv.AbstractModel):
 
         for event in all_event_from_google.values():
             event_id = event.get('id')
-            base_event_id = event_id.split('_')[0]
+            base_event_id = event_id.rsplit('_', 1)[0]
 
             if base_event_id not in event_to_synchronize:
                 event_to_synchronize[base_event_id] = {}
@@ -786,7 +785,7 @@ class google_calendar(osv.AbstractModel):
                     if actSrc == 'OE':
                         self.delete_an_event(cr, uid, current_event[0], context=context)
                     elif actSrc == 'GG':
-                        new_google_event_id = event.GG.event['id'].split('_')[1]
+                        new_google_event_id = event.GG.event['id'].rsplit('_', 1)[1]
                         if 'T' in new_google_event_id:
                             new_google_event_id = new_google_event_id.replace('T', '')[:-1]
                         else:
@@ -795,7 +794,8 @@ class google_calendar(osv.AbstractModel):
                         if event.GG.status:
                             parent_event = {}
                             if not event_to_synchronize[base_event][0][1].OE.event_id:
-                                event_to_synchronize[base_event][0][1].OE.event_id = att_obj.search_read(cr, uid, [('google_internal_event_id', '=', event.GG.event['id'].split('_')[0])], ['event_id'], context=context_novirtual)[0].get('event_id')[0]
+                                main_ev = att_obj.search_read(cr, uid, [('google_internal_event_id', '=', event.GG.event['id'].rsplit('_', 1)[0])], fields=['event_id'], context=context_novirtual)
+                                event_to_synchronize[base_event][0][1].OE.event_id = main_ev[0].get('event_id')[0]
 
                             parent_event['id'] = "%s-%s" % (event_to_synchronize[base_event][0][1].OE.event_id, new_google_event_id)
                             res = self.update_from_google(cr, uid, parent_event, event.GG.event, "copy", context)
@@ -915,7 +915,7 @@ class res_users(osv.Model):
         'google_calendar_token_validity': fields.datetime('Token Validity'),
         'google_calendar_last_sync_date': fields.datetime('Last synchro date'),
         'google_calendar_cal_id': fields.char('Calendar ID', help='Last Calendar ID who has been synchronized. If it is changed, we remove \
-all links between GoogleID and OpenERP Google Internal ID')
+all links between GoogleID and Odoo Google Internal ID')
     }
 
 
@@ -936,7 +936,6 @@ class calendar_event(osv.Model):
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
-        default['attendee_ids'] = False
         if default.get('write_type', False):
             del default['write_type']
         elif default.get('recurrent_id', False):
@@ -949,7 +948,7 @@ class calendar_event(osv.Model):
         return super(calendar_event, self).unlink(cr, uid, ids, can_be_deleted=can_be_deleted, context=context)
 
     _columns = {
-        'oe_update_date': fields.datetime('OpenERP Update Date'),
+        'oe_update_date': fields.datetime('Odoo Update Date'),
     }
 
 
@@ -958,7 +957,7 @@ class calendar_attendee(osv.Model):
 
     _columns = {
         'google_internal_event_id': fields.char('Google Calendar Event Id'),
-        'oe_synchro_date': fields.datetime('OpenERP Synchro Date'),
+        'oe_synchro_date': fields.datetime('Odoo Synchro Date'),
     }
     _sql_constraints = [('google_id_uniq', 'unique(google_internal_event_id,partner_id,event_id)', 'Google ID should be unique!')]
 

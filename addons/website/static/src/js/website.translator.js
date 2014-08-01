@@ -11,21 +11,25 @@
     var nodialog = 'website_translator_nodialog';
 
     website.EditorBar.include({
-        events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action=edit_master]': 'edit_master',
-        }),
+        do_not_translate : ['-','*','!'],
         start: function () {
             var self = this;
             this.initial_content = {};
             return this._super.apply(this, arguments).then(function () {
-                self.$("button[data-action=edit]").removeClass("hidden");
-                self.$('button[data-action=edit]')
-                    .text("Translate");
-                if (website.is_editable_button) {
-                    self.$('button[data-action=edit]')
-                        .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
+                var $edit_button = $("button[data-action=edit]");
+                $edit_button.removeClass("hidden");
+                $edit_button.text("Translate");
+
+                if(website.no_editor) {
+                    $edit_button.removeProp('disabled');
+                } else {
+                    $edit_button.parent().after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
+                    $('a[data-action=edit_master]').on('click', self, function(ev) {
+                        self.edit_master(ev);
+                    });
                 }
-                self.$('.js_hide_on_translate').hide();
+
+                $('.js_hide_on_translate').hide();
             });
         },
         edit: function () {
@@ -134,7 +138,7 @@
                         node.className += ' oe_translatable_inprogress';
                 }
             } else {
-                node.className += ' oe_translatable_todo';
+                node.className += this.do_not_translate.indexOf(node.textContent.trim()) ? ' oe_translatable_todo' : '';
             }
             node.contentEditable = true;
             var nid = _.uniqueId();

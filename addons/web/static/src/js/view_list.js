@@ -354,6 +354,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.$el.hide();
         }
         //Sort
+        var default_order = this.fields_view.arch.attrs.default_order,
+            unsorted = !this.dataset._sort.length;
+        if (unsorted && default_order) {
+            this.dataset.set_sort(default_order.split(','));
+        }
+
         if(this.dataset._sort.length){
             if(this.dataset._sort[0].indexOf('-') == -1){
                 this.$el.find('th[data-id=' + this.dataset._sort[0] + ']').addClass("sortdown");
@@ -1108,7 +1114,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     ids = value;
                 }
                 new instance.web.Model(column.relation)
-                    .call('name_get', [ids]).done(function (names) {
+                    .call('name_get', [ids, this.dataset.context]).done(function (names) {
                         // FIXME: nth horrible hack in this poor listview
                         record.set(column.id + '__display',
                                    _(names).pluck(1).join(', '));
@@ -1605,6 +1611,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 .filter(function (column) { return column.tag === 'field';})
                 .pluck('name').value(),
             function (groups) {
+                self.view.$pager.hide();
                 $el[0].appendChild(
                     self.render_groups(groups));
                 if (post_render) { post_render(); }

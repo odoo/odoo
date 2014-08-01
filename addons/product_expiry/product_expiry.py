@@ -62,8 +62,7 @@ class stock_production_lot(osv.osv):
         for f in ('life_date', 'use_date', 'removal_date', 'alert_date'):
             if not getattr(obj, f):
                 towrite.append(f)
-        if context is None:
-            context = {}
+        context = dict(context or {})
         context['product_id'] = obj.product_id.id
         self.write(cr, uid, [obj.id], self.default_get(cr, uid, towrite, context=context))
         return newid
@@ -92,7 +91,7 @@ class stock_quant(osv.osv):
 
     def apply_removal_strategy(self, cr, uid, location, product, qty, domain, removal_strategy, context=None):
         if removal_strategy == 'fefo':
-            order = 'removal_date, id'
+            order = 'removal_date, in_date, id'
             return self._quants_get_order(cr, uid, location, product, qty, domain, order, context=context)
         return super(stock_quant, self).apply_removal_strategy(cr, uid, location, product, qty, domain, removal_strategy, context=context)
 

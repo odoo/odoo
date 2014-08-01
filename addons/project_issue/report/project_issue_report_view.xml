@@ -13,22 +13,37 @@
             </field>
         </record>
 
+        <!-- Custom reports (aka filters) -->
+        <record id="filter_issue_report_responsible" model="ir.filters">
+            <field name="name">By Responsible</field>
+            <field name="model_id">project.issue.report</field>
+            <field name="domain">[]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['project_id', 'user_id']}</field>
+        </record>
+        <record id="filter_issue_report_reviewer" model="ir.filters">
+            <field name="name">By Reviewer</field>
+            <field name="model_id">project.issue.report</field>
+            <field name="domain">[]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['project_id', 'reviewer_id']}</field>
+        </record>
+
         <record id="view_project_issue_report_filter" model="ir.ui.view">
             <field name="name">project.issue.report.select</field>
             <field name="model">project.issue.report</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <field name="creation_date"/>
                     <field name="project_id"/>
                     <field name="user_id"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="version_id"/>
                     <field name="stage_id"/>
+                    <filter string="My Task" domain="[('user_id','=',uid)]" />
                     <filter string="Unassigned" name="unassigned" domain="[('user_id','=',False)]"/>
-                    <filter string="New" name="new" domain="[('stage_id.sequence', '=', 1)]"/>
-                    <filter string="Done" name="done" domain="[('stage_id.fold', '=', True)]"
-                            help="Tasks beloging to a folded stage"/>
-                    <group  expand="1" string="Group By...">
+                    <separator/>
+                    <filter string="New" name="new" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
+                    <group  expand="1" string="Group By">
                         <filter string="Assigned to" name="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Contact" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <filter string="Sale Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
@@ -38,9 +53,7 @@
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}" help="Creation Date"/>
-                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Creation Date"/>
-                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'name'}" help="Creation Date"/>
+                        <filter string="Create Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" help="Create Date"/>
                         <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}"/>
                    </group>
                </search>

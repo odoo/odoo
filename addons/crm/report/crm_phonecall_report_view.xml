@@ -41,11 +41,10 @@
                     <group expand="0" string="Extended Filters...">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="creation_date"/>
                         <field name="opening_date"/>
                         <field name="date_closed"/>
                     </group>
-                    <group expand="1" string="Group By...">
+                    <group expand="1" string="Group By">
                         <filter string="Salesperson" name="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
@@ -53,9 +52,7 @@
                         <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Creation Date (day)" icon="terp-go-today" domain="[]" context="{'group_by':'create_date:day'}" help="Date of call"/>
-                        <filter string="Creation Date (month)" icon="terp-go-month" domain="[]" context="{'group_by':'create_date:month'}" help="Month of call"/>
-                        <filter string="Creation Date (year)" icon="terp-go-year" domain="[]" context="{'group_by':'create_date:name'}" help="Year of call"/>
+                        <filter string="Creation Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date:month'}" help="Month of call"/>
                     </group>
                 </search>
             </field>
