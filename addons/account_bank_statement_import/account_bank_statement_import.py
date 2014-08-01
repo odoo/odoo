@@ -18,11 +18,18 @@ def add_file_type(selection_value):
 class account_bank_statement_import(osv.TransientModel):
     _name = 'account.bank.statement.import'
     _description = 'Import Bank Statement'
+
+    def _get_import_file_type(self, cr, uid, context=None):
+        return _IMPORT_FILE_TYPE
+
     _columns = {
         'data_file': fields.binary('Bank Statement File', required=True, help='Get you bank statements in electronic format from your bank and select them here.'),
-        'file_type': fields.selection(_IMPORT_FILE_TYPE, 'File Type', required=True),
+        'file_type': fields.selection(_get_import_file_type, 'File Type', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, help="The journal for which the bank statements will be created"),
     }
+
+    def _get_first_file_type(self, cr, uid, context=None):
+        return self._get_import_file_type(cr, uid, context=context)[0][0]
 
     def _get_default_journal(self, cr, uid, context=None):
         company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement', context=context)
@@ -30,7 +37,7 @@ class account_bank_statement_import(osv.TransientModel):
         return journal_ids and journal_ids[0] or False
 
     _defaults = {
-        'file_type': _IMPORT_FILE_TYPE[0][0],
+        'file_type': _get_first_file_type,
         'journal_id': _get_default_journal,
     }
 

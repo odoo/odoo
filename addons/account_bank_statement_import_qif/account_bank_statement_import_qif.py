@@ -2,13 +2,10 @@
 
 import dateutil.parser
 import base64
-import logging
 from tempfile import TemporaryFile
 
 from openerp.tools.translate import _
-from openerp.osv import fields, osv
-
-_logger = logging.getLogger(__name__)
+from openerp.osv import osv
 
 from openerp.addons.account_bank_statement_import import account_bank_statement_import as ibs
 
@@ -16,10 +13,6 @@ ibs.add_file_type(('qif', 'QIF'))
 
 class account_bank_statement_import(osv.TransientModel):
     _inherit = "account.bank.statement.import"
-
-    _columns = {
-        'file_type': fields.selection(ibs._IMPORT_FILE_TYPE, 'File Type', required=True),
-    }
 
     def process_qif(self, cr, uid, data_file, journal_id=False, context=None):
         """ Import a file in the .QIF format"""

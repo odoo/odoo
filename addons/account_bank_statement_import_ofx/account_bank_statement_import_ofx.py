@@ -4,7 +4,7 @@ import logging
 import base64
 import os
 
-from openerp.osv import fields, osv
+from openerp.osv import osv
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -21,10 +21,6 @@ except ImportError:
 
 class account_bank_statement_import(osv.TransientModel):
     _inherit = 'account.bank.statement.import'
-
-    _columns = {
-        'file_type': fields.selection(ibs._IMPORT_FILE_TYPE, 'File Type', required=True),
-    }
 
     def process_ofx(self, cr, uid, data_file, journal_id=False, context=None):
         """ Import a file in the .OFX format"""

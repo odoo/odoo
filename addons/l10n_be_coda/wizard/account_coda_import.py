@@ -22,7 +22,7 @@
 import base64
 import time
 
-from openerp.osv import fields, osv
+from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp import tools
 
@@ -36,10 +36,6 @@ coda_ibs.add_file_type(('coda', 'CODA'))
 
 class account_bank_statement_import(osv.TransientModel):
     _inherit = "account.bank.statement.import"
-    _description = 'Import CODA File'
-    _columns = {
-        'file_type': fields.selection(coda_ibs._IMPORT_FILE_TYPE, 'File Type'),
-    }
 
     def process_coda(self, cr, uid, codafile=None, journal_id=False, context=None):
         if context is None:
