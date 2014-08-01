@@ -1,10 +1,17 @@
 $(document).ready(function () {
-    var $shippingDifferent = $(".oe_website_sale input[name='shipping_different']");
-    if ($shippingDifferent.is(':checked')) {
-       $(".oe_website_sale .js_shipping").show();
-    }
-    $shippingDifferent.change(function () {
-        $(".oe_website_sale .js_shipping").toggle();
+    var $shippingDifferent = $(".oe_website_sale select[name='shipping_id']");
+    $shippingDifferent.change(function (event) {
+        var value = +$shippingDifferent.val();
+        var data = $shippingDifferent.find("option:selected").data();
+        var $snipping = $(".oe_website_sale .js_shipping");
+        var $inputs = $snipping.find("input,select");
+
+        $snipping.toggle(!!value);
+        $inputs.attr("readonly", value <= 0 ? null : "readonly" ).prop("readonly", value <= 0 ? null : "readonly" );
+
+        $inputs.each(function () {
+            $(this).val( data[$(this).attr("name")] || "" );
+        });
     });
 
     // change for css
