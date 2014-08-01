@@ -241,8 +241,13 @@ class ModelConverter(ir.ir_http.ModelConverter):
     def to_python(self, value):
         m = re.match(self.regex, value)
         _uid = RequestUID(value=value, match=m, converter=self)
+        record_id = int(m.group(2))
+        if record_id < 0:
+            # limited support for negative IDs due to our slug pattern, assume abs() if not found
+            if not request.registry[self.model].exists(request.cr, _uid, [record_id]):
+                record_id = abs(record_id)
         return request.registry[self.model].browse(
-            request.cr, _uid, int(m.group(2)), context=request.context)
+            request.cr, _uid, record_id, context=request.context)
 
     def generate(self, cr, uid, query=None, args=None, context=None):
         obj = request.registry[self.model]

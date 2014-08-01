@@ -983,22 +983,22 @@ class calendar_event(osv.Model):
         value['allday'] = checkallday  # Force to be rewrited
 
         if allday:
-            if fromtype == 'start':
+            if fromtype == 'start' and start:
                 start = datetime.strptime(start, DEFAULT_SERVER_DATE_FORMAT)
                 value['start_datetime'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['start'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
 
-            if fromtype == 'stop':
+            if fromtype == 'stop' and end:
                 end = datetime.strptime(end, DEFAULT_SERVER_DATE_FORMAT)
                 value['stop_datetime'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
 
         else:
-            if fromtype == 'start':
+            if fromtype == 'start' and start:
                 start = datetime.strptime(start, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['start_date'] = datetime.strftime(start, DEFAULT_SERVER_DATE_FORMAT)
                 value['start'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
-            if fromtype == 'stop':
+            if fromtype == 'stop' and end:
                 end = datetime.strptime(end, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['stop_date'] = datetime.strftime(end, DEFAULT_SERVER_DATE_FORMAT)
                 value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
