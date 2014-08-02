@@ -50,19 +50,19 @@ German accounting chart and localization (DATEV SKR03 and SKR04).
     'demo': [],
     'data': [
         'account_tax_skr03.xml',
-        'account_types_skr03.xml',
-        'account_chart_schema_skr03.xml',
+		'account_chart_schema_skr03.xml',
         'account_chart_skr03.xml',
+        'account_chart_template_skr03.xml',
         'account_tax_fiscal_position_skr03.xml',
         'account_tax_skr04.xml',
-        'account_types_skr04.xml',
-        'account_chart_schema_skr04.xml',
+		'account_chart_schema_skr04.xml',
         'account_chart_skr04.xml',
+        'account_chart_template_skr04.xml',
         'account_tax_fiscal_position_skr04.xml',
         #'account_tax_ikr.xml',
-        #'account_types_ikr.xml',                     => todo: add new chart-template (Industriekontenrahmen (IKR)) which is also used sometimes in Germany
-        #'account_chart_ikr.xml',                     => part of Industriekontenrahmen
-        #'account_tax_fiscal_position_ikr.xml',       => part of Industriekontenrahmen
+        #'account_chart_ikr.xml', 					=> part of Industriekontenrahmen
+        #'account_chart_template_ikr.xml',			=> part of Industriekontenrahmen
+        #'account_tax_fiscal_position_ikr.xml',		=> part of Industriekontenrahmen
         'l10n_de_wizard.xml',
     ],
     'installable': True,
