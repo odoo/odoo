@@ -928,8 +928,7 @@ class stock_picking(osv.osv):
                 'pack_operation_ids': [],
                 'backorder_id': picking.id,
             })
-            back_order_name = self.browse(cr, uid, backorder_id, context=context).name
-            self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (back_order_name), context=context)
+            self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (picking.name), context=context)
             move_obj = self.pool.get("stock.move")
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
 
@@ -1448,7 +1447,7 @@ class stock_production_lot(osv.osv):
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
     _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, ref)', 'The combination of Serial Number and internal reference must be unique !'),
+        ('name_ref_uniq', 'unique (name, ref, product_id)', 'The combination of serial number, internal reference and product must be unique !'),
     ]
 
     def action_traceability(self, cr, uid, ids, context=None):
@@ -1531,9 +1530,9 @@ class stock_move(osv.osv):
         res = dict.fromkeys(ids, False)
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'done':
-                res[move.id] = [q.id for q in move.quant_ids]
+                res[move.id] = [q.lot_id.id for q in move.quant_ids if q.lot_id]
             else:
-                res[move.id] = [q.id for q in move.reserved_quant_ids]
+                res[move.id] = [q.lot_id.id for q in move.reserved_quant_ids if q.lot_id]
         return res
 
     def _get_product_availability(self, cr, uid, ids, field_name, args, context=None):
@@ -1688,7 +1687,7 @@ class stock_move(osv.osv):
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
         'inventory_id': fields.many2one('stock.inventory', 'Inventory'),
-        'lot_ids': fields.function(_get_lot_ids, type='many2many', relation='stock.quant', string='Lots'),
+        'lot_ids': fields.function(_get_lot_ids, type='many2many', relation='stock.production.lot', string='Lots'),
         'origin_returned_move_id': fields.many2one('stock.move', 'Origin return move', help='move that created the return move', copy=False),
         'returned_move_ids': fields.one2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move'),
         'reserved_availability': fields.function(_get_reserved_availability, type='float', string='Quantity Reserved', readonly=True, help='Quantity that has already been reserved for this move'),
@@ -4149,7 +4148,7 @@ class stock_picking_type(osv.osv):
 
         # Statistics for the kanban view
         'last_done_picking': fields.function(_get_tristate_values,
-            type='any',
+            type='char',
             string='Last 10 Done Pickings'),
 
         'count_picking_draft': fields.function(_get_picking_count,

@@ -19,10 +19,13 @@
 #
 ##############################################################################
 
+import logging
 import time
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+
+_logger = logging.getLogger(__name__)
 
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
@@ -51,14 +54,24 @@ class delivery_carrier(osv.osv):
         for carrier in self.browse(cr, uid, ids, context=context):
             order_id=context.get('order_id',False)
             price=False
+            available = False
             if order_id:
               order = sale_obj.browse(cr, uid, order_id, context=context)
               carrier_grid=self.grid_get(cr,uid,[carrier.id],order.partner_shipping_id.id,context)
               if carrier_grid:
-                  price=grid_obj.get_price(cr, uid, carrier_grid, order, time.strftime('%Y-%m-%d'), context)
+                  try:
+                    price=grid_obj.get_price(cr, uid, carrier_grid, order, time.strftime('%Y-%m-%d'), context)
+                    available = True
+                  except osv.except_osv, e:
+                    # no suitable delivery method found, probably configuration error
+                    _logger.error("Carrier %s: %s\n%s" % (carrier.name, e.name, e.value))
+                    price = 0.0
               else:
                   price = 0.0
-            res[carrier.id]=price
+            res[carrier.id] = {
+                'price': price,
+                'available': available
+            }
         return res
 
     _columns = {
@@ -66,7 +79,9 @@ class delivery_carrier(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Transport Company', required=True, help="The partner that is doing the delivery service."),
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
-        'price' : fields.function(get_price, string='Price'),
+        'available' : fields.function(get_price, string='Available',type='boolean', multi='price',
+            help="Is the carrier method possible with the current order."),
+        'price' : fields.function(get_price, string='Price', multi='price'),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it."),
         'normal_price': fields.float('Normal Price', help="Keep empty if the pricing depends on the advanced pricing per destination"),
         'free_if_more_than': fields.boolean('Free If Order Total Amount Is More Than', help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping"),
@@ -196,7 +211,7 @@ class delivery_grid(osv.osv):
         for line in order.order_line:
             if not line.product_id or line.is_delivery:
                 continue
-            q = product_uom_obj._compute_qty(cr, uid, line.product_uom.id, line.product_uos_qty, line.product_id.uom_id.id)
+            q = product_uom_obj._compute_qty(cr, uid, line.product_uom.id, line.product_uom_qty, line.product_id.uom_id.id)
             weight += (line.product_id.weight or 0.0) * q
             volume += (line.product_id.volume or 0.0) * q
             quantity += q

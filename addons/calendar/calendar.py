@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
+from openerp import api
 from openerp import tools, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
@@ -982,22 +983,22 @@ class calendar_event(osv.Model):
         value['allday'] = checkallday  # Force to be rewrited
 
         if allday:
-            if fromtype == 'start':
+            if fromtype == 'start' and start:
                 start = datetime.strptime(start, DEFAULT_SERVER_DATE_FORMAT)
                 value['start_datetime'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['start'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
 
-            if fromtype == 'stop':
+            if fromtype == 'stop' and end:
                 end = datetime.strptime(end, DEFAULT_SERVER_DATE_FORMAT)
                 value['stop_datetime'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
 
         else:
-            if fromtype == 'start':
+            if fromtype == 'start' and start:
                 start = datetime.strptime(start, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['start_date'] = datetime.strftime(start, DEFAULT_SERVER_DATE_FORMAT)
                 value['start'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
-            if fromtype == 'stop':
+            if fromtype == 'stop' and end:
                 end = datetime.strptime(end, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['stop_date'] = datetime.strftime(end, DEFAULT_SERVER_DATE_FORMAT)
                 value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
@@ -1323,6 +1324,7 @@ class calendar_event(osv.Model):
             ('user_id', '=', uid),
         ]
 
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         if isinstance(thread_id, str):
             thread_id = get_real_ids(thread_id)

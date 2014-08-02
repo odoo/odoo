@@ -21,6 +21,7 @@
 
 from datetime import datetime
 
+from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import fields, osv, orm
@@ -449,6 +450,7 @@ class project_issue(osv.Model):
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
         return res_id
 
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, content_subtype='html', **kwargs):
         """ Overrides mail_thread message_post so that we can set the date of last action field when
             a new message is posted on the issue.

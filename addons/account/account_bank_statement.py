@@ -738,9 +738,12 @@ class account_bank_statement_line(osv.osv):
         move_id = am_obj.create(cr, uid, move_vals, context=context)
 
         # Create the move line for the statement line
-        ctx = context.copy()
-        ctx['date'] = st_line.date
-        amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount, context=ctx)
+        if st_line.statement_id.currency.id != company_currency.id:
+            ctx = context.copy()
+            ctx['date'] = st_line.date
+            amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount_currency, context=ctx)
+        else:
+            amount = st_line.amount
         bank_st_move_vals = bs_obj._prepare_bank_move_line(cr, uid, st_line, move_id, amount, company_currency.id, context=context)
         aml_obj.create(cr, uid, bank_st_move_vals, context=context)
         # Complete the dicts
@@ -817,8 +820,8 @@ class account_bank_statement_line(osv.osv):
     _description = "Bank Statement Line"
     _inherit = ['ir.needaction_mixin']
     _columns = {
-        'name': fields.char('Description', required=True, copy=False),
-        'date': fields.date('Date', required=True, copy=False),
+        'name': fields.char('Description', required=True),
+        'date': fields.date('Date', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'bank_account_id': fields.many2one('res.partner.bank','Bank Account'),
@@ -829,7 +832,7 @@ class account_bank_statement_line(osv.osv):
         'note': fields.text('Notes'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of bank statement lines."),
         'company_id': fields.related('statement_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'journal_entry_id': fields.many2one('account.move', 'Journal Entry'),
+        'journal_entry_id': fields.many2one('account.move', 'Journal Entry', copy=False),
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
     }

@@ -86,9 +86,7 @@
                     <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                     <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_line_id'}"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Invoice Date (day)" name="day" icon="terp-go-today" context="{'group_by':'date:day'}" help="Group by Invoice Date"/>
-                    <filter string="Invoice Date (month)" name="month" icon="terp-go-month" context="{'group_by':'date:month'}" help="Group by month of Invoice Date"/>
-                    <filter string="Invoice Date (year)" name="group_year" icon="terp-go-year" context="{'group_by':'date:year'}" help="Group by year of Invoice Date"/>
+                    <filter string="Invoice Date" name="month" icon="terp-go-month" context="{'group_by':'date'}" help="Group by month of Invoice Date"/>
                 </group>
             </search>
         </field>

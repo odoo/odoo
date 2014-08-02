@@ -66,7 +66,7 @@ class mail_alias(osv.Model):
 
     _columns = {
         'alias_name': fields.char('Alias Name',
-            help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.my.openerp.com>",),
+            help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>",),
         'alias_model_id': fields.many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
                                           help="The model (Odoo Document Kind) to which this alias "
                                                "corresponds. Any incoming email that does not reply to an "
@@ -132,7 +132,7 @@ class mail_alias(osv.Model):
     def name_get(self, cr, uid, ids, context=None):
         """Return the mail alias display alias_name, including the implicit
            mail catchall domain if exists from config otherwise "New Alias".
-           e.g. `jobs@openerp.my.openerp.com` or `jobs` or 'New Alias'
+           e.g. `jobs@mail.odoo.com` or `jobs` or 'New Alias'
         """
         res = []
         for record in self.browse(cr, uid, ids, context=context):
