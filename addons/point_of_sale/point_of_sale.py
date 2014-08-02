@@ -1391,4 +1391,19 @@ class product_template(osv.osv):
             'context':context,
         }
 
+class product_product(osv.osv):
+    _inherit = 'product.product'
+
+    def edit_ean(self, cr, uid, ids, context):
+        return {
+            'name': _("Assign a Custom EAN"),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'pos.ean_wizard',
+            'target' : 'new',
+            'view_id': False,
+            'context':context,
+        }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
