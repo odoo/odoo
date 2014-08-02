@@ -23,49 +23,46 @@
     'name': 'Deutschland - Accounting',
     'version': '1.1',
     'author': 'V1.1: copado.de | V1.0 openbig.org',
-	'website': 'http://www.copado.de',
+    'website': 'http://www.copado.de',
     'category': 'Localization/Account Charts',
     'description': """
 Dieses Modul beinhaltet die deutschen Kontenrahmen SKR03 und SKR04 nach Datev
 und den IKR (Industriekontenrahmen).
 ==============================================================================
-	* Letzte Überarbeitung SKR03: 07/2014
-	* Letzte Überarbeitung SKR04: 07/2014
-	* In Kürze neuer zusätzlicher Kontenrahmen: IKR
+    * Letzte Überarbeitung SKR03: 07/2014
+    * Letzte Überarbeitung SKR04: 07/2014
+    * In Kürze neuer zusätzlicher Kontenrahmen: IKR
 
 
 English:
 German accounting chart and localization (DATEV SKR03 and SKR04).
-	* Last change SKR03: 07/2014
-	* Last change SKR04: 07/2014
-	* New chart will be comming soon: IKR
+    * Last change SKR03: 07/2014
+    * Last change SKR04: 07/2014
+    * New chart will be comming soon: IKR
     """,
     'depends': [
-		'base',
-		'account',
-		'base_iban',
-		'base_vat',
-		'account_chart'
-	],
+        'base',
+        'account',
+        'base_iban',
+        'base_vat',
+        'account_chart'
+    ],
     'demo': [],
     'data': [
         'account_tax_skr03.xml',
         'account_types_skr03.xml',
-		'account_chart_schema_skr03.xml',
+        'account_chart_schema_skr03.xml',
         'account_chart_skr03.xml',
-        'account_chart_template_skr03.xml',
         'account_tax_fiscal_position_skr03.xml',
         'account_tax_skr04.xml',
         'account_types_skr04.xml',
-		'account_chart_schema_skr04.xml',
+        'account_chart_schema_skr04.xml',
         'account_chart_skr04.xml',
-        'account_chart_template_skr04.xml',
         'account_tax_fiscal_position_skr04.xml',
         #'account_tax_ikr.xml',
-        #'account_types_ikr.xml', 					=> todo: add new chart-template (Industriekontenrahmen (IKR)) which is also used sometimes in Germany
-        #'account_chart_ikr.xml', 					=> part of Industriekontenrahmen
-        #'account_chart_template_ikr.xml',			=> part of Industriekontenrahmen
-        #'account_tax_fiscal_position_ikr.xml',		=> part of Industriekontenrahmen
+        #'account_types_ikr.xml',                     => todo: add new chart-template (Industriekontenrahmen (IKR)) which is also used sometimes in Germany
+        #'account_chart_ikr.xml',                     => part of Industriekontenrahmen
+        #'account_tax_fiscal_position_ikr.xml',       => part of Industriekontenrahmen
         'l10n_de_wizard.xml',
     ],
     'installable': True,
