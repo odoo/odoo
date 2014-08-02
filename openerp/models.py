@@ -1082,6 +1082,16 @@ class BaseModel(object):
                 # Failed to write, log to messages, rollback savepoint (to
                 # avoid broken transaction) and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+            except Exception, e:
+                message = (_('Unknown error during import:') +
+                           ' %s: %s' % (type(e), unicode(e)))
+                moreinfo = _('Resolve other errors first')
+                messages.append(dict(info, type='error',
+                                     message=message,
+                                     moreinfo=moreinfo))
+                # Failed for some reason, perhaps due to invalid data supplied,
+                # rollback savepoint and keep going
+                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
