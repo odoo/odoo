@@ -604,25 +604,18 @@ class Field(object):
         """ return the null value for this field in the given environment """
         return False
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         """ convert `value` to the cache level in `env`; `value` may come from
             an assignment, or have the format of methods :meth:`BaseModel.read`
             or :meth:`BaseModel.write`
-
-            :param bool validate: when True, field-specific validation of
-                `value` will be performed
         """
         return value
 
     def convert_to_read(self, value, use_name_get=True):
         """ convert `value` from the cache to a value as returned by method
             :meth:`BaseModel.read`
-
-            :param bool use_name_get: when True, value's diplay name will
-                be computed using :meth:`BaseModel.name_get`, if relevant
-                for the field
         """
-        return False if value is None else value
+        return value
 
     def convert_to_write(self, value, target=None, fnames=None):
         """ convert `value` from the cache to a valid value for method
@@ -760,7 +753,7 @@ class Field(object):
                             try:
                                 values = target._convert_to_cache({
                                     f.name: source[f.name] for f in self.computed_fields
-                                }, validate=False)
+                                })
                             except MissingError as e:
                                 values = FailedValue(e)
                             target._cache.update(values)
@@ -852,11 +845,17 @@ class Field(object):
         return spec
 
 
+class Any(Field):
+    """ Field for arbitrary Python values. """
+    # Warning: no storage is defined for this type of field!
+    type = 'any'
+
+
 class Boolean(Field):
     """ Boolean field. """
     type = 'boolean'
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         return bool(value)
 
     def convert_to_export(self, value, env):
@@ -869,7 +868,7 @@ class Integer(Field):
     """ Integer field. """
     type = 'integer'
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         return int(value or 0)
 
     def convert_to_read(self, value, use_name_get=True):
@@ -909,7 +908,7 @@ class Float(Field):
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         # apply rounding here, otherwise value in cache may be wrong!
         if self.digits:
             return float_round(float(value or 0.0), precision_digits=self.digits[1])
@@ -943,7 +942,7 @@ class Char(_String):
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         return bool(value) and ustr(value)[:self.size]
 
 
@@ -957,7 +956,7 @@ class Text(_String):
     """
     type = 'text'
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         return bool(value) and ustr(value)
 
 
@@ -965,7 +964,7 @@ class Html(_String):
     """ Html field. """
     type = 'html'
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         return bool(value) and html_sanitize(value)
 
 
@@ -1014,7 +1013,7 @@ class Date(Field):
         """ Convert a :class:`date` value into the format expected by the ORM. """
         return value.strftime(DATE_FORMAT)
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         if not value:
             return False
         if isinstance(value, basestring):
@@ -1079,7 +1078,7 @@ class Datetime(Field):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
         return value.strftime(DATETIME_FORMAT)
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         if not value:
             return False
         if isinstance(value, basestring):
@@ -1159,9 +1158,7 @@ class Selection(Field):
             selection = selection(env[self.model_name])
         return [value for value, _ in selection]
 
-    def convert_to_cache(self, value, env, validate=True):
-        if not validate:
-            return value or False
+    def convert_to_cache(self, value, env):
         if value in self.get_values(env):
             return value
         elif not value:
@@ -1199,10 +1196,9 @@ class Reference(Selection):
 
     _column_size = property(attrgetter('size'))
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         if isinstance(value, BaseModel):
-            if ((not validate or value._name in self.get_values(env))
-                    and len(value) <= 1):
+            if value._name in self.get_values(env) and len(value) <= 1:
                 return value.with_env(env) or False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
@@ -1297,7 +1293,7 @@ class Many2one(_Relational):
         """ Update the cached value of `self` for `records` with `value`. """
         records._cache[self] = value
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         if isinstance(value, (NoneType, int)):
             return env[self.comodel_name].browse(value)
         if isinstance(value, BaseModel):
@@ -1350,7 +1346,7 @@ class _RelationalMulti(_Relational):
         for record in records:
             record._cache[self] = record[self.name] | value
 
-    def convert_to_cache(self, value, env, validate=True):
+    def convert_to_cache(self, value, env):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name:
                 return value.with_env(env)

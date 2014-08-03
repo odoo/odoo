@@ -17,6 +17,9 @@ from PIL import Image
 from sys import maxint
 
 import werkzeug
+import werkzeug.exceptions
+import werkzeug.utils
+import werkzeug.wrappers
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
     import slugify as slugify_lib
@@ -568,7 +571,7 @@ class website_menu(osv.osv):
     _description = "Website Menu"
     _columns = {
         'name': fields.char('Menu', required=True, translate=True),
-        'url': fields.char('Url'),
+        'url': fields.char('Url', translate=True),
         'new_window': fields.boolean('New Window'),
         'sequence': fields.integer('Sequence'),
         # TODO: support multiwebsite once done for ir.ui.views

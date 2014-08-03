@@ -149,11 +149,10 @@ class mail_notification(osv.Model):
             company = "<a style='color:inherit' href='%s'>%s</a>" % (website_url, user.company_id.name)
         else:
             company = user.company_id.name
-        sent_by = _('Sent by %(company)s using %(odoo)s.')
-
+        sent_by = _('Sent from %(company)s using %(openerp)s')
         signature_company = '<small>%s</small>' % (sent_by % {
             'company': company,
-            'odoo': "<a style='color:inherit' href='https://www.odoo.com/'>Odoo</a>"
+            'openerp': "<a style='color:inherit' href='https://www.odoo.com/'>Odoo</a>"
         })
         footer = tools.append_content_to_html(footer, signature_company, plaintext=False, container_tag='div')
 
@@ -186,9 +185,8 @@ class mail_notification(osv.Model):
 
         # compute email body (signature, company data)
         body_html = message.body
-        # add user signature except for mail groups, where users are usually adding their own signatures already
-        if user_signature and message.model != 'mail.group':
-            user_id = message.author_id and message.author_id.user_ids and message.author_id.user_ids[0] and message.author_id.user_ids[0].id or None
+        user_id = message.author_id and message.author_id.user_ids and message.author_id.user_ids[0] and message.author_id.user_ids[0].id or None
+        if user_signature:
             signature_company = self.get_signature_footer(cr, uid, user_id, res_model=message.model, res_id=message.res_id, context=context)
             body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
 

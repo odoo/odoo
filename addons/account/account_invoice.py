@@ -145,7 +145,7 @@ class account_invoice(models.Model):
             else:
                 self.residual = new_value
         # prevent the residual amount on the invoice to be less than 0
-        self.residual = max(self.residual, 0.0)
+        self.residual = max(self.residual, 0.0)            
 
     @api.one
     @api.depends(
@@ -379,7 +379,7 @@ class account_invoice(models.Model):
         assert len(self) == 1, 'This option should only be used for a single id at a time.'
         template = self.env.ref('account.email_template_edi_invoice', False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        ctx = dict(
+        ctx = dict(self._context,
             default_model='account.invoice',
             default_res_id=self.id,
             default_use_template=bool(template),
@@ -793,10 +793,7 @@ class account_invoice(models.Model):
                 continue
 
             ctx = dict(self._context, lang=inv.partner_id.lang)
-
-            if not inv.date_invoice:
-                inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
-            date_invoice = inv.date_invoice
+            date_invoice = inv.date_invoice or fields.Date.context_today(self)
 
             company_currency = inv.company_id.currency_id
             # create the analytical lines, one move line per invoice line
@@ -909,6 +906,7 @@ class account_invoice(models.Model):
             move = account_move.with_context(ctx).create(move_vals)
             # make the invoice point to that move
             vals = {
+                'date_invoice': date_invoice,
                 'move_id': move.id,
                 'period_id': period.id,
                 'move_name': move.name,
@@ -1007,18 +1005,15 @@ class account_invoice(models.Model):
         #TODO: implement messages system
         return True
 
-    @api.multi
-    def name_get(self):
+    @api.one
+    def _compute_display_name(self):
         TYPES = {
             'out_invoice': _('Invoice'),
             'in_invoice': _('Supplier Invoice'),
             'out_refund': _('Refund'),
             'in_refund': _('Supplier Refund'),
         }
-        result = []
-        for inv in self:
-            result.append((inv.id, "%s %s" % (inv.number or TYPES[inv.type], inv.name or '')))
-        return result
+        self.display_name = "%s %s" % (self.number or TYPES[self.type], self.name or '')
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -1624,8 +1619,8 @@ class mail_compose_message(models.Model):
                 context.get('default_res_id') and context.get('mark_invoice_as_sent'):
             invoice = self.env['account.invoice'].browse(context['default_res_id'])
             invoice = invoice.with_context(mail_post_autofollow=True)
-            invoice.write({'sent': True})
-            invoice.message_post(body=_("Invoice sent"))
+            self.write({'sent': True})
+            self.message_post(body=_("Invoice sent"))
         return super(mail_compose_message, self).send_mail()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
