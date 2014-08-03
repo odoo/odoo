@@ -34,13 +34,8 @@ from openerp.addons.website.models.website import slug
 
 class main(http.Controller):
     _slides_per_page = 8
-    
 
-    @http.route(['/slides',
-                 '/slides/page/<int:page>',
-                 '/slides/view/<model("ir.attachment"):slideview>'
-                 ], type='http', auth="public", website=True)
-    def slides(self, page=1, filters='all', sorting='creation', search='', tags='', slideview=''):
+    def apply_filter(self,  page=1, filters='all', sorting='creation', search='', tags='', slideview=''):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         attachment = request.registry['ir.attachment']
 
@@ -82,7 +77,8 @@ class main(http.Controller):
         if sorting:
             url_args['sorting'] = sorting
         if tags:
-            url_args['tags'] = tags        
+            url_args['tags'] = tags
+
         pager = request.website.pager(url=url, total=attachment_count, page=page,
                                       step=self._slides_per_page, scope=self._slides_per_page,
                                       url_args=url_args)
@@ -101,7 +97,20 @@ class main(http.Controller):
             'tags':tags,
             'slideview':slideview,
         })
+        return values
+
+
+    @http.route(['/slides',
+                 '/slides/page/<int:page>'], type='http', auth="public", website=True)
+    def slides(self, page=1, filters='all', sorting='creation', search='', tags='', slideview=''):
+        values = self.apply_filter(page, filters, sorting, search, tags, slideview)
         return request.website.render('website_slides.home', values)
+
+
+    @http.route('/slides/view/<model("ir.attachment"):slideview>', type='http', auth="public", website=True)
+    def slide_view(self, page=1, filters='all', sorting='creation', search='', tags='', slideview=''):
+        values = self.apply_filter(page, filters, sorting, search, tags, slideview)
+        return request.website.render('website_slides.slide_view', values)
 
 
     @http.route('/slides/thumb/<int:document_id>', type='http', auth="public", website=True)
@@ -113,4 +122,3 @@ class main(http.Controller):
         user = Files.browse(cr, uid, document_id, context=context)
         return Website._image(cr, uid, 'ir.attachment', user.id, 'image', response, max_height=225)
 
-        
