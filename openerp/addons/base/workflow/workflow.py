@@ -30,7 +30,7 @@ class workflow(osv.osv):
     _order = "name"
     _columns = {
         'name': fields.char('Name', required=True),
-        'osv': fields.char('Resource Object', required=True,select=True),
+        'osv': fields.char('Resource Object', required=True, select=True),
         'on_create': fields.boolean('On Create', select=True),
         'activities': fields.one2many('workflow.activity', 'wkf_id', 'Activities'),
     }
@@ -43,12 +43,12 @@ class workflow(osv.osv):
 
     def write(self, cr, user, ids, vals, context=None):
         if not context:
-            context={}
+            context = {}
         openerp.workflow.clear_cache(cr, user)
         return super(workflow, self).write(cr, user, ids, vals, context=context)
 
     def get_active_workitems(self, cr, uid, res, res_id, context=None):
-        cr.execute('select * from wkf where osv=%s limit 1',(res,))
+        cr.execute('select * from wkf where osv=%s limit 1', (res,))
         wkfinfo = cr.dictfetchone()
         workitems = []
         if wkfinfo:
@@ -64,7 +64,7 @@ class workflow(osv.osv):
 
     def create(self, cr, user, vals, context=None):
         if not context:
-            context={}
+            context = {}
         openerp.workflow.clear_cache(cr, user)
         return super(workflow, self).create(cr, user, vals, context=context)
 
@@ -77,7 +77,7 @@ class wkf_activity(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True),
         'wkf_id': fields.many2one('workflow', 'Workflow', required=True, select=True, ondelete='cascade'),
-        'split_mode': fields.selection([('XOR', 'Xor'), ('OR','Or'), ('AND','And')], 'Split Mode', size=3, required=True),
+        'split_mode': fields.selection([('XOR', 'Xor'), ('OR', 'Or'), ('AND', 'And')], 'Split Mode', size=3, required=True),
         'join_mode': fields.selection([('XOR', 'Xor'), ('AND', 'And')], 'Join Mode', size=3, required=True),
         'kind': fields.selection([('dummy', 'Dummy'), ('function', 'Function'), ('subflow', 'Subflow'), ('stopall', 'Stop All')], 'Kind', required=True),
         'action': fields.text('Python Action'),
@@ -111,6 +111,7 @@ class wkf_transition(osv.osv):
     _columns = {
         'trigger_model': fields.char('Trigger Object'),
         'trigger_expr_id': fields.char('Trigger Expression'),
+        'sequence': fields.integer('Transition Sequence'),
         'signal': fields.char('Signal (Button Name)',
                               help="When the operation of transition comes from a button pressed in the client form, "\
                               "signal tests the name of the pressed button. If signal is NULL, no button is necessary to validate this transition."),
@@ -122,11 +123,14 @@ class wkf_transition(osv.osv):
                                     help="Source activity. When this activity is over, the condition is tested to determine if we can start the ACT_TO activity."),
         'act_to': fields.many2one('workflow.activity', 'Destination Activity', required=True, select=True, ondelete='cascade',
                                   help="The destination activity."),
-        'wkf_id': fields.related('act_from','wkf_id', type='many2one', relation='workflow', string='Workflow', select=True),
+        'wkf_id': fields.related('act_from', 'wkf_id', type='many2one', relation='workflow', string='Workflow', select=True),
     }
     _defaults = {
         'condition': lambda *a: 'True',
+        'sequence': 10,
     }
+
+    _order = 'sequence,id'
 
     def name_get(self, cr, uid, ids, context=None):
         return [(line.id, (line.act_from.name) + '+' + (line.act_to.name)) if line.signal == False else (line.id, line.signal) for line in self.browse(cr, uid, ids, context=context)]
@@ -135,7 +139,7 @@ class wkf_transition(osv.osv):
         if args is None:
             args = []
         if name:
-            ids = self.search(cr, user, ['|',('act_from', operator, name),('act_to', operator, name)] + args, limit=limit)
+            ids = self.search(cr, user, ['|', ('act_from', operator, name), ('act_to', operator, name)] + args, limit=limit)
             return self.name_get(cr, user, ids, context=context)
         return super(wkf_transition, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)
 
@@ -148,7 +152,7 @@ class wkf_instance(osv.osv):
     _rec_name = 'res_type'
     _log_access = False
     _columns = {
-        'uid': fields.integer('User'),      # FIXME no constraint??
+        'uid': fields.integer('User'),  # FIXME no constraint??
         'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='cascade', select=True),
         'res_id': fields.integer('Resource ID'),
         'res_type': fields.char('Resource Object'),
@@ -173,7 +177,7 @@ class wkf_workitem(osv.osv):
     _rec_name = 'state'
     _columns = {
         'act_id': fields.many2one('workflow.activity', 'Activity', required=True, ondelete="cascade", select=True),
-        'wkf_id': fields.related('act_id','wkf_id', type='many2one', relation='workflow', string='Workflow'),
+        'wkf_id': fields.related('act_id', 'wkf_id', type='many2one', relation='workflow', string='Workflow'),
         'subflow_id': fields.many2one('workflow.instance', 'Subflow', ondelete="cascade", select=True),
         'inst_id': fields.many2one('workflow.instance', 'Instance', required=True, ondelete="cascade", select=True),
         'state': fields.char('Status', select=True),

@@ -85,7 +85,7 @@ class WorkflowItem(object):
         cr.execute("select nextval('wkf_workitem_id_seq')")
         id_new = cr.fetchone()[0]
         cr.execute("insert into wkf_workitem (id,act_id,inst_id,state) values (%s,%s,%s,'active')", (id_new, activity['id'], instance_id))
-        cr.execute('select * from wkf_workitem where id=%s',(id_new,))
+        cr.execute('select * from wkf_workitem where id=%s', (id_new,))
         work_item_values = cr.dictfetchone()
         logger.info('Created workflow item in activity %s',
                     activity['id'],
@@ -121,14 +121,14 @@ class WorkflowItem(object):
             triggers = triggers and not ok
 
         if triggers:
-            cr.execute('select * from wkf_transition where act_from=%s', (self.workitem['act_id'],))
+            cr.execute('select * from wkf_transition where act_from=%s ORDER BY sequence', (self.workitem['act_id'],))
             for trans in cr.dictfetchall():
                 if trans['trigger_model']:
                     ids = self.wkf_expr_eval_expr(trans['trigger_expr_id'])
                     for res_id in ids:
                         cr.execute('select nextval(\'wkf_triggers_id_seq\')')
-                        id =cr.fetchone()[0]
-                        cr.execute('insert into wkf_triggers (model,res_id,instance_id,workitem_id,id) values (%s,%s,%s,%s,%s)', (trans['trigger_model'],res_id, self.workitem['inst_id'], self.workitem['id'], id))
+                        id = cr.fetchone()[0]
+                        cr.execute('insert into wkf_triggers (model,res_id,instance_id,workitem_id,id) values (%s,%s,%s,%s,%s)', (trans['trigger_model'], res_id, self.workitem['inst_id'], self.workitem['id'], id))
 
         return True
 
@@ -138,7 +138,7 @@ class WorkflowItem(object):
         cr = self.session.cr
         signal_todo = []
 
-        if (self.workitem['state']=='active') and activity['signal_send']:
+        if (self.workitem['state'] == 'active') and activity['signal_send']:
             # signal_send']:
             cr.execute("select i.id,w.osv,i.res_id from wkf_instance i left join wkf w on (i.wkf_id=w.id) where i.id IN (select inst_id from wkf_workitem where subflow_id=%s)", (self.workitem['inst_id'],))
             for instance_id, model_name, record_id in cr.fetchall():
@@ -147,17 +147,17 @@ class WorkflowItem(object):
 
 
         if activity['kind'] == WorkflowActivity.KIND_DUMMY:
-            if self.workitem['state']=='active':
+            if self.workitem['state'] == 'active':
                 self._state_set(activity, 'complete')
                 if activity['action_id']:
                     res2 = self.wkf_expr_execute_action(activity)
                     if res2:
                         stack.append(res2)
-                        result=res2
+                        result = res2
 
         elif activity['kind'] == WorkflowActivity.KIND_FUNCTION:
 
-            if self.workitem['state']=='active':
+            if self.workitem['state'] == 'active':
                 self._state_set(activity, 'running')
                 returned_action = self.wkf_expr_execute(activity)
                 if type(returned_action) in (dict,):
@@ -167,11 +167,11 @@ class WorkflowItem(object):
                     # A client action has been returned
                     if res2:
                         stack.append(res2)
-                        result=res2
+                        result = res2
                 self._state_set(activity, 'complete')
 
         elif activity['kind'] == WorkflowActivity.KIND_STOPALL:
-            if self.workitem['state']=='active':
+            if self.workitem['state'] == 'active':
                 self._state_set(activity, 'running')
                 cr.execute('delete from wkf_workitem where inst_id=%s and id<>%s', (self.workitem['inst_id'], self.workitem['id']))
                 if activity['action']:
@@ -180,7 +180,7 @@ class WorkflowItem(object):
 
         elif activity['kind'] == WorkflowActivity.KIND_SUBFLOW:
 
-            if self.workitem['state']=='active':
+            if self.workitem['state'] == 'active':
 
                 self._state_set(activity, 'running')
                 if activity.get('action', False):
@@ -188,7 +188,7 @@ class WorkflowItem(object):
                     if not id_new:
                         cr.execute('delete from wkf_workitem where id=%s', (self.workitem['id'],))
                         return False
-                    assert type(id_new)==type(1) or type(id_new)==type(1L), 'Wrong return value: '+str(id_new)+' '+str(type(id_new))
+                    assert type(id_new) == type(1) or type(id_new) == type(1L), 'Wrong return value: ' + str(id_new) + ' ' + str(type(id_new))
                     cr.execute('select id from wkf_instance where res_id=%s and wkf_id=%s', (id_new, activity['subflow_id']))
                     id_new = cr.fetchone()[0]
                 else:
@@ -198,10 +198,10 @@ class WorkflowItem(object):
                 cr.execute('update wkf_workitem set subflow_id=%s where id=%s', (id_new, self.workitem['id']))
                 self.workitem['subflow_id'] = id_new
 
-            if self.workitem['state']=='running':
+            if self.workitem['state'] == 'running':
                 cr.execute("select state from wkf_instance where id=%s", (self.workitem['subflow_id'],))
                 state = cr.fetchone()[0]
-                if state=='complete':
+                if state == 'complete':
                     self._state_set(activity, 'complete')
 
         for instance_id, record, signal_send in signal_todo:
@@ -219,17 +219,17 @@ class WorkflowItem(object):
 
     def _split_test(self, split_mode, signal, stack):
         cr = self.session.cr
-        cr.execute('select * from wkf_transition where act_from=%s', (self.workitem['act_id'],))
+        cr.execute('select * from wkf_transition where act_from=%s ORDER BY sequence', (self.workitem['act_id'],))
         test = False
         transitions = []
         alltrans = cr.dictfetchall()
 
         if split_mode in ('XOR', 'OR'):
             for transition in alltrans:
-                if self.wkf_expr_check(transition,signal):
+                if self.wkf_expr_check(transition, signal):
                     test = True
                     transitions.append((transition['id'], self.workitem['inst_id']))
-                    if split_mode=='XOR':
+                    if split_mode == 'XOR':
                         break
         else:
             test = True
@@ -251,24 +251,24 @@ class WorkflowItem(object):
 
     def _join_test(self, trans_id, inst_id, stack):
         cr = self.session.cr
-        cr.execute('select * from wkf_activity where id=(select act_to from wkf_transition where id=%s)', (trans_id,))
+        cr.execute('select * from wkf_activity where id=(select act_to from wkf_transition ORDER BY sequence where id=%s)', (trans_id,))
         activity = cr.dictfetchone()
-        if activity['join_mode']=='XOR':
+        if activity['join_mode'] == 'XOR':
             WorkflowItem.create(self.session, self.record, activity, inst_id, stack=stack)
-            cr.execute('delete from wkf_witm_trans where inst_id=%s and trans_id=%s', (inst_id,trans_id))
+            cr.execute('delete from wkf_witm_trans where inst_id=%s and trans_id=%s', (inst_id, trans_id))
         else:
-            cr.execute('select id from wkf_transition where act_to=%s', (activity['id'],))
+            cr.execute('select id from wkf_transition where act_to=%s ORDER BY sequence', (activity['id'],))
             trans_ids = cr.fetchall()
             ok = True
             for (id,) in trans_ids:
-                cr.execute('select count(*) from wkf_witm_trans where trans_id=%s and inst_id=%s', (id,inst_id))
+                cr.execute('select count(*) from wkf_witm_trans where trans_id=%s and inst_id=%s', (id, inst_id))
                 res = cr.fetchone()[0]
                 if not res:
                     ok = False
                     break
             if ok:
                 for (id,) in trans_ids:
-                    cr.execute('delete from wkf_witm_trans where trans_id=%s and inst_id=%s', (id,inst_id))
+                    cr.execute('delete from wkf_witm_trans where trans_id=%s and inst_id=%s', (id, inst_id))
                 WorkflowItem.create(self.session, self.record, activity, inst_id, stack=stack)
 
     def wkf_expr_eval_expr(self, lines):
