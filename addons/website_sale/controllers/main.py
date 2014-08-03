@@ -660,7 +660,7 @@ class website_sale(http.Controller):
         if not order:
             return {
                 'state': 'error',
-                'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
+                'message': '<p>There seems to be an error with your request.</p>',
             }
 
         tx_ids = request.registry['payment.transaction'].search(
@@ -672,7 +672,7 @@ class website_sale(http.Controller):
             if order.amount_total:
                 return {
                     'state': 'error',
-                    'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
+                    'message': '<p>There seems to be an error with your request.</p>',
                 }
             else:
                 state = 'done'
@@ -682,15 +682,15 @@ class website_sale(http.Controller):
             tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
             state = tx.state
             if state == 'done':
-                message = '<p>%s</p>' % _('Your payment has been received.')
+                message = '<p>Your payment has been received.</p>'
             elif state == 'cancel':
-                message = '<p>%s</p>' % _('The payment seems to have been canceled.')
+                message = '<p>The payment seems to have been canceled.</p>'
             elif state == 'pending' and tx.acquirer_id.validation == 'manual':
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+                message = '<p>Your transaction is waiting confirmation.</p>'
                 if tx.acquirer_id.post_msg:
                     message += tx.acquirer_id.post_msg
             else:
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+                message = '<p>Your transaction is waiting confirmation.</p>'
             validation = tx.acquirer_id.validation
 
         return {
@@ -820,22 +820,9 @@ class website_sale(http.Controller):
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)
         return product.write({'website_size_x': x, 'website_size_y': y})
 
-    def order_lines_2_google_api(self, order_lines):
-        """ Transforms a list of order lines into a dict for google analytics """
-        ret = []
-        for line in order_lines:
-            ret.append({
-                'id': line.order_id and line.order_id.id,
-                'name': line.product_id.categ_id and line.product_id.categ_id.name or '-',
-                'sku': line.product_id.id,
-                'quantity': line.product_uom_qty,
-                'price': line.price_unit,
-            })
-        return ret
-
     @http.route(['/shop/tracking_last_order'], type='json', auth="public")
     def tracking_cart(self, **post):
-        """ return data about order in JSON needed for google analytics"""
+        """ return JS code for google analytics"""
         cr, uid, context = request.cr, request.uid, request.context
         ret = {}
         sale_order_id = request.session.get('sale_last_order_id')
@@ -847,7 +834,16 @@ class website_sale(http.Controller):
                 'revenue': order.amount_total,
                 'currency': order.currency_id.name
             }
-            ret['lines'] = self.order_lines_2_google_api(order.order_line)
+            ret['lines'] = []
+            for line in order.order_line:
+                if not line.is_delivery:
+                    ret['lines'].append({
+                        'id': line.order_id and line.order_id.id,
+                        'name': line.product_id.categ_id and line.product_id.categ_id.name or '-',
+                        'sku': line.product_id.id,
+                        'quantity': line.product_uom_qty,
+                        'price': line.price_unit,
+                    })
         return ret
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

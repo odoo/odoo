@@ -33,10 +33,7 @@ class res_users(osv.osv):
 
     def _get_users_from_group(self, cr, uid, ids, context=None):
         result = set()
-        groups = self.pool['res.groups'].browse(cr, uid, ids, context=context)
-        # Clear cache to avoid perf degradation on databases with thousands of users 
-        groups.invalidate_cache()
-        for group in groups:
+        for group in self.pool['res.groups'].browse(cr, uid, ids, context=context):
             result.update(user.id for user in group.users)
         return list(result)
 

@@ -39,10 +39,17 @@ class report_membership(osv.osv):
     _name = 'report.membership'
     _description = __doc__
     _auto = False
-    _rec_name = 'start_date'
+    _rec_name = 'year'
     _columns = {
-        'start_date': fields.date('Start Date', readonly=True),
-        'date_to': fields.date('End Date', readonly=True, help="End membership date"),
+        'year': fields.char('Year', size=4, readonly=True, select=1),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), \
+                                  ('03', 'March'), ('04', 'April'),\
+                                  ('05', 'May'), ('06', 'June'), \
+                                  ('07', 'July'), ('08', 'August'),\
+                                  ('09', 'September'), ('10', 'October'),\
+                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'date_from': fields.datetime('Start Date', readonly=True, help="Start membership date"),
+        'date_to': fields.datetime('End Date', readonly=True, help="End membership date"),
         'num_waiting': fields.integer('# Waiting', readonly=True),
         'num_invoiced': fields.integer('# Invoiced', readonly=True),
         'num_paid': fields.integer('# Paid', readonly=True),
@@ -68,8 +75,10 @@ class report_membership(osv.osv):
         membership_state,
         associate_member_id,
         membership_amount,
+        date_from,
         date_to,
-        start_date,
+        year,
+        month,
         COUNT(num_waiting) AS num_waiting,
         COUNT(num_invoiced) AS num_invoiced,
         COUNT(num_paid) AS num_paid,
@@ -85,8 +94,10 @@ class report_membership(osv.osv):
             p.membership_state AS membership_state,
             p.associate_member AS associate_member_id,
             p.membership_amount AS membership_amount,
-            p.membership_stop AS date_to,
-            p.membership_start AS start_date,
+            TO_CHAR(p.membership_start, 'YYYY-MM-DD') AS date_from,
+            TO_CHAR(p.membership_stop, 'YYYY-MM-DD') AS date_to,
+            TO_CHAR(p.membership_start, 'YYYY') AS year,
+            TO_CHAR(p.membership_start,'MM') AS month,
             CASE WHEN ml.state = 'waiting'  THEN ml.id END AS num_waiting,
             CASE WHEN ml.state = 'invoiced' THEN ml.id END AS num_invoiced,
             CASE WHEN ml.state = 'paid'     THEN ml.id END AS num_paid,
@@ -105,14 +116,19 @@ class report_membership(osv.osv):
               p.membership_state,
               p.associate_member,
               p.membership_amount,
-              p.membership_start,
+              TO_CHAR(p.membership_start, 'YYYY-MM-DD'),
+              TO_CHAR(p.membership_stop, 'YYYY-MM-DD'),
+              TO_CHAR(p.membership_start, 'YYYY'),
+              TO_CHAR(p.membership_start,'MM'),
               ml.membership_id,
               p.company_id,
               ml.state,
               ml.id
         ) AS foo
         GROUP BY
-            start_date,
+            year,
+            month,
+            date_from,
             date_to,
             partner_id,
             user_id,

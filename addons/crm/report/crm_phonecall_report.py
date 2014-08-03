@@ -55,6 +55,7 @@ class crm_phonecall_report(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'opening_date': fields.date('Opening Date', readonly=True, select=True),
+        'creation_date': fields.date('Creation Date', readonly=True, select=True),
         'date_closed': fields.date('Close Date', readonly=True, select=True),
     }
 
@@ -68,8 +69,9 @@ class crm_phonecall_report(osv.osv):
             create or replace view crm_phonecall_report as (
                 select
                     id,
-                    date(c.date_open) as opening_date,
-                    date(c.date_closed) as date_closed,
+                    to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
+                    to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
+                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
                     c.state,
                     c.user_id,
                     c.section_id,
@@ -79,7 +81,7 @@ class crm_phonecall_report(osv.osv):
                     c.company_id,
                     c.priority,
                     1 as nbr,
-                    c.create_date as create_date,
+                    date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 from

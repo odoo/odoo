@@ -40,21 +40,17 @@
             }
             this.$target.removeClass('has-error');
 
-            var email = $email.length ? $email.val() : false;
-            if (email) {
-                openerp.jsonRpc('/website_mail/follow', 'call', {
-                    'id': +this.$target.data('id'),
-                    'object': this.$target.data('object'),
-                    'message_is_follower': this.$target.attr("data-follow") || "off",
-                    'email': email,
-                }).then(function (follow) {
-                    self.toggle_subscription(follow, email);
-                });
-            }
+            openerp.jsonRpc('/website_mail/follow', 'call', {
+                'id': +this.$target.data('id'),
+                'object': this.$target.data('object'),
+                'message_is_follower': this.$target.attr("data-follow") || "off",
+                'email': $email.length ? $email.val() : false,
+            }).then(function (follow) {
+                self.toggle_subscription(follow, self.email);
+            });
         },
         toggle_subscription: function(follow, email) {
             console.log(follow, email);
-            follow = follow || (!email && this.$target.attr('data-unsubscribe'));
             if (follow) {
                 this.$target.find(".js_follow_btn").addClass("hidden");
                 this.$target.find(".js_unfollow_btn").removeClass("hidden");
@@ -64,8 +60,8 @@
                 this.$target.find(".js_unfollow_btn").addClass("hidden");
             }
             this.$target.find('input.js_follow_email')
-                .val(email || "")
-                .attr("disabled", email && (follow || this.is_user) ? "disabled" : false);
+                .val(email ? email : "")
+                .attr("disabled", follow || (email.length && this.is_user) ? "disabled" : false);
             this.$target.attr("data-follow", follow ? 'on' : 'off');
         },
     });

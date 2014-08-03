@@ -377,20 +377,11 @@ class MergePartnerAutomatic(osv.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def _generate_query(self, fields, maximum_group=100):
-        sql_fields = []
-        for field in fields:
-            if field in ['email', 'name']:
-                sql_fields.append('lower(%s)' % field)
-            elif field in ['vat']:
-                sql_fields.append("replace(%s, ' ', '')" % field)
-            else:
-                sql_fields.append(field)
-
-        group_fields = ', '.join(sql_fields)
+        group_fields = ', '.join(fields)
 
         filters = []
         for field in fields:
-            if field in ['email', 'name', 'vat']:
+            if field in ['email', 'name']:
                 filters.append((field, 'IS NOT', 'NULL'))
 
         criteria = ' AND '.join('%s %s %s' % (field, operator, value)
