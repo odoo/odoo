@@ -112,7 +112,7 @@ class Post(osv.Model):
     _name = 'forum.post'
     _description = 'Forum Post'
     _inherit = ['mail.thread', 'website.seo.metadata']
-    _order = "is_correct DESC, vote_count DESC"
+    _order = "is_correct DESC, vote_count DESC, write_date DESC"
 
     def _get_user_vote(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0)
@@ -315,6 +315,9 @@ class Post(osv.Model):
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
         post = self.browse(cr, SUPERUSER_ID, post_id, context=context)  # SUPERUSER_ID to avoid read access rights issues when creating
+        # deleted or closed questions
+        if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active == False):
+            osv.except_osv(_('Error !'), _('Posting answer on [Deleted] or [Closed] question is prohibited'))
         # karma-based access
         if post.parent_id and not post.can_ask:
             raise KarmaError('Not enough karma to create a new question')
@@ -400,7 +403,9 @@ class Post(osv.Model):
             raise KarmaError('Not enough karma to downvote.')
 
         Vote = self.pool['forum.post.vote']
-        vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], limit=1, context=context)
+        vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
+        new_vote = '1' if upvote else '-1'
+        voted_forum_ids = set()
         if vote_ids:
             for vote in Vote.browse(cr, uid, vote_ids, context=context):
                 if upvote:
@@ -408,11 +413,11 @@ class Post(osv.Model):
                 else:
                     new_vote = '0' if vote.vote == '1' else '-1'
                 Vote.write(cr, uid, vote_ids, {'vote': new_vote}, context=context)
-        else:
+                voted_forum_ids.add(vote.post_id.id)
+        for post_id in set(ids) - voted_forum_ids:
             for post_id in ids:
-                new_vote = '1' if upvote else '-1'
                 Vote.create(cr, uid, {'post_id': post_id, 'vote': new_vote}, context=context)
-        return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]]}
+        return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]], 'user_vote': new_vote}
 
     def convert_answer_to_comment(self, cr, uid, id, context=None):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).

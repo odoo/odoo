@@ -230,9 +230,9 @@
                     <field name="partner_id" invisible="1"/>
                     <field name="section_id" groups="base.group_multi_salesteams"/>
                     <field name="probability" invisible="1"/>
-                    <field name="type_id" invisible="1"/>
+                    <field name="campaign_id" invisible="1"/>
                     <field name="referred" invisible="1"/>
-                    <field name="channel_id" invisible="1"/>
+                    <field name="medium_id" invisible="1"/>
                     <field name="message_unread" invisible="1"/>
                 </tree>
             </field>
@@ -349,6 +349,9 @@
                         <filter string="Sales Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
+                        <filter string="Source"  domain="[]" context="{'group_by':'source_id'}"/>
+                        <filter string="Channel"  domain="[]" context="{'group_by':'medium_id'}"/>
                         <filter string="Expected Closing" domain="[]" context="{'group_by':'date_deadline:week'}"/>
                         <filter string="Last Message" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
                     </group>
@@ -513,8 +516,9 @@
                     <field name="country_id"/>
                     <field name="date_action"/>
                     <field name="title_action"/>
-                    <field name="channel_id" invisible="1"/>
-                    <field name="type_id" invisible="1"/>
+                    <field name="medium_id" invisible="1"/>
+                    <field name="campaign_id" invisible="1"/>
+                    <field name="source_id" invisible="1"/>
                     <field name="stage_id"/>
                     <field name="planned_revenue" sum="Expected Revenues"/>
                     <field name="probability" avg="Avg. of Probability"/>

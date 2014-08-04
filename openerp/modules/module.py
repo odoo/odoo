@@ -43,7 +43,7 @@ MANIFEST = '__openerp__.py'
 _logger = logging.getLogger(__name__)
 
 # addons path as a list
-ad_paths = [tools.config.addons_data_dir]
+ad_paths = []
 hooked = False
 
 # Modules already loaded
@@ -88,6 +88,10 @@ def initialize_sys_path():
     """
     global ad_paths
     global hooked
+
+    dd = tools.config.addons_data_dir
+    if dd not in ad_paths:
+        ad_paths.append(dd)
 
     for ad in tools.config['addons_path'].split(','):
         ad = os.path.abspath(tools.ustr(ad.strip()))
@@ -278,7 +282,7 @@ def init_module_models(cr, module_name, obj_list):
     for obj in obj_list:
         obj._auto_end(cr, {'module': module_name})
         cr.commit()
-    todo.sort()
+    todo.sort(key=lambda x: x[0])
     for t in todo:
         t[1](cr, *t[2])
     cr.commit()

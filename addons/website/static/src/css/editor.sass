@@ -134,6 +134,19 @@ table.editorbar-panel
     td.selected
         background-color: #b1c9d9
 
+.link-style
+    .dropdown > .btn
+        min-width: 160px
+    .link-style
+        display: none
+    li
+        text-align: center
+        label
+            width: 100px
+            margin: 0 5px
+    .col-sm-2 > *
+        line-height: 2em
+
 // }}}
 
 /* ---- TRANSLATIONS ---- {{{ */
@@ -476,6 +489,10 @@ $infobar_height: 20px
     &.oe_ace_closed
         z-index: -1000
         +opacity(0)
+
+.oe_include_bundles
+    font-weight: normal
+    padding: 0 8px
 
 // }}}
 

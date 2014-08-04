@@ -172,8 +172,8 @@ openerp_mail_followers = function(session, mail) {
         fetch_generic: function (error, event) {
             var self = this;
             event.preventDefault();
-            return this.ds_users.call('read', [this.session.uid, ['partner_id']]).then(function (results) {
-                var pid = results['partner_id'][0];
+            return this.ds_users.call('read', [[this.session.uid], ['partner_id']]).then(function (results) {
+                var pid = results[0]['partner_id'][0];
                 self.message_is_follower = (_.indexOf(self.value, pid) != -1);
             }).then(self.proxy('display_generic'));
         },

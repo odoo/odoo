@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent cd98e5752eedca2780da80387ac01c8cd166940f
+# Parent 13c65b2eed8f84b951ff5a98051f64fe35ddcf0a
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -15,22 +15,17 @@ diff --git a/__openerp__.py b/__openerp__.py
 diff --git a/controllers/academy.py b/controllers/academy.py
 --- a/controllers/academy.py
 +++ b/controllers/academy.py
-@@ -6,10 +6,15 @@ from openerp.addons.web.controllers impo
+@@ -6,8 +6,10 @@ from openerp.addons.web.controllers impo
  class academy(main.Home):
      @http.route('/', auth='public', website=True)
      def index(self):
-+        cr, uid, context = http.request.cr, http.request.uid, http.request.context
-+        Lectures = http.request.registry['academy.lectures']
-         tas = http.request.registry['academy.tas'].search_read(
-             http.request.cr, http.request.uid, context=http.request.context)
-+        lectures = Lectures.browse(
-+            cr, uid, Lectures.search(cr, uid, [], context=context), context=context)
-         return http.request.website.render('academy.index', {
-             'tas': tas,
++        lectures = http.request.env['academy.lectures'].search([])
+         tas = http.request.env['academy.tas'].search([])
+         return http.request.render('academy.index', {
 +            'lectures': lectures,
+             'tas': tas,
          })
  
-     @http.route('/tas/<model("academy.tas"):ta>/', auth='public', website=True)
 diff --git a/data/lectures.xml b/data/lectures.xml
 new file mode 100644
 --- /dev/null
@@ -63,19 +58,24 @@ new file mode 100644
 diff --git a/models/academy.py b/models/academy.py
 --- a/models/academy.py
 +++ b/models/academy.py
-@@ -8,3 +8,12 @@ class TeachingAssistants(orm.Model):
-         'name': fields.char(),
-         'biography': fields.html(),
-     }
+@@ -1,9 +1,16 @@
+ # -*- coding: utf-8 -*-
+ from openerp.models import Model
+-from openerp.fields import Char, Html
++from openerp.fields import Char, Html, Date
+ 
+ class TeachingAssistants(Model):
+     _name = "academy.tas"
+ 
+     name = Char()
+     biography = Html()
 +
-+class Lectures(orm.Model):
++class Lectures(Model):
 +    _name = 'academy.lectures'
 +    _order = 'date ASC'
 +
-+    _columns = {
-+        'name': fields.char(required=True),
-+        'date': fields.date(required=True),
-+    }
++    name = Char(required=True)
++    date = Date(required=True)
 diff --git a/security/ir.model.access.csv b/security/ir.model.access.csv
 --- a/security/ir.model.access.csv
 +++ b/security/ir.model.access.csv

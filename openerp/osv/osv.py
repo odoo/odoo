@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from openerp.osv.orm import except_orm, Model, TransientModel, AbstractModel
+from ..exceptions import except_orm
+from .orm import Model, TransientModel, AbstractModel
 
 # Deprecated, kept for backward compatibility.
 # openerp.exceptions.Warning should be used instead.

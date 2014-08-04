@@ -288,7 +288,7 @@
                         <select class="form-control" name="attrib">
                           <option value=""/>
                           <t t-foreach="a.value_ids" t-as="v">
-                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-field="v.name" t-att-selected="'selected' if v.id in attrib_set else ''"/>
+                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="'selected' if v.id in attrib_set else ''"/>
                           </t>
                         </select>
                       </t>
@@ -344,6 +344,7 @@
 
 <template id="product" name="Product">
   <t t-call="website.layout">
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title" t-value="product.name"/>
       <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
 
@@ -371,7 +372,7 @@
           </div>
         </section>
 
-        <section class="container oe_website_sale" id="product_detail">
+        <section t-attf-class="container oe_website_sale #{(compute_currency(product.lst_price) - product.price) &gt; 0.1 and 'discount'}" id="product_detail">
           <div class="row">
             <div class="col-sm-7 col-md-7 col-lg-7">
                 <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
@@ -435,13 +436,13 @@
 <template id="product_price">
   <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
       <h4 class="oe_price_h4 css_editable_mode_hidden">
-          <span class="text-danger oe_default_price" t-att-style="'' if (compute_currency(product.lst_price) - product.price) &gt; 0.1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
+          <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
             t-field="product.lst_price"
             t-field-options='{
               "widget": "monetary",
               "from_currency": "website.currency_id",
               "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-           }'/><br/>
+           }'/>
           <b class="oe_price" style="white-space: nowrap;"
             t-field="product.price"
             t-field-options='{
@@ -649,6 +650,7 @@
 
 <template id="cart" name="Shopping Cart">
   <t t-call="website.layout">
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <div id="wrap">
         <div class="container oe_website_sale">
 
@@ -836,6 +838,7 @@
 
 <template id="checkout">
   <t t-call="website.layout">
+        <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
     <t t-set="additional_title">Shop - Checkout</t>
     <div id="wrap">
       <div class="container oe_website_sale">
@@ -913,14 +916,14 @@
 
                   <div class="clearfix"/>
 
-                  <div class="form-group col-lg-6" groups="sale.group_delivery_invoice_address">
+                  <div class="form-group col-lg-6">
                       <label>
                           <input type="checkbox" name="shipping_different" t-att-checked="checkout.get('shipping_different')"/>
                           <span>Ship to a different address</span>
                       </label>
                   </div>
               </div>
-              <div class="js_shipping row mb16" t-att-style="not checkout.get('shipping_different') and 'display:none' or ''" groups="sale.group_delivery_invoice_address">
+              <div class="js_shipping row mb16" t-att-style="not checkout.get('shipping_different') and 'display:none' or ''">
                   <h3 class="oe_shipping col-lg-12 mt16">Shipping Information</h3>
 
                   <div t-attf-class="form-group #{error.get('shipping_name') and 'has-error' or ''} col-lg-6">
@@ -998,6 +1001,7 @@
 
 <template id="payment">
   <t t-call="website.layout">
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title">Shop - Select Payment Mode</t>
       <div id="wrap">
         <div class="container oe_website_sale">
@@ -1057,7 +1061,7 @@
                 <div>
                   <a href="/shop/checkout"><span class="fa fa-arrow-right"/> Change Address</a>
                 </div>
-                <t groups="sale.group_delivery_invoice_address">
+                <t>
                     <h4 class="mt32">Ship To:</h4>
                     <t t-if="website_sale_order.partner_shipping_id and website_sale_order.partner_shipping_id.id != website_sale_order.partner_invoice_id.id">
                       <div t-field="order.partner_shipping_id" t-field-options='{
@@ -1116,6 +1120,7 @@
 
 <template id="confirmation">
   <t t-call="website.layout">
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title">Shop - Confirmed</t>
       <div id="wrap">
         <div class="container oe_website_sale">
@@ -1141,7 +1146,7 @@
                     "widget": "contact",
                     "fields": ["address", "name", "phone", "email"]
                     }'/>
-                <t groups="sale.group_delivery_invoice_address">
+                <t>
                     <h4 class="mt32">Ship To:</h4>
                     <t t-if="order.partner_shipping_id and order.partner_shipping_id.id != order.partner_invoice_id.id">
                       <div t-field="order.partner_shipping_id" t-field-options='{

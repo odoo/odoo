@@ -330,7 +330,7 @@ class ir_actions_act_window(osv.osv):
         }
         for res in results:
             model = res.get('res_model')
-            if model and self.pool.get(model):
+            if model in self.pool:
                 try:
                     with tools.mute_logger("openerp.tools.safe_eval"):
                         eval_context = eval(res['context'] or "{}", eval_dict) or {}
@@ -339,7 +339,7 @@ class ir_actions_act_window(osv.osv):
                     continue
                 if not fields or 'help' in fields:
                     custom_context = dict(context, **eval_context)
-                    res['help'] = self.pool.get(model).get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
+                    res['help'] = self.pool[model].get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
         if ids_int:
             return results[0]
         return results
@@ -355,7 +355,7 @@ class ir_actions_act_window(osv.osv):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id (cr, SUPERUSER_ID, module, xml_id)
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
-        return self.read(cr, uid, res_id, [], context)
+        return self.read(cr, uid, [res_id], [], context)[0]
 
 VIEW_TYPES = [
     ('tree', 'Tree'),
@@ -494,7 +494,7 @@ class ir_actions_server(osv.osv):
         'model_name': fields.related('model_id', 'model', type='char',
                                      string='Model Name', readonly=True),
         'menu_ir_values_id': fields.many2one('ir.values', 'More Menu entry', readonly=True,
-                                             help='More menu entry.'),
+                                             help='More menu entry.', copy=False),
         # Client Action
         'action_id': fields.many2one('ir.actions.actions', 'Client Action',
                                      help="Select the client action that has to be executed."),
@@ -550,7 +550,7 @@ class ir_actions_server(osv.osv):
                                         help="Provide an expression that, applied on the current record, gives the field to update."),
         'fields_lines': fields.one2many('ir.server.object.lines', 'server_id',
                                         string='Value Mapping',
-                                        help=""),
+                                        copy=True),
 
         # Fake fields used to implement the placeholder assistant
         'model_object_field': fields.many2one('ir.model.fields', string="Field",
@@ -577,7 +577,7 @@ class ir_actions_server(osv.osv):
         'sequence': 5,
         'code': """# You can use the following variables:
 #  - self: ORM model of the record on which the action is triggered
-#  - object: browse_record of the record on which the action is triggered if there is one, otherwise None
+#  - object: Record on which the action is triggered if there is one, otherwise None
 #  - pool: ORM model pool (i.e. self.pool)
 #  - cr: database cursor
 #  - uid: current user id
@@ -838,7 +838,7 @@ class ir_actions_server(osv.osv):
     def run_action_client_action(self, cr, uid, action, eval_context=None, context=None):
         if not action.action_id:
             raise osv.except_osv(_('Error'), _("Please specify an action to launch!"))
-        return self.pool[action.action_id.type].read(cr, uid, action.action_id.id, context=context)
+        return self.pool[action.action_id.type].read(cr, uid, [action.action_id.id], context=context)[0]
 
     def run_action_code_multi(self, cr, uid, action, eval_context=None, context=None):
         eval(action.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
@@ -848,9 +848,9 @@ class ir_actions_server(osv.osv):
     def run_action_trigger(self, cr, uid, action, eval_context=None, context=None):
         """ Trigger a workflow signal, depending on the use_relational_model:
 
-         - `base`: base_model_pool.signal_<TRIGGER_NAME>(cr, uid, context.get('active_id'))
+         - `base`: base_model_pool.signal_workflow(cr, uid, context.get('active_id'), <TRIGGER_NAME>)
          - `relational`: find the related model and object, using the relational
-           field, then target_model_pool.signal_<TRIGGER_NAME>(cr, uid, target_id)
+           field, then target_model_pool.signal_workflow(cr, uid, target_id, <TRIGGER_NAME>)
         """
         obj_pool = self.pool[action.model_id.model]
         if action.use_relational_model == 'base':
@@ -1100,10 +1100,10 @@ Launch Manually Once: after having been launched manually, it sets automatically
             wizard.write({'state': 'done'})
 
         # Load action
-        act_type = self.pool.get('ir.actions.actions').read(cr, uid, wizard.action_id.id, ['type'], context=context)
+        act_type = wizard.action_id.type
 
-        res = self.pool[act_type['type']].read(cr, uid, wizard.action_id.id, [], context=context)
-        if act_type['type'] != 'ir.actions.act_window':
+        res = self.pool[act_type].read(cr, uid, [wizard.action_id.id], [], context=context)[0]
+        if act_type != 'ir.actions.act_window':
             return res
         res.setdefault('context','{}')
         res['nodestroy'] = True

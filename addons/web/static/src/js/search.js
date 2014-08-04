@@ -782,6 +782,7 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
 
     start: function() {
         var self = this;
+        if (this.searchview.headless) return $.when(this._super(), this.searchview.ready);
         var filters_ready = this.searchview.fields_view_get
                                 .then(this.proxy('prepare_filters'));
         return $.when(this._super(), filters_ready).then(function () {

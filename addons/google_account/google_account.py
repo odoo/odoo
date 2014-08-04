@@ -129,8 +129,7 @@ class google_service(osv.osv_memory):
         return res
 
     def _do_request(self, cr, uid, uri, params={}, headers={}, type='POST', preuri="https://www.googleapis.com", context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         """ Return a tuple ('HTTP_CODE', 'HTTP_RESPONSE') """
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri, type, headers, werkzeug.url_encode(params) if type == 'GET' else params))

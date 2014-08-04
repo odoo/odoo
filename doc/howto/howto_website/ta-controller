@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent a110c540b0769ee849a404324cf8594d116cc982
+# Parent a813df5b9cbdf5db9b0c3f6bac47b1821ddbb086
 
 diff --git a/controllers/academy.py b/controllers/academy.py
 --- a/controllers/academy.py
@@ -25,7 +25,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 +        ]
 +
          return """<!doctype html>
- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+ <link href="/web/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
  <body class="container">
 -    Hello, world!
 +    <h1>Introduction to something</h1>
@@ -45,7 +45,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 +<html>
 +    <head>
 +        <title>AcademyAcademy TA %(name)s</title>
-+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
++        <link href="/web/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 +    </head>
 +    <body class="container">
 +        <h1>%(name)s</h1>

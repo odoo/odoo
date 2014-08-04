@@ -285,12 +285,12 @@ class WebKitParser(report_sxw):
             raise except_osv(_('Error!'), _('Webkit report template not found!'))
         header = report_xml.webkit_header.html
         footer = report_xml.webkit_header.footer_html
-        if not header and report_xml.header:
+        if not header and report_xml.use_global_header:
             raise except_osv(
                   _('No header defined for this Webkit report!'),
                   _('Please set a header in company settings.')
               )
-        if not report_xml.header :
+        if not report_xml.use_global_header :
             header = ''
             default_head = get_module_resource('report_webkit', 'default_header.html')
             with open(default_head,'r') as f:
@@ -365,16 +365,7 @@ class WebKitParser(report_sxw):
         report_xml_ids = ir_obj.search(cursor, uid,
                 [('report_name', '=', self.name[7:])], context=context)
         if report_xml_ids:
-
-            report_xml = ir_obj.browse(cursor,
-                                       uid,
-                                       report_xml_ids[0],
-                                       context=context)
-            report_xml.report_rml = None
-            report_xml.report_rml_content = None
-            report_xml.report_sxw_content_data = None
-            report_xml.report_sxw_content = None
-            report_xml.report_sxw = None
+            report_xml = ir_obj.browse(cursor, uid, report_xml_ids[0], context=context)
         else:
             return super(WebKitParser, self).create(cursor, uid, ids, data, context)
         if report_xml.report_type != 'webkit':

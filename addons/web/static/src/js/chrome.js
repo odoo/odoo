@@ -115,6 +115,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.init_dialog();
         }
         this.$buttons.insertAfter(this.$dialog_box.find(".modal-body"));
+        $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal is opened
         //add to list of currently opened modal
         opened_modal.push(this.$dialog_box);
         return this;
@@ -124,11 +125,12 @@ instance.web.Dialog = instance.web.Widget.extend({
         var $customButons = this.$buttons.find('.oe_dialog_custom_buttons').empty();
         _.each(buttons, function(fn, text) {
             // buttons can be object or array
+            var oe_link_class = fn.oe_link_class;
             if (!_.isFunction(fn)) {
                 text = fn.text;
                 fn = fn.click;
             }
-            var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {} }}}));
+            var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': oe_link_class} }}}));
             $customButons.append($but);
             $but.on('click', function(ev) {
                 fn.call(self.$el, ev);
@@ -184,12 +186,12 @@ instance.web.Dialog = instance.web.Widget.extend({
     close: function(reason) {
         if (this.dialog_inited && !this.__tmp_dialog_hiding) {
             $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
-            this.trigger("closing", reason);
             if (this.$el.is(":data(bs.modal)")) {     // may have been destroyed by closing signal
                 this.__tmp_dialog_hiding = true;
                 this.$dialog_box.modal('hide');
                 this.__tmp_dialog_hiding = undefined;
             }
+            this.trigger("closing", reason);
         }
     },
     _closing: function() {
@@ -229,6 +231,9 @@ instance.web.Dialog = instance.web.Widget.extend({
                 if (opened_modal.length > 0){
                     //we still have other opened modal so we should focus it
                     opened_modal[opened_modal.length-1].focus();
+                    //keep class modal-open (deleted by bootstrap hide fnct) on body 
+                    //to allow scrolling inside the modal
+                    $('body').addClass('modal-open');
                 }
             },0);
         }
@@ -251,7 +256,7 @@ instance.web.CrashManager = instance.web.Class.extend({
             return;
         }
         if (error.data.name === "openerp.http.SessionExpiredException" || error.data.name === "werkzeug.exceptions.Forbidden") {
-            this.show_warning({type: "Session Expired", data: { message: _t("Your OpenERP session expired. Please refresh the current web page.") }});
+            this.show_warning({type: "Session Expired", data: { message: _t("Your Odoo session expired. Please refresh the current web page.") }});
             return;
         }
         if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning" || error.data.exception_type === "access_error") {
@@ -269,7 +274,7 @@ instance.web.CrashManager = instance.web.Class.extend({
         }
         new instance.web.Dialog(this, {
             size: 'medium',
-            title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
+            title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
                 {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
             ],
@@ -284,7 +289,7 @@ instance.web.CrashManager = instance.web.Class.extend({
             this.parents('.modal').modal('hide');
         };
         new instance.web.Dialog(this, {
-            title: "OpenERP " + _.str.capitalize(error.type),
+            title: "Odoo " + _.str.capitalize(error.type),
             buttons: buttons
         }, QWeb.render('CrashManager.error', {session: instance.session, error: error})).open();
     },
@@ -330,21 +335,23 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
         this.error = error;
     },
     display: function() {
+        var self = this;
         error = this.error;
         error.data.message = error.data.arguments[0];
 
         new instance.web.Dialog(this, {
             size: 'medium',
-            title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
+            title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
-                {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }},
-                {text: error.data.arguments[2], click: function() {
+                {text: _t("Ok"), click: function() { self.$el.parents('.modal').modal('hide');  self.destroy();}},
+                {text: error.data.arguments[2],
+                 oe_link_class: 'oe_link',
+                 click: function() {
                     window.location.href='#action='+error.data.arguments[1];
-                    this.$el.parents('.modal').modal('hide');
+                    self.destroy();
                 }}
             ],
         }, QWeb.render('CrashManager.warning', {error: error})).open();
-        this.destroy();
     }
 });
 instance.web.crash_manager_registry.add('openerp.exceptions.RedirectWarning', 'instance.web.RedirectWarningHandler');
@@ -907,7 +914,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
         // add a tooltip to cropped menu items
         this.$secondary_menus.find('.oe_secondary_submenu li a span').each(function() {
-            $(this).tooltip(this.scrollWidth > this.clientWidth ? {title: $(this).text().trim(), placement: 'auto right'} :'destroy');
+            $(this).tooltip(this.scrollWidth > this.clientWidth ? {title: $(this).text().trim(), placement: 'right'} :'destroy');
        });
     },
     /**
@@ -955,6 +962,8 @@ instance.web.Menu =  instance.web.Widget.extend({
                 id: id,
                 previous_menu_id: this.current_menu // Here we don't know if action will fail (in which case we have to revert menu)
             }, $item);
+        } else {
+            console.log('Menu no action found web test 04 will fail');
         }
         this.open_menu(id);
     },
@@ -1151,7 +1160,7 @@ instance.web.Client = instance.web.Widget.extend({
             }, 0);
         });
         instance.web.bus.on('click', this, function(ev) {
-            $.fn.tooltip('destroy');
+            $('.tooltip').remove();
             if (!$(ev.target).is('input[type=file]')) {
                 self.$el.find('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
             }
@@ -1185,7 +1194,7 @@ instance.web.WebClient = instance.web.Client.extend({
         this._current_state = null;
         this.menu_dm = new instance.web.DropMisordered();
         this.action_mutex = new $.Mutex();
-        this.set('title_part', {"zopenerp": "OpenERP"});
+        this.set('title_part', {"zopenerp": "Odoo"});
     },
     start: function() {
         var self = this;
@@ -1375,8 +1384,7 @@ instance.web.WebClient = instance.web.Client.extend({
                         var first_menu_id = self.menu.$el.find("a:first").data("menu");
                         if(first_menu_id) {
                             self.menu.menu_click(first_menu_id);
-                        }
-                    }
+                        }                    }
                 });
             });
         } else {
