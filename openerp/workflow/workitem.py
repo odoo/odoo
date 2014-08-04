@@ -121,7 +121,7 @@ class WorkflowItem(object):
             triggers = triggers and not ok
 
         if triggers:
-            cr.execute('select * from wkf_transition where act_from=%s ORDER BY sequence', (self.workitem['act_id'],))
+            cr.execute('select * from wkf_transition where act_from=%s', (self.workitem['act_id'],))
             for trans in cr.dictfetchall():
                 if trans['trigger_model']:
                     ids = self.wkf_expr_eval_expr(trans['trigger_expr_id'])
@@ -219,7 +219,7 @@ class WorkflowItem(object):
 
     def _split_test(self, split_mode, signal, stack):
         cr = self.session.cr
-        cr.execute('select * from wkf_transition where act_from=%s ORDER BY sequence', (self.workitem['act_id'],))
+        cr.execute('select * from wkf_transition where act_from=%s', (self.workitem['act_id'],))
         test = False
         transitions = []
         alltrans = cr.dictfetchall()
@@ -251,7 +251,7 @@ class WorkflowItem(object):
 
     def _join_test(self, trans_id, inst_id, stack):
         cr = self.session.cr
-        cr.execute('select * from wkf_activity where id=(select act_to from wkf_transition where id=%s ORDER BY sequence)', (trans_id,))
+        cr.execute('select * from wkf_activity where id=(select act_to from wkf_transition where id=%s ORDER BY sequence,id)', (trans_id,))
         activity = cr.dictfetchone()
         if activity['join_mode'] == 'XOR':
             WorkflowItem.create(self.session, self.record, activity, inst_id, stack=stack)
