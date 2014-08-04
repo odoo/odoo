@@ -851,7 +851,7 @@ class calendar_event(osv.Model):
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."),
         'categ_ids': fields.many2many('calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags'),
         'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
-        'partner_ids': fields.many2many('res.partner', string='Attendees', states={'done': [('readonly', True)]}),
+        'partner_ids': fields.many2many('res.partner', string='Invitations', states={'done': [('readonly', True)]}),
         'alarm_ids': fields.many2many('calendar.alarm', string='Reminders', ondelete="restrict"),
 
     }
