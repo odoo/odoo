@@ -18,6 +18,10 @@ class MassMailingnReport(osv.Model):
         'opened': fields.integer('Opened', readonly=True),
         'bounced': fields.integer('Bounced', readonly=True),
         'replied': fields.integer('Replied', readonly=True),
+        'state': fields.selection(
+            [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')],
+            string='Status', readonly=True,
+        ),
     }
 
     def init(self, cr):
@@ -36,7 +40,8 @@ class MassMailingnReport(osv.Model):
                     count(ms.sent) as sent,
                     (count(ms.sent) - count(ms.bounced)) as delivered,
                     count(ms.opened) as opened,
-                    count(ms.replied) as replied
+                    count(ms.replied) as replied,
+                    mm.state
                 FROM
                     mail_mail_statistics as ms
                     left join mail_mass_mailing as mm ON (ms.mass_mailing_id=mm.id)
