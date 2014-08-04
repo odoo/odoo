@@ -111,6 +111,7 @@ class wkf_transition(osv.osv):
     _columns = {
         'trigger_model': fields.char('Trigger Object'),
         'trigger_expr_id': fields.char('Trigger Expression'),
+        'sequence': fields.integer('Sequence'),
         'signal': fields.char('Signal (Button Name)',
                               help="When the operation of transition comes from a button pressed in the client form, "\
                               "signal tests the name of the pressed button. If signal is NULL, no button is necessary to validate this transition."),
@@ -126,7 +127,10 @@ class wkf_transition(osv.osv):
     }
     _defaults = {
         'condition': lambda *a: 'True',
+        'sequence': 10,
     }
+
+    _order = 'sequence,id'
 
     def name_get(self, cr, uid, ids, context=None):
         return [(line.id, (line.act_from.name) + '+' + (line.act_to.name)) if line.signal == False else (line.id, line.signal) for line in self.browse(cr, uid, ids, context=context)]

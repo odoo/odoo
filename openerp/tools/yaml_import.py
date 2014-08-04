@@ -615,7 +615,7 @@ class YamlInterpreter(object):
             uid = workflow.uid
         else:
             uid = self.uid
-        self.cr.execute('select distinct signal from wkf_transition')
+        self.cr.execute('select distinct signal, sequence, id from wkf_transition ORDER BY sequence,id')
         signals=[x['signal'] for x in self.cr.dictfetchall()]
         if workflow.action not in signals:
             raise YamlImportException('Incorrect action %s. No such action defined' % workflow.action)
