@@ -2,12 +2,19 @@ $(document).ready(function () {
 $('.oe_website_sale').each(function () {
     var oe_website_sale = this;
 
-    var $shippingDifferent = $("input[name='shipping_different']", oe_website_sale);
-    if ($shippingDifferent.is(':checked')) {
-       $(".js_shipping", oe_website_sale).show();
-    }
-    $shippingDifferent.change(function () {
-        $(".js_shipping", oe_website_sale).toggle();
+    var $shippingDifferent = $("select[name='shipping_id']", oe_website_sale);
+    $shippingDifferent.change(function (event) {
+        var value = +$shippingDifferent.val();
+        var data = $shippingDifferent.find("option:selected").data();
+        var $snipping = $(".js_shipping", oe_website_sale);
+        var $inputs = $snipping.find("input,select");
+
+        $snipping.toggle(!!value);
+        $inputs.attr("readonly", value <= 0 ? null : "readonly" ).prop("readonly", value <= 0 ? null : "readonly" );
+
+        $inputs.each(function () {
+            $(this).val( data[$(this).attr("name")] || "" );
+        });
     });
 
     // change for css
