@@ -54,14 +54,13 @@
                 </search>
             </field>
         </record>
-        <record id="tip_action" model="ir.actions.act_window">
+        <record id="edit_tip_action" model="ir.actions.act_window">
             <field name="name">Tips</field>
             <field name="res_model">web.tip</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_tip_list"/>
-            <field name="context">{'ir.ui.menu.full_list':True}</field>
             <field name="search_view_id" ref="edit_tip_search"/>
         </record>
-        <menuitem action="tip_action" id="menu_tip_action" parent="base.next_id_2" sequence="5"/>
+        <menuitem action="edit_tip_action" id="menu_tip_action" parent="base.next_id_2" sequence="5"/>
     </data>
 </openerp>
