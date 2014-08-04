@@ -292,6 +292,10 @@
                         node_id = self.treeMirrorClient.knownNodes.nodeId(n);
                     }
                 });
+                // find the real id of the loading node
+                if(node_id){
+                    node_id = this.treeMirrorClient.knownNodes.values[node_id];
+                }
             }
             return node_id;
         },
@@ -343,6 +347,11 @@
             // start recording
             self._super();
         },
+        stop_record: function(){
+            this._super();
+            this.loading_node_id = false;
+            this.loading_children_ids = [];
+        },
         send_record: function(json_mutations, type){
             console.log('============================================');
             var mutations = JSON.parse(json_mutations);
@@ -351,20 +360,13 @@
             this.loading_node_id = this._find_loading_node_id();
 
             // find new child of the loading node
-            this.loading_children_ids = this.loading_children_ids.concat(this._child_of_loading_node(mutations));
-
-        console.log(this.loading_node_id);
-        console.log(JSON.stringify(this.loading_children_ids));
-        //this.treeMirrorClient && console.log(this.treeMirrorClient.knownNodes.nodes);
-        console.log(JSON.stringify(mutations));
-        console.log("-------------");
+            this.loading_children_ids = this.loading_children_ids.slice((this.loading_children_ids.length-1), this.loading_children_ids.length).concat(this._child_of_loading_node(mutations));
 
             // filter the mutations
             mutations = this._filter(mutations);
 
             // remove the empty mutations
             mutations = this._remove_empty_mutations(mutations);
-        console.log(JSON.stringify(mutations));
             if(mutations.length !== 0){
                 var type = type || "base";
                 var message = {
@@ -373,7 +375,6 @@
                     "type" : mutations[0] ? mutations[0].f : type,
                     "uuid" : this.uuid
                 };
-        console.log("SEND : ", this.count);
                 this.count++;
                 return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, message : message});
             }else{
@@ -385,7 +386,6 @@
     // Class listening the bus, and keeping the im_screenshare messages to send them to the player
     instance.im_screenshare.BusListener = openerp.Class.extend({
         init: function(channel, player){
-            console.log("channel", channel);
             this.player = player;
             this.channel = channel;
             this.bus = openerp.bus.bus;
