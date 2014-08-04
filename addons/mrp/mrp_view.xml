@@ -1055,20 +1055,6 @@
                         groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
-                </div>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="product_product_form_view_bom_button">
-            <field name="name">product.product.procurement</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <div name="buttons" position="inside">
-                    <button class="oe_inline oe_stat_button" name="%(product_open_bom)d" type="action"
-                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
-                        <field string="Bill of Materials" name="bom_count" widget="statinfo" />
-                    </button>
                     <button class="oe_inline oe_stat_button" name="action_view_mos" type="object" 
                         groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
@@ -1076,9 +1062,9 @@
                 </div>
             </field>
         </record>
-        
-        <record model="ir.ui.view" id="product_normal_form_view_bom_button">
-            <field name="name">product.product.mrp.button</field>
+
+        <record model="ir.ui.view" id="product_product_form_view_bom_button">
+            <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
@@ -1094,7 +1080,7 @@
                 </div>
             </field>
         </record>
-        
+
         <record id="view_warehouse_inherited" model="ir.ui.view">
             <field name="name">Stock Warehouse Inherited</field>
             <field name="model">stock.warehouse</field>
