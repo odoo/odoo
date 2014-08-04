@@ -35,7 +35,7 @@
                 });
             });
 
-            instance.web.bus.on('switch_mode', this, function(viewManager, mode) {
+            instance.web.bus.on('view_switch_mode', this, function(viewManager, mode) {
                 self.on_switch(viewManager, mode);
             });
 
@@ -65,11 +65,11 @@
             if(fields_view.type === 'kanban') {
                 var dataset_def = $.Deferred();
                 var groups_def = $.Deferred();
-                view.on("dataset_processed", self, function() {
+                view.on("kanban_dataset_processed", self, function() {
                     var length = view.dataset.ids.length;
                     dataset_def.resolve(length);
                 });
-                view.on('groups_processed', self, function() {
+                view.on('kanban_groups_processed', self, function() {
                     groups_def.resolve();
                 });
                 dataset_def.done(function(length) {
@@ -188,6 +188,15 @@
                     container: 'body',
                 }).popover("show");
 
+                var $cross = $('<button type="button" class="close">&times;</button>');
+                $cross.addClass('oe_tip_close');
+
+                if (tip.title) {
+                    $('.popover-title').prepend($cross);
+                } else {
+                    $('.popover-content').prepend($cross);
+                }
+
                 // consume tip
                 tip.end_selector = tip.end_selector ? tip.end_selector : tip.highlight_selector;
                 $(tip.end_selector).one(tip.end_event, function($ev) {
@@ -196,6 +205,10 @@
                 });
 
                 // dismiss tip
+                $cross.on('click', function($ev) {
+                    self.end_tip(tip);
+                    def.resolve();
+                });
                 self.$overlay.on('click', function($ev) {
                     self.end_tip(tip);
                     def.resolve();
@@ -223,7 +236,7 @@
                 $(el).removeClass('oe_tip_fix_parent');
             });
             $(document).off('keyup.web_tip');
-            Tips.call('consume_tip', [tip.id], {});
+            Tips.call('consume', [tip.id], {});
             tip.is_consumed = true;
         }
     });

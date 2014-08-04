@@ -27,9 +27,9 @@ class tip(osv.Model):
 
     def _is_consumed(self, cr, uid, ids, fields, arg, context=None):
         results = {}
-        records = self.read(cr, uid, ids, ['web_tip_user_ids'])
+        records = self.read(cr, uid, ids, ['user_ids'])
         for rec in records:
-            if uid in rec['web_tip_user_ids']:
+            if uid in rec['user_ids']:
                 results[rec['id']] = True
             else:
                 results[rec['id']] = False
@@ -43,13 +43,12 @@ class tip(osv.Model):
         'model': fields.char("Model", help="Model name on which to trigger the tip, e.g. 'res.partner'."),
         'type': fields.char("Type", help="Model type, e.g. lead or opportunity for crm.lead"),
         'mode': fields.char("Mode", help="Mode, e.g. kanban, form"),
-        'trigger_selector': fields.char(help='CSS selectors used to trigger the tip, separated by a comma (ANDed).'),
-        'highlight_selector': fields.char(help='CSS selector for the element to highlight'),
-        'end_selector': fields.char(help='CSS selector used to end the tip'),
-        'end_event': fields.char(help='Event to end the tip'),
-        'placement': fields.char(help='Popover placement, bottom, top, left or right'),
-        'web_tip_user_ids': fields.many2many('res.users', 'web_tip_user', 'web_tip_id',
-            'res_users_id'),
+        'trigger_selector': fields.char('Trigger selector', help='CSS selectors used to trigger the tip, separated by a comma (ANDed).'),
+        'highlight_selector': fields.char('Highlight selector', help='CSS selector for the element to highlight'),
+        'end_selector': fields.char('End selector', help='CSS selector used to end the tip'),
+        'end_event': fields.char('End event', help='Event to end the tip'),
+        'placement': fields.char('Placement', help='Popover placement, bottom, top, left or right'),
+        'user_ids': fields.many2many('res.users', string='Consumed by'),
         'is_consumed': fields.function(_is_consumed, type='boolean', string='Tip consumed')
     }
 
@@ -58,7 +57,7 @@ class tip(osv.Model):
         'end_event': 'click'
     }
 
-    def consume_tip(self, cr, uid, ids, context=None):
+    def consume(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {
-            'web_tip_user_ids': [(4, uid)]
+            'user_ids': [(4, uid)]
         }, context=context)
