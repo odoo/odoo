@@ -348,10 +348,10 @@
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
                 <graph string="Mass Mailing" type="bar" stacked="True">
-                    <field name="name" type="row"/>
-                    <field name="opened" type="measure"/>
-                    <field name="delivered" type="measure"/>
+                    <field name="mass_mailing_campaign_id" type="row"/>
+                    <field name="sent_date" interval="month" type="col"/>
                     <field name="sent" type="measure"/>
+                    <field name="opened" type="measure"/>
                 </graph>
             </field>
         </record>
