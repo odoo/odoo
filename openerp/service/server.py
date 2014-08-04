@@ -135,12 +135,11 @@ class FSWatcher(object):
                         _logger.info('autoreload: python code updated, autoreload activated')
                         restart()
 
-    def run(self):
+    def start(self):
         self.observer.start()
         _logger.info('AutoReload watcher running')
 
     def stop(self):
-        # TODO: properly stop observer
         self.observer.stop()
         self.observer.join()
 
@@ -809,7 +808,8 @@ def _reexec(updated_modules=None):
         subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)
     args = stripped_sys_argv()
-    args += ["-u", ','.join(updated_modules)]
+    if updated_modules:
+        args += ["-u", ','.join(updated_modules)]
     if not args or args[0] != exe:
         args.insert(0, exe)
     os.execv(sys.executable, args)
@@ -882,18 +882,14 @@ def start(preload=None, stop=False):
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
     watcher = FSWatcher()
-    watcher.run()
+    watcher.start()
 
     rc = server.run(preload, stop)
 
     # like the legend of the phoenix, all ends with beginnings
     if getattr(openerp, 'phoenix', False):
-        modules = []
-        if config['auto_reload']:
-            # WIP: make it work
-            # modules = autoreload.modules.keys()
-            pass
-        _reexec(modules)
+        watcher.stop()
+        _reexec()
 
     return rc if rc else 0
 
