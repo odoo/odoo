@@ -105,7 +105,7 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
             super(ThreadedWSGIServerReloadable, self).server_activate()
 
 #----------------------------------------------------------
-# FileSystem Watcher for autoreload and orm cache void
+# FileSystem Watcher for autoreload and cache invalidation
 #----------------------------------------------------------
 class FSWatcher(object):
     def __init__(self):
