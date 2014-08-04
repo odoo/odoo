@@ -2956,9 +2956,13 @@ class BaseModel(object):
             field.reset()
 
     @api.model
-    def _setup_fields(self):
+    def _setup_fields(self, partial=False):
         """ Setup the fields (dependency triggers, etc). """
         for field in self._fields.itervalues():
+            if partial and field.manual and \
+                    field.relational and field.comodel_name not in self.pool:
+                # do not set up manual fields that refer to unknown models
+                continue
             field.setup(self.env)
 
         # group fields by compute to determine field.computed_fields

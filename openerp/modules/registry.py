@@ -151,9 +151,11 @@ class Registry(Mapping):
 
         return [self.models[m] for m in models_to_load]
 
-    def setup_models(self, cr):
+    def setup_models(self, cr, partial=False):
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
+
+            :param partial: ``True`` if all models have not been loaded yet.
         """
         # prepare the setup on all models
         for model in self.models.itervalues():
@@ -162,7 +164,7 @@ class Registry(Mapping):
         # do the actual setup from a clean state
         self._m2m = {}
         for model in self.models.itervalues():
-            model._setup_fields(cr, SUPERUSER_ID)
+            model._setup_fields(cr, SUPERUSER_ID, partial=partial)
 
     def clear_caches(self):
         """ Clear the caches
