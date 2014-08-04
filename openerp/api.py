@@ -273,8 +273,8 @@ def get_context_split(method):
 
 
 def model(method):
-    """ Decorate a record-style method where `self` is a recordset. Such a
-        method::
+    """ Decorate a record-style method where `self` is a recordset, but its
+        contents is not relevant, only the model is. Such a method::
 
             @api.model
             def method(self, args):
@@ -286,6 +286,8 @@ def model(method):
             recs.method(args)
 
             model.method(cr, uid, args, context=context)
+
+        Notice that no `ids` are passed to the method in the traditional style.
     """
     method._api = model
     split = get_context_split(method)
@@ -301,8 +303,8 @@ def model(method):
 
 
 def multi(method):
-    """ Decorate a record-style method where `self` is a recordset. Such a
-        method::
+    """ Decorate a record-style method where `self` is a recordset. The method
+        typically defines an operation on records. Such a method::
 
             @api.multi
             def method(self, args):
