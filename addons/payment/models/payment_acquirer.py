@@ -140,6 +140,7 @@ class PaymentAcquirer(osv.Model):
                 'country': tx.partner_country_id,
                 'phone': tx.partner_phone,
                 'reference': tx.partner_reference,
+                'state': None,
             }
         else:
             if partner_id:
@@ -154,6 +155,7 @@ class PaymentAcquirer(osv.Model):
                     'country_id': partner.country_id.id,
                     'country': partner.country_id,
                     'phone': partner.phone,
+                    'state': partner.state_id,
                 }
             else:
                 partner, partner_data = False, {}
