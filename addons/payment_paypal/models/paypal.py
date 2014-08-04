@@ -118,6 +118,7 @@ class AcquirerPaypal(osv.Model):
             'address1': partner_values['address'],
             'city': partner_values['city'],
             'country': partner_values['country'] and partner_values['country'].name or '',
+            'state': partner_values['state'] and partner_values['state'].name or '',
             'email': partner_values['email'],
             'zip': partner_values['zip'],
             'first_name': partner_values['first_name'],
