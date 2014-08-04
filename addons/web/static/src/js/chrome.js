@@ -1077,7 +1077,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                     state: JSON.stringify(state),
                     scope: 'userinfo',
                 };
-                instance.web.redirect('https://accounts.openerp.com/oauth2/auth?'+$.param(params));
+                instance.web.redirect('https://accounts.odoo.com/oauth2/auth?'+$.param(params));
             });
         }
     },
