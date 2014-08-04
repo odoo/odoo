@@ -334,8 +334,14 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route(['/website/seo_suggest/<keywords>'], type='http', auth="public", website=True)
     def seo_suggest(self, keywords):
-        url = "http://google.com/complete/search?ie=utf8&oe=utf8&output=toolbar&q="
-        req = urllib2.Request("%s?%s" % (url, keywords))
+        url = "http://google.com/complete/search"
+        param = {
+            'ie': 'utf8',
+            'oe': 'utf8',
+            'output': 'toolbar',
+            'q': keywords
+        }
+        req = urllib2.Request("%s?%s" % (url, werkzeug.url_encode(param)))
         request = urllib2.urlopen(req)
         xmlroot = ET.fromstring(request.read())
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
