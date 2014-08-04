@@ -450,17 +450,31 @@ class res_partner(osv.Model, format_address):
     def _commercial_sync_from_company(self, cr, uid, partner, context=None):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
         as if they were related fields """
-        if partner.commercial_partner_id != partner:
+        commercial_partner = partner.commercial_partner_id
+        if not commercial_partner:
+            # On child partner creation of a parent partner,
+            # the commercial_partner_id is not yet computed
+            commercial_partner_id = self._commercial_partner_compute(
+                cr, uid, [partner.id], 'commercial_partner_id', [], context=context)[partner.id]
+            commercial_partner = self.browse(cr, uid, commercial_partner_id, context=context)
+        if commercial_partner != partner:
             commercial_fields = self._commercial_fields(cr, uid, context=context)
-            sync_vals = self._update_fields_values(cr, uid, partner.commercial_partner_id,
-                                                        commercial_fields, context=context)
+            sync_vals = self._update_fields_values(cr, uid, commercial_partner,
+                                                   commercial_fields, context=context)
             partner.write(sync_vals)
 
     def _commercial_sync_to_children(self, cr, uid, partner, context=None):
         """ Handle sync of commercial fields to descendants """
         commercial_fields = self._commercial_fields(cr, uid, context=context)
-        sync_vals = self._update_fields_values(cr, uid, partner.commercial_partner_id,
-                                                   commercial_fields, context=context)
+        commercial_partner = partner.commercial_partner_id
+        if not commercial_partner:
+            # On child partner creation of a parent partner,
+            # the commercial_partner_id is not yet computed
+            commercial_partner_id = self._commercial_partner_compute(
+                cr, uid, [partner.id], 'commercial_partner_id', [], context=context)[partner.id]
+            commercial_partner = self.browse(cr, uid, commercial_partner_id, context=context)
+        sync_vals = self._update_fields_values(cr, uid, commercial_partner,
+                                               commercial_fields, context=context)
         sync_children = [c for c in partner.child_ids if not c.is_company]
         for child in sync_children:
             self._commercial_sync_to_children(cr, uid, child, context=context)
