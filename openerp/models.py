@@ -3947,11 +3947,6 @@ class BaseModel(object):
 
             record_id = tocreate[table].pop('id', None)
 
-            if isinstance(record_id, dict):
-                # Shit happens: this possibly comes from a new record
-                tocreate[table] = dict(record_id, **tocreate[table])
-                record_id = None
-
             # When linking/creating parent records, force context without 'no_store_function' key that
             # defers stored functions computing, as these won't be computed in batch at the end of create().
             parent_context = dict(context)
