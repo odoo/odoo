@@ -632,6 +632,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         perform_search: function(query, associate_result){
             if(query){
                 var customers = this.pos.db.search_partner(query);
+                console.log(customers);
                 this.display_client_details('hide');
                 if ( associate_result && customers.length === 1){
                     this.new_client = customers[0];
@@ -652,8 +653,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         render_list: function(partners){
             var contents = this.$el[0].querySelector('.client-list-contents');
-            contents.innerHtml = "";
-            for(var i = 0, len = partners.length; i < len; i++){
+            contents.innerHTML = "";
+            for(var i = 0, len = Math.min(partners.length,1000); i < len; i++){
                 var partner    = partners[i];
                 var clientline = this.partner_cache.get_node(partner.id);
                 if(!clientline){
