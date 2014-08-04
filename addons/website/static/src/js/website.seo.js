@@ -95,7 +95,7 @@
                     }
                 });
             }
-            $.getJSON("http://suggest.hp.af.cm/suggest/"+encodeURIComponent(this.root + " "), addSuggestions);
+            $.getJSON("/website/seo_suggest/" + encodeURIComponent(this.root + " "), addSuggestions);
         },
     });
 
