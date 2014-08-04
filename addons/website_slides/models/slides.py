@@ -89,6 +89,10 @@ class ir_attachment(osv.osv):
                     values['slide_views'] = statistics['items'][0]['statistics']['viewCount']
         return super(ir_attachment, self).create(cr, uid, values, context)
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        ids = super(ir_attachment, self)._search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
+        return len(ids) if count else ids
+ 
     def extract_youtube_id(self,url):
         youtube_id = ""
         query = urlparse(url)

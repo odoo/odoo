@@ -34,6 +34,7 @@ from openerp.addons.website.models.website import slug
 
 class main(http.Controller):
     _slides_per_page = 8
+    _slides_per_list = 20
 
     def apply_filter(self,  page=1, filters='all', sorting='creation', search='', tags='', slideview=''):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
@@ -110,6 +111,22 @@ class main(http.Controller):
     @http.route('/slides/view/<model("ir.attachment"):slideview>', type='http', auth="public", website=True)
     def slide_view(self, page=1, filters='all', sorting='creation', search='', tags='', slideview=''):
         values = self.apply_filter(page, filters, sorting, search, tags, slideview)
+        cr, uid, context = request.cr, SUPERUSER_ID, request.context
+        attachment = request.registry['ir.attachment']
+        domain = [("is_slide","=","TRUE")]
+ 
+        # most viewed slides
+        ids = attachment.search(cr, uid, domain, limit=self._slides_per_list, offset=0, order='slide_views desc', context=context)
+        most_viewed_ids = attachment.browse(cr, uid, ids, context=context)
+
+        # related slides
+        tags = slideview.tag_ids.ids
+        if tags:
+            domain += [('tag_ids', 'in', tags)]
+        ids = attachment.search(cr, uid, domain, limit=self._slides_per_list, offset=0, context=context)
+        related_ids = attachment.browse(cr, uid, ids, context=context)
+
+        values.update({'most_viewed_ids':most_viewed_ids,'related_ids': related_ids})
         return request.website.render('website_slides.slide_view', values)
 
 
