@@ -90,7 +90,7 @@ class TestMailMessage(TestMail):
         self.registry('ir.config_parameter').unlink(cr, uid, param_ids)
 
         # Do: free message; specified values > default values
-        msg_id = self.mail_message.create(cr, user_raoul_id, {'same_thread': False, 'reply_to': reply_to1, 'email_from': email_from1})
+        msg_id = self.mail_message.create(cr, user_raoul_id, {'no_auto_thread': True, 'reply_to': reply_to1, 'email_from': email_from1})
         msg = self.mail_message.browse(cr, user_raoul_id, msg_id)
         # Test: message content
         self.assertIn('reply_to', msg.message_id,
