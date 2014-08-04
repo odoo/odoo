@@ -145,12 +145,14 @@ class view(osv.osv):
             if not context:
                 context = {}
 
+            company = self.pool['res.company'].browse(cr, SUPERUSER_ID, request.website.company_id.id, context=context)
+
             qcontext = dict(
                 context.copy(),
                 website=request.website,
                 url_for=website.url_for,
                 slug=website.slug,
-                res_company=request.website.company_id,
+                res_company=company,
                 user_id=self.pool.get("res.users").browse(cr, uid, uid),
                 translatable=context.get('lang') != request.website.default_lang_code,
                 editable=request.website.is_publisher(),
