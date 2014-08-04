@@ -134,6 +134,7 @@ class _column(object):
             ('_origin', self),                  # field interfaces self
             ('copy', self.copy),
             ('index', self.select),
+            ('manual', self.manual),
             ('string', self.string),
             ('help', self.help),
             ('readonly', self.readonly),

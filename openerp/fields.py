@@ -263,6 +263,7 @@ class Field(object):
 
     store = True                # whether the field is stored in database
     index = False               # whether the field is indexed in database
+    manual = False              # whether the field is a custom field
     copyable = True             # whether the field is copied over by BaseModel.copy()
     depends = ()                # collection of field dependencies
     recursive = False           # whether self depends on itself
