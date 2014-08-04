@@ -601,7 +601,7 @@ class MassMailing(osv.Model):
                 'composition_mode': 'mass_mail',
                 'mass_mailing_id': mailing.id,
                 'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
-                'same_thread': mailing.reply_to_mode == 'thread',
+                'no_auto_thread': mailing.reply_to_mode != 'thread',
             }
             if mailing.reply_to_mode == 'email':
                 composer_values['reply_to'] = mailing.reply_to
