@@ -226,7 +226,7 @@ class TxPaypal(osv.Model):
         # check seller
         if data.get('receiver_email') != tx.acquirer_id.paypal_email_account:
             invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.paypal_email_account))
-        if tx.acquirer_id.paypal_seller_account and data.get('receiver_id') != tx.acquirer_id.paypal_seller_account:
+        if data.get('receiver_id') and tx.acquirer_id.paypal_seller_account and data['receiver_id'] != tx.acquirer_id.paypal_seller_account:
             invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.paypal_seller_account))
 
         return invalid_parameters
