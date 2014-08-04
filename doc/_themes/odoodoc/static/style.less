@@ -14,6 +14,9 @@
 @navbar-default-bg: white;
 @navbar-default-border: 0;
 
+// indent level for various items list e.g. dl, fields lists, ...
+@item-indent: 30px;
+
 body {
   position: relative;
 }
@@ -409,5 +412,25 @@ div.section > h2 {
 @media (min-width: 768px) {
   .zero-clipboard {
     display: block;
+  }
+}
+
+dd {
+  // Reinstate dd indent, looks horrible and illegible otherwise
+  margin-left: @item-indent;
+}
+
+// By default there's (browser) padding on ``ul`` so lists of >1 field are
+// nicely separated from the section name (e.g. ``Parameters``) but single
+// fields/items are stuck to it and look horrible. Make everything neatly-ish
+// aligned. Other option: half and half so list bullets are aligned to text
+// instead of text to text
+td.field-body {
+  padding-left: @item-indent;
+  ul {
+    padding-left: @item-indent;
+  }
+  > ul {
+    padding-left: 0;
   }
 }

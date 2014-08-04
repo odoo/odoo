@@ -5,6 +5,8 @@ Views
 Structure
 =========
 
+.. _core/views/inheritance:
+
 Inheritance
 ===========
 
