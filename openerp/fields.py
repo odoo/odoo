@@ -1322,7 +1322,7 @@ class Many2one(_Relational):
             return value.id
 
     def convert_to_write(self, value, target=None, fnames=None):
-        return bool(value) and (value.id or value._convert_to_write(value._cache))
+        return value.id
 
     def convert_to_onchange(self, value):
         return value.id
