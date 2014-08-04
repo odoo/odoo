@@ -3,6 +3,8 @@ import cStringIO
 import contextlib
 import hashlib
 import json
+import xml.etree.ElementTree as ET
+
 import logging
 import os
 import datetime
@@ -13,6 +15,7 @@ import psycopg2
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.utils
+import urllib2
 import werkzeug.wrappers
 from PIL import Image
 
@@ -300,6 +303,14 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         obj = _object.browse(request.cr, request.uid, _id)
         return bool(obj.website_published)
+
+    @http.route(['/website/seo_suggest/<keywords>'], type='http', auth="public", website=True)
+    def seo_suggest(self, keywords):
+        url = "http://google.com/complete/search?ie=utf8&oe=utf8&output=toolbar&q="
+        req = urllib2.Request("%s?%s" % (url, keywords))
+        request = urllib2.urlopen(req)
+        xmlroot = ET.fromstring(request.read())
+        return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
     #------------------------------------------------------
     # Helpers
