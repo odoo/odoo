@@ -456,7 +456,6 @@ class hr_applicant(osv.Model):
                         'model': self._name,
                         'composition_mode': 'mass_mail',
                         'template_id': stage.template_id.id,
-                        'same_thread': True,
                         'post': True,
                         'notify': True,
                     }, context=compose_ctx)

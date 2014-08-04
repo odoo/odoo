@@ -248,7 +248,7 @@ class mail_compose_message(osv.TransientModel):
             rendered_values = self.render_message_batch(cr, uid, wizard, res_ids, context=context)
         # compute alias-based reply-to in batch
         reply_to_value = dict.fromkeys(res_ids, None)
-        if mass_mail_mode and wizard.same_thread:
+        if mass_mail_mode and not wizard.no_auto_thread:
             reply_to_value = self.pool['mail.thread'].message_get_reply_to(cr, uid, res_ids, default=wizard.email_from, context=dict(context, thread_model=wizard.model))
 
         for res_id in res_ids:
@@ -274,11 +274,11 @@ class mail_compose_message(osv.TransientModel):
                 email_dict = rendered_values[res_id]
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
                 mail_values.update(email_dict)
-                if wizard.same_thread:
+                if not wizard.no_auto_thread:
                     mail_values.pop('reply_to')
                     if reply_to_value.get(res_id):
                         mail_values['reply_to'] = reply_to_value[res_id]
-                if not wizard.same_thread and not mail_values.get('reply_to'):
+                if wizard.no_auto_thread and not mail_values.get('reply_to'):
                     mail_values['reply_to'] = mail_values['email_from']
                 # mail_mail values: body -> body_html, partner_ids -> recipient_ids
                 mail_values['body_html'] = mail_values.get('body', '')
