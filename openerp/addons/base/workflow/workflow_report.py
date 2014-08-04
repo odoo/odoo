@@ -70,7 +70,7 @@ def graph_get(cr, graph, wkf_ids, nested, workitem, witm_trans, processed_subflo
             actfrom[n['id']] = (n['id'],{})
             actto[n['id']] = (n['id'],{})
             node_ids = tuple(map(itemgetter('id'), nodes))
-    cr.execute('select * from wkf_transition where act_from IN %s', (node_ids,))
+    cr.execute('select * from wkf_transition where act_from IN %s ORDER BY sequence,id', (node_ids,))
     transitions = cr.dictfetchall()
     for t in transitions:
         if not t['act_to'] in activities:
