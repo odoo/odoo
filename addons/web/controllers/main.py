@@ -70,7 +70,7 @@ def serialize_exception(f):
             se = _serialize_exception(e)
             error = {
                 'code': 200,
-                'message': "OpenERP Server Error",
+                'message': "Odoo Server Error",
                 'data': se
             }
             return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
@@ -1330,7 +1330,7 @@ class Export(http.Controller):
             fields['.id'] = fields.pop('id', {'string': 'ID'})
 
         fields_sequence = sorted(fields.iteritems(),
-            key=lambda field: field[1].get('string', ''))
+            key=lambda field: openerp.tools.ustr(field[1].get('string', '')))
 
         records = []
         for field_name, field in fields_sequence:

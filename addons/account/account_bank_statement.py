@@ -326,16 +326,26 @@ class account_bank_statement(osv.osv):
                     or (not st.journal_id.default_debit_account_id):
                 raise osv.except_osv(_('Configuration Error!'), _('Please verify that an account is defined in the journal.'))
             for line in st.move_line_ids:
-                if line.state <> 'valid':
+                if line.state != 'valid':
                     raise osv.except_osv(_('Error!'), _('The account entries lines are not in valid state.'))
             move_ids = []
             for st_line in st.line_ids:
                 if not st_line.amount:
                     continue
-                if not st_line.journal_entry_id.id:
+                if st_line.account_id and not st_line.journal_entry_id.id:
+                    #make an account move as before
+                    vals = {
+                        'debit': st_line.amount < 0 and -st_line.amount or 0.0,
+                        'credit': st_line.amount > 0 and st_line.amount or 0.0,
+                        'account_id': st_line.account_id.id,
+                        'name': st_line.name
+                    }
+                    self.pool.get('account.bank.statement.line').process_reconciliation(cr, uid, st_line.id, [vals], context=context)
+                elif not st_line.journal_entry_id.id:
                     raise osv.except_osv(_('Error!'), _('All the account entries lines must be processed in order to close the statement.'))
                 move_ids.append(st_line.journal_entry_id.id)
-            self.pool.get('account.move').post(cr, uid, move_ids, context=context)
+            if move_ids:
+                self.pool.get('account.move').post(cr, uid, move_ids, context=context)
             self.message_post(cr, uid, [st.id], body=_('Statement %s confirmed, journal items were created.') % (st.name,), context=context)
         self.link_bank_to_partner(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
@@ -728,7 +738,12 @@ class account_bank_statement_line(osv.osv):
         move_id = am_obj.create(cr, uid, move_vals, context=context)
 
         # Create the move line for the statement line
-        amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount, context=context)
+        if st_line.statement_id.currency.id != company_currency.id:
+            ctx = context.copy()
+            ctx['date'] = st_line.date
+            amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount_currency, context=ctx)
+        else:
+            amount = st_line.amount
         bank_st_move_vals = bs_obj._prepare_bank_move_line(cr, uid, st_line, move_id, amount, company_currency.id, context=context)
         aml_obj.create(cr, uid, bank_st_move_vals, context=context)
         # Complete the dicts
@@ -805,18 +820,19 @@ class account_bank_statement_line(osv.osv):
     _description = "Bank Statement Line"
     _inherit = ['ir.needaction_mixin']
     _columns = {
-        'name': fields.char('Description', required=True, copy=False),
-        'date': fields.date('Date', required=True, copy=False),
+        'name': fields.char('Description', required=True),
+        'date': fields.date('Date', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'bank_account_id': fields.many2one('res.partner.bank','Bank Account'),
+        'account_id': fields.many2one('account.account', 'Account', help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account"),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='cascade'),
         'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
         'ref': fields.char('Structured Communication'),
         'note': fields.text('Notes'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of bank statement lines."),
         'company_id': fields.related('statement_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'journal_entry_id': fields.many2one('account.move', 'Journal Entry'),
+        'journal_entry_id': fields.many2one('account.move', 'Journal Entry', copy=False),
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
     }

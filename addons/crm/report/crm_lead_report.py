@@ -88,10 +88,10 @@ class crm_lead_report(osv.osv):
                     id,
                     c.date_deadline,
 
-                    to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
-                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
+                    date(c.date_open) as opening_date,
+                    date(c.date_closed) as date_closed,
 
-                    date_trunc('day',c.date_last_stage_update) as date_last_stage_update,
+                    c.date_last_stage_update as date_last_stage_update,
 
                     c.user_id,
                     c.probability,
@@ -107,7 +107,7 @@ class crm_lead_report(osv.osv):
                     c.country_id,
                     c.planned_revenue,
                     c.planned_revenue*(c.probability/100) as probable_revenue,
-                    date_trunc('day',c.create_date) as create_date,
+                    c.create_date as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open

@@ -39,7 +39,6 @@ from lxml import etree
 
 import config
 import misc
-from misc import UpdateableStr
 from misc import SKIPPED_ELEMENT_TYPES
 import osutil
 import openerp
@@ -669,6 +668,10 @@ def trans_generate(lang, modules, cr):
             _logger.error("Unable to find object %r", model)
             continue
 
+        if not registry[model]._translate:
+            # explicitly disabled
+            continue
+
         exists = registry[model].exists(cr, uid, res_id)
         if not exists:
             _logger.warning("Unable to find object %r with id %d", model, res_id)
@@ -689,7 +692,8 @@ def trans_generate(lang, modules, cr):
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
             objmodel = registry.get(obj.model)
-            if objmodel is None or field_name not in objmodel._columns:
+            if (objmodel is None or field_name not in objmodel._columns
+                    or not objmodel._translate):
                 continue
             field_def = objmodel._columns[field_name]
 
@@ -792,7 +796,7 @@ def trans_generate(lang, modules, cr):
     for bin_path in ['osv', 'report' ]:
         path_list.append(os.path.join(config.config['root_path'], bin_path))
 
-    _logger.debug("Scanning modules at paths: ", path_list)
+    _logger.debug("Scanning modules at paths: %s", path_list)
 
     mod_paths = list(path_list)
 

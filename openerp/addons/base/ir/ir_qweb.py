@@ -289,7 +289,7 @@ class QWeb(orm.AbstractModel):
             result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
 
         if element.tail:
-            result += element.tail
+            result += element.tail.encode('utf-8')
 
         if isinstance(result, unicode):
             return result.encode('utf-8')
@@ -887,7 +887,7 @@ class Contact(orm.AbstractModel):
 
         val = {
             'name': value.split("\n")[0],
-            'address': escape("\n".join(value.split("\n")[1:])),
+            'address': escape("\n".join(value.split("\n")[1:])).strip(),
             'phone': field_browse.phone,
             'mobile': field_browse.mobile,
             'fax': field_browse.fax,

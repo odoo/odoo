@@ -18,17 +18,18 @@ class website_gengo(http.Controller):
 
     @http.route('/website/gengo_callback', type='http', auth='none')
     def gengo_callback(self, **post):
+        print "IN website/gengo_callback"
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         translation_pool = request.registry['ir.translation']
         if post and post.get('job') and post.get('pgk'):
             if post.get('pgk') != self.get_gengo_key(cr):
-                return Response("Bad authentication - 403/412", status=412)
+                return Response("Bad authentication", status=104)
             job = json.loads(post['job'], 'utf-8')
             tid = job.get('custom_data', False)
             if (job.get('status') == 'approved') and tid:
                 term = translation_pool.browse(cr, uid, int(tid), context=context)
                 if term.src != job.get('body_src'):
-                    return Response("Text Altered - Not saved", status=100)
+                    return Response("Text Altered - Not saved", status=418)
                 domain = [
                     '|',
                     ('id', "=", int(tid)),
@@ -49,5 +50,5 @@ class website_gengo(http.Controller):
                     translation_pool.write(cr, uid, all_ir_tanslations, vals, context=context)
                     return Response("OK", status=200)
                 else:
-                    return Response("No terms found", status=104)
-        return Response("Not saved", status=100)
+                    return Response("No terms found", status=412)
+        return Response("Not saved", status=418)

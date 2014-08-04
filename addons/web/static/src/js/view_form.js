@@ -1835,7 +1835,6 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         trigger = trigger || this.$el;
         options = _.extend({
                 delay: { show: 500, hide: 0 },
-                trigger: 'hover',
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {

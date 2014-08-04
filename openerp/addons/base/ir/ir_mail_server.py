@@ -415,6 +415,13 @@ class ir_mail_server(osv.osv):
         smtp_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses,[email_to, email_cc, email_bcc])))
         assert smtp_to_list, "At least one valid recipient address should be specified for outgoing emails (To/Cc/Bcc)"
 
+        x_forge_to = message['X-Forge-To']
+        if x_forge_to:
+            # `To:` header forged, e.g. for posting on mail.groups, to avoid confusion
+            del message['X-Forge-To']
+            del message['To'] # avoid multiple To: headers!
+            message['To'] = x_forge_to
+
         # Do not actually send emails in testing mode!
         if getattr(threading.currentThread(), 'testing', False):
             _test_logger.info("skip sending email in test mode")

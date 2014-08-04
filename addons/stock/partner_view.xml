@@ -10,12 +10,12 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="product.view_partner_property_form"/>
         <field name="arch" type="xml">
-            <group name="pricelists" position="after">
-                <group groups="stock.group_locations">
+            <xpath expr="//group[@name='mailing']" position="after">
+                <group groups="stock.group_locations" string="Warehouse">
                     <field name="property_stock_customer" domain="[('usage','=','customer')]"/>
                     <field name="property_stock_supplier" domain="[('usage','=','supplier')]"/>
                 </group>
-            </group>
+            </xpath>
         </field>
     </record>
 

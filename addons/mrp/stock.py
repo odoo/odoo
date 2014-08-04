@@ -85,6 +85,8 @@ class StockMove(osv.osv):
                     'product_uos_qty': line['product_uos_qty'],
                     'state': state,
                     'name': line['name'],
+                    'procurement_id': move.procurement_id.id,
+                    'split_from': move.id, #Needed in order to keep purchase connection, but will be removed by unlink
                 }
                 mid = move_obj.copy(cr, uid, move.id, default=valdef)
                 to_explode_again_ids.append(mid)

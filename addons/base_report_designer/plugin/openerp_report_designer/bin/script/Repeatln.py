@@ -178,7 +178,7 @@ class RepeatIn( unohelper.Base, XJobExecutor ):
 
             self.win.doModalDialog("lstFields",self.sValue)
         else:
-            ErrorDialog("Please Select Appropriate module" ,"Create new report from: \nOpenERP -> Open a New Report")
+            ErrorDialog("Please Select Appropriate module" ,"Create new report from: \nOdoo -> Open a New Report")
             self.win.endExecute()
 
     def lstbox_selected(self, oItemEvent):
