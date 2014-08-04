@@ -31,14 +31,9 @@ class hr_evaluation_report(osv.Model):
         'create_date': fields.date('Create Date', readonly=True),
         'delay_date': fields.float('Delay to Start', digits=(16, 2), readonly=True),
         'overpass_delay': fields.float('Overpassed Deadline', digits=(16, 2), readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
         'request_id': fields.many2one('survey.user_input', 'Request_id', readonly=True),
         'closed': fields.date("closed", readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
-            ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
-            ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee", readonly=True),
         'rating': fields.selection([
@@ -73,16 +68,13 @@ class hr_evaluation_report(osv.Model):
             create or replace view hr_evaluation_report as (
                  select
                      min(l.id) as id,
-                     date_trunc('day',s.create_date) as create_date,
-                     to_char(s.create_date, 'YYYY-MM-DD') as day,
+                     date(s.create_date) as create_date,
                      s.employee_id,
                      l.request_id,
                      s.plan_id,
                      s.rating,
                      s.date as deadline,
                      s.date_close as closed,
-                     to_char(s.create_date, 'YYYY') as year,
-                     to_char(s.create_date, 'MM') as month,
                      count(l.*) as nbr,
                      s.state,
                      avg(extract('epoch' from age(s.create_date,CURRENT_DATE)))/(3600*24) as  delay_date,
@@ -93,10 +85,6 @@ class hr_evaluation_report(osv.Model):
                      hr_evaluation_evaluation s on (s.id=l.evaluation_id)
                  GROUP BY
                      s.create_date,
-                     date_trunc('day',s.create_date),
-                     to_char(s.create_date, 'YYYY-MM-DD'),
-                     to_char(s.create_date, 'YYYY'),
-                     to_char(s.create_date, 'MM'),
                      s.state,
                      s.employee_id,
                      s.date,

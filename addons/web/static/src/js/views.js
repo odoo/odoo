@@ -691,8 +691,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var container = this.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
-        this.views[view_type].deferred.resolve(view_type);
         return $.when(view_promise).done(function() {
+            self.views[view_type].deferred.resolve(view_type);
             if (self.searchview
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
@@ -1122,7 +1122,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             );
         } 
 
-        $.when(defs).done(function() {
+        $.when(this.views[this.active_view] ? this.views[this.active_view].deferred : $.when(), defs).done(function() {
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },

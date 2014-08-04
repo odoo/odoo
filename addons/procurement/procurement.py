@@ -111,7 +111,7 @@ class procurement_order(osv.osv):
 
         'origin': fields.char('Source Document',
             help="Reference of the document that created this Procurement.\n"
-            "This is automatically completed by OpenERP."),
+            "This is automatically completed by Odoo."),
         'company_id': fields.many2one('res.company', 'Company', required=True),
 
         # These two fields are used for shceduling
@@ -195,7 +195,7 @@ class procurement_order(osv.osv):
 
     def run(self, cr, uid, ids, context=None):
         for procurement_id in ids:
-            #we intentionnaly do the browse under the for loop to avoid caching all ids which would be ressource greedy
+            #we intentionnaly do the browse under the for loop to avoid caching all ids which would be resource greedy
             #and useless as we'll make a refresh later that will invalidate all the cache (and thus the next iteration
             #will fetch all the ids again) 
             procurement = self.browse(cr, uid, procurement_id, context=context)

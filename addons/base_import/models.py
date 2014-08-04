@@ -48,7 +48,7 @@ class ir_import(orm.TransientModel):
 
             .. attribute:: name (str)
 
-                The field's logical (OpenERP) name within the scope of
+                The field's logical (Odoo) name within the scope of
                 its parent.
 
             .. attribute:: string (str)

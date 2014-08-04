@@ -21,6 +21,7 @@
 
 from datetime import datetime
 
+from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import fields, osv, orm
@@ -449,6 +450,7 @@ class project_issue(osv.Model):
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
         return res_id
 
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, content_subtype='html', **kwargs):
         """ Overrides mail_thread message_post so that we can set the date of last action field when
             a new message is posted on the issue.
@@ -514,6 +516,13 @@ class account_analytic_account(osv.Model):
             context = {}
         res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
         return res or (vals.get('use_issues') and not 'project_creation_in_progress' in context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
+        has_issues = self.pool['project.issue'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
+        if has_issues:
+            raise osv.except_osv(_('Warning!'), _('Please remove existing issues in the project linked to the accounts you want to delete.'))
+        return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
 
 
 class project_project(osv.Model):

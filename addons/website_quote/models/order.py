@@ -118,8 +118,17 @@ class sale_order(osv.osv):
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float",
             digits_compute=dp.get_precision('Account'))
     }
+
+    def _get_template_id(self, cr, uid, context=None):
+        try:
+            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_quote', 'website_quote_template_default')[1]
+        except ValueError:
+            template_id = False
+        return template_id
+
     _defaults = {
-        'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4())
+        'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4()),
+        'template_id' : _get_template_id,
     }
 
     def open_quotation(self, cr, uid, quote_id, context=None):

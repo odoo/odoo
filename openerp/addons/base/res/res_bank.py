@@ -192,7 +192,7 @@ class res_partner_bank(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        bank_dicts = self.read(cr, uid, ids, context=context)
+        bank_dicts = self.read(cr, uid, ids, self.fields_get_keys(cr, uid, context=context), context=context)
         return self._prepare_name_get(cr, uid, bank_dicts, context=context)
 
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
