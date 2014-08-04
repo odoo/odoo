@@ -66,16 +66,16 @@ class account_fiscal_position(osv.osv):
                 result.add(t.id)
         return list(result)
 
-    @api.v8
+    @api.v8     # noqa
     def map_tax(self, taxes):
-        result = taxes.browse()
+        result = set()
         for tax in taxes:
-            found = False
             for t in self.tax_ids:
                 if t.tax_src_id == tax:
-                    result |= t.tax_dest_id
-                    found = True
-            if not found:
+                    if t.tax_dest_id:
+                        result |= t.tax_dest_id
+                    break
+            else:
                 result |= tax
         return result
 
