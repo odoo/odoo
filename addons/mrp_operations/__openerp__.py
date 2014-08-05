@@ -56,12 +56,14 @@ So, that we can compare the theoretic delay and real delay.
     'website': 'https://www.odoo.com/page/manufacturing',
     'depends': ['mrp'],
     'data': [
+        'data/report_paperformat.xml',
         'security/ir.model.access.csv',
         'mrp_operation_data.xml',
         'mrp_operations_workflow.xml',
         'mrp_operations_view.xml',
         'mrp_operations_report.xml',
         'report/mrp_workorder_analysis_view.xml',
+        'views/report_wcbarcode.xml',
         'mrp_operations_workflow_instance.xml'
     ],
     'demo': [ 
