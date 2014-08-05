@@ -776,21 +776,17 @@ class calendar_event(osv.Model):
         if not isinstance(ids, list):
             ids = [ids]
 
-        for id in ids:
-            #read these fields as SUPERUSER because if the record is private a normal search could return False and raise an error
-            data = self.browse(cr, SUPERUSER_ID, id, context=context)
-
-            if data.interval and data.interval < 0:
-                raise osv.except_osv(_('Warning!'), _('Interval cannot be negative.'))
-            if data.count and data.count <= 0:
-                raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
-
-            data = self.read(cr, uid, id, ['id', 'byday', 'recurrency', 'final_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list'], context=context)
-            event = data['id']
-            if data['recurrency']:
-                result[event] = self.compute_rule_string(data)
+        #read these fields as SUPERUSER because if the record is private a normal search could raise an error
+        events = self.read(cr, SUPERUSER_ID, ids,
+                           ['id', 'byday', 'recurrency', 'final_date', 'rrule_type', 'month_by',
+                            'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa',
+                            'su', 'day', 'week_list'], context=context)
+        for event in events:
+            if event['recurrency']:
+                result[event['id']] = self.compute_rule_string(event)
             else:
-                result[event] = ""
+                result[event['id']] = ''
+
         return result
 
     # retro compatibility function
@@ -1180,6 +1176,11 @@ class calendar_event(osv.Model):
         @param data: dictionary of freq and interval value
         @return: string containing recurring rule (empty if no rule)
         """
+        if data['interval'] and data['interval'] < 0:
+            raise osv.except_osv(_('warning!'), _('interval cannot be negative.'))
+        if data['count'] and data['count'] <= 0:
+            raise osv.except_osv(_('warning!'), _('count cannot be negative or 0.'))
+
         def get_week_string(freq, data):
             weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
             if freq == 'weekly':
