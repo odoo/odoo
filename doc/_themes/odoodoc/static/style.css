@@ -6525,15 +6525,15 @@ div.section > h2 + p {
 .admonition {
   padding: 20px;
   margin: 20px 0;
-  border: 1px solid #eee;
+  border: 1px solid #eeeeee;
   border-left-width: 5px;
   border-radius: 3px;
 }
 .admonition .admonition-title:after {
   content: ": ";
 }
-.admonition .admonition-title,
-.admonition .admonition-title + p {
+.admonition > .admonition-title,
+.admonition.aphorism > .admonition-title + p {
   display: inline-block;
   margin-top: 0;
   margin-bottom: 5px;
@@ -6549,20 +6549,23 @@ div.section > h2 + p {
 .admonition.tip {
   border-left-color: #5bc0de;
 }
-.admonition.tip .admonition-title {
+.admonition.tip > .admonition-title {
   color: #5bc0de;
 }
 .admonition.warning {
   border-left-color: #f0ad4e;
 }
-.admonition.warning .admonition-title {
+.admonition.warning > .admonition-title {
   color: #f0ad4e;
 }
 .admonition.danger {
   border-left-color: #d9534f;
 }
-.admonition.danger .admonition-title {
+.admonition.danger > .admonition-title {
   color: #d9534f;
+}
+.admonition.admonition-example > .admonition-title {
+  color: #555555;
 }
 /*
  * Code snippets

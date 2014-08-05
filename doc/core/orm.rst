@@ -219,11 +219,11 @@ Domain criteria can be combined using logical operators in *prefix* form:
 ``'!'``
     logical *NOT*, arity 1.
 
-    .. tip::
+    .. tip:: Mostly to negate combinations of criteria
+        :class: aphorism
 
-        Not generally useful to negate individual criteria as most have a
-        negative form (e.g. ``=`` -> ``!=``, ``<`` -> ``>=``), mostly used
-        to negate combinations of criterion.
+        Individual criterion generally have a negative form (e.g. ``=`` ->
+        ``!=``, ``<`` -> ``>=``) which is simpler than negating the positive.
 
 .. admonition:: Example
 

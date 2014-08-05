@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="course_form_view">
+            <field name="name">course.form</field>
+            <field name="model">openacademy.course</field>
+            <field name="arch" type="xml">
+                <form string="Course Form">
+                    <field name="name" colspan="4"/>
+                    <field name="responsible_id"/>
+                    <!-- "notebook"... uh? Forget that, it’s just tabs -->
+                    <notebook colspan="4">
+                        <page string="Description">
+                            <field name="description" colspan="4"
+                                   nolabel="1"/>
+                        </page>
+                        <page string="About">
+                            <label string="This is an example of notebooks"/>
+                        </page>
+                        <page string="Sessions">
+                            <!--
+                                Let’s make a form and tree view inside another
+                                form! We just need the <tree> and <form> tags
+                                to define what field we need
+                             -->
+                            <field name="session_ids" nolabel="1" colspan="4"
+                                   mode="tree">
+                                <tree string="Registered sessions">
+                                    <field name="name"/>
+                                    <field name="instructor_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <!-- The declaration below will overwrite the default list view
+             of our openacademy.course model -->
+        <record model="ir.ui.view" id="course_tree_view">
+            <field name="name">course.tree</field>
+            <field name="model">openacademy.course</field>
+            <field name="arch" type="xml">
+                <tree string="Course Tree">
+                    <field name="name"/>
+                    <field name="responsible_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="course_search_view">
+            <field name="name">course.search</field>
+            <field name="models">openacademy.course</field>
+            <field name="arch" type="xml">
+                <search string="Session Search">
+                    <filter string="My Courses" icon="terp-partner"
+                            name="my_courses"
+                            domain="[('responsible_id', '=', uid)]"
+                            help="My own sessions"/>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- window action -->
+        <!--
+            The following tag is an action definition for a "window action",
+            that is an action opening a view or a set of views
+        -->
+        <record model="ir.actions.act_window" id="course_list_action">
+            <field name="name">Courses</field>
+            <field name="res_model">openacademy.course</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!-- mostly useful if multiple search view on the model (picks one
+                 with lowest priority by default -->
+            <field name="search_view_id" ref="course_search_view"/>
+            <!-- Enable "my courses" filter by default -->
+            <field name="context">{’search_default_my_courses’:1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first course
+                </p>
+            </field>
+        </record>
+
+        <!-- top level menu: no paret -->
+        <menuitem id="main_openacademy_menu" name="Open Academy"/>
+        <!-- A first level in the left side menu is needed
+             before using action= attribute -->
+        <menuitem id="openacademy_menu" name="Open Academy"
+                  parent="main_openacademy_menu"/>
+        <!-- the following menuitem should appear *after*
+             its parent openacademy_menu and *after* its
+             action course_list_action -->
+        <menuitem id="courses_menu" name="Courses" parent="openacademy_menu"
+                  action="course_list_action"/>
+        <!-- Full id location:
+             action="openacademy.course_list_action"
+             It is not required when it is the same module -->
+
+        <!-- session’s form view -->
+        <record model="ir.ui.view" id="session_form_view">
+            <field name="name">session.form</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <form string="Session Form">
+                    <group colspan="2" col="2">
+                        <separator string="General" colspan="2"/>
+                        <field name="course_id"/>
+                        <field name="name"/>
+                        <field name="instructor_id"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Schedule" colspan="2"/>
+                        <field name="start_date"/>
+                        <field name="duration"/>
+                        <field name="seats"/>
+                        <field name="seats_taken" widget="progressbar"/>
+                    </group>
+                    <separator string="Attendees" colspan="4"/>
+                    <field name="attendee_ids" colspan="4" nolabel="1">
+                        <!-- ’editable’ attribute will set the position
+                             to push new elements in the list -->
+                        <tree string="" editable="bottom">
+                            <field name="partner_id"/>
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+        <!-- session’s tree/list view -->
+        <record model="ir.ui.view" id="session_tree_view">
+            <field name="name">session.tree</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <!-- Colors are separated by semi-colons ’;’ and look like this:
+                     colorValue1:condition1;colorValue2:condition2;...
+                     Each color can be specified by using HTML color codes:
+                      - the hexadecimal form:
+                        #ff8080 => ff for red, 80 for green and blue
+                      - the color keywords:
+                        red, black, white, grey, ...
+
+                     When writing your condition, don’t forget that you are
+                     in an XML file. You have to escape your special characters
+                     in order to make the whole file XML-compliant
+
+                     For example:
+                      - lesser than symbol is written &lt;
+                      - greater than symbol is written &gt; -->
+                <tree string="Session Tree"
+                      colors="#0000ff:duration&lt;5;red:duration&gt;15">
+                    <field name="name"/>
+                    <field name="course_id"/>
+                    <!--
+                        Since we use the duration field to determine the
+                        colors of each line, we have to include it in the
+                        view. If you don’t want to make it visible, just hide
+                        it with the invisible attribute
+                    -->
+                    <field name="duration" invisible="1"/>
+                    <field name="taken_seats_percent" widget="progressbar"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- calendar view -->
+        <record model="ir.ui.view" id="session_calendar_view">
+            <field name="name">session.calendar</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <calendar string="Session Calendar" date_start="start_date"
+                          date_stop="end_date"
+                          color="instructor_id">
+                    <field name="name"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- gantt view -->
+        <record model="ir.ui.view" id="session_gantt_view">
+            <field name="name">session.gantt</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <gantt string="Session Gantt" color="course_id"
+                       date_start="start_date" date_delay="hours">
+                    <level object="res.partner" link="instructor_id">
+                        <field name="name"/>
+                    </level>
+                </gantt>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="openacademy_session_graph_view">
+            <field name="name">openacademy.session.graph</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <graph string="Participations by Courses" type="bar">
+                    <field name="course_id"/>
+                    <field name="attendee_count" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- kanban view -->
+        <record model="ir.ui.view" id="view_openacad_session_kanban">
+            <field name="name">openacad.session.kanban</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="course_id">
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div
+                                    t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override
+oe_kanban_card #{record.group_fancy==1 ? ’oe_kanban_card_fancy’ :
+’’}">
+                                <div class="oe_dropdown_kanban">
+                                    <!-- dropdown menu -->
+                                    <div class="oe_dropdown_toggle">
+                                        <span class="oe_e">#</span>
+                                        <ul class="oe_dropdown_menu">
+                                            <li>
+                                                <a type="delete">Delete</a>
+                                            </li>
+                                            <li>
+                                                <ul class="oe_kanban_colorpicker"
+                                                    data-field="color"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="oe_clear"></div>
+                                </div>
+                                <div t-attf-class="oe_kanban_content">
+                                    <!-- title -->
+                                    Session name:
+                                    <field name="name"/>
+                                    <br/>
+                                    Start date:
+                                    <field name="start_date"/>
+                                    <br/>
+                                    duration:
+                                    <field name="duration"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="session_list_action">
+            <field name="name">Sessions</field>
+            <field name="res_model">openacademy.session</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,gantt,graph,kanban
+            </field>
+        </record>
+
+        <menuitem id="session_menu" name="Sessions"
+                  parent="openacademy_menu"
+                  action="session_list_action"/>
+    </data>
+</openerp>

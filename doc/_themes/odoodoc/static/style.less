@@ -315,14 +315,16 @@ div.section > h2 {
 .admonition {
   padding: 20px;
   margin: 20px 0;
-  border: 1px solid #eee;
+  border: 1px solid @gray-lighter;
   border-left-width: 5px;
   border-radius: 3px;
 
   .admonition-title:after {
     content: ": ";
   }
-  .admonition-title, .admonition-title + p {
+  > .admonition-title,
+  // only "aphorisms" should have the same size as the admonition category
+  &.aphorism > .admonition-title + p {
     display: inline-block;
     margin-top: 0;
     margin-bottom: 5px;
@@ -341,20 +343,25 @@ div.section > h2 {
 
   &.tip {
     border-left-color: @brand-info;
-    .admonition-title {
+    > .admonition-title {
       color: @brand-info;
     }
   }
   &.warning {
     border-left-color: @brand-warning;
-    .admonition-title {
+    > .admonition-title {
       color: @brand-warning;
     }
   }
   &.danger {
     border-left-color: @brand-danger;
-    .admonition-title {
+    > .admonition-title {
       color: @brand-danger;
+    }
+  }
+  &.admonition-example {
+    > .admonition-title {
+      color: @gray;
     }
   }
 }
