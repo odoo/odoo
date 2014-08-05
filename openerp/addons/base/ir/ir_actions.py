@@ -133,30 +133,41 @@ class ir_actions_report_xml(osv.osv):
         return new_report
 
     def create_action(self, cr, uid, ids, context=None):
-        """ Create a contextual action for each of the report. """
-        for ir_actions_report_xml in self.browse(cr, uid, ids, context=context):
-            ir_values_id = self.pool['ir.values'].create(cr, SUPERUSER_ID, {
-                'name': ir_actions_report_xml.name,
-                'model': ir_actions_report_xml.model,
-                'key2': 'client_print_multi',
-                'value': "ir.actions.report.xml,%s" % ir_actions_report_xml.id,
-            }, context)
-            ir_actions_report_xml.write({
-                'ir_values_id': ir_values_id,
-            })
-
+        """ Create a contextual action for each of the report."""
+        if self.pool['res.users'].has_group(cr, uid, 'base.group_no_one'):
+            for ir_actions_report_xml in self.browse(cr, uid, ids, context=context):
+                ir_values_id = self.pool['ir.values'].create(cr, SUPERUSER_ID, {
+                    'name': ir_actions_report_xml.name,
+                    'model': ir_actions_report_xml.model,
+                    'key2': 'client_print_multi',
+                    'value': "ir.actions.report.xml,%s" % ir_actions_report_xml.id,
+                }, context)
+                ir_actions_report_xml.write({
+                    'ir_values_id': ir_values_id,
+                })
+        else:
+            raise osv.except_osv(
+                _('Warning'),
+                _("You don't have permission to create a report contextual action.")
+            )
         return True
 
     def unlink_action(self, cr, uid, ids, context=None):
-        """ Remove the contextual actions created for the reports. """
-        for ir_actions_report_xml in self.browse(cr, uid, ids, context=context):
-            if ir_actions_report_xml.ir_values_id:
-                try:
-                    self.pool['ir.values'].unlink(
-                        cr, SUPERUSER_ID, ir_actions_report_xml.ir_values_id.id, context
-                    )
-                except Exception:
-                    raise osv.except_osv(_('Warning'), _('Deletion of the action record failed.'))
+        """ Remove the contextual actions created for the reports."""
+        if self.pool['res.users'].has_group(cr, uid, 'base.group_no_one'):
+            for ir_actions_report_xml in self.browse(cr, uid, ids, context=context):
+                if ir_actions_report_xml.ir_values_id:
+                    try:
+                        self.pool['ir.values'].unlink(
+                            cr, SUPERUSER_ID, ir_actions_report_xml.ir_values_id.id, context
+                        )
+                    except Exception:
+                        raise osv.except_osv(_('Warning'), _('Deletion of the action record failed.'))
+        else:
+            raise osv.except_osv(
+                _('Warning'),
+                _("You don't have permission to remove a report contextual action.")
+            )
         return True
 
     def render_report(self, cr, uid, res_ids, name, data, context=None):
@@ -842,27 +853,38 @@ class ir_actions_server(osv.osv):
 
     def create_action(self, cr, uid, ids, context=None):
         """ Create a contextual action for each of the server actions. """
-        for action in self.browse(cr, uid, ids, context=context):
-            ir_values_id = self.pool.get('ir.values').create(cr, SUPERUSER_ID, {
-                'name': _('Run %s') % action.name,
-                'model': action.model_id.model,
-                'key2': 'client_action_multi',
-                'value': "ir.actions.server,%s" % action.id,
-            }, context)
-            action.write({
-                'menu_ir_values_id': ir_values_id,
-            })
-
+        if self.pool['res.users'].has_group(cr, uid, 'base.group_no_one'):
+            for action in self.browse(cr, uid, ids, context=context):
+                ir_values_id = self.pool.get('ir.values').create(cr, SUPERUSER_ID, {
+                    'name': _('Run %s') % action.name,
+                    'model': action.model_id.model,
+                    'key2': 'client_action_multi',
+                    'value': "ir.actions.server,%s" % action.id,
+                }, context)
+                action.write({
+                    'menu_ir_values_id': ir_values_id,
+                })
+        else:
+            raise osv.except_osv(
+                _('Warning'),
+                _("You don't have permission to create a server action contextual action.")
+            )
         return True
 
     def unlink_action(self, cr, uid, ids, context=None):
         """ Remove the contextual actions created for the server actions. """
-        for action in self.browse(cr, uid, ids, context=context):
-            if action.menu_ir_values_id:
-                try:
-                    self.pool.get('ir.values').unlink(cr, SUPERUSER_ID, action.menu_ir_values_id.id, context)
-                except Exception:
-                    raise osv.except_osv(_('Warning'), _('Deletion of the action record failed.'))
+        if self.pool['res.users'].has_group(cr, uid, 'base.group_no_one'):
+            for action in self.browse(cr, uid, ids, context=context):
+                if action.menu_ir_values_id:
+                    try:
+                        self.pool.get('ir.values').unlink(cr, SUPERUSER_ID, action.menu_ir_values_id.id, context)
+                    except Exception:
+                        raise osv.except_osv(_('Warning'), _('Deletion of the action record failed.'))
+        else:
+            raise osv.except_osv(
+                _('Warning'),
+                _("You don't have permission to remove a server action contextual action.")
+            )
         return True
 
     def run_action_client_action(self, cr, uid, action, eval_context=None, context=None):
