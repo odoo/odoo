@@ -1597,7 +1597,8 @@ class calendar_event(osv.Model):
                     res['start_datetime'] = ls[1]
                     res['stop_datetime'] = ls[2]
 
-                res['display_time'] = self._get_display_time(cr, uid, ls[1], ls[2], res['duration'], res['allday'], context=context)
+                if 'display_time' in fields:
+                    res['display_time'] = self._get_display_time(cr, uid, ls[1], ls[2], res['duration'], res['allday'], context=context)
 
             res['id'] = calendar_id
             result.append(res)
