@@ -3815,10 +3815,9 @@ class stock_pack_operation(osv.osv):
                 new_lot_id = lots[0]
             val.update({'name': name})
 
-        if not obj.lot_id:
-            if not new_lot_id:
-                new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, val, context=context)
-            self.write(cr, uid, id, {'lot_id': new_lot_id}, context=context)
+        if not new_lot_id:
+            new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, val, context=context)
+        self.write(cr, uid, id, {'lot_id': new_lot_id}, context=context)
 
     def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False, visible_op_ids=False, increment=True, context=None):
         '''Search for an operation with given 'domain' in a picking, if it exists increment the qty (+1) otherwise create it
