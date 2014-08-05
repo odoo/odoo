@@ -19,6 +19,82 @@
         <menuitem name="Configuration" id="marketing_configuration"
             parent="base.marketing_menu" sequence="99"/>
 
+        <!--  MAIL MAIL STATISTICS !-->
+        <record model="ir.ui.view" id="view_mail_mail_statistics_search">
+            <field name="name">mail.mail.statistics.search</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+               <search string="Mail Statistics">
+                    <field name="mail_mail_id_int"/>
+                    <field name="message_id"/>
+                    <field name="mass_mailing_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mail_statistics_tree">
+            <field name="name">mail.mail.statistics.tree</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+                <tree string="Mail Statistics">
+                    <field name="mail_mail_id_int"/>
+                    <field name="message_id"/>
+                    <field name="sent"/>
+                    <field name="exception"/>
+                    <field name="opened"/>
+                    <field name="replied"/>
+                    <field name="bounced"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mail_statistics_form">
+            <field name="name">mail.mail.statistics.form</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+                <form string="Mail Statistics">
+                    <group>
+                        <group>
+                            <field name="mail_mail_id"/>
+                            <field name="mail_mail_id_int"/>
+                            <field name="message_id"/>
+                            <field name="exception"/>
+                            <field name="sent"/>
+                            <field name="opened"/>
+                            <field name="replied"/>
+                            <field name="bounced"/>
+                        </group>
+                        <group>
+                            <field name="mass_mailing_id"/>
+                            <field name="mass_mailing_campaign_id"/>
+                            <field name="model"/>
+                            <field name="res_id"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_mail_mail_statistics" model="ir.actions.act_window">
+            <field name="name">Mail Statistics</field>
+            <field name="res_model">mail.mail.statistics</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_view_mail_mail_statistics_mailing" model="ir.actions.act_window">
+            <field name="name">Mail Statistics</field>
+            <field name="res_model">mail.mail.statistics</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_mass_mailing_id': active_id}</field>
+        </record>
+
+        <!-- Add in Technical/Email -->
+        <menuitem name="Mail Statistics" id="menu_email_statistics"
+            parent="base.menu_email" sequence="50"
+            action="action_view_mail_mail_statistics"/>
+
         <!--  MASS MAILING CONTACT -->
         <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
             <field name="name">mail.mass_mailing.contact.search</field>
@@ -207,28 +283,28 @@
                     </div>
                     <sheet>
                         <div class="oe_button_box pull-right" attrs="{'invisible': [('state', 'in', ('draft','test'))]}">
-                            <button name="%(action_view_mass_mailing_contacts)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing)d"
                                 type="action" class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mass_mailing_contacts)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing)d"
                                 type="action" class="oe_stat_button">
                                 <field name="opened_ratio" string="Opened" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mass_mailing_contacts)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing)d"
                                 type="action" class="oe_stat_button">
                                 <field name="replied_ratio" string="Replied" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mass_mailing_contacts)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing)d"
                                 type="action" class="oe_stat_button oe_inline">
                                 <field name="opened_daily" string="Opened Daily" widget="barchart"/>
                             </button>
-                            <button name="%(action_view_mass_mailing_contacts)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing)d"
                                 type="action" class="oe_stat_button oe_inline">
                                 <field name="replied_daily" string="Replied Daily" widget="barchart"/>
                             </button>
                         </div>
-                        <button name="%(action_view_mass_mailing_contacts)d" type="action"
+                        <button name="%(action_view_mail_mail_statistics_mailing)d" type="action"
                             icon="fa-envelope-o" class="oe_stat_button"
                             attrs="{'invisible': [('total', '=', 0)]}" >
                             <field name="total" string="Emails" widget="statinfo"/>
@@ -570,72 +646,6 @@
             parent="mass_mailing_campaign" sequence="1"
             action="action_view_mass_mailing_campaigns"
             groups="mass_mailing.group_mass_mailing_campaign"/>
-
-        <!--  MAIL MAIL STATISTICS !-->
-        <record model="ir.ui.view" id="view_mail_mail_statistics_search">
-            <field name="name">mail.mail.statistics.search</field>
-            <field name="model">mail.mail.statistics</field>
-            <field name="arch" type="xml">
-               <search string="Mail Statistics">
-                    <field name="mail_mail_id"/>
-                    <field name="message_id"/>
-                </search>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_mail_mail_statistics_tree">
-            <field name="name">mail.mail.statistics.tree</field>
-            <field name="model">mail.mail.statistics</field>
-            <field name="arch" type="xml">
-                <tree string="Mail Statistics">
-                    <field name="mail_mail_id"/>
-                    <field name="message_id"/>
-                    <field name="sent"/>
-                    <field name="exception"/>
-                    <field name="opened"/>
-                    <field name="replied"/>
-                    <field name="bounced"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_mail_mail_statistics_form">
-            <field name="name">mail.mail.statistics.form</field>
-            <field name="model">mail.mail.statistics</field>
-            <field name="arch" type="xml">
-                <form string="Mail Statistics">
-                    <group>
-                        <group>
-                            <field name="mail_mail_id"/>
-                            <field name="message_id"/>
-                            <field name="exception"/>
-                            <field name="sent"/>
-                            <field name="opened"/>
-                            <field name="replied"/>
-                            <field name="bounced"/>
-                        </group>
-                        <group>
-                            <field name="mass_mailing_id"/>
-                            <field name="mass_mailing_campaign_id"/>
-                            <field name="model"/>
-                            <field name="res_id"/>
-                        </group>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_view_mail_mail_statistics" model="ir.actions.act_window">
-            <field name="name">Mail Statistics</field>
-            <field name="res_model">mail.mail.statistics</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <!-- Add in Technical/Email -->
-        <menuitem name="Mail Statistics" id="menu_email_statistics"
-            parent="base.menu_email" sequence="50"
-            action="action_view_mail_mail_statistics"/>
 
     </data>
 </openerp>
