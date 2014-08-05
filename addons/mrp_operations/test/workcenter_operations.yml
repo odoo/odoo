@@ -130,6 +130,6 @@
     from openerp import tools
     from openerp.report import render_report
     ids = [ref('mrp.mrp_workcenter_0'), ref('mrp.mrp_workcenter_1')]
-    data, format = render_report(cr, uid, ids, 'mrp.wc.barcode', {})
+    data, format = render_report(cr, uid, ids, 'mrp_operations.report_wcbarcode', {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp_operations-workcenter_barcode_report.'+format), 'wb+').write(data)
