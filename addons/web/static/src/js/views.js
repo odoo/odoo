@@ -727,7 +727,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
                 views.push(mode);
             }
-            instance.web.bus.trigger('switch_mode', self, mode);
+            instance.web.bus.trigger('view_switch_mode', self, mode);
         });
         var item = _.extend({
             widget: this,
