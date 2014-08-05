@@ -246,6 +246,17 @@
                                 <field name="paypal_account" placeholder="e.g. sales@odoo.com" class="oe_inline"/>
                             </div>
                         </div>
+                        <label for="id" string="Bank Statements"/>
+                        <div>
+                            <div>
+                                <field name="module_account_bank_statement_import_ofx" class="oe_inline"/>
+                                <label for="module_account_bank_statement_import_ofx"/>
+                            </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_qif" class="oe_inline"/>
+                                <label for="module_account_bank_statement_import_qif"/>
+                            </div>
+                        </div>
                     </group>
                     <separator name="analytic_account" string="Analytic Accounting" invisible="1"/>
                     <group name="analytic_account_sale" invisible="1">

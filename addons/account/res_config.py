@@ -108,6 +108,12 @@ class account_config_settings(osv.osv_memory):
         'module_product_email_template': fields.boolean('Send products tools and information at the invoice confirmation',
             help='With this module, link your products to a template to send complete information and tools to your customer.\n'
                  'For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.'),
+        'module_account_bank_statement_import_ofx': fields.boolean('Import of Bank Statements in .OFX Format',
+            help='Get your bank statements from you bank and import them in Odoo in .OFX format.\n'
+                '-that installs the module account_bank_statement_import.'),
+        'module_account_bank_statement_import_qif': fields.boolean('Import of Bank Statements in .QIF Format.',
+            help='Get your bank statements from you bank and import them in Odoo in .QIF format.\n'
+                '-that installs the module account_bank_statement_import_qif.'),
         'group_proforma_invoices': fields.boolean('Allow pro-forma invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),

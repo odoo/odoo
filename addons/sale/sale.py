@@ -174,7 +174,7 @@ class sale_order(osv.osv):
         'name': fields.char('Order Reference', required=True, copy=False,
             readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
         'origin': fields.char('Source Document', help="Reference of the document that generated this sales order request."),
-        'client_order_ref': fields.char('Reference/Description', copy=False),
+        'client_order_ref': fields.char('Customer Reference', copy=False),
         'state': fields.selection([
             ('draft', 'Draft Quotation'),
             ('sent', 'Quotation Sent'),

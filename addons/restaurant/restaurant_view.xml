@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_restaurant_printer_form">
+            <field name="name">Order Printer</field>
+            <field name="model">restaurant.printer</field>
+            <field name="arch" type="xml">
+                <form string="POS Printer" version="7.0">
+                    <group col="2">
+                        <field name="name" />
+                        <field name="proxy_ip" />
+                        <field name="product_categories_ids" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_restaurant_printer_form">
+            <field name="name">Order Printers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">restaurant.printer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Restaurant Order Printer.
+              </p><p>
+                Order Printers are used by restaurants and bars to print the
+                order updates in the kitchen/bar when the waiter updates the order.
+              </p><p>
+                Each Order Printer has an IP Address that defines the PosBox/Hardware
+                Proxy where the printer can be found, and a list of product categories.
+                An Order Printer will only print updates for prodcuts belonging to one of
+                its categories.
+              </p>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_restaurant_printer">
+            <field name="name">Order Printers</field>
+            <field name="model">restaurant.printer</field>
+            <field name="arch" type="xml">
+                <tree string="Restaurant Order Printers">
+                    <field name="name" />
+                    <field name="proxy_ip" />
+                    <field name="product_categories_ids" />
+                </tree>
+            </field>
+        </record>
+
+        <menuitem
+            parent="point_of_sale.menu_point_config_product"
+            action="action_restaurant_printer_form"
+            id="menu_restaurant_printer_all"
+            sequence="30"
+            groups="point_of_sale.group_pos_manager"/>
+        
+        <record model="ir.ui.view" id="view_pos_config_form">
+            <field name="name">pos.config.form.view.inherit</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_config_form"></field>
+            <field name="arch" type="xml">
+                <sheet position='inside'>
+                    <group string="Bar &amp; Restaurant" >
+                        <field name="iface_splitbill" />
+                        <field name="iface_printbill" />
+                        <field name="printer_ids" />
+                    </group>
+                </sheet>
+            </field>
+        </record>
+
+    </data>
+</openerp>

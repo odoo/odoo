@@ -37,7 +37,7 @@ class view(osv.osv):
 
     # Returns all views (called and inherited) related to a view
     # Used by translation mechanism, SEO and optional templates
-    def _views_get(self, cr, uid, view_id, options=True, context=None, root=True):
+    def _views_get(self, cr, uid, view_id, options=True, bundles=False, context=None, root=True):
         """ For a given view ``view_id``, should return:
 
         * the view itself
@@ -57,13 +57,16 @@ class view(osv.osv):
         result = [view]
 
         node = etree.fromstring(view.arch)
-        for child in node.xpath("//t[@t-call]"):
+        xpath = "//t[@t-call]"
+        if bundles:
+            xpath += "| //t[@t-call-assets]"
+        for child in node.xpath(xpath):
             try:
-                called_view = self._view_obj(cr, uid, child.get('t-call'), context=context)
+                called_view = self._view_obj(cr, uid, child.get('t-call', child.get('t-call-assets')), context=context)
             except ValueError:
                 continue
             if called_view not in result:
-                result += self._views_get(cr, uid, called_view, options=options, context=context)
+                result += self._views_get(cr, uid, called_view, options=options, bundles=bundles, context=context)
 
         extensions = view.inherit_children_ids
         if not options:

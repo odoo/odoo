@@ -210,10 +210,11 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.redirect(redirect)
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, xml_id, full=False):
+    def customize_template_get(self, xml_id, full=False, bundles=False):
         """ Lists the templates customizing ``xml_id``. By default, only
         returns optional templates (which can be toggled on and off), if
         ``full=True`` returns all templates customizing ``xml_id``
+        ``bundles=True`` returns also the asset bundles
         """
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(
@@ -224,7 +225,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         user_groups = set(user.groups_id)
 
         views = request.registry["ir.ui.view"]\
-            ._views_get(request.cr, request.uid, xml_id, context=request.context)
+            ._views_get(request.cr, request.uid, xml_id, bundles=bundles, context=request.context)
         done = set()
         result = []
         for v in views:

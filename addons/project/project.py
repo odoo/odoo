@@ -531,7 +531,11 @@ def Project():
 
         project_id = super(project, self).create(cr, uid, vals, context=create_context)
         project_rec = self.browse(cr, uid, project_id, context=context)
-        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], {'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}, context)
+        ir_values = self.pool.get('ir.values').get_default( cr, uid, 'project.config.settings', 'generate_project_alias' )
+        values = { 'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}
+        if ir_values:
+            values = dict(values, alias_name=vals['name'])
+        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], values, context=context)
         return project_id
 
     def write(self, cr, uid, ids, vals, context=None):

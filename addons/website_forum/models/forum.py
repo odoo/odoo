@@ -315,6 +315,9 @@ class Post(osv.Model):
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
         post = self.browse(cr, SUPERUSER_ID, post_id, context=context)  # SUPERUSER_ID to avoid read access rights issues when creating
+        # deleted or closed questions
+        if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active == False):
+            osv.except_osv(_('Error !'), _('Posting answer on [Deleted] or [Closed] question is prohibited'))
         # karma-based access
         if post.parent_id and not post.can_ask:
             raise KarmaError('Not enough karma to create a new question')

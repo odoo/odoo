@@ -621,7 +621,8 @@ class test_mail(TestMail):
         mail_compose.send_mail(cr, user_raoul.id, [compose_id], {'mail_post_autofollow': True, 'mail_create_nosubscribe': True})
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
-
+        # Test: mail_mail: notifications have been deleted
+        self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', message.id)]),'message_send: mail.mail message should have been auto-deleted!')
         # Test: mail.group: followers (c and d added by auto follow key; raoul not added by nosubscribe key)
         pigs_pids = [p.id for p in group_pigs.message_follower_ids]
         test_pids = [self.partner_admin_id, p_b_id, p_c_id, p_d_id]
@@ -703,6 +704,12 @@ class test_mail(TestMail):
 
         # Test: Pigs and Bird did receive their message
         test_msg_ids = self.mail_message.search(cr, uid, [], limit=2)
+        mail_ids = self.mail_mail.search(cr, uid, [('mail_message_id', '=', message2.id)])
+        mail_record_id = self.mail_mail.browse(cr, uid, mail_ids)[0]
+        self.assertTrue(mail_record_id, "'message_send: mail.mail message should have in processing mail queue'" )
+        #check mass mail state...
+        test_mail_ids = self.mail_mail.search(cr, uid, [('state', '=', 'exception')])
+        self.assertNotIn(mail_ids, test_mail_ids, 'compose wizard: Mail sending Failed!!')
         self.assertIn(message1.id, test_msg_ids, 'compose wizard: Pigs did not receive its mass mailing message')
         self.assertIn(message2.id, test_msg_ids, 'compose wizard: Bird did not receive its mass mailing message')
 

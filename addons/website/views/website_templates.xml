@@ -129,7 +129,7 @@
                                     <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
-                                                <span t-esc="user_id.name"/>
+                                                <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') or user_id.name"/>
                                                 <span class="caret"></span>
                                             </b>
                                         </a>
