@@ -140,6 +140,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
     def trans_rec_reconcile(self, cr, uid, ids, context=None):
+        context = dict(context or {})
         account_move_line_obj = self.pool.get('account.move.line')
         period_obj = self.pool.get('account.period')
         if context is None:

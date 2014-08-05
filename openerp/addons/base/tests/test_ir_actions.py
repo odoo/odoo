@@ -357,7 +357,7 @@ workflow"""
         cids = self.res_country.search(cr, uid, [('name', 'ilike', 'NewCountry')])
         self.assertEqual(len(cids), 1, 'ir_actions_server: TODO')
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_60_multi(self):
         cr, uid = self.cr, self.uid
 

@@ -39,8 +39,7 @@ class crm_merge_opportunity(osv.osv_memory):
     }
 
     def action_merge(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         lead_obj = self.pool.get('crm.lead')
         wizard = self.browse(cr, uid, ids[0], context=context)

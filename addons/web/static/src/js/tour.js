@@ -73,17 +73,24 @@ var Tour = {
     run: function (tour_id, mode) {
         var tour = Tour.tours[tour_id];
         if (!tour) {
-            Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
+            return Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
+        }
+        Tour.log("Tour '"+tour_id+"' Begin from run method", true);
+        var state = Tour.getState();
+        if (state) {
+             if (state.mode === "test") {
+                return Tour.error(false, "An other running tour has been detected all tours are now killed.");
+            } else {
+                Tour.endTour();
+            }
         }
         this.time = new Date().getTime();
         if (tour.path && !window.location.href.match(new RegExp("("+Tour.getLang()+")?"+tour.path+"#?$", "i"))) {
             var href = Tour.getLang()+tour.path;
-            console.log("Tour '"+tour_id+"' Begin from run method (redirection to "+href+")");
             Tour.saveState(tour.id, mode || tour.mode, -1, 0);
             $(document).one("ajaxStop", Tour.running);
             window.location.href = href;
         } else {
-            console.log("Tour '"+tour_id+"' Begin from run method");
             Tour.saveState(tour.id, mode || tour.mode, 0, 0);
             Tour.running();
         }
@@ -304,7 +311,7 @@ var Tour = {
                 "step_id": 0
             };
             window.location.hash = "";
-            console.log("Tour '"+state.id+"' Begin from url hash");
+            Tour.log("Tour '"+state.id+"' Begin from url hash");
             Tour.saveState(state.id, state.mode, state.step_id, 0);
         }
         if (!state.id) {
@@ -313,6 +320,14 @@ var Tour = {
         state.tour = Tour.tours[state.id];
         state.step = state.tour && state.tour.steps[state.step_id === -1 ? 0 : state.step_id];
         return state;
+    },
+    log: function (message, add_user) {
+        if (add_user) {
+            var user = $(".navbar .dropdown:has(>.js_usermenu) a:first, .navbar .oe_topbar_name").text();
+            if (!user && $('a[href*="/login"]')) user = 'Public User';
+            message += " (" + (user||"").replace(/^\s*|\s*$/g, '') + ")";
+        }
+        console.log(message);
     },
     error: function (step, message) {
         var state = Tour.getState();
@@ -325,10 +340,8 @@ var Tour = {
             + (step ? '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' )
             + "\n localStorage: " + JSON.stringify(localStorage)
             + '\n\n' + $("body").html();
-        Tour.reset();
-        if (state.mode === "test") {
-            throw new Error(message);
-        }
+        Tour.log(message, true);
+        Tour.endTour();
     },
     lists: function () {
         var tour_ids = [];
@@ -358,6 +371,7 @@ var Tour = {
         clearTimeout(Tour.timer);
         clearTimeout(Tour.testtimer);
         Tour.closePopover();
+        Tour.log("Tour reset");
     },
     running: function () {
         var state = Tour.getState();
@@ -367,15 +381,15 @@ var Tour = {
                 Tour.load_template().then(Tour.running);
                 return;
             }
-            console.log("Tour '"+state.id+"' is running");
+            Tour.log("Tour '"+state.id+"' is running", true);
             Tour.registerSteps(state.tour, state.mode);
             Tour.nextStep();
         } else {
             if (state.mode === "test" && state.wait >= 10) {
-                Tour.error(state.step, "Tour '"+state.id+"' undefined");
+                return Tour.error(state.step, "Tour '"+state.id+"' undefined");
             }
             Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
-            console.log("Tour '"+state.id+"' wait for running (tour undefined)");
+            Tour.log("Tour '"+state.id+"' wait for running (tour undefined)");
             setTimeout(Tour.running, Tour.retryRunningDelay);
         }
     },
@@ -398,6 +412,8 @@ var Tour = {
         };
 
         function checkNext () {
+            if (!Tour.getState()) return;
+
             Tour.autoTogglePopover();
 
             clearTimeout(Tour.timer);
@@ -411,10 +427,10 @@ var Tour = {
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
                 Tour.timer = setTimeout(checkNext, Tour.defaultDelay);
             } else {
-                Tour.error(next, "Can't reach the next step");
+                return Tour.error(next, "Can't reach the next step");
             }
         }
-        checkNext();
+        setTimeout(checkNext, 0);
     },
     nextStep: function (step) {
         var state = Tour.getState();
@@ -427,13 +443,13 @@ var Tour = {
         var next = state.tour.steps[step.id+1];
 
         if (state.mode === "test" && state.number > 3) {
-            Tour.error(next, "Cycling. Can't reach the next step");
+            return Tour.error(next, "Cycling. Can't reach the next step");
         }
         
         Tour.saveState(state.id, state.mode, step.id, state.number);
 
         if (step.id !== state.step_id) {
-            console.log("Tour '"+state.id+"' Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
+            Tour.log("Tour '"+state.id+"' Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
         }
 
         Tour.autoTogglePopover(true);
@@ -442,40 +458,38 @@ var Tour = {
             step.onload();
         }
 
-        if (next) {
+        if (state.mode === "test") {
             setTimeout(function () {
-                if (Tour.getState()) {
+                Tour.autoNextStep(state.tour, step);
+                if (next && Tour.getState()) {
                     Tour.waitNextStep();
                 }
-                if (state.mode === "test") {
-                    setTimeout(function(){
-                        Tour.autoNextStep(state.tour, step);
-                    }, Tour.defaultDelay);
-                }
-            }, next.wait || 0);
-        } else {
-            setTimeout(function(){
-                Tour.autoNextStep(state.tour, step);
-            }, Tour.defaultDelay);
+            }, step.wait || Tour.defaultDelay);
+        } else if (next) {
+            setTimeout(Tour.waitNextStep, next.wait || 0);
+        }
+        if (!next) {
             Tour.endTour();
         }
     },
     endTour: function () {
         var state = Tour.getState();
-        var test = state.step.id >= state.tour.steps.length-1;
+        var test = state.step && state.step.id >= state.tour.steps.length-1;
         Tour.reset();
         if (test) {
-            console.log("Tour '"+state.id+"' finish: ok");
-            console.log('ok');
+            Tour.log("Tour '"+state.id+"' finish: ok");
+            Tour.log('ok');
         } else {
-            console.log("Tour '"+state.id+"' finish: error");
-            console.log('error');
+            Tour.log("Tour '"+state.id+"' finish: error");
+            Tour.log('error');
         }
     },
     autoNextStep: function (tour, step) {
         clearTimeout(Tour.testtimer);
 
         function autoStep () {
+            if (!Tour.getState()) return;
+
             if (!step) return;
 
             if (step.autoComplete) {
@@ -502,6 +516,7 @@ var Tour = {
 
                 // trigger after for step like: mouseenter, next step click on button display with mouseenter
                 setTimeout(function () {
+                    if (!Tour.getState()) return;
                     $element.trigger($.Event("mouseup", { srcElement: $element[0] }));
                     $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
                 }, 1000);
@@ -518,13 +533,14 @@ var Tour = {
                     $element.html(step.sampleText);
                 }
                 setTimeout(function () {
+                    if (!Tour.getState()) return;
                     $element.trigger($.Event("keyup", { srcElement: $element }));
                     $element.trigger($.Event("change", { srcElement: $element }));
                 }, self.defaultDelay<<1);
             
             }
         }
-        Tour.testtimer = setTimeout(autoStep, 100);
+        Tour.testtimer = setTimeout(autoStep, 0);
     },
     autoDragAndDropSnippet: function (selector) {
         var $thumbnail = $(selector).first();

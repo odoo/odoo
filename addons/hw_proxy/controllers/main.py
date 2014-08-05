@@ -44,7 +44,7 @@ class Proxy(http.Controller):
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>OpenERP's PosBox</title>
+        <title>Odoo's PosBox</title>
         <style>
         body {
             width: 480px;

@@ -56,8 +56,6 @@ class res_partner(osv.osv):
     _columns = {
         'partner_weight': fields.integer('Grade Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
-        'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
-            'Assigned Opportunities'),
         'grade_id': fields.many2one('res.partner.grade', 'Grade'),
         'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
         'date_partnership' : fields.date('Partnership Date'),

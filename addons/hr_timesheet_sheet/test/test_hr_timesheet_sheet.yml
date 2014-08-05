@@ -9,7 +9,7 @@
 -
   I assign this product(Service on Timesheet) and journal(Timesheet Journal) to employee "Gilles Gravie"
 -
-  !record {model: hr.employee, id: hr.employee_qdp}:
+  !record {model: hr.employee, id: hr.employee_qdp, view: False}:
     product_id: product.product_product_consultant
     journal_id: hr_timesheet.analytic_journal
 -
@@ -27,7 +27,7 @@
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_in
     employee_id: 'hr.employee_qdp'
-    name: !eval datetime.now().strftime('%Y-%m-%d 09:%M:%S')
+    name: !eval datetime.now().strftime('%Y-%m-%d 09:12:37')
 -
   I test that Gilles in signed in
 -
@@ -45,7 +45,7 @@
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
-      - account_id: account.analytic_agrolait
+      - account_id: analytic.analytic_agrolait
         date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
         user_id: base.user_demo
@@ -74,7 +74,7 @@
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
-      - account_id: account.analytic_agrolait
+      - account_id: analytic.analytic_agrolait
         date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
         unit_amount: 2.00

@@ -62,7 +62,7 @@ class account_payment_populate_statement(osv.osv_memory):
 
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         line_ids = data['lines']
         if not line_ids:
             return {'type': 'ir.actions.act_window_close'}
@@ -77,7 +77,7 @@ class account_payment_populate_statement(osv.osv_memory):
 
             if not line.move_line_id.id:
                 continue
-            context.update({'move_line_ids': [line.move_line_id.id]})
+            context = dict(context, move_line_ids=[line.move_line_id.id])
             result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, amount=abs(amount), currency_id= statement.currency.id, ttype='payment', date=line.ml_maturity_date, context=context)
 
             if line.move_line_id:

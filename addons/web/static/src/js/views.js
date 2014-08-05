@@ -271,7 +271,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     }
                     action_loaded = this.do_action(state.action, { additional_context: add_context });
                     $.when(action_loaded || null).done(function() {
-                        instance.webclient.menu.has_been_loaded.done(function() {
+                        instance.webclient.menu.is_bound.done(function() {
                             if (self.inner_action && self.inner_action.id) {
                                 instance.webclient.menu.open_action(self.inner_action.id);
                             }
@@ -617,7 +617,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var view_promise;
         var form = this.views['form'];
         if (!view || (form && form.controller && !form.controller.can_be_discarded())) {
-            self.trigger('switch_mode', view_type, no_store, view_options);
             return $.Deferred().reject();
         }
         if (!no_store) {
@@ -692,8 +691,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var container = this.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
-        this.views[view_type].deferred.resolve(view_type);
         return $.when(view_promise).done(function() {
+            self.views[view_type].deferred.resolve(view_type);
             if (self.searchview
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
@@ -955,12 +954,12 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     url: '/web/tests?mod=*'
                 });
                 break;
-            case 'perm_read':
+            case 'get_metadata':
                 var ids = current_view.get_selected_ids();
                 if (ids.length === 1) {
-                    this.dataset.call('perm_read', [ids]).done(function(result) {
+                    this.dataset.call('get_metadata', [ids]).done(function(result) {
                         var dialog = new instance.web.Dialog(this, {
-                            title: _.str.sprintf(_t("View Log (%s)"), self.dataset.model),
+                            title: _.str.sprintf(_t("Metadata (%s)"), self.dataset.model),
                             size: 'medium',
                         }, QWeb.render('ViewManagerDebugViewLog', {
                             perm : result[0],
@@ -1123,7 +1122,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             );
         } 
 
-        $.when(defs).done(function() {
+        $.when(this.views[this.active_view] ? this.views[this.active_view].deferred : $.when(), defs).done(function() {
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
@@ -1463,7 +1462,7 @@ instance.web.View = instance.web.Widget.extend({
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', {
                 action_id: action_data.name,
-                context: _.extend({'active_model': dataset.model, 'active_ids': dataset.ids, 'active_id': record_id}, instance.web.pyeval.eval('context', context)),
+                context: _.extend(instance.web.pyeval.eval('context', context), {'active_model': dataset.model, 'active_ids': dataset.ids, 'active_id': record_id}),
                 do_not_eval: true
             }).then(handler);
         } else  {

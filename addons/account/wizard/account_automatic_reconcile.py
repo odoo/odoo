@@ -239,7 +239,7 @@ class account_automatic_reconcile(osv.osv_memory):
                 (account_id.id,))
             additional_unrec = cr.fetchone()[0]
             unreconciled = unreconciled + additional_unrec
-        context.update({'reconciled': reconciled, 'unreconciled': unreconciled})
+        context = dict(context, reconciled=reconciled, unreconciled=unreconciled)
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','account_automatic_reconcile_view1')])
         resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         return {

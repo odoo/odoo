@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011-2012 OpenERP S.A. <http://openerp.com>
+#    Copyright (c) 2011-2014 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -37,7 +37,7 @@ _logger = logging.getLogger(__name__)
 EXTERNAL_ID_PATTERN = re.compile(r'^([^.:]+)(?::([^.]+))?\.(\S+)$')
 EDI_VIEW_WEB_URL = '%s/edi/view?db=%s&token=%s'
 EDI_PROTOCOL_VERSION = 1 # arbitrary ever-increasing version number
-EDI_GENERATOR = 'OpenERP ' + release.major_version
+EDI_GENERATOR = 'Odoo' + release.major_version
 EDI_GENERATOR_VERSION = release.version_info
 
 def split_external_id(ext_id):
@@ -65,8 +65,8 @@ def last_update_for(record):
     """Returns the last update timestamp for the given record,
        if available, otherwise False
     """
-    if record._model._log_access:
-        record_log = record.perm_read()[0]
+    if record._log_access:
+        record_log = record.get_metadata()[0]
         return record_log.get('write_date') or record_log.get('create_date') or False
     return False
 
@@ -127,7 +127,7 @@ class edi(osv.AbstractModel):
             assert module, 'a `__module` or `__import_module` attribute is required in each EDI document.'
             if module != 'base' and not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
                 raise osv.except_osv(_('Missing Application.'),
-                            _("The document you are trying to import requires the OpenERP `%s` application. "
+                            _("The document you are trying to import requires the Odoo `%s` application. "
                               "You can install it by connecting as the administrator and opening the configuration assistant.")%(module,))
             model = edi_document.get('__import_model') or edi_document.get('__model')
             assert model, 'a `__model` or `__import_model` attribute is required in each EDI document.'
@@ -185,9 +185,9 @@ class EDIMixin(object):
         """Generate/Retrieve unique external ID for ``record``.
         Each EDI record and each relationship attribute in it is identified by a
         unique external ID, which includes the database's UUID, as a way to
-        refer to any record within any OpenERP instance, without conflict.
+        refer to any record within any Odoo instance, without conflict.
 
-        For OpenERP records that have an existing "External ID" (i.e. an entry in
+        For Odoo records that have an existing "External ID" (i.e. an entry in
         ir.model.data), the EDI unique identifier for this record will be made of
         "%s:%s:%s" % (module, database UUID, ir.model.data ID). The database's
         UUID MUST NOT contain a colon characters (this is guaranteed by the
@@ -266,7 +266,7 @@ class EDIMixin(object):
                '__id': 'module:db-uuid:model.id',      # unique global external ID for the record
                '__last_update': '2011-01-01 10:00:00', # last update date in UTC!
                '__version': 1,                         # EDI spec version
-               '__generator' : 'OpenERP',              # EDI generator
+               '__generator' : 'Odoo',              # EDI generator
                '__generator_version' : [6,1,0],        # server version, to check compatibility.
                '__attachments_':
            }

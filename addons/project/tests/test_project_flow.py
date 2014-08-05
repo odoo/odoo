@@ -28,6 +28,7 @@ EMAIL_TPL = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 X-Original-To: {email_to}
 Delivered-To: {email_to}
 To: {email_to}
+cc: {cc}
 Received: by mail1.openerp.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 Message-ID: {msg_id}
@@ -51,7 +52,7 @@ Integrator at Agrolait"""
 
 class TestProjectFlow(TestProjectBase):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_00_project_process(self):
         """ Testing project management """
         cr, uid, user_projectuser_id, user_projectmanager_id, project_pigs_id = self.cr, self.uid, self.user_projectuser_id, self.user_projectmanager_id, self.project_pigs_id
@@ -117,11 +118,17 @@ class TestProjectFlow(TestProjectBase):
         """ Testing task creation and management """
         cr, uid, user_projectuser_id, user_projectmanager_id, project_pigs_id = self.cr, self.uid, self.user_projectuser_id, self.user_projectmanager_id, self.project_pigs_id
 
-        def format_and_process(template, email_to='project+pigs@mydomain.com, other@gmail.com', subject='Frogs',
+        # create new partner
+        self.partner_id = self.registry('res.partner').create(cr, uid, {
+            'name': 'Pigs',
+            'email': 'otherid@gmail.com',
+        }, {'mail_create_nolog': True})
+
+        def format_and_process(template, email_to='project+pigs@mydomain.com, other@gmail.com', cc='otherid@gmail.com', subject='Frogs',
                                email_from='Patrick Ratatouille <patrick.ratatouille@agrolait.com>',
                                msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>'):
             self.assertEqual(self.project_task.search(cr, uid, [('name', '=', subject)]), [])
-            mail = template.format(email_to=email_to, subject=subject, email_from=email_from, msg_id=msg_id)
+            mail = template.format(email_to=email_to, cc=cc, subject=subject, email_from=email_from, msg_id=msg_id)
             self.mail_thread.message_process(cr, uid, None, mail)
             return self.project_task.search(cr, uid, [('name', '=', subject)])
 
@@ -131,8 +138,12 @@ class TestProjectFlow(TestProjectBase):
         # Test: one task created by mailgateway administrator
         self.assertEqual(len(frogs), 1, 'project: message_process: a new project.task should have been created')
         task = self.project_task.browse(cr, user_projectuser_id, frogs[0])
-        res = self.project_task.perm_read(cr, uid, [task.id], details=False)
-        self.assertEqual(res[0].get('create_uid'), uid,
+        
+        # Test: check partner in message followers
+        self.assertTrue((self.partner_id in [follower.id for follower in task.message_follower_ids]),"Partner in message cc is not added as a task followers.")
+        
+        res = self.project_task.get_metadata(cr, uid, [task.id])[0].get('create_uid') or [None]
+        self.assertEqual(res[0], uid,
                          'project: message_process: task should have been created by uid as alias_user_id is False on the alias')
         # Test: messages
         self.assertEqual(len(task.message_ids), 3,

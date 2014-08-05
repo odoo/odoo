@@ -2,20 +2,20 @@
 <openerp>
 <data>
 
-<template name="Sponsors" id="event_sponsor" optional="enabled" inherit_id="website_event.layout">
-    <xpath expr="//t[@t-call='website.layout']" position="inside">
-        <t t-set="head">
-            <link rel='stylesheet' href='/website_event_track/static/src/css/website_event_track.css'/>
-            <t t-raw="head or ''"/>
-        </t>
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Event Track Assets">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
     </xpath>
+</template>
+
+<template name="Sponsors" id="event_sponsor" optional="enabled" inherit_id="website_event.layout">
     <xpath expr="//div[@id='wrap']" position="inside">
         <div class="container mt32 mb16 hidden-print" t-if="event.sponsor_ids">
             <section data-snippet-id="title">
                 <h2 class="text-center mb32">Our Sponsors</h2>
             </section>
             <div class="row">
-                <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center mb16" t-foreach="event.sponsor_ids" t-as="sponsor">
+                <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center mb16 oe_sponsor" t-foreach="event.sponsor_ids" t-as="sponsor">
                     <t t-if="sponsor.url">
                         <a t-att-href="sponsor.url" style="position: relative; display: inline-block;">
                             <span t-field="sponsor.image_medium"
@@ -42,10 +42,6 @@
 
 <template id="agenda">
     <t t-call="website_event.layout">
-        <t t-set="head">
-          <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
-          <t t-raw="head or ''"/>
-        </t>
         <section class="container">
             <h1 class="text-center" t-field="event.name"/>
             <div class="form-inline pull-right">

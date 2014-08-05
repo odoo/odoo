@@ -85,6 +85,7 @@ def py2exe_options():
                         "commands",
                         "dateutil",
                         "decimal",
+                        "decorator",
                         "docutils",
                         "email",
                         "encodings",
@@ -155,6 +156,7 @@ setuptools.setup(
       install_requires = [
           'pychart', # not on pypi, use: pip install http://download.gna.org/pychart/PyChart-1.39.tar.gz
           'babel >= 1.0',
+          'decorator',
           'docutils',
           'feedparser',
           'gdata',

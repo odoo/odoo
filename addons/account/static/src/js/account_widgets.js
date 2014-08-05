@@ -53,7 +53,7 @@ openerp.account = function (instance) {
                         relation: "account.account",
                         string: _t("Account"),
                         type: "many2one",
-                        domain: [['type','!=','view']],
+                        domain: [['type','not in',['view', 'closed', 'consolidation']]],
                     },
                 },
                 label: {
@@ -81,6 +81,7 @@ openerp.account = function (instance) {
                         relation: "account.tax",
                         string: _t("Tax"),
                         type: "many2one",
+                        domain: [['type_tax_use','in',['purchase', 'all']], ['parent_id', '=', false]],
                     },
                 },
                 amount: {
@@ -138,7 +139,7 @@ openerp.account = function (instance) {
             }
     
             // Retreive statement infos and reconciliation data from the model
-            var lines_filter = [['journal_entry_id', '=', false]];
+            var lines_filter = [['journal_entry_id', '=', false], ['account_id', '=', false]];
             var deferred_promises = [];
     
             if (self.statement_id) {
@@ -1149,10 +1150,17 @@ openerp.account = function (instance) {
                     deferred_tax = $.when(self.model_tax
                         .call("compute_for_bank_reconciliation", [self.tax_id_field.get("value"), amount]))
                         .then(function(data){
-                            var tax = data.taxes[0];
-                            var tax_account_id = (amount > 0 ? tax.account_collected_id : tax.account_paid_id)
+                            line_created_being_edited[0].amount_with_tax = line_created_being_edited[0].amount;
                             line_created_being_edited[0].amount = (data.total.toFixed(3) === amount.toFixed(3) ? amount : data.total);
-                            line_created_being_edited[1] = {id: line_created_being_edited[0].id, account_id: tax_account_id, account_num: self.map_account_id_code[tax_account_id], label: tax.name, amount: tax.amount, no_remove_action: true, currency_id: self.st_line.currency_id};
+                            var current_line_cursor = 1;
+                            $.each(data.taxes, function(index, tax){
+                                if (tax.amount !== 0.0) {
+                                    var tax_account_id = (amount > 0 ? tax.account_collected_id : tax.account_paid_id)
+                                    tax_account_id = tax_account_id !== false ? tax_account_id: line_created_being_edited[0].account_id
+                                    line_created_being_edited[current_line_cursor] = {id: line_created_being_edited[0].id, account_id: tax_account_id, account_num: self.map_account_id_code[tax_account_id], label: tax.name, amount: tax.amount, no_remove_action: true, currency_id: self.st_line.currency_id, is_tax_line: true};
+                                    current_line_cursor = current_line_cursor + 1;
+                                };
+                            });
                         }
                     );
                 } else {
@@ -1164,10 +1172,10 @@ openerp.account = function (instance) {
     
             $.when(deferred_tax).then(function(){
                 // Format amounts
-                if (line_created_being_edited[0].amount)
-                    line_created_being_edited[0].amount_str = self.formatCurrency(Math.abs(line_created_being_edited[0].amount), line_created_being_edited[0].currency_id);
-                if (line_created_being_edited[1] && line_created_being_edited[1].amount)
-                    line_created_being_edited[1].amount_str = self.formatCurrency(Math.abs(line_created_being_edited[1].amount), line_created_being_edited[0].currency_id);
+                $.each(line_created_being_edited, function(index, val) {
+                    if (val.amount)
+                        line_created_being_edited[index].amount_str = self.formatCurrency(Math.abs(val.amount), val.currency_id);
+                });
                 self.set("line_created_being_edited", line_created_being_edited);
                 self.createdLinesChanged(); // TODO For some reason, previous line doesn't trigger change handler
             });
@@ -1318,13 +1326,14 @@ openerp.account = function (instance) {
         // idem
         prepareCreatedMoveLineForPersisting: function(line) {
             var dict = {};
-            
             if (dict['account_id'] === undefined)
                 dict['account_id'] = line.account_id;
             dict['name'] = line.label;
-            if (line.amount > 0) dict['credit'] = line.amount;
-            if (line.amount < 0) dict['debit'] = -1*line.amount;
-            if (line.tax_id) dict['tax_code_id'] = line.tax_id;
+            var amount = line.tax_id ? line.amount_with_tax: line.amount;
+            if (amount > 0) dict['credit'] = amount;
+            if (amount < 0) dict['debit'] = -1 * amount;
+            if (line.tax_id) dict['account_tax_id'] = line.tax_id;
+            if (line.is_tax_line) dict['is_tax_line'] = line.is_tax_line;
             if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
     
             return dict;

@@ -83,7 +83,7 @@
     Test one2many operator with False
 -
     !assert {model: res.partner, search: "[('child_ids', '=', False)]"}:
-        - child_ids in (False, None, [])
+        - list(child_ids) == []
 -
     Test many2many operator with empty search list
 -
@@ -92,7 +92,7 @@
     Test many2many operator with False
 -
     !assert {model: res.partner, search: "[('category_id', '=', False)]"}:
-        - category_id in (False, None, [])
+        - list(category_id) == []
 -
     Filtering on invalid value across x2many relationship should return an empty set
 -

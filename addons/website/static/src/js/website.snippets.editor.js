@@ -975,12 +975,10 @@
         },
         clean_for_save: function () {
             this._super();
-            $(".carousel").find(".item").removeClass("next prev left right active");
+            this.$target.find(".item").removeClass("next prev left right active");
+            this.$target.find(".item:first").addClass("active");
             this.$indicators.find('li').removeClass('active');
             this.$indicators.find('li:first').addClass('active');
-            if(!this.$target.find(".item.active").length) {
-                this.$target.find(".item:first").addClass("active");
-            }
         },
         start : function () {
             var self = this;
@@ -1565,7 +1563,9 @@
         */
         _readXMLData: function() {
             var self = this;
-            this.$el = this.BuildingBlock.$snippets.filter(function () { return $(this).data("snippet-id") == self.snippet_id; }).clone();
+            if(this && this.BuildingBlock && this.BuildingBlock.$snippets) {
+                this.$el = this.BuildingBlock.$snippets.filter(function () { return $(this).data("snippet-id") == self.snippet_id; }).clone();
+            }
             var $options = this.$overlay.find(".oe_overlay_options");
             if ($options.find(".oe_options ul li").length) {
                 $options.find(".oe_options").removeClass("hidden");

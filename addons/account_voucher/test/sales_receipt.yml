@@ -69,7 +69,7 @@
     id = self.create(cr, uid, vals)
     voucher_id = self.browse(cr, uid, id)
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
-    self.signal_proforma_voucher(cr, uid, [voucher_id.id])
+    voucher_id.signal_workflow('proforma_voucher')
 -
   I check that move lines are reconciled meaning voucher is paid
 -

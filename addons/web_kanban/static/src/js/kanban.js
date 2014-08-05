@@ -938,10 +938,6 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         var self = this;
         this.setup_color_picker();
         this.$el.find('[title]').each(function(){
-            //in case of kanban, attach tooltip to the element itself
-            //otherwise it might stay on screen when kanban view reload
-            //since default container is body.
-            //(when clicking on ready for next stage for example)
             $(this).tooltip({
                 delay: { show: 500, hide: 0},
                 container: $(this),

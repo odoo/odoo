@@ -104,9 +104,9 @@ class res_partner(osv.Model):
         return self._get_signup_url_for_action(cr, uid, ids, context=context)
 
     _columns = {
-        'signup_token': fields.char('Signup Token'),
-        'signup_type': fields.char('Signup Token Type'),
-        'signup_expiration': fields.datetime('Signup Expiration'),
+        'signup_token': fields.char('Signup Token', copy=False),
+        'signup_type': fields.char('Signup Token Type', copy=False),
+        'signup_expiration': fields.datetime('Signup Expiration', copy=False),
         'signup_valid': fields.function(_get_signup_valid, type='boolean', string='Signup Token is Valid'),
         'signup_url': fields.function(_get_signup_url, type='char', string='Signup URL'),
     }
@@ -201,6 +201,14 @@ class res_users(osv.Model):
             partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
 
             partner_user = partner.user_ids and partner.user_ids[0] or False
+
+            # avoid overwriting existing (presumably correct) values with geolocation data
+            if partner.country_id or partner.zip or partner.city:
+                values.pop('city', None)
+                values.pop('country_id', None)
+            if partner.lang:
+                values.pop('lang', None)
+
             if partner_user:
                 # user exists, modify it according to values
                 values.pop('login', None)
@@ -294,7 +302,7 @@ class res_users(osv.Model):
         user_id = super(res_users, self).create(cr, uid, values, context=context)
         user = self.browse(cr, uid, user_id, context=context)
         if user.email and not context.get('no_reset_password'):
-            context.update({'create_user': True})
+            context = dict(context, create_user=True)
             try:
                 self.action_reset_password(cr, uid, [user.id], context=context)
             except MailDeliveryException:

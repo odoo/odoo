@@ -24,8 +24,8 @@ class pos_session_opening(osv.osv_memory):
     }
 
     def open_ui(self, cr, uid, ids, context=None):
-        context = context or {}
         data = self.browse(cr, uid, ids[0], context=context)
+        context = dict(context or {})
         context['active_id'] = data.pos_session_id.id
         return {
             'type' : 'ir.actions.act_url',
@@ -35,7 +35,7 @@ class pos_session_opening(osv.osv_memory):
 
     def open_existing_session_cb_close(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
-        self.pool.get('pos.session').signal_cashbox_control(cr, uid, [wizard.pos_session_id.id])
+        wizard.pos_session_id.signal_workflow('cashbox_control')
         return self.open_session_cb(cr, uid, ids, context)
 
     def open_session_cb(self, cr, uid, ids, context=None):

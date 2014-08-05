@@ -27,6 +27,7 @@ import werkzeug.urls
 import urllib2
 import json
 import re
+import openerp
 
 _logger = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ class config(osv.Model):
         config = self.browse(cr, SUPERUSER_ID, config_id, context=context)
         model = config.model_id
         filter_name = config.filter_id and config.filter_id.name or False
-        record = self.pool.get(model.model).read(cr, uid, res_id, [], context=context)
+        record = self.pool.get(model.model).read(cr, uid, [res_id], context=context)[0]
         record.update({'model': model.name, 'filter': filter_name})
         name_gdocs = config.name_template
         try:
@@ -63,7 +64,9 @@ class config(osv.Model):
         user_is_admin = self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
         if not google_drive_refresh_token:
             if user_is_admin:
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
+                model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base_setup', 'action_general_configuration')
+                msg = _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it .")
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
                 raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
         google_drive_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
@@ -81,7 +84,9 @@ class config(osv.Model):
             content = urllib2.urlopen(req).read()
         except urllib2.HTTPError:
             if user_is_admin:
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during the token generation. Please request again an authorization code in %(menu:base_setup.menu_general_configuration)s."), context=context)
+                model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base_setup', 'action_general_configuration')
+                msg = _("Something went wrong during the token generation. Please request again an authorization code .")
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
                 raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
         content = json.loads(content)
@@ -98,10 +103,10 @@ class config(osv.Model):
             req = urllib2.Request(request_url, None, headers)
             parents = urllib2.urlopen(req).read()
         except urllib2.HTTPError:
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("The Google Template cannot be found. Maybe it has been deleted."), context=context)
+            raise osv.except_osv(_('Warning!'), _("The Google Template cannot be found. Maybe it has been deleted."))
         parents_dict = json.loads(parents)
 
-        record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
+        record_url = "Click on link to open Record in Odoo\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
         data = {"title": name_gdocs, "description": record_url, "parents": parents_dict['parents']}
         request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (template_id, access_token)
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -119,7 +124,7 @@ class config(osv.Model):
             cr.commit()
             res['url'] = content['alternateLink']
             key = self._get_key_from_url(res['url'])
-            request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+OpenERP&sendNotificationEmails=false&access_token=%s" % (key, access_token)
+            request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+Odoo&sendNotificationEmails=false&access_token=%s" % (key, access_token)
             data = {'role': 'writer', 'type': 'anyone', 'value': '', 'withLink': True}
             try:
                 req = urllib2.Request(request_url, json.dumps(data), headers)
