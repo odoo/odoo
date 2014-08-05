@@ -345,6 +345,9 @@ function openerp_pos_db(instance, module){
             });
             this.save('orders',orders);
         },
+        remove_all_orders: function(){
+            this.save('orders',[]);
+        },
         get_orders: function(){
             return this.load('orders',[]);
         },
