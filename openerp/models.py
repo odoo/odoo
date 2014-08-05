@@ -1299,7 +1299,12 @@ class BaseModel(object):
                 record[name]            # force evaluation of defaults
 
         # retrieve defaults from record's cache
-        return self._convert_to_write(record._cache)
+        result = self._convert_to_write(record._cache)
+        for key, val in result.items():
+            if isinstance(val, NewId):
+                del result[key]         # ignore new records in defaults
+
+        return result
 
     def add_default_value(self, field):
         """ Set the default value of `field` to the new record `self`.
@@ -2956,9 +2961,13 @@ class BaseModel(object):
             field.reset()
 
     @api.model
-    def _setup_fields(self):
+    def _setup_fields(self, partial=False):
         """ Setup the fields (dependency triggers, etc). """
         for field in self._fields.itervalues():
+            if partial and field.manual and \
+                    field.relational and field.comodel_name not in self.pool:
+                # do not set up manual fields that refer to unknown models
+                continue
             field.setup(self.env)
 
         # group fields by compute to determine field.computed_fields
@@ -3946,11 +3955,6 @@ class BaseModel(object):
                 del vals[self._inherits[table]]
 
             record_id = tocreate[table].pop('id', None)
-
-            if isinstance(record_id, dict):
-                # Shit happens: this possibly comes from a new record
-                tocreate[table] = dict(record_id, **tocreate[table])
-                record_id = None
 
             # When linking/creating parent records, force context without 'no_store_function' key that
             # defers stored functions computing, as these won't be computed in batch at the end of create().

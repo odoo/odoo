@@ -125,8 +125,12 @@ class Field(object):
         :param default: the default value for the field; this is either a static
             value, or a function taking a recordset and returning a value
 
-        :param states: a dictionary mapping state values to lists of attribute-value
-            pairs; possible attributes are: 'readonly', 'required', 'invisible'
+        :param states: a dictionary mapping state values to lists of UI attribute-value
+            pairs; possible attributes are: 'readonly', 'required', 'invisible'.
+            Note: Any state-based condition requires the ``state`` field value to be
+            available on the client-side UI. This is typically done by including it in
+            the relevant views, possibly made invisible if not relevant for the
+            end-user.
 
         :param groups: comma-separated list of group xml ids (string); this
             restricts the field access to the users of the given groups only
@@ -263,6 +267,7 @@ class Field(object):
 
     store = True                # whether the field is stored in database
     index = False               # whether the field is indexed in database
+    manual = False              # whether the field is a custom field
     copyable = True             # whether the field is copied over by BaseModel.copy()
     depends = ()                # collection of field dependencies
     recursive = False           # whether self depends on itself
@@ -1321,7 +1326,7 @@ class Many2one(_Relational):
             return value.id
 
     def convert_to_write(self, value, target=None, fnames=None):
-        return bool(value) and (value.id or value._convert_to_write(value._cache))
+        return value.id
 
     def convert_to_onchange(self, value):
         return value.id
