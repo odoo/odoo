@@ -179,6 +179,13 @@ class crm_claim(base_stage, osv.osv):
         address = self.pool.get('res.partner').browse(cr, uid, part)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone}}
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        claim = self.browse(cr, uid, id, context=context)
+        default = dict(default or {},
+            stage_id = self._get_default_stage_id(cr, uid, context=context),
+            name = _('%s (copy)') % claim.name)
+        return super(crm_claim, self).copy(cr, uid, id, default, context=context)
+
     # -------------------------------------------------------
     # Mail gateway
     # -------------------------------------------------------

@@ -528,11 +528,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     reload_record: function (record) {
         var self = this;
+        // Use of search_read instead of read to check if we can still read the record (security rules)
         return this.dataset.read_ids(
             [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
-                }), 'name')
+                }), 'name'),
+            {check_access_rule: true}
         ).done(function (records) {
             var values = records[0];
             if (!values) {
@@ -1073,7 +1075,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     ids = value;
                 }
                 new instance.web.Model(column.relation)
-                    .call('name_get', [ids]).done(function (names) {
+                    .call('name_get', [ids, this.dataset.context]).done(function (names) {
                         // FIXME: nth horrible hack in this poor listview
                         record.set(column.id + '__display',
                                    _(names).pluck(1).join(', '));
@@ -1573,6 +1575,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 .filter(function (column) { return column.tag === 'field' })
                 .pluck('name').value(),
             function (groups) {
+                self.view.$pager.hide();
                 $el[0].appendChild(
                     self.render_groups(groups));
                 if (post_render) { post_render(); }

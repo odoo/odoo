@@ -854,7 +854,7 @@ def trans_generate(lang, modules, cr):
     for bin_path in ['osv', 'report' ]:
         path_list.append(os.path.join(config.config['root_path'], bin_path))
 
-    _logger.debug("Scanning modules at paths: ", path_list)
+    _logger.debug("Scanning modules at paths: %s", path_list)
 
     mod_paths = []
 

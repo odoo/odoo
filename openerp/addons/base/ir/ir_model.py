@@ -151,7 +151,7 @@ class ir_model(osv.osv):
             if result and result[0] == 'v':
                 cr.execute('DROP view %s' % (model_pool._table,))
             elif result and result[0] == 'r':
-                cr.execute('DROP TABLE %s' % (model_pool._table,))
+                cr.execute('DROP TABLE %s CASCADE' % (model_pool._table,))
         return True
 
     def unlink(self, cr, user, ids, context=None):
@@ -312,6 +312,14 @@ class ir_model_fields(osv.osv):
             if column_name and (result and result[0] == 'r'):
                 cr.execute('ALTER table "%s" DROP column "%s" cascade' % (model._table, field.name))
             model._columns.pop(field.name, None)
+
+            # remove m2m relation table for custom fields
+            # we consider the m2m relation is only one way as it's not possible
+            # to specify the relation table in the interface for custom fields
+            # TODO master: maybe use ir.model.relations for custom fields
+            if field.state == 'manual' and field.ttype == 'many2many':
+                rel_name = self.pool[field.model]._all_columns[field.name].column._rel
+                cr.execute('DROP table "%s"' % (rel_name))
         return True
 
     def unlink(self, cr, user, ids, context=None):

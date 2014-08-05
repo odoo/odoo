@@ -46,7 +46,7 @@ class OAuthController(oeweb.Controller):
             registry = RegistryManager.get(dbname)
             with registry.cursor() as cr:
                 providers = registry.get('auth.oauth.provider')
-                l = providers.read(cr, SUPERUSER_ID, providers.search(cr, SUPERUSER_ID, [('enabled', '=', True)]))
+                l = providers.read(cr, SUPERUSER_ID, providers.search(cr, SUPERUSER_ID, [('enabled', '=', True), ('auth_endpoint', '!=', False), ('validation_endpoint', '!=', False)]))
         except Exception:
             l = []
         return l

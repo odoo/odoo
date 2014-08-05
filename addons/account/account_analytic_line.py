@@ -74,13 +74,19 @@ class account_analytic_line(osv.osv):
         product_obj = self.pool.get('product.product')
         analytic_journal_obj =self.pool.get('account.analytic.journal')
         product_price_type_obj = self.pool.get('product.price.type')
+        product_uom_obj = self.pool.get('product.uom')
         j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
         prod = product_obj.browse(cr, uid, prod_id, context=context)
         result = 0.0
         if prod_id:
-            unit = prod.uom_id.id
+            unit_obj = False
+            if unit:
+                unit_obj = product_uom_obj.browse(cr, uid, unit, context=context)
+            if not unit_obj or prod.uom_id.category_id.id != unit_obj.category_id.id:
+                unit = prod.uom_id.id
             if j_id.type == 'purchase':
-                unit = prod.uom_po_id.id
+                if not unit_obj or prod.uom_po_id.category_id.id != unit_obj.category_id.id:
+                    unit = prod.uom_po_id.id
         if j_id.type <> 'sale':
             a = prod.property_account_expense.id
             if not a:

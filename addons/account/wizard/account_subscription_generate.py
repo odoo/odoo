@@ -36,11 +36,11 @@ class account_subscription_generate(osv.osv_memory):
     def action_generate(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
+        sub_line_obj = self.pool.get('account.subscription.line')
         moves_created=[]
         for data in  self.read(cr, uid, ids, context=context):
-            cr.execute('select id from account_subscription_line where date<%s and move_id is null', (data['date'],))
-            line_ids = map(lambda x: x[0], cr.fetchall())
-            moves = self.pool.get('account.subscription.line').move_create(cr, uid, line_ids, context=context)
+            line_ids = sub_line_obj.search(cr, uid, [('date', '<', data['date']), ('move_id', '=', False)], context=context)
+            moves = sub_line_obj.move_create(cr, uid, line_ids, context=context)
             moves_created.extend(moves)
         result = mod_obj.get_object_reference(cr, uid, 'account', 'action_move_line_form')
         id = result and result[1] or False

@@ -2815,11 +2815,11 @@
 .openerp .oe_list_editable .oe_list_content td.oe_list_field_cell {
   padding: 4px 6px 3px;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe_readonly) {
+.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell {
   color: transparent;
   text-shadow: none;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe_readonly) * {
+.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell * {
   visibility: hidden;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_m2o_drop_down_button {
@@ -2835,6 +2835,13 @@
   min-width: 0;
   max-width: none;
 }
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_list_field_handle {
+  color: transparent;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_readonly {
+  padding: 4px 6px 3px;
+  text-align: left;
+}
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea {
   height: 27px;
   -moz-border-radius: 0;
@@ -2846,9 +2853,14 @@
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field select {
   min-width: 0;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer input {
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float.oe_readonly, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer.oe_readonly {
+  padding: 6px 0px 0px;
   text-align: right;
+  max-width: 100px;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer input {
   width: 100% !important;
+  text-align: right;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime input.oe_datepicker_master, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date input.oe_datepicker_master {
   width: 100% !important;

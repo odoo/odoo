@@ -78,6 +78,7 @@ class account_fiscal_position(osv.osv):
     _inherit = 'account.fiscal.position'
     _columns = {
         'name': fields.char('Fiscal Position', size=64, required=True, translate=True),
+        'note': fields.text('Notes', translate=True),
     }
 account_fiscal_position()
 
@@ -86,6 +87,7 @@ class account_fiscal_position_template(osv.osv):
     _inherit = 'account.fiscal.position.template'
     _columns = {
         'name': fields.char('Fiscal Position Template', size=64, required=True, translate=True),
+        'note': fields.text('Notes', translate=True),
     }
 account_fiscal_position_template()
 

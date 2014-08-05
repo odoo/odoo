@@ -33,7 +33,7 @@ class account_fiscal_position(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Tax Mapping'),
-        'note': fields.text('Notes', translate=True),
+        'note': fields.text('Notes'),
     }
 
     _defaults = {
