@@ -1385,7 +1385,7 @@ class stock_picking(osv.osv):
                         op = stock_operation_obj.browse(cr, uid, new_operation, context=context)
                     pack_operation_ids.append(op.id)
                     for record in op.linked_move_operation_ids:
-                        stock_move_obj.check_tracking(cr, uid, record.move_id, op.package_id.id or op.lot_id.id, context=context)
+                        stock_move_obj.check_tracking(cr, uid, record.move_id, not op.product_id and op.package_id.id or op.lot_id.id, context=context)
                 package_id = package_obj.create(cr, uid, {}, context=context)
                 stock_operation_obj.write(cr, uid, pack_operation_ids, {'result_package_id': package_id}, context=context)
         return True
@@ -2052,18 +2052,23 @@ class stock_move(osv.osv):
         """
         return self.write(cr, uid, ids, {'state': 'assigned'}, context=context)
 
+    def check_tracking_product(self, cr, uid, product, lot_id, location, location_dest, context=None):
+        check = False
+        if product.track_all and not location_dest.usage == 'inventory':
+            check = True
+        elif product.track_incoming and location.usage in ('supplier', 'transit', 'inventory') and location_dest.usage == 'internal':
+            check = True
+        elif product.track_outgoing and location_dest.usage in ('customer', 'transit') and location.usage == 'internal':
+            check = True
+        if check and not lot_id:
+            raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (product.name))
+
+
     def check_tracking(self, cr, uid, move, lot_id, context=None):
         """ Checks if serial number is assigned to stock move or not and raise an error if it had to.
         """
-        check = False
-        if move.product_id.track_all and not move.location_dest_id.usage == 'inventory':
-            check = True
-        elif move.product_id.track_incoming and move.location_id.usage in ('supplier', 'transit', 'inventory') and move.location_dest_id.usage == 'internal':
-            check = True
-        elif move.product_id.track_outgoing and move.location_dest_id.usage in ('customer', 'transit') and move.location_id.usage == 'internal':
-            check = True
-        if check and not lot_id:
-            raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
+        self.check_tracking_product(cr, uid, move.product_id, lot_id, move.location_id, move.location_dest_id, context=context)
+        
 
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
@@ -2227,7 +2232,7 @@ class stock_move(osv.osv):
             main_domain = [('qty', '>', 0)]
             for record in ops.linked_move_operation_ids:
                 move = record.move_id
-                self.check_tracking(cr, uid, move, ops.package_id.id or ops.lot_id.id, context=context)
+                self.check_tracking(cr, uid, move, not ops.product_id and ops.package_id.id or ops.lot_id.id, context=context)
                 prefered_domain = [('reservation_id', '=', move.id)]
                 fallback_domain = [('reservation_id', '=', False)]
                 fallback_domain2 = ['&', ('reservation_id', '!=', move.id), ('reservation_id', '!=', False)]
@@ -3793,7 +3798,10 @@ class stock_pack_operation(osv.osv):
             operation in two to process the one with the qty moved
         '''
         processed_ids = []
+        move_obj = self.pool.get("stock.move")
         for pack_op in self.browse(cr, uid, ids, context=None):
+            if pack_op.product_id and pack_op.location_id and pack_op.location_dest_id:
+                move_obj.check_tracking_product(cr, uid, pack_op.product_id, pack_op.lot_id.id, pack_op.location_id, pack_op.location_dest_id, context=None)
             op = pack_op.id
             if pack_op.qty_done < pack_op.product_qty:
                 # we split the operation in two
