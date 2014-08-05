@@ -8,6 +8,7 @@
       <li><a href="#snippet_content" data-toggle="tab">Content</a></li>
       <li><a href="#snippet_feature" data-toggle="tab">Features</a></li>
       <li><a href="#snippet_effect" data-toggle="tab">Effects</a></li>
+      <li><a href="#snippet_form" data-toggle="tab">Form Fields</a></li>
     </ul>
     <div class="tab-content">
 
@@ -35,7 +36,7 @@
                                     </p>
                             </div>
                             <span class="carousel-img col-md-6 hidden-sm hidden-xs">
-                                <img class="carousel-image img-responsive" src="/website/static/src/img/banner/banner_picture.png" alt="Banner Odoo Image"/>
+                                <img class="carousel-image img-responsive" src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
                             </span> 
                         </div>
                     </div>
@@ -142,7 +143,7 @@
                             A great way to catch your reader's attention is to tell a story.
                             Everything you consider writing can be told as a story.
                         </p><p>
-                            <b>Great stories have personality.</b> Consider telling
+                            <b>Great stories have personality</b>. Consider telling
                             a great story that provides personality. Writing a story
                             with personality for potential clients will asist with
                             making a relationship connection. This shows up in small
@@ -150,7 +151,7 @@
                             of view, not from someone else's experience.
                         </p><p>
                             <b>Great stories are for everyone even when only written for
-                            just one person.</b> If you try to write with a wide general
+                            just one person</b>. If you try to write with a wide general
                             audience in mind, your story will ring false and be bland.
                             No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.
                         </p>
@@ -281,7 +282,54 @@
             </div>
         </section>
     </div>
-
+    
+	<div>
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_block.png"/>
+            <span class="oe_snippet_thumbnail_title">Form Editor</span>
+        </div>
+     	<section class="oe_snippet_body editForm">
+     		<div class="container">
+	        	<form action="/crm/contactus" method="post" class="form-horizontal mt32" enctype="multipart/form-data"> 
+		            <div class="form-group row">
+		                <label class="col-md-3 col-sm-4 control-label" for="contact_name">Your Name</label>
+		                <div class="col-md-7 col-sm-8">
+		                    <input type="text" class="form-control" name="contact_name" required="True" />
+		                </div>
+		            </div>
+		            <div class="form-group row">
+		                <label class="col-md-3 col-sm-4 control-label" for="phone">Phone Number</label>
+		                <div class="col-md-7 col-sm-8">
+		                    <input type="text" class="form-control" name="phone" placeholder="e.g. (+32).81.81.37.00" />
+		                </div>
+		            </div>
+		            <div class="form-group row">
+		                <label class="col-md-3 col-sm-4 control-label" for="email_from">Email</label>
+		                <div class="col-md-7 col-sm-8">
+		                    <input type="email" class="form-control" name="email_from" required="True" />
+		                </div>
+		            </div>
+		            <div class="form-group row">
+		                <label class="col-md-3 col-sm-4 control-label" for="name">Subject</label>
+		                <div class="col-md-7 col-sm-8">
+		                    <input type="text" class="form-control" name="name" />
+		                </div>
+		            </div>
+		            <div class="form-group row">
+		                <label class="col-md-3 col-sm-4 control-label" for="description">Your Question</label>
+		                <div class="col-md-7 col-sm-8">
+		                    <textarea  class="form-control" name="description" style="min-height: 120px" required="True"></textarea>
+		                </div>
+		            </div>
+		            <div class="form-group row">
+		                <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+		                    <button class="btn btn-primary btn-lg">Send</button>
+		                </div>
+		            </div>
+	            </form>
+	        </div>
+        </section>
+    </div>
 </div>
 
 <div id="snippet_content" class="tab-pane">
@@ -546,10 +594,10 @@
                     Point of Sale Questions <small>v7</small>
                 </h2>
                 <h3>
-                    Which hardware does Odoo POS support?
+                    Which hardware does OpenERP POS support?
                 </h3>
                 <p>
-                    Odoo's POS is a web application that can run on any device that
+                    OpenERP's POS is a web application that can run on any device that
                     can display websites with little to no setup required.
                 </p><p>
                     The Point of Sale works perfectly on any kind of touch enabled
@@ -610,7 +658,7 @@
                     <div class="col-md-4 col-md-offset-2 mt16 mb32">
                         <blockquote>
                             <p>
-                                Odoo provides essential platform for our project management.
+                                OpenERP provides essential platform for our project management.
                                 Things are better organized and more visible with it.
                             </p>
                             <small>John Doe, CEO</small>
@@ -674,7 +722,7 @@
                             <div class="row">
                                 <blockquote class="mt48 mb16 col-md-4 col-md-offset-4">
                                         <p>
-                                            Odoo provides essential platform for our project management.
+                                            OpenERP provides essential platform for our project management.
                                             Things are better organized and more visible with it.
                                         </p>
                                         <small>John Doe, CEO</small>
@@ -803,7 +851,7 @@
                                         <div class="row">
                                             <blockquote class="mt48 mb16 col-md-4 col-md-offset-4">
                                                 <p>
-                                                    Odoo provides essential platform for our project management.
+                                                    OpenERP provides essential platform for our project management.
                                                     Things are better organized and more visible with it.
                                                 </p>
                                                 <small>John Doe, CEO</small>
@@ -820,6 +868,34 @@
         </section>
     </div>
 
+</div>
+
+<div id="snippet_form" class="tab-pane">
+	<div>
+	 	<div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+            <span class="oe_snippet_thumbnail_title">Input Text</span>
+        </div>
+        <div class="form-group oe_snippet_body form-field row">
+        	<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
+        	<div class="col-md-7 col-sm-8">
+        		<input type="text" class="form-control" placeholder="Placeholder Exemple" />
+        		<p class="help-block">Help exemple.</p>
+        	</div>
+        </div>
+    </div>
+	<div>
+	 	<div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+            <span class="oe_snippet_thumbnail_title">Input Text</span>
+        </div>
+        <div class="form-group oe_snippet_body form-field row">
+        	<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
+        	<div class="col-md-7 col-sm-8">
+        		<input type="text" class="form-control" />
+        	</div>
+        </div>
+    </div>
 </div>
 
 <div id="snippet_options" class="hidden">
@@ -932,12 +1008,19 @@
         data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel, .oe_share"
         data-selector-children=".content">
     </div>
+    
+    <div data-snippet-option-id='input'
+        data-selector=".form-group"
+        data-selector-siblings=".form-group"
+        data-selector-children="form">
+    </div>
 
     <div data-snippet-option-id='separator'
         data-selector="hr"
         data-selector-children=".oe_structure, [data-oe-type=html]">
     </div>
-
+	
+	
     <div data-snippet-option-id='parallax'
         data-selector=".parallax">
         <li class="dropdown-submenu">
@@ -973,9 +1056,24 @@
         <li><a href="#" class="style">Transform</a></li>
         <li><a href="#" class="clear-style">Reset Transformation</a></li>
     </div>
+    
+    <div data-snippet-option-id='editForm'
+        data-selector="section, .form"
+        data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
+       >
+       	<li class="divider"></li>
+        <li><a href="#" class="button js_action_form_list">Change Form Parameters</a></li>
+        <li><a href="#" class="button js_add_form_field">Add Field</a></li>
+    </div>
+    
+    <div data-snippet-option-id='editFormField'
+        data-selector=".form-field"
+        data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
+       >
+       	<li class="divider"></li>
+        <li><a href="#" class="button js_action_form_list">Change Field Parameters</a></li>
+    </div>
 
 </template>
-
-
 </data>
 </openerp>
