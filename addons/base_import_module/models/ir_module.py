@@ -19,21 +19,23 @@ class view(osv.osv):
     def import_module(self, cr, uid, module, path, force=False, context=None):
         known_mods = self.browse(cr, uid, self.search(cr, uid, []))
         known_mods_names = dict([(m.name, m) for m in known_mods])
+        installed_mods = [m.name for m in known_mods if m.state == 'installed']
 
-        mod = known_mods_names.get(module)
         terp = openerp.modules.load_information_from_description_file(module, mod_path=path)
         values = self.get_values_from_terp(terp)
 
-        unmet_dependencies = set(terp['depends']).difference(known_mods_names.keys())
+        unmet_dependencies = set(terp['depends']).difference(installed_mods)
         if unmet_dependencies:
-            raise osv.except_osv(_('Error !'), _("Unmet module dependencies: %s" % ', '.join(unmet_dependencies)))
+            msg = _("Unmet module dependencies: %s")
+            raise osv.except_osv(_('Error !'), msg % ', '.join(unmet_dependencies))
 
+        mod = known_mods_names.get(module)
         if mod:
-            self.write(cr, uid, mod.id, values)
+            self.write(cr, uid, mod.id, dict(state='installed', **values))
             mode = 'update' if not force else 'init'
         else:
             assert terp.get('installable', True), "Module not installable"
-            self.create(cr, uid, dict(name=module, state='uninstalled', **values))
+            self.create(cr, uid, dict(name=module, state='installed', **values))
             mode = 'init'
 
         for kind in ['data', 'init_xml', 'update_xml']:
@@ -49,7 +51,7 @@ class view(osv.osv):
         path_static = opj(path, 'static')
         ir_attach = self.pool['ir.attachment']
         if os.path.isdir(path_static):
-            for root, _, files in os.walk(path_static):
+            for root, dirs, files in os.walk(path_static):
                 for static_file in files:
                     full_path = opj(root, static_file)
                     with open(full_path, 'r') as fp:
@@ -85,7 +87,8 @@ class view(osv.osv):
         with zipfile.ZipFile(module_file, "r") as z:
             for zf in z.filelist:
                 if zf.file_size > MAX_FILE_SIZE:
-                    raise osv.except_osv(_('Error !'), _("File '%s' exceed maximum allowed file size" % zf.filename))
+                    msg = _("File '%s' exceed maximum allowed file size")
+                    raise osv.except_osv(_('Error !'), msg % zf.filename)
 
             with openerp.tools.osutil.tempdir() as module_dir:
                 z.extractall(module_dir)
