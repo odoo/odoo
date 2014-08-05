@@ -2621,7 +2621,7 @@ class BaseModel(object):
 
                             if isinstance(f, fields.many2one) or (isinstance(f, fields.function) and f._type == 'many2one' and f.store):
                                 dest_model = self.pool[f._obj]
-                                if dest_model._table != 'ir_actions':
+                                if dest_model._auto and dest_model._table != 'ir_actions':
                                     self._m2o_fix_foreign_key(cr, self._table, k, dest_model, f.ondelete)
 
                     # The field doesn't exist in database. Create it if necessary.
