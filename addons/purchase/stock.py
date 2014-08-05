@@ -78,6 +78,13 @@ class stock_move(osv.osv):
             purchase_line = move.purchase_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit
+        if move.origin_returned_move_id:
+            acc_fp_obj = self.pool.get('account.fiscal.position')
+            taxes = move.product_id.taxes_id
+            fpos = partner.property_account_position or False
+            taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes)
+            res['invoice_line_tax_id'] = [(6, 0, taxes_ids)]
+            res['price_unit'] = move.price_unit
         return res
 
 class stock_picking(osv.osv):
