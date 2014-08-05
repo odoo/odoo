@@ -3,6 +3,7 @@
 from datetime import datetime
 import werkzeug.urls
 import werkzeug.wrappers
+import re
 import simplejson
 
 from openerp import tools
@@ -12,6 +13,7 @@ from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
 from openerp.addons.website.models.website import slug
+from openerp.tools.translate import _
 
 controllers = controllers()
 
@@ -276,6 +278,20 @@ class WebsiteForum(http.Controller):
     def post_new(self, forum, post, **kwargs):
         if not request.session.uid:
             return login_redirect()
+        cr, uid, context = request.cr, request.uid, request.context
+        user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        if not user.email or not tools.single_email_re.match(user.email):
+            country = request.registry['res.country']
+            country_ids = country.search(request.cr, SUPERUSER_ID, [], context=request.context)
+            countries = country.browse(request.cr, SUPERUSER_ID, country_ids, context=request.context)
+            values = self._prepare_forum_values(forum=forum, searches=kwargs)
+            values.update({
+                'email_enter_valid': _('Before answering you first enter valid email address.'),
+                'countries': countries,
+                'notifications': self._get_notifications(),
+            })
+            return request.website.render("website_forum.edit_profile", values)
+ 
         request.registry['forum.post'].create(
             request.cr, request.uid, {
                 'forum_id': forum.id,
