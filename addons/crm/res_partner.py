@@ -99,5 +99,21 @@ class res_partner(osv.osv):
         }
         return res
 
+    def default_get(self, cr, uid, fields, context=None):
+        context = dict(context or {})
+        if context.get('default_type') and context.get('default_type') == 'opportunity':
+            context.pop('default_type')
+        return super(res_partner, self).default_get(cr, uid, fields, context=context)
+
+
+class res_users(osv.Model):
+    """ Inherits user to check default_type in default_get method"""
+    _inherit = 'res.users'
+
+    def default_get(self, cr, uid, fields, context=None):
+        context = dict(context or {})
+        if context.get('default_type') and context.get('default_type') == 'opportunity':
+            context.pop('default_type')
+        return super(res_users, self).default_get(cr, uid, fields, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
