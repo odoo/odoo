@@ -68,7 +68,7 @@ class account_fiscal_position(osv.osv):
 
     @api.v8     # noqa
     def map_tax(self, taxes):
-        result = set()
+        result = self.env['account.tax'].browse()
         for tax in taxes:
             for t in self.tax_ids:
                 if t.tax_src_id == tax:
