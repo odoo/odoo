@@ -748,23 +748,23 @@ class calendar_event(osv.Model):
         res = {}
         if not isinstance(fields, list):
             fields = [fields]
-        for meeting_id in ids:
-            res[meeting_id] = {}
-            attendee = self._find_my_attendee(cr, uid, [meeting_id], context)
-            meeting = self.browse(cr, uid, [meeting_id], context=context)[0]
+        for meeting in self.browse(cr, uid, ids, context=context):
+            meeting_data = {}
+            res[meeting.id] = meeting_data
+            attendee = self._find_my_attendee(cr, uid, [meeting.id], context)
             for field in fields:
                 if field == 'is_attendee':
-                    res[meeting_id][field] = True if attendee else False
+                    meeting_data[field] = bool(attendee)
                 elif field == 'attendee_status':
-                    res[meeting_id][field] = attendee.state if attendee else 'needsAction'
+                    meeting_data[field] = attendee.state if attendee else 'needsAction'
                 elif field == 'display_time':
-                    res[meeting_id][field] = self._get_display_time(cr, uid, meeting.start, meeting.stop, meeting.duration, meeting.allday, context=context)
+                    meeting_data[field] = self._get_display_time(cr, uid, meeting.start, meeting.stop, meeting.duration, meeting.allday, context=context)
                 elif field == "display_start":
-                    res[meeting_id][field] = meeting.start_date if meeting.allday else meeting.start_datetime
+                    meeting_data[field] = meeting.start_date if meeting.allday else meeting.start_datetime
                 elif field == 'start':
-                    res[meeting_id][field] = meeting.start_date if meeting.allday else meeting.start_datetime
+                    meeting_data[field] = meeting.start_date if meeting.allday else meeting.start_datetime
                 elif field == 'stop':
-                    res[meeting_id][field] = meeting.stop_date if meeting.allday else meeting.stop_datetime
+                    meeting_data[field] = meeting.stop_date if meeting.allday else meeting.stop_datetime
         return res
 
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
@@ -857,10 +857,10 @@ class calendar_event(osv.Model):
         'is_attendee': fields.function(_compute, string='Attendee', type="boolean", multi='attendee'),
         'attendee_status': fields.function(_compute, string='Attendee Status', type="selection", selection=calendar_attendee.STATE_SELECTION, multi='attendee'),
         'display_time': fields.function(_compute, string='Event Time', type="char", multi='attendee'),
-        'display_start': fields.function(_compute, string='Date', type="char", multi='display_start', store=True),
+        'display_start': fields.function(_compute, string='Date', type="char", multi='attendee', store=True),
         'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
-        'start': fields.function(_compute, string='Calculated start', type="datetime", multi='start', store=True, required=True),
-        'stop': fields.function(_compute, string='Calculated stop', type="datetime", multi='stop', store=True, required=True),
+        'start': fields.function(_compute, string='Calculated start', type="datetime", multi='attendee', store=True, required=True),
+        'stop': fields.function(_compute, string='Calculated stop', type="datetime", multi='attendee', store=True, required=True),
         'start_date': fields.date('Start Date', states={'done': [('readonly', True)]}, track_visibility='onchange'),
         'start_datetime': fields.datetime('Start DateTime', states={'done': [('readonly', True)]}, track_visibility='onchange'),
         'stop_date': fields.date('End Date', states={'done': [('readonly', True)]}, track_visibility='onchange'),
