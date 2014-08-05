@@ -849,6 +849,98 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     });
 
 
+    module.NewPaymentScreenWidget = module.ScreenWidget.extend({
+        template:      'NewPaymentScreenWidget',
+        back_screen:   'product',
+        next_screen:   'receipt',
+        show_leftpane: false,
+        show_numpad:   false,
+        init: function(parent, options) {
+            this._super(parent, options);
+            this.pos.bind('change:selectedOrder',function(){
+                    this.bind_events();
+                    this.renderElement();
+                },this);
+        },
+        click_numpad: function(button){
+            console.log(button);
+        },
+        render_numpad: function() {
+            var numpad = $(QWeb.render('PaymentScreen-Numpad', { widget:this }));
+            return numpad;
+        },
+        click_delete_paymentline: function(cid){
+            var lines = this.pos.get_order().get('paymentLines').models;
+            for ( var i = 0; i < lines.length; i++ ) {
+                if (lines[i].cid === cid) {
+                    this.pos.get_order().removePaymentline(lines[i]);
+                    this.render_paymentlines();
+                    return;
+                }
+            }
+        },
+        render_paymentlines: function() {
+            var self  = this;
+            var order = this.pos.get_order();
+            var lines = order.get('paymentLines').models;
+
+            this.$('.paymentlines-container').empty();
+            var lines = $(QWeb.render('PaymentScreen-Paymentlines', { 
+                widget: this, 
+                order: order,
+                paymentlines: lines,
+            }));
+
+            lines.on('click','.delete-button',function(){
+                self.click_delete_paymentline($(this).data('cid'));
+            });
+                
+            lines.appendTo(this.$('.paymentlines-container'));
+        },
+        click_paymentmethods: function(id){
+            var cashregister = null;
+            for ( var i = 0; i < this.pos.cashregisters.length; i++ ) {
+                if ( this.pos.cashregisters[i].journal_id[0] === id ){
+                    cashregister = this.pos.cashregisters[i];
+                    break;
+                }
+            }
+            this.pos.get_order().addPaymentline( cashregister );
+            this.render_paymentlines();
+        },
+        render_paymentmethods: function() {
+            var self = this;
+            var methods = $(QWeb.render('PaymentScreen-Paymentmethods', { widget:this }));
+                methods.on('click','.paymentmethod',function(){
+                    self.click_paymentmethods($(this).data('id'));
+                });
+            return methods;
+        },
+        renderElement: function() {
+            var self = this;
+            this._super();
+
+            var numpad = this.render_numpad();
+            numpad.appendTo(this.$('.payment-numpad'));
+
+            var methods = this.render_paymentmethods();
+            methods.appendTo(this.$('.paymentmethods-container'));
+
+            this.render_paymentlines();
+
+            this.$('.back').click(function(){
+                self.pos_widget.screen_selector.back();
+            });
+
+        },
+        show: function(){
+            this.pos.get_order().clean_empty_paymentlines();
+            this.render_paymentlines();
+            this._super();
+        },
+
+    });
+
     module.PaymentScreenWidget = module.ScreenWidget.extend({
         template: 'PaymentScreenWidget',
         back_screen: 'products',

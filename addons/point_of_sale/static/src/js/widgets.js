@@ -1067,7 +1067,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.receipt_screen = new module.ReceiptScreenWidget(this, {});
             this.receipt_screen.appendTo(this.$('.screens'));
 
-            this.payment_screen = new module.PaymentScreenWidget(this, {});
+            this.payment_screen = new module.NewPaymentScreenWidget(this, {});
             this.payment_screen.appendTo(this.$('.screens'));
 
             this.clientlist_screen = new module.ClientListScreenWidget(this, {});

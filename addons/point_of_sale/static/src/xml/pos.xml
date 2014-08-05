@@ -389,7 +389,146 @@
         </div>
     </t>
 
+    <t t-name="PaymentScreen-Paymentlines">
+        <t t-if="!paymentlines.length">
+            <div class='paymentlines-empty'>
+                <div class='total'>
+                    <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
+                </div>
+                <div class='message'>
+                    Please select a payment method. 
+                </div>
+            </div>
+        </t>
+
+        <t t-if="paymentlines.length">
+            <table class='paymentlines'>
+                <colgroup>
+                    <col class='due' />
+                    <col class='tendered' />
+                    <col class='change' />
+                    <col class='method' />
+                    <col class='controls' />
+                </colgroup>
+                <thead>
+                    <tr class='label'>
+                        <th>Due</th>
+                        <th>Tendered</th>
+                        <th>Change</th>
+                        <th>Method</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach='paymentlines' t-as='line'>
+                        <t t-if='line.selected'>
+                            <tr class='paymentline selected'>
+                                <td> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
+                                <td class='edit'> <t t-esc='line.get_amount()' /> </td>
+                                <td> <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' /> </td>
+                                <td> <t t-esc='line.name' /> </td>
+                                <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
+                            </tr>
+                        </t>
+                        <t t-if='!line.selected'>
+                            <tr class='paymentline'>
+                                <td> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
+                                <td> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
+                                <td> <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' /> </td>
+                                <td> <t t-esc='line.name' /> </td>
+                                <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+
+    </t>
+
+    <t t-name="PaymentScreen-Numpad">
+        <div class="numpad">
+            <button class="input-button number-char">1</button>
+            <button class="input-button number-char">2</button>
+            <button class="input-button number-char">3</button>
+            <button class="mode-button" data-action='currency' data-value='5' >5€</button>
+            <br />
+            <button class="input-button number-char">4</button>
+            <button class="input-button number-char">5</button>
+            <button class="input-button number-char">6</button>
+            <button class="mode-button" data-action='currency' data-value='10' >10€</button>
+            <br />
+            <button class="input-button number-char">7</button>
+            <button class="input-button number-char">8</button>
+            <button class="input-button number-char">9</button>
+            <button class="mode-button" data-action='currency' data-value='20' >20€</button>
+            <br />
+            <button class="input-button numpad-char" data-action='clear' >C</button>
+            <button class="input-button number-char">0</button>
+            <button class="input-button number-char">.</button>
+            <button class="input-button numpad-backspace" data-action='backspace' >
+                <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+            </button>
+            <br />
+        </div>
+    </t>
+
+    <t t-name="PaymentScreen-Paymentmethods">
+        <div class='paymentmethods'>
+            <t t-foreach="widget.pos.cashregisters" t-as="cashregister">
+                <div class="paymentmethod" t-att-data-id="cashregister.journal_id[0]">
+                    <t t-esc="cashregister.journal_id[1]" />
+                </div>
+            </t>
+        </div>
+    </t>
         
+    <t t-name="NewPaymentScreenWidget">
+        <div class='payment-screen screen'>
+            <div class='screen-content'>
+                <div class='top-content'>
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                    <h1>Payment</h1>
+                    <span class='button next'>
+                        Validate
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </div>
+                <div class='left-content pc40 touch-scrollable scrollable-y'>
+
+                    <div class='paymentmethods-container'>
+                    </div>
+
+                </div>
+                <div class='right-content pc60 touch-scrollable scrollable-y'>
+
+                    <section class='paymentlines-container'>
+                    </section>
+
+                    <div class='payment-buttons'>
+                        <t t-if='widget.pos.config.iface_invoicing'>
+                            <div class='button js_invoice'>
+                                <i class='fa fa-file-text-o' /> Invoice
+                            </div>
+                        </t>
+                        <t t-if='widget.pos.config.iface_cashdrawer'>
+                            <div class='button js_invoice'>
+                                <i class='fa fa-archive' /> Open Cashbox
+                            </div>
+                        </t>
+                    </div>
+
+                    <section class='payment-numpad'>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+
+    </t>
 
     <t t-name="PaymentScreenWidget">
         <div class="payment-screen screen touch-scrollable">

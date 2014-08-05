@@ -996,11 +996,39 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 return sum + paymentLine.get_amount();
             }), 0);
         },
-        getChange: function() {
-            return this.getPaidTotal() - this.getTotalTaxIncluded();
+        getChange: function(paymentline) {
+            if (!paymentline) {
+                var change = this.getPaidTotal() - this.getTotalTaxIncluded();
+            } else {
+                var change = -this.getTotalTaxIncluded(); 
+                var lines  = this.get('paymentLines').models;
+                for (var i = 0; i < lines.length; i++) {
+                    change += lines[i].get_amount();
+                    if (lines[i] === paymentline) {
+                        break;
+                    }
+                }
+            }
+            return round_pr(Math.max(0,change), this.pos.currency.rounding);
         },
-        getDueLeft: function() {
-            return this.getTotalTaxIncluded() - this.getPaidTotal();
+        getDueLeft: function(paymentline) {
+            if (!paymentline) {
+                var due = this.getTotalTaxIncluded() - this.getPaidTotal();
+            } else {
+                var due = this.getTotalTaxIncluded();
+                var lines = this.get('paymentLines').models;
+                for (var i = 0; i < lines.length; i++) {
+                    if (lines[i] === paymentline) {
+                        break;
+                    } else {
+                        due -= lines[i].get_amount();
+                    }
+                }
+            }
+            return round_pr(Math.max(0,due), this.pos.currency.rounding);
+        },
+        isPaid: function(){
+            return this.getDueLeft() === 0;
         },
         // sets the type of receipt 'receipt'(default) or 'invoice'
         set_receipt_type: function(type){
@@ -1030,6 +1058,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 for(key in arguments[0]){
                     this.screen_data[key] = arguments[0][key];
                 }
+            }
+        },
+        // remove all the paymentlines with zero money in it
+        clean_empty_paymentlines: function() {
+            var lines = this.get('paymentLines').models;
+            var empty = [];
+            for ( var i = 0; i < lines.length; i++) {
+                if (!lines[i].get_amount()) {
+                    empty.push(lines[i]);
+                }
+            }
+            for ( var i = 0; i < empty.length; i++) {
+                this.removePaymentline(empty[i]);
             }
         },
         //see set_screen_data
