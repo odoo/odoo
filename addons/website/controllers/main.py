@@ -254,7 +254,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         lang = lang or request.context.get('lang')
         views = self.customize_template_get(xml_id, full=True)
         views_ids = [view.get('id') for view in views if view.get('active')]
-        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
+        domain = [('type', '=', 'model'), ('name','=','ir.ui.view,arch'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
         irt = request.registry.get('ir.translation')
         return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value','state','gengo_translation'], context=request.context)
 
@@ -271,7 +271,8 @@ class Website(openerp.addons.web.controllers.main.Home):
                     old_trans = irt.search_read(
                         request.cr, request.uid,
                         [
-                            ('type', '=', 'view'),
+                            ('type', '=', 'model'),
+                            ('name', '=', 'ir.ui.view,arch'),
                             ('res_id', '=', view_id),
                             ('lang', '=', lang),
                             ('src', '=', initial_content),
@@ -283,11 +284,11 @@ class Website(openerp.addons.web.controllers.main.Home):
                     irt.write(request.cr, request.uid, [tid], vals)
                 else:
                     new_trans = {
-                        'name': 'website',
+                        'type': 'model',
+                        'name': 'ir.ui.view,arch',
                         'res_id': view_id,
                         'lang': lang,
-                        'type': 'view',
-                        'source': initial_content,
+                        'src': initial_content,
                         'value': new_content,
                     }
                     if t.get('gengo_translation'):
