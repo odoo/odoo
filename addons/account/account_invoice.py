@@ -97,8 +97,6 @@ class account_invoice(models.Model):
     @api.depends('account_id', 'move_id.line_id.account_id', 'move_id.line_id.reconcile_id')
     def _compute_reconciled(self):
         self.reconciled = self.test_paid()
-        if not self.reconciled and self.state == 'paid':
-            self.signal_workflow('open_test')
 
     @api.model
     def _get_reference_type(self):
