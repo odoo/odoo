@@ -4973,9 +4973,10 @@ class BaseModel(object):
         """ stuff to do right after the registry is built """
         pass
 
-    def _patch_method(self, name, method):
+    @classmethod
+    def _patch_method(cls, name, method):
         """ Monkey-patch a method for all instances of this model. This replaces
-            the method called `name` by `method` in `self`'s class.
+            the method called `name` by `method` in the given class.
             The original method is then accessible via ``method.origin``, and it
             can be restored with :meth:`~._revert_method`.
 
@@ -4996,7 +4997,6 @@ class BaseModel(object):
                 # restore the original method
                 model._revert_method('write')
         """
-        cls = type(self)
         origin = getattr(cls, name)
         method.origin = origin
         # propagate decorators from origin to method, and apply api decorator
@@ -5004,11 +5004,11 @@ class BaseModel(object):
         wrapped.origin = origin
         setattr(cls, name, wrapped)
 
-    def _revert_method(self, name):
-        """ Revert the original method of `self` called `name`.
+    @classmethod
+    def _revert_method(cls, name):
+        """ Revert the original method called `name` in the given class.
             See :meth:`~._patch_method`.
         """
-        cls = type(self)
         method = getattr(cls, name)
         setattr(cls, name, method.origin)
 
