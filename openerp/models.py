@@ -1317,6 +1317,16 @@ class BaseModel(object):
         # 1. look up context
         key = 'default_' + name
         if key in context:
+            if hasattr(field, 'selection'):
+                if isinstance(field.selection, (tuple, list)):
+                    if context[key] not in dict(field.selection):
+                        self[name] = None
+                        _logger.warning("The value %s for the field %s is not in the selection", context[key], field)
+                        return
+                elif context[key] not in dict(field.selection(self)):
+                    self[name] = None
+                    _logger.warning("The value %s for the field %s is not in the selection", context[key], field)
+                    return
             self[name] = context[key]
             return
 
