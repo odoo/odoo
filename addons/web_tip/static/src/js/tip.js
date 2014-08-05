@@ -23,7 +23,7 @@
             });
 
             instance.web.bus.on('view_shown', this, function(view) {
-                if (Object.keys(view.fields_view).length === 0) {
+                if (_.keys(view.fields_view).length === 0) {
                     view.on('view_loaded', this, function(fields_view) {
                         self.on_view(view);
                     });
