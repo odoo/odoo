@@ -3,49 +3,49 @@
     var CursorMirror = function() {
 
         var smtOpt = {
-            /** 
+            /**
              * Entry point color
-             * @type string 
-             */  
-            entryPt:  "#9F6",   
-            /** 
+             * @type string
+             */
+            entryPt:  "#9F6",
+            /**
              * Exit point color
-             * @type string     
+             * @type string
              */
-            exitPt:   "#F66",   
-            /** 
+            exitPt:   "#F66",
+            /**
              * Registration points color
-             * @type string      
+             * @type string
              */
-            regPt:    "#F0F",   
-            /** 
+            regPt:    "#F0F",
+            /**
              * Lines color
-             * @type string      
-             */ 
-            regLn:    "#0CC",   
-            /** 
+             * @type string
+             */
+            regLn:    "#0CC",
+            /**
              * Clicks color
-             * @type string      
+             * @type string
              */
-            click:    "#F00",   
-            /** 
+            click:    "#F00",
+            /**
              * Drag and drop color
-             * @type string      
+             * @type string
              */
-            dDrop:    "#ABC",   
-            /** 
+            dDrop:    "#ABC",
+            /**
              * User stops: time-depending circles color
-             * @type string      
+             * @type string
              */
-            varCir:   "#F99",   
-            /** 
+            varCir:   "#F99",
+            /**
              * Centroid color
-             * @type string      
+             * @type string
              */
-            cenPt:    "#DDD",   
-            /** 
+            cenPt:    "#DDD",
+            /**
              * Clusters color
-             * @type string      
+             * @type string
              */
             clust:    "#00F",
             /**
@@ -53,9 +53,9 @@
              * @type string
              */
             bgColor: "#555",
-            /** 
+            /**
              * Draw background layer (true) or not (false)
-             * @type boolean      
+             * @type boolean
              */
             bgLayer:  true,
             /**
@@ -63,19 +63,19 @@
              * @type boolean
              */
             realTime: true,
-            /** 
+            /**
              * Show direction vector (useful if realTime: false)
-             * @type boolean      
+             * @type boolean
              */
             dirVect:  false,
-            /** 
-             * Main layout content diagramation; a.k.a 'how page content flows'. 
+            /**
+             * Main layout content diagramation; a.k.a 'how page content flows'.
              * Values: "left" (fixed), "center" (fixed and centered), or "liquid" (adaptable, default behavior).
              * In "left" and "center" layouts the content is not adapted on resizing the browser.
              * An example of left diagramation is http://smt.speedzinemedia.com
              * @type string
              */
-            layoutType: "liquid"    
+            layoutType: "liquid"
         };
 
         var viewport = smt2fn.getWindowSize();
@@ -112,11 +112,11 @@
         var playMouse = function (coords) {
             // console.log(coords);
             // mouse coords normalization
-            var iniMouse = { 
+            var iniMouse = {
                     x: coords.x[counter] * discrepanceRatio.x,
                     y: coords.y[counter] * discrepanceRatio.y
             };
-            var endMouse = { 
+            var endMouse = {
                     x: coords.x[counter+1] * discrepanceRatio.x,
                     y: coords.y[counter+1] * discrepanceRatio.y
             };
@@ -124,10 +124,10 @@
                 counter++;
                 // console.log(JSON.stringify(iniMouse)+","+JSON.stringify(endMouse));
                 mouseCanvas.clear();
-                mouseCanvas.fillPolygon([iniMouse.x, iniMouse.x, iniMouse.x+4, iniMouse.x+6, iniMouse.x+9, iniMouse.x+7, iniMouse.x+15], 
+                mouseCanvas.fillPolygon([iniMouse.x, iniMouse.x, iniMouse.x+4, iniMouse.x+6, iniMouse.x+9, iniMouse.x+7, iniMouse.x+15],
                             [iniMouse.y, iniMouse.y+15, iniMouse.y+15, iniMouse.y+23, iniMouse.y+23, iniMouse.y+15, iniMouse.y+15]);
                 mouseCanvas.paint();
-            } else {                
+            } else {
                 clearInterval(play);
                 counter = 0;
             }
@@ -138,7 +138,7 @@
             play = window.setInterval(playMouse(coords), interval);
         };
 
-        return { 
+        return {
             forwardData: function(prevPage, coords, elem) {
                 // console.log(JSON.stringify(page) + "\n" + JSON.stringify(coords)/* + "\n" + JSON.stringify(elem)*/);
                 discrepanceRatio.x = smt2fn.roundTo(page.width / prevPage.width);
@@ -170,7 +170,7 @@
         };
         var clicked = false;
         var recordingInterval = null;
-        var fps = 24;
+        var fps = 2;
 
         var computeAvailableSpace = function() {
             var doc = smt2fn.getPageSize();
@@ -210,7 +210,7 @@
             // in certain situations the mouse coordinates could be negative values (e.g. Opera)
             if (x < 0 || !x) x = 0;
             if (y < 0 || !y) y = 0;
-            
+
             // coords.x.push(x);
             // coords.y.push(y);
             // coords.p.push(+clicked);
@@ -237,7 +237,7 @@
         };
 
         var releaseClick = function() {
-            clicked = false; 
+            clicked = false;
         };
         var setClick = function() {
             clicked = true;
@@ -269,8 +269,8 @@
             clearMouseData();
         };
         var interval = Math.round(1000/fps);
-        recordingInterval = window.setInterval(recMouse, interval);                            
-                
+        recordingInterval = window.setInterval(recMouse, interval);
+
         return {
                 disconnect: function() {
                     window.clearInterval(recordingInterval);

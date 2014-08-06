@@ -10,7 +10,7 @@
     instance.im_screenshare.RecordHandler = instance.Widget.extend({
         init: function() {
             this.treeMirrorClient = null;
-           // this.cursorMirrorClient = null;
+            this.cursorMirrorClient = null;
             this.def = $.when();
             this.msgQueue = [];
         },
@@ -56,7 +56,7 @@
                     });
                 }
             });
-            /*
+
             this.cursorMirrorClient = new CursorMirrorClient({
                 forwardData: function(page, coords, elem) {
                     self.queue({
@@ -66,14 +66,14 @@
                     });
                 },
             });
-            */
+
         },
         stop_record: function(){
             if(this.is_recording()){
                 this.treeMirrorClient.disconnect();
                 this.treeMirrorClient = null;
-                //this.cursorMirrorClient.disconnect();
-                //this.cursorMirrorClient = null;
+                this.cursorMirrorClient.disconnect();
+                this.cursorMirrorClient = null;
             }
         },
         send_record: function(json_mutations){
@@ -83,8 +83,8 @@
 
     // Class which replay the recieved mutation on the current DOM
     instance.im_screenshare.Player = instance.Widget.extend({
-        init: function(treeMirror){
-            //this.cursorMirror = cursorMirror;
+        init: function(treeMirror, cursorMirror){
+            this.cursorMirror = cursorMirror;
             this.treeMirror = treeMirror;
         },
         clearPage : function() {
@@ -102,7 +102,7 @@
             } else {
                 //console.log(msg.f);
                 if (msg.f === 'forwardData') {
-                    //console.log("msg.f = forwardData");
+                    console.log("msg.f = forwardData");
                     this.cursorMirror[msg.f].apply(this.cursorMirror, msg.args);
                     //console.log(this.cursorMirror[msg.f]);
                 } else {
@@ -302,6 +302,7 @@
         _filter: function(mutations){
             var self = this;
             _.each(mutations, function(m){
+                // remove 'loading' mutations
                 if(m.f === 'applyChanged'){
                     // remove the Removed Element (generally child of loading node)
                     m.args[0] = _.filter(m.args[0], function(item){
@@ -323,6 +324,12 @@
             var self = this;
             var clean_mutations = [];
             _.each(mutations, function(m){
+                if(m.f === 'forwardData'){
+                    clean_mutations.push(m);
+                }
+                if(m.f === 'initialize'){
+                    clean_mutations.push(m);
+                }
                 if(m.f === 'applyChanged'){
                     // remove mutation id=1 and attribute is empty key-array
                     m.args[2] = _.filter(m.args[2], function(item){
@@ -332,8 +339,6 @@
                     if(!(_.isEmpty(m.args[0]) && _.isEmpty(m.args[1]) && _.isEmpty(m.args[2]) && _.isEmpty(m.args[3]))){
                         clean_mutations.push(m);
                     }
-                }else{
-                    clean_mutations.push(m);
                 }
             });
             return clean_mutations;
@@ -399,7 +404,7 @@
             var message = notification[1];
 
             if(channel === this.channel){
-                console.log("RECEIVE : ", JSON.stringify(message));
+                //console.log("RECEIVE : ", JSON.stringify(message));
                 if(message.type === 'finish'){
                    //window.close();
                 }else{
