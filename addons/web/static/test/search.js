@@ -157,7 +157,7 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
             return {
                 type: 'search',
                 fields: {
-                    dummy: {type: 'char', string: "Dummy"}
+                    dummy: {type: 'char', string: "Dummy", searchable: true}
                 },
                 arch: '<search><field name="dummy" widget="dummy"/></search>'
             };
@@ -168,7 +168,7 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
     };
     instance.session.responses['dummy.model:fields_get'] = function () {
         return {
-            dummy: {type: 'char', string: 'Dummy'}
+            dummy: {type: 'char', string: 'Dummy', searchable: true}
         };
     };
     instance.client = { action_manager: { inner_action: undefined } };
