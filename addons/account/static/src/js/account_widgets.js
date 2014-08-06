@@ -5,49 +5,432 @@ openerp.account = function (instance) {
     var QWeb = instance.web.qweb;
     
     instance.web.account = instance.web.account || {};
-    
-    instance.web.client_actions.add('bank_statement_reconciliation_view', 'instance.web.account.bankStatementReconciliation');
-    instance.web.account.bankStatementReconciliation = instance.web.Widget.extend({
-        className: 'oe_bank_statement_reconciliation',
 
-        events: {
-            "click .statement_name span": "statementNameClickHandler",
-            "keyup .change_statement_name_field": "changeStatementNameFieldHandler",
-            "click .change_statement_name_button": "changeStatementButtonClickHandler",
-        },
+    // NOTE
+    // "implementation classes" must declare a
+    // this.childrenWidget = instance.web.account.implementationOfAbstractReconciliationLine
+    instance.web.account.abstractReconciliation = instance.web.Widget.extend({
+        className: 'oe_reconciliation',
     
         init: function(parent, context) {
             this._super(parent);
             this.max_reconciliations_displayed = 10;
-            if (context.context.statement_id) this.statement_ids = [context.context.statement_id];
-            if (context.context.statement_ids) this.statement_ids = context.context.statement_ids;
-            this.single_statement = this.statement_ids !== undefined && this.statement_ids.length === 1;
-            this.multiple_statements = this.statement_ids !== undefined && this.statement_ids.length > 1;
-            this.title = context.context.title || _t("Reconciliation");
-            this.st_lines = [];
+            this.title = context.context.title || _t("Reconciliation"); // TODO : only bank statement ?
+            this.lines = []; // list of reconciliations identifiers to instantiate children widgets
             this.last_displayed_reconciliation_index = undefined; // Flow control
             this.reconciled_lines = 0; // idem
             this.already_reconciled_lines = 0; // Number of lines of the statement which were already reconciled
-            this.model_bank_statement = new instance.web.Model("account.bank.statement");
-            this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
-            this.reconciliation_menu_id = false; // Used to update the needaction badge
-            this.formatCurrency; // Method that formats the currency ; loaded from the server
     
             // Only for statistical purposes
-            this.lines_reconciled_with_ctrl_enter = 0;
+            this.lines_reconciled_with_ctrl_enter = 0; // TODO : only bank statement ?
             this.time_widget_loaded = Date.now();
     
-            // Stuff used by the children bankStatementReconciliationLine
+            // Stuff used by the children reconciliationLine
             this.max_move_lines_displayed = 5;
             this.animation_speed = 100; // "Blocking" animations
             this.aestetic_animation_speed = 300; // eye candy
-            this.map_currency_id_rounding = {};
-            this.map_tax_id_amount = {};
-            this.presets = {};
             // We'll need to get the code of an account selected in a many2one (whose value is the id)
             this.map_account_id_code = {};
+            this.reconciliation_menu_id = false; // Used to update the needaction badge
+        },
+    
+        start: function() {
+            var self = this;
+            $.when(this._super()).then(function(){
+                var deferred_promises = [];
+
+                // Create a dict account id -> account code for display facilities
+                deferred_promises.push(new instance.web.Model("account.account")
+                    .query(['id', 'code'])
+                    .all().then(function(data) {
+                        _.each(data, function(o) { self.map_account_id_code[o.id] = o.code });
+                    })
+                );
+                
+                // Bind keyboard events TODO : méthode standard ?
+                $("body").on("keypress", function (e) {
+                    self.keyboardShortcutsHandler(e);
+                });
+        
+                return $.when.apply($, deferred_promises);
+            });
+        },
+    
+        keyboardShortcutsHandler: function(e) {},
+
+        displayReconciliation: function(line_id, mode, animate_entrance, initial_data_provided, line, reconciliation_proposition) {
+            var self = this;
+            animate_entrance = (animate_entrance === undefined ? true : animate_entrance);
+            initial_data_provided = (initial_data_provided === undefined ? false : initial_data_provided);
+    
+            var context = {
+                line_id: line_id,
+                mode: mode,
+                animate_entrance: animate_entrance,
+                initial_data_provided: initial_data_provided,
+                line: initial_data_provided ? line : undefined,
+                reconciliation_proposition: initial_data_provided ? reconciliation_proposition : undefined,
+            };
+            var widget = new self.childrenWidget(self, context);
+            return widget.appendTo(self.$(".reconciliation_lines_container"));
+        },
+    
+        childValidated: function(child) {
+            var self = this;
+    
+            self.reconciled_lines++;
+            self.updateProgressbar();
+            self.doReloadMenuReconciliation();
+    
+            // Display new line if there are left
+            if (self.last_displayed_reconciliation_index < self.lines.length) {
+                self.displayReconciliation(self.lines[self.last_displayed_reconciliation_index++], 'inactive');
+            }
+            // Congratulate the user if the work is done
+            if (self.reconciled_lines === self.lines.length) {
+                self.displayDoneMessage();
+            }
+        },
+    
+        displayDoneMessage: function() {},
+    
+        updateProgressbar: function() {
+            var self = this;
+            var done = self.already_reconciled_lines + self.reconciled_lines;
+            var total = self.already_reconciled_lines + self.lines.length;
+            var prog_bar = self.$(".progress .progress-bar");
+            prog_bar.attr("aria-valuenow", done);
+            prog_bar.css("width", (done/total*100)+"%");
+            self.$(".progress .progress-text .valuenow").text(done);
+        },
+    
+        /* reloads the needaction badge */
+        doReloadMenuReconciliation: function () {
+            var menu = instance.webclient.menu;
+            if (!menu || !this.reconciliation_menu_id) {
+                return $.when();
+            }
+            return menu.rpc("/web/menu/load_needaction", {'menu_ids': [this.reconciliation_menu_id]}).done(function(r) {
+                menu.on_needaction_loaded(r);
+            }).then(function () {
+                menu.trigger("need_action_reloaded");
+            });
+        },
+    });
+    
+    instance.web.account.abstractReconciliationLine = instance.web.Widget.extend({
+        className: 'oe_reconciliation_line',
+    
+        init: function(parent, context) {
+            this._super(parent);
+    
+            if (context.initial_data_provided) {
+                // Process data
+                _(context.reconciliation_proposition).each(this.decorateMoveLine.bind(this));
+                this.set("mv_lines_selected", context.reconciliation_proposition);
+                this.partner_id = context.line.partner_id;
+            } else {
+                this.set("mv_lines_selected", []);
+            }
+    
+            this.context = context;
+            this.max_move_lines_displayed = this.getParent().max_move_lines_displayed;
+            this.animation_speed = this.getParent().animation_speed;
+            this.aestetic_animation_speed = this.getParent().aestetic_animation_speed;
+            this.map_account_id_code = this.getParent().map_account_id_code;
+            this.is_valid = true;
+            this.is_consistent = true; // Used to prevent bad server requests
+            this.filter = "";
+    
+            this.set("balance", undefined); // Debit is +, credit is -
+            this.on("change:balance", this, this.balanceChanged);
+            this.set("pager_index", 0);
+            this.on("change:pager_index", this, this.pagerChanged);
+            // NB : mv_lines represent the counterpart that will be created to reconcile existing move lines, so debit and credit are inverted
+            this.set("mv_lines", []);
+            this.on("change:mv_lines", this, this.mvLinesChanged);
+            this.on("change:mv_lines_selected", this, this.mvLinesSelectedChanged);
+
+            //all lines associated to current reconciliation
+            this.propositions_lines = undefined;
+        },
+    
+        start: function() {
+            var self = this;
+            return self._super().then(function() {
+
+                // Event handlers are not defined via the shortcut in order
+                // not to be overwritten by implementation widgets
+                self.$el.on("click", ".mv_line", self.moveLineClickHandler.bind(self));
+                self.$el.on("click", ".pager_control_left:not(.disabled)", self.pagerControlLeftHandler.bind(self));
+                self.$el.on("click", ".pager_control_right:not(.disabled)", self.pagerControlRightHandler.bind(self));
+                self.$el.on("keyup", ".filter", self.filterHandler.bind(self));
+                self.$el.on("click", ".line_info_button", function(e){e.stopPropagation()});
+
+                // no animation while loading
+                self.animation_speed = 0;
+                self.aestetic_animation_speed = 0;
+    
+                self.is_consistent = false;
+                if (self.context.animate_entrance) self.$el.css("opacity", "0");
+
+                return $.when(self.loadData()).then(function(){
+                    return $.when(self.render()).then(function(){
+                        // Make an entrance
+                        self.animation_speed = self.getParent().animation_speed;
+                        self.aestetic_animation_speed = self.getParent().aestetic_animation_speed;
+                        if (self.context.animate_entrance) return self.$el.animate({opacity: 1}, self.aestetic_animation_speed);
+                    });
+                });
+            });
+        },
+
+        loadData: function() {},
+
+        render: function() {},
+    
+        /** Utils */
+    
+        // adds fields, prefixed with q_, to the move line for qweb rendering
+        decorateMoveLine: function(line) {
+            /* Seems useless
+            line.partial_reconcile = false;
+            line.propose_partial_reconcile = false; */
+            line.q_due_date = (line.date_maturity === false ? line.date : line.date_maturity);
+            line.q_amount = (line.debit !== 0 ? "- "+line.q_debit : "") + (line.credit !== 0 ? line.q_credit : "");
+            line.q_popover = QWeb.render("reconciliation_move_line_details", {line: line});
+            line.q_label = line.name;
+            if (line.has_no_partner)
+                line.q_label = line.partner_name + ': ' + line.q_label;
+    
+            // WARNING : pretty much of a ugly hack
+            // The value of account_move.ref is either the move's communication or it's name without the slashes
+            if (line.ref && line.ref !== line.name.replace(/\//g,''))
+                line.q_label += " : " + line.ref;
+        },
+    
+        bindPopoverTo: function(el) {
+            var self = this;
+            $(el).addClass("bootstrap_popover");
+            el.popover({
+                'placement': 'left',
+                'container': self.el,
+                'html': true,
+                'trigger': 'hover',
+                'animation': false,
+                'toggle': 'popover'
+            });
+        },
+    
+        /** Matching */
+    
+        moveLineClickHandler: function(e) {
+            var self = this;
+            if (e.currentTarget.dataset.selected === "true") self.deselectMoveLine(e.currentTarget);
+            else self.selectMoveLine(e.currentTarget);
+        },
+
+        selectMoveLine: function(mv_line) {
+            var self = this;
+            var line_id = mv_line.dataset.lineid;
+            var line = _.find(self.propositions_lines, function(o){ return o.id == line_id});
+            $(mv_line).attr('data-selected','true');
+            self.set("mv_lines_selected", self.get("mv_lines_selected").concat(line));
+        },
+
+        deselectMoveLine: function(mv_line) {
+            var self = this;
+            var line_id = mv_line.dataset.lineid;
+            // var line = _.find(self.propositions_lines, function(o){ return o.id == line_id});
+            $(mv_line).attr('data-selected','false');
+            self.set("mv_lines_selected",_.filter(self.get("mv_lines_selected"), function(o) { return o.id != line_id }));
+        },
+    
+        /** Matches pagination */
+    
+        pagerControlLeftHandler: function() {
+            this.set("pager_index", this.get("pager_index")-1 );
+        },
+    
+        pagerControlRightHandler: function() {
+            this.set("pager_index", this.get("pager_index")+1 );
+        },
+    
+        filterHandler: function() {
+            var self = this;
+            self.set("pager_index", 0);
+            self.filter = self.$(".filter").val();
+            self.filterMoveLines();
+        },
+    
+    
+        /** Views updating */
+    
+        updateAccountingViewMatchedLines: function() {
+            var self = this;
+            $.each(self.$(".tbody_matched_lines .bootstrap_popover"), function(){ $(this).popover('destroy') });
+            self.$(".tbody_matched_lines").empty();
+    
+            _(self.get("mv_lines_selected")).each(function(line){
+                var $line = $(QWeb.render("reconciliation_move_line", {line: line, selected: true}));
+                self.bindPopoverTo($line.find(".line_info_button"));
+                if (line.propose_partial_reconcile) self.bindPopoverTo($line.find(".do_partial_reconcile_button"));
+                if (line.partial_reconcile) self.bindPopoverTo($line.find(".undo_partial_reconcile_button"));
+                self.$(".tbody_matched_lines").append($line);
+            });
+        },
+    
+        updateMatchView: function() {
+            var self = this;
+            var table = self.$(".match table");
+            var nothing_displayed = true;
+    
+            // Display move lines
+            $.each(self.$(".match table .bootstrap_popover"), function(){ $(this).popover('destroy') });
+            table.empty();
+            var slice_start = self.get("pager_index") * self.max_move_lines_displayed;
+            var slice_end = (self.get("pager_index")+1) * self.max_move_lines_displayed;
+
+            var visible = 0;
+            _(self.get("mv_lines")).each(function(line){
+                if (visible >= slice_start && visible < slice_end) {
+                    var $line = $(QWeb.render("reconciliation_move_line", {line: line, selected: false}));
+                    self.bindPopoverTo($line.find(".line_info_button"));
+                    table.append($line);
+                    nothing_displayed = false;
+                }
+                visible = visible + 1;
+            });
+            if (nothing_displayed)
+                table.append(QWeb.render("filter_no_match", {filter_str: self.filter}));
+        },
+    
+        updatePagerControls: function() {
+            var self = this;
+            if (self.get("pager_index") === 0)
+                self.$(".pager_control_left").addClass("disabled");
+            else
+                self.$(".pager_control_left").removeClass("disabled");
+            if (self.get('mv_lines').length <= ((self.get("pager_index")+1) * self.max_move_lines_displayed))
+                self.$(".pager_control_right").addClass("disabled");
+            else
+                self.$(".pager_control_right").removeClass("disabled");
+        },
+    
+    
+        /** Properties changed */
+    
+        // Updates the validation button and the "open balance" line
+        balanceChanged: function() {},
+    
+        modeChanged: function() {},
+    
+        pagerChanged: function() {
+            this.filterMoveLines();
+        },
+    
+        mvLinesChanged: function() {
+            var self = this;
+    
+            // If there is no match to display, disable match view and pass in mode inactive
+            if (self.get("mv_lines").length === 0 && self.filter === "") {
+                self.$el.addClass("no_match");
+                if (self.get("mode") === "match") {
+                    self.set("mode", "inactive");
+                }
+            } else {
+                self.$el.removeClass("no_match");
+            }
+    
+            self.updateMatchView();
+            self.updatePagerControls();
+        },
+    
+        mvLinesSelectedChanged: function(elt, val) {
+            this.updateAccountingViewMatchedLines();
+            this.updateBalance();
+        },
+    
+    
+        /** Model */
+    
+        updateBalance: function() {},
+    
+        loadReconciliationProposition: function() {},
+
+        filterMoveLines: function() {
+            var self = this;
+            var lines_to_show = [];
+            _.each(self.propositions_lines, function(line){
+                var filter = (line.q_label.toLowerCase().indexOf(self.filter.toLowerCase()) > -1 || line.account_code.toLowerCase().indexOf(self.filter.toLowerCase()) > -1);
+                if (self.getParent().excluded_move_lines_ids.indexOf(line.id) === -1 && filter) {
+                    lines_to_show.push(line);
+                }
+            });
+            self.set("mv_lines", lines_to_show);
+        },
+    
+        // Returns an object that can be passed to process_reconciliation()
+        prepareSelectedMoveLineForPersisting: function(line) {
+            return {
+                name: line.name,
+                debit: line.debit,
+                credit: line.credit,
+                counterpart_move_line_id: line.id,
+            };
+        },
+    
+        // Persist data, notify parent view and terminate widget
+        persistAndDestroy: function() {
+            var self = this;
+            if (! self.is_consistent) return;
+    
+            // Sliding animation
+            var height = self.$el.outerHeight();
+            var container = $("<div />");
+            container.css("height", height)
+                     .css("marginTop", self.$el.css("marginTop"))
+                     .css("marginBottom", self.$el.css("marginBottom"));
+            self.$el.wrap(container);
+            var deferred_animation = self.$el.parent().slideUp(self.animation_speed*height/150);
+    
+            // RPC
+            return self.makeRPCForPersisting()
+                .then(function () {
+                    $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
+                    return $.when(deferred_animation).then(function(){
+                        self.$el.parent().remove();
+                        var parent = self.getParent();
+                        return $.when(self.destroy()).then(function() {
+                            parent.childValidated(self);
+                        });
+                    });
+                }, function(){
+                    self.$el.parent().slideDown(self.animation_speed*height/150, function(){
+                        self.$el.unwrap();
+                    });
+                });
+        },
+
+        makeRPCForPersisting: function() {},
+    });
+
+    instance.web.client_actions.add('bank_statement_reconciliation_view', 'instance.web.account.bankStatementReconciliation');
+    instance.web.account.bankStatementReconciliation = instance.web.account.abstractReconciliation.extend({
+    
+        init: function(parent, context) {
+            this._super(parent, context);
+
+            this.childrenWidget = instance.web.account.bankStatementReconciliationLine;
+
+            this.statement_id = context.context.statement_id;
+            this.presets = {};
+            this.model_bank_statement = new instance.web.Model("account.bank.statement");
+            this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             // The same move line cannot be selected for multiple resolutions
-            this.excluded_move_lines_ids = {};
+            this.excluded_move_lines_ids = [];
+            this.map_tax_id_amount = {};
+            this.formatCurrency; // Method that formats the currency ; loaded from the server
             // Description of the fields to initialize in the "create new line" form
             // NB : for presets to work correctly, a field id must be the same string as a preset field
             this.create_form_fields = {
@@ -126,129 +509,124 @@ openerp.account = function (instance) {
         },
     
         start: function() {
-            this._super();
             var self = this;
-            // Retreive statement infos and reconciliation data from the model
-            var lines_filter = [['journal_entry_id', '=', false], ['account_id', '=', false]];
-            var deferred_promises = [];
-            
-            // Working on specified statement(s)
-            if (self.statement_ids && self.statement_ids.length > 0) {
-                lines_filter.push(['statement_id', 'in', self.statement_ids]);
+            $.when(this._super()).then(function(){
+                self.$el.addClass("oe_bank_statement_reconciliation");
+                
+                // Inject variable styles
+                var style = document.createElement("style");
+                style.appendChild(document.createTextNode(""));
+                document.head.appendChild(style);
+                var css_selector = ".oe_reconciliation_line .toggle_match, .oe_reconciliation_line .toggle_create,  .oe_reconciliation_line .initial_line > td";
+                if(style.sheet.insertRule) {
+                    style.sheet.insertRule(css_selector + " { -webkit-transition-duration: "+self.aestetic_animation_speed+"ms; }", 0);
+                    style.sheet.insertRule(css_selector + " { -moz-transition-duration: "+self.aestetic_animation_speed+"ms; }", 0);
+                    style.sheet.insertRule(css_selector + " { -ms-transition-duration: "+self.aestetic_animation_speed+"ms; }", 0);
+                    style.sheet.insertRule(css_selector + " { -o-transition-duration: "+self.aestetic_animation_speed+"ms; }", 0);
+                    style.sheet.insertRule(css_selector + " { transition-duration: "+self.aestetic_animation_speed+"ms; }", 0);
+                } else {
+                    style.sheet.addRule(css_selector, "-webkit-transition-duration: "+self.aestetic_animation_speed+"ms;");
+                    style.sheet.addRule(css_selector, "-moz-transition-duration: "+self.aestetic_animation_speed+"ms;");
+                    style.sheet.addRule(css_selector, "-ms-transition-duration: "+self.aestetic_animation_speed+"ms;");
+                    style.sheet.addRule(css_selector, "-o-transition-duration: "+self.aestetic_animation_speed+"ms;");
+                    style.sheet.addRule(css_selector, "-webkit-transition-duration: "+self.aestetic_animation_speed+"ms;");
+                }
 
-                // If only one statement, display its name as title and allow to modify it
-                if (self.single_statement) {
+                // Retreive statement infos and reconciliation data from the model
+                var lines_filter = [['journal_entry_id', '=', false], ['account_id', '=', false]];
+                var deferred_promises = [];
+        
+                if (self.statement_id) {
+                    lines_filter.push(['statement_id', '=', self.statement_id]);
                     deferred_promises.push(self.model_bank_statement
                         .query(["name"])
-                        .filter([['id', '=', self.statement_ids[0]]])
+                        .filter([['id', '=', self.statement_id]])
                         .first()
                         .then(function(title){
                             self.title = title.name;
                         })
                     );
+                    deferred_promises.push(self.model_bank_statement
+                        .call("number_of_lines_reconciled", [self.statement_id])
+                        .then(function(num) {
+                            self.already_reconciled_lines = num;
+                        })
+                    );
                 }
-                // Anyway, find out how many statement lines are reconciled (for the progressbar)
+
+                // Get the function to format currencies
+                self.model_bank_statement = new instance.web.Model("account.bank.statement");
                 deferred_promises.push(self.model_bank_statement
-                    .call("number_of_lines_reconciled", [self.statement_ids])
-                    .then(function(num) {
-                        self.already_reconciled_lines = num;
+                    .call("get_format_currency_js_function", [self.statement_id])
+                    .then(function(data){
+                        self.formatCurrency = new Function("amount, currency_id", data);
                     })
                 );
-            }
-            
-            // Get operation templates
-            deferred_promises.push(new instance.web.Model("account.statement.operation.template")
-                .query(['id','name','account_id','label','amount_type','amount','tax_id','analytic_account_id'])
-                .all().then(function (data) {
-                    _(data).each(function(preset){
-                        self.presets[preset.id] = preset;
-                    });
-                })
-            );
-
-            // Get the function to format currencies
-            deferred_promises.push(new instance.web.Model("res.currency")
-                .call("get_format_currencies_js_function")
-                .then(function(data) {
-                    self.formatCurrency = new Function("amount, currency_id", data);
-                })
-            );
-    
-            // Get statement lines
-            deferred_promises.push(self.model_bank_statement_line
-                .query(['id'])
-                .filter(lines_filter)
-                .order_by('statement_id, id')
-                .all().then(function (data) {
-                    self.st_lines = _(data).map(function(o){ return o.id });
-                })
-            );
-    
-            // When queries are done, render template and reconciliation lines
-            return $.when.apply($, deferred_promises).then(function(){
-    
-                // If there is no statement line to reconcile, stop here
-                if (self.st_lines.length === 0) {
-                    self.$el.prepend(QWeb.render("bank_statement_nothing_to_reconcile"));
-                    return;
-                }
-    
-                // Create a dict account id -> account code for display facilities
-                new instance.web.Model("account.account")
-                    .query(['id', 'code'])
-                    .all().then(function(data) {
-                        _.each(data, function(o) { self.map_account_id_code[o.id] = o.code });
-                    });
-
-                // Create a dict currency id -> rounding factor
-                new instance.web.Model("res.currency")
-                    .query(['id', 'rounding'])
-                    .all().then(function(data) {
-                        _.each(data, function(o) { self.map_currency_id_rounding[o.id] = o.rounding });
-                    });
+        
+                deferred_promises.push(new instance.web.Model("account.statement.operation.template")
+                    .query(['id','name','account_id','label','amount_type','amount','tax_id','analytic_account_id'])
+                    .all().then(function (data) {
+                        _(data).each(function(preset){
+                            self.presets[preset.id] = preset;
+                        });
+                    })
+                );
 
                 // Create a dict tax id -> amount
-                new instance.web.Model("account.tax")
+                deferred_promises.push(new instance.web.Model("account.tax")
                     .query(['id', 'amount'])
                     .all().then(function(data) {
                         _.each(data, function(o) { self.map_tax_id_amount[o.id] = o.amount });
-                    });
-            
-                new instance.web.Model("ir.model.data")
-                    .call("xmlid_to_res_id", ["account.menu_bank_reconcile_bank_statements"])
-                    .then(function(data) {
-                        self.reconciliation_menu_id = data;
-                        self.doReloadMenuReconciliation();
-                    });
+                    })
+                );
 
-                // Bind keyboard events TODO : méthode standard ?
-                $("body").on("keypress", function (e) {
-                    self.keyboardShortcutsHandler(e);
-                });
-    
-                // Render and display
-                self.$el.prepend(QWeb.render("bank_statement_reconciliation", {
-                    title: self.title,
-                    single_statement: self.single_statement,
-                    total_lines: self.already_reconciled_lines+self.st_lines.length
-                }));
-                self.updateProgressbar();
-                var reconciliations_to_show = self.st_lines.slice(0, self.max_reconciliations_displayed);
-                self.last_displayed_reconciliation_index = reconciliations_to_show.length;
-                self.$(".reconciliation_lines_container").css("opacity", 0);
-    
-                // Display the reconciliations
-                return self.model_bank_statement_line
-                    .call("get_data_for_reconciliations", [reconciliations_to_show])
-                    .then(function (data) {
-                        var child_promises = [];
-                        while ((datum = data.shift()) !== undefined)
-                            child_promises.push(self.displayReconciliation(datum.st_line.id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition));
-                        $.when.apply($, child_promises).then(function(){
-                            self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed);
-                            self.getChildren()[0].set("mode", "match");
+                deferred_promises.push(self.model_bank_statement_line
+                    .query(['id'])
+                    .filter(lines_filter)
+                    .order_by('id')
+                    .all().then(function (data) {
+                        self.lines = _(data).map(function(o){ return o.id });
+                    })
+                );
+        
+                // When queries are done, render template and reconciliation lines
+                return $.when.apply($, deferred_promises).then(function(){
+        
+                    // If there is no statement line to reconcile, stop here
+                    if (self.lines.length === 0) {
+                        self.$el.prepend(QWeb.render("bank_statement_nothing_to_reconcile"));
+                        return;
+                    }
+            
+                    new instance.web.Model("ir.model.data")
+                        .call("xmlid_to_res_id", ["account.menu_bank_reconcile_bank_statements"])
+                        .then(function(data) {
+                            self.reconciliation_menu_id = data;
+                            self.doReloadMenuReconciliation();
                         });
-                    });
+        
+                    // Render and display
+                    self.$el.prepend(QWeb.render("bank_statement_reconciliation", {title: self.title, total_lines: self.already_reconciled_lines+self.lines.length}));
+                    self.updateProgressbar();
+                    var reconciliations_to_show = self.lines.slice(0, self.max_reconciliations_displayed);
+                    self.last_displayed_reconciliation_index = reconciliations_to_show.length;
+                    self.$(".reconciliation_lines_container").css("opacity", 0);
+        
+                    // Display the reconciliations
+                    return self.model_bank_statement_line
+                        .call("get_data_for_reconciliations", [reconciliations_to_show])
+                        .then(function (data) {
+                            var child_promises = [];
+                            _.each(reconciliations_to_show, function(st_line_id){
+                                var datum = data.shift();
+                                child_promises.push(self.displayReconciliation(st_line_id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition));
+                            });
+                            $.when.apply($, child_promises).then(function(){
+                                self.getChildren()[0].set("mode", "match");
+                                self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed);
+                            });
+                        });
+                });
             });
         },
 
@@ -288,6 +666,7 @@ openerp.account = function (instance) {
         },
     
         keyboardShortcutsHandler: function(e) {
+            this._super(e);
             var self = this;
             if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
                 self.persistReconciliations(_.filter(self.getChildren(), function(o) { return o.is_valid; }));
@@ -396,16 +775,7 @@ openerp.account = function (instance) {
         
             // Update children if needed
             _.each(self.getChildren(), function(child){
-                if ((child.partner_id === partner_id || child.st_line.has_no_partner) && child !== source_child) {
-                    if (contains_lines(child.get("mv_lines_selected"), line_ids)) {
-                        child.set("mv_lines_selected", _.filter(child.get("mv_lines_selected"), function(o){ return line_ids.indexOf(o.id) === -1 }));
-                    } else if (contains_lines(child.mv_lines_deselected, line_ids)) {
-                        child.mv_lines_deselected = _.filter(child.mv_lines_deselected, function(o){ return line_ids.indexOf(o.id) === -1 });
-                        child.updateMatches();
-                    } else if (contains_lines(child.get("mv_lines"), line_ids)) {
-                        child.updateMatches();
-                    }
-                }
+                child.filterMoveLines();
             });
         },
         
@@ -420,79 +790,21 @@ openerp.account = function (instance) {
         
             // Update children if needed
             _.each(self.getChildren(), function(child){
-                if (child.partner_id === partner_id && child !== source_child && (child.get("mode") === "match" || child.$el.hasClass("no_match")))
-                    child.updateMatches();
-                if (child.st_line.has_no_partner && child.get("mode") === "match" || child.$el.hasClass("no_match"))
-                    child.updateMatches();
+                child.filterMoveLines();
             });
         },
-    
-        displayReconciliation: function(st_line_id, mode, animate_entrance, initial_data_provided, st_line, reconciliation_proposition) {
-            var self = this;
-            animate_entrance = (animate_entrance === undefined ? true : animate_entrance);
-            initial_data_provided = (initial_data_provided === undefined ? false : initial_data_provided);
-    
-            var context = {
-                st_line_id: st_line_id,
-                mode: mode,
-                animate_entrance: animate_entrance,
-                initial_data_provided: initial_data_provided,
-                st_line: initial_data_provided ? st_line : undefined,
-                reconciliation_proposition: initial_data_provided ? reconciliation_proposition : undefined,
-            };
-            var widget = new instance.web.account.bankStatementReconciliationLine(self, context);
-            return widget.appendTo(self.$(".reconciliation_lines_container"));
-        },
-    
+
         childValidated: function(child) {
+            this._super(child);
             var self = this;
-    
-            self.reconciled_lines++;
-            self.updateProgressbar();
-            self.doReloadMenuReconciliation();
-    
-            // Display new line if there are left
-            if (self.last_displayed_reconciliation_index < self.st_lines.length) {
-                self.displayReconciliation(self.st_lines[self.last_displayed_reconciliation_index++], 'inactive');
-            }
-            // Congratulate the user if the work is done
-            if (self.reconciled_lines === self.st_lines.length) {
-                self.displayDoneMessage();
-            }
         
             // Put the first line in match mode
-            if (self.reconciled_lines !== self.st_lines.length) {
+            if (self.reconciled_lines !== self.lines.length) {
                 var first_child = self.getChildren()[0];
                 if (first_child.get("mode") === "inactive") {
                     first_child.set("mode", "match");
                 }
             }
-        },
-
-        goBackToStatementsTreeView: function() {
-            var self = this;
-            new instance.web.Model("ir.model.data")
-                .call("get_object_reference", ['account', 'action_bank_statement_tree'])
-                .then(function (result) {
-                    var action_id = result[1];
-                    // Warning : altough I don't see why this widget wouldn't be directly instanciated by the
-                    // action manager, if it wasn't, this code wouldn't work. You'd have to do something like :
-                    // var action_manager = self;
-                    // while (! action_manager instanceof ActionManager)
-                    //    action_manager = action_manager.getParent();
-                    var action_manager = self.getParent();
-                    var breadcrumbs = action_manager.breadcrumbs;
-                    var found = false;
-                    for (var i=breadcrumbs.length-1; i>=0; i--) {
-                        if (breadcrumbs[i].action && breadcrumbs[i].action.id === action_id) {
-                            var title = breadcrumbs[i].get_title();
-                            action_manager.select_breadcrumb(i, _.isArray(title) ? i : undefined);
-                            found = true;
-                        }
-                    }
-                    if (!found)
-                        instance.web.Home(self);
-                });
         },
     
         displayDoneMessage: function() {
@@ -575,44 +887,15 @@ openerp.account = function (instance) {
                     });
             }
         },
-    
-        updateProgressbar: function() {
-            var self = this;
-            var done = self.already_reconciled_lines + self.reconciled_lines;
-            var total = self.already_reconciled_lines + self.st_lines.length;
-            var prog_bar = self.$(".progress .progress-bar");
-            prog_bar.attr("aria-valuenow", done);
-            prog_bar.css("width", (done/total*100)+"%");
-            self.$(".progress .progress-text .valuenow").text(done);
-        },
-    
-        /* reloads the needaction badge */
-        doReloadMenuReconciliation: function () {
-            var menu = instance.webclient.menu;
-            if (!menu || !this.reconciliation_menu_id) {
-                return $.when();
-            }
-            return menu.rpc("/web/menu/load_needaction", {'menu_ids': [this.reconciliation_menu_id]}).done(function(r) {
-                menu.on_needaction_loaded(r);
-            }).then(function () {
-                menu.trigger("need_action_reloaded");
-            });
-        },
     });
     
-    instance.web.account.bankStatementReconciliationLine = instance.web.Widget.extend({
-        className: 'oe_bank_statement_reconciliation_line',
-    
+    instance.web.account.bankStatementReconciliationLine = instance.web.account.abstractReconciliationLine.extend({
+
         events: {
             "click .change_partner": "changePartnerClickHandler",
             "click .button_ok": "persistAndDestroy",
-            "click .mv_line": "moveLineClickHandler",
             "click .initial_line": "initialLineClickHandler",
             "click .line_open_balance": "lineOpenBalanceClickHandler",
-            "click .pager_control_left:not(.disabled)": "pagerControlLeftHandler",
-            "click .pager_control_right:not(.disabled)": "pagerControlRightHandler",
-            "keyup .filter": "filterHandler",
-            "click .line_info_button": function(e){e.stopPropagation()}, // small usability hack
             "click .add_line": "addLineBeingEdited",
             "click .preset": "presetClickHandler",
             "click .do_partial_reconcile_button": "doPartialReconcileButtonClickHandler",
@@ -620,17 +903,13 @@ openerp.account = function (instance) {
         },
     
         init: function(parent, context) {
-            this._super(parent);
+            this._super(parent, context);
     
             this.formatCurrency = this.getParent().formatCurrency;
             if (context.initial_data_provided) {
                 // Process data
-                _.each(context.reconciliation_proposition, function(line) {
-                    this.decorateMoveLine(line, context.st_line.currency_id);
-                }, this);
-                this.set("mv_lines_selected", context.reconciliation_proposition);
-                this.st_line = context.st_line;
-                this.partner_id = context.st_line.partner_id;
+
+                this.st_line = context.line;
                 this.decorateStatementLine(this.st_line);
     
                 // Exclude selected move lines
@@ -638,43 +917,19 @@ openerp.account = function (instance) {
                     this.getParent().excluded_move_lines_ids[this.partner_id] = [];
                 this.getParent().excludeMoveLines(this, this.partner_id, context.reconciliation_proposition);
             } else {
-                this.set("mv_lines_selected", []);
                 this.st_line = undefined;
                 this.partner_id = undefined;
             }
     
-            this.context = context;
-            this.st_line_id = context.st_line_id;
-            this.max_move_lines_displayed = this.getParent().max_move_lines_displayed;
-            this.animation_speed = this.getParent().animation_speed;
-            this.aestetic_animation_speed = this.getParent().aestetic_animation_speed;
+            this.st_line_id = context.line_id;
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             this.model_res_users = new instance.web.Model("res.users");
             this.model_tax = new instance.web.Model("account.tax");
-            this.map_currency_id_rounding = this.getParent().map_currency_id_rounding;
-            this.map_account_id_code = this.getParent().map_account_id_code;
             this.map_tax_id_amount = this.getParent().map_tax_id_amount;
             this.presets = this.getParent().presets;
-            this.is_valid = true;
-            this.is_consistent = true; // Used to prevent bad server requests
-            this.can_fetch_more_move_lines; // Tell if we can show more move lines
-            this.filter = "";
-            // In rare cases like when deleting a statement line's partner we don't want the server to
-            // look for a reconciliation proposition (in this particular case it might find a move line
-            // matching the statement line and decide to set the statement line's partner accordingly)
-            this.do_load_reconciliation_proposition = true;
     
             this.set("mode", undefined);
             this.on("change:mode", this, this.modeChanged);
-            this.set("balance", undefined); // Debit is +, credit is -
-            this.on("change:balance", this, this.balanceChanged);
-            this.set("pager_index", 0);
-            this.on("change:pager_index", this, this.pagerChanged);
-            // NB : mv_lines represent the counterpart that will be created to reconcile existing move lines, so debit and credit are inverted
-            this.set("mv_lines", []);
-            this.on("change:mv_lines", this, this.mvLinesChanged);
-            this.mv_lines_deselected = []; // deselected lines are displayed on top of the match table
-            this.on("change:mv_lines_selected", this, this.mvLinesSelectedChanged);
             this.set("lines_created", []);
             this.set("line_created_being_edited", [{'id': 0}]);
             this.on("change:lines_created", this, this.createdLinesChanged);
@@ -682,28 +937,83 @@ openerp.account = function (instance) {
         },
     
         start: function() {
+            this.$el.addClass("oe_bank_statement_reconciliation_line");
+            return this._super();
+        },
+
+        loadData: function() {
             var self = this;
-            return self._super().then(function() {
-                // no animation while loading
-                self.animation_speed = 0;
-                self.aestetic_animation_speed = 0;
-    
-                self.is_consistent = false;
-                if (self.context.animate_entrance) {
-                    self.$el.fadeOut(0);
-                    self.$el.slideUp(0);
-                }
-                return $.when(self.loadData()).then(function(){
-                    return $.when(self.render()).then(function(){
-                        self.is_consistent = true;
-                        // Make an entrance
-                        self.animation_speed = self.getParent().animation_speed;
-                        self.aestetic_animation_speed = self.getParent().aestetic_animation_speed;
-                        if (self.context.animate_entrance) {
-                            return self.$el.stop(true, true).fadeIn({ duration: self.aestetic_animation_speed, queue: false }).css('display', 'none').slideDown(self.aestetic_animation_speed); 
-                        }
+            var deferred_fetch_data = new $.Deferred();
+            if (! self.context.initial_data_provided) {
+                // Load statement line
+                self.model_bank_statement_line
+                    .call("get_statement_line_for_reconciliation", [self.st_line_id])
+                    .then(function (data) {
+                        self.st_line = data;
+                        self.decorateStatementLine(self.st_line);
+                        self.partner_id = data.partner_id;
+                        $.when(self.loadReconciliationProposition()).then(function(){
+                            deferred_fetch_data.resolve();
+                        });
                     });
-                });
+            } else {
+                deferred_fetch_data.resolve();
+            }
+            return $.when(deferred_fetch_data).then(function(){
+                //load all lines that can be usefull for counterparts
+                var deferred_total_move_lines_num = self.model_bank_statement_line
+                    .call("get_move_lines_counterparts_id", [self.st_line.id, []])
+                    .then(function(lines){
+                        _(lines).each(self.decorateMoveLine.bind(self));
+                        self.propositions_lines = lines;
+                    });
+                return deferred_total_move_lines_num;
+            });
+        },
+
+        render: function() {
+            var self = this;
+            var presets_array = [];
+            for (var id in self.presets)
+                if (self.presets.hasOwnProperty(id))
+                    presets_array.push(self.presets[id]);
+            self.$el.prepend(QWeb.render("bank_statement_reconciliation_line", {
+                line: self.st_line,
+                mode: self.context.mode,
+                presets: presets_array
+            }));
+            
+            // Stuff that require the template to be rendered
+            self.$(".match").slideUp(0);
+            self.$(".create").slideUp(0);
+            if (self.st_line.no_match) self.$el.addClass("no_match");
+            if (self.context.mode !== "match") self.filterMoveLines();
+            self.bindPopoverTo(self.$(".line_info_button"));
+            self.createFormWidgets();
+            // Special case hack : no identified partner
+            if (self.st_line.has_no_partner) {
+                self.$el.css("opacity", "0");
+                self.updateBalance();
+                self.$(".change_partner_container").show(0);
+                self.change_partner_field.$el.find("input").attr("placeholder", _t("Select Partner"));
+                self.$(".match").slideUp(0);
+                self.$el.addClass("no_partner");
+                self.set("mode", self.context.mode);
+                self.animation_speed = self.getParent().animation_speed;
+                self.aestetic_animation_speed = self.getParent().aestetic_animation_speed;
+                self.$el.animate({opacity: 1}, self.aestetic_animation_speed);
+                self.is_consistent = true;
+                return;
+            }
+            
+            // TODO : the .on handler's returned deferred is lost
+            return $.when(self.set("mode", self.context.mode)).then(function(){
+                self.is_consistent = true;
+            
+                // Make sure the display is OK
+                self.balanceChanged();
+                self.createdLinesChanged();
+                self.updateAccountingViewMatchedLines();
             });
         },
 
@@ -945,37 +1255,7 @@ openerp.account = function (instance) {
     
         /* TODO : if t-call for attr, all in qweb */
         decorateStatementLine: function(line){
-            line.q_popover = QWeb.render("bank_statement_reconciliation_line_details", {line: line});
-        },
-    
-        // adds fields, prefixed with q_, to the move line for qweb rendering
-        decorateMoveLine: function(line, currency_id) {
-            line.partial_reconcile = false;
-            line.propose_partial_reconcile = false;
-            line['credit'] = [line['debit'], line['debit'] = line['credit']][0];
-            line.q_due_date = (line.date_maturity === false ? line.date : line.date_maturity);
-            line.q_amount = (line.debit !== 0 ? "- "+line.q_debit : "") + (line.credit !== 0 ? line.q_credit : "");
-            line.q_label = line.name;
-            line.debit_str = this.formatCurrency(line.debit, currency_id);
-            line.credit_str = this.formatCurrency(line.credit, currency_id);
-            line.q_popover = QWeb.render("bank_statement_reconciliation_move_line_details", {line: line});
-            if (line.has_no_partner)
-                line.q_label = line.partner_name + ': ' + line.q_label;
-            if (line.ref && line.ref !== line.name)
-                line.q_label += " : " + line.ref;
-        },
-    
-        bindPopoverTo: function(el) {
-            var self = this;
-            $(el).addClass("bootstrap_popover");
-            el.popover({
-                'placement': 'left',
-                'container': self.el,
-                'html': true,
-                'trigger': 'hover',
-                'animation': false,
-                'toggle': 'popover'
-            });
+            line.q_popover = QWeb.render("bank_statement_reconciliation_statement_line_details", {line: line});
         },
     
         islineCreatedBeingEditedValid: function() {
@@ -1004,71 +1284,15 @@ openerp.account = function (instance) {
         },
 
         selectMoveLine: function(mv_line) {
-            var self = this;
+            this._super(mv_line);
             var line_id = mv_line.dataset.lineid;
-
-            // find the line in mv_lines or mv_lines_deselected
-            var line = _.find(self.get("mv_lines"), function(o){ return o.id == line_id});
-            if (! line) {
-                line = _.find(self.mv_lines_deselected, function(o){ return o.id == line_id });
-                self.mv_lines_deselected = _.filter(self.mv_lines_deselected, function(o) { return o.id != line_id });
-            }
-            if (! line) return; // If no line found, we've got a syncing problem (let's turn a deaf ear)
-
-            // Warn the user if he's selecting lines from both a payable and a receivable account
-            var last_selected_line = _.last(self.get("mv_lines_selected"));
-            if (last_selected_line && last_selected_line.account_type != line.account_type) {
-                new instance.web.Dialog(this, {
-                    title: _t("Warning"),
-                    size: 'medium',
-                }, $("<div />").text(_.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), last_selected_line.account_type))).open();
-                return;
-            }
-
-            self.set("mv_lines_selected", self.get("mv_lines_selected").concat(line));
+            this.getParent().excludeMoveLines([line_id]);
         },
 
         deselectMoveLine: function(mv_line) {
-            var self = this;
+            this._super(mv_line);
             var line_id = mv_line.dataset.lineid;
-            var line = _.find(self.get("mv_lines_selected"), function(o){ return o.id == line_id});
-            if (! line) return; // If no line found, we've got a syncing problem (let's turn a deaf ear)
-
-            // add the line to mv_lines_deselected and remove it from mv_lines_selected
-            self.mv_lines_deselected.unshift(line);
-            var mv_lines_selected = _.filter(self.get("mv_lines_selected"), function(o) { return o.id != line_id });
-            
-            // remove partial reconciliation stuff if necessary
-            if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
-            if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
-            
-            self.$el.removeClass("no_match");
-            self.set("mode", "match");
-            self.set("mv_lines_selected", mv_lines_selected);
-        },
-    
-        /** Matches pagination */
-    
-        pagerControlLeftHandler: function() {
-            var self = this;
-            if (self.$(".pager_control_left").hasClass("disabled")) { return; /* shouldn't happen, anyway*/ }
-            if (self.get("pager_index") === 0) { return; }
-            self.set("pager_index", self.get("pager_index")-1 );
-        },
-        
-        pagerControlRightHandler: function() {
-            var self = this;
-            if (self.$(".pager_control_right").hasClass("disabled")) { return; /* shouldn't happen, anyway*/ }
-            if (! self.can_fetch_more_move_lines) { return; }
-            self.set("pager_index", self.get("pager_index")+1 );
-        },
-    
-        filterHandler: function() {
-            var self = this;
-            self.set("pager_index", 0);
-            self.filter = self.$(".filter").val();
-            window.clearTimeout(self.apply_filter_timeout);
-            self.apply_filter_timeout = window.setTimeout(self.proxy('updateMatches'), 200);
+            this.getParent().unexcludeMoveLines([line_id]);
         },
 
     
@@ -1169,20 +1393,6 @@ openerp.account = function (instance) {
     
         /** Views updating */
     
-        updateAccountingViewMatchedLines: function() {
-            var self = this;
-            $.each(self.$(".tbody_matched_lines .bootstrap_popover"), function(){ $(this).popover('destroy') });
-            self.$(".tbody_matched_lines").empty();
-    
-            _(self.get("mv_lines_selected")).each(function(line){
-                var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: true}));
-                self.bindPopoverTo($line.find(".line_info_button"));
-                if (line.propose_partial_reconcile) self.bindPopoverTo($line.find(".do_partial_reconcile_button"));
-                if (line.partial_reconcile) self.bindPopoverTo($line.find(".undo_partial_reconcile_button"));
-                self.$(".tbody_matched_lines").append($line);
-            });
-        },
-    
         updateAccountingViewCreatedLines: function() {
             var self = this;
             $.each(self.$(".tbody_created_lines .bootstrap_popover"), function(){ $(this).popover('destroy') });
@@ -1199,46 +1409,6 @@ openerp.account = function (instance) {
             });
         },
     
-        updateMatchView: function() {
-            var self = this;
-            var table = self.$(".match table");
-            var nothing_displayed = true;
-        
-            // Display move lines
-            $.each(self.$(".match table .bootstrap_popover"), function(){ $(this).popover('destroy') });
-            table.empty();
-            var slice_start = self.get("pager_index") * self.max_move_lines_displayed;
-            var slice_end = (self.get("pager_index")+1) * self.max_move_lines_displayed;
-            _( _.filter(self.mv_lines_deselected, function(o){
-                    return o.name.indexOf(self.filter) !== -1 || o.ref.indexOf(self.filter) !== -1 })
-                .slice(slice_start, slice_end)).each(function(line){
-                var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: false}));
-                self.bindPopoverTo($line.find(".line_info_button"));
-                table.append($line);
-                nothing_displayed = false;
-            });
-            _(self.get("mv_lines")).each(function(line){
-                var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: false}));
-                self.bindPopoverTo($line.find(".line_info_button"));
-                table.append($line);
-                nothing_displayed = false;
-            });
-            if (nothing_displayed && this.filter !== "")
-                table.append(QWeb.render("filter_no_match", {filter_str: self.filter}));
-        },
-    
-        updatePagerControls: function() {
-            var self = this;
-        
-            if (self.get("pager_index") === 0)
-                self.$(".pager_control_left").addClass("disabled");
-            else
-                self.$(".pager_control_left").removeClass("disabled");
-            if (! self.can_fetch_more_move_lines)
-                self.$(".pager_control_right").addClass("disabled");
-            else
-                self.$(".pager_control_right").removeClass("disabled");
-        },
     
         /** Properties changed */
     
@@ -1266,7 +1436,7 @@ openerp.account = function (instance) {
                         credit: credit,
                         account_code: self.map_account_id_code[self.st_line.open_balance_account_id]
                     }));
-                    $line.find('.js_open_balance')[0].innerHTML = _t("Choose counterpart");
+                    $line.find('.js_open_balance')[0].innerHTML = "Choose counterpart";
                     self.$(".tbody_open_balance").append($line);
                 }
                 return;
@@ -1303,12 +1473,7 @@ openerp.account = function (instance) {
                 self.el.dataset.mode = "inactive";
     
             } else if (self.get("mode") === "match") {
-                // TODO : remove this old_animation_speed / new_animation_speed hack
-                // when .on handler's returned deferred's no longer lost
-                var old_animation_speed = self.animation_speed;
-                return $.when(self.updateMatches()).then(function() {
-                    var new_animation_speed = self.animation_speed;
-                    self.animation_speed = old_animation_speed;
+                return $.when(self.filterMoveLines()).then(function() {
                     if (self.$el.hasClass("no_match")) {
                         self.animation_speed = 0;
                         self.set("mode", "create");
@@ -1328,51 +1493,14 @@ openerp.account = function (instance) {
             }
         },
     
-        pagerChanged: function() {
-            this.updateMatches();
-        },
-    
-        mvLinesChanged: function() {
-            var self = this;
-            // If pager_index is out of range, set it to display the last page
-            if (self.get("pager_index") !== 0 && self.get("mv_lines").length === 0 && ! self.can_fetch_more_move_lines) {
-                self.set("pager_index", 0);
-            }
-        
-            // If there is no match to display, disable match view and pass in mode inactive
-            if (self.get("mv_lines").length + self.mv_lines_deselected.length === 0 && !self.can_fetch_more_move_lines && self.filter === "") {
-                self.$el.addClass("no_match");
-                if (self.get("mode") === "match") {
-                    self.set("mode", "inactive");
-                }
-            } else {
-                self.$el.removeClass("no_match");
-            }
-
-            _.each(self.get("mv_lines"), function(line) {
-                if (line.partial_reconciliation_siblings_ids.length > 0) {
-                    var correct_format = _.collect(line.partial_reconciliation_siblings_ids, function(o) { return {'id': o} });
-                    self.getParent().excludeMoveLines(self, self.partner_id, correct_format);
-                }
-            });
-
-            self.updateMatchView();
-            self.updatePagerControls();
-        },
-    
         mvLinesSelectedChanged: function(elt, val) {
-            var self = this;
-        
-            var added_lines = _.difference(val.newValue, val.oldValue);
-            var removed_lines = _.difference(val.oldValue, val.newValue);
-        
-            self.getParent().excludeMoveLines(self, self.partner_id, added_lines);
-            self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines);
-        
-            $.when(self.updateMatches()).then(function(){
-                self.updateAccountingViewMatchedLines();
-                self.updateBalance();
-            });
+            var added_lines_ids = _.map(_.difference(val.newValue, val.oldValue), function(o){ return o.id });
+            var removed_lines_ids = _.map(_.difference(val.oldValue, val.newValue), function(o){ return o.id });
+    
+            this.getParent().excludeMoveLines(added_lines_ids);
+            this.getParent().unexcludeMoveLines(removed_lines_ids);
+
+            this._super(elt, val);
         },
 
         // Generic function for updating the line_created_being_edited
@@ -1544,40 +1672,6 @@ openerp.account = function (instance) {
             }
         },
 
-        // Loads move lines according to the widget's state
-        updateMatches: function() {
-            var self = this;
-            var deselected_lines_num = self.mv_lines_deselected.length;
-            var offset = self.get("pager_index") * self.max_move_lines_displayed - deselected_lines_num;
-            if (offset < 0) offset = 0;
-            var limit = (self.get("pager_index")+1) * self.max_move_lines_displayed - deselected_lines_num;
-            if (limit > self.max_move_lines_displayed) limit = self.max_move_lines_displayed;
-            var excluded_ids = _.collect(self.get("mv_lines_selected").concat(self.mv_lines_deselected), function(o) { return o.id; });
-            var globally_excluded_ids = [];
-            if (self.st_line.has_no_partner)
-                _.each(self.getParent().excluded_move_lines_ids, function(o) { globally_excluded_ids = globally_excluded_ids.concat(o) });
-            else
-                globally_excluded_ids = self.getParent().excluded_move_lines_ids[self.partner_id];
-            if (globally_excluded_ids !== undefined)
-                for (var i=0; i<globally_excluded_ids.length; i++)
-                    if (excluded_ids.indexOf(globally_excluded_ids[i]) === -1)
-                        excluded_ids.push(globally_excluded_ids[i]);
-            
-            limit += 1; // Let's fetch 1 more item than requested
-            if (limit > 0) {
-                return self.model_bank_statement_line
-                    .call("get_move_lines_for_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, offset, limit])
-                    .then(function (lines) {
-                        _.each(lines, function(line) { self.decorateMoveLine(line, self.st_line.currency_id) }, self);
-                        // If we could fetch 1 more item than what we'll display, that means there are move lines left to be displayed (so we enable the pager)
-                        self.can_fetch_more_move_lines = (lines.length === limit);
-                        self.set("mv_lines", lines.slice(0, limit-1));
-                    });
-            } else {
-                self.set("mv_lines", []);
-            }
-        },
-
         // Changes the partner_id of the statement_line in the DB and reloads the widget
         changePartner: function(partner_id) {
             var self = this;
@@ -1597,16 +1691,6 @@ openerp.account = function (instance) {
         },
     
         // Returns an object that can be passed to process_reconciliation()
-        prepareSelectedMoveLineForPersisting: function(line) {
-            return {
-                name: line.name,
-                debit: line.debit,
-                credit: line.credit,
-                counterpart_move_line_id: line.id,
-            };
-        },
-    
-        // idem
         prepareCreatedMoveLineForPersisting: function(line) {
             var dict = {};
             if (dict['account_id'] === undefined)
@@ -1634,51 +1718,59 @@ openerp.account = function (instance) {
     
             return dict;
         },
-
-        makeMoveLineDicts: function() {
+    
+        makeRPCForPersisting: function() {
             var self = this;
             var mv_line_dicts = [];
             _.each(self.get("mv_lines_selected"), function(o) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(o)) });
             _.each(self.getCreatedLines(), function(o) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(o)) });
             if (Math.abs(self.get("balance")).toFixed(3) !== "0.000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
-            return mv_line_dicts;
-        },
-    
-        // Persist data, notify parent view and terminate widget
-        persistAndDestroy: function(speed) {
-            var self = this;
-            speed = (isNaN(speed) ? self.animation_speed : speed);
-            if (! self.is_consistent) return;
-
-            // Sliding animation
-            var height = self.$el.outerHeight();
-            var container = $("<div />");
-            container.css("height", height)
-                     .css("marginTop", self.$el.css("marginTop"))
-                     .css("marginBottom", self.$el.css("marginBottom"));
-            self.$el.wrap(container);
-            var deferred_animation = self.$el.parent().slideUp(speed*height/150);
-    
-            // RPC
             return self.model_bank_statement_line
-                .call("process_reconciliation", [self.st_line_id, self.makeMoveLineDicts()])
-                .then(function () {
-                    self.getParent().unexcludeMoveLines(self, self.partner_id, self.get("mv_lines_selected"));
-                    $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
-                    return $.when(deferred_animation).then(function(){
-                        self.$el.parent().remove();
-                        var parent = self.getParent();
-                        return $.when(self.destroy()).then(function() {
-                            parent.childValidated(self);
-                        });
-                    });
-                }, function(){
-                    self.$el.parent().slideDown(speed*height/150, function(){
-                        self.$el.unwrap();
-                    });
-                });
+                .call("process_reconciliation", [self.st_line_id, mv_line_dicts]);
         },
     });
+
+    instance.web.client_actions.add('manual_reconciliation_view', 'instance.web.account.manualReconciliation');
+    instance.web.account.manualReconciliation = instance.web.account.abstractReconciliation.extend({
+    
+        init: function(parent, context) {
+            this._super(parent, context);
+
+            this.childrenWidget = instance.web.account.manualReconciliationLine;
+        },
+    
+        start: function() {
+            var self = this;
+            $.when(this._super()).then(function(){
+                self.$el.addClass("oe_manual_reconciliation");
+                self.$el.prepend(QWeb.render("reconciliation", {title: self.title, total_lines: 0}));
+            });
+        },
+    });
+    
+    instance.web.account.manualReconciliationLine = instance.web.account.abstractReconciliationLine.extend({
+
+        events: {
+        },
+    
+        init: function(parent, context) {
+            this._super(parent, context);
+        },
+    
+        start: function() {
+            this.$el.addClass("oe_manual_reconciliation_line");
+            return this._super();
+        },
+
+        loadData: function() {
+            var self = this;
+        },
+
+        render: function() {
+            var self = this;
+        },
+    });
+
 
     instance.web.views.add('tree_account_reconciliation', 'instance.web.account.ReconciliationListView');
     instance.web.account.ReconciliationListView = instance.web.ListView.extend({
