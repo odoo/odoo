@@ -215,7 +215,7 @@
                         <li><a href="#transscript" role="tab" data-toggle="tab">Transscript</a></li>
                     </ul>
                     <!-- Tab panes -->
-                    <div class="tab-content">
+                    <div class="tab-content" style="background: none repeat scroll 0 0 #f8f8f8;padding: 20px;">
                         <div class="tab-pane fade in active" id="about">
                             <p t-field="slideview.description"></p>
                         </div>
@@ -301,7 +301,7 @@
                     </t>
                     <t t-if="attachment.youtube_id">
                         <!--<i class="fa fa-play-circle-o fa-2x list-play-button"></i>-->
-                        <img class="media-objecti image-box" t-attf-src="/slides/thumb/#{attachment.id}"/>
+                        <img class="media-objecti image-box" t-att-src="attachment.image"/>
                     </t>
                 </a>
                 <div class="media-heading">

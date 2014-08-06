@@ -39,9 +39,8 @@ class main(http.Controller):
 
     def _slides_message(self, user, attachment_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        attachment = request.registry['ir.attachment']        
+        attachment = request.registry['ir.attachment']
         partner_obj = request.registry['res.partner']
-        mail_thread = request.registry['mail.thread']        
 
         if uid != request.website.user_id.id:
             partner_ids = [user.partner_id.id]
@@ -50,7 +49,7 @@ class main(http.Controller):
             if not partner_ids or not partner_ids[0]:
                 partner_ids = [partner_obj.create(cr, SUPERUSER_ID, {'name': post.get('name'), 'email': post.get('email')}, context=context)]
 
-        message_id = mail_thread.message_post(
+        message_id = attachment.message_post(
             cr, SUPERUSER_ID, int(attachment_id),
             body=post.get('comment'),
             type='comment',
@@ -165,9 +164,8 @@ class main(http.Controller):
             user = request.registry['res.users'].browse(cr, uid, uid, context=context)
             attachment = request.registry['ir.attachment']
             attachment.check_access_rights(cr, uid, 'read')
-            temp = self._slides_message(user, slideview.id, **post)
-            print ">>>>>>>>>>>>>>>>>>>>>>>>>",temp
-        return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
+            self._slides_message(user, slideview.id, **post)            
+        return werkzeug.utils.redirect(request.httprequest.referrer + "#discuss")
 
 
     @http.route('/slides/thumb/<int:document_id>', type='http', auth="public", website=True)
