@@ -1209,7 +1209,7 @@ class stock_picking(osv.osv):
 
                         #check if the quant is matching the operation details
                         if ops.package_id:
-                            flag = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id]), ('id', '=', quant.package_id.id)], context=context)) or False
+                            flag = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id])], context=context)) or False
                         else:
                             flag = not quant.package_id.id
                         flag = flag and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
@@ -1804,8 +1804,8 @@ class stock_move(osv.osv):
                     if wh_route_ids:
                         rules = push_obj.search(cr, uid, domain + [('route_id', 'in', wh_route_ids)], order='route_sequence, sequence', context=context)
                     if not rules:
-                        #if no specialized push rule has been found yet, we try to find a general one
-                        rules = push_obj.search(cr, uid, domain, order='route_sequence, sequence', context=context)
+                        #if no specialized push rule has been found yet, we try to find a general one (without route)
+                        rules = push_obj.search(cr, uid, domain + [('route_id', '=', False)], order='sequence', context=context)
                 if rules:
                     rule = push_obj.browse(cr, uid, rules[0], context=context)
                     push_obj._apply(cr, uid, rule, move, context=context)
