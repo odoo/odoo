@@ -39,11 +39,23 @@ class document_directory(osv.osv):
             'Publish', help="Publish on the website", copy=False,
         ),
     }
+    
+class MailMessage(osv.Model):
+    _inherit = 'mail.message'
 
+    _columns = {
+        'path': fields.char(
+            'Discussion Path', select=1,
+            help='Used to display messages in a paragraph-based chatter using a unique path;'),
+    }
+
+class MailThread(osv.Model):
+    _inherit = 'mail.thread'
+    
 
 class ir_attachment(osv.osv):
     _inherit = 'ir.attachment'    
-
+    
     _order = "id desc"
     _columns = {
         'is_slide': fields.boolean('Is Slide'),
@@ -54,7 +66,15 @@ class ir_attachment(osv.osv):
         'youtube_id': fields.char(string="Youtube Video ID"),
         'website_published': fields.boolean(
             'Publish', help="Publish on the website", copy=False,
-        ),        
+        ),
+        'website_message_ids': fields.one2many(
+            'mail.message', 'res_id',
+            domain=lambda self: [
+                '&', '&', ('model', '=', self._name), ('type', '=', 'comment'), ('path', '=', False)
+            ],
+            string='Website Messages',
+            help="Website communication history",
+        ),
     }
 
     def _get_slide_setting(self, cr, uid, context):

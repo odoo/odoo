@@ -37,6 +37,30 @@ class main(http.Controller):
     _slides_per_list = 20
 
 
+    def _slides_message(self, user, attachment_id=0, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        attachment = request.registry['ir.attachment']        
+        partner_obj = request.registry['res.partner']
+        mail_thread = request.registry['mail.thread']        
+
+        if uid != request.website.user_id.id:
+            partner_ids = [user.partner_id.id]
+        else:
+            partner_ids = attachment._find_partner_from_emails(cr, SUPERUSER_ID, 0, [post.get('email')], context=context)
+            if not partner_ids or not partner_ids[0]:
+                partner_ids = [partner_obj.create(cr, SUPERUSER_ID, {'name': post.get('name'), 'email': post.get('email')}, context=context)]
+
+        message_id = mail_thread.message_post(
+            cr, SUPERUSER_ID, int(attachment_id),
+            body=post.get('comment'),
+            type='comment',
+            subtype='mt_comment',
+            author_id=partner_ids[0],
+            path=post.get('path', False),
+            context=dict(context, mail_create_nosubcribe=True))
+        return message_id
+
+
     @http.route(['/slides',
                  '/slides/page/<int:page>',                 
                  ], type='http', auth="public", website=True)
@@ -120,13 +144,30 @@ class main(http.Controller):
         ids = attachment.search(cr, uid, domain, limit=self._slides_per_list, offset=0, context=context)
         related_ids = attachment.browse(cr, uid, ids, context=context)
 
+        # get comments 
+        comments = slideview.website_message_ids
+
         values = {}
         values.update({
             'slideview':slideview,
             'most_viewed_ids':most_viewed_ids,
-            'related_ids': related_ids
+            'related_ids': related_ids,
+            'comments': comments,
         })
         return request.website.render('website_slides.slide_view', values)
+
+
+    @http.route('/slides/comment/<model("ir.attachment"):slideview>', type='http', auth="public", methods=['POST'], website=True)
+    def blog_post_comment(self, slideview, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        attachment = request.registry['ir.attachment']
+        if post.get('comment'):
+            user = request.registry['res.users'].browse(cr, uid, uid, context=context)
+            attachment = request.registry['ir.attachment']
+            attachment.check_access_rights(cr, uid, 'read')
+            temp = self._slides_message(user, slideview.id, **post)
+            print ">>>>>>>>>>>>>>>>>>>>>>>>>",temp
+        return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
 
     @http.route('/slides/thumb/<int:document_id>', type='http', auth="public", website=True)
