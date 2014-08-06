@@ -36,12 +36,13 @@ class main(http.Controller):
     _slides_per_page = 8
     _slides_per_list = 20
 
-    def apply_filter(self,  page=1, filters='all', sorting='creation', search='', tags='', slideview=''):
+
+    @http.route(['/slides',
+                 '/slides/page/<int:page>',                 
+                 ], type='http', auth="public", website=True)
+    def slides(self, page=1, filters='all', sorting='creation', search='', tags=''):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         attachment = request.registry['ir.attachment']
-
-        if slideview:
-            attachment.set_viewed(cr, uid, [slideview.id], context=context)
 
         domain = [("is_slide","=","TRUE")]
         if search:
@@ -79,7 +80,6 @@ class main(http.Controller):
             url_args['sorting'] = sorting
         if tags:
             url_args['tags'] = tags
-
         pager = request.website.pager(url=url, total=attachment_count, page=page,
                                       step=self._slides_per_page, scope=self._slides_per_page,
                                       url_args=url_args)
@@ -96,25 +96,19 @@ class main(http.Controller):
             'sorting': sorting,
             'search': search,
             'tags':tags,
-            'slideview':slideview,
         })
-        return values
-
-
-    @http.route(['/slides',
-                 '/slides/page/<int:page>'], type='http', auth="public", website=True)
-    def slides(self, page=1, filters='all', sorting='creation', search='', tags='', slideview=''):
-        values = self.apply_filter(page, filters, sorting, search, tags, slideview)
         return request.website.render('website_slides.home', values)
 
 
     @http.route('/slides/view/<model("ir.attachment"):slideview>', type='http', auth="public", website=True)
-    def slide_view(self, page=1, filters='all', sorting='creation', search='', tags='', slideview=''):
-        values = self.apply_filter(page, filters, sorting, search, tags, slideview)
+    def slide_view(self, slideview, filters='', sorting='', search='', tags=''):        
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         attachment = request.registry['ir.attachment']
         domain = [("is_slide","=","TRUE")]
- 
+        
+        # increment view counter 
+        attachment.set_viewed(cr, uid, [slideview.id], context=context)
+
         # most viewed slides
         ids = attachment.search(cr, uid, domain, limit=self._slides_per_list, offset=0, order='slide_views desc', context=context)
         most_viewed_ids = attachment.browse(cr, uid, ids, context=context)
@@ -126,7 +120,12 @@ class main(http.Controller):
         ids = attachment.search(cr, uid, domain, limit=self._slides_per_list, offset=0, context=context)
         related_ids = attachment.browse(cr, uid, ids, context=context)
 
-        values.update({'most_viewed_ids':most_viewed_ids,'related_ids': related_ids})
+        values = {}
+        values.update({
+            'slideview':slideview,
+            'most_viewed_ids':most_viewed_ids,
+            'related_ids': related_ids
+        })
         return request.website.render('website_slides.slide_view', values)
 
 
@@ -139,3 +138,5 @@ class main(http.Controller):
         user = Files.browse(cr, uid, document_id, context=context)
         return Website._image(cr, uid, 'ir.attachment', user.id, 'image', response, max_height=225)
 
+
+    
