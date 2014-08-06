@@ -106,7 +106,7 @@
 
 		<template id='home' name="slide">
 			<t t-set="head">
-				<link href="/website_slides/static/src/css/slides.css" rel="stylesheet" />
+				<link href="/website_slides/static/src/css/website_slides.css" rel="stylesheet" />
 				<script type="text/javascript" src="/website_slides/static/src/js/slides.js"></script>
 			</t>
 			<t t-call="website.layout">
@@ -125,7 +125,7 @@
 
 		<template id='slide_view' name="slide_view">
 			<t t-set="head">
-				<link href="/website_slides/static/src/css/slides.css" rel="stylesheet" />
+				<link href="/website_slides/static/src/css/website_slides.css" rel="stylesheet" />
 				<script type="text/javascript" src="/website_slides/static/src/js/slides.js"></script>
 			</t>
 			<t t-call="website.layout">
@@ -223,7 +223,7 @@
                             share
                         </div>
                         <div class="tab-pane fade" id="discuss">
-                        	
+
                         </div>
                         <div class="tab-pane fade" id="transscript">
                             <p t-field="slideview.index_content"></p>
@@ -240,42 +240,48 @@
                     <li><a href="#most_viewed" data-toggle="tab">Most Viewed</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div id="related" class="tab-pane fade in active">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 thumbnail oe-slides-detail-thumbnail" t-foreach="related_ids" t-as="attachment">
-                            <t t-call="website_slides.slide-box"/>
+                    <div id="related" class="tab-pane active">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 slide-box">
+                            <ul class="media-list">
+                                <t t-foreach="related_ids" t-as="attachment">
+                                    <t t-call="website_slides.slide-box"/>
+                                </t>
+                            </ul>
                         </div>
                     </div>
-                    <div id="most_viewed" class="tab-pane fade">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 thumbnail oe-slides-detail-thumbnail" t-foreach="most_viewed_ids" t-as="attachment">
-                            <t t-call="website_slides.slide-box"/>
+                    <div id="most_viewed" class="tab-pane">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 slide-box">
+                            <ul class="media-list">
+                                <t t-foreach="most_viewed_ids" t-as="attachment">
+                                    <t t-call="website_slides.slide-box"/>
+                                </t>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </template>
         <template id="slide-box" name="Slide Box">
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding:0px;">
-                <a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
+            <li class="media">
+                <a class="pull-left" t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
                     <t t-if="not attachment.youtube_id">
-                        <img t-attf-src="/slides/thumb/#{attachment.id}" width="128px;" class="img-responsive shadow"/>
+                        <img class="media-object image-box" t-attf-src="/slides/thumb/#{attachment.id}"/>
                     </t>
                     <t t-if="attachment.youtube_id">
-                        <i class="fa fa-play-circle-o fa-2x list-play-button"></i>
-                        <img t-att-src="attachment.image" class="img-responsive shadow"/>
+                        <!--<i class="fa fa-play-circle-o fa-2x list-play-button"></i>-->
+                        <img class="media-objecti image-box" t-attf-src="/slides/thumb/#{attachment.id}"/>
                     </t>
                 </a>
-            </div>
-            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                <a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
-                    <p class="oe-slides-text-truncation">
+                <div class="media-heading">
+                    <div class="h5 text-truncation" t-att-title="attachment.name">
                         <t t-esc="attachment.name"/>
-                    </p>
-                </a>
-                <p class="text-muted slide-list">
-                    <span><timeago class="timeago" t-att-title="attachment.create_date" stype="margin: 0 0 0px;"></timeago></span>,
-                    <span><t t-esc="attachment.slide_views"/> Views</span>
-                </p>
-            </div>
+                    </div>
+                    <div class="h6">
+                        <span><timeago class="timeago" t-att-title="attachment.create_date"></timeago></span>
+                        <span class="pull-right"><t t-esc="attachment.slide_views"/> Views</span>
+                    </div>
+                </div>
+            </li>
         </template>
 	</data>
 </openerp>
