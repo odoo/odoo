@@ -200,13 +200,22 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_add_group: function() {
         var self = this;
+        var local_context = self.dataset.get_context().eval();
+        //check condition for default groupby because in default groupby add new cloumn set default value for stage type from context.
+        if (self.fields_view.arch.attrs && (self.fields_view.arch.attrs.default_group_by != self.group_by)) {
+            _.each(local_context, function(value, key) {
+                if (key.match('^default_')) {
+                    delete local_context[key]
+                }
+            });
+        }
         self.do_action({
             name: _t("Add column"),
             res_model: self.group_by_field.relation,
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
             target: "new",
-            context: self.dataset.get_context(),
+            context: local_context,
             flags: {
                 action_buttons: true,
             }
