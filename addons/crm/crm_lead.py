@@ -229,10 +229,12 @@ class crm_lead(format_address, osv.osv):
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By'),
         'date_open': fields.datetime('Assigned', readonly=True),
-        'day_open': fields.function(_compute_day, string='Days to Open', \
-                                multi='day_open', type="float", store=True),
-        'day_close': fields.function(_compute_day, string='Days to Close', \
-                                multi='day_open', type="float", store=True),
+        'day_open': fields.function(_compute_day, string='Days to Assign',
+                                    multi='day_open', type="float",
+                                    store={'crm.lead': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
+        'day_close': fields.function(_compute_day, string='Days to Close',
+                                     multi='day_open', type="float",
+                                     store={'crm.lead': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
 
         # Messaging and marketing
@@ -887,6 +889,8 @@ class crm_lead(format_address, osv.osv):
             context['default_type'] = vals.get('type')
         if vals.get('section_id') and not context.get('default_section_id'):
             context['default_section_id'] = vals.get('section_id')
+        if vals.get('user_id'):
+            vals['date_open'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
@@ -896,7 +900,9 @@ class crm_lead(format_address, osv.osv):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
-        # stage change with new stage: update probability
+        if vals.get('user_id'):
+            vals['date_open'] = fields.datetime.now()
+        # stage change with new stage: update probability and date_closed
         if vals.get('stage_id') and not vals.get('probability'):
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)
