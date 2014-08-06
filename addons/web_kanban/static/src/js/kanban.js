@@ -431,7 +431,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                         group.aggregates[value] = instance.web.format_value(group.group.get('aggregates')[key], {type: 'float'});
                         $(group.$el).find('.oe_kanban_aggregates').append('<li><span>' + value + ':</span> ' + group.aggregates[value] + '</li>');
                     });
-                    $(group.$el).find('.oe_kanban_group_length').text(group.records.length);
+                    if (group === new_group) group.group.attributes.length++;
+                    else group.group.attributes.length--;
+                    $(group.$el).find('.oe_kanban_group_length').text(group.group.get('length') > 99 ? "99+" : group.group.get('length'));
                 });
             }).fail(function(error, evt) {
                 evt.preventDefault();
