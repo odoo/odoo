@@ -137,6 +137,14 @@ Model
 
         :type: ``res.users``
 
+.. _core/orm/decorators:
+
+Method decorators
+=================
+
+.. automodule:: openerp.api
+    :members: one, multi, model, depends, onchange, returns
+
 .. _core/orm/fields:
 
 Fields
