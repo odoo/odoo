@@ -37,6 +37,7 @@ from lxml import etree
 import openerp
 from openerp import tools, api
 from openerp.http import request
+from openerp.modules.module import get_resource_path, get_resource_from_path
 from openerp.osv import fields, osv, orm
 from openerp.tools import config, graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.convert import _fix_multiple_roots
@@ -153,7 +154,9 @@ class view(osv.osv):
         for view in self.browse(cr, uid, ids, context=context):
             arch_fs = None
             if config['dev_mode'] and view.arch_fs and view.xml_id:
-                arch_fs = get_view_arch_from_file(view.arch_fs, view.xml_id)
+                # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
+                fullpath = get_resource_path(*view.arch_fs.split('/'))
+                arch_fs = get_view_arch_from_file(fullpath, view.xml_id)
             result[view.id] = arch_fs or view.arch_db
         return result
 
@@ -167,7 +170,8 @@ class view(osv.osv):
                 if context and key in context:
                     imd = context[key]
                     if self._model._name == imd['model'] and (not view.xml_id or view.xml_id == imd['xml_id']):
-                        data['arch_fs'] = imd['xml_file']
+                        # we store the relative path to the resource instead of the absolute path
+                        data['arch_fs'] = '/'.join(get_resource_from_path(imd['xml_file'])[0:2])
                 self.write(cr, uid, ids, data, context=context)
 
         return True
