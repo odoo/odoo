@@ -56,7 +56,7 @@ class res_currency(osv.osv):
                 res[id] = 0
             else:
                 currency = self.browse(cr, uid, id, context=context)
-                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency '%s' for the given period" % (currency.name)))
+                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency '%s' for the given period: %s" % (currency.name, date)))
         return res
 
     _name = "res.currency"

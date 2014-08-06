@@ -4,6 +4,7 @@
 
     <t t-name="bank_statement_nothing_to_reconcile">
         <div class="oe_form_sheetbg"><div class="oe_form_sheet oe_form_sheet_width">
+            <div class="notification_area"></div>
             <div class="oe_view_nocontent"><p>
                 <b>Good Job!</b> Bank statements are fully reconciled.</p>
                 <p>This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so.</p>
@@ -31,6 +32,7 @@
             	</div>
             </div>
             <div class="oe_clear"></div>
+            <div class="notification_area"></div>
             <div class="reconciliation_lines_container"></div>
             <p class='protip'>Tip : Hit ctrl-enter to validate the whole sheet.</p>
         </div></div>
@@ -54,6 +56,19 @@
                     <button class="button_close_statement btn btn-primary btn-sm">Close the statement<t t-if="multiple_statements">s</t></button>
                 </t>
             </p>
+        </div>
+    </t>
+
+    <t t-name="reconciliation_notification">
+        <div t-att-class="'notification alert-dismissible alert alert-' + type" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span><span class="sr-only">Close</span></button>
+            <t t-esc="message" />
+            <t t-if="details !== undefined">
+                <a class="oe_e" style="line-height: 14px; position: relative; top: 3px" rel="do_action" href="javascript:void(0)"
+                    t-att-data-action_nam="details.name"
+                    t-att-data-model="details.model"
+                    t-att-data-ids="details.ids">/</a>
+            </t>
         </div>
     </t>
 
