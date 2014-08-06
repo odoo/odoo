@@ -841,10 +841,10 @@ class BaseModel(object):
         ir_model_data = self.sudo().env['ir.model.data']
         data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
         if data:
-            if data.module:
-                return '%s.%s' % (data.module, data.name)
+            if data[0].module:
+                return '%s.%s' % (data[0].module, data[0].name)
             else:
-                return data.name
+                return data[0].name
         else:
             postfix = 0
             name = '%s_%s' % (self._table, self.id)
