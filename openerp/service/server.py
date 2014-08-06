@@ -41,6 +41,13 @@ from openerp.tools.misc import stripped_sys_argv, dumpstacks
 
 _logger = logging.getLogger(__name__)
 
+try:
+    import watchdog
+    from watchdog.observers import Observer
+    from watchdog.events import FileCreatedEvent, FileModifiedEvent
+except ImportError:
+    watchdog = None
+
 SLEEP_INTERVAL = 60     # 1 min
 
 #----------------------------------------------------------
@@ -109,16 +116,12 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
 #----------------------------------------------------------
 class FSWatcher(object):
     def __init__(self):
-        # TODO: check if debian package is available
-        from watchdog.observers import Observer
         self.observer = Observer()
         for path in openerp.modules.module.ad_paths:
             _logger.info('Watching addons folder %s', path)
             self.observer.schedule(self, path, recursive=True)
 
     def dispatch(self, event):
-        # TODO: check if debian package is available
-        from watchdog.events import FileCreatedEvent, FileModifiedEvent
         if isinstance(event, (FileCreatedEvent, FileModifiedEvent)):
             if not event.is_directory:
                 path = event.src_path
@@ -881,14 +884,21 @@ def start(preload=None, stop=False):
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
-    watcher = FSWatcher()
-    watcher.start()
+    if watchdog:
+        watcher = FSWatcher()
+        watcher.start()
+    else:
+        intro = "'watchdog' module not installed."
+        _logger.warning("%s Asset Bundles automatic cache invalidation disabled." % intro)
+        if config['dev_mode']:
+            _logger.warning("%s Code autoreload feature is disabled" % intro)
 
     rc = server.run(preload, stop)
 
     # like the legend of the phoenix, all ends with beginnings
     if getattr(openerp, 'phoenix', False):
-        watcher.stop()
+        if watchdog:
+            watcher.stop()
         _reexec()
 
     return rc if rc else 0
