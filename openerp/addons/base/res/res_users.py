@@ -921,29 +921,26 @@ class change_password_wizard(osv.TransientModel):
         'user_ids': fields.one2many('change.password.user', 'wizard_id', string='Users'),
     }
 
-    def default_get(self, cr, uid, fields, context=None):
-        if context == None:
+    def _default_user_ids(self, cr, uid, context=None):
+        if context is None:
             context = {}
-        user_ids = context.get('active_ids', [])
-        wiz_id = context.get('active_id', None)
-        res = []
-        users = self.pool.get('res.users').browse(cr, uid, user_ids, context=context)
-        for user in users:
-            res.append((0, 0, {
-                'wizard_id': wiz_id,
-                'user_id': user.id,
-                'user_login': user.login,
-            }))
-        return {'user_ids': res}
+        user_model = self.pool['res.users']
+        user_ids = context.get('active_model') == 'res.users' and context.get('active_ids') or []
+        return [
+            (0, 0, {'user_id': user.id, 'user_login': user.login})
+            for user in user_model.browse(cr, uid, user_ids, context=context)
+        ]
 
-    def change_password_button(self, cr, uid, id, context=None):
-        wizard = self.browse(cr, uid, id, context=context)[0]
+    _defaults = {
+        'user_ids': _default_user_ids,
+    }
+
+    def change_password_button(self, cr, uid, ids, context=None):
+        wizard = self.browse(cr, uid, ids, context=context)[0]
         need_reload = any(uid == user.user_id.id for user in wizard.user_ids)
-        line_ids = [user.id for user in wizard.user_ids]
 
+        line_ids = [user.id for user in wizard.user_ids]
         self.pool.get('change.password.user').change_password_button(cr, uid, line_ids, context=context)
-        # don't keep temporary password copies in the database longer than necessary
-        self.pool.get('change.password.user').write(cr, uid, line_ids, {'new_passwd': False}, context=context)
 
         if need_reload:
             return {
@@ -971,8 +968,10 @@ class change_password_user(osv.TransientModel):
     }
 
     def change_password_button(self, cr, uid, ids, context=None):
-        for user in self.browse(cr, uid, ids, context=context):
-            self.pool.get('res.users').write(cr, uid, user.user_id.id, {'password': user.new_passwd})
+        for line in self.browse(cr, uid, ids, context=context):
+            line.user_id.write({'password': line.new_passwd})
+        # don't keep temporary passwords in the database longer than necessary
+        self.write(cr, uid, ids, {'new_passwd': False}, context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
