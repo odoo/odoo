@@ -296,6 +296,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 if(!self.nb_records) {
                     self.no_result();
                 }
+                self.trigger('kanban_groups_processed');
             });
         });
     },
@@ -312,6 +313,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     if (_.isEmpty(records)) {
                         self.no_result();
                     }
+                    self.trigger('kanban_dataset_processed');
                     def.resolve();
                 });
             }).done(null, function() {

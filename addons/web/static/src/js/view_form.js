@@ -302,6 +302,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 opacity: '1',
                 filter: 'alpha(opacity = 100)'
             });
+            instance.web.bus.trigger('form_view_shown', self);
         });
     },
     do_hide: function () {
@@ -705,6 +706,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 if (menu) {
                     menu.do_reload_needaction();
                 }
+                instance.web.bus.trigger('form_view_saved', self);
             });
         }).always(function(){
             $(e.target).attr("disabled", false);
