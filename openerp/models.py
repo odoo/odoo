@@ -1729,12 +1729,7 @@ class BaseModel(object):
             :rtype: list
             :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
-        args = list(args or [])
-        if not self._rec_name:
-            _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
-        elif not (name == '' and operator == 'ilike'):
-            args += [(self._rec_name, operator, name)]
-        return self.search(args, limit=limit).name_get()
+        return self._name_search(name, args, operator, limit=limit)
 
     def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
         # private implementation of name_search, allows passing a dedicated user
