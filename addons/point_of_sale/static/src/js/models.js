@@ -423,7 +423,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // it is therefore important to only call this method from inside a mutex
         // this method returns a deferred indicating wether the sending was successful or not
         // there is a timeout parameter which is set to 2 seconds by default. 
-        _flush_order: function( order_id, options) {
+        _flush_order: function(order_id, options) {
             return this._flush_all_orders([this.db.get_order(order_id)], options);
         },
         
@@ -431,13 +431,17 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // called from within a mutex. 
         // this method returns a deferred that always succeeds when all orders have been tried to be sent,
         // even if none of them could actually be sent. 
-        _flush_all_orders: function () {
+        _flush_all_orders: function (order_id, options) {
             var self = this;
             self.set('synch', {
                 state: 'connecting',
                 pending: self.get('synch').pending
             });
-            return self._save_to_server(self.db.get_orders()).done(function () {
+            var orders_to_save = self.db.get_orders();
+            if(order_id) {
+                orders_to_save = order_id
+            }
+            return self._save_to_server(orders_to_save, options).done(function () {
                 var pending = self.db.get_orders().length;
                 self.set('synch', {
                     state: pending ? 'connecting' : 'connected',
@@ -474,10 +478,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     shadow: !options.to_invoice,
                     timeout: timeout
                 }
-            ).then(function () {
+            ).then(function (res) {
                 _.each(orders, function (order) {
                     self.db.remove_order(order.id);
                 });
+                return res;
             }).fail(function (unused, event){
                 // prevent an error popup creation by the rpc failure
                 // we want the failure to be silent as we send the orders in the background
