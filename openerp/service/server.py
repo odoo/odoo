@@ -125,7 +125,7 @@ class FSWatcher(object):
                 if path.endswith('.xml'):
                     _logger.info('autoreload: xml change detected, voiding orm cache')
                     # TODO: void orm caches
-                elif config['auto_reload'] and path.endswith('.py'):
+                elif config['dev_mode'] and path.endswith('.py'):
                     try:
                         source = open(path, 'rb').read() + '\n'
                         compile(source, path, 'exec')

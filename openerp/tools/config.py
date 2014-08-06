@@ -255,8 +255,6 @@ class configmanager(object):
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        if os.name == 'posix':
-            group.add_option('--auto-reload', dest='auto_reload', action='store_true', my_default=False, help='enable auto reload')
         group.add_option('--dev', dest='dev_mode', action='store_true', my_default=False, help='enable developper mode')
         group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
@@ -417,7 +415,7 @@ class configmanager(object):
         ]
 
         posix_keys = [
-            'auto_reload', 'workers',
+            'workers',
             'limit_memory_hard', 'limit_memory_soft',
             'limit_time_cpu', 'limit_time_real', 'limit_request',
         ]
