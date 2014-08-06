@@ -408,7 +408,8 @@ class Field(object):
         self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
         self.inverse = self._inverse_related
-        self.search = self._search_related
+        if field._description_searchable(env):
+            self.search = self._search_related
 
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
@@ -524,23 +525,27 @@ class Field(object):
     def get_description(self, env):
         """ Return a dictionary that describes the field `self`. """
         desc = {'type': self.type}
-        # determine 'store'
-        if self.store:
-            # if the corresponding column is a function field, check the column
-            column = env[self.model_name]._columns.get(self.name)
-            desc['store'] = bool(getattr(column, 'store', True))
-        else:
-            desc['store'] = False
-        # determine other attributes
         for attr, prop in self.description_attrs:
             value = getattr(self, prop)
             if callable(value):
                 value = value(env)
-            if value:
+            if value is not None:
                 desc[attr] = value
+
         return desc
 
     # properties used by get_description()
+
+    def _description_store(self, env):
+        if self.store:
+            # if the corresponding column is a function field, check the column
+            column = env[self.model_name]._columns.get(self.name)
+            return bool(getattr(column, 'store', True))
+        return False
+
+    def _description_searchable(self, env):
+        return self._description_store(env) or bool(self.search)
+
     _description_depends = property(attrgetter('depends'))
     _description_related = property(attrgetter('related'))
     _description_company_dependent = property(attrgetter('company_dependent'))
