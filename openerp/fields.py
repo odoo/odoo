@@ -418,9 +418,9 @@ class Field(object):
 
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
-        for record in records:
+        for record, sudo_record in zip(records, records.sudo()):
             # bypass access rights check when traversing the related path
-            value = record.sudo() if record.id else record
+            value = sudo_record if record.id else record
             # traverse the intermediate fields, and keep at most one record
             for name in self.related[:-1]:
                 value = value[name][:1]
