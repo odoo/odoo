@@ -514,7 +514,8 @@ openerp.mail = function (session) {
                     'default_is_log': self.is_log,
                     'mail_post_autofollow': true,
                     'mail_post_autofollow_partner_ids': partner_ids,
-                    'is_private': self.is_private
+                    'is_private': self.is_private,
+                    'default_composition_mode':default_composition_mode
                 };
                 if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
                     context.default_model = self.context.default_model;

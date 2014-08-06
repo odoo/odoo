@@ -66,12 +66,15 @@ class mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
-
+        composition_mode = result.get('composition_mode', context.get('default_composition_mode'))
         # v6.1 compatibility mode
-        result['composition_mode'] = result.get('composition_mode', context.get('mail.compose.message.mode'))
-        result['model'] = result.get('model', context.get('active_model'))
-        result['res_id'] = result.get('res_id', context.get('active_id'))
-        result['parent_id'] = result.get('parent_id', context.get('message_id'))
+        model_id = context.get('active_model') or context.get('default_model') or False
+        res_id = context.get('active_id') or context.get('default_res_id') or False
+        parent_id = context.get('message_id') or context.get('default_parent_id') or False
+        result['composition_mode'] = composition_mode
+        result['model'] = result.get('model', model_id)
+        result['res_id'] = result.get('res_id', res_id)
+        result['parent_id'] = result.get('parent_id', parent_id)
 
         # default values according to composition mode - NOTE: reply is deprecated, fall back on comment
         if result['composition_mode'] == 'reply':
