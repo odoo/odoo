@@ -23,6 +23,7 @@ import urllib2
 import werkzeug
 import werkzeug.urls
 import werkzeug.wrappers
+import simplejson
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -178,4 +179,10 @@ class main(http.Controller):
         return Website._image(cr, uid, 'ir.attachment', user.id, 'image', response, max_height=225)
 
 
-    
+    @http.route('/slides/get_tags', type='http', auth="public", methods=['GET'], website=True)
+    def tag_read(self, **post):
+        tags = request.registry['ir.attachment.tag'].search_read(request.cr, request.uid, [], ['name'], context=request.context)
+        data = [tag['name'] for tag in tags]
+        return simplejson.dumps(data)
+
+
