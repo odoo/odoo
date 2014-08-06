@@ -393,56 +393,56 @@ class MassMailing(osv.Model):
         ),
         'total': fields.function(
             _get_statistics, string='Total',
-            type='integer', multi='_get_statistics', store=True,
+            type='integer', multi='_get_statistics',
         ),
         'scheduled': fields.function(
             _get_statistics, string='Scheduled',
-            type='integer', multi='_get_statistics', store=True,
+            type='integer', multi='_get_statistics',
         ),
         'failed': fields.function(
             _get_statistics, string='Failed',
-            type='integer', multi='_get_statistics', store=True,
+            type='integer', multi='_get_statistics',
         ),
         'sent': fields.function(
             _get_statistics, string='Sent',
-            type='integer', multi='_get_statistics', store=True,
+            type='integer', multi='_get_statistics',
         ),
         'delivered': fields.function(
             _get_statistics, string='Delivered',
-            type='integer', multi='_get_statistics', store=True,
+            type='integer', multi='_get_statistics',
         ),
         'opened': fields.function(
             _get_statistics, string='Opened',
-            type='integer', multi='_get_statistics', store=True,
+            type='integer', multi='_get_statistics',
         ),
         'replied': fields.function(
             _get_statistics, string='Replied',
-            type='integer', multi='_get_statistics', store=True,
+            type='integer', multi='_get_statistics',
         ),
         'bounced': fields.function(
             _get_statistics, string='Bounced',
-            type='integer', multi='_get_statistics', store=True,
+            type='integer', multi='_get_statistics',
         ),
         'received_ratio': fields.function(
             _get_statistics, string='Received Ratio',
-            type='integer', multi='_get_statistics', store=True,
+            type='integer', multi='_get_statistics',
         ),
         'opened_ratio': fields.function(
             _get_statistics, string='Opened Ratio',
-            type='integer', multi='_get_statistics', store=True,
+            type='integer', multi='_get_statistics',
         ),
         'replied_ratio': fields.function(
             _get_statistics, string='Replied Ratio',
-            type='integer', multi='_get_statistics', store=True,
+            type='integer', multi='_get_statistics',
         ),
         # daily ratio
         'opened_daily': fields.function(
             _get_daily_statistics, string='Opened',
-            type='char', multi='_get_daily_statistics', store=True,
+            type='char', multi='_get_daily_statistics',
         ),
         'replied_daily': fields.function(
             _get_daily_statistics, string='Replied',
-            type='char', multi='_get_daily_statistics', store=True,
+            type='char', multi='_get_daily_statistics',
         )
     }
 
