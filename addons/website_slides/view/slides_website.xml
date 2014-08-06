@@ -180,7 +180,7 @@
             <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                 <t t-if="slideview.datas">
                     <iframe id="viewer"
-                        t-attf-src="/website_slides/static/lib/pdfjs/web/viewer.html?file=#{slideview.url}&amp;create_thumb=1&amp;id=#{slideview.id}"
+                        t-attf-src="/website_slides/static/lib/pdfjs/web/viewer.html?file=#{slideview.url}"
                         width='100%' height='588' allowfullscreen="true"
                         webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;" scrolling="no"></iframe>
                 </t>
@@ -223,7 +223,7 @@
                             share
                         </div>
                         <div class="tab-pane fade" id="discuss">
-
+                        	
                         </div>
                         <div class="tab-pane fade" id="transscript">
                             <p t-field="slideview.index_content"></p>
@@ -240,12 +240,12 @@
                     <li><a href="#most_viewed" data-toggle="tab">Most Viewed</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div id="related" class="tab-pane active">
+                    <div id="related" class="tab-pane fade in active">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 thumbnail oe-slides-detail-thumbnail" t-foreach="related_ids" t-as="attachment">
                             <t t-call="website_slides.slide-box"/>
                         </div>
                     </div>
-                    <div id="most_viewed" class="tab-pane">
+                    <div id="most_viewed" class="tab-pane fade">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 thumbnail oe-slides-detail-thumbnail" t-foreach="most_viewed_ids" t-as="attachment">
                             <t t-call="website_slides.slide-box"/>
                         </div>

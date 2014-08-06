@@ -42,7 +42,7 @@ class document_directory(osv.osv):
 
 
 class ir_attachment(osv.osv):
-    _inherit = 'ir.attachment'
+    _inherit = 'ir.attachment'    
 
     _order = "id desc"
     _columns = {
@@ -54,7 +54,7 @@ class ir_attachment(osv.osv):
         'youtube_id': fields.char(string="Youtube Video ID"),
         'website_published': fields.boolean(
             'Publish', help="Publish on the website", copy=False,
-        ),
+        ),        
     }
 
     def _get_slide_setting(self, cr, uid, context):
