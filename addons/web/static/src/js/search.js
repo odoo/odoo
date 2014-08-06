@@ -1963,7 +1963,7 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
                     context: this.view.dataset.context
                 }).done(function(data) {
                     self.fields = {
-                        id: { string: 'ID', type: 'id' }
+                        id: { string: 'ID', type: 'id', searchable: true }
                     };
                     _.each(data, function(field_def, field_name) {
                         if (field_def.selectable !== false && field_name != 'id') {
