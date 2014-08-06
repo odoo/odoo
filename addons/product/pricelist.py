@@ -186,6 +186,46 @@ class product_pricelist(osv.osv):
                 results[product_id][pricelist.id] = price
         return results
 
+    def _get_related_item_ids(self, cr, uid, version_id, context=None):
+        """ Based on context variable keyword sql_conditions this method
+            builds the query as known for positive matching.
+
+            You might also replace the order by. Take care that sequence and
+            min_quantity are crucial for core rules.
+
+            Returns a list of item_ids
+        """
+        context = context or {}
+        if 'sql_conditions' not in context:
+            return []
+        conditions = False
+        tuples = tuple()
+        for field, value in context['sql_conditions'].items():
+            if self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', field), ('model', '=', 'product.pricelist.item')]):
+                if not conditions:
+                    conditions = '(%s IS NULL OR %s = any(%%s))' % (field, field)
+                else:
+                    conditions = conditions + ' AND (%s IS NULL OR %s = any(%%s))' % (field, field)
+                tuples = tuples + (value,)
+
+        sql = 'SELECT i.id FROM product_pricelist_item AS i \
+               WHERE ' + conditions + ' AND (price_version_id = %s) \
+               ORDER BY sequence, min_quantity DESC'
+        tuples = tuples + (version_id,)
+        # Load all rules
+        cr.execute(sql, tuples)
+        item_ids = [x[0] for x in cr.fetchall()]
+
+        return item_ids
+
+    def _check_rule_constraint(self, rule, next_rule, context=None):
+        """ Inherit this method and super the return in order to give feedback
+            about your rule checking with the help of context and current rule
+            Returns False if the rule should not be skipped at this point
+        """
+        context = context or {}
+        return next_rule
+
     def _price_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
         context = context or {}
         date = context.get('date') or time.strftime('%Y-%m-%d')
@@ -222,18 +262,15 @@ class product_pricelist(osv.osv):
             prod_ids = [product.id for product in products]
             prod_tmpl_ids = [product.product_tmpl_id.id for product in products]
 
-        # Load all rules
-        cr.execute(
-            'SELECT i.id '
-            'FROM product_pricelist_item AS i '
-            'WHERE (product_tmpl_id IS NULL OR product_tmpl_id = any(%s)) '
-                'AND (product_id IS NULL OR (product_id = any(%s))) '
-                'AND ((categ_id IS NULL) OR (categ_id = any(%s))) '
-                'AND (price_version_id = %s) '
-            'ORDER BY sequence, min_quantity desc',
-            (prod_tmpl_ids, prod_ids, categ_ids, version.id))
-        
-        item_ids = [x[0] for x in cr.fetchall()]
+        # Inheritance Hook #1
+        conditions = {'product_tmpl_id': prod_tmpl_ids, 'product_id': prod_ids, 'categ_id': categ_ids}
+        if 'sql_conditions' in context:
+            conditions = dict(context['sql_conditions'].items() + conditions.items())
+        ctx = context.copy()
+        ctx['sql_conditions'] = conditions
+        item_ids = self._get_related_item_ids(cr, uid, version.id, context=ctx)
+        # End Inheritance Hook #1
+
         items = self.pool.get('product.pricelist.item').browse(cr, uid, item_ids, context=context)
 
         price_types = {}
@@ -244,8 +281,14 @@ class product_pricelist(osv.osv):
             results[product.id] = 0.0
             price = False
             for rule in items:
-                if rule.min_quantity and qty<rule.min_quantity:
+                # Inheritance Hook #2
+                next_rule = self._check_rule_constraint(rule, False, context=context)
+                if next_rule:
                     continue
+                # End Inheritance Hook #2
+                if rule.min_quantity and qty < rule.min_quantity:
+                    continue
+
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
                         continue
