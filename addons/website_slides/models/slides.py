@@ -30,7 +30,6 @@ class ir_attachment_tags(osv.osv):
         'name': fields.char('Name')
     }
 
-
 class document_directory(osv.osv):
     _inherit = 'document.directory'
 
@@ -39,7 +38,7 @@ class document_directory(osv.osv):
             'Publish', help="Publish on the website", copy=False,
         ),
     }
-    
+
 class MailMessage(osv.Model):
     _inherit = 'mail.message'
 
@@ -49,12 +48,9 @@ class MailMessage(osv.Model):
             help='Used to display messages in a paragraph-based chatter using a unique path;'),
     }
 
-class MailThread(osv.Model):
-    _inherit = 'mail.thread'
-    
-
 class ir_attachment(osv.osv):
-    _inherit = 'ir.attachment'    
+    _name = 'ir.attachment'
+    _inherit = ['ir.attachment','mail.thread']
     
     _order = "id desc"
     _columns = {
