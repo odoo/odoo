@@ -18,46 +18,36 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
+from openerp import models, fields, api
 
 
-class tip(osv.Model):
+class tip(models.Model):
     _name = 'web.tip'
     _description = 'Tips'
 
-    def _is_consumed(self, cr, uid, ids, fields, arg, context=None):
-        results = {}
-        records = self.read(cr, uid, ids, ['user_ids'])
-        for rec in records:
-            if uid in rec['user_ids']:
-                results[rec['id']] = True
-            else:
-                results[rec['id']] = False
-        return results
+    @api.one
+    @api.depends('user_ids')
+    def _is_consumed(self):
+        if self.env.uid in self.user_ids:
+            self.is_consumed = True
+        else:
+            self.is_consumed = False
 
-    _columns = {
-        'title': fields.char('Tip title'),
-        'description': fields.html('Tip Description', required=True),
-        'action_id': fields.many2one('ir.actions.act_window', string="Action",
-            help="The action that will trigger the tip"),
-        'model': fields.char("Model", help="Model name on which to trigger the tip, e.g. 'res.partner'."),
-        'type': fields.char("Type", help="Model type, e.g. lead or opportunity for crm.lead"),
-        'mode': fields.char("Mode", help="Mode, e.g. kanban, form"),
-        'trigger_selector': fields.char('Trigger selector', help='CSS selectors used to trigger the tip, separated by a comma (ANDed).'),
-        'highlight_selector': fields.char('Highlight selector', help='CSS selector for the element to highlight'),
-        'end_selector': fields.char('End selector', help='CSS selector used to end the tip'),
-        'end_event': fields.char('End event', help='Event to end the tip'),
-        'placement': fields.char('Placement', help='Popover placement, bottom, top, left or right'),
-        'user_ids': fields.many2many('res.users', string='Consumed by'),
-        'is_consumed': fields.function(_is_consumed, type='boolean', string='Tip consumed')
-    }
+    title = fields.Char('Tip title')
+    description = fields.Html('Tip Description', required=True)
+    action_id = fields.Many2one('ir.actions.act_window', string="Action",
+        help="The action that will trigger the tip")
+    model = fields.Char("Model", help="Model name on which to trigger the tip, e.g. 'res.partner'.")
+    type = fields.Char("Type", help="Model type, e.g. lead or opportunity for crm.lead")
+    mode = fields.Char("Mode", help="Mode, e.g. kanban, form")
+    trigger_selector = fields.Char('Trigger selector', help='CSS selectors used to trigger the tip, separated by a comma (ANDed).')
+    highlight_selector = fields.Char('Highlight selector', help='CSS selector for the element to highlight')
+    end_selector = fields.Char('End selector', help='CSS selector used to end the tip')
+    end_event = fields.Char('End event', help='Event to end the tip', default='click')
+    placement = fields.Char('Placement', help='Popover placement, bottom, top, left or right', default='auto')
+    user_ids = fields.Many2many('res.users', string='Consumed by')
+    is_consumed = fields.Boolean(string='Tip consumed', compute='_is_consumed')
 
-    _defaults = {
-        'placement': 'auto',
-        'end_event': 'click'
-    }
-
-    def consume(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {
-            'user_ids': [(4, uid)]
-        }, context=context)
+    @api.one
+    def consume(self):
+       self.write({'user_ids': [(4, self.env.uid)]})
