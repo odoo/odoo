@@ -20,9 +20,6 @@
 import werkzeug
 import urllib
 from urlparse import urlparse
-
-import werkzeug.urls
-import werkzeug.wrappers
 import simplejson
 
 from openerp import tools
