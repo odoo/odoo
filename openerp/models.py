@@ -841,10 +841,10 @@ class BaseModel(object):
         ir_model_data = self.sudo().env['ir.model.data']
         data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
         if data:
-            if data.module:
-                return '%s.%s' % (data.module, data.name)
+            if data[0].module:
+                return '%s.%s' % (data[0].module, data[0].name)
             else:
-                return data.name
+                return data[0].name
         else:
             postfix = 0
             name = '%s_%s' % (self._table, self.id)
@@ -1729,12 +1729,7 @@ class BaseModel(object):
             :rtype: list
             :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
-        args = list(args or [])
-        if not self._rec_name:
-            _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
-        elif not (name == '' and operator == 'ilike'):
-            args += [(self._rec_name, operator, name)]
-        return self.search(args, limit=limit).name_get()
+        return self._name_search(name, args, operator, limit=limit)
 
     def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
         # private implementation of name_search, allows passing a dedicated user
@@ -2621,7 +2616,7 @@ class BaseModel(object):
 
                             if isinstance(f, fields.many2one) or (isinstance(f, fields.function) and f._type == 'many2one' and f.store):
                                 dest_model = self.pool[f._obj]
-                                if dest_model._table != 'ir_actions':
+                                if dest_model._auto and dest_model._table != 'ir_actions':
                                     self._m2o_fix_foreign_key(cr, self._table, k, dest_model, f.ondelete)
 
                     # The field doesn't exist in database. Create it if necessary.
@@ -3627,7 +3622,8 @@ class BaseModel(object):
 
         # put the values of pure new-style fields into cache, and inverse them
         if new_vals:
-            self._cache.update(self._convert_to_cache(new_vals))
+            for record in self:
+                record._cache.update(record._convert_to_cache(new_vals, update=True))
             for key in new_vals:
                 self._fields[key].determine_inverse(self)
 
@@ -4973,9 +4969,10 @@ class BaseModel(object):
         """ stuff to do right after the registry is built """
         pass
 
-    def _patch_method(self, name, method):
+    @classmethod
+    def _patch_method(cls, name, method):
         """ Monkey-patch a method for all instances of this model. This replaces
-            the method called `name` by `method` in `self`'s class.
+            the method called `name` by `method` in the given class.
             The original method is then accessible via ``method.origin``, and it
             can be restored with :meth:`~._revert_method`.
 
@@ -4996,7 +4993,6 @@ class BaseModel(object):
                 # restore the original method
                 model._revert_method('write')
         """
-        cls = type(self)
         origin = getattr(cls, name)
         method.origin = origin
         # propagate decorators from origin to method, and apply api decorator
@@ -5004,11 +5000,11 @@ class BaseModel(object):
         wrapped.origin = origin
         setattr(cls, name, wrapped)
 
-    def _revert_method(self, name):
-        """ Revert the original method of `self` called `name`.
+    @classmethod
+    def _revert_method(cls, name):
+        """ Revert the original method called `name` in the given class.
             See :meth:`~._patch_method`.
         """
-        cls = type(self)
         method = getattr(cls, name)
         setattr(cls, name, method.origin)
 
@@ -5098,11 +5094,17 @@ class BaseModel(object):
         context = dict(args[0] if args else self._context, **kwargs)
         return self.with_env(self.env(context=context))
 
-    def _convert_to_cache(self, values, validate=True):
-        """ Convert the `values` dictionary into cached values. """
+    def _convert_to_cache(self, values, update=False, validate=True):
+        """ Convert the `values` dictionary into cached values.
+
+            :param update: whether the conversion is made for updating `self`;
+                this is necessary for interpreting the commands of *2many fields
+            :param validate: whether values must be checked
+        """
         fields = self._fields
+        target = self if update else self.browse()
         return {
-            name: fields[name].convert_to_cache(value, self.env, validate=validate)
+            name: fields[name].convert_to_cache(value, target, validate=validate)
             for name, value in values.iteritems()
             if name in fields
         }
@@ -5191,7 +5193,7 @@ class BaseModel(object):
             exist in the database.
         """
         record = self.browse([NewId()])
-        record._cache.update(self._convert_to_cache(values))
+        record._cache.update(record._convert_to_cache(values, update=True))
 
         if record.env.in_onchange:
             # The cache update does not set inverse fields, so do it manually.

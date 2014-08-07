@@ -2598,7 +2598,7 @@ class stock_inventory(osv.osv):
             domain += ' and lot_id = %s'
             args += (inventory.lot_id.id,)
         if inventory.product_id:
-            domain += 'and product_id = %s'
+            domain += ' and product_id = %s'
             args += (inventory.product_id.id,)
         if inventory.package_id:
             domain += ' and package_id = %s'
