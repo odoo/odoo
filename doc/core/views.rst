@@ -10,6 +10,8 @@ Structure
 Inheritance
 ===========
 
+.. _core/views/form:
+
 Forms
 =====
 

@@ -1,0 +1,23 @@
+# HG changeset patch
+# Parent bbfa610bfabd5c5881c040a7cb711701d1250697
+diff -r bbfa610bfabd -r 7ce1aa80e26b openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml	Thu Aug 07 12:11:28 2014 +0200
++++ b/openacademy/views/openacademy.xml	Thu Aug 07 12:13:11 2014 +0200
+@@ -1,6 +1,17 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <openerp>
+     <data>
++        <record model="ir.ui.view" id="course_form_view">
++            <field name="name">course.form</field>
++            <field name="model">openacademy.course</field>
++            <field name="arch" type="xml">
++                <form string="Course Form">
++                    <field name="name"/>
++                    <field name="description"/>
++                </form>
++            </field>
++        </record>
++
+         <!-- window action -->
+         <!--
+             The following tag is an action definition for a "window action",

@@ -1,0 +1,75 @@
+# HG changeset patch
+# Parent cb4291a236908f3ca33e1dde8b15f731d2f70ac7
+diff -r cb4291a23690 -r 4dd7482d78ca openacademy/views/session_board.xml
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/openacademy/views/session_board.xml	Thu Aug 07 13:25:33 2014 +0200
+@@ -0,0 +1,68 @@
++<?xml version="1.0"?>
++<openerp>
++  <data>
++    <record model="ir.actions.act_window" id="act_session_graph">
++      <field name="res_model">openacademy.session</field>
++      <field name="view_type">form</field>
++      <field name="view_mode">graph</field>
++      <field name="view_id"
++             ref="openacademy.openacademy_session_graph_view"/>
++    </record>
++    <record model="ir.actions.act_window" id="act_session_calendar">
++      <field name="res_model">openacademy.session</field>
++      <field name="view_type">form</field>
++      <field name="view_mode">calendar</field>
++      <field name="view_id" ref="openacademy.session_calendar_view"/>
++    </record>
++    <record model="ir.actions.act_window" id="act_course_list">
++      <field name="res_model">openacademy.course</field>
++      <field name="view_type">form</field>
++      <field name="view_mode">tree,form</field>
++    </record>
++    <record model="ir.ui.view" id="board_session_form">
++      <field name="name">Session Dashboard Form</field>
++      <field name="model">board.board</field>
++      <field name="type">form</field>
++      <field name="arch" type="xml">
++        <form string="Session Dashboard" version="7.0">
++          <board style="2-1">
++            <column>
++              <action
++                  string="Attendees by course"
++                  name="%(act_session_graph)d"
++                  colspan="4"
++                  height="150"
++                  width="510"/>
++              <action
++                  string="Sessions"
++                  name="%(act_session_calendar)d"
++                  colspan="4"/>
++            </column>
++            <column>
++              <action
++                  string="Courses"
++                  name="%(act_course_list)d" colspan="4"/>
++            </column>
++          </board>
++        </form>
++      </field>
++    </record>
++    <record model="ir.actions.act_window" id="open_board_session">
++      <field name="name">Session Dashboard</field>
++      <field name="res_model">board.board</field>
++      <field name="view_type">form</field>
++      <field name="view_mode">form</field>
++      <field name="usage">menu</field>
++      <field name="view_id" ref="board_session_form"/>
++    </record>
++    <menuitem id="openacademy_menu" name="OpenAcademy"
++              action="open_board_session"/>
++    <menuitem id="board.menu_dashboard" name="Dashboard" sequence="0"
++              parent="openacademy_all"/>
++    <menuitem
++        name="Session Dashboard" parent="board.menu_dashboard"
++        action="open_board_session"
++        sequence="1"
++        id="menu_board_session" icon="terp-graph"/>
++  </data>
++</openerp>
+\ No newline at end of file

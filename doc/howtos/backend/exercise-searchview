@@ -1,0 +1,32 @@
+# HG changeset patch
+# Parent 380a2ad0da161ccce1794c1ba5c4fe8651c5b4b9
+diff -r 380a2ad0da16 -r 00f7609f2002 openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml	Thu Aug 07 12:55:22 2014 +0200
++++ b/openacademy/views/openacademy.xml	Thu Aug 07 12:59:15 2014 +0200
+@@ -39,6 +39,18 @@
+                 </tree>
+             </field>
+         </record>
++        <record model="ir.ui.view" id="course_search_view">
++            <field name="name">course.search</field>
++            <field name="models">openacademy.course</field>
++            <field name="arch" type="xml">
++                <search string="Session Search">
++                    <filter string="My Courses" icon="terp-partner"
++                            name="my_courses" domain="[('responsible_id', '=', uid)]"
++                            help="My own sessions"/>
++                    <field name="name"/>
++                </search>
++            </field>
++        </record>
+ 
+         <!-- window action -->
+         <!--
+@@ -50,6 +62,7 @@
+             <field name="res_model">openacademy.course</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
++            <field name="search_view_id" ref="course_search_view"/>
+             <field name="help" type="html">
+                 <p class="oe_view_nocontent_create">Create the first course
+                 </p>

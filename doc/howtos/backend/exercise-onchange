@@ -1,0 +1,29 @@
+# HG changeset patch
+# Parent cda1293e177ba403406e35b66c90b8bb5e5e7fa1
+diff -r cda1293e177b -r 782b7acc3e7a openacademy/course.py
+--- a/openacademy/course.py	Thu Aug 07 12:40:30 2014 +0200
++++ b/openacademy/course.py	Thu Aug 07 12:43:15 2014 +0200
+@@ -39,6 +39,23 @@ class Session(models.Model):
+         else:
+             self.seats_taken = 100.0 * len(self.attendee_ids) / self.seats
+ 
++    @api.onchange('seats', 'attendee_ids')
++    def _verify_valid_seats(self):
++        if self.seats < 0:
++            return {
++                'warning': {
++                    'title': "Incorrect 'seats' value",
++                    'message': "The number of available seats may not be negative",
++                },
++            }
++        if self.seats < len(self.attendee_ids):
++            return {
++                'warning': {
++                    'title': "Too many attendees",
++                    'message': "Increase seats or remove excess attendees",
++                },
++            }
++
+ class Attendee(models.Model):
+     _name = 'openacademy.attendee'
+     _rec_name = 'partner_id'

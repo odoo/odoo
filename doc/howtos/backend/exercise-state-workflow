@@ -1,0 +1,22 @@
+# HG changeset patch
+# Parent 3a18c84baeaf0d458beb6a3fecdec0132614f28f
+diff -r 3a18c84baeaf -r 87a215ead8c9 openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml	Thu Aug 07 13:08:25 2014 +0200
++++ b/openacademy/views/openacademy.xml	Thu Aug 07 13:09:46 2014 +0200
+@@ -90,13 +90,13 @@
+             <field name="model">openacademy.session</field>
+             <field name="arch" type="xml">
+                 <form string="Session Form">
+-                    <button name="action_draft" type="object"
++                    <button name="signal_draft" type="workflow"
+                             string="Reset to draft"
+                             states="confirmed,done"/>
+-                    <button name="action_confirm" type="object"
++                    <button name="state_confirm" type="workflow"
+                             string="Confirm" states="draft"
+                             class="oe_highlight"/>
+-                    <button name="action_done" type="object"
++                    <button name="state_done" type="workflow"
+                             string="Mark as done" states="confirmed"
+                             class="oe_highlight"/>
+                     <field name="state" widget="statusbar"/>

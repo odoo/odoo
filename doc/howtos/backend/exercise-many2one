@@ -1,0 +1,53 @@
+# HG changeset patch
+# Parent 9c02076d4e980dd9833d9a327acb2978b91aa023
+diff -r 9c02076d4e98 -r a1788ea272cc openacademy/course.py
+--- a/openacademy/course.py	Thu Aug 07 12:15:14 2014 +0200
++++ b/openacademy/course.py	Thu Aug 07 12:20:45 2014 +0200
+@@ -6,16 +6,25 @@ class Course(models.Model):
+ 
+     name = fields.Char(string="Title", required=True)
+     description = fields.Text()
++    responsible_id = fields.Many2one('res.users',
++        ondelete='set null', string="Responsible", index=True)
+ 
+ class Session(models.Model):
+     _name = 'openacademy.session'
+ 
+-    name = fields.Char(string="Name", required=True)
++    name = fields.Char(required=True)
+     start_date = fields.Date()
+     duration = fields.Float(digits=(6, 2), help="Duration in days")
+     seats = fields.Integer(string="Number of seats")
++    instructor_id = fields.Many2one('res.partner', string="Instructor")
++    course_id = fields.Many2one('openacademy.course',
++        ondelete='cascade', string="Course", required=True)
+ 
+ class Attendee(models.Model):
+     _name = 'openacademy.attendee'
++    _rec_name = 'partner_id'
+ 
+-    name = fields.Char()
++    partner_id = fields.Many2one('res.partner',
++        string="Partner", required=True, ondelete='cascade')
++    session_id = fields.Many2one('openacademy.session',
++        string="Session", required=True, ondelete='cascade')
+diff -r 9c02076d4e98 -r a1788ea272cc openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml	Thu Aug 07 12:15:14 2014 +0200
++++ b/openacademy/views/openacademy.xml	Thu Aug 07 12:20:45 2014 +0200
+@@ -49,5 +49,16 @@
+         <!-- Full id location:
+              action="openacademy.course_list_action"
+              It is not required when it is the same module -->
++
++        <record model="ir.actions.act_window" id="session_list_action">
++            <field name="name">Sessions</field>
++            <field name="res_model">openacademy.session</field>
++            <field name="view_type">form</field>
++            <field name="view_mode">tree,form</field>
++        </record>
++
++        <menuitem id="session_menu" name="Sessions"
++                  parent="openacademy_menu"
++                  action="session_list_action"/>
+     </data>
+ </openerp>

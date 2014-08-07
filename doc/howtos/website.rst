@@ -180,7 +180,7 @@ Odoo updates the manifest and install the template file:
 
 .. code-block:: console
 
-    $ odoo.py --addons-path addons,my-modules -i academy -u academy
+    $ odoo.py --addons-path addons,my-modules -d academy -u academy
 
 Going to http://localhost:8069/academy/ should now result in:
 

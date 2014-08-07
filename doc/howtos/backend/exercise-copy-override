@@ -1,0 +1,25 @@
+# HG changeset patch
+# Parent 4ac15572dd3bf04c1815f1d1ffd288eacb5e7ccd
+diff -r 4ac15572dd3b -r 1ec8f71cab47 openacademy/course.py
+--- a/openacademy/course.py	Thu Aug 07 12:46:55 2014 +0200
++++ b/openacademy/course.py	Thu Aug 07 12:48:07 2014 +0200
+@@ -12,6 +12,19 @@ class Course(models.Model):
+     session_ids = fields.One2many(
+         'openacademy.session', 'course_id', string="Session")
+ 
++    @api.one
++    def copy(self, default=None):
++        default = dict(default or {})
++        
++        others_count = self.search_count([('name', '=like', self.name + '%')])
++        if not others_count:
++            new_name = "Copy of {}".format(self.name)
++        else:
++            new_name = "Copy of {} ({})".format(self.name, others_count + 1)
++
++        default['name'] = new_name
++        return super(Course, self).copy(default)
++    
+     _sql_constraints = [
+         ('name_description_check',
+          'CHECK(name != description)',

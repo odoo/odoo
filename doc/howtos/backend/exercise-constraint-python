@@ -1,0 +1,24 @@
+# HG changeset patch
+# Parent 782b7acc3e7a8873a16482569ac006a6bc0bfed1
+diff -r 782b7acc3e7a -r e17d44b2a442 openacademy/course.py
+--- a/openacademy/course.py	Thu Aug 07 12:43:15 2014 +0200
++++ b/openacademy/course.py	Thu Aug 07 12:45:17 2014 +0200
+@@ -56,6 +56,18 @@ class Session(models.Model):
+                 },
+             }
+ 
++    def _check_instructor_not_in_attendees(self):
++        for session in self:
++            partners = [att.partner_id for att in session.attendee_ids]
++            if session.instructor_id and session.instructor_id in partners:
++                return False
++        return True
++    _constraints = [
++        (_check_instructor_not_in_attendees,
++         "The instructor can not be an attendee",
++         ['instructor_id', 'attendee_ids'])
++    ]
++
+ class Attendee(models.Model):
+     _name = 'openacademy.attendee'
+     _rec_name = 'partner_id'

@@ -1,0 +1,53 @@
+# HG changeset patch
+# Parent 5ce2f0b4b4d18a79f033817c401369cd14d08425
+diff -r 5ce2f0b4b4d1 -r c56d08094611 openacademy/course.py
+--- a/openacademy/course.py	Thu Aug 07 13:01:36 2014 +0200
++++ b/openacademy/course.py	Thu Aug 07 13:03:44 2014 +0200
+@@ -64,6 +64,9 @@ class Session(models.Model):
+     hours = fields.Float(string="Duration in hours",
+                          compute='_get_hours', inverse='_set_hours')
+ 
++    attendees_count = fields.Integer(
++        string="Attendees count", compute='_get_attendees_count', store=True)
++
+     @api.one
+     @api.depends('seats', 'attendee_ids')
+     def _taken_seats(self):
+@@ -121,6 +124,10 @@ class Session(models.Model):
+     def _set_hours(self):
+         self.duration = self.hours / 24
+ 
++    @api.one
++    @api.depends('attendee_ids')
++    def _get_attendees_count(self):
++        self.attendees_count = len(self.attendee_ids)
+ 
+     def _check_instructor_not_in_attendees(self):
+         for session in self:
+diff -r 5ce2f0b4b4d1 -r c56d08094611 openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml	Thu Aug 07 13:01:36 2014 +0200
++++ b/openacademy/views/openacademy.xml	Thu Aug 07 13:03:44 2014 +0200
+@@ -176,11 +176,22 @@
+             </field>
+         </record>
+ 
++        <record model="ir.ui.view" id="openacademy_session_graph_view">
++            <field name="name">openacademy.session.graph</field>
++            <field name="model">openacademy.session</field>
++            <field name="arch" type="xml">
++                <graph string="Participations by Courses">
++                    <field name="course_id"/>
++                    <field name="attendee_count" type="measure"/>
++                </graph>
++            </field>
++        </record>
++
+         <record model="ir.actions.act_window" id="session_list_action">
+             <field name="name">Sessions</field>
+             <field name="res_model">openacademy.session</field>
+             <field name="view_type">form</field>
+-            <field name="view_mode">tree,form,calendar,gantt</field>
++            <field name="view_mode">tree,form,calendar,gantt,graph</field>
+         </record>
+ 
+         <menuitem id="session_menu" name="Sessions"

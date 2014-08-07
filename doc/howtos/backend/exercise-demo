@@ -1,0 +1,36 @@
+# HG changeset patch
+# Parent 7929aa014c78290890c660c0cf37e11e5a48ca46
+diff -r 7929aa014c78 -r 16e4cb131d9f openacademy/__openerp__.py
+--- a/openacademy/__openerp__.py	Thu Aug 07 12:06:41 2014 +0200
++++ b/openacademy/__openerp__.py	Thu Aug 07 12:10:05 2014 +0200
+@@ -12,4 +12,7 @@
+         - attendees registration""",
+     'data' : [
+     ],
++    'demo': [
++        'demo.xml',
++    ],
+ }
+diff -r 7929aa014c78 -r 16e4cb131d9f openacademy/demo.xml
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/openacademy/demo.xml	Thu Aug 07 12:10:05 2014 +0200
+@@ -0,0 +1,19 @@
++<openerp>
++  <data>
++    <record model="openacademy.course" id="course0">
++      <field name="name">Course 0</field>
++      <field name="description">Course 0's description
++
++Can have multiple lines
++      </field>
++    </record>
++    <record model="openacademy.course" id="course1">
++      <field name="name">Course 1</field>
++      <!-- no description for this one -->
++    </record>
++    <record model="openacademy.course" id="course1">
++      <field name="name">Course 1</field>
++      <field name="description">Course 1's description</field>
++    </record>
++  </data>
++</openerp>

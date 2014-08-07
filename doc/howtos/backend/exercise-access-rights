@@ -1,0 +1,37 @@
+# HG changeset patch
+# Parent 87a215ead8c9ec9452b9164a9203c43878ae526a
+diff -r 87a215ead8c9 -r 960afe3cdacf openacademy/__openerp__.py
+--- a/openacademy/__openerp__.py	Thu Aug 07 13:09:46 2014 +0200
++++ b/openacademy/__openerp__.py	Thu Aug 07 13:23:06 2014 +0200
+@@ -11,6 +11,8 @@
+         - training sessions
+         - attendees registration""",
+     'data' : [
++        'security/security.xml',
++        'security/ir.model.access.csv',
+         'views/partner.xml',
+         'views/openacademy.xml',
+     ],
+diff -r 87a215ead8c9 -r 960afe3cdacf openacademy/security/ir.model.access.csv
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/openacademy/security/ir.model.access.csv	Thu Aug 07 13:23:06 2014 +0200
+@@ -0,0 +1,7 @@
++id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
++course_manager,course manager,model_openacademy_course,group_manager,1,1,1,1
++session_manager,session manager,model_openacademy_session,group_manager,1,1,1,1
++attendee_manager,attendee manager,model_openacademy_attendee,group_manager,1,1,1,1
++course_read_all,course all,model_openacademy_course,,1,0,0,0
++session_read_all,session all,model_openacademy_session,,1,0,0,0
++attendee_read_all,attendee all,model_openacademy_attendee,,1,0,0,0
+\ No newline at end of file
+diff -r 87a215ead8c9 -r 960afe3cdacf openacademy/security/security.xml
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/openacademy/security/security.xml	Thu Aug 07 13:23:06 2014 +0200
+@@ -0,0 +1,7 @@
++<openerp>
++  <data>
++    <record id="group_manager" model="res.groups">
++      <field name="name">OpenAcademy / Manager</field>
++    </record>
++  </data>
++</openerp>

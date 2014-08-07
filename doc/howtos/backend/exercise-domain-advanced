@@ -1,0 +1,32 @@
+# HG changeset patch
+# Parent 2be1f7f2aeb61fa773bf53a9bf49d056d6b07e6e
+diff -r 2be1f7f2aeb6 -r 731daebf22f0 openacademy/course.py
+--- a/openacademy/course.py	Thu Aug 07 12:26:24 2014 +0200
++++ b/openacademy/course.py	Thu Aug 07 12:28:44 2014 +0200
+@@ -22,7 +22,8 @@ class Session(models.Model):
+ 
+     instructor_id = fields.Many2one(
+         'res.partner', string="Instructor",
+-        domain=[('instructor', '=', True)])
++        domain=['|', ('instructor', '=', True),
++                     ('category_id.name', 'ilike', "Teacher")])
+     course_id = fields.Many2one('openacademy.course',
+         ondelete='cascade', string="Course", required=True)
+     attendee_ids = fields.One2many(
+diff -r 2be1f7f2aeb6 -r 731daebf22f0 openacademy/views/partner.xml
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/openacademy/views/partner.xml	Thu Aug 07 12:28:44 2014 +0200
+@@ -0,0 +1,13 @@
++<openerp>
++  <data>
++    <record model="ir.actions.act_window" id="contact_cat_list_action">
++      <field name="name">Contact tags</field>
++      <field name="res_model">res.partner.category</field>
++      <field name="view_mode">tree,form</field>
++    </record>
++
++    <menuitem id="contact_cat_menu" name="Contact tags"
++              parent="configuration_menu"
++              action="contact_cat_list_action" />
++  </data>
++</openerp>

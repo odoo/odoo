@@ -1,3 +1,5 @@
+.. queue:: backend/series
+
 =======
 Backend
 =======
@@ -53,17 +55,18 @@ Each module is a directory within a *module directory*. Module directories
 are specified by using the :option:`--addons-path <odoo.py --addons-path>`
 option.
 
-.. tip:: most command-line options can also be set using a configuration file
+.. tip::
     :class: aphorism
 
-    .. todo:: reference for config file?
+    most command-line options can also be set using :ref:`a configuration
+    file <core/cmdline/config>`
 
 An Odoo module is declared by its :ref:`manifest <core/module/manifest>`. It
 is mandatory and contains a single python dictionary declaring various
 metadata for the module: the module's name and description, list of Odoo
 modules required for this one to work properly, references to data files, …
 
-Its general structure is the following::
+The manifest's general structure is::
 
     {
         'name': "MyModule",
@@ -103,25 +106,25 @@ might contain::
 
         #. Create a new folder ``openacademy``
         #. Create an empty ``openacademy/__init__.py`` file
-        #. Create an ``openacademy/__openerp__.py`` file with:
+        #. Create an ``openacademy/__openerp__.py`` file
 
-           .. literalinclude:: backend/exercise1/__openerp__.py
+        .. patch::
 
 Object-Relational Mapping
 -------------------------
 
 A key component of Odoo is the :abbr:`ORM (Object-Relational Mapping)` layer.
-This layer avoids having to write :abbr:`SQL (Structured Query Language)` by
-hand and provide extensibility and security services.
+This layer avoids having to write most :abbr:`SQL (Structured Query Language)`
+by hand and provides extensibility and security services\ [#rawsql]_.
 
 Business objects are declared as Python classes extending
 :class:`~openerp.models.Model` which integrates them into the automated
 persistence system.
 
 Models can be configured by setting a number of attributes at their
-definition, the most important being ``_name`` which is *required* and defines
-the name for the model in the Odoo system. Here is a minimally complete
-definition of a model::
+definition. The most important attribute :attr:`~openerp.models.Model._name`
+which is required and defines the name for the model in the Odoo system. Here
+is a minimally complete definition of a model::
 
     from openerp import models
     class MinimalModel(models.Model):
@@ -130,7 +133,7 @@ definition of a model::
 Model fields
 ------------
 
-Fields are used to define the model's data storage capabilities. Fields are
+Fields are used to define what the model can store and where. Fields are
 defined as attributes on the model class::
 
     from openerp import models, fields
@@ -143,22 +146,21 @@ defined as attributes on the model class::
 Common Attributes
 #################
 
-Field attributes are passed as parameters to the field, e.g.
-
-::
+Much like the model itself, its fields can be configured, by passing
+configuration attributes as parameters::
 
     name = field.Char(readonly=True)
 
 Some attributes are available on all fields, here are the most common ones:
 
-:attr:`~openerp.fields.Field.string` (``unicode``, defaults to field's name)
+:attr:`~openerp.fields.Field.string` (``unicode``, default: field's name)
     The label of the field in UI (visible by users).
-:attr:`~openerp.fields.Field.required` (``bool``, defaults to ``False``)
+:attr:`~openerp.fields.Field.required` (``bool``, default: ``False``)
     If ``True``, the field can not be empty, it must either have a default
     value or always be given a value when creating a record.
-:attr:`~openerp.fields.Field.help` (``unicode``, defaults to empty)
+:attr:`~openerp.fields.Field.help` (``unicode``, default: ``''``)
     Long-formm, provides a help tooltip to users in the UI.
-:attr:`~openerp.fields.Field.select` (``bool``, defaults to ``False``)
+:attr:`~openerp.fields.Field.select` (``bool``, default: ``False``)
     Requests that Odoo create a `database index`_ on the column
 
 Simple fields
@@ -175,7 +177,8 @@ Reserved fields
 ###############
 
 Odoo creates a few fields in all models\ [#autofields]_. These fields are
-managed by the system and shouldn't be written to (they can be read):
+managed by the system and shouldn't be written to. They can be read if
+useful or necessary:
 
 ``id`` (:class:`~openerp.fields.Id`)
     the unique identifier for a record in its model
@@ -192,46 +195,80 @@ Special fields
 ##############
 
 By default, Odoo also requires a ``name`` field on all models for various
-display and search behaviors. The field use thus can be overridden using
-:attr:`~openerp.models.Model._rec_name`.
+display and search behaviors. The field used for these purposes can be
+overridden by setting :attr:`~openerp.models.Model._rec_name`.
 
 .. admonition:: Exercise 2 — define a model
     :class: exercise
 
     Define a new data model *Course* in the *openacademy* module. A course
-    has a name, or "title", and a description. All courses must have a name.
-
+    has a title and a description. Courses must have a title.
 
     .. only:: solutions
 
-        #. Create a new file ``openacademy/course.py`` with the content:
+        #. Create a new file ``openacademy/course.py``
+        #. Edit ``openacademy/__init__.py`` to import it
 
-           .. literalinclude:: backend/exercise2/course.py
+        .. patch::
 
-        #. To the existing ``openacademy/__init__.py`` add:
+Data files
+----------
 
-           .. literalinclude:: backend/exercise2/__init__.py
+Odoo is a highly data driven system. Although behavior is customized using
+Python_ code part of a module's value is in the data it sets up when loaded.
+
+.. tip:: some modules exist solely to add data into Odoo
+
+Module data is declared via :ref:`data files <core/data>`, XML files with
+``<record>`` elements, each ``<record>`` element creates or updates a database
+record.
+
+.. code-block:: xml
+
+    <openerp>
+      <data>
+        <record model="{model name}" id="{record identifier}">
+          <field name="{a field name}">{a value}</field>
+        </record>
+      </data>
+    <openerp>
+
+* ``@model`` is the name of the Odoo model for the record
+* ``@id`` is an :term:`external identifier`, it allows referring to the record
+  (without having to know its in-database identifier)
+* ``<field>`` elements have a ``@name`` which is the name of the field in the
+  model (e.g. ``description``). Their body is the field's value.
+
+Data files have to be declared in the manifest file to be loaded, they can
+be declared in the ``'data'`` list (always loaded) or in the ``'demo'`` list
+(only loaded in demonstration mode).
+
+.. admonition:: Exercise — define demonstration data
+    :class: exercise
+
+    Create demonstration data filling the *Courses* model with a few
+    demonstration courses
+
+    .. only:: solutions
+
+        #. Create a new file ``openacademy/demo.xml``
+        #. Add the file to the ``'demo'`` list of your ``__openerp__.py``
+
+        .. patch::
 
 Actions and Menus
 -----------------
 
-Actions are declared as regular records and can be triggered in three ways:
+Actions and menus are regular records in database, usually declared through
+data files. Actions can be triggered in three ways:
 
 #. by clicking on menu items (linked to specific actions)
 #. by clicking on buttons in views (if these are connected to actions)
 #. as contextual actions on object
 
-.. todo:: maybe <record> should be introduced before shortcuts?
-
-Menus are also regular records in the ORM, there is a ``<menuitem>`` shortcut
-to declare an ``ir.ui.menu`` and connect it to the corresponding action more
-easily.
-
-The following example defines a menu item to display the list of ideas. The
-action associated to the menu mentions the model of the records to display,
-and which views are enabled; in this example, only the tree and form views
-will be available. There are other optional fields for actions, see the
-documentation for a complete description of them.
+Because menus are somewhat complex to declare there is a ``<menuitem>``
+shortcut to declare an ``ir.ui.menu`` and connect it to the corresponding
+action more easily.
 
 .. code-block:: xml
 
@@ -239,13 +276,9 @@ documentation for a complete description of them.
       <field name="name">Ideas</field>
       <field name="res_model">idea.idea</field>
       <field name="view_mode">tree,form</field>
-      <field name="help" type="html">
-        <p class="oe_view_nocontent_create">
-          A nice arrow with some help for your first record</p>
-        </field>
-      </record>
-      <menuitem id="menu_ideas" parent="menu_root" name="Ideas" sequence="10"
-                action="action_list_ideas"/>
+    </record>
+    <menuitem id="menu_ideas" parent="menu_root" name="Ideas" sequence="10"
+              action="action_list_ideas"/>
 
 .. danger::
     :class: aphorism
@@ -266,30 +299,31 @@ documentation for a complete description of them.
 
     .. only:: solutions
 
-        #. Create ``openacademy/views/openacademy.xml``:
+        #. Create ``openacademy/views/openacademy.xml`` with an action and
+           the menus triggering the action
+        #. Add it to the ``data`` list of ``openacademy/__openerp__.py``
 
-           .. literalinclude:: backend/exercise3/openacademy.xml
-                :language: xml
+        .. patch::
 
-        #. In ``openacademy/__openerp__.py`` add to the ``data`` list:
+Basic views
+===========
 
-           .. literalinclude:: backend/exercise3/__openerp__.py
-               :lines: 13-15
+Views define the way the records of a model are displayed. Each type of view
+represents a mode of visualization (a list of records, a graph of their
+aggregation, …). Views can either be requested generically via their type
+(e.g. *a list of partners*) or specifically via their id. For generic
+requests, the view with the correct type and the lowest priority will be
+used (so the lowest-priority view of each type is the default view for that
+type).
 
-Building views: basics
-======================
-
-Views form a hierarchy. Several views of the same type can be declared on the
-same object, and will be used depending on their priorities.
-
-It is also possible to add/remove elements in a view by declaring an inherited
-view (see :ref:`view inheritance <core/views/inheritance>`).
+:ref:`View inheritance <core/views/inheritance>` allows altering views
+declared elsewhere (adding or removing content).
 
 Generic view declaration
 ------------------------
 
-A view is declared as a record of the model ``ir.ui.view``. Such a record is
-declared in XML as
+A view is declared as a record of the model ``ir.ui.view``. The view type
+is implied by the root element of the ``arch`` field:
 
 .. code-block:: xml
 
@@ -311,9 +345,10 @@ declared in XML as
 Tree views
 ----------
 
-Tree views, also called list views, display records in a tabular form. They
-are defined with the XML element ``<tree>``. In its simplest form, it mentions
-the fields that must be used as the columns of the table.
+Tree views, also called list views, display records in a tabular form.
+
+Their root element is ``<tree>``. The simplest form of the tree view simply
+lists all the fields to display in the table (each field as a column):
 
 .. code-block:: xml
 
@@ -325,44 +360,68 @@ the fields that must be used as the columns of the table.
 Form views
 ----------
 
-Forms allow the creation/edition of resources, and are defined by XML elements
-``<form>``. The following ex- ample shows how a form view can be spatially
-structured with separators, groups, notebooks, etc. Consult the documentation
-to find out all the possible elements you can place on a form.
+Forms are used to create and edit single records.
+
+
+Their root element is ``<form>``. They composed of high-level structure
+elements (groups, notebooks) and interactive elements (buttons and fields):
 
 .. code-block:: xml
 
     <form string="Idea form">
-      <group colspan="2" col="2">
-        <separator string="General stuff" colspan="2"/>
-        <field name="name"/>
-        <field name="inventor_id"/>
+      <group colspan="4">
+        <group colspan="2" col="2">
+          <separator string="General stuff" colspan="2"/>
+          <field name="name"/>
+          <field name="inventor_id"/>
+        </group>
+
+        <group colspan="2" col="2">
+          <separator string="Dates" colspan="2"/>
+          <field name="active"/>
+          <field name="invent_date" readonly="1"/>
+        </group>
+
+        <notebook colspan="4">
+          <page string="Description">
+            <field name="description" nolabel="1"/>
+          </page>
+        </notebook>
+
+        <field name="state"/>
       </group>
-
-      <group colspan="2" col="2">
-        <separator string="Dates" colspan="2"/>
-        <field name="active"/>
-        <field name="invent_date" readonly="1"/>
-      </group>
-
-      <notebook colspan="4">
-        <page string="Description">
-          <field name="description" nolabel="1"/>
-        </page>
-      </notebook>
-
-      <field name="state"/>
     </form>
 
-.. todo:: isn't version 7 the default now?
+.. admonition:: Exercise 1 - Customise form view using XML
+    :class: exercise
 
-.. todo:: might be smart to have the same view in both versions...
+    Create your own form view for the Course object. Data displayed should be:
+    the name and the description of the course.
 
-Now with the new version 7 you can write html in your form
+    .. only:: solutions
+
+        .. todo:: step 2 with better alignments & stuff e.g. colspan=4 on fields?
+
+        .. patch::
+
+.. admonition:: Exercise 2 - Notebooks
+    :class: exercise
+
+    In the Course form view, put the description field under a tab, such that
+    it will be easier to add other tabs later, containing additional
+    information.
+
+    .. only:: solutions
+
+        Modify the Course form view as follows:
+
+        .. patch::
+
+Form views can also use plain HTML for more flexible layouts:
 
 .. code-block:: xml
 
-    <form string="Idea Form v7" version="7.0">
+    <form string="Idea Form">
       <header>
         <button string="Confirm" type="object" name="action_confirm"
                 states="draft" class="oe_highlight" />
@@ -384,35 +443,6 @@ Now with the new version 7 you can write html in your form
       </sheet>
     </form>
 
-.. admonition:: Exercise 1 - Customise form view using XML
-    :class: exercise
-
-    Create your own form view for the Course object. Data displayed should be:
-    the name and the description of the course.
-
-    .. only:: solutions
-
-        .. todo:: step 2 with better alignments & stuff e.g. colspan=4 on fields?
-
-        .. literalinclude:: backend/exercise4/openacademy.xml
-            :lines: 4-13
-            :language: xml
-
-.. admonition:: Exercise 2 - Notebooks
-    :class: exercise
-
-    In the Course form view, put the description field under a tab, such that
-    it will be easier to add other tabs later, containing additional
-    information.
-
-    .. only:: solutions
-
-        Modify the Course form view as follows:
-
-        .. literalinclude:: backend/exercise5/openacademy.xml
-            :lines: 4-20
-            :language: xml
-
 Relations between objects
 =========================
 
@@ -430,8 +460,7 @@ Relations between objects
 
         Create classes *Session* and *Attendee*:
 
-        .. literalinclude:: backend/exercise6/course.py
-            :lines: 10-
+        .. patch::
 
         .. note:: ``digits=(6, 2)`` specifies the precision of a float number:
                   6 is the total number of digits, while 2 is the number of
@@ -444,28 +473,37 @@ Relational fields
 Relational fields link records, either of the same model (hierarchies) or
 between different models.
 
-Relationalf field types are:
+Relational field types are:
 
-:class:`~openerp.fields.Many2one(other_model, ondelete='set null')`
-    A simple link to an other object
+:class:`Many2one(other_model, ondelete='set null') <openerp.fields.Many2one>`
+    A simple link to an other object::
+
+        print foo.other_id.name
 
     .. todo:: UI picture
 
     .. seealso:: `foreign keys <http://www.postgresql.org/docs/9.3/static/tutorial-fk.html>`_
 
-:class:`~openerp.fields.One2many(other_model, related_field)`
+:class:`One2many(other_model, related_field) <openerp.fields.One2many>`
     A virtual relationship, inverse of a :class:`~openerp.fields.Many2one`.
     A :class:`~openerp.fields.One2many` behaves as a container of records,
-    accessing it results in a (possibly empty) set of records.
+    accessing it results in a (possibly empty) set of records::
+
+        for other in foo.other_ids:
+            print foo.name
 
     .. todo::
 
         * UI picture
         * note about necessary m2o (or can it be autogenerated?)
 
-:class:`~openerp.fields.Many2many(other_model)`
+:class:`Many2many(other_model) <openerp.fields.Many2many>`
     Bidirectional multiple relationship, any record on one side can be related
-    to any number of records on the other side
+    to any number of records on the other side. Behaves as a container of
+    records, accessing it also results in a possibly empty set of records::
+
+        for other in foo.other_ids:
+            print foo.name
 
     .. todo::
 
@@ -481,21 +519,17 @@ Relationalf field types are:
 
     .. only:: solutions
 
-        #. Modify the classes as follows::
+        #. Add the relevant ``Many2one`` fields to the models
+        #. add access to the session object in
+           ``openacademy/view/openacademy.xml``
 
-           .. literalinclude:: backend/exercise7/course.py
-
-        #. add access to the session object in ``openacademy/view/openacademy.xml``:
-
-           .. literalinclude:: backend/exercise7/openacademy.xml
-               :lines: 53-62
-               :language: xml
+        .. patch::
 
         .. note::
 
             In the ``Attendee`` class, the ``name`` field was removed and
-            replaced by the partner field directly. This is what ``_rec_name``
-            is used for.
+            replaced by the partner field directly. This is
+            :attr:`~openerp.models.Model._rec_name`'s purpose.
 
 .. admonition:: Exercise 3 — Inverse o2m
     :class: exercise
@@ -507,8 +541,7 @@ Relationalf field types are:
 
         Modify the classes as follows:
 
-        .. literalinclude:: backend/exercise8/course.py
-            :lines: 4-27
+        .. patch::
 
 .. admonition:: Exercise 4 — Views modification
     :class: exercise
@@ -531,19 +564,7 @@ Relationalf field types are:
 
     .. only:: solutions
 
-        #. Modify the Courses view:
-
-           .. literalinclude:: backend/exercise9/openacademy.xml
-                :lines: 4-49
-                :language: xml
-
-        #. Create the session views
-
-           .. todo:: is colspan crap really good/necessary?
-
-           .. literalinclude:: backend/exercise9/openacademy.xml
-                :lines: 82-121
-                :language: xml
+        .. patch::
 
 Domains
 #######
@@ -580,30 +601,14 @@ records for the relation when trying to select records in the client UI.
 
     .. only:: solutions
 
-        You can either:
+        .. patch::
 
-        * Modify the *Session* model to have::
+        .. note::
 
-              class Session(models.Model):
-                  _name = 'openacademy.session'
-
-                  [...]
-                  instructor_id = fields.Many2one('res.parter',
-                      string="Instructor", domain=[('instructor', '=', True)])
-                  [...]
-
-          .. note::
-
-              A domain declared as a literal list is evaluated server-side and
-              can't refer to dynamic values on the right-hand side, a domain
-              declared as a string is evaluated client-side and allows
-              field names on the right-hand side
-
-        * Or modify the ``instructor_id`` field in the *Session*'s view:
-
-          .. code-block:: xml
-
-              <field name="instructor_id" domain="[('instructor', '=', True)]"/>
+            A domain declared as a literal list is evaluated server-side and
+            can't refer to dynamic values on the right-hand side, a domain
+            declared as a string is evaluated client-side and allows
+            field names on the right-hand side
 
 .. admonition:: Exercise 3 — relational fields bis
     :class: exercise
@@ -614,27 +619,11 @@ records for the relation when trying to select records in the client UI.
 
     .. only:: solutions
 
-        #. Modify the *Session* model::
-
-            instructor_id = fields.Many2one('res.partner', string="Instructor",
-                domain=['|', ('instructor', '=', True),
-                             ('category_id.name', 'ilike', "Teacher")])
-
+        #. Modify the *Session* model's domain
         #. Modify ``openacademy/view/partner.xml`` to get access to
            *Partner categories*:
 
-           .. code-block:: xml
-
-                <record model="ir.actions.act_window" id="contact_cat_list_action">
-                    <field name="name">Contact tags</field>
-                    <field name="res_model">res.partner.category</field>
-                    <field name="view_type">form</field>
-                    <field name="view_mode">tree,form</field>
-                </record>
-
-                <menuitem id="contact_cat_menu" name="Contact tags"
-                          parent="configuration_menu"
-                          action="contact_cat_list_action" />
+        .. patch::
 
 Inheritance
 ===========
@@ -704,11 +693,10 @@ instead of a single view its ``arch`` field is composed of any number of
 
     .. only:: solutions
 
-        #. Create a ``openacademy/partner.py`` file:
-
-           .. literalinclude:: backend/exercise11/partner.py
-
-        #. Create an ``openacademy/views/partner.xml``:
+        #. Create a ``openacademy/partner.py`` and import it in
+           ``__init__.py``
+        #. Create an ``openacademy/views/partner.xml`` and add it to
+           ``__openerp__.py``
 
            .. note::
 
@@ -716,16 +704,7 @@ instead of a single view its ``arch`` field is composed of any number of
                inspect the view find its ``xml_id`` and the place to put the
                new field.
 
-           .. literalinclude:: backend/exercise11/partner.xml
-                :language: xml
-
-        #. Add the following line to ``openacademy/__init__.py``::
-
-            import partner
-
-        #. Finally add the new data file to ``openacademy/__openerp__.py``:
-
-            .. literalinclude:: backend/exercise11/__openerp__.py
+        .. patch::
 
 Computed fields
 ===============
@@ -762,21 +741,10 @@ method should simply set its field on its subject::
 
     .. only:: solutions
 
-        #. In ``openacademy/course.py``, modify the *Session* model as follows:
+        #. Add a computed field to *Session*
+        #. Show the field in the *Session* view:
 
-           .. literalinclude:: backend/exercise12/course.py
-
-        #. In ``openacademy/views/openacademy.xml`` modify the *Session* view:
-
-           .. literalinclude:: backend/exercise12/openacademy.xml
-               :language: xml
-               :lines: 94-100
-               :emphasize-lines: 6
-
-           .. literalinclude:: backend/exercise12/openacademy.xml
-               :language: xml
-               :lines: 117-121
-               :emphasize-lines: 4
+        .. patch::
 
 Onchange
 ========
@@ -816,6 +784,7 @@ by playing with the *Session* form: change the number of seats and the
 
     .. only:: solutions
 
+        .. patch::
         .. code-block:: python
 
             @api.onchange('seats', 'attendee_ids')
@@ -837,8 +806,31 @@ by playing with the *Session* form: change the number of seats and the
 Model invariants
 ================
 
-* :attr:`~openerp.models.Model._constraints`
-* :attr:`~openerp.models.Model._sql_constraints`
+Odoo provides two ways to set up automatically verified invariants:
+:attr:`Python constraints <openerp.models.Model._constraints>` and
+:attr:`SQL constaints <openerp.models.Model._sql_constraints>`.
+
+Python constraints are defined through
+:attr:`~openerp.models.Model._constraints`, they take a Python function which
+is called when creating or updating a record::
+
+    def _check_something(self):
+        for record in self:
+            if not check_thing(record):
+                # check failed
+                return False
+
+        # all records passed the test, check succeeded
+        return True
+
+    _constraints = [
+        (_check_something, "Constraint description", [fields_list]),
+    ]
+
+.. note::
+
+    fields are for debugging only, they are printed out when the constraint
+    check fails
 
 .. admonition:: Exercise 4 - Add Python constraints
     :class: exercise
@@ -847,20 +839,10 @@ Model invariants
 
     .. only:: solutions
 
-        .. code-block:: python
+        .. patch::
 
-            def _check_instructor_not_in_attendees(self):
-                for session in self:
-                    partners = [att.partner_id for att in session.attendee_ids]
-                    if session.instructor_id and session.instructor_id in partners:
-                        return False
-                return True
-
-            _constraints = {
-                (_check_instructor_not_in_attendees,
-                 "The instructor can not be an attendee",
-                 ['instructor_id', 'attendee_ids']),
-            }
+SQL constraints are defined through :attr:`~openerp.models.Model._constraints`
+and take a table_constraint_ expression as a string.
 
 .. admonition:: Exercise 5 - Add SQL constraints
     :class: exercise
@@ -868,84 +850,38 @@ Model invariants
     With the help of `PostgreSQL's documentation`_ , add the following
     constraints:
 
-    #. CHECK that the course description and the course title are not the same
+    #. CHECK that the course description and the course title are different
     #. Make the Course's name UNIQUE
     #. Make sure the Attendee table can not contain the same partner for the
-       same session multiple times (UNIQUE on pairs)
+       same session multiple times (UNIQUE on pair)
 
     .. only:: solutions
 
-        #. In the *Course* model
-
-            .. code-block:: python
-
-                _sql_constraints = [
-                    ('name_description_check',
-                     'CHECK(name != description)',
-                     "The title of the course should not be the description"),
-
-                    ('name_unique',
-                     'UNIQUE(name)',
-                     "The course title must be unique"),
-                ]
-        #. In the *Attendee* model
-
-            .. code-block:: python
-
-                _sql_constraints = [
-                    ('partner_session_unique',
-                     'UNIQUE(partner_id, session_id)',
-                     "An attendee can not attend the same session multiple times"),
-                ]
+        .. patch::
 
 .. admonition:: Exercise 6 - Add a duplicate option
     :class: exercise
 
     Since we added a constraint for the Course name uniqueness, it is not
-    possible to use the “duplicate” function anymore (Form > Duplicate).
-    Re-implement your own “copy” method which allows to duplicate the Course
-    object, changing the original name into “Copy of [original name]”.
+    possible to use the "duplicate" function anymore (:menuselection:`Form -->
+    Duplicate`).
+
+    Re-implement your own "copy" method which allows to duplicate the Course
+    object, changing the original name into "Copy of [original name]".
 
     .. only:: solutions
 
-        .. code-block:: python
-
-            class Course(models.Model):
-                _name = 'openacademy.course'
-
-                @api.one
-                def copy(self, default=None):
-                    default = dict(default or {})
-
-                    others_count = self.search_count(
-                        [('name', '=like', self.name + '%')])
-                    if not others_count:
-                        new_name = "{} (copy)".format(self.name)
-                    else:
-                        new_name = "{} (copy {})".format(
-                            self.name, others_count + 1)
-                    default['name'] = new_name
-                    return super(Course, self).copy(default)
+        .. patch::
 
 .. admonition:: Exercise 7 - Active objects – Default values
     :class: exercise
 
-    Define the start_date default value as today. Add a field active in the
-    class Session, and set the session as active by default.
+    Define the start_date default value as today. Add a field ``active`` in
+    the class Session, and set sessions as active by default.
 
     .. only:: solutions
 
-        .. code-block:: python
-
-            class Session(models.Model):
-                _name = 'openacademuy.session'
-
-                name = fields.Char(required=True)
-                start_date = fields.Date( string="Start date", default=fields.Date.today)
-                duration = fields.Float(string="Duration", digits=(6, 2))
-                seats = fields.Integer(string="Number of seats")
-                # is the record active in OpenERP
-                active = fields.Boolean("Active", default=True)
+        .. patch::
 
         .. note::
 
@@ -955,30 +891,26 @@ Model invariants
 Advanced Views
 ==============
 
-List and trees
---------------
+Tree views
+----------
 
-Lists include field elements, are created with type tree, and have a <tree>
-parent element.
+Tree views can take supplementary attributes to further customize their
+behavior:
 
-Attributes
+``colors``
+    a list of colors mapped to Python conditions. If the condition evaluates
+    to ``True``, the corresponding color is applied to the row:
 
-* colors: list of colors mapped to Python conditions
-* editable: top or bottom to allow in-place edit
-* toolbar:set to True to display the top level of object hierarchies as a side toolbar
-  (example: the menu)
+    .. code-block:: xml
 
-Allowed elements
-
-field, group, separator, tree, button, filter, newline
-
-
-.. code-block:: xml
-
-    <tree string="Idea Categories" toolbar="1" colors="blue:state==draft">
-        <field name="name"/>
-        <field name="state"/>
-    </tree>
+        <tree string="Idea Categories" colors="blue:state=='draft';red:state=='trashed'">
+            <field name="name"/>
+            <field name="state"/>
+        </tree>
+``editable``
+    Either ``"top"`` or ``"bottom"``. Makes the tree view editable in-place
+    (rather than having to go through the form view), the value is the
+    position where new rows appear.
 
 .. admonition:: Exercise 1 - List coloring
     :class: exercise
@@ -991,18 +923,23 @@ field, group, separator, tree, button, filter, newline
 
         Modify the session tree view:
 
-        .. literalinclude:: backend/exercisex1/openacademy.xml
-            :language: xml
-            :lines: 113-146
+        .. patch::
 
 Calendars
 ---------
 
-Used to display date fields as calendar events.
+Displays records as calendar events. Their root element is ``<calendar>`` and
+their most common attributes are:
 
-* color: name of field for color segmentation
-* date_start: name of field containing event start date/time
-* date_stop: name of field containing event stop date/time
+``color``
+    The name of the field used for *color segmentation*. Colors are
+    automatically distributed to events, but events in the same color segment
+    (records which have the same value for their ``@color`` field) will be
+    given the same color.
+``date_start``
+    record's field holding the start date/time for the event
+``date_stop`` (optional)
+    record's field holding the end date/time for the event
 
 field (to define the label for each calendar event)
 
@@ -1023,32 +960,21 @@ field (to define the label for each calendar event)
         #. Add an ``end_date`` field computed from ``start_date`` and
            ``duration``
 
-           .. literalinclude:: backend/exercisex2/course.py
-               :lines: 33-34,43-65
-
-           .. note:: the inverse function makes the field writable, and allows
-                     moving the sessions (via drag and drop) in the calendar view
+           .. tip:: the inverse function makes the field writable, and allows
+                    moving the sessions (via drag and drop) in the calendar view
 
         #. Add a calendar view to the *Session* model
-
-           .. literalinclude:: backend/exercisex2/openacademy.xml
-                :language: xml
-                :lines: 148-159
-
         #. And add the calendar view to the *Session* model's actions
 
-            .. literalinclude:: backend/exercisex2/openacademy.xml
-                :language: xml
-                :lines: 161-166
+        .. patch::
 
 Search views
 ------------
 
-Search views are used to customize the search panel on top of list views, and
-are declared with the search type, and a top-level <search> element.
-
-After defining a search view with a unique id, add it to the action opening
-the list view using the search_view_id field in its declaration.
+Search views customize the search field in the top-right corner of the
+screen, as well as the foldable filters drawer. Their root element is
+``<search>``. They can use fields (performing searches of user-entered text)
+and filters (toggles of predefined searches):
 
 .. code-block:: xml
 
@@ -1061,14 +987,15 @@ the list view using the search_view_id field in its declaration.
         <field name="country_id" widget="selection"/>
     </search>
 
-The action record that opens such a view may initialize search fields by its
-field context. The value of the field context is a Python dictionary that can modify the client's behavior. The keys of the dictionary are given a meaning depending on the following convention.
+Search views are somewhat special as they are displayed alongside other views.
+As a result, they are configured specially by adding them separately to an
+*action*, through the ``search_view_id`` field.
 
-* The key 'default_foo' initializes the field 'foo' to the corresponding value
-  in the form view.
-* The key 'search_default_foo' initializes the field 'foo' to the
-  corresponding value in the search view. Note that ``filter`` elements are
-  like boolean fields.
+The action can also default values for search fields through its ``context``
+field: context keys of the form :samp:`search_default_{field_name}` will
+initialize *field_name* with the provided value. Search filters must have
+an optional ``@name`` to have a default and behave as booleans (they can
+only be enabled by default).
 
 .. admonition:: Exercise 3 - Search views
     :class: exercise
@@ -1076,33 +1003,28 @@ field context. The value of the field context is a Python dictionary that can mo
     Add a search view containing:
 
     #. a field to search the courses based on their title and
-    #. a button to filter the courses of which the current user is the
+    #. a button to filter the courses for which the current user is the
        responsible. Make the latter selected by default.
 
     .. only:: solutions
 
-        #. Add a search view for courses:
+        #. Add a search view for courses
+        #. Add the search view to the courses action
 
-            .. literalinclude:: backend/exercisex3/openacademy.xml
-                :language: xml
-                :lines: 51-62
-
-        #. Add the search view to the action:
-
-            .. literalinclude:: backend/exercisex3/openacademy.xml
-                :language: xml
-                :lines: 69-83
+        .. patch::
 
 Gantt
 -----
 
-Bar chart typically used to show project schedule (<gantt> parent element).
+Horizontal bar charts typically used to show project planning and advancement,
+their root element is ``<gantt>``.
 
 .. code-block:: xml
 
     <gantt string="Ideas" date_start="invent_date" color="inventor_id">
         <level object="idea.idea" link="id" domain="[]">
-        <field name="inventor_id"/> </level>
+            <field name="inventor_id"/>
+        </level>
     </gantt>
 
 .. admonition:: Exercise 4 - Gantt charts
@@ -1114,28 +1036,58 @@ Bar chart typically used to show project schedule (<gantt> parent element).
     .. only:: solutions
 
         #. Create a computed field expressing the session's duration in hours
-
-           .. literalinclude:: backend/exercisex4/course.py
-                :lines: 36-37,69-77
-
         #. Add the gantt view's definition, and add the gantt view to the
            *Session* model's action
 
-           .. literalinclude:: backend/exercisex4/openacademy.xml
-                :language: xml
-                :lines: 181-199
+        .. patch::
 
-Graph (charts)
---------------
+Graph views
+-----------
 
-.. todo:: look at graph view doc
+Graph views allow aggregated overview and analysis of models, their root
+element is ``<graph>``.
+
+Graph views have 4 display modes, the default mode is selected using the
+``@type`` attribute.
+
+Pivot
+    a multidimensional table, allows the selection of filers and dimensions
+    to get the right aggregated dataset before moving to a more graphical
+    overview
+Bar (default)
+    a bar chart, the first dimension is used to define groups on the
+    horizontal axis, other dimensions define aggregated bars within each group.
+
+    By default bars are side-by-side, they can be stacked by using
+    ``@stacked="True"`` on the ``<graph>``
+Line
+    2-dimensional line chart
+Pie
+    2-dimensional pie
+
+Graph views contain ``<field>`` with a mandatory ``@type`` attribute taking
+the values:
+
+``row`` (default)
+    the field should be aggregated by rows
+
+    .. todo:: wtf does that even mean?
+``measure``
+    the field should be aggregated rather than grouped on
+
+.. todo:: @type=col
 
 .. code-block:: xml
 
-    <graph string="Total idea score by Inventor" type="bar">
-        <field name="inventor_id" />
-        <field name="score" operator="+"/>
+    <graph string="Total idea score by Inventor">
+        <field name="inventor_id"/>
+        <field name="score" type="measure"/>
     </graph>
+
+.. warning::
+
+    Graph views perform aggregations on database values, they do not work
+    with non-stored computed fields.
 
 .. admonition:: Exercise 5 - Graph view
     :class: exercise
@@ -1145,32 +1097,25 @@ Graph (charts)
 
     .. only:: solutions
 
-        #. Add the number of attendees as a computed field:
+        #. Add the number of attendees as a stored computed field
+        #. Then add the relevant view
 
-           .. literalinclude:: backend/exercisex5/course.py
-                :lines: 39-41,82-85
-
-           .. warning:: The **store** flag must be set as graphs are computed
-                        directly from database storage.
-
-        #. Then add the relevant view:
-
-            .. literalinclude:: backend/exercisex5/openacademy.xml
-                :language: xml
-                :lines: 194-210
+        .. patch::
 
 Kanban
 ------
 
-Those views are available since OpenERP 6.1, and may be used to organize
-tasks, production processes, etc. A kanban view presents a set of columns of
-cards; each card represents a record, and columns represent the values of a
-given field. For instance, project tasks may be organized by stage (each
-column is a stage), or by responsible (each column is a user), and so on.
+Used to organize tasks, production processes, etc… their root element is
+``<kanban>``.
 
-The following example is a simplification of the Kanban view of leads. The
-view is defined with qweb templates, and can mix form elements with HTML
-elements.
+A kanban view shows a set of cards possibly grouped in columns. Each card
+represents a record, and each column the values of an aggregation field.
+
+For instance, project tasks may be organized by stage (each column is a
+stage), or by responsible (each column is a user), and so on.
+
+Kanban views define the structure of each card as a mix of form elements
+(including basic HTML) and :ref:`web/qweb`.
 
 .. admonition:: Exercise 6 - Kanban view
     :class: exercise
@@ -1183,9 +1128,7 @@ elements.
         #. Add an integer ``color`` field to the *Session* model
         #. Add the kanban view and update the action
 
-           .. literalinclude:: backend/exercisex6/openacademy.xml
-                :language: xml
-                :lines: 206-258
+        .. patch::
 
 Workflows
 =========
@@ -1208,27 +1151,14 @@ Workflows are also used to track processes that evolve over time.
 
     .. only:: solutions
 
-        #. Add a new ``state`` field:
-
-           .. literalinclude:: backend/exercisex7/course.py
-                :lines: 42-46
-
+        #. Add a new ``state`` field
         #. Add state-transitioning methods, those can be called from view
-           buttons to change the record's state:
+           buttons to change the record's state
+        #. And add the relevant buttons to the session's form view
 
-           .. literalinclude:: backend/exercisex7/course.py
-                :lines: 48-58
+        .. patch::
 
-        #. And add the relevant buttons to the session's form view:
-
-           .. literalinclude:: backend/exercisex7/openacademy.xml
-                :language: xml
-                :lines: 102-151
-
-*A sales order generates an invoice and a shipping order is an example of
-workflow used in OpenERP*.
-
-Workflows may be associated with any object in OpenERP, and are entirely
+Workflows may be associated with any object in Odoo, and are entirely
 customizable. Workflows are used to structure and manage the lifecycles of
 business objects and documents, and define transitions, triggers, etc. with
 graphical tools. Workflows, activities (nodes or actions) and transitions
@@ -1245,6 +1175,7 @@ in workflows are called workitems.
     .. only:: solutions
 
         .. note::
+
             A workflow associated with a model is only created when the
             model's records are created. Thus there is no workflow instance
             associated with session instances created before the workflow's
@@ -1257,14 +1188,8 @@ in workflows are called workitems.
            A transition should be associated with the corresponding signal,
            and each activity (node) should call a function altering the
            session state according to the workflow state
-
         #. Alter the form view buttons to call use the workflow instead of the
            ``state`` field:
-
-           .. literalinclude:: backend/exercisex8/openacademy.xml
-                :language: xml
-                :lines: 107-118
-
         #. If the function in the Draft activity is encoded, you can even
            remove the default state value in the *Session* model
 
@@ -1275,6 +1200,8 @@ in workflows are called workitems.
             In order to check if instances of the workflow are correctly
             created with sessions, go to :menuselection:`Settings > Low Level
             Objects`
+
+        .. patch::
 
 .. admonition:: Exercise 3 - Automatic transitions
     :class: exercise
@@ -1293,7 +1220,7 @@ in workflows are called workitems.
     :class: exercise
 
     Create server actions and modify the previous workflow in order to
-    re-create the same behaviour as previ- ously, but without using the Python
+    re-create the same behaviour as previously, but without using the Python
     methods of the Session class.
 
     .. only:: solutions
@@ -1359,39 +1286,14 @@ rights are usually created by a CSV file named after its model:
 
     .. only:: solutions
 
-        #. Create a new file ``openacademy/security/security.xml``:
+        #. Create a new file ``openacademy/security/security.xml`` to
+           hold the OpenAcademy Manager group
+        #. Create a new file ``openacademy/security/ir.model.access.csv`` with
+           the access rights to the models
+        #. finally update ``openacademy/__openerp__.py`` to add the new data
+           files to it
 
-            .. code-block:: xml
-
-                <openerp>
-                  <data>
-                    <record id="group_manager" model="res.groups">
-                      <field name="name">OpenAcademy / Manager</field>
-                    </record>
-                  </data>
-                </openerp>
-
-        #. Create a new file ``openacademy/security/ir.model.access.csv``:
-
-            .. code-block:: text
-
-                id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
-                course_manager,course manager,model_openacademy_course,group_manager,1,1,1,1
-                session_manager,session manager,model_openacademy_session,group_manager,1,1,1,1
-                attendee_manager,attendee manager,model_openacademy_attendee,group_manager,1,1,1,1
-                course_read_all,course all,model_openacademy_course,,1,0,0,0
-                session_read_all,session all,model_openacademy_session,,1,0,0,0
-                attendee_read_all,attendee all,model_openacademy_attendee,,1,0,0,0
-
-        #. finally update ``openacademy/__openerp__.py`` with the new files:
-
-            .. code-block:: python
-
-                'data' : [
-                    'security/security.xml',
-                    'security/ir.model.access.csv',
-                    'views/openacademy.xml',
-                ],
+        .. patch::
 
 Record rules
 ------------
@@ -1423,29 +1325,15 @@ the same convention as the method “write” of the ORM.
     :class: exercise
 
     Add a record rule for the model Course and the group
-    “OpenAcademy / Manager”, that restricts “write” and “unlink” accesses to
-    the responsible of a course. If a course has no responsible, all users of
-    the group must be able to modify it.
+    "OpenAcademy / Manager", that restricts ``write`` and ``unlink`` accesses
+    to the responsible of a course. If a course has no responsible, all users
+    of the group must be able to modify it.
 
     .. only:: solutions
 
         Create a new rule in ``openacademy/security/security.xml``:
 
-        .. code-block:: xml
-
-            <record id="only_responsible_can_modify" model="ir.rule">
-                <field name="name">Only Responsible can modify Course</field>
-                <field name="model_id" ref="model_openacademy_course"/>
-                <field name="groups" eval="[(4, ref('openacademy.group_manager'))]"/>
-                <field name="perm_read" eval="0"/>
-                <field name="perm_write" eval="1"/>
-                <field name="perm_create" eval="0"/>
-                <field name="perm_unlink" eval="1"/>
-                <field name="domain_force">
-                    ['|', ('responsible_id','=',False),
-                          ('responsible_id','=',user.id)]
-                </field>
-            </record>
+        .. patch::
 
 Internationalization
 ====================
@@ -1453,15 +1341,15 @@ Internationalization
 Each module can provide its own translations within the i18n directory, by
 having files named LANG.po where LANG is the locale code for the language, or
 the language and country combination when they differ (e.g. pt.po or
-pt_BR.po). Translations will be loaded automatically by OpenERP for all
+pt_BR.po). Translations will be loaded automatically by Odoo for all
 enabled languages. Developers always use English when creating a module, then
-export the module terms using OpenERP's gettext POT export feature
+export the module terms using Odoo's gettext POT export feature
 (Settings>Translations>Export a Translation File without specifying a
 language), to create the module template POT file, and then derive the
 translated PO files. Many IDE's have plugins or modes for editing and merging
 PO/POT files.
 
-.. tip:: The GNU gettext format (Portable Object) used by OpenERP is
+.. tip:: The GNU gettext format (Portable Object) used by Odoo is
          integrated into LaunchPad, making it an online collaborative
          translation platform.
 
@@ -1469,14 +1357,14 @@ PO/POT files.
 
    |- idea/ # The module directory
       |- i18n/ # Translation files
-         | - idea.pot # Translation Template (exported from OpenERP)
+         | - idea.pot # Translation Template (exported from Odoo)
          | - fr.po # French translation
          | - pt_BR.po # Brazilian Portuguese translation
          | (...)
 
 .. tip:: 
 
-   By default OpenERP's POT export only extracts labels inside XML files or
+   By default Odoo's POT export only extracts labels inside XML files or
    inside field definitions in Python code, but any Python string can be
    translated this way by surrounding it with the tools.translate._ method
    (e.g. _(‘Label') )
@@ -1484,8 +1372,8 @@ PO/POT files.
 .. admonition:: Exercise 1 - Translate a module
    :class: exercise
 
-   Choose a second language for your OpenERP installation. Translate your
-   module using the facilities pro- vided by OpenERP.
+   Choose a second language for your Odoo installation. Translate your
+   module using the facilities provided by Odoo.
 
    .. only:: solutions
 
@@ -1551,83 +1439,13 @@ Dashboards
            open the dashboard and a re-definition of the main menu item to add
            the dashboard action
 
-           .. code-block:: xml
-
-                <?xml version="1.0"?>
-                <openerp>
-                  <data>
-                    <record model="ir.actions.act_window" id="act_session_graph">
-                      <field name="res_model">openacademy.session</field>
-                      <field name="view_type">form</field>
-                      <field name="view_mode">graph</field>
-                      <field name="view_id"
-                             ref="openacademy.openacademy_session_graph_view"/>
-                    </record>
-                    <record model="ir.actions.act_window" id="act_session_calendar">
-                      <field name="res_model">openacademy.session</field>
-                      <field name="view_type">form</field>
-                      <field name="view_mode">calendar</field>
-                      <field name="view_id" ref="openacademy.session_calendar_view"/>
-                    </record>
-                    <record model="ir.actions.act_window" id="act_course_list">
-                      <field name="res_model">openacademy.course</field>
-                      <field name="view_type">form</field>
-                      <field name="view_mode">tree,form</field>
-                    </record>
-                    <record model="ir.ui.view" id="board_session_form">
-                      <field name="name">Session Dashboard Form</field>
-                      <field name="model">board.board</field>
-                      <field name="type">form</field>
-                      <field name="arch" type="xml">
-                        <form string="Session Dashboard" version="7.0">
-                          <board style="2-1">
-                            <column>
-                              <action
-                                  string="Attendees by course"
-                                  name="%(act_session_graph)d"
-                                  colspan="4"
-                                  height="150"
-                                  width="510"/>
-                              <action
-                                  string="Sessions"
-                                  name="%(act_session_calendar)d"
-                                  colspan="4"/>
-                            </column>
-                            <column>
-                              <action
-                                  string="Courses"
-                                  name="%(act_course_list)d" colspan="4"/>
-                            </column>
-                          </board>
-                        </form>
-                      </field>
-                    </record>
-                    <record model="ir.actions.act_window" id="open_board_session">
-                      <field name="name">Session Dashboard</field>
-                      <field name="res_model">board.board</field>
-                      <field name="view_type">form</field>
-                      <field name="view_mode">form</field>
-                      <field name="usage">menu</field>
-                      <field name="view_id" ref="board_session_form"/>
-                    </record>
-                    <menuitem id="openacademy_menu" name="OpenAcademy"
-                              action="open_board_session"/>
-                    <menuitem id="board.menu_dashboard" name="Dashboard" sequence="0"
-                              parent="openacademy_all"/>
-                    <menuitem
-                        name="Session Dashboard" parent="board.menu_dashboard"
-                        action="open_board_session"
-                        sequence="1"
-                        id="menu_board_session" icon="terp-graph"/>
-                  </data>
-                </openerp>
-
            .. note:: Available dashboard styles are ``1``, ``1-1``, ``1-2``,
                      ``2-1`` and ``1-1-1``
 
-
         #. Update ``openacademy/__openerp__.py`` to reference the new data
            file
+
+        .. patch::
 
 WebServices
 ===========
@@ -1642,7 +1460,7 @@ Business objects can also be accessed via the distributed object
 mechanism. They can all be modified via the client interface with contextual
 views.
 
-OpenERP is accessible through XML-RPC interfaces, for which libraries exist in
+Odoo is accessible through XML-RPC interfaces, for which libraries exist in
 many languages.
 
 XML-RPC Library
@@ -1722,6 +1540,8 @@ server with the library xmlrpclib.
 
 .. [#autofields] it is possible to :attr:`disable the creation of some
                  <openerp.models.Model._log_access>`
+.. [#rawsql] writing raw SQL queries is possible, but requires care as it
+              bypasses all Odoo authentication and security mechanisms.
 
 .. _database index:
     http://use-the-index-luke.com/sql/preface
@@ -1729,6 +1549,9 @@ server with the library xmlrpclib.
 .. _POEdit: http://poedit.net
 
 .. _PostgreSQL's documentation:
+.. _table_constraint:
     http://www.postgresql.org/docs/9.3/static/ddl-constraints.html
+
+.. _python: http://python.org
 
 .. _XPath: http://w3.org/TR/xpath

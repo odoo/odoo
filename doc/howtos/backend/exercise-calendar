@@ -1,0 +1,82 @@
+# HG changeset patch
+# Parent 6d292d741c1f904b84c3f18f7704cef6f7d1c3fe
+
+diff --git a/openacademy/course.py b/openacademy/course.py
+--- a/openacademy/course.py
++++ b/openacademy/course.py
+@@ -1,4 +1,7 @@
+ # -*- coding: utf-8 -*-
++from datetime import date, timedelta
++
++import openerp.tools
+ from openerp import api, fields, models
+ 
+ class Course(models.Model):
+@@ -55,6 +58,8 @@ class Session(models.Model):
+         'openacademy.attendee', 'session_id', string="Attendees")
+ 
+     seats_taken = fields.Float(string="Taken seats", compute='_taken_seats')
++    end_date = fields.Date(
++        string="End Date", compute='_get_end_date', inverse='_set_end_date')
+ 
+     @api.one
+     @api.depends('seats', 'attendee_ids')
+@@ -81,6 +86,29 @@ class Session(models.Model):
+                 },
+             }
+ 
++    @api.one
++    @api.depends('start_date', 'duration')
++    def _get_end_date(self):
++        if not (self.start_date and self.duration):
++            self.end_date = self.start_date
++            return
++
++        start = date.strptime(
++            self.start_date, openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
++        duration = timedelta(days=self.duration)
++
++        self.end_date = (start + duration).strftime(openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
++
++    @api.one
++    def _set_end_date(self):
++        if not (self.start_date and self.end_date):
++            return
++
++        start_date = date.strptime(self.start_date, openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
++        end_date = date.strptime(self.end_date, openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
++
++        self.duration = end_date - start_date
++
+     def _check_instructor_not_in_attendees(self):
+         for session in self:
+             partners = [att.partner_id for att in session.attendee_ids]
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -137,11 +137,24 @@
+             </field>
+         </record>
+ 
++        <!-- calendar view -->
++        <record model="ir.ui.view" id="session_calendar_view">
++            <field name="name">session.calendar</field>
++            <field name="model">openacademy.session</field>
++            <field name="arch" type="xml">
++                <calendar string="Session Calendar" date_start="start_date"
++                          date_stop="end_date"
++                          color="instructor_id">
++                    <field name="name"/>
++                </calendar>
++            </field>
++        </record>
++
+         <record model="ir.actions.act_window" id="session_list_action">
+             <field name="name">Sessions</field>
+             <field name="res_model">openacademy.session</field>
+             <field name="view_type">form</field>
+-            <field name="view_mode">tree,form</field>
++            <field name="view_mode">tree,form,calendar</field>
+         </record>
+ 
+         <menuitem id="session_menu" name="Sessions"

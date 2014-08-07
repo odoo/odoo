@@ -30,6 +30,16 @@ Running the server
     comma-separated list of directories in which modules are stored. These
     directories are scanned for modules (nb: when and why?)
 
+.. option:: -c <config>, --config <config>
+
+    provide an alternate configuration file
+
+.. option:: -s, --save
+
+    saves the server configuration to the current configuration file
+    (:file:`{$HOME}/.openerp_serverrc` by default, overridable using
+    :option:`-c`)
+
 .. _core/cmdline/scaffold:
 
 Scaffolding
@@ -41,6 +51,8 @@ Scaffolding is the automated creation of a skeleton structure to simplify
 bootstrapping (of new modules, in the case of Odoo). While not necessary it
 avoids the tedium of setting up basic structures and looking up what all
 starting requirements are.
+
+Scaffolding is available via the :command:`odoo.py scaffold` subcommand.
 
 .. option:: -t <template>
 
@@ -56,5 +68,18 @@ starting requirements are.
 
     directory in which to create the new module, defaults to the current
     directory
+
+.. _core/cmdline/config:
+
+Configuration file
+==================
+
+Most of the command-line options can also be specified via a configuration
+file.
+
+The default configuration file is :file:`{$HOME}/.openerp_serverrc` which
+can be overridden using :option:`--config <odoo.py -c>`. Specifying
+:option:`--save <odoo.py -s>` will save the current configuration state back
+to that file.
 
 .. _jinja2: http://jinja.pocoo.org

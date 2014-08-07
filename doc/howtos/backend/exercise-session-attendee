@@ -1,0 +1,21 @@
+# HG changeset patch
+# Parent 22f8d180a7f9ad209d7e98cf7d1bd0fee1f05350
+diff -r 22f8d180a7f9 -r 9c02076d4e98 openacademy/course.py
+--- a/openacademy/course.py	Thu Aug 07 12:14:32 2014 +0200
++++ b/openacademy/course.py	Thu Aug 07 12:15:14 2014 +0200
+@@ -7,3 +7,15 @@ class Course(models.Model):
+     name = fields.Char(string="Title", required=True)
+     description = fields.Text()
+ 
++class Session(models.Model):
++    _name = 'openacademy.session'
++
++    name = fields.Char(string="Name", required=True)
++    start_date = fields.Date()
++    duration = fields.Float(digits=(6, 2), help="Duration in days")
++    seats = fields.Integer(string="Number of seats")
++
++class Attendee(models.Model):
++    _name = 'openacademy.attendee'
++
++    name = fields.Char()

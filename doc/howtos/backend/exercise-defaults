@@ -1,0 +1,14 @@
+# HG changeset patch
+# Parent 1ec8f71cab4724b9e2fcf650749e9ddeb71920a8
+diff -r 1ec8f71cab47 -r ba3ebe84b36a openacademy/course.py
+--- a/openacademy/course.py	Thu Aug 07 12:48:07 2014 +0200
++++ b/openacademy/course.py	Thu Aug 07 12:48:59 2014 +0200
+@@ -43,6 +43,8 @@ class Session(models.Model):
+     duration = fields.Float(digits=(6, 2), help="Duration in days")
+     seats = fields.Integer(string="Number of seats")
+ 
++    active = fields.Boolean(default=True)
++
+     instructor_id = fields.Many2one(
+         'res.partner', string="Instructor",
+         domain=['|', ('instructor', '=', True),

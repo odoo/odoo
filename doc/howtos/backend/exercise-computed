@@ -1,0 +1,48 @@
+# HG changeset patch
+# Parent edaa91668f4cc3de811f3f733c5081e401b74dd7
+diff -r edaa91668f4c -r cda1293e177b openacademy/course.py
+--- a/openacademy/course.py	Thu Aug 07 12:38:06 2014 +0200
++++ b/openacademy/course.py	Thu Aug 07 12:40:30 2014 +0200
+@@ -1,5 +1,5 @@
+ # -*- coding: utf-8 -*-
+-from openerp import fields, models
++from openerp import api, fields, models
+ 
+ class Course(models.Model):
+     _name = 'openacademy.course'
+@@ -29,6 +29,16 @@ class Session(models.Model):
+     attendee_ids = fields.One2many(
+         'openacademy.attendee', 'session_id', string="Attendees")
+ 
++    seats_taken = fields.Float(string="Taken seats", compute='_taken_seats')
++
++    @api.one
++    @api.depends('seats', 'attendee_ids')
++    def _taken_seats(self):
++        if not self.seats:
++            self.seats_taken = 0.0
++        else:
++            self.seats_taken = 100.0 * len(self.attendee_ids) / self.seats
++
+ class Attendee(models.Model):
+     _name = 'openacademy.attendee'
+     _rec_name = 'partner_id'
+diff -r edaa91668f4c -r cda1293e177b openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml	Thu Aug 07 12:38:06 2014 +0200
++++ b/openacademy/views/openacademy.xml	Thu Aug 07 12:40:30 2014 +0200
+@@ -88,6 +88,7 @@
+                         <field name="start_date"/>
+                         <field name="duration"/>
+                         <field name="seats"/>
++                        <field name="seats_taken" widget="progressbar"/>
+                     </group>
+                     <separator string="Attendees" colspan="4"/>
+                     <field name="attendee_ids" colspan="4" nolabel="1">
+@@ -108,6 +109,7 @@
+                 <tree string="Session Tree">
+                     <field name="name"/>
+                     <field name="course_id"/>
++                    <field name="seats_taken" widget="progressbar"/>
+                 </tree>
+             </field>
+         </record>
