@@ -6,16 +6,16 @@
 
         <template id="index" inherit_id='point_of_sale.index' name="Restaurant Index">&lt;!DOCTYPE html&gt;
             <xpath expr="//link[@id='pos-stylesheet']" position="after">
-                <link rel="stylesheet" href="/restaurant/static/src/css/restaurant.css" />
+                <link rel="stylesheet" href="/pos_restaurant/static/src/css/restaurant.css" />
             </xpath>
         </template>
 
         <template id="assets_frontend" inherit_id="web.assets_common">
           <xpath expr="." position="inside">
-              <script type="text/javascript" src="/restaurant/static/src/js/multiprint.js"></script>
-              <script type="text/javascript" src="/restaurant/static/src/js/splitbill.js"></script>
-              <script type="text/javascript" src="/restaurant/static/src/js/printbill.js"></script>
-              <script type="text/javascript" src="/restaurant/static/src/js/main.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/multiprint.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/splitbill.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/printbill.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/main.js"></script>
           </xpath>
         </template>
 
