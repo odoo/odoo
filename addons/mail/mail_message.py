@@ -76,7 +76,8 @@ class mail_message(osv.Model):
 
     def default_get(self, cr, uid, fields, context=None):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
-        if context and context.get('default_type') and context.get('default_type') not in self._columns['type'].selection:
+        if context and context.get('default_type') and context.get('default_type') not in [
+                val[0] for val in self._columns['type'].selection]:
             context = dict(context, default_type=None)
         return super(mail_message, self).default_get(cr, uid, fields, context=context)
 
@@ -129,8 +130,8 @@ class mail_message(osv.Model):
             help="Email address of the sender. This field is set when no matching partner is found for incoming emails."),
         'reply_to': fields.char('Reply-To',
             help='Reply email address. Setting the reply_to bypasses the automatic thread creation.'),
-        'same_thread': fields.boolean('Same thread',
-            help='Redirect answers to the same discussion thread.'),
+        'no_auto_thread': fields.boolean('No threading for answers',
+            help='Answers do not go in the original document\' discussion thread. This has an impact on the generated message-id.'),
         'author_id': fields.many2one('res.partner', 'Author', select=1,
             ondelete='set null',
             help="Author of the message. If not set, email_from may hold an email address that did not match any partner."),
@@ -188,7 +189,6 @@ class mail_message(osv.Model):
         'author_id': lambda self, cr, uid, ctx=None: self._get_default_author(cr, uid, ctx),
         'body': '',
         'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
-        'same_thread': True,
     }
 
     #------------------------------------------------------
@@ -776,7 +776,7 @@ class mail_message(osv.Model):
         return self.pool['mail.thread'].message_get_reply_to(cr, uid, [res_id], default=email_from, context=ctx)[res_id]
 
     def _get_message_id(self, cr, uid, values, context=None):
-        if values.get('same_thread', True) is False:
+        if values.get('no_auto_thread', False) is True:
             message_id = tools.generate_tracking_message_id('reply_to')
         elif values.get('res_id') and values.get('model'):
             message_id = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)

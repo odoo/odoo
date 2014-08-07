@@ -61,11 +61,8 @@ class hr_recruitment_report(osv.Model):
                  select
                      min(s.id) as id,
                      s.create_date as date_create,
-                     date_trunc('day',s.date_closed) as date_closed,
-                     date_trunc('day',s.date_last_stage_update) as date_last_stage_update,
-                     to_char(s.create_date, 'YYYY') as year,
-                     to_char(s.create_date, 'MM') as month,
-                     to_char(s.create_date, 'YYYY-MM-DD') as day,
+                     date(s.date_closed) as date_closed,
+                     s.date_last_stage_update as date_last_stage_update,
                      s.partner_id,
                      s.company_id,
                      s.user_id,
@@ -84,8 +81,6 @@ class hr_recruitment_report(osv.Model):
                      count(*) as nbr
                  from hr_applicant s
                  group by
-                     date_trunc('day',s.create_date),
-                     date_trunc('day',s.date_closed),
                      s.date_open,
                      s.create_date,
                      s.write_date,

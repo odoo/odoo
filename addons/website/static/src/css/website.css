@@ -522,12 +522,15 @@ div.media_iframe_video {
 div.media_iframe_video iframe {
   width: 100%;
   height: 100%;
+  position: absolute;
+  margin-left: -50%;
 }
-div.media_iframe_video div {
+div.media_iframe_video .css_editable_mode_display {
   position: absolute;
   width: 100%;
   height: 100%;
   display: none;
+  z-index: 2;
 }
 
 /* Mobile view */

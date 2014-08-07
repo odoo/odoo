@@ -928,8 +928,7 @@ class stock_picking(osv.osv):
                 'pack_operation_ids': [],
                 'backorder_id': picking.id,
             })
-            back_order_name = self.browse(cr, uid, backorder_id, context=context).name
-            self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (back_order_name), context=context)
+            self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (picking.name), context=context)
             move_obj = self.pool.get("stock.move")
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
 
@@ -1448,7 +1447,7 @@ class stock_production_lot(osv.osv):
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
     _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, ref)', 'The combination of Serial Number and internal reference must be unique !'),
+        ('name_ref_uniq', 'unique (name, ref, product_id)', 'The combination of serial number, internal reference and product must be unique !'),
     ]
 
     def action_traceability(self, cr, uid, ids, context=None):
@@ -2599,7 +2598,7 @@ class stock_inventory(osv.osv):
             domain += ' and lot_id = %s'
             args += (inventory.lot_id.id,)
         if inventory.product_id:
-            domain += 'and product_id = %s'
+            domain += ' and product_id = %s'
             args += (inventory.product_id.id,)
         if inventory.package_id:
             domain += ' and package_id = %s'
@@ -4149,7 +4148,7 @@ class stock_picking_type(osv.osv):
 
         # Statistics for the kanban view
         'last_done_picking': fields.function(_get_tristate_values,
-            type='any',
+            type='char',
             string='Last 10 Done Pickings'),
 
         'count_picking_draft': fields.function(_get_picking_count,

@@ -115,6 +115,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.init_dialog();
         }
         this.$buttons.insertAfter(this.$dialog_box.find(".modal-body"));
+        $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal is opened
         //add to list of currently opened modal
         opened_modal.push(this.$dialog_box);
         return this;
@@ -185,12 +186,12 @@ instance.web.Dialog = instance.web.Widget.extend({
     close: function(reason) {
         if (this.dialog_inited && !this.__tmp_dialog_hiding) {
             $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
-            this.trigger("closing", reason);
             if (this.$el.is(":data(bs.modal)")) {     // may have been destroyed by closing signal
                 this.__tmp_dialog_hiding = true;
                 this.$dialog_box.modal('hide');
                 this.__tmp_dialog_hiding = undefined;
             }
+            this.trigger("closing", reason);
         }
     },
     _closing: function() {
@@ -230,6 +231,9 @@ instance.web.Dialog = instance.web.Widget.extend({
                 if (opened_modal.length > 0){
                     //we still have other opened modal so we should focus it
                     opened_modal[opened_modal.length-1].focus();
+                    //keep class modal-open (deleted by bootstrap hide fnct) on body 
+                    //to allow scrolling inside the modal
+                    $('body').addClass('modal-open');
                 }
             },0);
         }
@@ -1073,7 +1077,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                     state: JSON.stringify(state),
                     scope: 'userinfo',
                 };
-                instance.web.redirect('https://accounts.openerp.com/oauth2/auth?'+$.param(params));
+                instance.web.redirect('https://accounts.odoo.com/oauth2/auth?'+$.param(params));
             });
         }
     },
@@ -1156,7 +1160,7 @@ instance.web.Client = instance.web.Widget.extend({
             }, 0);
         });
         instance.web.bus.on('click', this, function(ev) {
-            $.fn.tooltip('destroy');
+            $('.tooltip').remove();
             if (!$(ev.target).is('input[type=file]')) {
                 self.$el.find('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
             }

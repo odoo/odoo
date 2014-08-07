@@ -772,6 +772,7 @@ instance.web.unblockUI = function() {
 /* Bootstrap defaults overwrite */
 $.fn.tooltip.Constructor.DEFAULTS.placement = 'auto top';
 $.fn.tooltip.Constructor.DEFAULTS.html = true;
+$.fn.tooltip.Constructor.DEFAULTS.trigger = 'hover focus click';
 $.fn.tooltip.Constructor.DEFAULTS.container = 'body';
 //overwrite bootstrap tooltip method to prevent showing 2 tooltip at the same time
 var bootstrap_show_function = $.fn.tooltip.Constructor.prototype.show;

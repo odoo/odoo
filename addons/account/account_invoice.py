@@ -97,8 +97,6 @@ class account_invoice(models.Model):
     @api.depends('account_id', 'move_id.line_id.account_id', 'move_id.line_id.reconcile_id')
     def _compute_reconciled(self):
         self.reconciled = self.test_paid()
-        if not self.reconciled and self.state == 'paid':
-            self.signal_workflow('open_test')
 
     @api.model
     def _get_reference_type(self):
@@ -379,7 +377,7 @@ class account_invoice(models.Model):
         assert len(self) == 1, 'This option should only be used for a single id at a time.'
         template = self.env.ref('account.email_template_edi_invoice', False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        ctx = dict(self._context,
+        ctx = dict(
             default_model='account.invoice',
             default_res_id=self.id,
             default_use_template=bool(template),
@@ -574,8 +572,8 @@ class account_invoice(models.Model):
             if 'journal_id' in journal_defaults:
                 values['journal_id'] = journal_defaults['journal_id']
             if not values.get('journal_id'):
-                field_desc = journals.fields_get(['journal_id'])
-                type_label = next(t for t, label in field_desc['journal_id']['selection'] if t == journal_type)
+                field_desc = journals.fields_get(['type'])
+                type_label = next(t for t, label in field_desc['type']['selection'] if t == journal_type)
                 action = self.env.ref('account.action_account_journal_form')
                 msg = _('Cannot find any account journal of type "%s" for this company, You should create one.\n Please go to Journal Configuration') % type_label
                 raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
@@ -793,7 +791,10 @@ class account_invoice(models.Model):
                 continue
 
             ctx = dict(self._context, lang=inv.partner_id.lang)
-            date_invoice = inv.date_invoice or fields.Date.context_today(self)
+
+            if not inv.date_invoice:
+                inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
+            date_invoice = inv.date_invoice
 
             company_currency = inv.company_id.currency_id
             # create the analytical lines, one move line per invoice line
@@ -906,7 +907,6 @@ class account_invoice(models.Model):
             move = account_move.with_context(ctx).create(move_vals)
             # make the invoice point to that move
             vals = {
-                'date_invoice': date_invoice,
                 'move_id': move.id,
                 'period_id': period.id,
                 'move_name': move.name,

@@ -852,7 +852,7 @@ class gamification_challenge_line(osv.Model):
         return ret
 
     _columns = {
-        'name': fields.related('definition_id', 'name', string="Name"),
+        'name': fields.related('definition_id', 'name', string="Name", type="char"),
         'challenge_id': fields.many2one('gamification.challenge',
             string='Challenge',
             required=True,

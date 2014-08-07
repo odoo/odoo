@@ -782,6 +782,7 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
 
     start: function() {
         var self = this;
+        if (this.searchview.headless) return $.when(this._super(), this.searchview.ready);
         var filters_ready = this.searchview.fields_view_get
                                 .then(this.proxy('prepare_filters'));
         return $.when(this._super(), filters_ready).then(function () {
@@ -1962,7 +1963,7 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
                     context: this.view.dataset.context
                 }).done(function(data) {
                     self.fields = {
-                        id: { string: 'ID', type: 'id' }
+                        id: { string: 'ID', type: 'id', searchable: true }
                     };
                     _.each(data, function(field_def, field_name) {
                         if (field_def.selectable !== false && field_name != 'id') {
@@ -2036,7 +2037,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         this._super(parent);
         this.fields = _(fields).chain()
             .map(function(val, key) { return _.extend({}, val, {'name': key}); })
-            .filter(function (field) { return !field.deprecated && (field.store === void 0 || field.store || field.fnct_search); })
+            .filter(function (field) { return !field.deprecated && field.searchable; })
             .sortBy(function(field) {return field.string;})
             .value();
         this.attrs = {_: _, fields: this.fields, selected: null};

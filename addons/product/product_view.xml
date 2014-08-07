@@ -236,7 +236,7 @@
                         <div class="oe_right">
                             <button class="oe_inline oe_stat_button" string="Variant Prices"  name="%(variants_template_action)d" type="action" icon="fa-strikethrough"/>
                             <button class="oe_inline oe_stat_button" name="%(product.product_variant_action)d" type="action" icon="fa-sitemap">
-                                <field string="Variants" name="product_variant_count" widget="statinfo" />
+                                <field string="List of Variants" name="product_variant_count" widget="statinfo" />
                             </button>
                         </div>
                         <field name="attribute_line_ids" widget="one2many_list">
@@ -270,7 +270,7 @@
                                              <field name="name"/> 
                                         </a>
                                     </h4>
-                                    <a name="%(product.product_variant_action)d" type="action" t-if="record.product_variant_count.raw_value&gt;1" >
+                                    <a name="%(product.product_variant_action)d" type="action">
                                         <t t-esc="record.product_variant_count.value"/> Variants
                                     </a>
                                     <div name="tags"/>
