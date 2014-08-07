@@ -1,4 +1,4 @@
-openerp.restaurant = function(instance){
+openerp.pos_restaurant = function(instance){
 
     var module = instance.point_of_sale;
 
