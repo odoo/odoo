@@ -207,7 +207,7 @@ class hr_employee(osv.osv):
         'parent_id': fields.many2one('hr.employee', 'Manager'),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Tags'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
-        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
+        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True, auto_join=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job Title'),
         # image: all image fields are base64 encoded and PIL-supported
