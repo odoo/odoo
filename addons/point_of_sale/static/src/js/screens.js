@@ -790,22 +790,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             var self = this;
 
-            var print_button = this.add_action_button({
-                    label: _t('Print'),
-                    icon: '/point_of_sale/static/src/img/icons/png48/printer.png',
-                    click: function(){ self.print(); },
-                });
-
-            var finish_button = this.add_action_button({
-                    label: _t('Next Order'),
-                    icon: '/point_of_sale/static/src/img/icons/png48/go-next.png',
-                    click: function() { self.finishOrder(); },
-                });
-
             this.refresh();
             this.print();
 
-            //
             // The problem is that in chrome the print() is asynchronous and doesn't
             // execute until all rpc are finished. So it conflicts with the rpc used
             // to send the orders to the backend, and the user is able to go to the next 
@@ -822,31 +809,47 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             // 2 seconds is the same as the default timeout for sending orders and so the dialog
             // should have appeared before the timeout... so yeah that's not ultra reliable. 
 
-            finish_button.set_disabled(true);   
+            this.lock_screen(true);  
             setTimeout(function(){
-                finish_button.set_disabled(false);
+                self.lock_screen(false);  
             }, 2000);
+        },
+        lock_screen: function(locked) {
+            this._locked = locked;
+            if (locked) {
+                this.$('.next').removeClass('highlight');
+            } else {
+                this.$('.next').addClass('highlight');
+            }
         },
         print: function() {
             window.print();
         },
-        finishOrder: function() {
-            this.pos.get('selectedOrder').destroy();
+        finish_order: function() {
+            if (!this._locked) {
+                this.pos.get_order().finalize();
+            }
+        },
+        renderElement: function() {
+            var self = this;
+            this._super();
+            this.$('.next').click(function(){
+                self.finish_order();
+            });
+            this.$('.button.print').click(function(){
+                self.print();
+            });
         },
         refresh: function() {
-            var order = this.pos.get('selectedOrder');
-            $('.pos-receipt-container', this.$el).html(QWeb.render('PosTicket',{
+            var order = this.pos.get_order();
+            this.$('.pos-receipt-container').html(QWeb.render('PosTicket',{
                     widget:this,
                     order: order,
                     orderlines: order.get('orderLines').models,
                     paymentlines: order.get('paymentLines').models,
                 }));
         },
-        close: function(){
-            this._super();
-        }
     });
-
 
     module.PaymentScreenWidget = module.ScreenWidget.extend({
         template:      'PaymentScreenWidget',

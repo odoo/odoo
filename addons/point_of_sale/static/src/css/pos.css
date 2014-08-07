@@ -1090,8 +1090,19 @@ td {
 
 /* c) The receipt screen */
 
+.pos .receipt-screen .centered-content .button {
+    line-height: 32px;
+    padding: 3px 13px;
+    font-size: 20px;
+    background: rgb(230, 230, 230);
+    margin: 12px;
+    border-radius: 3px;
+    border: solid 1px rgb(209, 209, 209);
+    cursor: pointer;
+}
 .pos .pos-receipt-container {
     font-size: 0.75em;
+    text-align: center;
 }
 
 .pos .pos-sale-ticket {
@@ -1126,10 +1137,16 @@ td {
 }
 
 @media print {
+    body {
+        margin: 0;
+    }
     .oe_leftbar,
     .pos .pos-topheader, 
     .pos .pos-leftpane, 
-    .pos .keyboard_frame {
+    .pos .keyboard_frame, 
+    .pos .receipt-screen header,
+    .pos .receipt-screen .top-content,
+    .pos .receipt-screen .centered-content .button {
         display: none !important;
     }
     .pos,
@@ -1150,10 +1167,15 @@ td {
         left: 0px !important;
         background-color: white;
     }
-    .pos .receipt-screen header {
-        display: none !important;
-    }
     .pos .receipt-screen {
+        text-align: left;
+    }
+    .pos .receipt-screen .centered-content{
+        position: static;
+        border: none;
+        margin: none;
+    }
+    .pos .pos-receipt-container {
         text-align: left;
     }
     .pos-actionbar {
