@@ -54,7 +54,7 @@ class PaypalController(http.Controller):
         resp = uopen.read()
         if resp == 'VERIFIED':
             _logger.info('Paypal: validated data')
-            res = request.registry['payment.transaction'].form_feedback(cr, uid, post, 'paypal', context=context)
+            res = request.registry['payment.transaction'].form_feedback(cr, SUPERUSER_ID, post, 'paypal', context=context)
         elif resp == 'INVALID':
             _logger.warning('Paypal: answered INVALID on data verification')
         else:
