@@ -123,7 +123,7 @@
     </t>
 
 
-    <t t-name="bank_statement_reconciliation_move_line">
+    <t t-name="reconciliation_move_line">
         <tr class="mv_line" t-att-data-lineid="line.id" t-att-data-selected="selected">
             <td><span class="glyphicon glyphicon-add-remove"></span></td>
             <td><t t-esc="line.account_code"/></td>
@@ -152,7 +152,7 @@
         <i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i>
     </t>
 
-    <t t-name="bank_statement_reconciliation_move_line_details">
+    <t t-name="reconciliation_move_line_details">
         <table class='details'>
             <tr><td>ID</td><td><t t-esc="line.id"/></td></tr>
             <tr><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
