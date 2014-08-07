@@ -169,9 +169,16 @@
     });
 
     $.extend($.expr[':'],{
-        hasArch: function(a,i,m){
-            var $a = $(a);
-            return $a.is(m[3]) || $a.closest(m[3]).size();
+        checkData: function(node,i,m){
+            var dataName = m[3];
+            while (node && node.dataset) {
+                if (node.dataset[dataName]) {
+                    return true;
+                } else {
+                    node = node.parentNode;
+                }
+            }
+            return false;
         }
     });
 
@@ -271,10 +278,19 @@
                     $snippet.closest(".oe_snippet").addClass("disable");
                 }
             });
-            $('#oe_snippets .scroll a[data-toggle="tab"][href="#' + $category.attr("id") + '"]').toggle(!!snippets);
+            $('#oe_snippets .scroll a[data-toggle="tab"][href="#' + $category.attr("id") + '"]')
+                .toggle(!!$category.find(".oe_snippet:not(.disable)").size());
         },
         _get_snippet_url: function () {
             return '/website/snippets';
+        },
+        _add_check_selector : function (selector) {
+            var data = selector.split(",");
+            var selectors = [];
+            for (var k in data) {
+                selectors.push(data[k].replace(/^\s+|\s+$/g, '') + ":checkData(oeModel)");
+            }
+            return selectors.join(", ");
         },
         fetch_snippet_templates: function () {
             var self = this;
@@ -283,30 +299,19 @@
                 .then(function (html) {
                     var $html = $(html);
 
-                    function selector_compute (selector, check) {
-                        var data = selector.split(",");
-                        var selectors = [];
-                        for (var k in data) {
-                            selectors.push(data[k].replace(/^\s+|\s+$/g, '') + ":hasArch(" + check + ")");
-                        }
-                        return selectors.join(", ");
-                    }
-
                     var selector = [];
                     var $styles = $html.find("[data-snippet-id], [data-selector]");
                     $styles.each(function () {
                         var $style = $(this);
                         var style_id = $style.data('snippet-id');
-                        var check = $style.data('check') || '[data-oe-model]';
                         var option = {
                             'snippet-id' : style_id,
                             'base_selector': $style.data('selector'),
-                            'selector': selector_compute($style.data('selector'), check),
+                            'selector': self._add_check_selector($style.data('selector')),
                             '$el': $style,
-                            'selector-siblings': $style.data('selector-siblings') && selector_compute($style.data('selector-siblings'), check),
-                            'selector-children': $style.data('selector-children') && selector_compute($style.data('selector-children'), check),
-                            'selector-vertical-children': $style.data('selector-vertical-children') && selector_compute($style.data('selector-vertical-children'), check),
-                            'check': check,
+                            'selector-siblings': $style.data('selector-siblings') && self._add_check_selector($style.data('selector-siblings')),
+                            'selector-children': $style.data('selector-children') && self._add_check_selector($style.data('selector-children')),
+                            'selector-vertical-children': $style.data('selector-vertical-children') && self._add_check_selector($style.data('selector-vertical-children')),
                             'data': $style.data()
                         };
                         website.snippet.templateOptions.push(option);
