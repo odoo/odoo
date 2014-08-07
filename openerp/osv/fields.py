@@ -147,7 +147,7 @@ class _column(object):
             ('domain', self._domain),
             ('context', self._context),
         ]
-        return dict(item for item in items if items[1])
+        return dict(item for item in items if item[1])
 
     def restart(self):
         pass
