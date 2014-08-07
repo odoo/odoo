@@ -196,4 +196,8 @@ class main(http.Controller):
         data = [tag['name'] for tag in tags]
         return simplejson.dumps(data)
 
+    @http.route(['/slides/add_slide'], type='http', auth="user", methods=['POST'], website=True)
+    def add_slide(self, *args, **post):
+        print '>>>>>>>>',args
+        print 'post',post
 
