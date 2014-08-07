@@ -1,0 +1,53 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="website.addslide.dialog">
+        <t t-call="website.editor.dialog">
+            <t t-set="title">Add Slide</t>
+
+            <div class="control-group">
+                <label for="slide-name" class="control-label">
+                    Slide Name
+                </label>
+                <div class="controls">
+                    <input name="slide-name" value="" id="name"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="slide-tag" class="control-label">
+                    Slide Tag
+                </label>
+                <div class="controls">
+                    <input type="text" name="slide-tags" placeholder="Tags" class="form-control load_tags"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="slide-file">Upload Slide</label>
+              <div class="controls">
+                  <input id="slide-file" name="file" class="input-file" type="file"/>
+              </div>
+            </div>
+
+            <div class="control-group">
+                <label for="slide-type" class="control-label">
+                    Slide Type
+                </label>
+                <div class="controls">
+                    <select name="slide-type" id="types">
+                        <option value="presentation">Presentation</option>
+                        <option value="document">Document</option>
+                        <option value="video">Video</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="slide-description">Description</label>
+                <div class="controls">                     
+                    <textarea id="slide-description" name="description">Description</textarea>
+                </div>
+            </div>
+
+        </t>
+    </t>
+</templates>
