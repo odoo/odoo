@@ -120,19 +120,20 @@
         },
         grid : function() {
             var self     = this,
-                $imgs    = this.get_imgs().wrap('<div>').parent(),
-                $img     = undefined,
+                $cols    = this.get_imgs().wrap('<div>').parent(),
+                $col, $img,
                 $row     = $('<div class="row"></div>'),
                 columns  = this.get_columns() || 3,
                 colClass = "col-md-"+(12/columns),
                 $container = this.replace($row);
 
-            $imgs.each(function(index) { // 0 based index
-                $img = $(this);
+            $cols.each(function(index) { // 0 based index
+                $col = $(this);
+                $img = $col.find('img');
                 self.img_preserve_styles($img);
                 self.img_responsive($img);
-                $img.addClass(colClass);
-                $img.appendTo($row);
+                $col.addClass(colClass);
+                $col.appendTo($row);
                 if ( (index+1) % columns === 0) {
                     $row = $('<div class="row"></div>');
                     $row.appendTo($container);
