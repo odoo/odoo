@@ -2749,7 +2749,7 @@ class stock_warehouse(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, select=True),
         'partner_id': fields.many2one('res.partner', 'Address'),
         'view_location_id': fields.many2one('stock.location', 'View Location', required=True, domain=[('usage', '=', 'view')]),
-        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage', '=', 'internal')]),
+        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', domain=[('usage', '=', 'internal')], required=True),
         'code': fields.char('Short Name', size=5, required=True, help="Short name used to identify your warehouse"),
         'route_ids': fields.many2many('stock.location.route', 'stock_route_warehouse', 'warehouse_id', 'route_id', 'Routes', domain="[('warehouse_selectable', '=', True)]", help='Defaults routes through the warehouse'),
         'reception_steps': fields.selection([
@@ -2825,7 +2825,7 @@ class stock_warehouse(osv.osv):
                 if wh.delivery_steps == 'ship_only':
                     output_loc = wh.lot_stock_id
                     # Create extra MTO rule (only for 'ship only' because in the other cases MTO rules already exists)
-                    mto_pull_vals = self._get_mto_pull_rule(cr, uid, wh, [(output_loc, transit_location, wh.out_type_id.id)], context=context)
+                    mto_pull_vals = self._get_mto_pull_rule(cr, uid, wh, [(output_loc, transit_location, wh.out_type_id.id)], context=context)[0]
                     pull_obj.create(cr, uid, mto_pull_vals, context=context)
                 inter_wh_route_vals = self._get_inter_wh_route(cr, uid, warehouse, wh, context=context)
                 inter_wh_route_id = route_obj.create(cr, uid, vals=inter_wh_route_vals, context=context)
@@ -2837,17 +2837,8 @@ class stock_warehouse(osv.osv):
                 if default_resupply_wh and default_resupply_wh.id == wh.id:
                     self.write(cr, uid, [warehouse.id], {'route_ids': [(4, inter_wh_route_id)]}, context=context)
 
-    def _default_stock_id(self, cr, uid, context=None):
-        #lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-        try:
-            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0')
-            return warehouse.lot_stock_id.id
-        except:
-            return False
-
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
-        'lot_stock_id': _default_stock_id,
         'reception_steps': 'one_step',
         'delivery_steps': 'ship_only',
     }
@@ -2966,8 +2957,10 @@ class stock_warehouse(osv.osv):
 
     def _get_mto_pull_rule(self, cr, uid, warehouse, values, context=None):
         mto_route_id = self._get_mto_route(cr, uid, context=context)
-        from_loc, dest_loc, pick_type_id = values[0]
-        return {
+        res = []
+        for value in values:
+            from_loc, dest_loc, pick_type_id = value
+            res += [{
             'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context) + _(' MTO'),
             'location_src_id': from_loc.id,
             'location_id': dest_loc.id,
@@ -2977,7 +2970,8 @@ class stock_warehouse(osv.osv):
             'procure_method': 'make_to_order',
             'active': True,
             'warehouse_id': warehouse.id,
-        }
+            }]
+        return res
 
     def _get_crossdock_route(self, cr, uid, warehouse, route_name, context=None):
         return {
@@ -3019,7 +3013,7 @@ class stock_warehouse(osv.osv):
         for pull_rule in pull_rules_list:
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
         #create MTO pull rule and link it to the generic MTO route
-        mto_pull_vals = self._get_mto_pull_rule(cr, uid, warehouse, values, context=context)
+        mto_pull_vals = self._get_mto_pull_rule(cr, uid, warehouse, values, context=context)[0]
         mto_pull_id = pull_obj.create(cr, uid, mto_pull_vals, context=context)
 
         #create a route for cross dock operations, that can be set on products and product categories
@@ -3093,7 +3087,7 @@ class stock_warehouse(osv.osv):
 
         #change MTO rule
         dummy, values = routes_dict[new_delivery_step]
-        mto_pull_vals = self._get_mto_pull_rule(cr, uid, warehouse, values, context=context)
+        mto_pull_vals = self._get_mto_pull_rule(cr, uid, warehouse, values, context=context)[0]
         pull_obj.write(cr, uid, warehouse.mto_pull_id.id, mto_pull_vals, context=context)
         return True
 
@@ -3295,7 +3289,7 @@ class stock_warehouse(osv.osv):
         route_obj = self.pool.get("stock.location.route")
         pull_obj = self.pool.get("procurement.rule")
         routes = route_obj.search(cr, uid, [('supplier_wh_id','=', warehouse.id)], context=context)
-        pulls= pull_obj.search(cr, uid, ['&', ('route_id', 'in', routes), ('location_id.usage', '=', 'transit')], context=context)
+        pulls = pull_obj.search(cr, uid, ['&', ('route_id', 'in', routes), ('location_id.usage', '=', 'transit')], context=context)
         if pulls:
             pull_obj.write(cr, uid, pulls, {'location_src_id': new_location, 'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"}, context=context)
         # Create or clean MTO rules
@@ -3307,7 +3301,8 @@ class stock_warehouse(osv.osv):
             transfer_locs = list(set([x.location_id for x in pull_recs]))
             vals = [(warehouse.lot_stock_id , x, warehouse.out_type_id.id) for x in transfer_locs]
             mto_pull_vals = self._get_mto_pull_rule(cr, uid, warehouse, vals, context=context)
-            pull_obj.create(cr, uid, mto_pull_vals, context=context)
+            for mto_pull_val in mto_pull_vals:
+                pull_obj.create(cr, uid, mto_pull_val, context=context)
         else:
             # We need to delete all the MTO pull rules, otherwise they risk to be used in the system
             pulls = pull_obj.search(cr, uid, ['&', ('route_id', '=', mto_route_id), ('location_id.usage', '=', 'transit'), ('location_src_id', '=', warehouse.lot_stock_id.id)], context=context)
