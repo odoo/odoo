@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 
 
@@ -67,10 +68,19 @@ class sale_order(osv.Model):
     def get_signup_url(self, cr, uid, ids, context=None):
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
-        partner = document.partner_id
-        action = 'portal_sale.action_quotations_portal' if document.state in ('draft', 'sent') else 'portal_sale.action_orders_portal'
-        partner.signup_prepare()
-        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=document.id)[partner.id]
+        contex_signup = dict(context, signup_valid=True)
+        return self.pool['res.partner']._get_signup_url_for_action(
+            cr, uid, [document.partner_id.id], action='mail.action_mail_redirect',
+            model=self._name, res_id=document.id, context=contex_signup,
+        )[document.partner_id.id]
+
+    def get_formview_action(self, cr, uid, id, context=None):
+        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        if user.share:
+            document = self.browse(cr, uid, id, context=context)
+            action_xmlid = 'action_quotations_portal' if document.state in ('draft', 'sent') else 'action_orders_portal'
+            return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', action_xmlid, context=context)
+        return super(sale_order, self).get_formview_action(cr, uid, id, context=context)
 
 
 class account_invoice(osv.Model):
@@ -117,10 +127,17 @@ class account_invoice(osv.Model):
     def get_signup_url(self, cr, uid, ids, context=None):
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
-        partner = document.partner_id
-        action = 'portal_sale.portal_action_invoices'
-        partner.signup_prepare()
-        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=document.id)[partner.id]
+        contex_signup = dict(context, signup_valid=True)
+        return self.pool['res.partner']._get_signup_url_for_action(
+            cr, uid, [document.partner_id.id], action='mail.action_mail_redirect',
+            model=self._name, res_id=document.id, context=contex_signup,
+        )[document.partner_id.id]
+
+    def get_formview_action(self, cr, uid, id, context=None):
+        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        if user.share:
+            return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', 'portal_action_invoices', context=context)
+        return super(sale_order, self).get_formview_action(cr, uid, id, context=context)
 
 
 class mail_mail(osv.osv):
