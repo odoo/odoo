@@ -147,7 +147,7 @@ class _column(object):
             ('domain', self._domain),
             ('context', self._context),
             ('change_default', self.change_default),
-            ('deprecated', self.change_default),
+            ('deprecated', self.deprecated),
         ]
         return dict(item for item in items if item[1])
 
