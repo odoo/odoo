@@ -200,8 +200,7 @@ class stock_picking(osv.osv):
         saleorder_model = self.pool['sale.order']
         context = context or {}
         todo = {}
-        import pudb
-        pudb.set_trace()
+
         for picking in self.browse(cr, uid, ids, context=context):
             #grouping is based on the invoiced partner
             if group:
