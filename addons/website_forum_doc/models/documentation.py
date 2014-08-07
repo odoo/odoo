@@ -73,3 +73,10 @@ class Post(osv.Model):
         'documentation_stage_id': _read_group_stage_ids,
     }
 
+    def _get_documentation_stage(self, cr, uid, context=None):
+        ids = self.pool.get('forum.documentation.stage').search(cr, uid, [], context=None)
+        return ids and ids[0] or False
+
+    _defaults = {
+        'documentation_stage_id': _get_documentation_stage,
+    }
