@@ -343,6 +343,8 @@ class survey_survey(osv.Model):
 
         #Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:
+            answers = {}
+            [answers.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
             result_summary = []
             for label in question.labels_ids:
                 count = 0
