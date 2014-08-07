@@ -284,6 +284,8 @@ class Field(object):
     required = False
     states = None
     groups = False              # csv list of group xml ids
+    change_default = None       # whether the field may trigger a "user-onchange"
+    deprecated = None           # whether the field is ... deprecated
 
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
@@ -553,6 +555,8 @@ class Field(object):
     _description_required = property(attrgetter('required'))
     _description_states = property(attrgetter('states'))
     _description_groups = property(attrgetter('groups'))
+    _description_change_default = property(attrgetter('change_default'))
+    _description_deprecated = property(attrgetter('deprecated'))
 
     def _description_string(self, env):
         if self.string and env.lang:
@@ -604,6 +608,8 @@ class Field(object):
     _column_required = property(attrgetter('required'))
     _column_states = property(attrgetter('states'))
     _column_groups = property(attrgetter('groups'))
+    _column_change_default = property(attrgetter('change_default'))
+    _column_deprecated = property(attrgetter('deprecated'))
 
     ############################################################################
     #
