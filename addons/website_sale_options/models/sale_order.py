@@ -45,7 +45,7 @@ class sale_order(osv.Model):
                 line.write({
                         "name": _("%s\nOption for: %s") % (line.name, linked.product_id.name_get()[0][1]),
                         "linked_line_id": linked_line_id
-                    }, context=context)
+                    })
 
             # select linked product
             option_ids = [l.id for l in so.order_line if l.linked_line_id.id == line.id]
