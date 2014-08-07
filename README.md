@@ -27,7 +27,7 @@ Packages, tarballs and installers
 
     Add this apt repository to your /etc/apt/sources.list file
 
-        deb http://nightly.openerp.com/8.0/deb/ ./
+        deb http://nightly.openerp.com/8.0/nightly/deb/ ./
 
     Then type:
 
