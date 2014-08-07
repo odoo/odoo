@@ -685,10 +685,10 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id, product_uom_qty)" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom')]" class="oe_inline" context='{"default_type": "product"}'/>
-                            <label for="product_uom_qty"/>
+                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom')]" class="oe_inline" context='{"default_type": "product"}'/>
+                            <label for="product_qty"/>
                             <div>
-                                <field name="product_uom_qty" class="oe_inline" on_change="product_id_change(product_id, product_uom_qty)"/>
+                                <field name="product_qty" class="oe_inline" on_change="product_id_change(product_id, product_qty)"/>
                                 <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
