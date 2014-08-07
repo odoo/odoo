@@ -1593,9 +1593,11 @@ class stock_move(osv.osv):
                    (move.product_id.track_production and move.location_id.usage == 'production') or \
                    (move.product_id.track_production and move.location_dest_id.usage == 'production') or \
                    (move.product_id.track_incoming and move.location_id.usage == 'supplier') or \
-                   (move.product_id.track_outgoing and move.location_dest_id.usage == 'customer') or \
-                   (move.product_id.track_incoming and move.location_id.usage == 'inventory') \
-               )):
+                   (move.product_id.track_outgoing and move.location_dest_id.usage == 'customer')
+               ) and
+               # We still let users correct wrong moves with inventories
+               move.location_id.usage != 'inventory' and \
+               move.location_dest_id.usage != 'inventory'):
                 return False
         return True
 
