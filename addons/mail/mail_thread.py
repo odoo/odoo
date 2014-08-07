@@ -627,7 +627,7 @@ class mail_thread(osv.AbstractModel):
         if params:
             msg_id = params.get('message_id')
             model = params.get('model')
-            res_id = params.get('res_id')
+            res_id = params.get('res_id', params.get('id'))  # signup automatically generated id instead of res_id
         if not msg_id and not (model and res_id):
             return action
         if msg_id and not (model and res_id):
@@ -641,7 +641,7 @@ class mail_thread(osv.AbstractModel):
             if model_obj.check_access_rights(cr, uid, 'read', raise_exception=False):
                 try:
                     model_obj.check_access_rule(cr, uid, [res_id], 'read', context=context)
-                    action = model_obj.get_formview_action(cr, uid, res_id, context=context)
+                    action = model_obj.get_access_action(cr, uid, res_id, context=context)
                 except (osv.except_osv, orm.except_orm):
                     pass
             action.update({
