@@ -197,10 +197,23 @@ class stock_picking(osv.osv):
         @param type: Type invoice to be created
         @return: Ids of created invoices for the pickings
         """
+        saleorder_model = self.pool['sale.order']
         context = context or {}
         todo = {}
+        import pudb
+        pudb.set_trace()
         for picking in self.browse(cr, uid, ids, context=context):
-            key = group and picking.id or True
+            #grouping is based on the invoiced partner
+            if group:
+                saleorder_ids = saleorder_model.search(cr, uid, [('procurement_group_id' ,'=', picking.group_id.id)], context=context)
+                saleorders = saleorder_model.browse(cr, uid, saleorder_ids, context=context)
+                if saleorders and saleorders[0]:
+                    saleorder = saleorders[0]
+                    key = "%s" % saleorder.partner_invoice_id.id
+                else:
+                    key = "Pick %s" % picking.id
+            else:
+                key = picking.id
             for move in picking.move_lines:
                 if move.invoice_state == '2binvoiced':
                     if (move.state != 'cancel') and not move.scrapped:
