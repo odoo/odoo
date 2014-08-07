@@ -53,7 +53,7 @@
                     <table class="accounting_view">
                         <caption>
                             <button class="button_ok"></button>
-                            <span class="partner_name"><t t-esc="line.partner_name"/></span>
+                            <span t-if="! line.has_no_partner" class="partner_name"><t t-esc="line.partner_name"/></span>
                             <div class="change_partner_container oe_form"></div>
                         </caption>
                         <tbody class="tbody_initial_line">
@@ -128,8 +128,7 @@
             <td><span class="glyphicon glyphicon-add-remove"></span></td>
             <td><t t-esc="line.account_code"/></td>
             <td><t t-esc="line.q_due_date"/></td>
-            <td class="js_qlabel"><t t-esc="line.q_label"/></td>
-
+            <td><t t-esc="line.q_label"/></td>
             <td><t t-if="line.debit !== 0">
                 <t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t>
                 <t t-if="line.partial_reconcile" t-call="icon_undo_partial_reconciliation"></t>
