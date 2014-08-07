@@ -1039,6 +1039,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos.get_order().clean_empty_paymentlines();
             this.reset_input();
             this.render_paymentlines();
+            this.order_changes();
             window.document.body.addEventListener('keydown',this.keyboard_handler);
             this._super();
         },
@@ -1061,8 +1062,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // called when the order is changed, used to show if
         // the order is paid or not
         order_changes: function(){
+            var self = this;
             var order = this.pos.get_order();
-            console.log('change!');
             if (order.isPaid()) {
                 self.$('.next').addClass('highlight');
             }else{
