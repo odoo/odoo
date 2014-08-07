@@ -45,7 +45,7 @@ class mail_mail(osv.Model):
     _rec_name = 'subject'
 
     _columns = {
-        'mail_message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade'),
+        'mail_message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade', auto_join=True),
         'state': fields.selection([
             ('outgoing', 'Outgoing'),
             ('sent', 'Sent'),
