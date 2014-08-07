@@ -17,37 +17,24 @@
                     Slide Tag
                 </label>
                 <div class="controls">
-                    <input type="text" name="slide-tags" placeholder="Tags" class="form-control load_tags"/>
+                    <input type="text" name="tags" placeholder="Tags" class="form-control load_tags"/>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for="slide-file">Upload Slide</label>
               <div class="controls">
-                  <input id="slide-file" name="file" class="input-file" type="file"/>
+                  <input id="slide-file" name="file" class="slide-upload" type="file"/>
               </div>
             </div>
 
             <div class="control-group">
-                <label for="slide-type" class="control-label">
-                    Slide Type
-                </label>
-                <div class="controls">
-                    <select name="slide-type" id="types">
-                        <option value="presentation">Presentation</option>
-                        <option value="document">Document</option>
-                        <option value="video">Video</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="control-group">
                 <label class="control-label" for="slide-description">Description</label>
-                <div class="controls">                     
+                <div class="controls">
                     <textarea id="slide-description" name="description">Description</textarea>
                 </div>
             </div>
-
+            <canvas id="the-canvas" style="border:1px  solid black"></canvas>
         </t>
     </t>
 </templates>
