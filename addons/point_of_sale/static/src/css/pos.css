@@ -996,7 +996,7 @@ td {
 
 .pos .payment-numpad {
     display: inline-block;
-    width: 230px;
+    width: 232px;
     margin-top: 8px;
     margin-right: 8px;
     float: right;
@@ -1024,7 +1024,7 @@ td {
     border-radius: 3px;
 }
 .pos .paymentline{
-    font-size: 18px;
+    font-size: 22px;
 }
 .pos .paymentline.selected {
     font-size: 22px;
@@ -1035,12 +1035,24 @@ td {
     background: white;
     color: #6EC89B;
     outline: 3px blue;
-    border: solid 4px #6EC89B;
+    box-shadow: 0px 0px 0px 3px #6EC89B;
+    position: relative;
     border-radius: 3px;
 }
 
 .pos .paymentline > *{
     padding: 8px;
+}
+.pos .paymentline .col-due,
+.pos .paymentline .col-tendered,
+.pos .paymentline .col-change {
+    min-width: 80px;
+}
+.pos .paymentline .col-change.highlight {
+    background: rgb(184, 152, 204);
+}
+.pos .paymentline .col-name {
+    font-size: 16px;
 }
 .pos .paymentline .delete-button{
     cursor: pointer;

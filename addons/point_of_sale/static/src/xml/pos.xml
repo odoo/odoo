@@ -423,19 +423,29 @@
                     <t t-foreach='paymentlines' t-as='line'>
                         <t t-if='line.selected'>
                             <tr class='paymentline selected'>
-                                <td> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
-                                <td class='edit'> <t t-esc='line.get_amount()' /> </td>
-                                <td> <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' /> </td>
-                                <td> <t t-esc='line.name' /> </td>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
+                                <td class='col-tendered edit'> <t t-esc='line.get_amount()' /> </td>
+                                <t t-if='order.getChange(line)'>
+                                    <td class='col-change highlight' > <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' /> </td>
+                                </t>
+                                <t t-if='!order.getChange(line)'>
+                                    <td class='col-change' ></td>
+                                </t>
+                                    
+                                <td class='col-name' > <t t-esc='line.name' /> </td>
                                 <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
                             </tr>
                         </t>
                         <t t-if='!line.selected'>
-                            <tr class='paymentline'>
-                                <td> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
-                                <td> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
-                                <td> <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' /> </td>
-                                <td> <t t-esc='line.name' /> </td>
+                            <tr class='paymentline' t-att-data-cid='line.cid'>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
+                                <td class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
+                                <td class='col-change'> 
+                                    <t t-if='order.getChange(line)'>
+                                        <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' />
+                                     </t>
+                                </td>
+                                <td class='col-name'> <t t-esc='line.name' /> </td>
                                 <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
                             </tr>
                         </t>
@@ -448,25 +458,25 @@
 
     <t t-name="PaymentScreen-Numpad">
         <div class="numpad">
-            <button class="input-button number-char">1</button>
-            <button class="input-button number-char">2</button>
-            <button class="input-button number-char">3</button>
-            <button class="mode-button" data-action='currency' data-value='5' >5€</button>
+            <button class="input-button number-char" data-action='1'>1</button>
+            <button class="input-button number-char" data-action='2'>2</button>
+            <button class="input-button number-char" data-action='3'>3</button>
+            <button class="mode-button" data-action='+5'>+5</button>
             <br />
-            <button class="input-button number-char">4</button>
-            <button class="input-button number-char">5</button>
-            <button class="input-button number-char">6</button>
-            <button class="mode-button" data-action='currency' data-value='10' >10€</button>
+            <button class="input-button number-char" data-action='4'>4</button>
+            <button class="input-button number-char" data-action='5'>5</button>
+            <button class="input-button number-char" data-action='6'>6</button>
+            <button class="mode-button" data-action='+10'>+10</button>
             <br />
-            <button class="input-button number-char">7</button>
-            <button class="input-button number-char">8</button>
-            <button class="input-button number-char">9</button>
-            <button class="mode-button" data-action='currency' data-value='20' >20€</button>
+            <button class="input-button number-char" data-action='7'>7</button>
+            <button class="input-button number-char" data-action='8'>8</button>
+            <button class="input-button number-char" data-action='9'>9</button>
+            <button class="mode-button" data-action='+20'>+20</button>
             <br />
-            <button class="input-button numpad-char" data-action='clear' >C</button>
-            <button class="input-button number-char">0</button>
-            <button class="input-button number-char">.</button>
-            <button class="input-button numpad-backspace" data-action='backspace' >
+            <button class="input-button numpad-char" data-action='CLEAR' >C</button>
+            <button class="input-button number-char" data-action='0'>0</button>
+            <button class="input-button number-char" data-action='.'>.</button>
+            <button class="input-button numpad-backspace" data-action='BACKSPACE' >
                 <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
             </button>
             <br />
@@ -483,7 +493,7 @@
         </div>
     </t>
         
-    <t t-name="NewPaymentScreenWidget">
+    <t t-name="PaymentScreenWidget">
         <div class='payment-screen screen'>
             <div class='screen-content'>
                 <div class='top-content'>
@@ -528,35 +538,6 @@
             </div>
         </div>
 
-    </t>
-
-    <t t-name="PaymentScreenWidget">
-        <div class="payment-screen screen touch-scrollable">
-            <div class="pos-payment-container">
-                <div class='payment-due-total'></div>
-                <div class='payment-lines'></div>
-                <div class='payment-info'>
-                    <div class="infoline">
-                        <span class='left-block'>
-                            Paid:
-                        </span>
-                        <span class="right-block payment-paid-total"></span>
-                    </div>
-                    <div class="infoline">
-                        <span class='left-block'>
-                            Remaining:
-                        </span>
-                        <span class="right-block payment-remaining"></span>
-                    </div>
-                    <div class="infoline bigger" >
-                        <span class='left-block'>
-                            Change:
-                        </span>
-                        <span class="right-block payment-change"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
     </t>
 
     <t t-name="ReceiptScreenWidget">

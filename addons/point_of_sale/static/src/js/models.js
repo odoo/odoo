@@ -1030,6 +1030,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         isPaid: function(){
             return this.getDueLeft() === 0;
         },
+        isPaidWithCash: function(){
+            return !!this.get('paymentLines').find( function(pl){
+                return pl.cashregister.journal.type === 'cash';
+            });
+        },
+        finalize: function(){
+            this.destroy();
+        },
         // sets the type of receipt 'receipt'(default) or 'invoice'
         set_receipt_type: function(type){
             this.receipt_type = type;
