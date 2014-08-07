@@ -135,6 +135,11 @@ class Field(object):
         :param groups: comma-separated list of group xml ids (string); this
             restricts the field access to the users of the given groups only
 
+        :param bool copy: whether the field value should be copied when the record
+            is duplicated (default: ``True`` for normal fields, ``False`` for
+            ``one2many`` and computed fields, including property fields and
+            related fields)
+
         .. _field-computed:
 
         .. rubric:: Computed fields
