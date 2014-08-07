@@ -432,3 +432,17 @@ td.field-body {
     padding-left: 0;
   }
 }
+
+// naming collision, rST generates .container nodes with completely different
+// semantics so go away
+.section .container {
+    width: auto;
+    margin: 0;
+    padding: 0;
+}
+
+// code block lines should not wrap
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
