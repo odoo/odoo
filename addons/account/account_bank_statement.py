@@ -555,13 +555,14 @@ class account_bank_statement_line(osv.osv):
             if st_line.amount < 0:
                 sign = -1
 
-        #we don't propose anything if there is no partner detected
+        # we don't propose anything if there is no partner detected
         if not st_line.partner_id.id:
             return []
+
         # look for exact match
         exact_match_id = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
         if exact_match_id:
-            return exact_match_id
+            return [exact_match_id[0]]
 
         # select oldest move lines
         if sign == -1:
