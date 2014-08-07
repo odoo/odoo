@@ -278,9 +278,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         # therefore we have to recover the files from the request object
         Attachments = request.registry['ir.attachment']  # registry for the attachment table
 
-        website_url = message = None
+        uploads = []
+        message = None
         if not upload: # no image provided, storing the link and the image name
-            website_url = url
+            uploads.append({'website_url': url})
             name = url.split("/").pop()                       # recover filename
             attachment_id = Attachments.create(request.cr, request.uid, {
                 'name':name,
@@ -309,35 +310,15 @@ class Website(openerp.addons.web.controllers.main.Home):
                     [attachment] = Attachments.read(
                         request.cr, request.uid, [attachment_id], ['website_url'],
                         context=request.context)
-                    website_url = attachment['website_url']
+                    uploads.append(attachment)
             except Exception, e:
                 logger.exception("Failed to upload image to attachment")
                 message = unicode(e)
 
         return """<script type='text/javascript'>
             window.parent['%s'](%s, %s);
-        </script>""" % (func, json.dumps(website_url), json.dumps(message))
+        </script>""" % (func, json.dumps(uploads), json.dumps(message))
 
-    @http.route(['/website/images_upload'], type='http', auth='user', methods=['POST'])
-    def album_images_upload(self, upload):
-        Attachments = request.registry['ir.attachment']
-        uploads = []
-        for c_file in request.httprequest.files.getlist('upload'):
-            image_data = c_file.read()
-            image = Image.open(cStringIO.StringIO(image_data))
-            w, h = image.size
-            attachment_id = Attachments.create(request.cr, request.uid, {
-                'name': c_file.filename,
-                'datas': image_data.encode('base64'),
-                'datas_fname': c_file.filename,
-                'res_model': 'ir.ui.view',
-            }, request.context)
-            up = Attachments.read(
-                request.cr, request.uid, [attachment_id], ['website_url'],
-                context=request.context)
-            uploads.append(up[0])
-        return  "%s" % (json.dumps(uploads))
-    
     @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):
         _id = int(id)

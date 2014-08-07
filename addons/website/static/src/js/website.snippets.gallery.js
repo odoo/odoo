@@ -187,6 +187,40 @@
                     var file = files[i];
                     formData.append('upload', file, file.name);
                 }
+
+                /* 
+                 * hide submit button
+                 */
+                $upload_form.find('input[name="upload"], input[type="submit"]').parent().addClass("hidden");
+
+                /* 
+                 * Images upload callback
+                 */
+                var callback = _.uniqueId('func_');
+                formData.append("func", callback);
+                window[callback] = function (attachments, error) {
+                    delete window[callback];
+
+                    $upload_form.find('input[name="upload"]').parent().removeClass("hidden");
+
+                    if (error) { /* failure */
+
+                        $progressbar.addClass("progress-bar-danger");
+                        $upload_form.find(".alert-danger").show();
+
+                    } else { /* success */
+
+                        $progressbar.addClass("progress-bar-success");
+                        $upload_form.find(".alert-success").show();
+                        for (var i = 0 ; i < attachments.length; i++) {
+                            $('<img class="img img-thumbnail img-responsive mb8 mt8"/>')
+                                .attr("src", attachments[i].website_url)
+                                .appendTo($container);
+                        }
+                        self.reapply(); // refresh the $target
+                    }
+                };
+
                 /* 
                  * Images upload : don't change order of contentType & processData
                  * and don't change their values, otherwise the XHR will be 
@@ -195,41 +229,29 @@
                  * (missing boundary in the content-type header field)
                  * Leading to an upload failure.
                  */
-                $.ajax('/website/images_upload', {
+                $.ajax('/website/attach', {
                     type: 'POST',
                     data: formData,
                     contentType: false,  /* multipart/form-data for files */
                     processData: false,
-                    dataType: 'json',
+                    dataType: 'text',
                     xhrFields: { /* progress bar support */
                         onprogress: function(up) {
                             var pc = Math.floor((up.total / up.totalSize) * 100);
                             var text = " "+pc+" %";
                             $progressbar.css({'width': pc+'%' }).attr("aria-valuenow", pc).text(text);
-                        }
-                    }
-                }).then(
-                    
-                    function(response) { /* success */
-                        $progressbar.addClass("progress-bar-success");
-                        $upload_form.find(".alert-success").show();
-                        for (var i = 0 ; i < response.length; i++) {
-                            $('<img class="img img-thumbnail img-responsive mb8 mt8"/>')
-                                .attr("src", response[i].website_url)
-                                .appendTo($container);
-                        }
-                        self.reapply(); // refresh the $target
-                    },
-                    
-                    function(response) { /* failure */
-                        $progressbar.addClass("progress-bar-danger");
-                        $upload_form.find(".alert-danger").show();
-                    }
-                );
+                        }}
+                    }).done(function (script) {
+                        $(script).appendTo('head').remove();
+                    });
             });
             $upload_form.modal({ backdrop : false });
-            var filepicker = $upload_form.find('input[name="upload"]');
-            filepicker.click();
+
+            var $filepicker = $upload_form.find('input[name="upload"]');
+            $filepicker.click(function () {
+                $upload_form.find('input[type="submit"]').parent().removeClass("hidden");
+            });
+            $filepicker.click();
         },
         images_rm   : function() {
             this.replace($('<div class="alert alert-info"/>').text(_t("Add Images from the menu")));
