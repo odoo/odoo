@@ -973,6 +973,17 @@ class Text(_String):
         return bool(value) and ustr(value)
 
 
+class Serialized(_String):
+    """ Serialized field, list will be returned. """
+    type = 'serialized'
+ 
+    def convert_to_cache(self, value, env, validate=True):
+        if value:
+            return value
+        else:
+            return []
+
+
 class Html(_String):
     """ Html field. """
     type = 'html'
