@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Management Solution#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,25 +17,30 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pprint
-import urllib2
 import werkzeug
-import werkzeug.urls
-import werkzeug.wrappers
-import simplejson
+from urlparse import urlparse
 
-from openerp import tools
 from openerp import SUPERUSER_ID
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models.website import slug
 
 
 class main(http.Controller):
     _slides_per_page = 8
     _slides_per_list = 20
 
+    def _slides_urldata(self):
+        urldata = urlparse(request.httprequest.url)
+        # print ">>>>>>>>",urldata
+        values = {}
+        values.update({
+            'urlscheme':urldata.scheme+'://',
+            'urlhost':urldata.netloc,
+            'urlpath':urldata.path,
+            'urlquery':urldata.query,
+        })
+        return values
 
     def _slides_message(self, user, attachment_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -146,6 +150,10 @@ class main(http.Controller):
 
         # get comments 
         comments = slideview.website_message_ids
+        
+        # get share url
+        urldata = self._slides_urldata()
+        shareurl = urldata['urlscheme']+urldata['urlhost']+urldata['urlpath']
 
         values = {}
         values.update({
@@ -153,12 +161,13 @@ class main(http.Controller):
             'most_viewed_ids':most_viewed_ids,
             'related_ids': related_ids,
             'comments': comments,
+            'shareurl':shareurl,
         })
         return request.website.render('website_slides.slide_view', values)
 
 
     @http.route('/slides/comment/<model("ir.attachment"):slideview>', type='http', auth="public", methods=['POST'], website=True)
-    def blog_post_comment(self, slideview, **post):
+    def slides_comment(self, slideview, **post):
         cr, uid, context = request.cr, request.uid, request.context
         attachment = request.registry['ir.attachment']
         if post.get('comment'):
