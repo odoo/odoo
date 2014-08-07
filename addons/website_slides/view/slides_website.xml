@@ -220,7 +220,19 @@
                             <p t-field="slideview.description"></p>
                         </div>
                         <div class="tab-pane fade" id="share">
-                            share
+                            <div class="oe_share">
+					            <h3>					                
+					                <a target="_Blank" class="oe_share_facebook" t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{shareurl}"><i class="fa fa-facebook-square"></i></a>
+					                <a target="_Blank" class="oe_share_twitter" t-attf-href="https://twitter.com/intent/tweet?text={title}&amp;url=#{shareurl}"><i class="fa fa-twitter"></i></a>
+					                <a target="_Blank" class="oe_share_linkedin" t-attf-href="http://www.linkedin.com/shareArticle?mini=true&amp;url=#{shareurl}&amp;title={title}&amp;"><i class="fa fa-linkedin"></i></a>
+					                <a target="_Blank" class="oe_share_google" t-attf-href="https://plus.google.com/share?url=#{shareurl}"><i class="fa fa-google-plus-square"></i></a>
+					                <a t-attf-href="mailto:?body=#{shareurl}&amp;subject={title}"><i class="fa fa-envelope-o"></i></a>
+					            </h3>
+					        </div>
+					        <div class="input-group">
+							  <span class="input-group-addon"><span class="glyphicon glyphicon-share"></span></span>
+							  <input type="text" class="form-control" t-att-value="shareurl"/>
+							</div>
                         </div>
                         <div class="tab-pane fade" id="discuss">
                         	<section id="comments" class="read_width">
