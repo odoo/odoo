@@ -19,7 +19,9 @@
 ##############################################################################
 import werkzeug
 from urlparse import urlparse
+import simplejson
 
+from openerp import tools
 from openerp import SUPERUSER_ID
 
 from openerp.addons.web import http

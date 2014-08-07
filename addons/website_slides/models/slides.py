@@ -94,7 +94,7 @@ class ir_attachment(osv.osv):
 
     def create(self, cr, uid, values, context=None):
         if values.get('is_slide', False) and values.get('datas_fname', False):
-            values['url'] = "/slides/" + values['datas_fname']
+            values['url'] = "/website_slides/" + values['datas_fname']
         if values.get('slide_type') == 'video' and values.get('url'):
             values["youtube_id"] = self.extract_youtube_id(values['url'])
             statistics = self.youtube_statistics(values["youtube_id"])

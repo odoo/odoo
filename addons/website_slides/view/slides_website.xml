@@ -219,55 +219,49 @@
                         <div class="tab-pane fade in active" id="about">
                             <p t-field="slideview.description"></p>
                         </div>
-                        <div class="tab-pane fade" id="share">
-                            <div class="oe_share">
-					            <h3>					                
-					                <a target="_Blank" class="oe_share_facebook" t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{shareurl}"><i class="fa fa-facebook-square"></i></a>
-					                <a target="_Blank" class="oe_share_twitter" t-attf-href="https://twitter.com/intent/tweet?text={title}&amp;url=#{shareurl}"><i class="fa fa-twitter"></i></a>
-					                <a target="_Blank" class="oe_share_linkedin" t-attf-href="http://www.linkedin.com/shareArticle?mini=true&amp;url=#{shareurl}&amp;title={title}&amp;"><i class="fa fa-linkedin"></i></a>
-					                <a target="_Blank" class="oe_share_google" t-attf-href="https://plus.google.com/share?url=#{shareurl}"><i class="fa fa-google-plus-square"></i></a>
-					                <a t-attf-href="mailto:?body=#{shareurl}&amp;subject={title}"><i class="fa fa-envelope-o"></i></a>
-					            </h3>
-					        </div>
+                        <div class="tab-pane fade" id="share">                            
+				            <h3>					                
+				                <a target="_Blank" class="oe_share_facebook" t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{shareurl}"><i class="fa fa-facebook-square"></i></a>
+				                <a target="_Blank" class="oe_share_twitter" t-attf-href="https://twitter.com/intent/tweet?text={title}&amp;url=#{shareurl}"><i class="fa fa-twitter"></i></a>
+				                <a target="_Blank" class="oe_share_linkedin" t-attf-href="http://www.linkedin.com/shareArticle?mini=true&amp;url=#{shareurl}&amp;title={title}&amp;"><i class="fa fa-linkedin"></i></a>
+				                <a target="_Blank" class="oe_share_google" t-attf-href="https://plus.google.com/share?url=#{shareurl}"><i class="fa fa-google-plus-square"></i></a>
+				                <a t-attf-href="mailto:?body=#{shareurl}&amp;subject={title}"><i class="fa fa-envelope-o"></i></a>
+				            </h3>					        
 					        <div class="input-group">
 							  <span class="input-group-addon"><span class="glyphicon glyphicon-share"></span></span>
 							  <input type="text" class="form-control" t-att-value="shareurl"/>
 							</div>
                         </div>
-                        <div class="tab-pane fade" id="discuss">
-                        	<section id="comments" class="read_width">
-                        		<section class="mb32 read_width css_editable_mode_hidden">
-						            <form id="comment" t-attf-action="/slides/comment/#{slideview.id}" method="POST">
-						                <div class="media">
-						                    <span class="pull-left">
-						                        <img class="img img-circle media-object" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 30px"/>
-						                    </span>
-						                    <div class="media-body">
-						                        <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-						                        <button type="submit" class="btn btn-primary mt8">Post</button>
-						                    </div>
-						                </div>
-						            </form>
-						        </section>						        
-						        <ul class="media-list" id="comments-list">
-						            <li t-foreach="comments" t-as="message" class="media">
-						                <span class="pull-left">
-						                    <img class="media-object img img-circle" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width: 30px"/>
-						                </span>
-						                <div class="media-body">
-						                    <t t-call="website.publish_short">
-						                        <t t-set="object" t-value="message"/>
-						                    </t>						                    
-						                    <span t-field="message.author_id" style="display: inline-block;" t-field-options='{
-						                            "widget": "contact",
-						                            "fields": ["name"]
-						                        }'/>
-						                    <span class="text-muted">on <span t-field="message.date"/></span>
-						                    <div t-field="message.body" class="discussion_scroll_post"/>
-						                </div>
-						            </li>
-						        </ul>
-						    </section>
+                        <div class="tab-pane fade" id="discuss">                       	
+				            <form id="comment" t-attf-action="/slides/comment/#{slideview.id}" method="POST">
+				                <div class="media">
+				                    <span class="pull-left">
+				                        <img class="img img-circle media-object" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 30px"/>
+				                    </span>
+				                    <div class="media-body">
+				                        <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
+				                        <button type="submit" class="btn btn-primary mt8">Post</button>
+				                    </div>
+				                </div>
+				            </form>						        					      
+					        <ul class="media-list">
+					            <li t-foreach="comments" t-as="message" class="media">
+					                <span class="pull-left">
+					                    <img class="media-object img img-circle" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width: 30px"/>
+					                </span>
+					                <div class="media-body">
+					                    <t t-call="website.publish_short">
+					                        <t t-set="object" t-value="message"/>
+					                    </t>						                    
+					                    <span t-field="message.author_id" style="display: inline-block;" t-field-options='{
+					                            "widget": "contact",
+					                            "fields": ["name"]
+					                        }'/>
+					                    <span class="text-muted">on <span t-field="message.date"/></span>
+					                    <div t-field="message.body" class="discussion_scroll_post"/>
+					                </div>
+					            </li>
+					        </ul>						    
                         </div>
                         <div class="tab-pane fade" id="transscript">
                             <p t-field="slideview.index_content"></p>
