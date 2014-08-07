@@ -288,6 +288,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).done(function(records) {
                 var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
+                if (!_.isEmpty(self.dataset.ids) && (self.dataset.index === null || self.dataset.index >= self.dataset.ids.length)) {
+                    self.dataset.index = 0;
+                }
                 self.do_add_groups([kgroup]).done(function() {
                     if (_.isEmpty(records)) {
                         self.no_result();
