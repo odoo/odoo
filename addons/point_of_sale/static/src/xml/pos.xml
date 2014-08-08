@@ -461,17 +461,17 @@
             <button class="input-button number-char" data-action='1'>1</button>
             <button class="input-button number-char" data-action='2'>2</button>
             <button class="input-button number-char" data-action='3'>3</button>
-            <button class="mode-button" data-action='+5'>+5</button>
+            <button class="mode-button" data-action='+10'>+10</button>
             <br />
             <button class="input-button number-char" data-action='4'>4</button>
             <button class="input-button number-char" data-action='5'>5</button>
             <button class="input-button number-char" data-action='6'>6</button>
-            <button class="mode-button" data-action='+10'>+10</button>
+            <button class="mode-button" data-action='+20'>+20</button>
             <br />
             <button class="input-button number-char" data-action='7'>7</button>
             <button class="input-button number-char" data-action='8'>8</button>
             <button class="input-button number-char" data-action='9'>9</button>
-            <button class="mode-button" data-action='+20'>+20</button>
+            <button class="mode-button" data-action='+50'>+50</button>
             <br />
             <button class="input-button numpad-char" data-action='CLEAR' >C</button>
             <button class="input-button number-char" data-action='0'>0</button>
@@ -518,6 +518,9 @@
                     <section class='paymentlines-container'>
                     </section>
 
+                    <section class='payment-numpad'>
+                    </section>
+
                     <div class='payment-buttons'>
                         <t t-if='widget.pos.config.iface_invoicing'>
                             <div class='button js_invoice'>
@@ -531,8 +534,6 @@
                         </t>
                     </div>
 
-                    <section class='payment-numpad'>
-                    </section>
 
                 </div>
             </div>

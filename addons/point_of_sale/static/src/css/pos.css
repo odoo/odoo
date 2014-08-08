@@ -933,7 +933,7 @@ td {
     border-right: dashed 1px rgb(215,215,215);
 }
 .screen .left-content.pc40{
-    right: 60%;
+    right: 66%;
 }
 .screen .right-content{
     position: absolute;
@@ -943,7 +943,7 @@ td {
     overflow-y: auto;
 }
 .screen .right-content.pc60{
-    left:40%
+    left:34%
 }
 .screen .centered-content{
     position: absolute;
@@ -996,17 +996,22 @@ td {
 
 .pos .payment-numpad {
     display: inline-block;
-    width: 232px;
-    margin-top: 8px;
-    margin-right: 8px;
-    float: right;
+    width: 50%;
+    box-sizing: border-box;
+    padding: 8px;
+    text-align: center;
+    float: left;
+}
+.pos .payment-numpad .numpad button {
+    width: 66px;
+    height: 66px;
 }
 
 .pos .paymentlines-container {
     padding: 16px;
     padding-top: 0;
     border-bottom: dashed 1px gainsboro;
-    min-height: 148px;
+    min-height: 154px;
 }
 
 .pos .paymentlines {
@@ -1041,12 +1046,12 @@ td {
 }
 
 .pos .paymentline > *{
-    padding: 8px;
+    padding: 8px 12px;
 }
 .pos .paymentline .col-due,
 .pos .paymentline .col-tendered,
 .pos .paymentline .col-change {
-    min-width: 80px;
+    min-width: 90px;
 }
 .pos .paymentline .col-change.highlight {
     background: rgb(184, 152, 204);
@@ -1060,10 +1065,10 @@ td {
 }
 .pos .payment-buttons {
     display: inline-block;
-    width: 300px;
-    margin: 16px;
-    margin-right: 0px;
-    float: left;
+    width: 50%;
+    box-sizing: border-box;
+    padding: 16px;
+    float: right;
 }
 
 .payment-screen   .payment-buttons .button {
@@ -1091,11 +1096,13 @@ td {
 /* c) The receipt screen */
 
 .pos .receipt-screen .centered-content .button {
-    line-height: 32px;
+    line-height: 40px;
     padding: 3px 13px;
     font-size: 20px;
+    text-align: center;
     background: rgb(230, 230, 230);
-    margin: 12px;
+    margin: 16px;
+    margin-bottom: 0px;
     border-radius: 3px;
     border: solid 1px rgb(209, 209, 209);
     cursor: pointer;
