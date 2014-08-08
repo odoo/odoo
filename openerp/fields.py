@@ -268,7 +268,7 @@ class Field(object):
     relational = False          # whether the field is a relational one
     model_name = None           # name of the model of this field
     comodel_name = None         # name of the model of values (if relational)
-    inverse_field = None        # inverse field (object), if it exists
+    inverse_fields = None       # list of inverse fields (objects)
 
     store = True                # whether the field is stored in database
     index = False               # whether the field is indexed in database
@@ -360,7 +360,7 @@ class Field(object):
         # invalidates the cache of each `field`, and registers the records to
         # recompute based on `path`. See method `modified` below for details.
         self._triggers = set()
-        self.inverse_field = None
+        self.inverse_fields = []
 
     def setup(self, env):
         """ Complete the setup of `self` (dependencies, recomputation triggers,
@@ -509,10 +509,10 @@ class Field(object):
             #_logger.debug("Add trigger on %s to recompute %s", field, self)
             field._triggers.add((self, '.'.join(path0 or ['id'])))
 
-            # add trigger on inverse field, too
-            if field.inverse_field:
-                #_logger.debug("Add trigger on %s to recompute %s", field.inverse_field, self)
-                field.inverse_field._triggers.add((self, '.'.join(path0 + [head])))
+            # add trigger on inverse fields, too
+            for invf in field.inverse_fields:
+                #_logger.debug("Add trigger on %s to recompute %s", invf, self)
+                invf._triggers.add((self, '.'.join(path0 + [head])))
 
             # recursively traverse the dependency
             if tail:
@@ -725,8 +725,8 @@ class Field(object):
             # set value in cache, inverse field, and mark record as dirty
             record._cache[self] = value
             if env.in_onchange:
-                if self.inverse_field:
-                    self.inverse_field._update(value, record)
+                for invf in self.inverse_fields:
+                    invf._update(value, record)
                 record._dirty = True
 
             # determine more dependent fields, and invalidate them
@@ -1294,12 +1294,12 @@ class _Relational(Field):
         return env[self.comodel_name]
 
     def modified(self, records):
-        # Invalidate cache for self.inverse_field, too. Note that recomputation
-        # of fields that depend on self.inverse_field is already covered by the
+        # Invalidate cache for self.inverse_fields, too. Note that recomputation
+        # of fields that depend on self.inverse_fields is already covered by the
         # triggers (see above).
         spec = super(_Relational, self).modified(records)
-        if self.inverse_field:
-            spec.append((self.inverse_field, None))
+        for invf in self.inverse_fields:
+            spec.append((invf, None))
         return spec
 
 
@@ -1338,7 +1338,7 @@ class Many2one(_Relational):
     def _setup_regular(self, env):
         super(Many2one, self)._setup_regular(env)
 
-        # self.inverse_field is determined by the corresponding One2many field
+        # self.inverse_fields is populated by the corresponding One2many field
 
         # determine self.delegate
         self.delegate = self.name in env[self.model_name]._inherits.values()
@@ -1455,10 +1455,10 @@ class _RelationalMulti(_Relational):
             add_existing = lambda id: result.append((4, id))
 
         if fnames is None:
-            # take all fields in cache, except the inverse of self
+            # take all fields in cache, except the inverses of self
             fnames = set(value._fields) - set(MAGIC_COLUMNS)
-            if self.inverse_field:
-                fnames.discard(self.inverse_field.name)
+            for invf in self.inverse_fields:
+                fnames.discard(invf.name)
 
         # add new and existing records
         for record in value:
@@ -1525,8 +1525,8 @@ class One2many(_RelationalMulti):
         if self.inverse_name:
             # link self to its inverse field and vice-versa
             invf = env[self.comodel_name]._fields[self.inverse_name]
-            self.inverse_field = invf
-            invf.inverse_field = self
+            self.inverse_fields.append(invf)
+            invf.inverse_fields.append(self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
@@ -1596,8 +1596,8 @@ class Many2many(_RelationalMulti):
             # if inverse field has already been setup, it is present in m2m
             invf = m2m.get((self.relation, self.column2, self.column1))
             if invf:
-                self.inverse_field = invf
-                invf.inverse_field = self
+                self.inverse_fields.append(invf)
+                invf.inverse_fields.append(self)
             else:
                 # add self in m2m, so that its inverse field can find it
                 m2m[(self.relation, self.column1, self.column2)] = self
