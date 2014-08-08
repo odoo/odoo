@@ -1,126 +1,6 @@
 (function () {
     'use strict';
 
-/*  Building block / Snippet Editor
- 
-    The building blocks appear in the edit bar website. These prebuilt html block
-    allowing the designer to easily generate content on a page (drag and drop).
-    Options allow snippets to add customizations part html code according to their
-    selector (jQuery) and javascript object.
-    
-    How to create content?
-
-    Designers can add their own html block in the "snippets" (/website/views/snippets.xml).
-    The block must be added in one of four menus (structure, content, feature or effect).
-    Structure:
-        <div>
-            <div class="oe_snippet_thumbnail">
-                <img class="oe_snippet_thumbnail_img" src="...image src..."/>
-                <span class="oe_snippet_thumbnail_title">...Block Name...</span>
-            </div>
-            <div class="oe_snippet_body">
-                ...
-                <!-- 
-                    The block with class 'oe_snippet_body' is inserted in the page.
-                    This class is removed when the block is dropped.
-                    The block can be made of any html tag and content. -->
-            </div>
-        </div>
-
-    How to create options?
-
-    Designers can add their own html block in the "snippet_options" (/website/views/snippets.xml).
-    Structure:
-
-        <div data-snippet-id='...'           <!-- Required: javascript object id (but javascript
-                                                        for this option object is not required) -->
-            data-selector="..."                     <!-- Required: jQuery selector.
-                                                        Apply options on all The part of html who 
-                                                        match with this jQuery selector.
-                                                        E.g.: If the selector is div, all div will be selected
-                                                        and can be highlighted and assigned an editor.  -->
-            data-selector-siblings="..."            <!-- Optional: jQuery selector.
-                                                        The html part can be insert or move beside
-                                                        the selected html block -->
-            data-selector-children="..."            <!-- Optional: jQuery selector.
-                                                        The html part can be insert or move inside
-                                                        the selected html block -->
-            data-selector-vertical-children='...'>  <!-- Optional: jQuery selector.
-                                                        The html part can be insert or move inside
-                                                        the selected html block. The drop zone is
-                                                        displayed vertically -->
-                ...
-                <li><a href="#">...</a></li>        <!-- Optional: html li list.
-                                                        List of menu items displayed in customize
-                                                        menu. If the li tag have 'data-class', the
-                                                        class is automaticcally added or removed to
-                                                        the html content when the user select this item. -->
-                ...
-                <li class="dropdown-submenu">                <!-- Optional: html li list exemple. !-->
-                    <a tabindex="-1" href="#">...</a>       <!-- bootstrap dropdown button !-->
-                    <ul class="dropdown-menu">
-                        <li data-your_js_method="your_value"><a>...</a></li>
-                    </ul>
-                </li>
-        </div>
-
-        How to create a javascript object for an options?
-
-        openerp.website.snippet.options["...option-id..."] = website.snippet.Option.extend({
-            // start is called when the user click into a block or when the user drop a block 
-            // into the page (just after the init method).
-            // start is usually used to bind event.
-            //
-            // this.$target: block html inserted inside the page
-            // this.$el: html li list of this options
-            // this.$overlay: html editor overlay who content resize bar, customize menu...
-            start: function () {},
-
-
-            // onFocus is called when the user click inside the block inserted in page
-            // and when the user drop on block into the page
-            onFocus : function () {},
-
-
-            // onBlur is called when the user click outside the block inserted in page, if
-            // the block is focused
-            onBlur : function () {},
-
-
-            // on_clone is called when the snippet is duplicate
-            // @variables: $clone is allready inserted is the page
-            on_clone: function ($clone) {},
-
-
-            // on_remove is called when the snippet is removed (dom is removing after this tigger)
-            on_remove: function () {},
-
-
-            // drop_and_build_snippet is called just after that a thumbnail is drag and dropped
-            // into a drop zone. The content is already inserted in the page.
-            drop_and_build_snippet: function () {},
-
-            // select is called when a user select an item in the li list of options
-            // By default, if the li item have a data-value attribute, the data-vlue it's apply
-            // like a class to the html block (this.$target)
-            // @variables: next_previous = {$next, $prev}
-            //      $next = next item selected or false
-            //      $prev = previous item selected or false
-            select: function (event, next, previous) {}
-
-            // clean_for_save
-            // clean_for_save is called just before to save the vue
-            // Sometime it's important to remove or add some datas (contentEditable, added 
-            // classes to a running animation...)
-            clean_for_save: function () {}
-        });
-
-
-    // 'snippet-dropped' is triggered on '#oe_snippets' whith $target as attribute when a snippet is dropped
-    // 'snippet-activated' is triggered on '#oe_snippets' (and on snippet) when a snippet is activated
-
-*/
-
     var dummy = function () {};
 
     var website = openerp.website;
@@ -263,9 +143,9 @@
                         if ($snippet.is(option.base_selector)) {
 
                             var dropzone = [];
-                            if (option['selector-siblings']) dropzone.push(option['selector-siblings']);
-                            if (option['selector-children']) dropzone.push(option['selector-children']);
-                            if (option['selector-vertical-children']) dropzone.push(option['selector-vertical-children']);
+                            if (option['drop-near']) dropzone.push(option['drop-near']);
+                            if (option['drop-in']) dropzone.push(option['drop-in']);
+                            if (option['drop-in-vertical']) dropzone.push(option['drop-in-vertical']);
                             selectors = selectors.concat(dropzone);
                         }
                     }
@@ -309,9 +189,9 @@
                             'base_selector': $style.data('selector'),
                             'selector': self._add_check_selector($style.data('selector')),
                             '$el': $style,
-                            'selector-siblings': $style.data('selector-siblings') && self._add_check_selector($style.data('selector-siblings')),
-                            'selector-children': $style.data('selector-children') && self._add_check_selector($style.data('selector-children')),
-                            'selector-vertical-children': $style.data('selector-vertical-children') && self._add_check_selector($style.data('selector-vertical-children')),
+                            'drop-near': $style.data('drop-near') && self._add_check_selector($style.data('drop-near')),
+                            'drop-in': $style.data('drop-in') && self._add_check_selector($style.data('drop-in')),
+                            'drop-in-vertical': $style.data('drop-in-vertical') && self._add_check_selector($style.data('drop-in-vertical')),
                             'data': $style.data()
                         };
                         website.snippet.templateOptions.push(option);
@@ -376,14 +256,14 @@
         snippet_blur: function ($snippet) {
             if ($snippet) {
                 if ($snippet.data("snippet-editor")) {
-                    $snippet.data("snippet-editor").onBlur();
+                    $snippet.data("snippet-editor").on_blur();
                 }
             }
         },
         snippet_focus: function ($snippet) {
             if ($snippet) {
                 if ($snippet.data("snippet-editor")) {
-                    $snippet.data("snippet-editor").onFocus();
+                    $snippet.data("snippet-editor").on_focus();
                 }
             }
         },
@@ -456,7 +336,7 @@
                 start: function(){
                     self.hide();
                     dropped = false;
-                    // snippet_selectors => to get selector-siblings, selector-children, selector-vertical-children
+                    // snippet_selectors => to get drop-near, drop-in, drop-in-vertical
                     $snippet = $(this);
                     var $base_body = $snippet.find('.oe_snippet_body');
                     var selector = [];
@@ -466,12 +346,12 @@
                     for (var k in website.snippet.templateOptions) {
                         if ($base_body.is(website.snippet.templateOptions[k].base_selector)) {
                             selector.push(website.snippet.templateOptions[k].base_selector);
-                            if (website.snippet.templateOptions[k]['selector-siblings'])
-                                selector_siblings.push(website.snippet.templateOptions[k]['selector-siblings']);
-                            if (website.snippet.templateOptions[k]['selector-children'])
-                                selector_children.push(website.snippet.templateOptions[k]['selector-children']);
-                            if (website.snippet.templateOptions[k]['selector-vertical-children'])
-                                selector_vertical_children.push(website.snippet.templateOptions[k]['selector-vertical-children']);
+                            if (website.snippet.templateOptions[k]['drop-near'])
+                                selector_siblings.push(website.snippet.templateOptions[k]['drop-near']);
+                            if (website.snippet.templateOptions[k]['drop-in'])
+                                selector_children.push(website.snippet.templateOptions[k]['drop-in']);
+                            if (website.snippet.templateOptions[k]['drop-in-vertical'])
+                                selector_vertical_children.push(website.snippet.templateOptions[k]['drop-in-vertical']);
                         }
                     }
 
@@ -481,7 +361,7 @@
                     if( action === 'insert'){
                         if (!selector_siblings.length && !selector_children.length && !selector_vertical_children.length) {
                             console.debug($snippet.find(".oe_snippet_thumbnail_title").text() + " have not insert action: "+
-                                "data-selector-siblings, data-selector-children or data-selector-vertical-children");
+                                "data-drop-near, data-drop-in or data-drop-in-vertical");
                             return;
                         }
                         self.activate_insertion_zones({
@@ -816,11 +696,11 @@
         start: function () {
         },
 
-        onFocus : function () {
+        on_focus : function () {
             this._bind_li_menu();
         },
 
-        onBlur : function () {
+        on_blur : function () {
         },
 
         on_clone: function ($clone) {
@@ -1297,7 +1177,7 @@
             return this.grid;
         },
 
-        onFocus : function () {
+        on_focus : function () {
             this._super();
             this.change_cursor();
         },
@@ -1397,7 +1277,7 @@
         hide_remove_button: function() {
             this.$overlay.find('.oe_snippet_remove').toggleClass("hidden", !this.$target.siblings().length);
         },
-        onFocus : function () {
+        on_focus : function () {
             this._super();
             this.hide_remove_button();
         },
@@ -1539,10 +1419,10 @@
                 })
                 .mouseover();
         },
-        onFocus : function () {
+        on_focus : function () {
             this.resetTransfo();
         },
-        onBlur : function () {
+        on_blur : function () {
             this.$target.transfo("hide");
         },
     });
@@ -1555,7 +1435,7 @@
             website.snippet.start_animation(true, this.$target);
 
             $(document.body).on("media-saved", self, function (event, prev , item) {
-                self.editor.onBlur();
+                self.editor.on_blur();
                 self.BuildingBlock.make_active(false);
                 if (self.$target.parent().data("oe-field") !== "image") {
                     self.BuildingBlock.make_active($(item));
@@ -1569,7 +1449,7 @@
                 new website.editor.MediaDialog(self, self.element).appendTo(document.body);
             });
         },
-        onFocus : function () {
+        on_focus : function () {
             var self = this;
             if (this.$target.parent().data("oe-field") === "image") {
                 this.$overlay.addClass("hidden");
@@ -1586,31 +1466,10 @@
             this.$target = $(dom);
             this.$overlay = this.$target.data('overlay');
             this.snippet_id = this.$target.data("snippet-id");
-            this._readXMLData();
             this.load_style_options();
             this.get_parent_block();
             this.start();
         },
-
-        /*
-        *  _readXMLData
-        *  Read data XML and set value into:
-        *  this.$el :
-        *       all xml data
-        *  this.$overlay :
-        *       Dom hover the $target who content options
-        */
-        _readXMLData: function() {
-            var self = this;
-            if(this && this.BuildingBlock && this.BuildingBlock.$snippets) {
-                this.$el = this.BuildingBlock.$snippets.filter(function () { return $(this).data("snippet-id") == self.snippet_id; }).clone();
-            }
-            var $options = this.$overlay.find(".oe_overlay_options");
-            if ($options.find(".oe_options ul li").length) {
-                $options.find(".oe_options").removeClass("hidden");
-            }
-        },
-
 
         // activate drag and drop for the snippets in the snippet toolbar
         _drag_and_drop: function(){
@@ -1701,9 +1560,9 @@
                 if (!self.$target.is(val.selector)) {
                     return;
                 }
-                if (val['selector-siblings']) self.selector_siblings.push(val['selector-siblings']);
-                if (val['selector-children']) self.selector_children.push(val['selector-children']);
-                if (val['selector-vertical-children']) self.selector_vertical_children.push(val['selector-vertical-children']);
+                if (val['drop-near']) self.selector_siblings.push(val['drop-near']);
+                if (val['drop-in']) self.selector_children.push(val['drop-in']);
+                if (val['drop-in-vertical']) self.selector_vertical_children.push(val['drop-in-vertical']);
 
                 var style = val['snippet-id'];
                 var Editor = website.snippet.options[style] || website.snippet.Option;
@@ -1769,7 +1628,7 @@
         },
 
         on_remove: function () {
-            this.onBlur();
+            this.on_blur();
             var index = _.indexOf(this.BuildingBlock.snippets, this.$target.get(0));
             for (var i in this.styles){
                 this.styles[i].on_remove();
@@ -1791,22 +1650,22 @@
             }
         },
 
-        /* onFocus
+        /* on_focus
         *  This method is called when the user click inside the snippet in the dom
         */
-        onFocus : function () {
+        on_focus : function () {
             this.$overlay.addClass('oe_active');
             for (var i in this.styles){
-                this.styles[i].onFocus();
+                this.styles[i].on_focus();
             }
         },
 
-        /* onFocus
+        /* on_focus
         *  This method is called when the user click outside the snippet in the dom, after a focus
         */
-        onBlur : function () {
+        on_blur : function () {
             for (var i in this.styles){
-                this.styles[i].onBlur();
+                this.styles[i].on_blur();
             }
             this.$overlay.removeClass('oe_active');
         },
