@@ -351,9 +351,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             $('body').append('<audio src="/point_of_sale/static/src/sounds/error.wav" autoplay="true"></audio>');
 
-            if( text && (text.message || text.comment) ){
-                this.$('.message').text(text.message);
-                this.$('.comment').text(text.comment);
+            if( text ) {
+                if ( text.message || text.comment ) {
+                    this.$('.message').text(text.message);
+                    this.$('.comment').text(text.comment);
+                } else {
+                    this.$('.message').text(_t('Error'));
+                    this.$('.comment').html(text);
+                }
             }
 
             this.pos.barcode_reader.save_callbacks();
