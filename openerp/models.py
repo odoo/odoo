@@ -1292,17 +1292,21 @@ class BaseModel(object):
         # trigger view init hook
         self.view_init(cr, uid, fields_list, context)
 
-        # use a new record to determine default values
+        # use a new record to determine default values; evaluate fields on the
+        # new record and put default values in result
         record = self.new(cr, uid, {}, context=context)
+        result = {}
         for name in fields_list:
             if name in self._fields:
-                record[name]            # force evaluation of defaults
+                value = record[name]
+                if name in record._cache:
+                    result[name] = value        # it really is a default value
 
-        # retrieve defaults from record's cache
-        result = self._convert_to_write(record._cache)
+        # convert default values to the expected format
+        result = self._convert_to_write(result)
         for key, val in result.items():
             if isinstance(val, NewId):
-                del result[key]         # ignore new records in defaults
+                del result[key]                 # ignore new records in defaults
 
         return result
 
@@ -5656,10 +5660,12 @@ class RecordCache(MutableMapping):
         self._recs = records
 
     def __contains__(self, field):
-        """ Return whether `records[0]` has a value for `field` in cache. """
+        """ Return whether `records[0]` has a regular value for `field` in cache. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
-        return self._recs.id in self._recs.env.cache[field]
+        dummy = SpecialValue(None)
+        value = self._recs.env.cache[field].get(self._recs.id, dummy)
+        return not isinstance(value, SpecialValue)
 
     def __getitem__(self, field):
         """ Return the cached value of `field` for `records[0]`. """
