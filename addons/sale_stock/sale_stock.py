@@ -202,6 +202,17 @@ class sale_order(osv.osv):
         return False
 
 
+class product_product(osv.osv):
+    _inherit = 'product.product'
+    
+    def need_procurement(self, cr, uid, ids, context=None):
+        #when sale is installed alone, there is no need to create procurements, but with sale_stock
+        #we must create a procurement for each product that is not a service.
+        for product in self.browse(cr, uid, ids, context=context):
+            if product.type != 'service':
+                return True
+        return super(product_product, self).need_procurement(cr, uid, ids, context=context)
+
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
 

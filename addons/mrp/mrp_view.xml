@@ -347,9 +347,8 @@
                 <form string="Bill of Material">
                     <group>
                         <group>
-                            <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
-                            <field name="product_id"/>
-                            <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_tmpl_id, product_uom)" groups="product.group_uom"/>
+                            <field name="product_tmpl_id" domain="[('type', '!=', 'service')]" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
+                            <field name="product_id" domain="[('type', '!=', 'service')]"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
                                 <field name="product_qty" class="oe_inline" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
@@ -685,7 +684,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom')]" class="oe_inline" context='{"default_type": "product"}'/>
+                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom'),('type','!=','service')]" class="oe_inline" context='{"default_type": "product"}'/>
                             <label for="product_qty"/>
                             <div>
                                 <field name="product_qty" class="oe_inline" on_change="product_id_change(product_id, product_qty)"/>

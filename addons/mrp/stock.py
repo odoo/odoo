@@ -65,6 +65,8 @@ class StockMove(osv.osv):
         """
         bom_obj = self.pool.get('mrp.bom')
         move_obj = self.pool.get('stock.move')
+        prod_obj = self.pool.get("product.product")
+        proc_obj = self.pool.get("procurement.order")
         to_explode_again_ids = []
         processed_ids = []
         bis = self._check_phantom_bom(cr, uid, move, context=context)
@@ -72,24 +74,44 @@ class StockMove(osv.osv):
             factor = move.product_qty
             bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis[0], context=context)
             res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [])
+            
             state = 'confirmed'
             if move.state == 'assigned':
                 state = 'assigned'
             for line in res[0]:
-                valdef = {
-                    'picking_id': move.picking_id.id if move.picking_id else False,
-                    'product_id': line['product_id'],
-                    'product_uom': line['product_uom'],
-                    'product_uom_qty': line['product_qty'],
-                    'product_uos': line['product_uos'],
-                    'product_uos_qty': line['product_uos_qty'],
-                    'state': state,
-                    'name': line['name'],
-                    'procurement_id': move.procurement_id.id,
-                    'split_from': move.id, #Needed in order to keep purchase connection, but will be removed by unlink
-                }
-                mid = move_obj.copy(cr, uid, move.id, default=valdef)
-                to_explode_again_ids.append(mid)
+                product = prod_obj.browse(cr, uid, line['product_id'], context=context)
+                if product.type != 'service':
+                    valdef = {
+                        'picking_id': move.picking_id.id if move.picking_id else False,
+                        'product_id': line['product_id'],
+                        'product_uom': line['product_uom'],
+                        'product_uom_qty': line['product_qty'],
+                        'product_uos': line['product_uos'],
+                        'product_uos_qty': line['product_uos_qty'],
+                        'state': state,
+                        'name': line['name'],
+                        'procurement_id': move.procurement_id.id,
+                        'split_from': move.id, #Needed in order to keep purchase connection, but will be removed by unlink
+                    }
+                    mid = move_obj.copy(cr, uid, move.id, default=valdef)
+                    to_explode_again_ids.append(mid)
+                else:
+                    if prod_obj.need_procurement(cr, uid, [product.id], context=context):
+                        vals = {
+                            'name': move.rule_id and move.rule_id.name or "/",
+                            'origin': move.origin,
+                            'company_id': move.company_id and move.company_id.id or False,
+                            'date_planned': move.date,
+                            'product_id': line['product_id'],
+                            'product_qty': line['product_qty'],
+                            'product_uom': line['product_uom'],
+                            'product_uos_qty': line['product_uos_qty'],
+                            'product_uos': line['product_uos'],
+                            'group_id': move.group_id.id,
+                            'priority': move.priority,
+                            }
+                        proc = proc_obj.create(cr, uid, vals, context=context)
+                        proc_obj.run(cr, uid, [proc], context=context)
 
             #delete the move with original product which is not relevant anymore
             move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)

@@ -1115,6 +1115,26 @@ class mrp_production(osv.osv):
     def _make_production_consume_line(self, cr, uid, line, context=None):
         return self._make_consume_line_from_data(cr, uid, line.production_id, line.product_id, line.product_uom.id, line.product_qty, line.product_uos.id, line.product_uos_qty, context=context)
 
+
+    def _make_service_procurement(self, cr, uid, line, context=None):
+        prod_obj = self.pool.get('product.product')
+        if prod_obj.need_procurement(cr, uid, [line.product_id.id], context=context):
+            vals = {
+                'name': line.production_id.name,
+                'origin': line.production_id.name,
+                'company_id': line.production_id.company_id.id,
+                'date_planned': line.production_id.date_planned,
+                'product_id': line.product_id.id,
+                'product_qty': line.product_qty,
+                'product_uom': line.product_uom.id,
+                'product_uos_qty': line.product_uos_qty,
+                'product_uos': line.product_uos.id,
+                }
+            proc_obj = self.pool.get("procurement.order")
+            proc = proc_obj.create(cr, uid, vals, context=context)
+            proc_obj.run(cr, uid, [proc], context=context)
+
+
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms production order.
         @return: Newly generated Shipment Id.
@@ -1126,7 +1146,11 @@ class mrp_production(osv.osv):
 
             stock_moves = []
             for line in production.product_lines:
-                stock_move_id = self._make_production_consume_line(cr, uid, line, context=context)
+                if line.product_id.type != 'service':
+                    stock_move_id = self._make_production_consume_line(cr, uid, line, context=context)
+                else:
+                    self._make_service_procurement(cr, uid, line, context=context)
+                    stock_move_id = False
                 if stock_move_id:
                     stock_moves.append(stock_move_id)
             if stock_moves:
