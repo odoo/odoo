@@ -1208,7 +1208,7 @@ class account_voucher(osv.osv):
         voucher_currency = voucher.journal_id.currency or voucher.company_id.currency_id
         ctx.update({
             'voucher_special_currency_rate': voucher_currency.rate * voucher.payment_rate ,
-            'voucher_special_currency': voucher_currency and voucher.payment_rate_currency_id.id or False,})
+            'voucher_special_currency': voucher_currency or False,})
         prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         for line in voucher.line_ids:
             #create one move line per voucher line where amount is not 0.0
