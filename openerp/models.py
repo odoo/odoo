@@ -5215,8 +5215,9 @@ class BaseModel(object):
             # records, if that field depends on the main record.
             for name in values:
                 field = self._fields.get(name)
-                if field and field.inverse_field:
-                    field.inverse_field._update(record[name], record)
+                if field:
+                    for invf in field.inverse_fields:
+                        invf._update(record[name], record)
 
         return record
 
@@ -5414,7 +5415,7 @@ class BaseModel(object):
 
         # invalidate fields and inverse fields, too
         spec = [(f, ids) for f in fields] + \
-               [(f.inverse_field, None) for f in fields if f.inverse_field]
+               [(invf, None) for f in fields for invf in f.inverse_fields]
         self.env.invalidate(spec)
 
     @api.multi
