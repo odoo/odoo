@@ -290,6 +290,7 @@
         <tr class='client-line' t-att-data-id='partner.id'>
             <td><t t-esc='partner.name' /></td>
             <td><t t-esc='partner.address' /></td>
+            <td><t t-esc='partner.phone or partner.mobile or ""' /></td>
         </tr>
     </t>
 
@@ -369,6 +370,7 @@
                                             <tr>
                                                 <th>Name</th>
                                                 <th>Address</th>
+                                                <th>Phone</th>
                                             </tr>
                                         </thead>
                                         <tbody class='client-list-contents'>
