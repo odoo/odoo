@@ -26,11 +26,13 @@ import threading
 import psycopg2
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import pytz
 
 import netsvc
 import openerp
 import pooler
 import tools
+from openerp import SUPERUSER_ID
 from openerp.cron import WAKE_UP_NOW
 from osv import fields, osv
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -161,7 +163,8 @@ class ir_cron(osv.osv):
 
         """
         try:
-            nextcall = datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT)
+            now = fields.datetime.context_timestamp(cr, SUPERUSER_ID, now)
+            nextcall = fields.datetime.context_timestamp(cr, SUPERUSER_ID, datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
             numbercall = job['numbercall']
 
             ok = False
@@ -177,7 +180,7 @@ class ir_cron(osv.osv):
             if not numbercall:
                 addsql = ', active=False'
             cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
-                       (nextcall.strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
+                       (nextcall.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
 
             if numbercall:
                 # Reschedule our own main cron thread if necessary.
@@ -287,8 +290,8 @@ class ir_cron(osv.osv):
         :param job: job to be run (as a dictionary).
         """
         try:
-            now = datetime.now() 
-            nextcall = datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT)
+            now = fields.datetime.context_timestamp(cr, SUPERUSER_ID, datetime.now())
+            nextcall = fields.datetime.context_timestamp(cr, SUPERUSER_ID, datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
             numbercall = job['numbercall']
 
             ok = False
@@ -304,7 +307,7 @@ class ir_cron(osv.osv):
             if not numbercall:
                 addsql = ', active=False'
             cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
-                       (nextcall.strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
+                       (nextcall.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
 
         finally:
             cr.commit()
