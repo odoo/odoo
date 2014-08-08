@@ -2105,6 +2105,7 @@ class BaseModel(object):
             f for f in fields
             if f not in ('id', 'sequence')
             if f not in groupby_fields
+            if f in self._all_columns
             if self._all_columns[f].column._type in ('integer', 'float')
             if getattr(self._all_columns[f].column, '_classic_write')]
 
