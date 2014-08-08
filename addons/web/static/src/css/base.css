@@ -8,7 +8,6 @@
   font-weight: normal;
   font-style: normal;
 }
-
 @font-face {
   font-family: "EntypoRegular";
   src: url("/web/static/src/font/entypo-webfont.eot") format("eot");
@@ -19,7 +18,6 @@
   font-weight: normal;
   font-style: normal;
 }
-
 .openerp {
   padding: 0;
   margin: 0;
@@ -809,7 +807,7 @@
   background-image: -moz-linear-gradient(top, #fc8787, maroon);
   background-image: -ms-linear-gradient(top, #fc8787, maroon);
   background-image: -o-linear-gradient(top, #fc8787, maroon);
-  background-image: linear-gradient(to bottom, #fc8787, #800000);
+  background-image: linear-gradient(to bottom, #fc8787, maroon);
 }
 .openerp .navbar .oe_topbar_anonymous_login a {
   display: block;
@@ -1352,6 +1350,9 @@
 }
 .openerp .oe_view_manager_inline > .oe_view_manager_header, .openerp .oe_view_manager_inlineview > .oe_view_manager_header {
   display: none;
+}
+.openerp .oe_popup_form {
+  display: table;
 }
 .openerp .oe_popup_form .oe_formview .oe_form_pager {
   display: none !important;
@@ -3074,7 +3075,6 @@
     top: 0px;
   }
 }
-
 .kitten-mode-activated {
   background-size: cover;
   background-attachment: fixed;
