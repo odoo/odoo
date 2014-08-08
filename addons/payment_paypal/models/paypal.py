@@ -42,8 +42,8 @@ class AcquirerPaypal(osv.Model):
     _columns = {
         'paypal_email_account': fields.char('Paypal Email ID', required_if_provider='paypal'),
         'paypal_seller_account': fields.char(
-            'Paypal Seller ID',
-            help='The Seller ID is used to ensure communications coming from Paypal are valid and secured.'),
+            'Paypal Merchant ID',
+            help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.'),
         'paypal_use_ipn': fields.boolean('Use IPN', help='Paypal Instant Payment Notification'),
         # Server 2 server
         'paypal_api_enabled': fields.boolean('Use Rest API'),
