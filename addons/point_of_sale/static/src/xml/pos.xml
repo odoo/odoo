@@ -424,9 +424,14 @@
                         <t t-if='line.selected'>
                             <tr class='paymentline selected'>
                                 <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
-                                <td class='col-tendered edit'> <t t-esc='line.get_amount()' /> </td>
+                                <td class='col-tendered edit'> 
+                                    <t t-esc='widget.inputbuffer' />
+                                    <!-- <t t-esc='line.get_amount()' /> -->
+                                </td>
                                 <t t-if='order.getChange(line)'>
-                                    <td class='col-change highlight' > <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' /> </td>
+                                    <td class='col-change highlight' > 
+                                        <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' />
+                                    </td>
                                 </t>
                                 <t t-if='!order.getChange(line)'>
                                     <td class='col-change' ></td>

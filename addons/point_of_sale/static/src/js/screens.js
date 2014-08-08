@@ -868,6 +868,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.watch_order_changes();
 
             this.inputbuffer = "";
+            this.firstinput  = true;
             this.keyboard_handler = function(event){
                 var key = '';
                 if ( event.keyCode === 13 ) {         // Enter
@@ -895,7 +896,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         // resets the current input buffer
         reset_input: function(){
-            this.inputbuffer = "";
+            var line = this.pos.get_order().selected_paymentline;
+            this.firstinput  = true;
+            if (line) {
+                this.inputbuffer = this.format_currency_no_symbol(line.get_amount());
+            } else {
+                this.inputbuffer = "";
+            }
         },
         // handle both keyboard and numpad input. Accepts
         // a string that represents the key pressed.
@@ -903,7 +910,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var oldbuf = this.inputbuffer.slice(0);
 
             if (input === '.') {
-                if (!this.inputbuffer.length || this.inputbuffer === '-') {
+                if (this.firstinput) {
+                    this.inputbuffer = "0.";
+                }else if (!this.inputbuffer.length || this.inputbuffer === '-') {
                     this.inputbuffer += "0.";
                 } else if (this.inputbuffer.indexOf('.') < 0){
                     this.inputbuffer = this.inputbuffer + '.';
@@ -925,8 +934,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             } else if (input[0] === '+' && !isNaN(parseFloat(input))) {
                 this.inputbuffer = '' + ((parseFloat(this.inputbuffer) || 0) + parseFloat(input));
             } else if (!isNaN(parseInt(input))) {
-                this.inputbuffer += input;
+                if (this.firstinput) {
+                    this.inputbuffer = '' + input;
+                } else {
+                    this.inputbuffer += input;
+                }
             }
+
+            this.firstinput = false;
 
             if (this.inputbuffer !== oldbuf) {
                 var order = this.pos.get_order();
