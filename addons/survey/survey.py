@@ -350,17 +350,14 @@ class survey_survey(osv.Model):
 
         #Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:
-            result_summary = []
-            for label in question.labels_ids:
-                count = 0
-                comments = []
-                for input_line in question.user_input_line_ids:
-                    if input_line.answer_type == 'suggestion' and input_line.value_suggested.id == label.id and (not current_filters or input_line.user_input_id.id in current_filters):
-                        count = count + 1
-                    if input_line.answer_type == 'text' and (not current_filters or input_line.user_input_id.id in current_filters):
-                        comments.append(input_line)
-                label_summary = {'text': label.value, 'count': count, 'answer_id': label.id, 'comments': comments}
-                result_summary = result_summary + [label_summary]
+            answers = {}
+            comments = []
+            [answers.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
+            for input_line in question.user_input_line_ids:
+                if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    answers[input_line.value_suggested.id]['count'] += 1
+                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    comments.append(input_line)
             result_summary = {'answers': answers.values(), 'comments': comments}
 
         #Calculate and return statistics for matrix
