@@ -1,34 +1,35 @@
 # HG changeset patch
-# Parent 2f58dd8c3622bf1d1deb89351aeffc08aad9ef2f
-diff -r 2f58dd8c3622 -r 6e4c5ab58036 openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml	Thu Aug 07 12:21:53 2014 +0200
-+++ b/openacademy/views/openacademy.xml	Thu Aug 07 12:24:16 2014 +0200
-@@ -7,6 +7,7 @@
-             <field name="arch" type="xml">
-                 <form string="Course Form">
-                     <field name="name" colspan="4"/>
-+                    <field name="responsible_id"/>
-                     <notebook colspan="4">
-                         <page string="Description">
-                             <field name="description" colspan="4" nolabel="1"/>
-@@ -14,10 +15,30 @@
-                         <page string="About">
-                             <label string="This is an example of notebooks"/>
-                         </page>
-+                        <page string="Sessions">
-+                            <field name="session_ids" nolabel="1" colspan="4" mode="tree">
-+                                <tree string="Registered sessions">
-+                                    <field name="name"/>
-+                                    <field name="instructor_id"/>
-+                                </tree>
-+                            </field>
-+                        </page>
-                     </notebook>
+# Parent c8e62fbbe3fd2566c2721b16aa04a6dddae3b05f
+
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -9,12 +9,18 @@
+                     <sheet>
+                         <group>
+                             <field name="name"/>
++                            <field name="responsible_id"/>
+                             <notebook colspan="4">
+                                 <page string="Description">
+                                     <field name="description"/>
+                                 </page>
+-                                <page string="About">
+-                                    This is an example of notebooks
++                                <page string="Sessions">
++                                    <field name="session_ids">
++                                        <tree string="Registered sessions">
++                                            <field name="name"/>
++                                            <field name="instructor_id"/>
++                                        </tree>
++                                    </field>
+                                 </page>
+                             </notebook>
+                         </group>
+@@ -22,6 +28,17 @@
                  </form>
              </field>
          </record>
-+        <!-- The declaration below will overwrite the default list view
-+             of our openacademy.course model -->
++        <!-- override the automatically generated list view for courses -->
 +        <record model="ir.ui.view" id="course_tree_view">
 +            <field name="name">course.tree</field>
 +            <field name="model">openacademy.course</field>
@@ -42,7 +43,7 @@ diff -r 2f58dd8c3622 -r 6e4c5ab58036 openacademy/views/openacademy.xml
  
          <!-- window action -->
          <!--
-@@ -50,6 +71,47 @@
+@@ -54,6 +71,47 @@
               action="openacademy.course_list_action"
               It is not required when it is the same module -->
  

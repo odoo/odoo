@@ -1,23 +1,26 @@
 # HG changeset patch
-# Parent 782b7acc3e7a8873a16482569ac006a6bc0bfed1
-diff -r 782b7acc3e7a -r e17d44b2a442 openacademy/course.py
---- a/openacademy/course.py	Thu Aug 07 12:43:15 2014 +0200
-+++ b/openacademy/course.py	Thu Aug 07 12:45:17 2014 +0200
-@@ -56,6 +56,18 @@ class Session(models.Model):
+# Parent 08454bef90bec6050f009164318e43141fe332ef
+
+diff --git a/openacademy/course.py b/openacademy/course.py
+--- a/openacademy/course.py
++++ b/openacademy/course.py
+@@ -1,5 +1,5 @@
+ # -*- coding: utf-8 -*-
+-from openerp import api, fields, models
++from openerp import api, fields, models, exceptions
+ 
+ class Course(models.Model):
+     _name = 'openacademy.course'
+@@ -56,6 +56,13 @@ class Session(models.Model):
                  },
              }
  
++    @api.one
++    @api.constrains('instructor_id', 'attendee_ids')
 +    def _check_instructor_not_in_attendees(self):
-+        for session in self:
-+            partners = [att.partner_id for att in session.attendee_ids]
-+            if session.instructor_id and session.instructor_id in partners:
-+                return False
-+        return True
-+    _constraints = [
-+        (_check_instructor_not_in_attendees,
-+         "The instructor can not be an attendee",
-+         ['instructor_id', 'attendee_ids'])
-+    ]
++        partners = [att.partner_id for att in self.attendee_ids]
++        if self.instructor_id and self.instructor_id in partners:
++            raise exceptions.ValidationError("A session's instructor can't be an attendee")
 +
  class Attendee(models.Model):
      _name = 'openacademy.attendee'

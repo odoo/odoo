@@ -1,8 +1,9 @@
 # HG changeset patch
-# Parent 7929aa014c78290890c660c0cf37e11e5a48ca46
-diff -r 7929aa014c78 -r 16e4cb131d9f openacademy/__openerp__.py
---- a/openacademy/__openerp__.py	Thu Aug 07 12:06:41 2014 +0200
-+++ b/openacademy/__openerp__.py	Thu Aug 07 12:10:05 2014 +0200
+# Parent 84e2b0b43fc61fd0bcbb44c1929755d44ee58ae5
+
+diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
+--- a/openacademy/__openerp__.py
++++ b/openacademy/__openerp__.py
 @@ -12,4 +12,7 @@
          - attendees registration""",
      'data' : [
@@ -11,9 +12,10 @@ diff -r 7929aa014c78 -r 16e4cb131d9f openacademy/__openerp__.py
 +        'demo.xml',
 +    ],
  }
-diff -r 7929aa014c78 -r 16e4cb131d9f openacademy/demo.xml
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/openacademy/demo.xml	Thu Aug 07 12:10:05 2014 +0200
+diff --git a/openacademy/demo.xml b/openacademy/demo.xml
+new file mode 100644
+--- /dev/null
++++ b/openacademy/demo.xml
 @@ -0,0 +1,19 @@
 +<openerp>
 +  <data>
@@ -28,9 +30,9 @@ diff -r 7929aa014c78 -r 16e4cb131d9f openacademy/demo.xml
 +      <field name="name">Course 1</field>
 +      <!-- no description for this one -->
 +    </record>
-+    <record model="openacademy.course" id="course1">
-+      <field name="name">Course 1</field>
-+      <field name="description">Course 1's description</field>
++    <record model="openacademy.course" id="course2">
++      <field name="name">Course 2</field>
++      <field name="description">Course 2's description</field>
 +    </record>
 +  </data>
 +</openerp>

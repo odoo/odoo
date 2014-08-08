@@ -1,8 +1,9 @@
 # HG changeset patch
-# Parent e17d44b2a442a21b5ab67b482ff2d37f79406ee6
-diff -r e17d44b2a442 -r 4ac15572dd3b openacademy/course.py
---- a/openacademy/course.py	Thu Aug 07 12:45:17 2014 +0200
-+++ b/openacademy/course.py	Thu Aug 07 12:46:55 2014 +0200
+# Parent 4c764d4501d31faedc51fd317217b7fbde59a77d
+
+diff --git a/openacademy/course.py b/openacademy/course.py
+--- a/openacademy/course.py
++++ b/openacademy/course.py
 @@ -12,6 +12,16 @@ class Course(models.Model):
      session_ids = fields.One2many(
          'openacademy.session', 'course_id', string="Session")
@@ -11,7 +12,7 @@ diff -r e17d44b2a442 -r 4ac15572dd3b openacademy/course.py
 +        ('name_description_check',
 +         'CHECK(name != description)',
 +         "The title of the course should not be the description"),
-+    
++
 +        ('name_unique',
 +         'UNIQUE(name)',
 +         "The course title must be unique"),
@@ -20,16 +21,7 @@ diff -r e17d44b2a442 -r 4ac15572dd3b openacademy/course.py
  class Session(models.Model):
      _name = 'openacademy.session'
  
-@@ -65,7 +75,7 @@ class Session(models.Model):
-     _constraints = [
-         (_check_instructor_not_in_attendees,
-          "The instructor can not be an attendee",
--         ['instructor_id', 'attendee_ids'])
-+         ['instructor_id', 'attendee_ids']),
-     ]
- 
- class Attendee(models.Model):
-@@ -76,3 +86,9 @@ class Attendee(models.Model):
+@@ -72,3 +82,9 @@ class Attendee(models.Model):
          string="Partner", required=True, ondelete='cascade')
      session_id = fields.Many2one('openacademy.session',
          string="Session", required=True, ondelete='cascade')

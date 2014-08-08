@@ -62,7 +62,7 @@ from . import SUPERUSER_ID
 from . import api
 from . import tools
 from .api import Environment
-from .exceptions import except_orm, AccessError, MissingError
+from .exceptions import except_orm, AccessError, MissingError, ValidationError
 from .osv import fields
 from .osv.query import Query
 from .tools import lazy_property
@@ -1268,12 +1268,17 @@ class BaseModel(object):
                         (', '.join(names), res_msg)
                 )
         if errors:
-            raise except_orm('ValidateError', '\n'.join(errors))
+            raise ValidationError('\n'.join(errors))
 
         # new-style constraint methods
         for check in self._constraint_methods:
             if set(check._constrains) & field_names:
-                check(self)
+                try:
+                    check(self)
+                except ValidationError, e:
+                    raise
+                except Exception, e:
+                    raise ValidationError("Error while validating constraint\n\n%s" % tools.ustr(e))
 
     def default_get(self, cr, uid, fields_list, context=None):
         """ default_get(fields) -> default_values

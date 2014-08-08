@@ -1,9 +1,10 @@
 # HG changeset patch
-# Parent 5ce2f0b4b4d18a79f033817c401369cd14d08425
-diff -r 5ce2f0b4b4d1 -r c56d08094611 openacademy/course.py
---- a/openacademy/course.py	Thu Aug 07 13:01:36 2014 +0200
-+++ b/openacademy/course.py	Thu Aug 07 13:03:44 2014 +0200
-@@ -64,6 +64,9 @@ class Session(models.Model):
+# Parent f0d616a5e64296bf21558898b49b597f7e9f821b
+
+diff --git a/openacademy/course.py b/openacademy/course.py
+--- a/openacademy/course.py
++++ b/openacademy/course.py
+@@ -66,6 +66,9 @@ class Session(models.Model):
      hours = fields.Float(string="Duration in hours",
                           compute='_get_hours', inverse='_set_hours')
  
@@ -13,21 +14,22 @@ diff -r 5ce2f0b4b4d1 -r c56d08094611 openacademy/course.py
      @api.one
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-@@ -121,6 +124,10 @@ class Session(models.Model):
-     def _set_hours(self):
+@@ -127,6 +130,11 @@ class Session(models.Model):
          self.duration = self.hours / 24
  
-+    @api.one
+     @api.one
 +    @api.depends('attendee_ids')
 +    def _get_attendees_count(self):
 +        self.attendees_count = len(self.attendee_ids)
- 
++
++    @api.one
+     @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
-         for session in self:
-diff -r 5ce2f0b4b4d1 -r c56d08094611 openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml	Thu Aug 07 13:01:36 2014 +0200
-+++ b/openacademy/views/openacademy.xml	Thu Aug 07 13:03:44 2014 +0200
-@@ -176,11 +176,22 @@
+         partners = [att.partner_id for att in self.attendee_ids]
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -154,11 +154,22 @@
              </field>
          </record>
  
@@ -37,7 +39,7 @@ diff -r 5ce2f0b4b4d1 -r c56d08094611 openacademy/views/openacademy.xml
 +            <field name="arch" type="xml">
 +                <graph string="Participations by Courses">
 +                    <field name="course_id"/>
-+                    <field name="attendee_count" type="measure"/>
++                    <field name="attendees_count" type="measure"/>
 +                </graph>
 +            </field>
 +        </record>

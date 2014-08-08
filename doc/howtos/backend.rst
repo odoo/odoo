@@ -122,9 +122,10 @@ Business objects are declared as Python classes extending
 persistence system.
 
 Models can be configured by setting a number of attributes at their
-definition. The most important attribute :attr:`~openerp.models.Model._name`
-which is required and defines the name for the model in the Odoo system. Here
-is a minimally complete definition of a model::
+definition. The most important attribute is
+:attr:`~openerp.models.Model._name` which is required and defines the name for
+the model in the Odoo system. Here is a minimally complete definition of a
+model::
 
     from openerp import models
     class MinimalModel(models.Model):
@@ -149,7 +150,7 @@ Common Attributes
 Much like the model itself, its fields can be configured, by passing
 configuration attributes as parameters::
 
-    name = field.Char(readonly=True)
+    name = field.Char(required=True)
 
 Some attributes are available on all fields, here are the most common ones:
 
@@ -160,7 +161,7 @@ Some attributes are available on all fields, here are the most common ones:
     value or always be given a value when creating a record.
 :attr:`~openerp.fields.Field.help` (``unicode``, default: ``''``)
     Long-formm, provides a help tooltip to users in the UI.
-:attr:`~openerp.fields.Field.select` (``bool``, default: ``False``)
+:attr:`~openerp.fields.Field.index` (``bool``, default: ``False``)
     Requests that Odoo create a `database index`_ on the column
 
 Simple fields
@@ -180,15 +181,15 @@ Odoo creates a few fields in all models\ [#autofields]_. These fields are
 managed by the system and shouldn't be written to. They can be read if
 useful or necessary:
 
-``id`` (:class:`~openerp.fields.Id`)
+:attr:`~openerp.fields.Model.id` (:class:`~openerp.fields.Id`)
     the unique identifier for a record in its model
-``create_date`` (:class:`~openerp.fields.Datetime`)
+:attr:`~openerp.fields.Model.create_date` (:class:`~openerp.fields.Datetime`)
     creation date of the record
-``create_uid`` (:class:`~openerp.fields.Many2one`)
+:attr:`~openerp.fields.Model.create_uid` (:class:`~openerp.fields.Many2one`)
     user who created the record
-``write_date`` (:class:`~openerp.fields.Datetime`)
+:attr:`~openerp.fields.Model.write_date` (:class:`~openerp.fields.Datetime`)
     last modification date of the record
-``write_uid`` (:class:`~openerp.fields.Many2one`)
+:attr:`~openerp.fields.Model.write_uid` (:class:`~openerp.fields.Many2one`)
     user who last modified the record
 
 Special fields
@@ -218,9 +219,10 @@ Odoo is a highly data driven system. Although behavior is customized using
 Python_ code part of a module's value is in the data it sets up when loaded.
 
 .. tip:: some modules exist solely to add data into Odoo
+    :class: aphorism
 
 Module data is declared via :ref:`data files <core/data>`, XML files with
-``<record>`` elements, each ``<record>`` element creates or updates a database
+``<record>`` elements. Each ``<record>`` element creates or updates a database
 record.
 
 .. code-block:: xml
@@ -233,10 +235,10 @@ record.
       </data>
     <openerp>
 
-* ``@model`` is the name of the Odoo model for the record
-* ``@id`` is an :term:`external identifier`, it allows referring to the record
+* ``model`` is the name of the Odoo model for the record
+* ``id`` is an :term:`external identifier`, it allows referring to the record
   (without having to know its in-database identifier)
-* ``<field>`` elements have a ``@name`` which is the name of the field in the
+* ``<field>`` elements have a ``name`` which is the name of the field in the
   model (e.g. ``description``). Their body is the field's value.
 
 Data files have to be declared in the manifest file to be loaded, they can
@@ -566,65 +568,6 @@ Relational field types are:
 
         .. patch::
 
-Domains
-#######
-
-In Odoo, :ref:`core/orm/domains` are lists of criteria used to select a subset
-of a model's records. Each criteria is a triple of a field name, an operator
-and a value.
-
-For instance, when used on the *Product* model the following domain selects
-all *services* with a unit price over *1000*::
-
-    [('product_type', '=', 'service'), ('unit_price', '>', 1000)]
-
-By default criteria are combined with an implicit AND. The logical operators
-``&`` (AND), ``|`` (OR) and ``!`` (NOT) can be used to explicitly combine
-criteria. They are used in prefix position (the operator is inserted before
-its arguments rather than between). For instance to select products "which are
-services *OR* have a unit price which is *NOT* between 1000 and 2000"::
-
-    ['|',
-        ('product_type', '=', 'service'),
-        '!', '&',
-            ('unit_price', '>=', 1000),
-            ('unit_price', '<', 2000)]
-
-A ``domain`` parameter can be added to relational fields to limit valid
-records for the relation when trying to select records in the client UI.
-
-.. admonition:: Exercise 2 — relational fields
-    :class: exercise
-
-    When selecting the instructor for a *Session*, only instructors (partners
-    with ``is_instructor`` set to ``True``) should be visible.
-
-    .. only:: solutions
-
-        .. patch::
-
-        .. note::
-
-            A domain declared as a literal list is evaluated server-side and
-            can't refer to dynamic values on the right-hand side, a domain
-            declared as a string is evaluated client-side and allows
-            field names on the right-hand side
-
-.. admonition:: Exercise 3 — relational fields bis
-    :class: exercise
-
-    Create new partner categories *Teacher / Level 1* and *Teacher / Level 2*.
-    The instructor for a session can be either an instructor or a teacher
-    (of any level).
-
-    .. only:: solutions
-
-        #. Modify the *Session* model's domain
-        #. Modify ``openacademy/view/partner.xml`` to get access to
-           *Partner categories*:
-
-        .. patch::
-
 Inheritance
 ===========
 
@@ -687,9 +630,13 @@ instead of a single view its ``arch`` field is composed of any number of
     :class: exercise
 
     * Using model inheritance, modify the existing *Partner* model to add an
-      ``is_instructor`` boolean field, and a list of the sessions for which
-      the partner is the instructor
-    * Using view inheritance, display these fields in the partner form view
+      ``instructor`` boolean field
+    * Using view inheritance, display this fields in the partner form view
+
+    .. note::
+
+        Instroduce devmode: inspect the view to find its xml_id and where to
+        put the new field.
 
     .. only:: solutions
 
@@ -706,6 +653,65 @@ instead of a single view its ``arch`` field is composed of any number of
 
         .. patch::
 
+Domains
+#######
+
+In Odoo, :ref:`core/orm/domains` are lists of criteria used to select a subset
+of a model's records. Each criteria is a triple of a field name, an operator
+and a value.
+
+For instance, when used on the *Product* model the following domain selects
+all *services* with a unit price over *1000*::
+
+    [('product_type', '=', 'service'), ('unit_price', '>', 1000)]
+
+By default criteria are combined with an implicit AND. The logical operators
+``&`` (AND), ``|`` (OR) and ``!`` (NOT) can be used to explicitly combine
+criteria. They are used in prefix position (the operator is inserted before
+its arguments rather than between). For instance to select products "which are
+services *OR* have a unit price which is *NOT* between 1000 and 2000"::
+
+    ['|',
+        ('product_type', '=', 'service'),
+        '!', '&',
+            ('unit_price', '>=', 1000),
+            ('unit_price', '<', 2000)]
+
+A ``domain`` parameter can be added to relational fields to limit valid
+records for the relation when trying to select records in the client UI.
+
+.. admonition:: Exercise 2 — relational fields
+    :class: exercise
+
+    When selecting the instructor for a *Session*, only instructors (partners
+    with ``instructor`` set to ``True``) should be visible.
+
+    .. only:: solutions
+
+        .. patch::
+
+        .. note::
+
+            A domain declared as a literal list is evaluated server-side and
+            can't refer to dynamic values on the right-hand side, a domain
+            declared as a string is evaluated client-side and allows
+            field names on the right-hand side
+
+.. admonition:: Exercise 3 — relational fields bis
+    :class: exercise
+
+    Create new partner categories *Teacher / Level 1* and *Teacher / Level 2*.
+    The instructor for a session can be either an instructor or a teacher
+    (of any level).
+
+    .. only:: solutions
+
+        #. Modify the *Session* model's domain
+        #. Modify ``openacademy/view/partner.xml`` to get access to
+           *Partner categories*:
+
+        .. patch::
+
 Computed fields
 ===============
 
@@ -714,11 +720,11 @@ database.
 
 Fields can also be *computed*. In that case, the field's value is not
 retrieved from the database but computed on-the-fly by calling a method of the
-model object.
+model.
 
 To create a computed field, create a field and set its
 :attr:`~openerp.fields.Field.compute` to the name of a method. The computation
-method should simply set its field on its subject::
+method should simply set the field to compute on ``self``::
 
     import random
     from openerp import api, models
@@ -771,8 +777,6 @@ Onchange
             }
         }
 
-.. todo:: check that this actually works
-
 For computed fields, valued ``onchange`` behavior is built-in as can be seen
 by playing with the *Session* form: change the number of seats and the
 ``seats_taken`` progressbar is automatically updated.
@@ -785,52 +789,24 @@ by playing with the *Session* form: change the number of seats and the
     .. only:: solutions
 
         .. patch::
-        .. code-block:: python
 
-            @api.onchange('seats', 'attendee_ids')
-            def onchange_seats_taken(self):
-                if self.seats < 0:
-                    return {
-                        'warning': {
-                            'title': "Incorrect field value",
-                            'message': "The number of seats should not be negativ",
-                    }
-                if self.seats < len(self.attendee_ids):
-                    return {
-                        'warning': {
-                            'title': "To many attendees",
-                            'message': "Increase seats or remove excess attendees",
-                        }
-                    }
-
-Model invariants
-================
+Model constraints
+=================
 
 Odoo provides two ways to set up automatically verified invariants:
-:attr:`Python constraints <openerp.models.Model._constraints>` and
+:func:`Python constraints <openerp.api.constrains>` and
 :attr:`SQL constaints <openerp.models.Model._sql_constraints>`.
 
-Python constraints are defined through
-:attr:`~openerp.models.Model._constraints`, they take a Python function which
-is called when creating or updating a record::
+Python constraints are defined through :func:`~openerp.api.constrains`, they
+take a Python function which is called when creating or updating a record::
 
+    @api.constrains(*fields)
     def _check_something(self):
         for record in self:
             if not check_thing(record):
-                # check failed
-                return False
+                raise ValidationError("Why the check failed")
 
-        # all records passed the test, check succeeded
-        return True
-
-    _constraints = [
-        (_check_something, "Constraint description", [fields_list]),
-    ]
-
-.. note::
-
-    fields are for debugging only, they are printed out when the constraint
-    check fails
+        # all records passed the test, don't return anything
 
 .. admonition:: Exercise 4 - Add Python constraints
     :class: exercise
@@ -898,8 +874,8 @@ Tree views can take supplementary attributes to further customize their
 behavior:
 
 ``colors``
-    a list of colors mapped to Python conditions. If the condition evaluates
-    to ``True``, the corresponding color is applied to the row:
+    mappings of colors to conditions. If the condition evaluates to ``True``,
+    the corresponding color is applied to the row:
 
     .. code-block:: xml
 
@@ -907,6 +883,10 @@ behavior:
             <field name="name"/>
             <field name="state"/>
         </tree>
+
+    Clauses are separated by ``;``, the color and condition are separated by
+    ``:``.
+
 ``editable``
     Either ``"top"`` or ``"bottom"``. Makes the tree view editable in-place
     (rather than having to go through the form view), the value is the
@@ -1139,9 +1119,13 @@ Workflows are also used to track processes that evolve over time.
 .. admonition:: Exercise 1 - Almost a workflow
     :class: exercise
 
-    Add a state field that will be used for defining a “workflow” on the
-    object Session. A session can have three possible states: Draft (default),
-    Confirmed and Done. In the session form, add a (read-only) field to
+    Add a ``state`` field to the *Session* model. It will be used to define
+    a workflow-ish.
+
+    A sesion can have three possible states: Draft (default), Confirmed and
+    Done.
+
+    In the session form, add a (read-only) field to
     visualize the state, and buttons to change it. The valid transitions are:
 
     * Draft ➔ Confirmed
@@ -1168,64 +1152,50 @@ in workflows are called workitems.
 .. admonition:: Exercise 2 - Dynamic workflow editor
     :class: exercise
 
-    Using the workflow editor, create the same workflow as the one defined
-    earlier for the Session object. Trans- form the Session form view such
-    that the buttons change the state in the workflow.
+    Replace the ad-hoc *Session* workflow by a real workflow. Transform the
+    *Session* form view so its buttons call the workflow instead of the
+    model's methods.
 
     .. only:: solutions
 
-        .. note::
+        .. patch::
+
+        .. warning::
 
             A workflow associated with a model is only created when the
             model's records are created. Thus there is no workflow instance
             associated with session instances created before the workflow's
             definition
 
-        #. Create a workflow using the web client (:menuselection:`Settings
-           --> Customization --> Workflows --> Workflows`), switch to the
-           diagram view and add the relevant nodes and transition.
-
-           A transition should be associated with the corresponding signal,
-           and each activity (node) should call a function altering the
-           session state according to the workflow state
-        #. Alter the form view buttons to call use the workflow instead of the
-           ``state`` field:
-        #. If the function in the Draft activity is encoded, you can even
-           remove the default state value in the *Session* model
-
-           .. todo:: what?
-
-        .. note::
+        .. tip::
 
             In order to check if instances of the workflow are correctly
-            created with sessions, go to :menuselection:`Settings > Low Level
-            Objects`
+            created alongside sessions, go to :menuselection:`Settings -->
+            Technical --> Workflows --> Instances`
 
-        .. patch::
 
 .. admonition:: Exercise 3 - Automatic transitions
     :class: exercise
 
-    Add a transition Draft ! Confirmed that is triggered automatically when
-    the number of attendees in a session is more than half the number of seats
-    of that session.
+    Automatically transition sessions from *Draft* to *Confirmed* when more
+    than half the session's seats are reserved.
 
     .. only:: solutions
 
-        Add a transition between the *Draft* and *Confirmed* activities. It
-        should not have a signal but it should have the condition
-        ``seats_taken > 50``
+        .. patch::
 
 .. admonition:: Exercise 4 - Server actions
     :class: exercise
 
-    Create server actions and modify the previous workflow in order to
-    re-create the same behaviour as previously, but without using the Python
-    methods of the Session class.
+    Replace the Python methods for synchronizing session state by
+    server actions.
+
+    Both the workflow and the server actions could have been created entirely
+    from the UI.
 
     .. only:: solutions
 
-        ??
+        .. patch::
 
 Security
 ========
@@ -1472,18 +1442,20 @@ server with the library xmlrpclib.
 ::
 
    import xmlrpclib
-   # ... define HOST, PORT, DB, USER, PASS
-   url = 'http://%s:%d/xmlrpc/common' % (HOST,PORT) sock = xmlrpclib.ServerProxy(url)
-   uid = sock.login(DB,USER,PASS)
-   print "Logged in as %s (uid:%d)" % (USER,uid)
+
+   root = 'http://%s:%d/xmlrpc/' % (HOST, PORT)
+
+   uid = xmlrpclib.ServerProxy(root + 'common').login(db, username, password)
+   print "Logged in as %s (uid: %d)" % (USER, uid)
+
    # Create a new idea
-   url = 'http://%s:%d/xmlrpc/object' % (HOST,PORT) sock = xmlrpclib.ServerProxy(url)
+   sock = xmlrpclib.ServerProxy(root + 'object')
    args = {
        'name' : 'Another idea',
        'description' : 'This is another idea of mine',
        'inventor_id': uid,
    }
-   idea_id = sock.execute(DB,uid,PASS,'idea.idea','create',args)
+   idea_id = sock.execute(db, uid, password, 'idea.idea', 'create', args)
 
 .. admonition:: Exercise 1 - Add a new service to the client
    :class: exercise
@@ -1506,7 +1478,7 @@ server with the library xmlrpclib.
             url = 'http://%s:%d/xmlrpc/' % (HOST,PORT)
             common_proxy = xmlrpclib.ServerProxy(url+'common')
             object_proxy = xmlrpclib.ServerProxy(url+'object')
-            def execute(\*args):
+            def execute(*args):
                     return object_proxy.execute(DB,uid,PASS,*args)
             # 1. Login
             uid = common_proxy.login(DB,USER,PASS)

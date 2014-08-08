@@ -1,14 +1,15 @@
 # HG changeset patch
-# Parent 731daebf22f08c3df6ae58a5e2ec4a1447fb1ce0
-diff -r 731daebf22f0 -r edaa91668f4c openacademy/__init__.py
---- a/openacademy/__init__.py	Thu Aug 07 12:28:44 2014 +0200
-+++ b/openacademy/__init__.py	Thu Aug 07 12:38:06 2014 +0200
+# Parent 392242547109b01ff6ed9daaa9b389f5c29d9079
+
+diff --git a/openacademy/__init__.py b/openacademy/__init__.py
+--- a/openacademy/__init__.py
++++ b/openacademy/__init__.py
 @@ -1,1 +1,2 @@
 +import partner
  import course
-diff -r 731daebf22f0 -r edaa91668f4c openacademy/__openerp__.py
---- a/openacademy/__openerp__.py	Thu Aug 07 12:28:44 2014 +0200
-+++ b/openacademy/__openerp__.py	Thu Aug 07 12:38:06 2014 +0200
+diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
+--- a/openacademy/__openerp__.py
++++ b/openacademy/__openerp__.py
 @@ -11,6 +11,7 @@
          - training sessions
          - attendees registration""",
@@ -17,9 +18,10 @@ diff -r 731daebf22f0 -r edaa91668f4c openacademy/__openerp__.py
          'views/openacademy.xml',
      ],
      'demo': [
-diff -r 731daebf22f0 -r edaa91668f4c openacademy/partner.py
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/openacademy/partner.py	Thu Aug 07 12:38:06 2014 +0200
+diff --git a/openacademy/partner.py b/openacademy/partner.py
+new file mode 100644
+--- /dev/null
++++ b/openacademy/partner.py
 @@ -0,0 +1,9 @@
 +# -*- coding: utf-8 -*-
 +from openerp import fields, models
@@ -30,23 +32,13 @@ diff -r 731daebf22f0 -r edaa91668f4c openacademy/partner.py
 +    # Add a new column to the res.partner model, by default partners are not
 +    # instructors
 +    instructor = fields.Boolean("Instructor", default=False)
-diff -r 731daebf22f0 -r edaa91668f4c openacademy/views/partner.xml
---- a/openacademy/views/partner.xml	Thu Aug 07 12:28:44 2014 +0200
-+++ b/openacademy/views/partner.xml	Thu Aug 07 12:38:06 2014 +0200
-@@ -1,13 +1,26 @@
+diff --git a/openacademy/views/partner.xml b/openacademy/views/partner.xml
+new file mode 100644
+--- /dev/null
++++ b/openacademy/views/partner.xml
+@@ -0,0 +1,27 @@
 +<?xml version="1.0" encoding="UTF-8"?>
- <openerp>
--  <data>
--    <record model="ir.actions.act_window" id="contact_cat_list_action">
--      <field name="name">Contact tags</field>
--      <field name="res_model">res.partner.category</field>
--      <field name="view_mode">tree,form</field>
--    </record>
--
--    <menuitem id="contact_cat_menu" name="Contact tags"
--              parent="configuration_menu"
--              action="contact_cat_list_action" />
--  </data>
++ <openerp>
 +    <data>
 +        <!-- Add instructor field to existing view -->
 +        <record model="ir.ui.view" id="partner_instructor_form_view">
@@ -54,20 +46,21 @@ diff -r 731daebf22f0 -r edaa91668f4c openacademy/views/partner.xml
 +            <field name="model">res.partner</field>
 +            <field name="inherit_id" ref="base.view_partner_form"/>
 +            <field name="arch" type="xml">
-+            <field name="is_company" position="before">
-+                <field name="instructor"/>
-+                <label for="instructor" string="Is an Instructor?"/>
++                <field name="is_company" position="before">
++                    <field name="instructor"/>
++                    <label for="instructor" string="Is an Instructor?"/>
++                </field>
 +            </field>
 +        </record>
 +        <record model="ir.actions.act_window" id="contact_list_action">
 +            <field name="name">Contacts</field>
 +            <field name="res_model">res.partner</field>
-+            <field name="view_type">form</field>
 +            <field name="view_mode">tree,form</field>
 +        </record>
 +        <menuitem id="configuration_menu" name="Configuration"
 +                  parent="main_openacademy_menu"/>
 +        <menuitem id="contact_menu" name="Contacts"
 +                  parent="configuration_menu"
++                  action="contact_list_action"/>
 +    </data>
- </openerp>
++</openerp>

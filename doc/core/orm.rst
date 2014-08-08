@@ -143,7 +143,7 @@ Method decorators
 =================
 
 .. automodule:: openerp.api
-    :members: one, multi, model, depends, onchange, returns
+    :members: one, multi, model, depends, constrains, onchange, returns
 
 .. _core/orm/fields:
 

@@ -1,11 +1,12 @@
 # HG changeset patch
-# Parent 00f7609f20027027a803ed07ac5ba5102593b01f
-diff -r 00f7609f2002 -r 5ce2f0b4b4d1 openacademy/course.py
---- a/openacademy/course.py	Thu Aug 07 12:59:15 2014 +0200
-+++ b/openacademy/course.py	Thu Aug 07 13:01:36 2014 +0200
-@@ -61,6 +61,9 @@ class Session(models.Model):
-     end_date = fields.Date(
-         string="End Date", compute='_get_end_date', inverse='_set_end_date')
+# Parent 55d85af158cc3ee2593eddd88a7ff52b68b4b327
+
+diff --git a/openacademy/course.py b/openacademy/course.py
+--- a/openacademy/course.py
++++ b/openacademy/course.py
+@@ -63,6 +63,9 @@ class Session(models.Model):
+         string="End Date", store=True,
+         compute='_get_end_date', inverse='_set_end_date')
  
 +    hours = fields.Float(string="Duration in hours",
 +                         compute='_get_hours', inverse='_set_hours')
@@ -13,11 +14,10 @@ diff -r 00f7609f2002 -r 5ce2f0b4b4d1 openacademy/course.py
      @api.one
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-@@ -109,6 +112,16 @@ class Session(models.Model):
- 
+@@ -115,6 +118,15 @@ class Session(models.Model):
          self.duration = end_date - start_date
  
-+    @api.one
+     @api.one
 +    @api.depends('duration')
 +    def _get_hours(self):
 +        self.hours = self.duration * 24
@@ -26,14 +26,14 @@ diff -r 00f7609f2002 -r 5ce2f0b4b4d1 openacademy/course.py
 +    def _set_hours(self):
 +        self.duration = self.hours / 24
 +
-+
++    @api.one
+     @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
-         for session in self:
-             partners = [att.partner_id for att in session.attendee_ids]
-diff -r 00f7609f2002 -r 5ce2f0b4b4d1 openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml	Thu Aug 07 12:59:15 2014 +0200
-+++ b/openacademy/views/openacademy.xml	Thu Aug 07 13:01:36 2014 +0200
-@@ -163,11 +163,24 @@
+         partners = [att.partner_id for att in self.attendee_ids]
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -141,11 +141,24 @@
              </field>
          </record>
  

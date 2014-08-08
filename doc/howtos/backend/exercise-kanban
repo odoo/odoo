@@ -1,9 +1,21 @@
 # HG changeset patch
-# Parent c56d080946113d392d8db3b92fa1ec0aa19bf641
-diff -r c56d08094611 -r 5ab1509615a6 openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml	Thu Aug 07 13:03:44 2014 +0200
-+++ b/openacademy/views/openacademy.xml	Thu Aug 07 13:05:47 2014 +0200
-@@ -187,11 +187,57 @@
+# Parent e884b0fdb18f5f2f7ee8c29b9300c28cb142994b
+
+diff --git a/openacademy/course.py b/openacademy/course.py
+--- a/openacademy/course.py
++++ b/openacademy/course.py
+@@ -48,6 +48,7 @@ class Session(models.Model):
+     seats = fields.Integer(string="Number of seats")
+ 
+     active = fields.Boolean(default=True)
++    color = fields.Integer()
+ 
+     instructor_id = fields.Many2one(
+         'res.partner', string="Instructor",
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -165,11 +165,57 @@
              </field>
          </record>
  

@@ -1,39 +1,17 @@
 # HG changeset patch
-# Parent ba3ebe84b36aaef2a6b8b6fd58116cfd170fb36b
+# Parent fd5323cd80bffd7ba11ce964ad7f04d78fee36c9
 
 diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
 --- a/openacademy/views/openacademy.xml
 +++ b/openacademy/views/openacademy.xml
-@@ -106,9 +106,32 @@
+@@ -106,9 +106,10 @@
              <field name="name">session.tree</field>
              <field name="model">openacademy.session</field>
              <field name="arch" type="xml">
 -                <tree string="Session Tree">
-+                <!-- Colors are separated by semi-colons ’;’ and look like this:
-+                     colorValue1:condition1;colorValue2:condition2;...
-+                     Each color can be specified by using HTML color codes:
-+                      - the hexadecimal form:
-+                        #ff8080 => ff for red, 80 for green and blue
-+                      - the color keywords:
-+                        red, black, white, grey, ...
-+
-+                     When writing your condition, don’t forget that you are
-+                     in an XML file. You have to escape your special characters
-+                     in order to make the whole file XML-compliant
-+
-+                     For example:
-+                      - lesser than symbol is written &lt;
-+                      - greater than symbol is written &gt; -->
-+                <tree string="Session Tree"
-+                      colors="#0000ff:duration&lt;5;red:duration&gt;15">
++                <tree string="Session Tree" colors="#0000ff:duration&lt;5;red:duration&gt;15">
                      <field name="name"/>
                      <field name="course_id"/>
-+                    <!--
-+                        Since we use the duration field to determine the
-+                        colors of each line, we have to include it in the
-+                        view. If you don’t want to make it visible, just hide
-+                        it with the invisible attribute
-+                    -->
 +                    <field name="duration" invisible="1"/>
                      <field name="seats_taken" widget="progressbar"/>
                  </tree>

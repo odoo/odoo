@@ -1,23 +1,22 @@
 # HG changeset patch
-# Parent 7ce1aa80e26b5292d5f579bff08ccf87324e22d6
-diff -r 7ce1aa80e26b -r 22f8d180a7f9 openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml	Thu Aug 07 12:13:11 2014 +0200
-+++ b/openacademy/views/openacademy.xml	Thu Aug 07 12:14:32 2014 +0200
-@@ -6,8 +6,15 @@
-             <field name="model">openacademy.course</field>
-             <field name="arch" type="xml">
-                 <form string="Course Form">
--                    <field name="name"/>
--                    <field name="description"/>
-+                    <field name="name" colspan="4"/>
-+                    <notebook colspan="4">
-+                        <page string="Description">
-+                            <field name="description" colspan="4" nolabel="1"/>
-+                        </page>
-+                        <page string="About">
-+                            <label string="This is an example of notebooks"/>
-+                        </page>
-+                    </notebook>
+# Parent 5508a5440faa7b607d057c4e4ae70af6b6f7cac9
+
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -9,7 +9,14 @@
+                     <sheet>
+                         <group>
+                             <field name="name"/>
+-                            <field name="description"/>
++                            <notebook colspan="4">
++                                <page string="Description">
++                                    <field name="description"/>
++                                </page>
++                                <page string="About">
++                                    This is an example of notebooks
++                                </page>
++                            </notebook>
+                         </group>
+                     </sheet>
                  </form>
-             </field>
-         </record>

@@ -1,9 +1,31 @@
 # HG changeset patch
-# Parent cb4291a236908f3ca33e1dde8b15f731d2f70ac7
-diff -r cb4291a23690 -r 4dd7482d78ca openacademy/views/session_board.xml
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/openacademy/views/session_board.xml	Thu Aug 07 13:25:33 2014 +0200
-@@ -0,0 +1,68 @@
+# Parent 4d43c5b1d776711ffc9c308d35673a75c2b3f6a7
+
+diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
+--- a/openacademy/__openerp__.py
++++ b/openacademy/__openerp__.py
+@@ -3,7 +3,7 @@
+     'name': "Open Academy",
+     'category': "Test",
+     'version': '1.0',
+-    'depends': ['base'],
++    'depends': ['base', 'board'],
+     'author': '<insert name here>',
+     'description' : """
+     Open Academy module for managing trainings:
+@@ -16,6 +16,7 @@
+         'views/partner.xml',
+         'views/openacademy.xml',
+         'views/session_workflow.xml',
++        'views/session_board.xml',
+     ],
+     'demo': [
+         'demo.xml',
+diff --git a/openacademy/views/session_board.xml b/openacademy/views/session_board.xml
+new file mode 100644
+--- /dev/null
++++ b/openacademy/views/session_board.xml
+@@ -0,0 +1,65 @@
 +<?xml version="1.0"?>
 +<openerp>
 +  <data>
@@ -61,15 +83,11 @@ diff -r cb4291a23690 -r 4dd7482d78ca openacademy/views/session_board.xml
 +      <field name="usage">menu</field>
 +      <field name="view_id" ref="board_session_form"/>
 +    </record>
-+    <menuitem id="openacademy_menu" name="OpenAcademy"
-+              action="open_board_session"/>
-+    <menuitem id="board.menu_dashboard" name="Dashboard" sequence="0"
-+              parent="openacademy_all"/>
++
 +    <menuitem
-+        name="Session Dashboard" parent="board.menu_dashboard"
++        name="Session Dashboard" parent="base.menu_reporting_dashboard"
 +        action="open_board_session"
 +        sequence="1"
 +        id="menu_board_session" icon="terp-graph"/>
 +  </data>
 +</openerp>
-\ No newline at end of file

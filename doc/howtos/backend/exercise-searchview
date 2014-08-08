@@ -1,15 +1,16 @@
 # HG changeset patch
-# Parent 380a2ad0da161ccce1794c1ba5c4fe8651c5b4b9
-diff -r 380a2ad0da16 -r 00f7609f2002 openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml	Thu Aug 07 12:55:22 2014 +0200
-+++ b/openacademy/views/openacademy.xml	Thu Aug 07 12:59:15 2014 +0200
+# Parent 3c0eb7fa1cc05c82fde20632ced3d149e6c31674
+
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
 @@ -39,6 +39,18 @@
                  </tree>
              </field>
          </record>
 +        <record model="ir.ui.view" id="course_search_view">
 +            <field name="name">course.search</field>
-+            <field name="models">openacademy.course</field>
++            <field name="model">openacademy.course</field>
 +            <field name="arch" type="xml">
 +                <search string="Session Search">
 +                    <filter string="My Courses" icon="terp-partner"

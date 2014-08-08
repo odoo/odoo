@@ -1,9 +1,10 @@
 # HG changeset patch
-# Parent 5ab1509615a6e13adf1eb183ce98589ca81ff1f7
-diff -r 5ab1509615a6 -r 3a18c84baeaf openacademy/course.py
---- a/openacademy/course.py	Thu Aug 07 13:05:47 2014 +0200
-+++ b/openacademy/course.py	Thu Aug 07 13:08:25 2014 +0200
-@@ -67,6 +67,24 @@ class Session(models.Model):
+# Parent 642bd3512eceab9a040c2a9df78c77fe759fc595
+
+diff --git a/openacademy/course.py b/openacademy/course.py
+--- a/openacademy/course.py
++++ b/openacademy/course.py
+@@ -70,6 +70,24 @@ class Session(models.Model):
      attendees_count = fields.Integer(
          string="Attendees count", compute='_get_attendees_count', store=True)
  
@@ -11,7 +12,7 @@ diff -r 5ab1509615a6 -r 3a18c84baeaf openacademy/course.py
 +         ('draft', "Draft"),
 +         ('confirmed', "Confirmed"),
 +         ('done', "Done"),
-+    ], string="State", default='draft')
++    ], default='draft')
 +
 +    @api.one
 +    def action_draft(self):
@@ -28,24 +29,70 @@ diff -r 5ab1509615a6 -r 3a18c84baeaf openacademy/course.py
      @api.one
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-diff -r 5ab1509615a6 -r 3a18c84baeaf openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml	Thu Aug 07 13:05:47 2014 +0200
-+++ b/openacademy/views/openacademy.xml	Thu Aug 07 13:08:25 2014 +0200
-@@ -90,6 +90,17 @@
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -90,27 +90,42 @@
              <field name="model">openacademy.session</field>
              <field name="arch" type="xml">
                  <form string="Session Form">
-+                    <button name="action_draft" type="object"
-+                            string="Reset to draft"
-+                            states="confirmed,done"/>
-+                    <button name="action_confirm" type="object"
-+                            string="Confirm" states="draft"
-+                            class="oe_highlight"/>
-+                    <button name="action_done" type="object"
-+                            string="Mark as done" states="confirmed"
-+                            class="oe_highlight"/>
-+                    <field name="state" widget="statusbar"/>
+-                    <group colspan="2" col="2">
+-                        <separator string="General" colspan="2"/>
+-                        <field name="course_id"/>
+-                        <field name="name"/>
+-                        <field name="instructor_id"/>
+-                    </group>
+-                    <group colspan="2" col="2">
+-                        <separator string="Schedule" colspan="2"/>
+-                        <field name="start_date"/>
+-                        <field name="duration"/>
+-                        <field name="seats"/>
+-                        <field name="seats_taken" widget="progressbar"/>
+-                    </group>
+-                    <separator string="Attendees" colspan="4"/>
+-                    <field name="attendee_ids" colspan="4" nolabel="1">
+-                        <!-- ’editable’ attribute will set the position
+-                             to push new elements in the list -->
+-                        <tree string="" editable="bottom">
+-                            <field name="partner_id"/>
+-                        </tree>
+-                    </field>
++                    <header>
++                        <button name="action_draft" type="object"
++                                string="Reset to draft"
++                                states="confirmed,done"/>
++                        <button name="action_confirm" type="object"
++                                string="Confirm" states="draft"
++                                class="oe_highlight"/>
++                        <button name="action_done" type="object"
++                                string="Mark as done" states="confirmed"
++                                class="oe_highlight"/>
++                        <field name="state" widget="statusbar"/>
++                    </header>
 +
-                     <group colspan="2" col="2">
-                         <separator string="General" colspan="2"/>
-                         <field name="course_id"/>
++                    <sheet>
++                        <group colspan="2" col="2">
++                            <separator string="General" colspan="2"/>
++                            <field name="course_id"/>
++                            <field name="name"/>
++                            <field name="instructor_id"/>
++                        </group>
++                        <group colspan="2" col="2">
++                            <separator string="Schedule" colspan="2"/>
++                            <field name="start_date"/>
++                            <field name="duration"/>
++                            <field name="seats"/>
++                            <field name="seats_taken" widget="progressbar"/>
++                        </group>
++                        <separator string="Attendees" colspan="4"/>
++                        <field name="attendee_ids" colspan="4" nolabel="1">
++                            <!-- ’editable’ attribute will set the position
++                                 to push new elements in the list -->
++                            <tree string="" editable="bottom">
++                                <field name="partner_id"/>
++                            </tree>
++                        </field>
++                    </sheet>
+                 </form>
+             </field>
+         </record>
