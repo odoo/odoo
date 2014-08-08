@@ -16,6 +16,11 @@
 		</template>
 		<!-- Layout add nav and footer -->
 
+		<template id="head" name="slides">
+			<link href="/website_slides/static/src/css/website_slides.css" rel="stylesheet"/>
+			<script type="text/javascript" src="/website_slides/static/src/js/slides.js"></script>			
+		</template>
+
 		<template id="search" name="search">
 			<form action="/slides" role="search" method="get">
 				<div class="input-group">
@@ -104,11 +109,8 @@
 			</div>
 		</template>
 
-		<template id='home' name="slide">
-			<t t-set="head">
-				<link href="/website_slides/static/src/css/website_slides.css" rel="stylesheet" />
-				<script type="text/javascript" src="/website_slides/static/src/js/slides.js"></script>
-			</t>
+		<template id='home' name="slide">			
+			<t t-set="head"><t t-call="website_slides.head"/></t>
 			<t t-call="website.layout">
 				<t t-call="website_slides.header"></t>
 				<div class="container">
@@ -124,10 +126,7 @@
 		</template>
 
 		<template id='slide_view' name="slide_view">
-			<t t-set="head">
-				<link href="/website_slides/static/src/css/website_slides.css" rel="stylesheet" />
-				<script type="text/javascript" src="/website_slides/static/src/js/slides.js"></script>
-			</t>
+			<t t-set="head"><t t-call="website_slides.head"/></t>
 			<t t-call="website.layout">
 				<br/>
 				<div class="container">
@@ -142,8 +141,8 @@
 			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" t-foreach="attachment_ids" t-as="attachment">
 				<div class="thumbnail oe-slides-grid-thumbnail">
 					<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
-						<img t-if="not attachment.youtube_id" t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive shadow"/>
-						<img t-if="attachment.youtube_id" t-att-src="attachment.image" class="img-responsive shadow"/>
+						<img t-if="not attachment.youtube_id" t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive"/>
+						<img t-if="attachment.youtube_id" t-att-src="attachment.image" class="img-responsive"/>
 					</a>
 					<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
 						<h4 class="oe-slides-text-truncation">
