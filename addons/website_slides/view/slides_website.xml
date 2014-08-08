@@ -142,13 +142,8 @@
 			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" t-foreach="attachment_ids" t-as="attachment">
 				<div class="thumbnail oe-slides-grid-thumbnail">
 					<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
-						<t t-if="not attachment.youtube_id">
-							<img t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive shadow"/>
-						</t>
-						<t t-if="attachment.youtube_id">
-							<i class="fa fa-play-circle-o fa-3x play_button"></i>
-							<img t-att-src="attachment.image" class="img-responsive shadow"/>
-						</t>
+						<img t-if="not attachment.youtube_id" t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive shadow"/>
+						<img t-if="attachment.youtube_id" t-att-src="attachment.image" class="img-responsive shadow"/>
 					</a>
 					<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
 						<h4 class="oe-slides-text-truncation">
@@ -178,34 +173,21 @@
 
         <template id='detailview' name="slide">
             <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-                <t t-if="slideview.datas">
-                    <iframe id="viewer"
-                        t-attf-src="/website_slides/static/lib/pdfjs/web/viewer.html?file=#{slideview.url}"
-                        width='100%' height='588' allowfullscreen="true"
-                        webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;" scrolling="no"></iframe>
-                </t>
-                <t t-if="slideview.youtube_id">
-                    <iframe id="viewer"
-                        t-attf-src="//www.youtube.com/embed/#{slideview.youtube_id}?theme=light"
-                        width='100%' height='588' allowfullscreen="true"
-                        webkitallowfullscreen="true" style="overflow:hidden;border:1px solid #ccc;"></iframe>
-                </t>
-                <h2 class="page-header">
-                    <span t-field="slideview.name"/>
-
-                    <small class="text-muted pull-right">
-                        <span t-esc="slideview.slide_views"/> Views
-                    </small>
-                    <br/>
-                </h2>
-                <p t-if="slideview.tag_ids">
+                <div class="embed-responsive embed-responsive-4by3 embed-responsive-item">
+	                <iframe t-if="slideview.datas" t-attf-src="/website_slides/static/lib/pdfjs/web/viewer.html?file=#{slideview.url}"></iframe>
+	                <iframe t-if="slideview.youtube_id" t-attf-src="//www.youtube.com/embed/#{slideview.youtube_id}?theme=light"></iframe>
+                </div>
+                <div class="page-header">
+					<h2><t t-esc="slideview.name"/><small class="pull-right"><t t-esc="slideview.slide_views"/> Views</small></h2>
+				</div>               
+                <div t-if="slideview.tag_ids">
                     <i class="fa fa-tags"></i>
                     <t t-foreach="slideview.tag_ids" t-as="att_tag">
                         <a t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=att_tag.name)">
                             <span t-attf-class="badge slide-badge #{tags and tags == att_tag.name and 'badge-active' ''}" t-field="att_tag.name"/>
                         </a>
                     </t>
-                </p>
+                </div>
                 <div>
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
