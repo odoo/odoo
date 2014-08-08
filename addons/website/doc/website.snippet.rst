@@ -117,7 +117,7 @@ data attributes is optional:
 - ``data-selector``:
   Apply options on all The part of html who match with this jQuery selector.
   E.g.: If the selector is div, all div will be selected and can be highlighted and assigned an editor.
-- ``data-snippet-id``:
+- ``data-option``:
   javascript ``option`` to call when the ``editor`` is loaded
 - ``data-drop-in``:
   The html part can be insert or move beside the selected html block (jQuery selector)

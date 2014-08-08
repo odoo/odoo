@@ -180,12 +180,12 @@
                     var $html = $(html);
 
                     var selector = [];
-                    var $styles = $html.find("[data-snippet-id], [data-selector]");
+                    var $styles = $html.find("[data-option], [data-selector]");
                     $styles.each(function () {
                         var $style = $(this);
-                        var style_id = $style.data('snippet-id');
+                        var option_id = $style.data('option');
                         var option = {
-                            'snippet-id' : style_id,
+                            'option' : option_id,
                             'base_selector': $style.data('selector'),
                             'selector': self._add_check_selector($style.data('selector')),
                             '$el': $style,
@@ -272,8 +272,7 @@
             var options = website.snippet.options;
             var template = website.snippet.templateOptions;
             for (var k in template) {
-                var snippet_id = template[k]['snippet-id'];
-                var Option = options[snippet_id];
+                var Option = options[template[k]['option']];
                 if (Option && Option.prototype.clean_for_save !== dummy) {
                     self.$wrapwrap.find(template[k].selector).each(function () {
                         new Option(self, null, $(this), k).clean_for_save();
@@ -372,7 +371,7 @@
 
                     } else if( action === 'mutate' ){
                         if (!$snippet.data('selector')) {
-                            console.debug($snippet.data("snippet-id") + " have not oe_snippet_body class and have not data-selector tag");
+                            console.debug($snippet.data("option") + " have not oe_snippet_body class and have not data-selector tag");
                             return;
                         }
                         var $targets = self.activate_overlay_zones(selector_children.join(","));
@@ -466,7 +465,7 @@
         // return the original snippet in the editor bar from a snippet id (string)
         get_snippet_from_id: function(id){
             return $('.oe_snippet').filter(function(){
-                    return $(this).data('snippet-id') === id;
+                    return $(this).data('option') === id;
                 }).first();
         },
 
@@ -638,17 +637,16 @@
             this.editor = editor;
             this.$target = $target;
             var option = website.snippet.templateOptions[option_id];
-            var styles = this.$target.data("snippet-ids") || {};
-            var snippet_id = option['snippet-id'];
-            styles[snippet_id] = this;
-            this.$target.data("snippet-ids", styles);
+            var styles = this.$target.data("snippet-option-ids") || {};
+            styles[option_id] = this;
+            this.$target.data("snippet-option-ids", styles);
             this.$overlay = this.$target.data('overlay');
-            this['snippet-id'] = snippet_id;
+            this.option= option_id;
             this.$el = option.$el.find(">li").clone();
             this.data = option.$el.data();
 
             this.set_active();
-            this.$target.on('snippet-style-reset', _.bind(this.set_active, this));
+            this.$target.on('snippet-option-reset', _.bind(this.set_active, this));
             this._bind_li_menu();
 
             this.start();
@@ -676,9 +674,9 @@
             this.select(event.type === "click" ? "click" : "over", $next);
             if (event.type === 'click') {
                 this.set_active();
-                this.$target.trigger("snippet-style-change", [this]);
+                this.$target.trigger("snippet-option-change", [this]);
             } else {
-                this.$target.trigger("snippet-style-preview", [this]);
+                this.$target.trigger("snippet-option-preview", [this]);
             }
         },
         /* 
@@ -724,7 +722,7 @@
                     });
                 }
                 self.reset_methods = [];
-                self.$target.trigger("snippet-style-reset", [this]);
+                self.$target.trigger("snippet-option-reset", [this]);
             },0);
         },
 
@@ -753,7 +751,7 @@
                         }
                         self[k](type, methods[k], $el);
                     } else {
-                        console.error("'"+self['snippet-id']+"' snippet have not method '"+k+"'");
+                        console.error("'"+self.option+"' snippet have not method '"+k+"'");
                     }
                 }
             });
@@ -813,14 +811,14 @@
                 var value = $image.attr("src");
                 self.$target.css("background-image", 'url(' + value + ')');
                 self.$el.find('li[data-select_class="oe_custom_bg"]').data("src", value);
-                self.$target.trigger("snippet-style-change", [self]);
+                self.$target.trigger("snippet-option-change", [self]);
                 $image.remove();
                 self.$target.addClass('oe_custom_bg').removeClass('oe_img_bg');
                 self.set_active();
             });
             editor.on('cancel', self, function () {
                 self.$target.removeClass("oe_img_bg")
-                    .trigger("snippet-style-change", [self]);
+                    .trigger("snippet-option-change", [self]);
                 $image.remove();
             });
         },
@@ -1001,7 +999,7 @@
         },
         load_style_options : function () {
             this._super();
-            $(".snippet-style-size li[data-value='']").remove();
+            $(".snippet-option-size li[data-value='']").remove();
         },
         start : function () {
             var self = this;
@@ -1026,7 +1024,7 @@
 
             var $clone = this._super(type, data);
             // choose an other background
-            var bg = this.$target.data("snippet-ids").background;
+            var bg = this.$target.data("snippet-option-ids").background;
             if (!bg) return $clone;
 
             var $styles = bg.$el.find("li[data-background]");
@@ -1352,7 +1350,7 @@
                 this.$target.data("snippet-view", new website.snippet.animationRegistry.parallax(this.$target));
             }
             this.scroll();
-            this.$target.on('snippet-style-change snippet-style-preview', function () {
+            this.$target.on('snippet-option-change snippet-option-preview', function () {
                 self.$target.data("snippet-view").set_values();
             });
             this.$target.attr('contentEditable', 'false');
@@ -1465,7 +1463,6 @@
             this.BuildingBlock = BuildingBlock;
             this.$target = $(dom);
             this.$overlay = this.$target.data('overlay');
-            this.snippet_id = this.$target.data("snippet-id");
             this.load_style_options();
             this.get_parent_block();
             this.start();
@@ -1564,10 +1561,10 @@
                 if (val['drop-in']) self.selector_children.push(val['drop-in']);
                 if (val['drop-in-vertical']) self.selector_vertical_children.push(val['drop-in-vertical']);
 
-                var style = val['snippet-id'];
-                var Editor = website.snippet.options[style] || website.snippet.Option;
-                var editor = self.styles[style] = new Editor(self.BuildingBlock, self, self.$target, option_id);
-                $ul.append(editor.$el.addClass("snippet-style-" + style));
+                var option = val['option'];
+                var Editor = website.snippet.options[option] || website.snippet.Option;
+                var editor = self.styles[option] = new Editor(self.BuildingBlock, self, self.$target, option_id);
+                $ul.append(editor.$el.addClass("snippet-option-" + option));
             });
             this.selector_siblings = this.selector_siblings.join(",");
             if (this.selector_siblings === "")
