@@ -198,6 +198,9 @@ class main(http.Controller):
 
     @http.route(['/slides/add_slide'], type='http', auth="user", methods=['POST'], website=True)
     def add_slide(self, *args, **post):
-        print '>>>>>>>>',args
-        print 'post',post
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        slide_obj = pool.get('ir.attachment')
+        slide_id = slide_obj.create(cr, uid, post, context=context)
+        slide = slide_obj.browse(cr, uid, slide_id, context=context)
+        return request.redirect("slides/view/%s" % slug(slide))
 

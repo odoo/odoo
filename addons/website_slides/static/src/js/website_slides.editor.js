@@ -9,37 +9,48 @@
         new_slide: function() {
             new website.editor.AddSlideDialog().appendTo(document.body);
         },
-               
+
     });
     website.editor.AddSlideDialog = website.editor.Dialog.extend({
         template: 'website.addslide.dialog',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
             'change .slide-upload': 'slide_upload',
         }),
+        init: function(){
+            this.file = {};
+        },
 
         start: function (){
+            this.$('.save').text('Create Slide');
             var r = this._super.apply(this, arguments);
             this.set_tags("");
             return r;
         },
         slide_upload: function(ev){
             var self = this;
-            var file = ev.target.files[0]; 
-            var fileReader = new FileReader();
-            var binaryReader = new FileReader();
-            fileReader.readAsArrayBuffer(file);
-            binaryReader.readAsDataURL(file);
-            binaryReader.onload = function FileAsBinaryOnload(evt) {
-                var data = evt.target.result;
-                self.file_data = data;
+            var file = ev.target.files[0];
+            var ArrayReader = new FileReader();
+            var BinaryReader = new FileReader();
+            // file read as DataURL
+            BinaryReader.readAsDataURL(file);
+            BinaryReader.onloadend = function(upload) {
+                var buffer = upload.target.result;
+                buffer = buffer.split(',')[1];
+                self.file.data = buffer;
+                self.file.name = file.name;
             };
-            fileReader.onload = function FileAsArrayOnload(evt) {
+            // file read as ArrayBuffer for PDFJS get_Document API
+            ArrayReader.readAsArrayBuffer(file);
+            ArrayReader.onload = function(evt) {
                 var buffer = evt.target.result;
-                var uint8Array = new Uint8Array(buffer);
-                // PDFJS can't eval path because of bunlde assest 
+                // PDFJS can't eval path because of bunlde assest
                 // https://github.com/mozilla/pdf.js/blob/master/src/pdf.js#L41
-                PDFJS.workerSrc = '/static/lib/pdfjs/build/pdf.worker.js';
-                PDFJS.getDocument(uint8Array).then(function getPdf(pdf) {
+                var path = '';
+                var pathArray = window.location.pathname.split( '/' );
+                pathArray.forEach(function(){path +='../'});
+                PDFJS.workerSrc = path + 'website_slides/static/lib/pdfjs/build/pdf.worker.js';
+
+                PDFJS.getDocument(buffer).then(function getPdf(pdf) {
                     pdf.getPage(1).then(function getFirstPage(page) {
                         var scale = 1;
                         var viewport = page.getViewport(scale);
@@ -57,7 +68,7 @@
         },
 
         set_tags: function(tags){
-           this.$("input.load_tags").textext({
+           this.$("input.slide-tags").textext({
                 plugins: 'tags focus autocomplete ajax',
                 tagsItems: tags.split(","),
                 // Note: The following list of keyboard keys is added. All entries are default except {32 : 'whitespace!'}.
@@ -72,13 +83,20 @@
         },
         get_value: function(){
             var self = this;
+            var default_val = {
+                'is_slide': true,
+                'website_published': false, 
+            };
             var values = {
                 'name' : this.$('#name').val(),
                 'description' : this.$('#description').val(),
-                'tags' : this.$('.load_tags').textext()[0].tags()._formData,
-                'file': self.file_data 
+//                'tags' : this.$('.slide-tags').textext()[0].tags()._formData,
+                'datas': self.file.data,
+                'datas_fname': self.file.name,
+                'image': this.$('#the-canvas')[0].toDataURL().split(',')[1],
+                'url': this.$('#url').val()
             };
-            return values;
+            return _.extend(values, default_val);
         },
         save: function () {
             var values = this.get_value();
@@ -87,6 +105,4 @@
 
         });
 
-
- 
 })();
