@@ -1058,7 +1058,7 @@ openerp.account = function (instance) {
     
         /* TODO : if t-call for attr, all in qweb */
         decorateStatementLine: function(line){
-            line.q_popover = QWeb.render("bank_statement_reconciliation_line_details", {line: line});
+            line.q_popover = QWeb.render("bank_statement_reconciliation_statement_line_details", {line: line});
         },
     
         islineCreatedBeingEditedValid: function() {
@@ -1349,7 +1349,7 @@ openerp.account = function (instance) {
                     );
                 } else {
                     line_created_being_edited[0].amount = amount;
-                    delete line_created_being_edited[1];
+                    line_created_being_edited.length = 1;
                     deferred_tax.resolve();
                 }
             } else { deferred_tax.resolve(); }
@@ -1514,46 +1514,6 @@ openerp.account = function (instance) {
             return dict;
         },
     
-        // Persist data, notify parent view and terminate widget
-        persistAndDestroy: function() {
-            var self = this;
-            if (! self.is_consistent) return;
-    
-            // Prepare data
-            var mv_line_dicts = [];
-            _.each(self.get("mv_lines_selected"), function(o) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(o)) });
-            _.each(self.getCreatedLines(), function(o) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(o)) });
-            if (Math.abs(self.get("balance")).toFixed(3) !== "0.000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
-    
-            // Sliding animation
-            var height = self.$el.outerHeight();
-            var container = $("<div />");
-            container.css("height", height)
-                     .css("marginTop", self.$el.css("marginTop"))
-                     .css("marginBottom", self.$el.css("marginBottom"));
-            self.$el.wrap(container);
-            var deferred_animation = self.$el.parent().slideUp(self.animation_speed*height/150);
-    
-            // RPC
-            return self.model_bank_statement_line
-                .call("process_reconciliation", [self.st_line_id, mv_line_dicts])
-                .then(function () {
-                    $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
-                    return $.when(deferred_animation).then(function(){
-                        self.$el.parent().remove();
-                        var parent = self.getParent();
-                        return $.when(self.destroy()).then(function() {
-                            parent.childValidated(self);
-                        });
-                    });
-                }, function(){
-                    self.$el.parent().slideDown(self.animation_speed*height/150, function(){
-                        self.$el.unwrap();
-                    });
-                });
-    
-        },
-
         makeRPCForPersisting: function() {
             var self = this;
             var mv_line_dicts = [];
@@ -1561,9 +1521,51 @@ openerp.account = function (instance) {
             _.each(self.getCreatedLines(), function(o) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(o)) });
             if (Math.abs(self.get("balance")).toFixed(3) !== "0.000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
             return self.model_bank_statement_line
-                .call("process_reconciliation", [self.st_line_id, mv_line_dicts])
+                .call("process_reconciliation", [self.st_line_id, mv_line_dicts]);
         },
     });
+
+    instance.web.client_actions.add('manual_reconciliation_view', 'instance.web.account.manualReconciliation');
+    instance.web.account.manualReconciliation = instance.web.account.abstractReconciliation.extend({
+    
+        init: function(parent, context) {
+            this._super(parent, context);
+
+            this.childrenWidget = instance.web.account.manualReconciliationLine;
+        },
+    
+        start: function() {
+            var self = this;
+            $.when(this._super()).then(function(){
+                self.$el.addClass("oe_manual_reconciliation");
+                self.$el.prepend(QWeb.render("reconciliation", {title: self.title, total_lines: 0}));
+            });
+        },
+    });
+    
+    instance.web.account.manualReconciliationLine = instance.web.account.abstractReconciliationLine.extend({
+
+        events: {
+        },
+    
+        init: function(parent, context) {
+            this._super(parent, context);
+        },
+    
+        start: function() {
+            this.$el.addClass("oe_manual_reconciliation_line");
+            return this._super();
+        },
+
+        loadData: function() {
+            var self = this;
+        },
+
+        render: function() {
+            var self = this;
+        },
+    });
+
 
     instance.web.views.add('tree_account_reconciliation', 'instance.web.account.ReconciliationListView');
     instance.web.account.ReconciliationListView = instance.web.ListView.extend({
