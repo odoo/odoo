@@ -2,39 +2,49 @@
     <t t-name="website.addslide.dialog">
         <t t-call="website.editor.dialog">
             <t t-set="title">Add Slide</t>
+            <form class="clearfix form-horizontal">
 
-            <div class="control-group">
-                <label for="slide-name" class="control-label">
-                    Slide Name
-                </label>
-                <div class="controls">
-                    <input name="slide-name" value="" id="name"/>
+                <div class="control-group">
+                    <label for="slide-name" class="control-label col-sm-3">
+                        Slide Name:
+                    </label>
+                    <div class="col-sm-9">
+                        <input name="slide-name" placeholder="Slide Name" class="form-control" required="required" id="name"/>
+                    </div>
                 </div>
-            </div>
 
-            <div class="control-group">
-                <label for="slide-tag" class="control-label">
-                    Slide Tag
-                </label>
-                <div class="controls">
-                    <input type="text" name="tags" placeholder="Tags" class="form-control load_tags"/>
+                <div class="control-group">
+                    <label for="slide-tag" style="margin-top: 13px;" class="control-label col-sm-3">
+                        Slide Tag:
+                    </label>
+                    <div class="controls col-sm-9">
+                        <br/>
+                        <input type="text" name="tags" style="width: 200px" placeholder="Tags" class="form-control slide-tags"/>
+                    </div>
                 </div>
-            </div>
 
-            <div class="control-group">
-                <label class="control-label" for="slide-file">Upload Slide</label>
-              <div class="controls">
-                  <input id="slide-file" name="file" class="slide-upload" type="file"/>
-              </div>
-            </div>
-
-            <div class="control-group">
-                <label class="control-label" for="slide-description">Description</label>
-                <div class="controls">
-                    <textarea id="slide-description" name="description">Description</textarea>
+                <div class="control-group">
+                    <label class="control-label col-sm-3" for="slide-file">Upload Slide:</label>
+                    <div class="controls col-sm-9 input-group-sm h5">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <input id="slide-file" name="file" accept="application/pdf" class="slide-upload" type="file"/> 
+                            </li>
+                            <li class="list-group-item">
+                                <input name="slide-url" class="form-control h5" placeholder="Video URL" id="url"/>
+                            </li>
+                        </ul> 
+                    </div>
                 </div>
-            </div>
-            <canvas id="the-canvas" style="border:1px  solid black"></canvas>
+                <div class="control-group">
+                    <label class="control-label col-sm-3" for="slide-description">Description:</label>
+                    <div class="controls col-sm-9">
+                        <textarea id="slide-description"   placeholder="Slide Description" class="form-control" name="description"></textarea>
+                    </div>
+                </div>
+
+                <canvas id="the-canvas" style="display: none;"></canvas>
+            </form>
         </t>
     </t>
 </templates>
