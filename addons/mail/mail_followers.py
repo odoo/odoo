@@ -48,6 +48,7 @@ class mail_followers(osv.Model):
             help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall."),
     }
 
+    _sql_constraints = [('mail_followers_res_partner_res_model_id_uniq','unique(res_model,res_id,partner_id)','Error, a partner cannot follow twice the same object.')]
 
 class mail_notification(osv.Model):
     """ Class holding notifications pushed to partners. Followers and partners

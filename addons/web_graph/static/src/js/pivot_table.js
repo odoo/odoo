@@ -28,7 +28,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	// ----------------------------------------------------------------------
     // this.measures: list of measure [measure], measure = {field: _, string: _, type: _}
     // this.rows.groupby, this.cols.groupby : list of groupbys used for describing rows (...),
-    //      a groupby is also {field:_, string:_, type:_} 
+    //      a groupby is also {field:_, string:_, type:_}
     //      If its type is date/datetime, field can have the corresponding interval in its description,
     //      for example 'create_date:week'.
 	set_measures: function (measures) {
@@ -65,7 +65,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         }
         var row_gb_changed = !_.isEqual(row_groupby, this.rows.groupby),
             col_gb_changed = !_.isEqual(col_groupby, this.cols.groupby);
-        
+
         this.domain = domain;
         this.rows.groupby = row_groupby;
         this.cols.groupby = col_groupby;
@@ -80,7 +80,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	// Cells manipulation methods
 	// ----------------------------------------------------------------------
     // cells are objects {x:_, y:_, values:_} where x < y and values is an array
-    //       of values (one for each measure).  The condition x < y might look 
+    //       of values (one for each measure).  The condition x < y might look
     //       unnecessary, but it makes the rest of the code simpler: headers
     //       don't krow if they are rows or cols, they just know their id, so
     //       it is useful that a call get_values(id1, id2) is the same as get_values(id2, id1)
@@ -103,9 +103,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	// ----------------------------------------------------------------------
 	// Headers/Rows/Cols manipulation methods
 	// ----------------------------------------------------------------------
-    // this.rows.headers, this.cols.headers = [header] describe the tree structure 
+    // this.rows.headers, this.cols.headers = [header] describe the tree structure
     //      of rows/cols.  Headers are objects
-    //      { 
+    //      {
     //          id:_,               (unique id obviously)
     //          path: [...],        (array of all parents title, with its own title at the end)
     //          title:_,            (name of the row/col)
@@ -150,12 +150,12 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	get_rows_leaves: function () {
 		return _.where(this.rows.headers, {expanded:false});
 	},
-	
+
 	// return all non expanded cols
 	get_cols_leaves: function () {
 		return _.where(this.cols.headers, {expanded:false});
 	},
-	
+
     get_ancestors: function (header) {
         var self = this;
         if (!header.children) return [];
@@ -181,7 +181,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
     main_row: function () { return this.rows.headers[0]; },
-    
+
     main_col: function () { return this.cols.headers[0]; },
 
 	// ----------------------------------------------------------------------
@@ -255,7 +255,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	// Data updating methods
 	// ----------------------------------------------------------------------
     // update_data will try to preserve the expand/not expanded status of each
-    // column/row.  If you want to expand all, then set this.cols.headers/this.rows.headers 
+    // column/row.  If you want to expand all, then set this.cols.headers/this.rows.headers
     // to null before calling update_data.
     update_data: function () {
         var self = this;
@@ -289,7 +289,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         data_pts.forEach(function (data_pt) {
             var row_value = (prefix || []).concat(data_pt.attributes.value.slice(0,index));
             var col_value = data_pt.attributes.value.slice(index);
-            
+
             if (expand && !_.find(col_headers, function (hdr) {return self.isEqual(col_value, hdr.path);})) {
                 return;
             }
@@ -427,6 +427,10 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
                             return _t('Undefined');
                         } else if (attrs.value[i] instanceof Array) {
                             return attrs.value[i][1];
+                        }else if (grouped_on && self.fields[grouped_on].type === 'selection'){
+                            var selection = self.fields[grouped_on].selection;
+                            var value_lookup = _.where(selection, {0:attrs.value[i]});
+                            return value_lookup ? value_lookup[0][1] : _t('Undefined');
                         }
                         return attrs.value[i];
                     });
@@ -445,8 +449,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
     isEqual: function (path1, path2) {
         if (path1.length !== path2.length) { return false; }
         for (var i = 0; i < path1.length; i++) {
-            if (path1[i] !== path2[i]) { 
-                return false; 
+            if (path1[i] !== path2[i]) {
+                return false;
             }
         }
         return true;
