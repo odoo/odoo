@@ -1295,7 +1295,7 @@ instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
         this.record_id = self.parent.id;
         this.priorities = self.prepare_priority();
         this.$el = $(QWeb.render("Priority", {'widget': this}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('li').click(self.do_action.bind(self));
     },
     do_action: function(e) {
         var self = this;
@@ -1337,7 +1337,7 @@ instance.web_kanban.KanbanSelection = instance.web_kanban.AbstractField.extend({
         this.record_id = self.parent.id;
         this.states = self.prepare_dropdown_selection();;
         this.$el = $(QWeb.render("KanbanSelection", {'widget': self}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('li').click(self.do_action.bind(self));
     },
     do_action: function(e) {
         var self = this;
