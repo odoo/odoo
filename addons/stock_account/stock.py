@@ -190,6 +190,14 @@ class stock_picking(osv.osv):
         invoice_obj = self.pool.get('account.invoice')
         return invoice_obj.create(cr, uid, vals, context=context)
 
+    def _get_partner_to_invoice(self, cr, uid, picking, context=None):
+        """ Gets the partner that will be invoiced
+            Note that this function is inherited in the sale and purchase modules
+            @param picking: object of the picking for which we are selecting the partner to invoice
+            @return: object of the partner to invoice
+        """
+        return picking.partner_id and picking.partner_id.id
+        
     def action_invoice_create(self, cr, uid, ids, journal_id, group=False, type='out_invoice', context=None):
         """ Creates invoice based on the invoice state selected for picking.
         @param journal_id: Id of journal
@@ -197,20 +205,14 @@ class stock_picking(osv.osv):
         @param type: Type invoice to be created
         @return: Ids of created invoices for the pickings
         """
-        saleorder_model = self.pool['sale.order']
         context = context or {}
         todo = {}
 
         for picking in self.browse(cr, uid, ids, context=context):
+            partner = self._get_partner_to_invoice(cr, uid, picking, context)
             #grouping is based on the invoiced partner
             if group:
-                saleorder_ids = saleorder_model.search(cr, uid, [('procurement_group_id' ,'=', picking.group_id.id)], context=context)
-                saleorders = saleorder_model.browse(cr, uid, saleorder_ids, context=context)
-                if saleorders and saleorders[0]:
-                    saleorder = saleorders[0]
-                    key = "%s" % saleorder.partner_invoice_id.id
-                else:
-                    key = "Pick %s" % picking.id
+                key = partner
             else:
                 key = picking.id
             for move in picking.move_lines:
