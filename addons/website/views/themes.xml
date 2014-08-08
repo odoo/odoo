@@ -3,287 +3,123 @@
 <data>
 
 <!--
-     Theme Selector
+     Theme
 -->
 
-    <template id="website.themes" name="Themes">
-        <t t-call="website.layout">
-          <div id="wrap" groups="base.group_website_publisher">
-            <div class="container">
-    
-            <div class="alert alert-info mt32" t-if="theme_changed">
-                <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
-                <p>
-                    <h4>Theme Changed!</h4>
-                    Have a look at <a href="/">your homepage</a> or try another theme below.
-                </p>
-            </div>
-            <h1 class="text-center">Try a New Theme</h1>
-            <h3 class="text-center text-muted">You'll be able to change the theme at anytime</h3>
-    
-            <div class="row mt32" id="themes-list">
-    
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img src="/website/static/src/img/bootswatch_default_thumbnail.png" class="img-responsive" alt="Default Theme"/>
-                  </div>
-                  <div class="options">
-                    <h3>Default</h3>
-                    <p>Pure Bootstrap</p>
-                    <a class="btn btn-info" href="/website/theme_change">Apply</a>
-                  </div>
-                </div>
-              </div>
+    <template id="website.theme" name="Theme">
+        <!-- Boostrap Fallback if server can't compute less files -->
+        <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
+        
+        <link rel="stylesheet" href='/website/static/src/css/website.css' t-ignore="true"/>
 
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/amelia/thumbnail.png" alt="Amelia"/>
-                  </div>
-                  <div class="options">
-                    <h3>Amelia</h3>
-                    <p>Sweet and cheery</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_amelia">Apply</a>
-                  </div>
-                </div>
-              </div>
+        <!-- Boostrap less files -->
 
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/cerulean/thumbnail.png" alt="Cerulean"/>
-                  </div>
-                  <div class="options">
-                    <h3>Cerulean</h3>
-                    <p>A calm blue sky</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_cerulean">Apply</a>
-                  </div>
-                </div>
-              </div>
+        <!-- Boostrap -->
 
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/cosmo/thumbnail.png" alt="Cosmo"/>
-                  </div>
-                  <div class="options">
-                    <h3>Cosmo</h3>
-                    <p>An ode to Metro</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_cosmo">Apply</a>
-                  </div>
-                </div>
-              </div>
+        <link href="/web/static/lib/bootstrap/less/mixins.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/alerts.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/background-variant.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/border-radius.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/buttons.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/center-block.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/clearfix.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/forms.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/gradients.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/grid-framework.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/grid.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/hide-text.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/image.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/labels.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/list-group.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/nav-divider.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/nav-vertical-align.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/opacity.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/pagination.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/panels.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/progress-bar.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/reset-filter.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/resize.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/responsive-visibility.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/size.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/tab-focus.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/table-row.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/text-emphasis.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/text-overflow.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/mixins/vendor-prefixes.less" rel="stylesheet" type="text/less"/>
 
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/cyborg/thumbnail.png" alt="Cyborg"/>
-                  </div>
-                  <div class="options">
-                    <h3>Cyborg</h3>
-                    <p>Jet black and electric blue</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_cyborg">Apply</a>
-                  </div>
-                </div>
-              </div>
+        <link href="/web/static/lib/bootstrap/less/variables.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/normalize.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/print.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/scaffolding.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/type.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/code.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/grid.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/tables.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/forms.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/buttons.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/component-animations.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/glyphicons.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/dropdowns.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/button-groups.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/input-groups.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/navs.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/navbar.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/breadcrumbs.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/pagination.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/pager.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/labels.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/badges.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/jumbotron.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/thumbnails.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/alerts.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/progress-bars.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/media.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/list-group.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/panels.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/wells.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/close.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/modals.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/tooltip.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/popovers.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/carousel.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/utilities.less" rel="stylesheet" type="text/less"/>
+        <link href="/web/static/lib/bootstrap/less/responsive-utilities.less" rel="stylesheet" type="text/less"/>
 
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/flatly/thumbnail.png" alt="Flatly"/>
-                  </div>
-                  <div class="options">
-                    <h3>Flatly</h3>
-                    <p>Flat and modern</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_flatly">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/journal/thumbnail.png" alt="Journal"/>
-                  </div>
-                  <div class="options">
-                    <h3>Journal</h3>
-                    <p>Crisp like a new sheet of paper.</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_journal">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/readable/thumbnail.png" alt="Readable"/>
-                  </div>
-                  <div class="options">
-                    <h3>Readable</h3>
-                    <p>Optimized for legibility</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_readable">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/simplex/thumbnail.png" alt="Simplex"/>
-                  </div>
-                  <div class="options">
-                    <h3>Simplex</h3>
-                    <p>Mini and minimalist.</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_simplex">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/slate/thumbnail.png" alt="Slate"/>
-                  </div>
-                  <div class="options">
-                    <h3>Slate</h3>
-                    <p>Shades of gunmetal gray</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_slate">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/spacelab/thumbnail.png" alt="Spacelab"/>
-                  </div>
-                  <div class="options">
-                    <h3>Spacelab</h3>
-                    <p>Silvery and sleek.</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_spacelab">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/united/thumbnail.png" alt="United"/>
-                  </div>
-                  <div class="options">
-                    <h3>United</h3>
-                    <p>Ubuntu orange and unique font</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_united">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/yeti/thumbnail.png" alt="Yeti"/>
-                  </div>
-                  <div class="options">
-                    <h3>Yeti</h3>
-                    <p>A friendly foundation</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_yeti">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            </div>
-          </div>
-        </t>
+        <link rel="stylesheet" href='/website/static/src/less/colors.less' t-ignore="true"/>
     </template>
 
+<!-- Option layout -->
 
-<!--
-     All Default Themes
--->
+<template id="option_layout_boxed" name="option_layout_boxed" inherit_id="website.theme" optional="disabled">
+    <xpath expr="//link[last()]" position="after">
+        <link href="/website/static/src/less/option_layout_boxed.less" rel="stylesheet" type="text/less"/>
+    </xpath>
+</template>
 
-    <template id="website.theme_amelia" name="Amelia" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/amelia.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/amelia.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
+<!-- Option color -->
 
-    <template id="website.theme_cerulean" name="Cerulean" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/cerulean.min.css' t-ignore="true"/>
-        </xpath>
-    </template>
+<template id="option_color_stone" name="option_color_stone" inherit_id="website.theme" optional="disabled">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_stone.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_emerald" name="option_color_emerald" inherit_id="website.theme" optional="disabled">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_emerald.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_cobalt" name="option_color_cobalt" inherit_id="website.theme" optional="disabled">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_cobalt.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_amethyst" name="option_color_amethyst" inherit_id="website.theme" optional="disabled">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_amethyst.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_ruby" name="option_color_ruby" inherit_id="website.theme" optional="disabled">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_ruby.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_gold" name="option_color_gold" inherit_id="website.theme" optional="disabled">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_gold.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
 
-    <template id="website.theme_cosmo" name="Cosmo" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/cosmo.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/cosmo.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_cyborg" name="Cyborg" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/cyborg.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/cyborg.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_flatly" name="Flatly" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/flatly.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/flatly.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_journal" name="Journal" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/journal.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/journal.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_readable" name="Readable" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/readable.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/readable.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_simplex" name="Simplex" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/simplex.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/simplex.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_slate" name="Slate" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/slate.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/slate.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_spacelab" name="Spacelab" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/spacelab.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/spacelab.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_united" name="United" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/united.min.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_yeti" name="Yeti" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/yeti.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/yeti.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
+<template id="option_font" name="option_font" inherit_id="website.theme" optional="disabled">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_font.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
 
 </data>
 </openerp>
