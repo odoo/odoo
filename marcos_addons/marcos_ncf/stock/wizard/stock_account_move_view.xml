@@ -1,0 +1,34 @@
+<openerp>
+    <data>
+
+        <record id="stock_picking_account_move_form_view" model="ir.ui.view">
+            <field name="name">stock.picking.account.move.form</field>
+            <field name="model">stock.picking.account.move</field>
+            <field name="arch" type="xml">
+                <form string="Enviar picking a contabilidad" version="7.0">
+                    <p class="oe_grey">
+                        Este procesos crea las entradas de diarios referentes al movimiento de productos,
+                    </p>
+                    <footer>
+                        <button string="Enviar a contabilidad" name="pick_move" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="stock_picking_account_move_confirm_in"
+            multi="True"
+            key2="client_action_multi" name="Enviar movimientos a contabilidad"
+            res_model="stock.picking.account.move" src_model="stock.picking"
+            view_mode="form" target="new" view_type="form" />
+
+        <act_window id="stock_picking_account_move_confirm_out"
+            multi="True"
+            key2="client_action_multi" name="Enviar movimientos a contabilidad"
+            res_model="stock.picking.account.move" src_model="stock.picking"
+            view_mode="form" target="new" view_type="form" />
+
+     </data>
+</openerp>

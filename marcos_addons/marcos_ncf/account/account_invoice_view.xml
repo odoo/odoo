@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+
+    <!-- 
+    =====================================================
+    Invoices Extension
+    =====================================================
+    -->  
+
+        <record id="account_inv_ext_view_form_crdr" model="ir.ui.view">
+            <field name="name">invoice_extended.form.crdr</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <notebook>
+                    <page string="Debit-Credit Notes" position="inside">
+                        <field name="child_ids" nolabel="1" widget="many2many" domain="[('partner_id','=',partner_id),('id', '!=', active_id),('type','in',['out_invoice', 'out_refund'])]"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+
+
+        <record id="account_inv_ext_view_supp_form_crdr" model="ir.ui.view">
+            <field name="name">invoice_extended.supplier.form.crdr</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <notebook>
+                    <page string="Debit-Credit Notes" position="inside">
+                        <field name="child_ids" nolabel="1" widget="many2many" domain="[('partner_id','=',partner_id),('id', '!=', active_id),('type','in',['in_invoice', 'in_refund'])]"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+
+        <record id="account_inv_ext_view_tree_crdr" model="ir.ui.view">
+            <field name="name">invoice_extended.tree.crdr</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="parent_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_inv_ext_form_crdrc" model="ir.ui.view">
+            <field name="name">invoice_ext.form.crdrc</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//field[@name='period_id']" position="after">-->
+                    <!--<field name="parent_id" attrs="{'required':[('type','=','out_refund')]}" domain="[('partner_id','=',partner_id),('id', '!=', active_id),('type','in',['out_invoice', 'out_refund'])]"/>-->
+                <!--</xpath>-->
+                <field name="fiscal_position" position="after">
+                    <field name="parent_id" attrs="{'required':[('type','=','out_refund')]}" domain="[('partner_id','=',partner_id),('id', '!=', active_id),('type','=','out_invoice')]"/>
+                </field>
+                <xpath expr="//button[@string='Refund Invoice']" position="after">
+                    <button name="%(action_account_invoice_debit)d"
+                            type='action'
+                            string='Debit Note'
+                            icon="gtk-execute"
+                            attrs="{'invisible':['|',('type','in',('in_refund','out_refund','out_invoice')),('state','=','draft')]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_inv_ext_form_crdrs" model="ir.ui.view">
+            <field name="name">invoice_ext.form.crdrs</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="reference" position="after">
+                    <field name="parent_id" attrs="{'required':[('type','=','in_refund')], 'invisible':[('type','!=','in_refund')]}" domain="[('partner_id','=',partner_id),('id', '!=', active_id),('type','in',['in_invoice', 'in_refund'])]"/>
+                </field>
+                <!--<xpath expr="//field[@name='period_id']" position="after">-->
+                    <!--<field name="parent_id" attrs="{'required':[('type','=','in_refund')]}" domain="[('partner_id','=',partner_id),('id', '!=', active_id),('type','in',['in_invoice', 'in_refund'])]"/>-->
+                <!--</xpath>-->
+                <!--<xpath expr="//button[@string='Ask Refund']" position="replace"/>-->
+                <!--<xpath expr="//button[@string='Ask Refund']" position="after">-->
+                    <!--<button name="%(action_account_invoice_debit)d" type='action' string='Debit Note' states='open,paid' icon="gtk-execute" attrs="{'invisible':['|',('type','in',['in_refund', 'out_refund'],('state','=','draft'))]}"/>-->
+                <!--</xpath>-->
+            </field>
+        </record>
+    </data>
+</openerp>

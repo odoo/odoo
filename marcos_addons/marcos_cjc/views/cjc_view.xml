@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="cjc_view_form" model="ir.ui.view">
+            <field name="name">Caja Chica Conceptos Form</field>
+            <field name="model">marcos.cjc.concept</field>
+            <field name="arch" type="xml">
+                <form string="Conceptos Para NCF Especiales" version="7.0">
+                    <group col="2">
+                        <field name="name"/>
+                        <field name="supplier_taxes_id" widget="many2many_tags"/>
+                        <field name="account_expense"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="cjc_view_tree" model="ir.ui.view">
+            <field name="name">Caja Chica Conceptos Tree</field>
+            <field name="model">marcos.cjc.concept</field>
+            <field name="arch" type="xml">
+                <tree string="Conceptos Para NCF Especiales" version="7.0">
+                    <field name="name"/>
+                    <field name="supplier_taxes_id"/>
+                    <field name="account_expense"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="cjc_view_action">
+            <field name="name">Conceptos de Caja Chica</field>
+            <field name="res_model">marcos.cjc.concept</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name='Conceptos de Caja Chica'
+                  id='cjc_menu'
+                  parent='account.menu_configuration_misc'
+                  sequence='13'
+                  action="cjc_view_action"/>
+
+        <record id="cjc_view_cash_statement_form_voucher" model="ir.ui.view">
+            <field name="name">cjc.account.cash.statement.voucher.form.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form2"/>
+            <field name="arch" type="xml">
+                <field name="period_id" position="after">
+                    <field name="is_cjc" invisible="1"/>
+                </field>
+                <field name="journal_id" position="attributes">
+                    <attribute name="on_change">journal_id_change(journal_id)</attribute>
+                </field>
+                <xpath expr="//header//button[@name='button_cancel']" position="before">
+                    <button name="create_invoice_wizard" type="object" string="Crear factura" attrs="{'invisible': ['|',('is_cjc','=',False),('state','in',('draft','confirm'))]}" class="oe_highlight"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

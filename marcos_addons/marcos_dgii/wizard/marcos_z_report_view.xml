@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="marcos_z_report_view_form" model="ir.ui.view">
+            <field name="name">marcos.z.report.view.form</field>
+            <field name="model">marcos.z.report</field>
+            <field name="arch" type="xml">
+                <form string="Z Report" version="7.0">
+                    <group>
+                        <field name="filter_type"/>
+                        <field name="period_from" class="oe_inline"
+                            attrs="{'invisible':[('filter_type','!=','period')],
+                                    'required':[('filter_type','=','period')]}"/>
+                        <field name="period_to" class="oe_inline"
+                            attrs="{'invisible':[('filter_type','!=','period')],
+                                    'required':[('filter_type','=','period')]}"/>
+                        <field name="sequence_from" class="oe_inline"
+                            attrs="{'invisible':[('filter_type','!=','sequence')],
+                                    'required':[('filter_type','=','sequence')]}"/>
+                        <field name="sequence_to" class="oe_inline"
+                            attrs="{'invisible':[('filter_type','!=','sequence')],
+                                    'required':[('filter_type','=','sequence')]}"/>
+                    </group>
+                    <footer>
+                        <widget type="printzreport"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_z_report" model="ir.actions.act_window">
+            <field name="name">Reportes Z</field>
+            <field name="res_model">marcos.z.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="marcos_z_report_view_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_z_report"
+            id="menu_action_z_report"
+            parent="point_of_sale.menu_point_of_sale" />
+    </data>
+</openerp>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document filename="Cheque Popular.pdf">
+  <template title="Cheque Popular" author="Marcos Organizador de Negocios (sales@openerp.com)" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="20.0" y1="42.0" width="540" height="780"/>  <!-- y1="42" when using openerp/odoo header -->
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableNoLines">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <!--
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,-1" stop="7,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="8,-1" stop="8,-1"/>
+      -->
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="terp_header" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Centre_8" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_Details" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Right" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Centre_9" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_1" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9_Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_11" fontSize="11.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_11" fontSize="11.0" leading="13" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_11" fontSize="11.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <images/>
+  </stylesheet>
+  <story>
+    <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
+    <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
+    <spacer length="2cm"/>
+    <blockTable colWidths="80.0,350.0,95.0,25.0" style="TableNoLines">
+      <tr>
+        <td>
+          <para style="terp_default_Centre_9">[[ formatLang(o.date, date = True) ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_11">[[ o.name ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount, digits=get_digits(dp='Account')) ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+      </tr>
+    </blockTable>
+    <spacer length="3.8cm"/>
+    <blockTable colWidths="455.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0" style="TableNoLines">
+      <tr>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ format_check_date(o.date, 0) ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ format_check_date(o.date, 1) ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ format_check_date(o.date, 2) ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ format_check_date(o.date, 3) ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ format_check_date(o.date, 4) ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ format_check_date(o.date, 5) ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ format_check_date(o.date, 6) ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ format_check_date(o.date, 7) ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <spacer length="0.7cm"/>
+    <blockTable colWidths="95.0,300.0,145.0" style="TableNoLines">
+      <tr>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_default_11">[[ o.partner_id.name ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Right_11">[[ formatLang(o.amount, digits=get_digits(dp='Account')) ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <spacer length="0.2cm"/>
+    <blockTable colWidths="10.0,510.0,20.0" style="TableNoLines">
+      <tr>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_default_11">[[ o.amount_in_word ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+      </tr>
+    </blockTable>
+    <spacer length="2cm"/>
+    <blockTable colWidths="20.0,520.0" style="TableNoLines">
+      <tr>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[ o.number]]</para>
+        </td>
+      </tr>
+    </blockTable>
+  </story>
+</document>

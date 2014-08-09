@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document filename="Solicitud de Cheque.pdf">
+  <template title="Solicitud de Cheque" author="Marcos Organizador de Negocios (sales@openerp.com)" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="20.0" y1="42.0" width="540" height="780"/>  <!-- y1="42" when using openerp/odoo header -->
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableNoLines">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableLineAbove">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,-1" stop="5,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableLineBelow">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableLineAround">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="4,-1" stop="4,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="TableThinLineBelow">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1" thickness="0.5"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1" thickness="0.5"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1" thickness="0.5"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1" thickness="0.5"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1" thickness="0.5"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1" thickness="0.5"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="terp_header" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9_sa" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Centre_8" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_Details" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Right" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Centre_9" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9_extra" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="3.0" spaceAfter="3.0"/>
+    <paraStyle name="terp_default_1" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9_Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <images/>
+  </stylesheet>
+  <story>
+  <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
+  <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="540.0" style="TableNoLines">
+      <tr>
+        <td>
+          <para style="terp_default_9"><b>[[ o.company_id.name ]]</b></para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="405.0,50.0,10.0,75.0" style="TableLineBelow">
+      <tr>
+        <td>
+          <para style="terp_default_9">[[ o.company_id.street ]] [[ o.company_id.city]]</para>
+          <para style="terp_default_9">Tel.: [[ o.company_id.phone ]] Fax.: [[ o.company_id.fax ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_9">Número</para>
+          <para style="terp_default_9">Fecha</para>
+        </td>
+        <td>
+          <para style="terp_default_9">:</para>
+          <para style="terp_default_9">:</para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9">[[ o.number or '0' ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.date, date = True) ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="540.0" style="TableNoLines">
+      <tr>
+        <td>
+          <para style="terp_default_Centre_9_extra"><b>SOLICITUD DE CHEQUE</b></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="terp_default_Right_9"><b>[[ formatLang(o.amount, digits=get_digits(dp='Account'), currency_obj=o.company_id.currency_id) ]]</b></para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="120.0,10.0,410.0" style="TableNoLines">
+      <tr>
+        <td>
+          <para style="terp_default_9_sa">CHEQUE A FAVOR DE</para>
+          <para style="terp_default_9_sa">POR LA SUMA DE</para>
+          <para style="terp_default_9_sa">POR CONCEPTO DE</para>
+        </td>
+        <td>
+          <para style="terp_default_9_sa">:</para>
+          <para style="terp_default_9_sa">:</para>
+          <para style="terp_default_9_sa">:</para>
+        </td>
+        <td>
+          <para style="terp_default_9_sa">[[ o.partner_id.name ]]</para>
+          <para style="terp_default_9_sa">[[ o.amount_in_word ]]</para>
+          <para style="terp_default_9_sa">[[ o.name ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <spacer length=".5cm"/>
+    <blockTable colWidths="125.0,175.0,80.0,80.0,80.0" style="TableLineAround">
+      <tr>
+        <td>
+          <para style="terp_default_9">Número</para>
+        </td>
+        <td>
+          <para style="terp_default_9">Concepto</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">Fecha</para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9">Monto Factura</para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9">Monto a Pagar</para>
+        </td>
+      </tr>
+    </blockTable>
+    <section>
+      <para style="terp_default_1">[[repeatIn(get_lines(o),'line')]]</para>
+      <blockTable colWidths="100.0,200.0,80.0,80.0,80.0" style="TableThinLineBelow">
+        <tr>
+          <td>
+            <para style="terp_default_9">[[ line.name ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_9">[[ o.journal_id.name ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Centre_9">[[ formatLang(line.voucher_id.date, date = True) ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Right_9">[[ formatLang(line.amount_original, digits=get_digits(dp='Account')) ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Right_9">[[ formatLang(line.amount, digits=get_digits(dp='Account')) ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+    </section>
+    <spacer length="18cm"/>
+    <blockTable colWidths="180.0,180.0,180.0" style="TableNoLines">
+      <tr>
+        <td>
+          <para style="terp_default_Centre_9">__________________________</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">__________________________</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">__________________________</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="terp_default_Centre_9">Solicitado por</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">Aprobado por</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">Recibido por</para>
+        </td>
+      </tr>
+    </blockTable>
+  </story>
+</document>

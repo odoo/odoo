@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="cjc_wizard_view_form" model="ir.ui.view">
+            <field name="name">Caja chica form wizard</field>
+            <field name="model">cjc.invoice.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Registro de factura caja chica" version="7.0">
+                    <group col="4">
+                        <field name="journal_id" on_change="onchenge_journal(journal_id)"/>
+                        <field name="date"/>
+                        <field name="partner_id" attrs="{'required': [('ncf_minor','=',False)]}"/>
+                        <!--<field name="partner_id" attrs="{'required': [('ncf_minor','=',False)], 'readonly': [('ncf_minor','=',True)]}"/>-->
+                        <field name="reference_type"/>
+                        <field name="concept"/>
+                        <field name="ncf" attrs="{'required': [('ncf_requierd','=',True)], 'invisible': [('ncf_requierd','=',False)]}"/>
+                        <field name="ncf_requierd" invisible="1"/>
+                        <field name="ncf_minor" invisible="1"/>
+                    </group>
+                    <group col="1">
+                        <field name="line_ids"/>
+                    </group>
+                    <footer>
+                        <button name="create_purchase" type="object" string="Crear factura"/>
+                        or
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="cjc_wizard_view_action" model="ir.actions.act_window">
+            <field name="name">Registro de facturas</field>
+            <field name="res_model">cjc.invoice.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="cjc_view_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="invoice_line_wizard" model="ir.ui.view">
+            <field name="name">Lineas de wizard para facturas de cjc</field>
+            <field name="model">cjc.invoice.line.wizard</field>
+            <field name="arch" type="xml">
+                <tree string="Lineas de productos" editable="bottom">
+                    <field name="concept_id"/>
+                    <!--<field name="quantity"/>-->
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>

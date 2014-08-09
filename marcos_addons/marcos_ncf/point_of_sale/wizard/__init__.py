@@ -1,0 +1,1 @@
+import pos_payment

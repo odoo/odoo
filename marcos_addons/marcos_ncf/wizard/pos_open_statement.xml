@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>    
+        <!-- multi="True" was added to hide this menu from 'More' in form view -->
+        <act_window name="Open Statements"
+            res_model="pos.open.statement"
+            src_model="account.bank.statement"
+            view_mode="tree"
+            target="new"
+            key2="client_action_multi"
+            multi="True"
+            id="act_pos_open_statement"/>
+    </data>    
+</openerp>

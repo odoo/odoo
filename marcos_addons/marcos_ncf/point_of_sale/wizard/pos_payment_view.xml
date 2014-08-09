@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="marcos_view_confirm_print_fiscal_invoice" model="ir.ui.view">
+            <field name="name">marcos.view.confirm.print.fiscal.invoice</field>
+            <field name="model">pos.print.fiscal.invoice</field>
+            <field name="arch" type="xml">
+              <form string="Confirmar Impresión" version="7.0">
+                  <field name="name"/>
+                  <footer>
+                      <widget type="printipf"/>
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel"/>
+                  </footer>
+             </form>
+            </field>
+        </record>
+
+        <record id="marcos_view_confirm_print_customer_receipt" model="ir.ui.view">
+            <field name="name">marcos.view.confirm.print.customer.receipt</field>
+            <field name="model">pos.print.customer.receipt</field>
+            <field name="arch" type="xml">
+              <form string="Confirmar Impresión" version="7.0">
+                  <footer>
+                      <button name="print_customer_receipt" string="Print Receipt" type="object" class="oe_highlight" />
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel"/>
+                  </footer>
+             </form>
+            </field>
+        </record>
+    </data>
+</openerp>
