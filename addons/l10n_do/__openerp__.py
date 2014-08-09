@@ -42,6 +42,8 @@ This is the base module to manage the accounting chart for Dominican Republic.
     'website': 'http://marcos.do',
     'depends': ['account', 'base_vat', 'base_iban'],
     'data': [
+        'ir_sequence_type.xml',
+        'ir_sequence.xml',
         # basic accounting data
         # 'account_financial_report.xml',
         'account.account.type.csv',
@@ -52,7 +54,7 @@ This is the base module to manage the accounting chart for Dominican Republic.
         # Change BRE: adds fiscal position
         'account.fiscal.position.template.csv',
         'account.fiscal.position.tax.template.csv',
-        'account_journal.xml',
+        'account_journal.xml'
     ],
     'test': [],
     'demo': [],
