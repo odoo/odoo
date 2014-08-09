@@ -2350,7 +2350,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
             if (self.record_id) {
                 return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {
-                return self.view.on_button_save().done(function(result) {
+                return self.view.on_button_save(self).done(function(result) {
                     if (result) {
                         self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
                     }
@@ -2400,7 +2400,7 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
             if (self.record_id) {
                 return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {
-                return self.view.on_button_save().done(function(result) {
+                return self.view.on_button_save(self).done(function(result) {
                     if (result) {
                         self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
                     }
