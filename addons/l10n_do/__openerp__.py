@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2014 Marcos Organizador de Negocios- Eneldo Serrata - www.marcos.do
+# Copyright (c) 2014 Marcos Organizador de Negocios- Eneldo Serrata - http://marcos.do
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -52,8 +52,6 @@ This is the base module to manage the accounting chart for Dominican Republic.
         # Change BRE: adds fiscal position
         'account.fiscal.position.template.csv',
         'account.fiscal.position.tax.template.csv',
-        # configuration wizard, views, reports...
-        'l10n_lu_wizard.xml',
     ],
     'test': [],
     'demo': [],
