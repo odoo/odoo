@@ -1,2 +1,0 @@
-import wizard
-import point_of_sale
