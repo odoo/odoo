@@ -1090,9 +1090,15 @@ class Binary(http.Controller):
         if not filecontent:
             return request.not_found()
         else:
-            filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
-                filename = res.get(filename_field, '') or filename
+                filename = res.get(filename_field, '')
+                if not filename:
+                    # based on https://bugs.launchpad.net/openerp-web/+bug/1252458
+                    filename_name = Model.read([int(id)], [filename_field], context)
++                   filename = filename_name and filename_name[0] and filename_name[0][filename_field] or False
+            if not filename:
+                filename = '%s_%s' % (model.replace('.', '_'), id)
+
             return request.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
                  ('Content-Disposition', content_disposition(filename))])
