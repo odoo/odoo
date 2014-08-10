@@ -316,7 +316,7 @@
         <form t-attf-action="/forum/#{ slug(forum) }/question/new" method="post" role="form" class="tag_text">
             <input type="text" name="question_name" required="True" t-attf-value="#{question_name}"
                 class="form-control" placeholder="Enter your Question"/>
-            <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
+            <h5 class="mt20">Please enter a descriptive question (should finish with a '?')</h5>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <textarea name="content" required="True" class="form-control load_editor">
                 <t t-esc="question_content"/>
