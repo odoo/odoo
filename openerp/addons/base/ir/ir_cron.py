@@ -150,10 +150,10 @@ class ir_cron(osv.osv):
         except Exception, e:
             self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
 
-    def _process_job(self, cr, job, cron_cr):
+    def _process_job(self, job_cr, job, cron_cr):
         """ Run a given job taking care of the repetition.
 
-        :param cr: cursor to use to execute the job, safe to commit/rollback
+        :param job_cr: cursor to use to execute the job, safe to commit/rollback
         :param job: job to be run (as a dictionary).
         :param cron_cr: cursor holding lock on the cron job row, to use to update the next exec date,
             must not be committed/rolled back!
@@ -169,7 +169,7 @@ class ir_cron(osv.osv):
                     if numbercall > 0:
                         numbercall -= 1
                     if not ok or job['doall']:
-                        self._callback(cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
+                        self._callback(job_cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
                     if numbercall:
                         nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
                     ok = True
@@ -181,7 +181,7 @@ class ir_cron(osv.osv):
                 self.invalidate_cache(cr, SUPERUSER_ID)
 
         finally:
-            cr.commit()
+            job_cr.commit()
             cron_cr.commit()
 
     @classmethod
