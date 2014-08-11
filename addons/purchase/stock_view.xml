@@ -45,9 +45,11 @@
             <field name="arch" type="xml">
                  <xpath expr="//div[contains(@class, 'oe_title')]" position="before">
                     <div class="oe_right oe_button_box" name="buttons">
+                        <field name="picking_ids" invisible="1"/>
                         <button type="object"
                             name="view_picking"
-                            string="Incoming Shipments" states="approved"/>
+                            string="Incoming Shipments"
+                            attrs="{'invisible': ['|',('picking_ids','=',False),('picking_ids','=',[])]}"/>
                         <button type="object"  name="invoice_open"
                             string="Invoices" attrs="{'invisible': [('state', '=', 'draft')]}"/> 
                     </div>
