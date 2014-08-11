@@ -2424,14 +2424,19 @@ class BaseModel(object):
             if column_name in defaults:
                 default = field.convert_to_write(defaults[column_name])
 
-        ss = self._columns[column_name]._symbol_set
-        store_default = ss[1](default)
-        if store_default is not None:
+        column = self._columns[column_name]
+        ss = column._symbol_set
+        db_default = ss[1](default)
+        # Write default if non-NULL, except for booleans for which False means
+        # the same as NULL - this saves us an expensive query on large tables.
+        write_default = (db_default is not None if column._type != 'boolean'
+                            else db_default)
+        if write_default:
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                           self._table, column_name, default)
             query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (
                 self._table, column_name, ss[0], column_name)
-            cr.execute(query, (store_default,))
+            cr.execute(query, (db_default,))
             # this is a disgrace
             cr.commit()
 
