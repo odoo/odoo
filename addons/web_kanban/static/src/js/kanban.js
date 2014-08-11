@@ -420,8 +420,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     stop: function(event, ui) {
                         var stop_index = ui.item.index();
                         if (start_index !== stop_index) {
-                            var $start_column = $('.oe_kanban_groups_records .oe_kanban_column').eq(start_index);
-                            var $stop_column = $('.oe_kanban_groups_records .oe_kanban_column').eq(stop_index);
+                            var $start_column = self.$('.oe_kanban_groups_records .oe_kanban_column').eq(start_index);
+                            var $stop_column = self.$('.oe_kanban_groups_records .oe_kanban_column').eq(stop_index);
                             var method = (start_index > stop_index) ? 'insertBefore' : 'insertAfter';
                             $start_column[method]($stop_column);
                             var tmp_group = self.groups.splice(start_index, 1)[0];
@@ -1146,7 +1146,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
  */
 instance.web_kanban.QuickCreate = instance.web.Widget.extend({
     template: 'KanbanView.quick_create',
-    
+
     /**
      * close_btn: If true, the widget will display a "Close" button able to trigger
      * a "close" event.

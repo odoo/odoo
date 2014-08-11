@@ -451,7 +451,7 @@ class YamlInterpreter(object):
                                 # do not shadow values explicitly set in yaml.
                                 record_dict[key] = process_val(key, val)
                         else:
-                            _logger.warning("The returning field '%s' from your on_change call '%s'"
+                            _logger.debug("The returning field '%s' from your on_change call '%s'"
                                             " does not exist either on the object '%s', either in"
                                             " the view '%s'",
                                             key, match.group(1), model._name, view_info['name'])
