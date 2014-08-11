@@ -825,6 +825,7 @@ class purchase_order(osv.osv):
             }
             picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
+        return picking_id or False
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
