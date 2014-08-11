@@ -27,7 +27,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                             oldest_key  = key;
                         }
                     }
-                    if(oldestKey){
+                    if(oldest_key){
                         delete this.cache[oldest_key];
                         delete this.access_time[oldest_key];
                     }
