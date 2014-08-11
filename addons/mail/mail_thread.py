@@ -311,6 +311,9 @@ class mail_thread(osv.AbstractModel):
             cascaded, because link is done through (res_model, res_id). """
         msg_obj = self.pool.get('mail.message')
         fol_obj = self.pool.get('mail.followers')
+
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         # delete messages and notifications
         msg_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context=context)
         msg_obj.unlink(cr, uid, msg_ids, context=context)
