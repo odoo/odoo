@@ -125,10 +125,8 @@ class FSWatcher(object):
         if isinstance(event, (FileCreatedEvent, FileModifiedEvent)):
             if not event.is_directory:
                 path = event.src_path
-                if path.endswith('.xml'):
-                    _logger.info('autoreload: xml change detected, voiding orm cache')
-                    # TODO: void orm caches
-                elif config['dev_mode'] and path.endswith('.py'):
+                # TODO: assets bundle cache invalidation
+                if path.endswith('.py'):
                     try:
                         source = open(path, 'rb').read() + '\n'
                         compile(source, path, 'exec')
@@ -884,7 +882,7 @@ def start(preload=None, stop=False):
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
-    if watchdog:
+    if watchdog and config['dev_mode']:
         watcher = FSWatcher()
         watcher.start()
     else:
@@ -897,7 +895,7 @@ def start(preload=None, stop=False):
 
     # like the legend of the phoenix, all ends with beginnings
     if getattr(openerp, 'phoenix', False):
-        if watchdog:
+        if watchdog and config['dev_mode']:
             watcher.stop()
         _reexec()
 
