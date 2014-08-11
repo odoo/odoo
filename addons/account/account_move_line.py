@@ -267,9 +267,6 @@ class account_move_line(osv.osv):
                         data['ref'] = data.get('ref') or l.ref
                         total += (l.debit or 0.0) - (l.credit or 0.0)
 
-            #compute the total of current move
-            data['debit'] = total < 0 and -total or 0.0
-            data['credit'] = total > 0 and total or 0.0
             #pick the good account on the journal accordingly if the next proposed line will be a debit or a credit
             journal_data = journal_obj.browse(cr, uid, context['journal_id'], context=context)
             account = total > 0 and journal_data.default_credit_account_id or journal_data.default_debit_account_id
@@ -278,7 +275,19 @@ class account_move_line(osv.osv):
             if account and data.get('partner_id'):
                 account = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, account.id)
                 account = account_obj.browse(cr, uid, account, context=context)
-            data['account_id'] =  account and account.id or False
+            data['account_id'] = account and account.id or False
+
+
+            if account and ((not fields) or ('debit' in fields) or ('credit' in fields)):
+                if account.tax_ids:
+                    taxes = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, account.tax_ids)
+                    tax = tax_obj.browse(cr, uid, taxes)
+                    for t in tax_obj.compute_inv(cr, uid, tax, total, 1):
+                        total -= t['amount']
+            data['debit'] = total < 0 and -total or 0.0
+            data['credit'] = total > 0 and total or 0.0
+
+
             #compute the amount in secondary currency of the account, if needed
             if account and account.currency_id:
                 data['currency_id'] = account.currency_id.id
