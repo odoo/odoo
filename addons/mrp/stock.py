@@ -109,6 +109,7 @@ class StockMove(osv.osv):
                             'product_uos': line['product_uos'],
                             'group_id': move.group_id.id,
                             'priority': move.priority,
+                            'partner_dest_id': move.partner_id.id,
                             }
                         proc = proc_obj.create(cr, uid, vals, context=context)
                         proc_obj.run(cr, uid, [proc], context=context)

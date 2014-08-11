@@ -206,7 +206,7 @@ class product_product(osv.osv):
     _inherit = 'product.product'
     
     def need_procurement(self, cr, uid, ids, context=None):
-        #when sale is installed alone, there is no need to create procurements, but with sale_stock
+        #when sale/product is installed alone, there is no need to create procurements, but with sale_stock
         #we must create a procurement for each product that is not a service.
         for product in self.browse(cr, uid, ids, context=context):
             if product.type != 'service':
@@ -216,13 +216,6 @@ class product_product(osv.osv):
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
 
-    def need_procurement(self, cr, uid, ids, context=None):
-        #when sale is installed alone, there is no need to create procurements, but with sale_stock
-        #we must create a procurement for each product that is not a service.
-        for line in self.browse(cr, uid, ids, context=context):
-            if line.product_id and line.product_id.type != 'service':
-                return True
-        return super(sale_order_line, self).need_procurement(cr, uid, ids, context=context)
 
     def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
         res = {}

@@ -81,7 +81,7 @@ class procurement_order(osv.osv):
             'date_deadline': procurement.date_planned,
             'planned_hours': planned_hours,
             'remaining_hours': planned_hours,
-            'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or False,
+            'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or procurement.partner_dest_id.id,
             'user_id': procurement.product_id.product_manager.id,
             'procurement_id': procurement.id,
             'description': procurement.name + '\n',
@@ -156,15 +156,5 @@ class product_product(osv.osv):
         return super(product_product, self).need_procurement(cr, uid, ids, context=context)
 
 
-class sale_order_line(osv.osv):
-    _inherit = 'sale.order.line'
-
-    def need_procurement(self, cr, uid, ids, context=None):
-        #when sale is installed alone, there is no need to create procurements, but with sale_service
-        #we must create a procurement for each service that has the auto_create_task boolean set to True.
-        for line in self.browse(cr, uid, ids, context=context):
-            if line.product_id and line.product_id.type == 'service' and line.product_id.auto_create_task:
-                return True
-        return super(sale_order_line, self).need_procurement(cr, uid, ids, context=context)
 
 
