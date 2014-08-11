@@ -12,6 +12,7 @@ class TestEventCommon(common.TransactionCase):
         self.Users = self.env['res.users']
         self.Event = self.env['event.event']
         self.Registration = self.env['event.registration']
+        self.EventMail = self.env['event.mail']
 
         # User groups
         self.group_employee_id = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')

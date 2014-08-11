@@ -20,6 +20,19 @@
                         <field name="default_registration_max"/>
                         <field name="default_email_registration" domain="[('model_id.model','=','event.registration')]"/>
                     </group>
+                    <notebook>
+                        <page string="Email Schedule">
+                            <field name="event_mail_id">
+                                <tree string="Email Schedule" editable="bottom">
+                                    <field name="email_template_id" />
+                                    <field name="event_interval_nbr" attrs="{'readonly':[('event_interval_type','=', 'after_subscription'),('email_immediate','=', True)]}"/>
+                                    <field name="event_interval_unit" attrs="{'readonly':[('event_interval_type','=', 'after_subscription'),('email_immediate','=', True)], 'required':['|', ('event_interval_type','!=', 'after_subscription'), ('email_immediate','=', False)]}"/>
+                                    <field name="event_interval_type"/>
+                                    <field name="email_immediate" attrs="{'readonly':[('event_interval_type','!=', 'after_subscription')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -109,6 +122,17 @@
                                     <field name="email_registration_id"/>
                                     <field name="email_confirmation_id"/>
                                 </group>
+                            </page>
+                            <page string="Email Schedule">
+                                <field name="event_mail_id">
+                                    <tree string="Email Schedule" editable="bottom">
+                                        <field name="email_template_id" />
+                                        <field name="event_interval_nbr" attrs="{'readonly':[('event_interval_type','=', 'after_subscription'),('email_immediate','=', True)]}"/>
+                                        <field name="event_interval_unit" attrs="{'readonly':[('event_interval_type','=', 'after_subscription'),('email_immediate','=', True)], 'required':['|', ('event_interval_type','!=', 'after_subscription'), ('email_immediate','=', False)]}"/>
+                                        <field name="event_interval_type"/>
+                                        <field name="email_immediate" attrs="{'readonly':[('event_interval_type','!=', 'after_subscription')]}"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>

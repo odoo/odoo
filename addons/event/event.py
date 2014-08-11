@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from datetime import timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 import pytz
 
 from openerp import models, fields, api, _
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import Warning
 
 
@@ -27,6 +32,68 @@ class event_type(models.Model):
     default_registration_max = fields.Integer(
         string='Default Maximum Registration', default=0,
         help="It will select this default maximum value when you choose this event")
+    event_mail_id = fields.One2many('event.mail', 'event_type_id', string='Mail Schedule')
+
+class EventMail(models.Model):
+    """ Event mailing schedule"""
+    _name = 'event.mail'
+
+    event_interval_nbr = fields.Integer(string='Timing', default='1', help="Email Schedule time.")
+    event_interval_unit = fields.Selection([
+            ('hours', 'Hour(s)'),
+            ('days', 'Day(s)'),
+            ('weeks', 'Week(s)'),
+            ('months', 'Month(s)')
+        ], string='Unit', default='hours', help="Time Unit")
+    event_interval_type = fields.Selection([
+            ('after_subscription', 'After the subscription'),
+            ('before_event', 'Before the event'),
+            ('after_event', 'After the event')
+        ], string='When to Run ', required=True, help="Time When")
+    email_template_id = fields.Many2one(
+        'email.template', string='Email to Send',
+        domain=[('model', '=', 'event.registration')], required=True,
+        help='This field contains the template of the mail that will be automatically sent each time a event mail schedule occurs.')
+    mail_sent = fields.Boolean("Mail Sent", default=False, help="Works for event mail reminder scheduler to an event")
+    event_id = fields.Many2one('event.event', string='Event ID', readonly=True)
+    event_type_id = fields.Many2one('event.type', string='Event Type ID', readonly=True)
+    email_immediate = fields.Boolean(string='Send Mail Immediately')
+
+    @api.model
+    def action_event_mail_scheduler(self):
+        def calculate_date(cal_field, interval, unit, operator):
+            _intervalTypes = {
+                'hours': lambda interval: relativedelta(hours=interval),
+                'days': lambda interval: relativedelta(days=interval),
+                'weeks': lambda interval: relativedelta(days=7*interval),
+                'months': lambda interval: relativedelta(months=interval)
+            }
+
+            time_to_send = datetime.max
+            if operator == '-':
+                time_to_send = datetime.strptime(cal_field, DEFAULT_SERVER_DATETIME_FORMAT) - _intervalTypes[unit](interval)
+            else:
+                time_to_send = datetime.strptime(cal_field, DEFAULT_SERVER_DATETIME_FORMAT) + _intervalTypes[unit](interval)
+            if time_to_send < datetime.now():
+                return True
+            return False
+
+        for schedule in self.search([('event_id.state', 'in', ['confirm', 'done']),('mail_sent', '=', False)]):
+            event = schedule.event_id
+            date_schedule = False
+            if schedule.event_interval_type == "before_event":
+                date_schedule = calculate_date(event.date_begin, schedule.event_interval_nbr, schedule.event_interval_unit, '-')
+            elif schedule.event_interval_type == "after_event":
+                date_schedule = calculate_date(event.date_end, schedule.event_interval_nbr, schedule.event_interval_unit, '+')
+            if date_schedule:
+                event.registration_ids.send_mail_batch(schedule.email_template_id)
+                schedule.mail_sent = True
+            if schedule.event_interval_type == "after_subscription":
+                for registration in event.registration_ids:
+                    date_schedule = calculate_date(registration.create_date, schedule.event_interval_nbr, schedule.event_interval_unit, '+')
+                    if not registration.scheduler_mail_sent and date_schedule:
+                        registration.send_mail_batch(schedule.email_template_id)
+                        registration.scheduler_mail_sent = True
 
 
 class event_event(models.Model):
@@ -79,6 +146,7 @@ class event_event(models.Model):
     seats_used = fields.Integer(
         oldname='register_attended', string='Number of Participations',
         store=True, readonly=True, compute='_compute_seats')
+    event_mail_id = fields.One2many('event.mail', 'event_id', string='Mail Schedule')
 
     @api.multi
     @api.depends('seats_max', 'registration_ids.state')
@@ -253,6 +321,17 @@ class event_event(models.Model):
             self.email_confirmation_id = self.type.default_email_event
             self.seats_min = self.type.default_registration_min
             self.seats_max = self.type.default_registration_max
+            lines = []
+            for event in self.type.event_mail_id:
+                data = ({
+                    'email_immediate': event.email_immediate,
+                    'event_interval_nbr': event.event_interval_nbr,
+                    'event_interval_unit': event.event_interval_unit,
+                    'event_interval_type': event.event_interval_type,
+                    'email_template_id': event.email_template_id
+                })
+                lines.append((0, 0, data))
+            self.event_mail_id = lines
 
     @api.multi
     def action_event_registration_report(self):
@@ -294,6 +373,16 @@ class event_registration(models.Model):
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
     name = fields.Char(string='Attendee Name', select=True)
+    scheduler_mail_sent = fields.Boolean('Mail sent', default=False, help="If True it indicates that registration mail has been sent.")
+
+    @api.multi
+    def send_mail_batch(self, template):
+        mail_ids = []
+        for id in self.ids:
+            mail_ids.append(template.send_mail(id)[0])
+        if mail_ids:
+            mails = self.env['mail.mail'].browse(mail_ids)
+            mails.send()
 
     @api.one
     @api.constrains('event_id', 'state')
@@ -311,10 +400,14 @@ class event_registration(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super(event_registration, self).create(vals)
-        if res._check_auto_confirmation()[0]:
-            res.sudo().confirm_registration()
-        return res
+        registration = super(event_registration, self).create(vals)
+        if registration._check_auto_confirmation():
+            registration.sudo().confirm_registration()
+        for schedule in registration.event_id.event_mail_id:
+            if schedule.email_immediate:
+                registration.send_mail_batch(schedule.email_template_id)
+                registration.scheduler_mail_sent = True
+        return registration
 
     @api.one
     def do_draft(self):
