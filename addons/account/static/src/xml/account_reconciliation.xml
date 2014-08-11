@@ -24,7 +24,7 @@
             	</div>
             </div>
             <div class="oe_clear"></div>
-            <div class="interface_options"></div>
+            <div class="interface_options oe_form"></div>
             <div class="reconciliation_lines_container"></div>
         </div></div>
     </t>
@@ -73,26 +73,22 @@
 
     <t t-name="reconciliation_move_line">
         <tr class="mv_line" t-att-data-lineid="line.id" t-att-data-selected="selected">
-            <td><span class="glyphicon glyphicon-add-remove"></span></td>
-            <td><t t-esc="line.account_code"/></td>
-            <td><t t-esc="line.q_due_date"/></td>
-            <td><t t-esc="line.q_label"/></td>
-            <td><t t-if="line.debit !== 0">
-                <t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t>
-                <t t-if="line.partial_reconcile" t-call="icon_undo_partial_reconciliation"></t>
-                <t t-esc="line.debit_str"/>
-            </t></td>
-            <td><t t-if="line.credit !== 0">
-                <t t-if="line.propose_partial_reconcile"><t t-call="icon_do_partial_reconciliation" /></t>
-                <t t-if="line.partial_reconcile"><t t-call="icon_undo_partial_reconciliation" /></t>
-                <t t-esc="line.credit_str"/>
-            </t></td>
-            <td><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
+            <td class="cell_action"><span class="glyphicon glyphicon-add-remove"></span></td>
+            <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
+            <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
+            <td class="cell_label"><t t-esc="line.q_label"/></td>
+            <td class="cell_debit"><t t-if="line.debit !== 0"><t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t><t t-if="line.partial_reconcile" t-call="icon_undo_partial_reconciliation"></t><t t-esc="line.debit_str"/></t></td>
+            <td class="cell_credit"><t t-if="line.credit !== 0"><t t-if="line.propose_partial_reconcile"><t t-call="icon_do_partial_reconciliation" /></t><t t-if="line.partial_reconcile"><t t-call="icon_undo_partial_reconciliation" /></t><t t-esc="line.credit_str"/></t></td>
+            <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
         </tr>
     </t>
 
     <t t-name="reconciliation_move_line_details">
         <table class='details'>
+            <!-- DEBUG -->
+            <tr><td>ID</td><td><t t-esc="line.id"/></td></tr>
+            <tr><td>reconcile_partial_id</td><td><t t-esc="line.reconcile_partial_id"/></td></tr>
+
             <tr t-if="line.account_code"><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
             <tr><td>Journal</td><td><t t-esc="line.journal_name"/></td></tr>
             <tr><td>Period</td><td><t t-esc="line.period_name"/></td></tr>
@@ -154,16 +150,16 @@
         <t t-jquery=".accounting_view caption" t-operation="after">
             <tbody class="tbody_initial_line">
                 <tr class="initial_line">
-                    <td><span class="toggle_match glyphicon glyphicon-cog"></span></td>
-                    <td><t t-esc="line.account_code"/></td>
-                    <td><t t-esc="line.date"/></td>
-                    <td><t t-esc="line.name"/>
+                    <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
+                    <td class="cell_account_code"><t t-esc="line.account_code"/></td>
+                    <td class="cell_due_date"><t t-esc="line.date"/></td>
+                    <td class="cell_label"><t t-if="line.name" t-esc="line.name"/>
                         <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td>
-                    <td><t t-if="line.amount &gt; 0">
+                    <td class="cell_debit"><t t-if="line.amount &gt; 0">
                           <t t-esc="line.amount_str"/></t></td>
-                    <td><t t-if="line.amount &lt; 0">
+                    <td class="cell_credit"><t t-if="line.amount &lt; 0">
                           <t t-esc="line.amount_str"/></t></td>
-                    <td><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
+                    <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
                 </tr>
             </tbody>
         </t>
@@ -193,7 +189,7 @@
     <t t-name="bank_statement_reconciliation_statement_line_details">
         <table class='details'>
             <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
-            <tr><td>Partner</td><td><t t-esc="line.partner_name"/></td></tr>
+            <tr t-if="line.partner_name"><td>Partner</td><td><t t-esc="line.partner_name"/></td></tr>
             <tr t-if="line.ref"><td>Transaction</td><td><t t-esc="line.ref"/></td></tr>
             <tr><td>Description</td><td><t t-esc="line.name"/></td></tr>
             <tr><td>Amount</td><td><t t-esc="line.amount_str"/><t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td></tr>
@@ -201,13 +197,9 @@
         </table>
     </t>
 
-    <t t-name="icon_do_partial_reconciliation">
-        <i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="This move's amount is higher than the transaction's amount. Click to do a partial reconciliation"></i>
-    </t>
+    <t t-name="icon_do_partial_reconciliation"><i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="This move's amount is higher than the transaction's amount. Click to do a partial reconciliation"></i></t>
 
-    <t t-name="icon_undo_partial_reconciliation">
-        <i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i>
-    </t>
+    <t t-name="icon_undo_partial_reconciliation"><i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i></t>
 
     <t t-name="bank_statement_reconciliation_created_line">
         <tr class="created_line" t-att-data-lineid="line.id">
@@ -234,6 +226,62 @@
     </t>
 
     <!-- accounts reconciliation -->
+    
+    <t t-name="manual_reconciliation_nothing_to_reconcile" t-extend="nothing_to_reconcile">
+        <t t-jquery=".oe_view_nocontent" t-operation="inner">
+            <p><b>Good Job!</b> There is nothing to reconcile.</p>
+            <p>All invoices and payments have been reconciled, your accounts' balances are clean.</p>
+        </t>
+    </t>
 
+    <t t-name="manual_reconciliation" t-extend="reconciliation">
+        <t t-jquery=".interface_options" t-operation="append">
+            <table t-if="show_accounts_type_controller" border="0" cellpadding="0" cellspacing="0" class="oe_form_group"><tbody>
+                <tr class="oe_form_group_row">
+                    <td class="oe_form_group_cell oe_form_group_cell_label" colspan="1">
+                        <label for="oe-field-input-5" class="oe_form_label oe_align_right">Show</label>
+                    </td>
+                    <td class="oe_form_group_cell" colspan="1" width="99%">
+                        <span class="oe_form_field oe_form_field_radio oe_vertical oe_form_required">
+                            <span>
+                                <div>
+                                    <span class="oe_radio_input"><input type="radio" name="show_reconciliations_type" val="partners" id="reconciliations_type_partner_accounts" t-att-checked="(show_partner_accounts and !show_other_accounts ? true : undefined)" /></span><label for="reconciliations_type_partner_accounts">Partner accounts</label>
+                                </div>
+                                <div>
+                                    <span class="oe_radio_input"><input type="radio" name="show_reconciliations_type" val="others" id="reconciliations_type_other_accounts" t-att-checked="(!show_partner_accounts and show_other_accounts ? true : undefined)" /></span><label for="reconciliations_type_other_accounts">Other reconciliable accounts</label>
+                                </div>
+                                <div>
+                                    <span class="oe_radio_input"><input type="radio" name="show_reconciliations_type" val="both" id="reconciliations_type_both_accounts" t-att-checked="(show_partner_accounts and show_other_accounts ? true : undefined)" /></span><label for="reconciliations_type_both_accounts">Both</label>
+                                </div>
+                            </span>
+                        </span>
+                    </td>
+                </tr>
+            </tbody></table>
+        </t>
+    </t>
+
+    <t t-name="manual_reconciliation_line" t-extend="reconciliation_line">
+        <t t-jquery=".accounting_view" t-operation="after">
+            <div class="reconcile_button_container"><button class="button_reconcile">Reconcile</button></div>
+        </t>
+        <t t-jquery=".accounting_view caption" t-operation="replace">
+            <thead><tr>
+                <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
+                <td t-if="data.partner_name" class="cell_partner_name"><t t-esc="data.partner_name" /></td>
+                <td t-att-colspan="(data.partner_name ? undefined : '2')" class="cell_last_reconciliation_date">Last Reconciliation : <t t-esc="data.last_reconciliation_date or 'Never'" /></td>
+                <td class="cell_title_account_code" colspan="2"><t t-esc="data.account_code" /></td>
+                <td class="cell_info_popover"></td>
+            </tr></thead>
+        </t>
+    </t>
+
+    <t t-name="manual_reconciliation_move_line" t-extend="reconciliation_move_line">
+        <t t-jquery=".cell_account_code" t-operation="replace"></t>
+    </t>
+
+
+    <t t-name="manual_reconciliation_done_message" t-extend="reconciliation_done_message">
+    </t>
 
 </templates>

@@ -88,6 +88,16 @@ $aestetic_animation_speed: 300ms;
         }
     }
 
+    .interface_options {
+        margin-bottom: 25px;
+        padding-left: $actionColWidth;
+
+        .oe_radio_input {
+            border: none;
+            display: inline;
+        }
+    }
+
     .protip {
         margin: 0;
         position: absolute;
@@ -489,5 +499,67 @@ $aestetic_animation_speed: 300ms;
                 }
             }
         }
+    }
+}
+
+.openerp .oe_manual_reconciliation {
+    .oe_manual_reconciliation_line {
+        .accounting_view {
+            thead {
+                background: none;
+                cursor: pointer;
+
+                td {
+                    vertical-align: bottom !important;
+                }
+                
+                td:nth-child(2) {
+                    padding-left: 0;
+                }
+
+                .cell_last_reconciliation_date {
+                    font-weight: normal;
+                }
+
+                .cell_title_account_code {
+                    text-align: center;
+                }
+            }
+            
+            .filler_line td {
+                height: 23px;
+                cursor: default !important;
+            }
+            
+            tbody tr:first-child td {
+                border-top: $lightBorder;
+                padding-top: 4px;
+
+                &.cell_action, &.cell_info_popover {
+                    border-top: none;
+                }
+            }
+        }
+        
+        td.cell_due_date {
+            padding-left: $mainTableBordersPadding !important;
+        }
+
+        .toggle_match {
+            display: none;
+        }
+        
+        /* Bouton entre les 2 tables */
+        .reconcile_button_container {
+            width: 30%;
+            float: right;
+            text-align: center;
+            margin: 5px $actionColWidth 5px 0;
+        }
+
+        > table > tbody > tr:nth-child(1) > td table {
+            margin-bottom: 0 !important;
+        }
+        /* / Bouton entre les 2 tables */
     }
 }

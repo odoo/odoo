@@ -305,21 +305,22 @@ class res_currency(osv.osv):
             symbol = row['symbol'] or row['name']
 
             if row['position'] == 'after':
-                return_str = "return amount.toFixed(" + str(digits) + ") + ' " + symbol + "';"
+                return_str = "return amount.toFixed(" + str(digits) + ") + '\\xA0" + symbol + "';"
             else:
-                return_str = "return '" + symbol + " ' + amount.toFixed(" + str(digits) + ");"
+                return_str = "return '" + symbol + "\\xA0' + amount.toFixed(" + str(digits) + ");"
             function += "if (currency_id === " + str(row['id']) + ") { " + return_str + " }"
 
         digits = math.log10(1/company_currency['rounding'])
         symbol = company_currency['symbol'] or company_currency['name']
         if company_currency['position'] == 'after':
-            return_str = "return amount.toFixed(" + str(digits) + ") + ' " + symbol + "';"
+            return_str = "return amount.toFixed(" + str(digits) + ") + '\\xA0" + symbol + "';"
         else:
-            return_str = "return '" + symbol + " ' + amount.toFixed(" + str(digits) + ");"
+            return_str = "return '" + symbol + "\\xA0' + amount.toFixed(" + str(digits) + ");"
         function += "else { " + return_str + " }"
 
         return function
 
+<<<<<<< HEAD
     def link_bank_to_partner(self, cr, uid, ids, context=None):
         for statement in self.browse(cr, uid, ids, context=context):
             for st_line in statement.line_ids:
@@ -327,6 +328,8 @@ class res_currency(osv.osv):
                     self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
 
 >>>>>>> [ADD] base : res.currency : method that returns a js function to format currencies
+=======
+>>>>>>> [ADD] account: new manual reconciliation interface
 class res_currency_rate(osv.osv):
     _name = "res.currency.rate"
     _description = "Currency Rate"
