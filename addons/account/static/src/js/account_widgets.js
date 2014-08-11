@@ -1400,7 +1400,7 @@ openerp.account = function (instance) {
             var balance = self.get("balance");
             line.initial_amount = line.debit !== 0 ? line.debit : -1 * line.credit;
             if (balance < 0) {
-                line.debit -= balance;
+                line.debit += balance;
                 line.debit_str = self.formatCurrencies(line.debit, self.st_line.currency_id);
             } else {
                 line.credit -= balance;
