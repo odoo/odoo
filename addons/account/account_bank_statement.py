@@ -494,17 +494,29 @@ class account_bank_statement_line(osv.osv):
 
     def get_statement_line_for_reconciliation(self, cr, uid, id, context=None):
         """ Returns the data required by the bank statement reconciliation use case """
+        if context is None:
+            context = {}
         line = self.browse(cr, uid, id, context=context)
         statement_currency = line.journal_id.currency or line.journal_id.company_id.currency_id
-        amount = line.amount
         rml_parser = report_sxw.rml_parse(cr, uid, 'statement_line_widget', context=context)
-        amount_str = line.amount > 0 and line.amount or -line.amount
-        amount_str = rml_parser.formatLang(amount_str, currency_obj=statement_currency)
-        amount_currency_str = ""
-        if line.amount_currency and line.currency_id:
-            amount_currency_str = amount_str
-            amount_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
+        if not line.journal_id.currency or line.journal_id.currency == line.journal_id.company_id.currency_id:
+            amount = line.amount
+            amount_str = line.amount > 0 and line.amount or -line.amount
+            amount_str = rml_parser.formatLang(amount_str, currency_obj=statement_currency)
+            amount_currency_str = ""
+        else:
             amount = line.amount_currency
+            if line.amount == 0:
+                ctx = context.copy()
+                ctx['date'] = line.date
+                currency_obj = self.pool.get('res.currency')
+                amount_home_curr = currency_obj.compute(cr, uid, line.journal_id.currency.id, line.journal_id.company_id.currency_id.id, line.amount_currency, context=ctx)
+                amount_currency_str = rml_parser.formatLang(amount_home_curr, currency_obj=line.journal_id.company_id.currency_id)
+                amount_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
+            else:
+                amount_currency_str = line.amount > 0 and line.amount or -line.amount
+                amount_currency_str = rml_parser.formatLang(amount_currency_str, currency_obj=line.journal_id.company_id.currency_id)
+                amount_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
 
         data = {
             'id': line.id,
