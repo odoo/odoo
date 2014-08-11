@@ -48,9 +48,6 @@ Static web data
 Module structure
 ----------------
 
-.. todo:: redundant with same section in web howto, use include? separate
-          intro to modules structure?
-
 Each module is a directory within a *module directory*. Module directories
 are specified by using the :option:`--addons-path <odoo.py --addons-path>`
 option.
@@ -1149,7 +1146,7 @@ graphical tools. Workflows, activities (nodes or actions) and transitions
 (conditions) are declared as XML records, as usual. The tokens that navigate
 in workflows are called workitems.
 
-.. admonition:: Exercise 2 - Dynamic workflow editor
+.. admonition:: Exercise 2 - Workflow
     :class: exercise
 
     Replace the ad-hoc *Session* workflow by a real workflow. Transform the
@@ -1172,6 +1169,7 @@ in workflows are called workitems.
             In order to check if instances of the workflow are correctly
             created alongside sessions, go to :menuselection:`Settings -->
             Technical --> Workflows --> Instances`
+
 
 
 .. admonition:: Exercise 3 - Automatic transitions
@@ -1469,38 +1467,42 @@ server with the library xmlrpclib.
 
         .. code-block:: python
 
+            import functools
             import xmlrpclib
-            HOST='192.168.0.44'
-            PORT=8069
-            DB='openacademy'
-            USER='admin'
-            PASS='admin'
-            url = 'http://%s:%d/xmlrpc/' % (HOST,PORT)
-            common_proxy = xmlrpclib.ServerProxy(url+'common')
-            object_proxy = xmlrpclib.ServerProxy(url+'object')
-            def execute(*args):
-                    return object_proxy.execute(DB,uid,PASS,*args)
+            HOST = 'localhost'
+            PORT = 8069
+            DB = 'openacademy'
+            USER = 'admin'
+            PASS = 'admin'
+            ROOT = 'http://%s:%d/xmlrpc/' % (HOST,PORT)
+
             # 1. Login
-            uid = common_proxy.login(DB,USER,PASS)
+            uid = xmlrpclib.ServerProxy(ROOT + 'common').login(DB,USER,PASS)
             print "Logged in as %s (uid:%d)" % (USER,uid)
+
+            call = functools.partial(
+                xmlcprlib.ServerProxy(ROOT + 'object').execute,
+                DB, uid, PASS)
+
             # 2. Read the sessions
-            session_ids = execute('openacademy.session','search',[])
-            sessions = execute('openacademy.session','read',session_ids, ['name','seats'])
+            sessions = call('openacademy.session','search_read', [], ['name','seats'])
             for session in sessions :
-                print "Session name :%s (%s seats)" % (session['name'], session['seats'])
+                print "Session %s (%s seats)" % (session['name'], session['seats'])
             # 3.create a new session
-            session_id = execute('openacademy.session', 'create',
-                                 {'name' : 'My session',
-                                  'course_id' : 2, })
+            session_id = call('openacademy.session', 'create', {
+                'name' : 'My session',
+                'course_id' : 2,
+            })
 
         Instead of using a hard-coded course id, the code can look up a course
         by name::
 
             # 3.create a new session for the "Functional" course
-            course_id = execute('openacademy.course', 'search', [('name','ilike','Functional')])[0]
-            session_id = execute('openacademy.session', 'create',
-                                 {'name' : 'My session',
-                                  'course_id' : course_id, })
+            course_id = call('openacademy.course', 'search', [('name','ilike','Functional')])[0]
+            session_id = call('openacademy.session', 'create', {
+                'name' : 'My session',
+                'course_id' : course_id,
+            })
 
 .. note:: there are also a number of high-level APIs in various languages to
           access Odoo systems without *explicitly* going through XML-RPC e.g.
