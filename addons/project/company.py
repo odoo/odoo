@@ -19,18 +19,16 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
 
-class res_company(osv.osv):
+class res_company(models.Model):
     _inherit = 'res.company'
-    _columns = {
-        'project_time_mode_id': fields.many2one('product.uom', 'Project Time Unit',
-            help='This will set the unit of measure used in projects and tasks.\n' \
+
+    project_time_mode_id = fields.Many2one('product.uom', string='Project Time Unit',
+        help='This will set the unit of measure used in projects and tasks.\n' \
 "If you use the timesheet linked to projects (project_timesheet module), don't " \
 "forget to setup the right unit of measure in your employees.",
-        ),
-    }
+    )
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
