@@ -459,12 +459,17 @@ class pos_session(osv.osv):
                         name= _('Point of Sale Profit')
                     else:
                         name= _('Point of Sale Loss')
+
+                    TABLES = ((_('Profit'), 'profit_account_id'), (_('Loss'), 'loss_account_id'),)
+                    is_profit = st.difference < 0.0
+                    ac = getattr(st.journal_id, TABLES[is_profit][1])
+
                     bsl.create(cr, uid, {
+                        'account_id': ac.id,
                         'statement_id': st.id,
                         'amount': st.difference,
                         'ref': record.name,
                         'name': name,
-                        'partner_id': order.partner_id and order.partner_id.id or False,
                     }, context=context)
 
                 if st.journal_id.type == 'bank':
