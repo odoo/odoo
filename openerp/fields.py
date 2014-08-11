@@ -170,7 +170,7 @@ class Field(object):
                     operator = 'ilike'
                 return [('name', operator, value)]
 
-        The compute method has to assign the field on all records of the invoked
+        The compute method *must* assign the field on *all* records of the invoked
         recordset. The decorator :meth:`openerp.api.depends` must be applied on
         the compute method to specify the field dependencies; those dependencies
         are used to determine when to recompute the field; recomputation is
