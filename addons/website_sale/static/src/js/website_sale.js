@@ -57,6 +57,12 @@ $(document).ready(function () {
         $(this).closest("form").submit();
     });
 
+    function price_to_str(price) {
+        price = Math.round(price * 100) / 100;
+        var dec = Math.round((price % 1) * 100);
+        return price + (dec ? '' : '.0') + (dec%10 ? '' : '0');
+    }
+
     // change price when they are variants
     var $price = $(".oe_price .oe_currency_value");
     $('form.js_add_cart_json label').on('mouseup', function (ev) {
@@ -66,8 +72,7 @@ $(document).ready(function () {
             $price.data("price", parseFloat($price.text()));
         }
         var value = $price.data("price") + parseFloat($label.find(".badge span").text() || 0);
-        var dec = value % 1;
-        $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
+        $price.html(price_to_str(value));
     });
     // hightlight selected color
     $('.css_attribute_color input').on('change', function (ev) {
@@ -88,9 +93,8 @@ $(document).ready(function () {
         var available = false;
         for (var k in variant_ids) {
             if (_.isEqual(variant_ids[k][1], values)) {
-                var dec = variant_ids[k][2] % 1;
                 $('input[name="product_id"]').val(variant_ids[k][0]);
-                $price.html(variant_ids[k][2] + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
+                $price.html(price_to_str(variant_ids[k][2]));
                 available = true;
                 break;
             }

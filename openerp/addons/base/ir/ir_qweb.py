@@ -755,7 +755,7 @@ class MonetaryConverter(osv.AbstractModel):
         if context is None:
             context = {}
         Currency = self.pool['res.currency']
-        display = self.display_currency(cr, uid, options)
+        display_currency = self.display_currency(cr, uid, options['display_currency'], options)
 
         # lang.format mandates a sprintf-style format. These formats are non-
         # minimal (they have a default fixed precision instead), and
@@ -766,17 +766,23 @@ class MonetaryConverter(osv.AbstractModel):
         # The log10 of the rounding should be the number of digits involved if
         # negative, if positive clamp to 0 digits and call it a day.
         # nb: int() ~ floor(), we want nearest rounding instead
-        precision = int(round(math.log10(display.rounding)))
+        precision = int(round(math.log10(display_currency.rounding)))
         fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+
+        from_amount = record[field_name]
+
+        if options.get('from_currency'):
+            from_currency = self.display_currency(cr, uid, options['from_currency'], options)
+            from_amount = Currency.compute(cr, uid, from_currency.id, display_currency.id, from_amount)
 
         lang_code = context.get('lang') or 'en_US'
         lang = self.pool['res.lang']
         formatted_amount = lang.format(cr, uid, [lang_code], 
-            fmt, Currency.round(cr, uid, display, record[field_name]),
+            fmt, Currency.round(cr, uid, display_currency, from_amount),
             grouping=True, monetary=True)
 
         pre = post = u''
-        if display.position == 'before':
+        if display_currency.position == 'before':
             pre = u'{symbol} '
         else:
             post = u' {symbol}'
@@ -785,12 +791,12 @@ class MonetaryConverter(osv.AbstractModel):
             formatted_amount,
             pre=pre, post=post,
         ).format(
-            symbol=display.symbol,
+            symbol=display_currency.symbol,
         ))
 
-    def display_currency(self, cr, uid, options):
+    def display_currency(self, cr, uid, currency, options):
         return self.qweb_object().eval_object(
-            options['display_currency'], options['_qweb_context'])
+            currency, options['_qweb_context'])
 
 TIMEDELTA_UNITS = (
     ('year',   3600 * 24 * 365),
