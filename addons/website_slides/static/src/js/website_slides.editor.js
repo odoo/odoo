@@ -7,7 +7,7 @@
 
     website.EditorBarContent.include({
         new_slide: function() {
-            new website.editor.AddSlideDialog().appendTo(document.body);
+            new website.editor.AddSlideDialog(this).appendTo(document.body);
         },
 
     });
@@ -17,6 +17,7 @@
             'change .slide-upload': 'slide_upload',
         }),
         init: function(){
+            this._super.apply(this, arguments);
             this.file = {};
         },
 
@@ -43,7 +44,7 @@
             ArrayReader.readAsArrayBuffer(file);
             ArrayReader.onload = function(evt) {
                 var buffer = evt.target.result;
-                // PDFJS can't eval path because of bunlde assest
+                // PDFJS can't eval path because of bundle assest
                 // https://github.com/mozilla/pdf.js/blob/master/src/pdf.js#L41
                 var path = '';
                 var pathArray = window.location.pathname.split( '/' );
@@ -68,17 +69,17 @@
         },
 
         set_tags: function(tags){
-           this.$("input.slide-tags").textext({
+            this.$("input.slide-tags").textext({
                 plugins: 'tags focus autocomplete ajax',
-                tagsItems: tags.split(","),
-                // Note: The following list of keyboard keys is added. All entries are default except {32 : 'whitespace!'}.
-                keys: {8: 'backspace', 9: 'tab', 13: 'enter!', 27: 'escape!', 37: 'left', 38: 'up!', 39: 'right',
-                    40: 'down!', 46: 'delete', 108: 'numpadEnter', 32: 'whitespace!'},
-                ajax: {
-                    url: '/slides/get_tags',
-                    dataType: 'json',
-                    cacheResults: true
-                }
+            tagsItems: tags.split(","),
+            // Note: The following list of keyboard keys is added. All entries are default except {32 : 'whitespace!'}.
+            keys: {8: 'backspace', 9: 'tab', 13: 'enter!', 27: 'escape!', 37: 'left', 38: 'up!', 39: 'right',
+                40: 'down!', 46: 'delete', 108: 'numpadEnter', 32: 'whitespace!'},
+            ajax: {
+                url: '/slides/get_tags',
+            dataType: 'json',
+            cacheResults: true
+            }
             });
         },
         get_value: function(){
@@ -90,7 +91,7 @@
             var values = {
                 'name' : this.$('#name').val(),
                 'description' : this.$('#description').val(),
-//                'tags' : this.$('.slide-tags').textext()[0].tags()._formData,
+                //'tags' : this.$('.slide-tags').textext()[0].tags()._formData,
                 'datas': self.file.data,
                 'datas_fname': self.file.name,
                 'image': this.$('#the-canvas')[0].toDataURL().split(',')[1],
@@ -101,8 +102,9 @@
         save: function () {
             var values = this.get_value();
             website.form('/slides/add_slide', 'POST', values);
-        }
+        },
 
-        });
+
+    });
 
 })();
