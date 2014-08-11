@@ -882,12 +882,13 @@ def start(preload=None, stop=False):
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
-    if watchdog and config['dev_mode']:
-        watcher = FSWatcher()
-        watcher.start()
+    if watchdog:
+        if config['dev_mode']:
+            watcher = FSWatcher()
+            watcher.start()
     else:
         intro = "'watchdog' module not installed."
-        _logger.warning("%s Asset Bundles automatic cache invalidation disabled." % intro)
+        # _logger.warning("%s Asset Bundles automatic cache invalidation disabled." % intro)
         if config['dev_mode']:
             _logger.warning("%s Code autoreload feature is disabled" % intro)
 
