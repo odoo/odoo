@@ -69,17 +69,30 @@
         },
 
         set_tags: function(tags){
+            var self = this;
             this.$("input.slide-tags").textext({
                 plugins: 'tags focus autocomplete ajax',
-            tagsItems: tags.split(","),
-            // Note: The following list of keyboard keys is added. All entries are default except {32 : 'whitespace!'}.
-            keys: {8: 'backspace', 9: 'tab', 13: 'enter!', 27: 'escape!', 37: 'left', 38: 'up!', 39: 'right',
-                40: 'down!', 46: 'delete', 108: 'numpadEnter', 32: 'whitespace!'},
-            ajax: {
-                url: '/slides/get_tags',
-            dataType: 'json',
-            cacheResults: true
-            }
+                keys: {8: 'backspace', 9: 'tab', 13: 'enter!', 27: 'escape!', 37: 'left', 38: 'up!', 39: 'right',
+                    40: 'down!', 46: 'delete', 108: 'numpadEnter', 32: 'whitespace!'},
+                ajax: {
+                    url: '/slides/get_tags',
+                    dataType: 'json',
+                    cacheResults: true,
+                },
+                ext: {
+                    itemManager: {
+                        itemToString: function(item) {
+                            return item.name;
+                        },
+                        stringToItem: function(str) {
+                            var suggestions = self.$('.slide-tags').textext()[0]._plugins.ajax._suggestions;
+                            var res = _.filter(suggestions, function(obj){ return obj.name == str; });
+                            return res[0];
+                        },
+
+                    },
+                  
+                }
             });
         },
         get_value: function(){
@@ -91,7 +104,7 @@
             var values = {
                 'name' : this.$('#name').val(),
                 'description' : this.$('#description').val(),
-                //'tags' : this.$('.slide-tags').textext()[0].tags()._formData,
+                'tags' : this.$('.slide-tags').textext()[0].tags()._formData,
                 'datas': self.file.data,
                 'datas_fname': self.file.name,
                 'image': this.$('#the-canvas')[0].toDataURL().split(',')[1],

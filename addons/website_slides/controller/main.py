@@ -193,8 +193,7 @@ class main(http.Controller):
     @http.route('/slides/get_tags', type='http', auth="public", methods=['GET'], website=True)
     def tag_read(self, **post):
         tags = request.registry['ir.attachment.tag'].search_read(request.cr, request.uid, [], ['name'], context=request.context)
-        data = [tag['name'] for tag in tags]
-        return simplejson.dumps(data)
+        return simplejson.dumps(tags)
 
     @http.route(['/slides/add_slide'], type='http', auth="user", methods=['POST'], website=True)
     def add_slide(self, *args, **post):
