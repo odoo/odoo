@@ -90,9 +90,12 @@ class website_event(http.Controller):
         if searches["type"] != 'all':
             current_type = type_obj.browse(cr, uid, int(searches['type']), context=context)
             domain_search["type"] = [("type", "=", int(searches["type"]))]
-        if searches["country"] != 'all':
+
+        if searches["country"] != 'all' and searches["country"] != 'online':
             current_country = country_obj.browse(cr, uid, int(searches['country']), context=context)
-            domain_search["country"] = [("country_id", "=", int(searches["country"]))]
+            domain_search["country"] = ['|', ("country_id", "=", int(searches["country"])), ("country_id", "=", False)]
+        elif searches["country"] == 'online':
+            domain_search["country"] = [("country_id", "=", False)]
 
         def dom_without(without):
             domain = [('state', "in", ['draft','confirm','done'])]

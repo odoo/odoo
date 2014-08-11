@@ -58,6 +58,7 @@
                             <div class="media-body">
                                 <h4 class="media-heading">
                                     <a t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
+                                    <small t-if="not event.address_id" class="label label-info">Online</small>
                                     <small t-if="not event.website_published" class="label label-danger">not published</small>
                                 </h4>
                                 <div>
@@ -162,7 +163,13 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries">
                 <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
-                    <a t-attf-href="/event/?{{ keep_query('type', 'data', country=country_id[0]) }}"><t t-esc="country_id[1]"/>
+                    <a t-attf-href="/event/?{{ keep_query('type', 'date', country=country_id[0]) }}"><t t-esc="country_id[1]"/>
+                        <span class="badge pull-right"><t t-esc="country_id_count"/></span>
+                    </a>
+                </li>
+                <li t-if="not country_id" t-att-class="searches.get('country') == 'online' and 'active' or ''">
+                    <a t-attf-href="/event/?{{ keep_query('type', 'date', country='online') }}">
+                        <span>Online Events</span>
                         <span class="badge pull-right"><t t-esc="country_id_count"/></span>
                     </a>
                 </li>
