@@ -5,12 +5,12 @@ Views
 Structure
 =========
 
-.. _core/views/inheritance:
+.. _reference/views/inheritance:
 
 Inheritance
 ===========
 
-.. _core/views/form:
+.. _reference/views/form:
 
 Forms
 =====

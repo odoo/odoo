@@ -5,7 +5,7 @@ Web Controllers
 Routing
 =======
 
-.. _web/http/request:
+.. _reference/http/request:
 
 Request
 =======
@@ -16,7 +16,7 @@ Response
 JSON-RPC
 ========
 
-.. _web/http/controllers:
+.. _reference/http/controllers:
 
 Extension: controllers
 ======================

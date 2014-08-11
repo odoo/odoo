@@ -56,9 +56,9 @@ option.
     :class: aphorism
 
     most command-line options can also be set using :ref:`a configuration
-    file <core/cmdline/config>`
+    file <reference/cmdline/config>`
 
-An Odoo module is declared by its :ref:`manifest <core/module/manifest>`. It
+An Odoo module is declared by its :ref:`manifest <reference/module/manifest>`. It
 is mandatory and contains a single python dictionary declaring various
 metadata for the module: the module's name and description, list of Odoo
 modules required for this one to work properly, references to data files, …
@@ -218,7 +218,7 @@ Python_ code part of a module's value is in the data it sets up when loaded.
 .. tip:: some modules exist solely to add data into Odoo
     :class: aphorism
 
-Module data is declared via :ref:`data files <core/data>`, XML files with
+Module data is declared via :ref:`data files <reference/data>`, XML files with
 ``<record>`` elements. Each ``<record>`` element creates or updates a database
 record.
 
@@ -315,7 +315,7 @@ requests, the view with the correct type and the lowest priority will be
 used (so the lowest-priority view of each type is the default view for that
 type).
 
-:ref:`View inheritance <core/views/inheritance>` allows altering views
+:ref:`View inheritance <reference/views/inheritance>` allows altering views
 declared elsewhere (adding or removing content).
 
 Generic view declaration
@@ -653,7 +653,7 @@ instead of a single view its ``arch`` field is composed of any number of
 Domains
 #######
 
-In Odoo, :ref:`core/orm/domains` are lists of criteria used to select a subset
+In Odoo, :ref:`reference/orm/domains` are lists of criteria used to select a subset
 of a model's records. Each criteria is a triple of a field name, an operator
 and a value.
 
@@ -1092,7 +1092,7 @@ For instance, project tasks may be organized by stage (each column is a
 stage), or by responsible (each column is a user), and so on.
 
 Kanban views define the structure of each card as a mix of form elements
-(including basic HTML) and :ref:`web/qweb`.
+(including basic HTML) and :ref:`reference/qweb`.
 
 .. admonition:: Exercise 6 - Kanban view
     :class: exercise

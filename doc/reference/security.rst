@@ -1,15 +1,15 @@
-.. _core/security:
+.. _reference/security:
 
 ================
 Security in Odoo
 ================
 
-.. _core/security/acl:
+.. _reference/security/acl:
 
 Access Control
 ==============
 
-.. _core/security/rules:
+.. _reference/security/rules:
 
 Record Rules
 ============

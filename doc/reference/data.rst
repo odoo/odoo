@@ -1,4 +1,4 @@
-.. _core/data:
+.. _reference/data:
 
 ==========
 Data Files

@@ -9,6 +9,5 @@ odoo developer documentation
 
     tutorials
     guides
-    core
-    web
+    reference
     modules

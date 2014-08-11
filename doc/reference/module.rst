@@ -2,7 +2,7 @@
 Modules
 =======
 
-.. _core/module/manifest:
+.. _reference/module/manifest:
 
 Manifest
 ========
@@ -60,17 +60,17 @@ Available manifest fields are:
     automatically adds CRM campaigns tracking to sale orders without either
     ``sale`` or ``crm`` being aware of one another
 
-.. _core/module/lifecycle:
+.. _reference/module/lifecycle:
 
 Lifecycle
 =========
 
-.. _core/module/lifecycle/install:
+.. _reference/module/lifecycle/install:
 
 Install
 -------
 
-.. _core/module/lifecycle/update:
+.. _reference/module/lifecycle/update:
 
 Update
 ------

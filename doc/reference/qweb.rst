@@ -1,4 +1,4 @@
-.. _web/qweb:
+.. _reference/qweb:
 
 ====
 QWeb
@@ -7,17 +7,17 @@ QWeb
 Basics
 ======
 
-.. _web/qweb/output:
+.. _reference/qweb/output:
 
 data output
 -----------
 
-.. _web/qweb/conditionals:
+.. _reference/qweb/conditionals:
 
 conditionals
 ------------
 
-.. _web/qweb/loops:
+.. _reference/qweb/loops:
 
 loops
 -----

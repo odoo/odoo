@@ -1,10 +1,10 @@
-.. _core/cmdline:
+.. _reference/cmdline:
 
 ===============================
 Command-line interface: oodo.py
 ===============================
 
-.. _core/cmdline/server:
+.. _reference/cmdline/server:
 
 Running the server
 ==================
@@ -18,12 +18,12 @@ Running the server
 .. option:: -i <modules>, --init=<modules>
 
     comma-separated list of modules to :ref:`install
-    <core/module/lifecycle/install>` before running the server.
+    <reference/module/lifecycle/install>` before running the server.
 
 .. option:: -u <modules>, --update=<modules>
 
     comma-separated list of modules to :ref:`update
-    <core/module/lifecycle/update>` before running the server.
+    <reference/module/lifecycle/update>` before running the server.
 
 .. option:: --addons-path <directories>
 
@@ -40,7 +40,7 @@ Running the server
     (:file:`{$HOME}/.openerp_serverrc` by default, overridable using
     :option:`-c`)
 
-.. _core/cmdline/scaffold:
+.. _reference/cmdline/scaffold:
 
 Scaffolding
 ===========
@@ -69,7 +69,7 @@ Scaffolding is available via the :command:`odoo.py scaffold` subcommand.
     directory in which to create the new module, defaults to the current
     directory
 
-.. _core/cmdline/config:
+.. _reference/cmdline/config:
 
 Configuration file
 ==================

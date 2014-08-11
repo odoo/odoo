@@ -1,10 +1,10 @@
-.. _core/orm:
+.. _reference/orm:
 
 ===
 ORM
 ===
 
-.. _core/orm/model:
+.. _reference/orm/model:
 
 Model
 =====
@@ -137,7 +137,7 @@ Model
 
         :type: ``res.users``
 
-.. _core/orm/decorators:
+.. _reference/orm/decorators:
 
 Method decorators
 =================
@@ -145,7 +145,7 @@ Method decorators
 .. automodule:: openerp.api
     :members: one, multi, model, depends, constrains, onchange, returns
 
-.. _core/orm/fields:
+.. _reference/orm/fields:
 
 Fields
 ======
@@ -197,7 +197,7 @@ Fields
 .. autoclass:: openerp.fields.Reference
     :show-inheritance:
 
-.. _core/orm/domains:
+.. _reference/orm/domains:
 
 Domains
 =======

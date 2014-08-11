@@ -1626,7 +1626,7 @@ class BaseModel(object):
         """ search_count(args) -> int
 
         Returns the number of records in the current model matching :ref:`the
-        provided domain <core/orm/domains>`.
+        provided domain <reference/orm/domains>`.
         """
         res = self.search(cr, user, args, context=context, count=True)
         if isinstance(res, list):
@@ -1638,9 +1638,9 @@ class BaseModel(object):
         """ search(args[, offset=0][, limit=None][, order=None][, count=False])
 
         Searches for records based on the ``args``
-        :ref:`search domain <core/orm/domains>`.
+        :ref:`search domain <reference/orm/domains>`.
 
-        :param args: :ref:`A search domain <core/orm/domains>`. Use an empty
+        :param args: :ref:`A search domain <reference/orm/domains>`. Use an empty
                      list to match all records.
         :param int offset: number of results to ignore (default: none)
         :param int limit: maximum number of records to return (default: all)

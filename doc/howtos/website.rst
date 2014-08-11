@@ -42,7 +42,7 @@ An Odoo module is a valid `Python package
     $ touch my-modules/academy/__init__.py
 
 Finally the mark of an Odoo module is the
-:ref:`manifest file <core/module/manifest>`, a Python dictionary describing
+:ref:`manifest file <reference/module/manifest>`, a Python dictionary describing
 various module metadata. Here is a minimal form::
 
     {
@@ -88,13 +88,13 @@ then install our new module into it:
 .. seealso::
 
     * In a production development setting, modules should generally be created
-      using :ref:`Odoo's scaffolding <core/cmdline/scaffold>` rather than by
+      using :ref:`Odoo's scaffolding <reference/cmdline/scaffold>` rather than by
       hand
 
 To the browser
 ==============
 
-:ref:`Controllers <web/http/controllers>` interpret browser requests and send
+:ref:`Controllers <reference/http/controllers>` interpret browser requests and send
 data back.
 
 Add a simple controller in a new :file:`my-modules/academy/controllers.py`::
@@ -129,7 +129,7 @@ Generating HTML in Python isn't fun.
 
 The usual solution is templates_, pseudo-documents with placeholders and
 display logic. Odoo allows any Python templating system, but provides its
-own :ref:`QWeb <web/qweb>` templating system which integrates with other Odoo
+own :ref:`QWeb <reference/qweb>` templating system which integrates with other Odoo
 features. QWeb is an XML template engine, let's create an XML file for our
 first template :file:`my-modules/academy/templates.xml`
 
@@ -189,7 +189,7 @@ Going to http://localhost:8069/academy/ should now result in:
 Storing data in Odoo
 ====================
 
-:ref:`Odoo models <core/orm/model>` map to database tables.
+:ref:`Odoo models <reference/orm/model>` map to database tables.
 
 In the previous section we just displayed a list of string entered statically
 in the Python code. This doesn't allow modifications and persistent storage
@@ -214,7 +214,7 @@ to import it from :file:`my-modules/academy/__init__.py`::
     from . import controllers
     from . import models
 
-and to set up basic :ref:`access control <core/security/acl>` for the model by
+and to set up basic :ref:`access control <reference/security/acl>` for the model by
 defining :file:`my-modules/academy/ir.model.access.csv` and adding it to the
 manifest:
 
@@ -253,7 +253,7 @@ Demonstration data
 
 The second step is to add some demonstration data to the system so it's
 possible to test eat easily. This is done by adding a ``demo``
-:ref:`data file <core/data>` to the manifest:
+:ref:`data file <reference/data>` to the manifest:
 
 .. code-block:: python
     :emphasize-lines: 13
@@ -289,7 +289,7 @@ possible to test eat easily. This is done by adding a ``demo``
 
 .. tip::
 
-    :ref:`Data files <core/data>` can be used for demo and non-demo data.
+    :ref:`Data files <reference/data>` can be used for demo and non-demo data.
     Demo data are only loaded in "demo mode" and can be used for flow testing
     and demonstration, non-demo data are always loaded and used as initial
     system setup.
@@ -392,7 +392,7 @@ then the ``website`` flag on the controller:
 .. TODO: website support link
 
 this sets up a few new variables on :ref:`the request object
-<web/http/request>` and allows using the website layout in our template:
+<reference/http/request>` and allows using the website layout in our template:
 
 .. code-block:: xml
     :emphasize-lines: 3-6,10-12
