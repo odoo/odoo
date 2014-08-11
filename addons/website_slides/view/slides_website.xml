@@ -178,7 +178,11 @@
                 </div>
                 <div class="page-header">
 					<h2><t t-esc="slideview.name"/><small class="pull-right"><t t-esc="slideview.slide_views"/> Views</small></h2>
-				</div>               
+				</div>
+				<t t-call="website.publish_management">
+	                <t t-set="object" t-value="slideview"/>
+	                <t t-set="publish_edit" t-value="True"/>
+	            </t>
                 <div t-if="slideview.tag_ids">
                     <i class="fa fa-tags"></i>
                     <t t-foreach="slideview.tag_ids" t-as="att_tag">
