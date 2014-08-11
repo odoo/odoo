@@ -1333,8 +1333,9 @@ class stock_picking(osv.osv):
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
-                if (need_rereserve or not all_op_processed) and not picking.location_id.usage in ("supplier", "production", "inventory"):
-                    self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
+                if need_rereserve or not all_op_processed: 
+                    if not picking.location_id.usage in ("supplier", "production", "inventory"):
+                        self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
                     self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
                 if todo_move_ids and not context.get('do_only_split'):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
