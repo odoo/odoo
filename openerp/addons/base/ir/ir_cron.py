@@ -27,11 +27,7 @@ from dateutil.relativedelta import relativedelta
 import pytz
 
 import openerp
-<<<<<<< HEAD
 from openerp import SUPERUSER_ID, netsvc, api
-=======
-from openerp import netsvc, SUPERUSER_ID
->>>>>>> 0739bc4edabab7e74571087c01a2da68ccadb10e
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
