@@ -1140,7 +1140,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                             self.$el.removeClass('confirm');
                             self.$el.text(_t('Close'));
                             self.confirmed = false;
-                        },900);
+                        },2000);
                     } else {
                         clearTimeout(this.confirmed);
                         this.pos_widget.close();
