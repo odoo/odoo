@@ -442,6 +442,31 @@ Form views can also use plain HTML for more flexible layouts:
       </sheet>
     </form>
 
+Search views
+------------
+
+Search views customize the search field associated with the list view (and
+other aggregated views). Their root element is ``<search>`` and they're
+composed of fields defining which fields can be searched on:
+
+.. code-block:: xml
+
+    <search>
+        <field name="name"/>
+        <field name="inventor_id"/>
+    </search>
+
+If no search view exists for the model, Odoo generates one which only allows
+searching on the ``name`` field.
+
+.. admonition:: Exercise 3 — search courses
+
+    Allow searching for courses based on their title or their description.
+
+    .. only:: solutions
+
+        .. patch::
+
 Relations between objects
 =========================
 
@@ -948,10 +973,11 @@ field (to define the label for each calendar event)
 Search views
 ------------
 
-Search views customize the search field in the top-right corner of the
-screen, as well as the foldable filters drawer. Their root element is
-``<search>``. They can use fields (performing searches of user-entered text)
-and filters (toggles of predefined searches):
+Search view fields can take custom operators or :ref:`reference/orm/domains`
+for more flexible matching of results.
+
+Search views can also contain *filters* which act as toggles for predefined
+searches (defined using :ref:`reference/orm/domains`):
 
 .. code-block:: xml
 
@@ -964,29 +990,22 @@ and filters (toggles of predefined searches):
         <field name="country_id" widget="selection"/>
     </search>
 
-Search views are somewhat special as they are displayed alongside other views.
-As a result, they are configured specially by adding them separately to an
-*action*, through the ``search_view_id`` field.
+To use a non-default search view in an action, it should be linked using the
+``search_view_id`` field of the action record.
 
-The action can also default values for search fields through its ``context``
-field: context keys of the form :samp:`search_default_{field_name}` will
-initialize *field_name* with the provided value. Search filters must have
-an optional ``@name`` to have a default and behave as booleans (they can
-only be enabled by default).
+The action can also set default values for search fields through its
+``context`` field: context keys of the form
+:samp:`search_default_{field_name}` will initialize *field_name* with the
+provided value. Search filters must have an optional ``@name`` to have a
+default and behave as booleans (they can only be enabled by default).
 
 .. admonition:: Exercise 3 - Search views
     :class: exercise
 
-    Add a search view containing:
-
-    #. a field to search the courses based on their title and
-    #. a button to filter the courses for which the current user is the
-       responsible. Make the latter selected by default.
+    Add a button to filter the courses for which the current user is the
+    responsible in the course search view. Make it selected by default.
 
     .. only:: solutions
-
-        #. Add a search view for courses
-        #. Add the search view to the courses action
 
         .. patch::
 

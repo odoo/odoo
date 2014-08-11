@@ -1,8 +1,9 @@
 # HG changeset patch
-# Parent 9c02076d4e980dd9833d9a327acb2978b91aa023
-diff -r 9c02076d4e98 -r a1788ea272cc openacademy/course.py
---- a/openacademy/course.py	Thu Aug 07 12:15:14 2014 +0200
-+++ b/openacademy/course.py	Thu Aug 07 12:20:45 2014 +0200
+# Parent a6e217b1fbbc64111581c269629b1c25c23abb99
+
+diff --git a/openacademy/course.py b/openacademy/course.py
+--- a/openacademy/course.py
++++ b/openacademy/course.py
 @@ -6,16 +6,25 @@ class Course(models.Model):
  
      name = fields.Char(string="Title", required=True)
@@ -31,10 +32,10 @@ diff -r 9c02076d4e98 -r a1788ea272cc openacademy/course.py
 +        string="Partner", required=True, ondelete='cascade')
 +    session_id = fields.Many2one('openacademy.session',
 +        string="Session", required=True, ondelete='cascade')
-diff -r 9c02076d4e98 -r a1788ea272cc openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml	Thu Aug 07 12:15:14 2014 +0200
-+++ b/openacademy/views/openacademy.xml	Thu Aug 07 12:20:45 2014 +0200
-@@ -49,5 +49,16 @@
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -63,5 +63,16 @@
          <!-- Full id location:
               action="openacademy.course_list_action"
               It is not required when it is the same module -->

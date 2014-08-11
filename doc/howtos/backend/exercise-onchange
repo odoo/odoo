@@ -1,8 +1,9 @@
 # HG changeset patch
-# Parent cda1293e177ba403406e35b66c90b8bb5e5e7fa1
-diff -r cda1293e177b -r 782b7acc3e7a openacademy/course.py
---- a/openacademy/course.py	Thu Aug 07 12:40:30 2014 +0200
-+++ b/openacademy/course.py	Thu Aug 07 12:43:15 2014 +0200
+# Parent ee398d15107bb599cb232a84c02ed29cc3be58c6
+
+diff --git a/openacademy/course.py b/openacademy/course.py
+--- a/openacademy/course.py
++++ b/openacademy/course.py
 @@ -39,6 +39,23 @@ class Session(models.Model):
          else:
              self.seats_taken = 100.0 * len(self.attendee_ids) / self.seats
