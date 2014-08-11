@@ -20,6 +20,7 @@ openerp.account = function (instance) {
             this.last_displayed_reconciliation_index = undefined; // Flow control
             this.reconciled_lines = 0; // idem
             this.already_reconciled_lines = 0; // Number of lines of the statement which were already reconciled
+            this.formatCurrencies; // Method that formats the currency ; loaded from the server
     
             // Only for statistical purposes
             this.lines_reconciled_with_ctrl_enter = 0; // TODO : only bank statement ?
@@ -44,6 +45,14 @@ openerp.account = function (instance) {
                     .query(['id', 'code'])
                     .all().then(function(data) {
                         _.each(data, function(o) { self.map_account_id_code[o.id] = o.code });
+                    })
+                );
+
+                // Get the function to format currencies
+                deferred_promises.push(new instance.web.Model("res.currency")
+                    .call("get_format_currencies_js_function")
+                    .then(function(data) {
+                        self.formatCurrencies = new Function("amount, currency_id", data);
                     })
                 );
                 
@@ -138,6 +147,7 @@ openerp.account = function (instance) {
             this.animation_speed = this.getParent().animation_speed;
             this.aestetic_animation_speed = this.getParent().aestetic_animation_speed;
             this.map_account_id_code = this.getParent().map_account_id_code;
+            this.formatCurrencies = this.getParent().formatCurrencies;
             this.is_valid = true;
             this.is_consistent = true; // Used to prevent bad server requests
             this.filter = "";
@@ -430,7 +440,6 @@ openerp.account = function (instance) {
             // The same move line cannot be selected for multiple resolutions
             this.excluded_move_lines_ids = [];
             this.map_tax_id_amount = {};
-            this.formatCurrency; // Method that formats the currency ; loaded from the server
             // Description of the fields to initialize in the "create new line" form
             // NB : for presets to work correctly, a field id must be the same string as a preset field
             this.create_form_fields = {
@@ -554,15 +563,6 @@ openerp.account = function (instance) {
                     );
                 }
 
-                // Get the function to format currencies
-                self.model_bank_statement = new instance.web.Model("account.bank.statement");
-                deferred_promises.push(self.model_bank_statement
-                    .call("get_format_currency_js_function", [self.statement_id])
-                    .then(function(data){
-                        self.formatCurrency = new Function("amount, currency_id", data);
-                    })
-                );
-        
                 deferred_promises.push(new instance.web.Model("account.statement.operation.template")
                     .query(['id','name','account_id','label','amount_type','amount','tax_id','analytic_account_id'])
                     .all().then(function (data) {
@@ -804,7 +804,6 @@ openerp.account = function (instance) {
             this.model_res_users = new instance.web.Model("res.users");
             this.model_tax = new instance.web.Model("account.tax");
             this.map_tax_id_amount = this.getParent().map_tax_id_amount;
-            this.formatCurrency = this.getParent().formatCurrency;
             this.presets = this.getParent().presets;
     
             this.set("mode", undefined);
@@ -1095,6 +1094,12 @@ openerp.account = function (instance) {
         deselectMoveLine: function(mv_line) {
             this._super(mv_line);
             var line_id = mv_line.dataset.lineid;
+            var line = _.find(this.get("mv_lines"), function(o) { return o.id == line_id });
+            if (line.partial_reconcile) {
+                this.unpartialReconcileLine(line);
+                line.propose_partial_reconcile = false;
+                this.updateMatchView()
+            }
             this.getParent().unexcludeMoveLines([line_id]);
         },
     
@@ -1225,8 +1230,8 @@ openerp.account = function (instance) {
                     self.$(".button_ok").attr("disabled", "disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = false;
-                    var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
-                    var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
+                    var debit = (balance > 0 ? self.formatCurrencies(balance, self.st_line.currency_id) : "");
+                    var credit = (balance < 0 ? self.formatCurrencies(-1*balance, self.st_line.currency_id) : "");
                     var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {
                         debit: debit,
                         credit: credit,
@@ -1244,8 +1249,8 @@ openerp.account = function (instance) {
             } else {
                 self.$(".button_ok").removeClass("oe_highlight");
                 self.$(".button_ok").text("Keep open");
-                var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
-                var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
+                var debit = (balance > 0 ? self.formatCurrencies(balance, self.st_line.currency_id) : "");
+                var credit = (balance < 0 ? self.formatCurrencies(-1*balance, self.st_line.currency_id) : "");
                 var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {
                     debit: debit,
                     credit: credit,
@@ -1358,7 +1363,7 @@ openerp.account = function (instance) {
                 // Format amounts
                 $.each(line_created_being_edited, function(index, val) {
                     if (val.amount)
-                        line_created_being_edited[index].amount_str = self.formatCurrency(Math.abs(val.amount), val.currency_id);
+                        line_created_being_edited[index].amount_str = self.formatCurrencies(Math.abs(val.amount), val.currency_id);
                 });
                 self.set("line_created_being_edited", line_created_being_edited);
                 self.createdLinesChanged(); // TODO For some reason, previous line doesn't trigger change handler
@@ -1396,10 +1401,10 @@ openerp.account = function (instance) {
             line.initial_amount = line.debit !== 0 ? line.debit : -1 * line.credit;
             if (balance < 0) {
                 line.debit -= balance;
-                line.debit_str = self.formatCurrency(line.debit, self.st_line.currency_id);
+                line.debit_str = self.formatCurrencies(line.debit, self.st_line.currency_id);
             } else {
                 line.credit -= balance;
-                line.credit_str = self.formatCurrency(line.credit, self.st_line.currency_id);
+                line.credit_str = self.formatCurrencies(line.credit, self.st_line.currency_id);
             }
             line.propose_partial_reconcile = false;
             line.partial_reconcile = true;
@@ -1422,10 +1427,10 @@ openerp.account = function (instance) {
             var self = this;
             if (line.initial_amount > 0) {
                 line.debit = line.initial_amount;
-                line.debit_str = self.formatCurrency(line.debit, self.st_line.currency_id);
+                line.debit_str = self.formatCurrencies(line.debit, self.st_line.currency_id);
             } else {
                 line.credit = -1 * line.initial_amount;
-                line.credit_str = self.formatCurrency(line.credit, self.st_line.currency_id);
+                line.credit_str = self.formatCurrencies(line.credit, self.st_line.currency_id);
             }
             line.propose_partial_reconcile = true;
             line.partial_reconcile = false;
