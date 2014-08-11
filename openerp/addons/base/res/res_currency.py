@@ -303,12 +303,6 @@ class res_currency(osv.osv):
 
         return function
 
-    def link_bank_to_partner(self, cr, uid, ids, context=None):
-        for statement in self.browse(cr, uid, ids, context=context):
-            for st_line in statement.line_ids:
-                if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
-                    self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
-
 class res_currency_rate(osv.osv):
     _name = "res.currency.rate"
     _description = "Currency Rate"

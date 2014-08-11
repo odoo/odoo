@@ -407,6 +407,12 @@ class account_bank_statement(osv.osv):
         bsl_obj = self.pool.get('account.bank.statement.line')
         return bsl_obj.search_count(cr, uid, [('statement_id', '=', id), ('journal_entry_id', '!=', False)], context=context)
 
+    def link_bank_to_partner(self, cr, uid, ids, context=None):
+        for statement in self.browse(cr, uid, ids, context=context):
+            for st_line in statement.line_ids:
+                if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
+                    self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
+
 class account_bank_statement_line(osv.osv):
 
     def cancel(self, cr, uid, ids, context=None):
