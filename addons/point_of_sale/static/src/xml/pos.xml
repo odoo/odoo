@@ -727,7 +727,7 @@
                 </t>
             </div>
             <div class="product-name">
-                <t t-esc="product.name"/>
+                <t t-esc="product.display_name"/>
             </div>
         </span>
     </t>
@@ -735,7 +735,7 @@
     <t t-name="Orderline">
         <li t-attf-class="orderline #{ line.selected ? 'selected' : '' }">
             <span class="product-name">
-                <t t-esc="line.get_product().name"/>
+                <t t-esc="line.get_product().display_name"/>
             </span>
             <span class="price">
                 <t t-esc="widget.format_currency(line.get_display_price())"/>
@@ -919,7 +919,7 @@
                 </colgroup>
                 <tr t-foreach="orderlines" t-as="orderline">
                     <td>
-                        <t t-esc="orderline.get_product().name"/>
+                        <t t-esc="orderline.get_product().display_name"/>
                          <t t-if="orderline.get_discount() > 0">
                             <div class="pos-disc-font">
                                 With a <t t-esc="orderline.get_discount()"/>% discount
