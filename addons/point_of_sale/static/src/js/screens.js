@@ -431,10 +431,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.ErrorNoClientPopupWidget = module.ErrorPopupWidget.extend({
-        template: 'ErrorNoClientPopupWidget',
-    });
-
     module.ErrorInvoiceTransferPopupWidget = module.ErrorPopupWidget.extend({
         template: 'ErrorInvoiceTransferPopupWidget',
     });
@@ -1111,7 +1107,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 invoiced.fail(function(error){
                     self.invoicing = false;
                     if (error === 'error-no-client') {
-                        self.pos_widget.screen_selector.show_popup('error-no-client');
+                        self.pos_widget.screen_selector.set_current_screen('clientlist');
                     } else {
                         self.pos_widget.screen_selector.show_popup('error-invoice-transfer');
                     }
