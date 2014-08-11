@@ -189,7 +189,7 @@ class _column(object):
 class boolean(_column):
     _type = 'boolean'
     _symbol_c = '%s'
-    _symbol_f = lambda x: x and 'True' or 'False'
+    _symbol_f = bool
     _symbol_set = (_symbol_c, _symbol_f)
 
     def __init__(self, string='unknown', required=False, **args):
