@@ -16,9 +16,7 @@
                         <field name="name"/>
                         <field name="default_reply_to"/>
                         <field name="default_registration_min"/>
-                        <field name="default_email_event" domain="[('model_id.model','=','event.registration')]"/>
                         <field name="default_registration_max"/>
-                        <field name="default_email_registration" domain="[('model_id.model','=','event.registration')]"/>
                     </group>
                 </form>
             </field>
@@ -103,12 +101,17 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string='Event Details' groups="base.group_no_one">
-                                <group colspan="4">
-                                    <field name="reply_to"/>
-                                    <field name="email_registration_id"/>
-                                    <field name="email_confirmation_id"/>
-                                </group>
+                            <page string="Email Schedule">
+                                <field name="reply_to"/>
+                                <field name="event_mail_ids">
+                                    <tree string="Email Schedule" editable="bottom">
+                                        <field name="template_id" />
+                                        <field name="interval_nbr"/>
+                                        <field name="interval_unit"/>
+                                        <field name="interval_type"/>
+                                        <field name="done"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
@@ -294,7 +297,7 @@
             <field name="arch" type="xml">
                 <form string="Event Registration">
                     <header>
-                        <button name="registration_open" string="Confirm" states="draft" type="object" class="oe_highlight"/>
+                        <button name="confirm_registration" string="Confirm" states="draft" type="object" class="oe_highlight"/>
                         <button name="button_reg_close" string="Attended" states="open" type="object" class="oe_highlight"/>
                         <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" />
                         <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
@@ -381,6 +384,60 @@
         <menuitem name="Attendees"
             id="menu_action_registration" parent="event.event_main_menu"
             action="action_registration" groups="event.group_event_manager,event.group_event_user"/>
+
+        <!-- EVENT.MAIL VIEWS -->
+        <record model="ir.ui.view" id="view_event_mail_form">
+            <field name="name">event.mail.form</field>
+            <field name="model">event.mail</field>
+            <field name="arch" type="xml">
+                <form string="Event Mail Scheduler">
+                    <group>
+                        <field name="event_id"/>
+                        <field name="template_id"/>
+                        <field name="mail_sent"/>
+                    </group>
+                    <group>
+                        <field name="interval_nbr"/>
+                        <field name="interval_unit"/>
+                        <field name="interval_type"/>
+                        <field name="scheduled_date"/>
+                    </group>
+                    <notebook>
+                        <page string="Registration Mails">
+                            <field name="mail_registration_ids">
+                                <tree string="Registration mail" editable="bottom">
+                                    <field name="registration_id"/>
+                                    <field name="scheduled_date"/>
+                                    <field name="mail_sent"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_event_mail_tree">
+            <field name="name">event.mail.tree</field>
+            <field name="model">event.mail</field>
+            <field name="arch" type="xml">
+                <tree string="Event Mail Schedulers">
+                    <field name="event_id"/>
+                    <field name="template_id"/>
+                    <field name="scheduled_date"/>
+                    <field name="mail_sent"/>
+                    <field name="done"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_event_mail">
+            <field name="name">Events Mail Schedulers</field>
+            <field name="res_model">event.mail</field>
+            <field name="view_type">form</field>
+        </record>
+        
+        <menuitem name="Events Mail Schedulers" id="menu_event_type" action="action_event_mail" parent="event.event_configuration" groups="base.group_no_one"/>
 
     </data>
 </openerp>
