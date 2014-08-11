@@ -32,6 +32,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
+from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp import http
 
@@ -141,50 +142,6 @@ def ensure_db(redirect='/web/database/selector'):
 
     request.session.db = db
 
-def module_topological_sort(modules):
-    """ Return a list of module names sorted so that their dependencies of the
-    modules are listed before the module itself
-
-    modules is a dict of {module_name: dependencies}
-
-    :param modules: modules to sort
-    :type modules: dict
-    :returns: list(str)
-    """
-
-    dependencies = set(itertools.chain.from_iterable(modules.itervalues()))
-    # incoming edge: dependency on other module (if a depends on b, a has an
-    # incoming edge from b, aka there's an edge from b to a)
-    # outgoing edge: other module depending on this one
-
-    # [Tarjan 1976], http://en.wikipedia.org/wiki/Topological_sorting#Algorithms
-    #L ← Empty list that will contain the sorted nodes
-    L = []
-    #S ← Set of all nodes with no outgoing edges (modules on which no other
-    #    module depends)
-    S = set(module for module in modules if module not in dependencies)
-
-    visited = set()
-    #function visit(node n)
-    def visit(n):
-        #if n has not been visited yet then
-        if n not in visited:
-            #mark n as visited
-            visited.add(n)
-            #change: n not web module, can not be resolved, ignore
-            if n not in modules: return
-            #for each node m with an edge from m to n do (dependencies of n)
-            for m in modules[n]:
-                #visit(m)
-                visit(m)
-            #add n to L
-            L.append(n)
-    #for each node n in S do
-    for n in S:
-        #visit(n)
-        visit(n)
-    return L
-
 def module_installed():
     # Candidates module the current heuristic is the /static dir
     loadable = http.addons_manifest.keys()
@@ -202,7 +159,7 @@ def module_installed():
             dependencies = [i['name'] for i in deps_read]
             modules[module['name']] = dependencies
 
-    sorted_modules = module_topological_sort(modules)
+    sorted_modules = topological_sort(modules)
     return sorted_modules
 
 def module_installed_bypass_session(dbname):
@@ -224,7 +181,7 @@ def module_installed_bypass_session(dbname):
                     modules[module['name']] = dependencies
     except Exception,e:
         pass
-    sorted_modules = module_topological_sort(modules)
+    sorted_modules = topological_sort(modules)
     return sorted_modules
 
 def module_boot(db=None):
