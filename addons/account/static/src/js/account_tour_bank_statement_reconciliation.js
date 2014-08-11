@@ -132,6 +132,7 @@
             },
 
 
+            // Be done
             {
                 title:      "check 'finish screen' and close the statement",
                 waitFor:    '.done_message',

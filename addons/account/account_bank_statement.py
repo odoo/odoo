@@ -406,34 +406,6 @@ class account_bank_statement(osv.osv):
     def number_of_lines_reconciled(self, cr, uid, id, context=None):
         bsl_obj = self.pool.get('account.bank.statement.line')
         return bsl_obj.search_count(cr, uid, [('statement_id', '=', id), ('journal_entry_id', '!=', False)], context=context)
-        
-    def get_format_currency_js_function(self, cr, uid, id, context=None):
-        """ Returns a string that can be used to instanciate a javascript function.
-            That function formats a number according to the statement line's currency or the statement currency"""
-        company_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
-        st = id and self.browse(cr, uid, id, context=context)
-        if not st:
-            return
-        statement_currency = st.journal_id.currency or company_currency
-        digits = 2 # TODO : from currency_obj
-        function = ""
-        done_currencies = []
-        for st_line in st.line_ids:
-            st_line_currency = st_line.currency_id or statement_currency
-            if st_line_currency.id not in done_currencies:
-                if st_line_currency.position == 'after':
-                    return_str = "return amount.toFixed(" + str(digits) + ") + ' " + st_line_currency.symbol + "';"
-                else:
-                    return_str = "return '" + st_line_currency.symbol + " ' + amount.toFixed(" + str(digits) + ");"
-                function += "if (currency_id === " + str(st_line_currency.id) + "){ " + return_str + " }"
-                done_currencies.append(st_line_currency.id)
-        return function
-
-    def link_bank_to_partner(self, cr, uid, ids, context=None):
-        for statement in self.browse(cr, uid, ids, context=context):
-            for st_line in statement.line_ids:
-                if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
-                    self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
 
 class account_bank_statement_line(osv.osv):
 
