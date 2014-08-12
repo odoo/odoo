@@ -52,7 +52,7 @@ class meeting_invitation(http.Controller):
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
     @http.route('/calendar/notify', type='json', auth="none")
     def notify(self):
-        registry = openerp.modules.registry.RegistryManager.get(request.session.db)
+        registry = request.registry
         uid = request.session.uid
         context = request.session.context
         with registry.cursor() as cr:
@@ -61,7 +61,7 @@ class meeting_invitation(http.Controller):
 
     @http.route('/calendar/notify_ack', type='json', auth="none")
     def notify_ack(self, type=''):
-        registry = openerp.modules.registry.RegistryManager.get(request.session.db)
+        registry = request.registry
         uid = request.session.uid
         context = request.session.context
         with registry.cursor() as cr:
