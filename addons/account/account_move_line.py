@@ -310,7 +310,9 @@ class account_move_line(osv.osv):
         sql = """SELECT l1.id, COALESCE(SUM(l2.debit-l2.credit), 0)
                     FROM account_move_line l1 LEFT JOIN account_move_line l2
                     ON (l1.account_id = l2.account_id
-                      AND l2.id <= l1.id
+                      AND (l1.date < l2.date
+                           or (l1.date = l2.date and l1.id<=l2.id)
+                      )
                       AND """ + \
                 self._query_get(cr, uid, obj='l2', context=c) + \
                 ") WHERE l1.id IN %s GROUP BY l1.id"
