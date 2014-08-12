@@ -105,8 +105,8 @@
             var values = {
                 'name' : this.$('#name').val(),
                 'tag_ids' : this.$('.slide-tags').textext()[0].tags()._formData,
-                'datas': self.file.data,
-                'datas_fname': self.file.name,
+                'datas': self.file.data || '',
+                'datas_fname': self.file.name || '',
                 'image': this.$('#the-canvas')[0].toDataURL().split(',')[1],
                 'url': this.$('#url').val()
             };

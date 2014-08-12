@@ -93,23 +93,24 @@ class ir_attachment(osv.osv):
         return True
 
     def create(self, cr, uid, values, context=None):
-        if values.get('is_slide', False) and values.get('datas_fname', False):
-            values['url'] = "/website_slides/" + values['datas_fname']
-        if values.get('slide_type') == 'video' and values.get('url'):
-            values["youtube_id"] = self.extract_youtube_id(values['url'])
-            statistics = self.youtube_statistics(values["youtube_id"])
-            if statistics:
-                if statistics['items'][0].get('snippet').get('thumbnails') and statistics['items'][0]['snippet'].get('thumbnails'):
-                    values['image'] = statistics['items'][0]['snippet']['thumbnails']['medium']['url']
-                if statistics['items'][0].get('statistics'):
-                    values['slide_views'] = statistics['items'][0]['statistics']['viewCount']
+        if values.get('is_slide'):
+            if values.get('datas_fname'):
+                values['url'] = "/website_slides/" + values['datas_fname']
+            elif values.get('url'):
+                values["youtube_id"] = self.extract_youtube_id(values['url'].strip())
+                statistics = self.youtube_statistics(values["youtube_id"])
+                if statistics:
+                    if statistics['items'][0].get('snippet').get('thumbnails') and statistics['items'][0]['snippet'].get('thumbnails'):
+                        values['image'] = statistics['items'][0]['snippet']['thumbnails']['medium']['url']
+                    if statistics['items'][0].get('statistics'):
+                        values['slide_views'] = statistics['items'][0]['statistics']['viewCount']
         return super(ir_attachment, self).create(cr, uid, values, context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         ids = super(ir_attachment, self)._search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
         return len(ids) if count else ids
  
-    def extract_youtube_id(self,url):
+    def extract_youtube_id(self, url):
         youtube_id = ""
         query = urlparse(url)
         if query.hostname == 'youtu.be':
