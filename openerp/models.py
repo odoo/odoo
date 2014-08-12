@@ -2474,8 +2474,8 @@ class BaseModel(object):
                 self._create_table(cr)
                 has_rows = False
             else:
-                cr.execute('SELECT COUNT(1) FROM "%s"' % (self._table,))
-                has_rows = cr.fetchone()[0]
+                cr.execute('SELECT min(id) FROM "%s"' % (self._table,))
+                has_rows = cr.fetchone()[0] is not None
 
             cr.commit()
             if self._parent_store:
