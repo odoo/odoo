@@ -146,8 +146,10 @@ class _column(object):
             ('translate', self.translate),
             ('domain', self._domain),
             ('context', self._context),
+            ('change_default', self.change_default),
+            ('deprecated', self.deprecated),
         ]
-        return dict(item for item in items if items[1])
+        return dict(item for item in items if item[1])
 
     def restart(self):
         pass
@@ -187,7 +189,7 @@ class _column(object):
 class boolean(_column):
     _type = 'boolean'
     _symbol_c = '%s'
-    _symbol_f = lambda x: x and 'True' or 'False'
+    _symbol_f = bool
     _symbol_set = (_symbol_c, _symbol_f)
 
     def __init__(self, string='unknown', required=False, **args):

@@ -21,7 +21,6 @@
 
 import base64
 import logging
-import re
 from urlparse import urljoin
 
 from openerp import api, tools
@@ -44,7 +43,7 @@ class mail_mail(osv.Model):
     _rec_name = 'subject'
 
     _columns = {
-        'mail_message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade'),
+        'mail_message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade', auto_join=True),
         'state': fields.selection([
             ('outgoing', 'Outgoing'),
             ('sent', 'Sent'),
@@ -68,7 +67,6 @@ class mail_mail(osv.Model):
 
     _defaults = {
         'state': 'outgoing',
-        'headers': '{}',
     }
 
     def default_get(self, cr, uid, fields, context=None):

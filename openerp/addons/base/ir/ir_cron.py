@@ -24,6 +24,7 @@ import time
 import psycopg2
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import pytz
 
 import openerp
 from openerp import SUPERUSER_ID, netsvc, api
@@ -149,18 +150,18 @@ class ir_cron(osv.osv):
         except Exception, e:
             self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
 
-    def _process_job(self, cr, job, cron_cr):
+    def _process_job(self, job_cr, job, cron_cr):
         """ Run a given job taking care of the repetition.
 
-        :param cr: cursor to use to execute the job, safe to commit/rollback
+        :param job_cr: cursor to use to execute the job, safe to commit/rollback
         :param job: job to be run (as a dictionary).
         :param cron_cr: cursor holding lock on the cron job row, to use to update the next exec date,
             must not be committed/rolled back!
         """
         try:
             with api.Environment.manage():
-                now = datetime.now() 
-                nextcall = datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT)
+                now = fields.datetime.context_timestamp(job_cr, SUPERUSER_ID, datetime.now())
+                nextcall = fields.datetime.context_timestamp(job_cr, SUPERUSER_ID, datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
                 numbercall = job['numbercall']
 
                 ok = False
@@ -168,7 +169,7 @@ class ir_cron(osv.osv):
                     if numbercall > 0:
                         numbercall -= 1
                     if not ok or job['doall']:
-                        self._callback(cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
+                        self._callback(job_cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
                     if numbercall:
                         nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
                     ok = True
@@ -176,11 +177,11 @@ class ir_cron(osv.osv):
                 if not numbercall:
                     addsql = ', active=False'
                 cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
-                           (nextcall.strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
-                self.invalidate_cache(cr, SUPERUSER_ID)
+                           (nextcall.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
+                self.invalidate_cache(job_cr, SUPERUSER_ID)
 
         finally:
-            cr.commit()
+            job_cr.commit()
             cron_cr.commit()
 
     @classmethod

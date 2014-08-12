@@ -227,7 +227,11 @@ class project(osv.osv):
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
+        'analytic_account_id': fields.many2one(
+            'account.analytic.account', 'Contract/Analytic',
+            help="Link this project to an analytic account if you need financial management on projects. "
+                 "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
+            ondelete="cascade", required=True, auto_join=True),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),

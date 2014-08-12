@@ -138,14 +138,33 @@ def propagate(from_method, to_method):
 
 def constrains(*args):
     """ Return a decorator that specifies the field dependencies of a method
-        implementing a constraint checker. Each argument must be a field name.
+        implementing a constraint checker. Each argument must be a field name::
+
+            @api.one
+            @api.constrains('name', 'description')
+            def _check_description(self):
+                if self.name == self.description:
+                    raise ValueError("Fields name and description must be different")
+
+        The method is invoked on the records where one of the given fields has
+        been modified. It is expected to raise an exception when the constraint
+        is not satisfied.
     """
     return lambda method: decorate(method, '_constrains', args)
 
 
 def onchange(*args):
     """ Return a decorator to decorate an onchange method for given fields.
-        Each argument must be a field name.
+        Each argument must be a field name::
+
+            @api.onchange('partner_id')
+            def _onchange_partner(self):
+                self.message = "Dear %s" % (self.partner_id.name or "")
+
+        In the form views where the field appears, the method will be called
+        when one of the given fields is modified. The method is invoked on a
+        pseudo-record that contains the values present in the form. Field
+        assignments on that record are automatically sent back to the client.
     """
     return lambda method: decorate(method, '_onchange', args)
 
@@ -153,7 +172,17 @@ def onchange(*args):
 def depends(*args):
     """ Return a decorator that specifies the field dependencies of a "compute"
         method (for new-style function fields). Each argument must be a string
-        that consists in a dot-separated sequence of field names.
+        that consists in a dot-separated sequence of field names::
+
+            pname = fields.Char(compute='_compute_pname')
+
+            @api.one
+            @api.depends('partner_id.name', 'partner_id.is_company')
+            def _compute_pname(self):
+                if self.partner_id.is_company:
+                    self.pname = (self.partner_id.name or "").upper()
+                else:
+                    self.pname = self.partner_id.name
 
         One may also pass a single function as argument. In that case, the
         dependencies are given by calling the function with the field's model.

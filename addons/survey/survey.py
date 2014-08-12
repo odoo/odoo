@@ -125,8 +125,10 @@ class survey_survey(osv.Model):
 
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes a public URL for the survey """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
-            'web.base.url')
+        if context and context.get('relative_url'):
+            base_url = '/'
+        else:
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         res = {}
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/start/%s" % slug(survey))
@@ -141,7 +143,10 @@ class survey_survey(osv.Model):
 
     def _get_print_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes a printing URL for the survey """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        if context and context.get('relative_url'):
+            base_url = '/'
+        else:
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         res = {}
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/print/%s" % slug(survey))
@@ -149,8 +154,10 @@ class survey_survey(osv.Model):
 
     def _get_result_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes an URL for the survey results """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
-            'web.base.url')
+        if context and context.get('relative_url'):
+            base_url = '/'
+        else:
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         res = {}
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/results/%s" % slug(survey))
@@ -343,17 +350,14 @@ class survey_survey(osv.Model):
 
         #Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:
-            result_summary = []
-            for label in question.labels_ids:
-                count = 0
-                comments = []
-                for input_line in question.user_input_line_ids:
-                    if input_line.answer_type == 'suggestion' and input_line.value_suggested.id == label.id and (not current_filters or input_line.user_input_id.id in current_filters):
-                        count = count + 1
-                    if input_line.answer_type == 'text' and (not current_filters or input_line.user_input_id.id in current_filters):
-                        comments.append(input_line)
-                label_summary = {'text': label.value, 'count': count, 'answer_id': label.id, 'comments': comments}
-                result_summary = result_summary + [label_summary]
+            answers = {}
+            comments = []
+            [answers.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
+            for input_line in question.user_input_line_ids:
+                if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    answers[input_line.value_suggested.id]['count'] += 1
+                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    comments.append(input_line)
             result_summary = {'answers': answers.values(), 'comments': comments}
 
         #Calculate and return statistics for matrix
@@ -416,7 +420,8 @@ class survey_survey(osv.Model):
     def action_start_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey form '''
         trail = ""
-        if context and 'survey_token' in context:
+        context = dict(context or {}, relative_url=True)
+        if 'survey_token' in context:
             trail = "/" + context['survey_token']
         return {
             'type': 'ir.actions.act_url',
@@ -464,7 +469,8 @@ class survey_survey(osv.Model):
     def action_print_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey printable view '''
         trail = ""
-        if context and 'survey_token' in context:
+        context = dict(context or {}, relative_url=True)
+        if 'survey_token' in context:
             trail = "/" + context['survey_token']
         return {
             'type': 'ir.actions.act_url',
@@ -475,6 +481,7 @@ class survey_survey(osv.Model):
 
     def action_result_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey results view '''
+        context = dict(context or {}, relative_url=True)
         return {
             'type': 'ir.actions.act_url',
             'name': "Results of the Survey",
@@ -484,6 +491,7 @@ class survey_survey(osv.Model):
 
     def action_test_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey form into test mode'''
+        context = dict(context or {}, relative_url=True)
         return {
             'type': 'ir.actions.act_url',
             'name': "Results of the Survey",

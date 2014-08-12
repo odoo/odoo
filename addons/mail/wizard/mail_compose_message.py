@@ -68,7 +68,7 @@ class mail_compose_message(osv.TransientModel):
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
 
         # v6.1 compatibility mode
-        result['composition_mode'] = result.get('composition_mode', context.get('mail.compose.message.mode'))
+        result['composition_mode'] = result.get('composition_mode', context.get('mail.compose.message.mode', 'comment'))
         result['model'] = result.get('model', context.get('active_model'))
         result['res_id'] = result.get('res_id', context.get('active_id'))
         result['parent_id'] = result.get('parent_id', context.get('message_id'))
@@ -97,6 +97,9 @@ class mail_compose_message(osv.TransientModel):
         if result['model'] == 'res.users' and result['res_id'] == uid:
             result['model'] = 'res.partner'
             result['res_id'] = self.pool.get('res.users').browse(cr, uid, uid).partner_id.id
+
+        if fields is not None:
+            [result.pop(field, None) for field in result.keys() if field not in fields]
         return result
 
     def _get_composition_mode_selection(self, cr, uid, context=None):
@@ -262,6 +265,7 @@ class mail_compose_message(osv.TransientModel):
                 'author_id': wizard.author_id.id,
                 'email_from': wizard.email_from,
                 'record_name': wizard.record_name,
+                'no_auto_thread': wizard.no_auto_thread,
             }
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and wizard.model:

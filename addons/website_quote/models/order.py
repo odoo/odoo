@@ -64,11 +64,14 @@ class sale_quote_line(osv.osv):
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        name = product_obj.name
+        if product_obj.description_sale:
+            name += '\n' + product_obj.description_sale
         vals.update({
             'price_unit': product_obj.list_price,
             'product_uom_id': product_obj.uom_id.id,
             'website_description': product_obj.website_description,
-            'name': product_obj.name,
+            'name': name,
         })
         return {'value': vals}
 
@@ -183,7 +186,19 @@ class sale_order(osv.osv):
         for line in order_line:
             products += line.product_id.product_tmpl_id.recommended_products(context=context)
         return products
-        
+
+    def get_access_action(self, cr, uid, id, context=None):
+        """ Override method that generated the link to access the document. Instead
+        of the classic form view, redirect to the online quote if exists. """
+        quote = self.browse(cr, uid, id, context=context)
+        if not quote.template_id:
+            return super(sale_order, self).get_access_action(cr, uid, id, context=context)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/quote/%s' % id,
+            'target': 'self',
+            'res_id': id,
+        }
 
 
 class sale_quote_option(osv.osv):

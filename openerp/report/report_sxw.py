@@ -192,7 +192,9 @@ class rml_parse(object):
         elif (hasattr(obj, '_field') and\
                 isinstance(obj._field, (float_field, function_field)) and\
                 obj._field.digits):
-                d = obj._field.digits[1] or DEFAULT_DIGITS
+                d = obj._field.digits[1]
+                if not d and d is not 0:
+                    d = DEFAULT_DIGITS
         return d
 
     def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False, currency_obj=False):

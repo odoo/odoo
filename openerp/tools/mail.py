@@ -63,6 +63,9 @@ def html_sanitize(src, silent=True, strict=False):
     # html encode email tags
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
     src = part.sub(lambda m: cgi.escape(m.group(1)), src)
+    # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
+    src = src.replace('<%', cgi.escape('<%'))
+    src = src.replace('%>', cgi.escape('%>'))
 
     kwargs = {
         'page_structure': True,
@@ -71,7 +74,7 @@ def html_sanitize(src, silent=True, strict=False):
         'remove_unknown_tags': False,
         'allow_tags': allowed_tags,
         'comments': False,
-        'processing_instructions' : False
+        'processing_instructions': False
     }
     if etree.LXML_VERSION >= (2, 3, 1):
         # kill_tags attribute has been added in version 2.3.1
@@ -104,6 +107,8 @@ def html_sanitize(src, silent=True, strict=False):
         cleaned = cleaned.replace('%20', ' ')
         cleaned = cleaned.replace('%5B', '[')
         cleaned = cleaned.replace('%5D', ']')
+        cleaned = cleaned.replace('&lt;%', '<%')
+        cleaned = cleaned.replace('%&gt;', '%>')
     except etree.ParserError, e:
         if 'empty' in str(e):
             return ""
@@ -598,10 +603,6 @@ command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 # group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
 reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?.*@(.*)>", re.UNICODE)
 
-# Bounce regex
-# Typical form of bounce is bounce-128-crm.lead-34@domain
-# group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
-bounce_re = re.compile("[\w]+-(\d+)-?([\w.]+)?-?(\d+)?", re.UNICODE)
 
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
