@@ -1,14 +1,12 @@
 Odoo CRM
 --------
 
-### Boost sales productivity, improve win rates, grow revenue
+Boost sales productivity, improve win rates, grow revenue with the Odoo
+<a href="https://www.odoo.com/page/crm">Open Source CRM</a>.
 
-
-Manage your sales funnel with the Odoo
-<a href="https://www.odoo.com/page/crm">Open Source CRM</a>. Attract leads,
-follow-up on phone calls and meetings. Analyse the quality of your leads to
-make informed decisions and save time by integrating emails directly into the
-application.
+Manage your sales funnel with no effort. Attract leads, follow-up on phone
+calls and meetings. Analyse the quality of your leads to make informed
+decisions and save time by integrating emails directly into the application.
 
 Your Sales Funnel, The Way You Like It
 --------------------------------------
@@ -35,8 +33,6 @@ operation. Spend less time on administration and more time on qualifying leads.
 
 Organize Your Opportunities
 ---------------------------
-
-### A clean user interface with everything in one screen
 
 Get your opportunities organized to stay focused on the best deals. Manage all
 your customer interactions from the opportunity like emails, phone calls,
@@ -66,7 +62,7 @@ see what your team is busy with.
 Lead Automation and Marketing Campaigns
 ---------------------------------------
 
-### Drive performance by automating tasks
+Drive performance by automating tasks with Odoo <a href="https://www.odoo.com/page/crm">CRM</a>.
 
 Use our marketing campaigns to automate lead acquisition, follow ups and
 promotions. Define automated actions (e.g. ask a salesperson to call, send an
@@ -80,8 +76,6 @@ company's bottom line.
 Customize Your Sales Cycle
 --------------------------
 
-### It Fits Your Sales Approach
-
 Customize your sales cycle by configuring sales stages that perfectly fit your
 sales approach. Control statistics to get accurate forecasts to improve your
 sales performance at every stage of your customer relationship.
@@ -92,9 +86,9 @@ Drive Engagement with Gamification
 ### Leverage sales' natural desire for competition
 
 Reinforce good habits and improve win rates with real-time recognition and
-rewards gamification system. Align sales teams around
-clear business objectives with challenges, personal objectives and team leader
-boards.
+rewards inspired by [game mechanics](http://en.wikipedia.org/wiki/Gamification).
+Align sales teams around clear business objectives with challenges, personal
+objectives and team leader boards.
 
 ### Leaderboards
 
