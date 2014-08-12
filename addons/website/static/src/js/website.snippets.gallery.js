@@ -44,10 +44,11 @@
         bind_change: function () {
             var self = this;
             return this.$target.find("img").off('saved').on('saved', function (event, img) {
-                    $(img).parent().addClass("saved_active");
+                    var $parent = $(img).parent();
+                    $parent.addClass("saved_active");
                     var index = self.$target.find(".item.saved_active").index();
-                    self.reapply();
-                    self.$target.find(".carousel:first li[data-target]:eq("+index+")").click();
+                    $parent.removeClass("saved_active");
+                    self.$target.find(".carousel:first li[data-target]:eq("+index+")").css("background-image", "url("+$(img).attr("src")+")");
                 });
         },
         get_imgs: function () {
