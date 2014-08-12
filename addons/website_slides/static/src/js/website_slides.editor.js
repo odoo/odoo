@@ -112,9 +112,23 @@
             };
             return _.extend(values, default_val);
         },
+        validate: function(){
+            this.$('.control-group').removeClass('has-error');
+            if(!this.$('#name').val()){
+                this.$('#name').closest('.control-group').addClass('has-error');
+                return false;
+            }
+            if(!(this.file.name || this.$('#url').val())){
+                this.$('#url').closest('.control-group').addClass('has-error');
+                return false;
+            }
+            return true;
+        },
         save: function () {
-            var values = this.get_value();
-            website.form('/slides/add_slide', 'POST', values);
+            if(this.validate()){
+                var values = this.get_value();
+                website.form('/slides/add_slide', 'POST', values);
+            }
         },
 
 
