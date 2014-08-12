@@ -4420,6 +4420,7 @@ class BaseModel(object):
                 order_split = order_part.strip().split(' ')
                 order_field = order_split[0].strip()
                 order_direction = order_split[1].strip() if len(order_split) == 2 else ''
+                order_column = None
                 inner_clause = None
                 if order_field == 'id':
                     order_by_elements.append('"%s"."%s" %s' % (self._table, order_field, order_direction))
@@ -4442,6 +4443,8 @@ class BaseModel(object):
                         continue  # ignore non-readable or "non-joinable" fields
                 else:
                     raise ValueError( _("Sorting field %s not found on model %s") %( order_field, self._name))
+                if order_column and order_column._type == 'boolean':
+                    inner_clause = "COALESCE(%s, false)" % inner_clause
                 if inner_clause:
                     if isinstance(inner_clause, list):
                         for clause in inner_clause:
