@@ -14,7 +14,6 @@
             parent="stock.menu_stock_product" sequence="0" groups="base.group_no_one"/>
         <menuitem action="product.product_template_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="group_stock_manager"/>
-        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="40" groups="base.group_no_one"/>
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="2"/>
         <menuitem
             id="menu_product_in_config_stock" name="Products"
@@ -1261,7 +1260,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="1"/>
+        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_stock_configuration" sequence="40"/>
 
 
          <record id="view_pickingtype_filter" model="ir.ui.view">
