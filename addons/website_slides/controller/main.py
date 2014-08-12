@@ -216,5 +216,4 @@ class main(http.Controller):
         slide_obj = pool.get('ir.attachment')
         slide_id = slide_obj.create(cr, uid, post, context=context)
         slide = slide_obj.browse(cr, uid, slide_id, context=context)
-        return request.redirect("slides/view/%s" % slug(slide))
-
+        return request.redirect("view/%s" % slug(slide))
