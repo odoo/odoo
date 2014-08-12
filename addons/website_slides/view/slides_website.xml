@@ -198,14 +198,14 @@
                 <div class="row">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="active"><a href="#about" role="tab" data-toggle="tab">About</a></li>
+                        <li><a href="#about" role="tab" data-toggle="tab">About</a></li>
                         <li><a href="#share" role="tab" data-toggle="tab">Share</a></li>
-                        <li><a href="#discuss" role="tab" data-toggle="tab">Discuss</a></li>
+                        <li class="active"><a href="#discuss" role="tab" data-toggle="tab">Discuss</a></li>
                         <li><a href="#transscript" role="tab" data-toggle="tab">Transscript</a></li>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content" style="background: none repeat scroll 0 0 #f8f8f8;padding: 20px;">
-                        <div class="tab-pane fade in active" id="about">
+                        <div class="tab-pane fade" id="about">
                             <p t-field="slideview.description"></p>
                         </div>
                         <div class="tab-pane fade" id="share">                            
@@ -243,7 +243,7 @@
 								</t>
 							</div>
                         </div>
-                        <div class="tab-pane fade" id="discuss">                       	
+                        <div class="tab-pane fade in active" id="discuss">                       	
 				            <form id="comment" t-attf-action="/slides/comment/#{slideview.id}" method="POST">
 				                <div class="media">
 				                    <span class="pull-left">
