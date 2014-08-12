@@ -16,10 +16,6 @@ openerp.account = function (instance) {
             this._super(parent);
             this.max_reconciliations_displayed = 10;
             this.title = context.context.title || _t("Reconciliation"); // TODO : only bank statement ?
-            this.lines = []; // list of reconciliations identifiers to instantiate children widgets
-            this.last_displayed_reconciliation_index = undefined; // Flow control
-            this.reconciled_lines = 0; // idem
-            this.already_reconciled_lines = 0; // Number of lines of the statement which were already reconciled
             this.formatCurrencies; // Method that formats the currency ; loaded from the server
     
             // Only for statistical purposes
@@ -37,7 +33,7 @@ openerp.account = function (instance) {
     
         start: function() {
             var self = this;
-            $.when(this._super()).then(function(){
+            return $.when(this._super()).then(function(){
                 var deferred_promises = [];
 
                 // Create a dict account id -> account code for display facilities
@@ -434,6 +430,10 @@ openerp.account = function (instance) {
             this.childrenWidget = instance.web.account.bankStatementReconciliationLine;
 
             this.statement_id = context.context.statement_id;
+            this.lines = []; // list of reconciliations identifiers to instantiate children widgets
+            this.last_displayed_reconciliation_index = undefined; // Flow control
+            this.reconciled_lines = 0; // idem
+            this.already_reconciled_lines = 0; // Number of lines of the statement which were already reconciled
             this.presets = {};
             this.model_bank_statement = new instance.web.Model("account.bank.statement");
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
@@ -519,7 +519,7 @@ openerp.account = function (instance) {
     
         start: function() {
             var self = this;
-            $.when(this._super()).then(function(){
+            return $.when(this._super()).then(function(){
                 self.$el.addClass("oe_bank_statement_reconciliation");
                 
                 // Inject variable styles
@@ -1535,15 +1535,28 @@ openerp.account = function (instance) {
     
         init: function(parent, context) {
             this._super(parent, context);
-
             this.childrenWidget = instance.web.account.manualReconciliationLine;
+            this.model_aml = new instance.web.Model("account.move.line");
+            this.show_partner_accounts = true;
+            this.show_other_accounts = false;
+            this.items_partner_accounts = [];
+            this.items_other_accounts = [];
+            this.num_total_items_partner_accounts = 0;
+            this.num_total_items_other_accounts = 0;
+            this.num_done_items_partner_accounts = 0;
+            this.num_done_items_other_accounts = 0;
         },
     
         start: function() {
             var self = this;
-            $.when(this._super()).then(function(){
+            return $.when(this._super()).then(function(){
                 self.$el.addClass("oe_manual_reconciliation");
                 self.$el.prepend(QWeb.render("reconciliation", {title: self.title, total_lines: 0}));
+
+                // Get and process data for all reconciliations
+                return $.when(self.model_aml.call("get_data_for_manual_reconciliation", [])).then(function(data){
+                    //self.decorateMoveLine()
+                });
             });
         },
     });

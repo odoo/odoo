@@ -752,6 +752,100 @@ class account_move_line(osv.osv):
             args.append(('partner_id', '=', partner[0]))
         return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
 
+    def get_data_for_manual_reconciliation(self, cr, uid, context=None):
+        """ Returns two lists of dicts containing all data required by manual reconciliation reconcile :
+            one for each reconciliable tuple partner-account and one for each other reconciliable account
+        """
+        # Fetch data for the partner accounts
+        cr.execute(
+             """SELECT partner_id, partner_name, last_reconciliation_date, account_id, account_name, account_code FROM (
+                    SELECT l.partner_id,
+                        p.last_reconciliation_date,
+                        p.name AS partner_name,
+                        a.id AS account_id,
+                        a.name AS account_name,
+                        a.code AS account_code,
+                        SUM(l.debit) AS debit,
+                        SUM(l.credit) AS credit,
+                        MAX(l.create_date) AS max_date
+                    FROM account_move_line l
+                    RIGHT JOIN account_account a ON (a.id = l.account_id)
+                    RIGHT JOIN res_partner p ON (l.partner_id = p.id)
+                    WHERE a.reconcile IS TRUE
+                    AND l.reconcile_id IS NULL
+                    AND l.state <> 'draft'
+                    GROUP BY l.partner_id, p.last_reconciliation_date, p.name, a.id, a.name, a.code
+                ) AS s
+                WHERE debit > 0
+                AND credit > 0
+                AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
+                ORDER BY last_reconciliation_date""")
+        
+        # Apply ir_rules by filtering out
+        part_acc_rows = cr.dictfetchall()
+        ids = [x['partner_id'] for x in part_acc_rows]
+        allowed_ids = set(self.pool.get('res.partner').search(cr, uid, [('id', 'in', ids)], context=context))
+        part_acc_rows = [row for row in part_acc_rows if row['partner_id'] in allowed_ids]
+        ids = [x['account_id'] for x in part_acc_rows]
+        allowed_ids = set(self.pool.get('account.account').search(cr, uid, [('id', 'in', ids)], context=context))
+        part_acc_rows = [row for row in part_acc_rows if row['account_id'] in allowed_ids]
+
+        # Fetch account move lines
+        for row in part_acc_rows:
+            row['move_lines'] = self.search_read(cr, uid, [
+                    ('account_id','=',row['account_id']),
+                    ('partner_id','=',row['partner_id']),
+                    ('reconcile_id','=',False),
+                    ('state','!=','draft')
+                ], ['id', 'name', 'ref', 'date_maturity', 'date'], context=context)
+            # line.period_id.name
+            # line.journal_id.name
+
+        # Fetch data for the other reconciliable accounts
+        # ajouter last_reconciliation_date dans account_account puis dans les deux SELECT
+        cr.execute(
+             """SELECT account_id, account_name FROM (
+                    SELECT a.id AS account_id,
+                        a.name AS account_name,
+                        SUM(l.debit) AS debit,
+                        SUM(l.credit) AS credit,
+                        MAX(l.create_date) AS max_date
+                    FROM account_move_line l
+                    RIGHT JOIN account_account a ON (a.id = l.account_id)
+                    WHERE a.reconcile IS TRUE
+                    AND l.reconcile_id IS NULL
+                    AND l.state <> 'draft'
+                    AND a.type <> 'payable' -- ?
+                    AND a.type <> 'receivable' -- ?
+                    GROUP BY a.id, a.name
+                ) AS s
+                WHERE debit > 0 AND credit > 0 -- AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
+                -- ORDER BY last_reconciliation_date
+            """)
+        
+        # Apply ir_rules by filtering out
+        other_acc_rows = cr.dictfetchall()
+        ids = [x['account_id'] for x in other_acc_rows]
+        allowed_ids = set(self.pool.get('account.account').search(cr, uid, [('id', 'in', ids)], context=context))
+        other_acc_rows = [row for row in other_acc_rows if row['account_id'] in allowed_ids]
+
+        # Fetch account move lines
+        for row in other_acc_rows:
+            row['move_lines'] = self.search_read(cr, uid, [
+                    ('account_id','=',row['account_id']),
+                    ('reconcile_id','=',False),
+                    ('state','!=','draft')
+                ], ['id', 'name', 'ref', 'date_maturity', 'date'], context=context)
+            # line.period_id.name
+            # line.journal_id.name
+
+        return [part_acc_rows, other_acc_rows]
+
+    # Utilisé dans :
+    # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/account_move_line.py:                partner = self.list_partners_to_reconcile(cr, uid, context=context)
+    # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/account_move_line.py:                def list_partners_to_reconcile(self, cr, uid, context=None):
+    # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/static/src/js/account_widgets.js:    return mod.call("list_partners_to_reconcile", []).then(function(result) {
+    # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/wizard/account_reconcile_partner_process.py:        partner = move_line_obj.list_partners_to_reconcile(cr, uid, context=context)
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
              """SELECT partner_id FROM (
