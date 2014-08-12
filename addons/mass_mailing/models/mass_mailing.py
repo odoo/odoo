@@ -4,13 +4,16 @@ from datetime import datetime
 from dateutil import relativedelta
 import json
 import random
+import re
 
 from openerp import tools
+from openerp import models, api, _
 from openerp.exceptions import Warning
 from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools.translate import _
 from openerp.tools import ustr
 from openerp.osv import osv, fields
+
+URL_REGEX = r'https?://[^\s<>"]+|www\.[^\s<>"]+'
 
 
 class MassMailingCategory(osv.Model):
@@ -148,6 +151,9 @@ class MassMailingCampaign(osv.Model):
     _name = "mail.mass_mailing.campaign"
     _description = 'Mass Mailing Campaign'
 
+    _inherit = ['utm.mixin']
+    _inherits = {'utm.campaign': 'campaign_id'}
+
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing campaign """
         results = {}
@@ -181,6 +187,21 @@ class MassMailingCampaign(osv.Model):
             row['replied_ratio'] = 100.0 * row['replied'] / total
         return results
 
+    def _get_clicks_ratio(self, cr, uid, ids, name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        cr.execute("""
+            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mail_stat_id)) AS nb_clicks, stats.mass_mailing_campaign_id AS id 
+            FROM mail_mail_statistics AS stats
+            LEFT OUTER JOIN website_links_click AS clicks ON clicks.mail_stat_id = stats.id
+            WHERE stats.mass_mailing_campaign_id IN %s
+            GROUP BY stats.mass_mailing_campaign_id
+        """, (tuple(ids), ))
+
+        for record in cr.dictfetchall():
+            res[record['id']] = 100 * record['nb_clicks'] / record['nb_mails']
+
+        return res
+
     _columns = {
         'name': fields.char('Name', required=True),
         'stage_id': fields.many2one('mail.mass_mailing.stage', 'Stage', required=True),
@@ -188,6 +209,8 @@ class MassMailingCampaign(osv.Model):
             'res.users', 'Responsible',
             required=True,
         ),
+        'campaign_id': fields.many2one('utm.campaign', 'campaign_id', 
+            required=True, ondelete='cascade'),
         'category_ids': fields.many2many(
             'mail.mass_mailing.category', 'mail_mass_mailing_category_rel',
             'category_id', 'campaign_id', string='Categories'),
@@ -201,6 +224,10 @@ class MassMailingCampaign(osv.Model):
                  'various mailings in a single campaign to test the effectiveness'
                  'of the mailings.'),
         'color': fields.integer('Color Index'),
+        'clicks_ratio': fields.function(
+            _get_clicks_ratio, string="Number of clicks",
+            type="integer",
+        ),
         # stat fields
         'total': fields.function(
             _get_statistics, string='Total',
@@ -252,10 +279,23 @@ class MassMailingCampaign(osv.Model):
         stage_ids = self.pool['mail.mass_mailing.stage'].search(cr, uid, [], limit=1, context=context)
         return stage_ids and stage_ids[0] or False
 
+    def _get_source_id(self, cr, uid, context=None):
+        return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'utm.utm_source_newsletter')
+
+    def _get_medium_id(self, cr, uid, context=None):
+        return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'utm.utm_medium_email')
+
     _defaults = {
         'user_id': lambda self, cr, uid, ctx=None: uid,
         'stage_id': lambda self, *args: self._get_default_stage_id(*args),
+        'source_id': lambda self, *args: self._get_source_id(*args),
+        'medium_id': lambda self,*args: self._get_medium_id(*args),
     }
+
+    def mass_mailing_statistics_action(self, cr, uid, ids, context=None):
+        res = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'mass_mailing', 'action_view_mass_mailing_statistics', context=context)
+        res['domain'] = [('mass_mailing_campaign_id', 'in', ids)]
+        return res
 
     def get_recipients(self, cr, uid, ids, model=None, context=None):
         """Return the recipients of a mailing campaign. This is based on the statistics
@@ -270,6 +310,17 @@ class MassMailingCampaign(osv.Model):
             res[cid] = set(stat.res_id for stat in Statistics.browse(cr, uid, stat_ids, context=context))
         return res
 
+    def on_change_campaign_name(self, cr, uid, ids, name, context=None):
+        if name:
+            mass_mailing_campaign = self.browse(cr, uid, ids, context=context)
+            if mass_mailing_campaign.campaign_id:
+                utm_campaign_id = mass_mailing_campaign.campaign_id.id
+                self.pool['utm.campaign'].write(cr, uid, [utm_campaign_id], {'name': name}, context=context)
+            else:
+                utm_campaign_id = self.pool['utm.campaign'].create(cr, uid, {'name': name}, context=context)
+
+            return {'value': {'campaign_id': utm_campaign_id}}
+
 
 class MassMailing(osv.Model):
     """ MassMailing models a wave of emails for a mass mailign campaign.
@@ -280,6 +331,8 @@ class MassMailing(osv.Model):
     # number of periods for tracking mail_mail statistics
     _period_number = 6
     _order = 'sent_date DESC'
+
+    _inherit = ['utm.mixin']
 
     def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, date_begin, context=None):
         """ Generic method to generate data for bar chart values using SparklineBarWidget.
@@ -370,6 +423,21 @@ class MassMailing(osv.Model):
         res.append(('mail.mass_mailing.contact', _('Mailing List')))
         return res
 
+    def _get_clicks_ratio(self, cr, uid, ids, name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        cr.execute("""
+            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mail_stat_id)) AS nb_clicks, stats.mass_mailing_id AS id 
+            FROM mail_mail_statistics AS stats
+            LEFT OUTER JOIN website_links_click AS clicks ON clicks.mail_stat_id = stats.id
+            WHERE stats.mass_mailing_id IN %s
+            GROUP BY stats.mass_mailing_id
+        """, (tuple(ids), ))
+
+        for record in cr.dictfetchall():
+            res[record['id']] = 100 * record['nb_clicks'] / record['nb_mails']
+
+        return res
+
     # indirections for inheritance
     _mailing_model = lambda self, *args, **kwargs: self._get_mailing_model(*args, **kwargs)
 
@@ -387,6 +455,10 @@ class MassMailing(osv.Model):
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
             ondelete='set null',
+        ),
+        'clicks_ratio': fields.function(
+            _get_clicks_ratio, string="Number of Clicks",
+            type="integer",
         ),
         'state': fields.selection(
             [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')],
@@ -473,6 +545,12 @@ class MassMailing(osv.Model):
         )
     }
 
+    def mass_mailing_statistics_action(self, cr, uid, ids, context=None):
+        res = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'mass_mailing', 'action_view_mass_mailing_statistics', context=context)
+        link_click_ids = self.pool['website.links.click'].search(cr, uid, [('mass_mailing_id', 'in', ids)], context=context)
+        res['domain'] = [('id', 'in', link_click_ids)]
+        return res
+
     def default_get(self, cr, uid, fields, context=None):
         res = super(MassMailing, self).default_get(cr, uid, fields, context=context)
         if 'reply_to_mode' in fields and not 'reply_to_mode' in res and res.get('mailing_model'):
@@ -489,6 +567,16 @@ class MassMailing(osv.Model):
         'mailing_model': 'mail.mass_mailing.contact',
         'contact_ab_pc': 100,
     }
+
+    def onchange_mass_mailing_campaign_id(self, cr, uid, id, mass_mailing_campaign_ids, context=None):
+        if mass_mailing_campaign_ids:
+            mass_mailing_campaign = self.pool['mail.mass_mailing.campaign'].browse(cr, uid, mass_mailing_campaign_ids, context=context)
+
+            dic = {'campaign_id': mass_mailing_campaign[0].campaign_id.id, 
+                   'source_id': mass_mailing_campaign[0].source_id.id, 
+                   'medium_id': mass_mailing_campaign[0].medium_id.id}
+            print dic
+            return {'value': dic}
 
     #------------------------------------------------------
     # Technical stuff
@@ -559,6 +647,7 @@ class MassMailing(osv.Model):
                 'res_model': 'mail.mass_mailing',
                 'res_id': copy_id,
                 'context': context,
+                'flags': {'initial_mode': 'edit'},
             }
         return False
 
@@ -622,7 +711,7 @@ class MassMailing(osv.Model):
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing.body_html,
+                'body': self.convert_link(cr, uid, [mailing.id], context=context)[mailing.id],
                 'subject': mailing.name,
                 'model': mailing.mailing_model,
                 'email_from': mailing.email_from,
@@ -638,3 +727,43 @@ class MassMailing(osv.Model):
             self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], context=comp_ctx)
             self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True
+
+    def convert_link(self, cr, uid, ids, context=None):
+        website_links = self.pool['website.links']
+        res = {}
+        for mass_mailing in self.browse(cr, uid, ids, context=context):
+            res[mass_mailing.id] = mass_mailing.body_html if mass_mailing.body_html else ''
+
+            for long_url in re.findall(URL_REGEX, res[mass_mailing.id]):
+                utm_object = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
+
+                vals = {'url': long_url}
+
+                if utm_object.campaign_id:
+                    vals['campaign_id'] = utm_object.campaign_id.id
+                if utm_object.source_id:
+                    vals['source_id'] = utm_object.source_id.id
+                if utm_object.medium_id:
+                    vals['medium_id'] = utm_object.medium_id.id
+
+                link_id = website_links.create(cr, uid, vals, context=context)
+                shorten_url = website_links.browse(cr, uid, link_id, context=context)[0].short_url
+
+                if shorten_url:
+                    res[mass_mailing.id] = res[mass_mailing.id].replace(long_url, shorten_url)
+        return res
+
+
+class MailMail(models.Model):
+    _inherit = ['mail.mail']
+
+    @api.model
+    def send_get_mail_body(self, mail, partner=None):
+        """Override to add Statistic_id in shorted urls """
+        if mail.mailing_id and mail.body_html:
+            urls = re.findall(URL_REGEX, mail.body_html)
+            
+            for url in urls:
+                mail.body_html = mail.body_html.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
+
+        return super(MailMail, self).send_get_mail_body(mail, partner=partner)

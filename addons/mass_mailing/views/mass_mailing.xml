@@ -161,6 +161,12 @@
             </field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_view_mass_mailing_statistics">
+            <field name="name">Statistics of Clicks</field>
+            <field name="res_model">website.links.click</field>
+            <field name="view_mode">graph</field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
             <field name="name">Mailing List Subscribers</field>
             <field name="res_model">mail.mass_mailing.contact</field>
@@ -183,7 +189,7 @@
         </record>
 
         <menuitem name="Contacts" id="menu_email_mass_mailing_contacts"
-            parent="mass_mailing_campaign" sequence="4"
+            parent="mass_mailing_campaign" sequence="4" groups="base.group_no_one"
             action="action_view_mass_mailing_contacts"/>
 
         <!--  MASS MAILING LIST -->
@@ -337,8 +343,11 @@
                                 type="action" class="oe_stat_button">
                                 <field name="replied_ratio" string="Replied" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mail_mail_statistics_mailing)d"
-                                type="action" class="oe_stat_button oe_inline">
+                            <button name="mass_mailing_statistics_action"
+                                type="object" class="oe_stat_button">
+                                <field name="clicks_ratio" string="clicks" widget="percentpie"/>
+                            </button>
+                            <button name="%(action_view_mass_mailing_contacts)d" type="action" class="oe_stat_button oe_inline">
                                 <field name="opened_daily" string="Opened Daily" widget="barchart"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
@@ -405,12 +414,19 @@
                                         <field name="sent_date" readonly="1"/>
                                     </group>
                                     <group string="Campaign">
-                                        <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
+                                        <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign" string="Campaign" on_change="onchange_mass_mailing_campaign_id(mass_mailing_campaign_id)"/>
                                         <label for="contact_ab_pc"/>
                                         <div>
                                             <field name="contact_ab_pc" class="oe_inline"/> %
                                         </div>
                                     </group>
+                                </group>
+                            </page>
+                            <page string="Tracking" groups="base.group_no_one">
+                                <group>
+                                    <field name="campaign_id" attrs="{'invisible': True}" />
+                                    <field name="medium_id" />
+                                    <field name="source_id" />
                                 </group>
                             </page>
                         </notebook>
@@ -450,7 +466,8 @@
                                         </div>
                                         <div style="display: inline-block; vertical-align: top;">
                                             <strong>Opened</strong> <field name="opened_ratio"/> %<br />
-                                            <strong>Replied</strong> <field name="replied_ratio"/> %
+                                            <strong>Replied</strong> <field name="replied_ratio"/> % <br />
+                                            <strong>Clicks</strong> <field name="clicks_ratio"/> % <br />
                                         </div>
                                     </div>
                                 </div>
@@ -551,7 +568,7 @@
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
                <search string="Mass Mailing Campaigns">
-                    <field name="name" string="Campaigns"/>
+                    <field name="name"/>
                     <field name="category_ids"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
@@ -589,7 +606,7 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="name"/>
+                                <field name="name" string="Campaign Name" on_change="on_change_campaign_name(name)"/>
                                 <field name="user_id"/>
                                 <field name="category_ids" widget="many2many_tags"/>
                             </group>
@@ -609,22 +626,36 @@
                                         type="action" class="oe_stat_button oe_inline">
                                         <field name="replied_ratio" widget="percentpie" string="Replied"/>
                                     </button>
+                                    <button name="mass_mailing_statistics_action"
+                                        type="object" class="oe_stat_button">
+                                        <field name="clicks_ratio" string="clicks" widget="percentpie"/>
+                                    </button>
                                 </div>
                             </group>
                         </group>
-                        <strong>Related Mailing(s)</strong>
-                        <field name="mass_mailing_ids" readonly="1" string="Related Mailing(s)">
-                            <tree>
-                                <field name="name"/>
-                                <field name="sent_date"/>
-                                <field name="state"/>
-                                <field name="delivered"/>
-                                <field name="opened"/>
-                                <field name="replied"/>
-                                <field name="bounced"/>
-                                <button name="action_duplicate" type="object" string="Duplicate"/>
-                            </tree>
-                        </field>
+                        <notebook>
+                            <page string="Related Mailing(s)">
+                                <field name="mass_mailing_ids" readonly="1" string="Related Mailing(s)">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="sent_date"/>
+                                        <field name="state"/>
+                                        <field name="delivered"/>
+                                        <field name="opened"/>
+                                        <field name="replied"/>
+                                        <field name="bounced"/>
+                                        <button name="action_duplicate" type="object" string="Duplicate"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Tracking">
+                                <group>
+                                    <field name="campaign_id" attrs="{'invisible': True}"/>
+                                    <field name="medium_id" />
+                                    <field name="source_id" />
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -673,7 +704,8 @@
                                         </div>
                                         <div style="display: inline-block; vertical-align: top;">
                                             <strong>Opened</strong> <field name="opened_ratio"/> %<br />
-                                            <strong>Replied</strong> <field name="replied_ratio"/> %
+                                            <strong>Replied</strong> <field name="replied_ratio"/> % <br />
+                                            <strong>Clicks</strong> <field name="clicks_ratio"/> % <br />
                                         </div>
                                     </div>
                                 </div>

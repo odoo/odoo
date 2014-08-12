@@ -29,7 +29,7 @@ class crm_lead_report(osv.Model):
     _auto = False
     _description = "CRM Lead Analysis"
     _rec_name = 'date_deadline'
-    _inherit = ["crm.tracking.mixin"]
+    _inherit = ["utm.mixin"]
 
     _columns = {
         'date_deadline': fields.date('Expected Closing', readonly=True),

@@ -23,90 +23,6 @@
         <menuitem id="menu_crm_config_phonecall" name="Phone Calls"
             parent="base.menu_base_config" sequence="45" groups="base.group_sale_salesman"/>
 
-        <!-- crm.tracking.medium -->
-        <record id="crm_tracking_medium_view_tree" model="ir.ui.view">
-            <field name="name">crm.tracking.medium.tree</field>
-            <field name="model">crm.tracking.medium</field>
-            <field name="arch" type="xml">
-                <tree string="Channels">
-                    <field name="name"/>
-                    <field name="active"/>
-                </tree>
-            </field>
-        </record>
-        <record id="crm_tracking_medium_view_form" model="ir.ui.view">
-            <field name="name">crm.tracking.medium.form</field>
-            <field name="model">crm.tracking.medium</field>
-            <field name="arch" type="xml">
-                <form string="Channel">
-                    <group>
-                        <field name="name"/>
-                        <field name="active"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="crm_tracking_medium_action" model="ir.actions.act_window">
-            <field name="name">Channels</field>
-            <field name="res_model">crm.tracking.medium</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new channel.
-              </p><p>
-                Use channels to track the type of source of your leads and opportunities. Channels
-                are mostly used in reporting to analyse sales performance
-                related to marketing efforts.
-              </p><p>
-                Some examples of channels: company website, phone call
-                campaign, reseller, banner, etc.
-              </p>
-            </field>
-        </record>
-
-        <!-- crm.tracking.source -->
-        <record id="crm_tracking_source_view_tree" model="ir.ui.view">
-            <field name="name">crm.tracking.source.tree</field>
-            <field name="model">crm.tracking.source</field>
-            <field name="arch" type="xml">
-                <tree string="Channels">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="crm_tracking_source_view_form" model="ir.ui.view">
-            <field name="name">crm.tracking.source.form</field>
-            <field name="model">crm.tracking.source</field>
-            <field name="arch" type="xml">
-                <form string="Channel">
-                    <group>
-                        <field name="name"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="crm_tracking_source_action" model="ir.actions.act_window">
-            <field name="name">Source</field>
-            <field name="res_model">crm.tracking.source</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new source.
-              </p><p>
-                Use channels to track the source of your leads and opportunities. Channels
-                are mostly used in reporting to analyse sales performance
-                related to marketing efforts.
-              </p><p>
-                Some examples of channels: partner's website, google.com, 
-                email list name, etc.
-              </p>
-            </field>
-        </record>
-
-        <menuitem action="crm_tracking_source_action" id="menu_crm_tracking_source" parent="base.menu_crm_config_lead" sequence="4" groups="base.group_no_one"/>
-
         <!-- CRM.LOST.REASON VIEWS -->
         <record id="crm_lost_reason_view_form" model="ir.ui.view">
             <field name="name">crm.lost.reason.form</field>
@@ -180,55 +96,11 @@
         </record>
 
         <!-- CRM Stage Action -->
-
         <record id="crm_stage_act" model="ir.actions.act_window">
             <field name="name">Stages</field>
             <field name="res_model">crm.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_stage_tree"/>
         </record>
-
-        <!-- Resource Type of case Tree View -->
-
-        <record model="ir.ui.view" id="crm_tracking_campaign_tree">
-            <field name="name">crm.tracking.campaign.tree</field>
-            <field name="model">crm.tracking.campaign</field>
-            <field name="arch" type="xml">
-                <tree string="Campaign">
-                    <field name="name"/>
-                    <field name="team_id" groups="base.group_multi_salesteams"/>
-                </tree>
-            </field>
-        </record>
-
-        <!-- Resource Type of case Form View -->
-
-        <record model="ir.ui.view" id="crm_tracking_campaign_form">
-            <field name="name">crm.tracking.campaign.form</field>
-            <field name="model">crm.tracking.campaign</field>
-            <field name="arch" type="xml">
-                <form string="Campaign">
-                    <group>
-                        <field name="name"/>
-                        <field name="team_id" groups="base.group_multi_salesteams"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <!-- Resource Type of case Action -->
-
-        <record id="crm_tracking_campaign_act" model="ir.actions.act_window">
-            <field name="name">Campaigns</field>
-            <field name="res_model">crm.tracking.campaign</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm_tracking_campaign_tree"/>
-        </record>
-
-        <menuitem action="crm_tracking_campaign_act"
-            id="menu_crm_tracking_campaign_act" sequence="4"
-            groups="base.group_no_one"
-            parent="base.menu_crm_config_lead"/>
-
     </data>
 </openerp>
