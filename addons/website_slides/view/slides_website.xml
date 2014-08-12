@@ -205,6 +205,7 @@
                             <p t-field="slideview.description"></p>
                         </div>
                         <div class="tab-pane fade" id="share">                            
+				            <h4>Share</h4>
 				            <h3>					                
 				                <a target="_Blank" class="oe_share_facebook" t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{shareurl}"><i class="fa fa-facebook-square"></i></a>
 				                <a target="_Blank" class="oe_share_twitter" t-attf-href="https://twitter.com/intent/tweet?text={title}&amp;url=#{shareurl}"><i class="fa fa-twitter"></i></a>
@@ -215,6 +216,27 @@
 					        <div class="input-group">
 							  <span class="input-group-addon"><span class="glyphicon glyphicon-share"></span></span>
 							  <input type="text" class="form-control" t-att-value="shareurl"/>
+							</div>
+							<span class="help-block"> -- copy above link to share</span>
+							<h4>Embed</h4>
+							<div class="row">	
+								<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+								<div class="input-group">
+								  <span class="input-group-addon"><span class="glyphicon glyphicon-share"></span></span>
+								  <textarea id="slide_embed_code" class="form-control"><t t-esc="embedcode"/></textarea>
+								</div>
+								<span class="help-block"> -- copy above embed code to share</span>
+								</div>
+								<t t-if="slideview.datas">								
+								<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-inline">
+									<div class="input-group">
+								      <div class="input-group-addon"><a href="javascript:void(0);" id="btnminus" field="page"><span class="glyphicon glyphicon-minus"/></a></div>
+								      <input class="form-control" type="text" size="1" value="0" name="page"/>
+								      <div class="input-group-addon"><a href="javascript:void(0);" id="btnplus" field="page"><span class="glyphicon glyphicon-plus"/></a></div>
+								    </div>
+									<span class="help-block"> -- Enter start page</span>
+								</div>
+								</t>
 							</div>
                         </div>
                         <div class="tab-pane fade" id="discuss">                       	
