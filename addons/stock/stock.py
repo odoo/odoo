@@ -1384,8 +1384,8 @@ class stock_picking(osv.osv):
                         stock_operation_obj.write(cr, uid, operation.id, {'product_qty': operation.product_qty - operation.qty_done,'qty_done': 0, 'lot_id': False}, context=context)
                         op = stock_operation_obj.browse(cr, uid, new_operation, context=context)
                     pack_operation_ids.append(op.id)
-                    for record in op.linked_move_operation_ids:
-                        stock_move_obj.check_tracking(cr, uid, record.move_id, not op.product_id and op.package_id.id or op.lot_id.id, context=context)
+                    if op.product_id and op.location_id and op.location_dest_id:
+                        stock_move_obj.check_tracking_product(cr, uid, op.product_id, op.lot_id.id, op.location_id, op.location_dest_id, context=context)
                 package_id = package_obj.create(cr, uid, {}, context=context)
                 stock_operation_obj.write(cr, uid, pack_operation_ids, {'result_package_id': package_id}, context=context)
         return True
@@ -3796,7 +3796,7 @@ class stock_pack_operation(osv.osv):
         move_obj = self.pool.get("stock.move")
         for pack_op in self.browse(cr, uid, ids, context=None):
             if pack_op.product_id and pack_op.location_id and pack_op.location_dest_id:
-                move_obj.check_tracking_product(cr, uid, pack_op.product_id, pack_op.lot_id.id, pack_op.location_id, pack_op.location_dest_id, context=None)
+                move_obj.check_tracking_product(cr, uid, pack_op.product_id, pack_op.lot_id.id, pack_op.location_id, pack_op.location_dest_id, context=context)
             op = pack_op.id
             if pack_op.qty_done < pack_op.product_qty:
                 # we split the operation in two
