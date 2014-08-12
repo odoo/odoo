@@ -159,6 +159,12 @@ class main(http.Controller):
         urldata = self._slides_urldata()
         shareurl = urldata['urlscheme']+urldata['urlhost']+urldata['urlpath']
 
+        # create slide embed code
+        if slideview.datas:
+            embedcode = '<iframe  src="'+urldata['urlscheme']+urldata['urlhost']+'/website_slides/static/lib/pdfjs/web/viewer.html?file='+slideview.url+'#page="></iframe>'
+        if slideview.youtube_id:    
+            embedcode = '<iframe src="//www.youtube.com/embed/'+slideview.youtube_id+'?theme=light"></iframe>'
+
         values = {}
         values.update({
             'slideview':slideview,
@@ -166,6 +172,7 @@ class main(http.Controller):
             'related_ids': related_ids,
             'comments': comments,
             'shareurl':shareurl,
+            'embedcode':embedcode,
         })
         return request.website.render('website_slides.slide_view', values)
 
