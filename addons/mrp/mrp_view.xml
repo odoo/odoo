@@ -391,14 +391,14 @@
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" on_change="onchange_product_id(product_id, product_qty)"/>
-                                    <field name="type"/>
+                                    <field name="type" groups="mrp.group_route_line_type"/>
                                     <field name="product_qty"/>
-                                    <field name="product_rounding"/>
-                                    <field name="product_efficiency"/>
+                                    <field name="product_rounding" groups="mrp.group_rounding_efficiency"/>
+                                    <field name="product_efficiency" groups="mrp.group_rounding_efficiency"/>
                                     <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
-                                    <field name="routing_id"/>
+                                    <field name="routing_id" groups="mrp.group_mrp_routings,mrp.group_route_line_type"/>
                                     <field name="attribute_value_ids" widget="many2many_tags"/>
                                 </tree>
                             </field>
@@ -491,7 +491,7 @@
             </field>
         </record>
 
-       <record id="mrp_bom_component_tree_view" model="ir.ui.view">
+        <record id="mrp_bom_component_tree_view" model="ir.ui.view">
             <field name="name">mrp.bom.component.tree</field>
             <field name="model">mrp.bom.line</field>
             <field name="arch" type="xml">
@@ -531,24 +531,6 @@
                         <filter string=" Valid From Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                    </group>
                 </search>
-            </field>
-        </record>
-
-        <record id="mrp_bom_form_action2" model="ir.actions.act_window">
-            <field name="name">Bill of Material Components</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.bom.line</field>
-            <field name="view_type">tree</field>
-            <field name="view_mode">tree</field>
-            <field name="view_id" eval="False"/> <!-- Force empty -->
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a component to a bill of material.
-              </p><p>
-                Bills of materials components are components and by-products
-                used to create master bills of materials.  Use this menu to
-                search in which BoM a specific component is used.
-              </p>
             </field>
         </record>
 
