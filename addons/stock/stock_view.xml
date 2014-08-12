@@ -924,13 +924,15 @@
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                        states="draft,waiting,confirmed,assigned"/>
+                        states="draft,waiting,confirmed,assigned"
+                        groups="stock.group_stock_user"/>
                     <field name="location_id" groups="stock.group_locations"/>
                     <field name="location_dest_id" groups="stock.group_locations"/>
                     <field name="date" groups="base.group_no_one"/>
                     <field name="date_expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward" help="Done"/>
+                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" 
+                            groups="stock.group_stock_user" icon="gtk-go-forward" help="Done"/>
                 </tree>
             </field>
         </record>
@@ -953,7 +955,7 @@
                        string="Scrap Products" type="action"
                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                        states="draft,waiting,confirmed,assigned"
-                       groups="base.group_user"/>
+                       groups="stock.group_stock_user"/>
                     <field name="scrapped" invisible="1"/>
                     <field name="availability" invisible="1"/>
                     <field name="reserved_availability" invisible="1"/>
@@ -1180,10 +1182,11 @@
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                        states="draft,waiting,confirmed,assigned"/>
+                        states="draft,waiting,confirmed,assigned"
+                        groups="stock.group_stock_user"/>
                     <field name="state"/>
                     <button name="action_done" states="draft,assigned,confirmed"
-                        icon="gtk-go-forward" type="object"
+                        icon="gtk-go-forward" type="object" groups="stock.group_stock_user"
                         class="oe_highlight" help="Done"/>
                 </tree>
             </field>
