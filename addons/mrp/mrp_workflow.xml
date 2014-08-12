@@ -51,6 +51,7 @@
             <field name="act_from" ref="prod_act_draft"/>
             <field name="act_to" ref="prod_act_confirmed"/>
             <field name="signal">button_confirm</field>
+            <field name="condition">True</field>
         </record>
         <record id="prod_trans_picking_ready" model="workflow.transition">
             <field name="act_from" ref="prod_act_confirmed"/>
