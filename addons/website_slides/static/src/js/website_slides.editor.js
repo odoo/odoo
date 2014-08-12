@@ -15,6 +15,10 @@
         template: 'website.addslide.dialog',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
             'change .slide-upload': 'slide_upload',
+            'click .list-group-item': function(ev) {
+                this.$('.list-group-item').removeClass('active');
+                $(ev.target).closest('li').addClass('active');
+            }
         }),
         init: function(){
             this._super.apply(this, arguments);
@@ -22,9 +26,9 @@
         },
 
         start: function (){
-            this.$('.save').text('Create Slide');
+            this.$('.save').text('Create');
             var r = this._super.apply(this, arguments);
-            this.set_tags("");
+            this.set_tags();
             return r;
         },
         slide_upload: function(ev){
@@ -68,7 +72,7 @@
             };
         },
 
-        set_tags: function(tags){
+        set_tags: function(){
             var self = this;
             this.$("input.slide-tags").textext({
                 plugins: 'tags focus autocomplete ajax',
@@ -100,7 +104,6 @@
             };
             var values = {
                 'name' : this.$('#name').val(),
-                'description' : this.$('#description').val(),
                 'tag_ids' : this.$('.slide-tags').textext()[0].tags()._formData,
                 'datas': self.file.data,
                 'datas_fname': self.file.name,

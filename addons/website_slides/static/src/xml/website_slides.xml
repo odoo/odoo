@@ -1,12 +1,12 @@
 <templates id="template" xml:space="preserve">
     <t t-name="website.addslide.dialog">
         <t t-call="website.editor.dialog">
-            <t t-set="title">Add Slide</t>
+            <t t-set="title">Add Presentation</t>
             <form class="clearfix form-horizontal">
 
                 <div class="control-group">
                     <label for="slide-name" class="control-label col-sm-3">
-                        Slide Name:
+                        Name:
                     </label>
                     <div class="col-sm-9">
                         <input name="slide-name" placeholder="Slide Name" class="form-control" required="required" id="name"/>
@@ -15,7 +15,7 @@
 
                 <div class="control-group">
                     <label for="slide-tag" style="margin-top: 13px;" class="control-label col-sm-3">
-                        Slide Tag:
+                        Tags:
                     </label>
                     <div class="controls col-sm-9">
                         <br/>
@@ -24,26 +24,30 @@
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label col-sm-3" for="slide-file">Upload Slide:</label>
+                    <label class="control-label col-sm-3" for="slide-file">Content:</label>
                     <div class="controls col-sm-9 input-group-sm h5">
                         <ul class="list-group">
-                            <li class="list-group-item">
+                            <li class="list-group-item active">
+                                <h5 class="list-group-item-heading">
+                                    <label for="file" class="control-label">
+                                        File
+                                    </label>
+                                </h5>
                                 <input id="slide-file" name="file" accept="application/pdf" class="slide-upload" type="file"/> 
                             </li>
                             <li class="list-group-item">
+                                <h5 class="list-group-item-heading">
+                                    <label for="slide-url" class="control-label">
+                                        URL
+                                    </label>
+                                </h5>
+
                                 <input name="slide-url" class="form-control h5" placeholder="Video URL" id="url"/>
                             </li>
                         </ul> 
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label col-sm-3" for="slide-description">Description:</label>
-                    <div class="controls col-sm-9">
-                        <textarea id="slide-description"   placeholder="Slide Description" class="form-control" name="description"></textarea>
-                    </div>
-                </div>
-
-                <canvas id="the-canvas" style="display: none;"></canvas>
+               <canvas id="the-canvas" style="display: none;"></canvas>
             </form>
         </t>
     </t>
