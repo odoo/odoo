@@ -26,7 +26,7 @@
             {
                 title:     "click on add to cart",
                 waitFor:   'label:contains(32 GB) input[checked]',
-                element:   'form[action^="/shop/cart/update"] a.a-submit.btn',
+                element:   'form[action^="/shop/cart/update"] .btn',
             },
             {
                 title:     "add suggested",
@@ -56,7 +56,7 @@
             },
             {
                 title:     "test with input error",
-                element:   'form[action="/shop/confirm_order"] a.a-submit.btn:contains("Confirm")',
+                element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
                 onload: function (tour) {
                     $("input[name='phone']").val("");
                 },
