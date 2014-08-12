@@ -256,7 +256,7 @@
             $upload_form.find('input[name="upload"]').click();
         },
         images_rm   : function() {
-            this.replace($('<div class="alert alert-info"/>').text(_t("Add Images from the menu")));
+            this.replace($('<div class="alert alert-info css_editable_mode_display" style="display: none;"/>').text(_t("Add Images from the 'Customize' menu")));
         },
         sizing : function() { // done via css, keep it to avoid undefined error
         },
