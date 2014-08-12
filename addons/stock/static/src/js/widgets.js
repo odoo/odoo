@@ -46,6 +46,15 @@ function openerp_picking_widgets(instance){
             });
             return locations;
         },
+        get_logisticunit: function(){
+            var model = this.getParent();
+            var ul = [];
+            var self = this;
+            _.each(model.uls, function(ulog){
+                ul.push({name: ulog.name, id: ulog.id,});
+            });
+            return ul;
+        },
         get_rows: function(){
             var model = this.getParent();
             this.rows = [];
@@ -59,6 +68,7 @@ function openerp_picking_widgets(instance){
                     if (packopline.product_qty < packopline.qty_done){ color = "danger "; }
                     //also check that we don't have a line already existing for that package
                     if (packopline.result_package_id[1] !== undefined && $.inArray(packopline.result_package_id[0], pack_created) === -1){
+                        var myPackage = $.grep(model.packages, function(e){ return e.id == packopline.result_package_id[0]; })[0];
                         self.rows.push({
                             cols: { product: packopline.result_package_id[1],
                                     qty: '',
@@ -75,6 +85,8 @@ function openerp_picking_widgets(instance){
                                     can_scan: false,
                                     head_container: true,
                                     processed: packopline.processed,
+                                    package_id: myPackage.id,
+                                    ul_id: myPackage.ul_id[0],
                             },
                             classes: ('success container_head ') + (packopline.processed === "true" ? 'processed hidden ':''),
                         });
@@ -96,6 +108,8 @@ function openerp_picking_widgets(instance){
                                 can_scan: packopline.result_package_id[1] === undefined ? true : false,
                                 head_container: false,
                                 processed: packopline.processed,
+                                package_id: undefined,
+                                ul_id: -1,
                         },
                         classes: color + (packopline.result_package_id[1] !== undefined ? 'in_container_hidden ' : '') + (packopline.processed === "true" ? 'processed hidden ':''),
                     });
@@ -132,10 +146,10 @@ function openerp_picking_widgets(instance){
             this.$('.oe_searchbox').keyup(function(event){
                 self.on_searchbox($(this).val());
             });
-            this.$('.js_pick_pack').click(function(){ self.getParent().pack(); });
+            this.$('.js_putinpack').click(function(){ self.getParent().pack(); });
             this.$('.js_drop_down').click(function(){ self.getParent().drop_down();});
-            this.$('.js_clear_search').click(function(){ 
-                self.on_searchbox(''); 
+            this.$('.js_clear_search').click(function(){
+                self.on_searchbox('');
                 self.$('.oe_searchbox').val('');
             });
             this.$('.oe_searchbox').focus(function(){
@@ -181,14 +195,14 @@ function openerp_picking_widgets(instance){
                     //we unfold
                     line.addClass('warning');
                     select.removeClass('in_container_hidden');
-                    select.addClass('in_container'); 
+                    select.addClass('in_container');
                 }
                 else{
                     //we fold
                     line.removeClass('warning');
                     select = self.$('.js_pack_op_line.in_container[data-container-id='+op_id+']')
                     select.removeClass('in_container');
-                    select.addClass('in_container_hidden'); 
+                    select.addClass('in_container_hidden');
                 }
             });
             this.$('.js_create_lot').click(function(){
@@ -201,7 +215,7 @@ function openerp_picking_widgets(instance){
                 $lot_modal.modal()
                 //focus input
                 $lot_modal.on('shown.bs.modal', function(){
-                    self.$('.js_lot_scan').focus();    
+                    self.$('.js_lot_scan').focus();
                 })
                 //reactivate scanner when dialog close
                 $lot_modal.on('hidden.bs.modal', function(){
@@ -298,6 +312,25 @@ function openerp_picking_widgets(instance){
 
                 }
             });
+            this.$('.js_pack_configure').click(function(){
+                var pack_id = $(this).parents(".js_pack_op_line:first").data('package-id');
+                var ul_id = $(this).parents(".js_pack_op_line:first").data('ulid');
+                self.$('#js_packconf_select').val(ul_id);
+                self.$('#js_packconf_select').data('pack-id',pack_id);
+                self.$el.siblings('#js_PackConfModal').modal();
+            });
+            this.$('.js_validate_pack').click(function(){
+                //get current selection
+                var select_dom_element = self.$('#js_packconf_select');
+                var ul_id = self.$('#js_packconf_select option:selected').data('ul-id');
+                var pack_id = select_dom_element.data('pack-id');
+                self.$el.siblings('#js_PackConfModal').modal('hide');
+                if (pack_id){
+                    self.getParent().set_package_pack(pack_id, ul_id);
+                    $('.container_head[data-package-id="'+pack_id+'"]').data('ulid', ul_id);
+                }
+            });
+            
             //remove navigtion bar from default openerp GUI
             $('td.navbar').html('<div></div>');
         },
@@ -439,7 +472,7 @@ function openerp_picking_widgets(instance){
                     self.pickings_by_type[0] = [];
 
                     return new instance.web.Model('stock.picking').call('search_read',[ [['state','in', ['assigned', 'partially_available']]], [] ], {context: new instance.web.CompoundContext()});
-                                                                  
+
                 }).then(function(pickings){
                     self.pickings = pickings;
                     for(var i = 0; i < pickings.length; i++){
@@ -490,7 +523,7 @@ function openerp_picking_widgets(instance){
                 //avoid crash if a not supported char is given (like '\' or ')')
 	        return [];
             }
-            
+
             var results = [];
             for(var i = 0; i < 100; i++){
                 r = re.exec(this.picking_search_string);
@@ -584,6 +617,7 @@ function openerp_picking_widgets(instance){
             this.packages = null;
             this.barcode_scanner = new module.BarcodeScanner();
             this.locations = [];
+            this.uls = [];
             if(this.picking_id){
                 this.loaded =  this.load(this.picking_id);
             }else{
@@ -597,7 +631,7 @@ function openerp_picking_widgets(instance){
         load: function(picking_id){
             var self = this;
 
-       
+
             function load_picking_list(type_id){
                 var pickings = new $.Deferred();
                 new instance.web.Model('stock.picking')
@@ -606,8 +640,8 @@ function openerp_picking_widgets(instance){
                         if(!picking_ids || picking_ids.length === 0){
                             (new instance.web.Dialog(self,{
                                 title: _t('No Picking Available'),
-                                buttons: [{ 
-                                    text:_t('Ok'), 
+                                buttons: [{
+                                    text:_t('Ok'),
                                     click: function(){
                                         self.menu();
                                     }
@@ -634,7 +668,7 @@ function openerp_picking_widgets(instance){
                         return load_picking_list(self.picking.picking_type_id[0]);
                     });
             }else{
-                // if we don't have a specified picking id, we load the pickings belong to the specified type, and then we take 
+                // if we don't have a specified picking id, we load the pickings belong to the specified type, and then we take
                 // the first one of that list as the active picking
                 var loaded_picking = new $.Deferred();
                 load_picking_list(self.picking_type_id)
@@ -685,6 +719,12 @@ function openerp_picking_widgets(instance){
                     return new instance.web.Model('stock.quant.package').call('read',[package_ids, [], new instance.web.CompoundContext()])
                 }).then(function(packages){
                     self.packages = packages;
+                }).then(function(){
+                        return new instance.web.Model('product.ul').call('search',[[]])
+                }).then(function(uls_ids){
+                        return new instance.web.Model('product.ul').call('read',[uls_ids, []])
+                }).then(function(uls){
+                    self.uls = uls;
                 });
         },
         start: function(){
@@ -694,7 +734,7 @@ function openerp_picking_widgets(instance){
             this.barcode_scanner.connect(function(ean){
                 self.scan(ean);
             });
-            
+
             this.$('.js_pick_quit').click(function(){ self.quit(); });
             this.$('.js_pick_prev').click(function(){ self.picking_prev(); });
             this.$('.js_pick_next').click(function(){ self.picking_next(); });
@@ -714,13 +754,13 @@ function openerp_picking_widgets(instance){
             $.when(this.loaded).done(function(){
                 self.picking_editor = new module.PickingEditorWidget(self);
                 self.picking_editor.replace(self.$('.oe_placeholder_picking_editor'));
-                
+
                 if( self.picking.id === self.pickings[0]){
                     self.$('.js_pick_prev').addClass('disabled');
                 }else{
                     self.$('.js_pick_prev').removeClass('disabled');
                 }
-                
+
                 if( self.picking.id === self.pickings[self.pickings.length-1] ){
                     self.$('.js_pick_next').addClass('disabled');
                 }else{
@@ -746,7 +786,7 @@ function openerp_picking_widgets(instance){
             var self = this;
             self.picking_editor.on_searchbox(query.toUpperCase());
         },
-        // reloads the data from the provided picking and refresh the ui. 
+        // reloads the data from the provided picking and refresh the ui.
         // (if no picking_id is provided, gets the first picking in the db)
         refresh_ui: function(picking_id){
             var self = this;
@@ -776,7 +816,7 @@ function openerp_picking_widgets(instance){
                     }else{
                         self.$('.js_pick_prev').removeClass('disabled');
                     }
-                    
+
                     if( self.picking.id === self.pickings[self.pickings.length-1] ){
                         self.$('.js_pick_next').addClass('disabled');
                     }else{
@@ -957,6 +997,12 @@ function openerp_picking_widgets(instance){
                     });
             }
 
+        },
+        set_package_pack: function(package_id, pack){
+            var self = this;
+                new instance.web.Model('stock.quant.package')
+                    .call('write',[[package_id],{'ul_id': pack }]);
+            return;
         },
         reload_pack_operation: function(){
             var self = this;

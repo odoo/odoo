@@ -174,7 +174,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             model:  'pos.session',
             fields: ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number'],
             domain: function(self){ return [['state','=','opened'],['user_id','=',self.session.uid]]; },
-            loaded: function(self,pos_sessions){ self.pos_session = pos_sessions[0]; },
+            loaded: function(self,pos_sessions){
+                self.pos_session = pos_sessions[0]; 
+
+                var orders = self.db.get_orders();
+                for (var i = 0; i < orders.length; i++) {
+                    self.pos_session.sequence_number = Math.max(self.pos_session.sequence_number, orders[i].data.sequence_number+1);
+                }
+            },
         },{
             model: 'pos.config',
             fields: [],
@@ -229,7 +236,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             },
         },{
             model:  'product.product',
-            fields: ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 'variants',
+            fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 
                      'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
                      'product_tmpl_id'],
             domain:  function(self){ return [['sale_ok','=',true],['available_in_pos','=',true]]; },

@@ -177,6 +177,8 @@ class account_invoice(models.Model):
     def _compute_payments(self):
         partial_lines = lines = self.env['account.move.line']
         for line in self.move_id.line_id:
+            if line.account_id != self.account_id:
+                continue
             if line.reconcile_id:
                 lines |= line.reconcile_id.line_id
             elif line.reconcile_partial_id:

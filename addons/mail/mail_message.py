@@ -790,7 +790,7 @@ class mail_message(osv.Model):
 
         if 'email_from' not in values:  # needed to compute reply_to
             values['email_from'] = self._get_default_from(cr, uid, context=context)
-        if 'message_id' not in values:
+        if not values.get('message_id'):
             values['message_id'] = self._get_message_id(cr, uid, values, context=context)
         if 'reply_to' not in values:
             values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)

@@ -901,6 +901,15 @@ class calendar_event(osv.Model):
         'partner_ids': fields.many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}),
         'alarm_ids': fields.many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False),
     }
+
+    def _get_default_partners(self, cr, uid, ctx=None):
+        ret = [self.pool['res.users'].browse(cr, uid, uid, context=ctx).partner_id.id]
+        active_id = ctx.get('active_id')
+        if ctx.get('active_model') == 'res.partner' and active_id:
+            if active_id not in ret:
+                ret.append(active_id)
+        return ret
+
     _defaults = {
         'end_type': 'count',
         'count': 1,
@@ -913,7 +922,7 @@ class calendar_event(osv.Model):
         'interval': 1,
         'active': 1,
         'user_id': lambda self, cr, uid, ctx: uid,
-        'partner_ids': lambda self, cr, uid, ctx: [self.pool['res.users'].browse(cr, uid, [uid], context=ctx)[0].partner_id.id]
+        'partner_ids': _get_default_partners,
     }
 
     def _check_closing_date(self, cr, uid, ids, context=None):

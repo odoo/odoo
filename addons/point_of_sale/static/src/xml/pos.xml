@@ -290,6 +290,7 @@
         <tr class='client-line' t-att-data-id='partner.id'>
             <td><t t-esc='partner.name' /></td>
             <td><t t-esc='partner.address' /></td>
+            <td><t t-esc='partner.phone or partner.mobile or ""' /></td>
         </tr>
     </t>
 
@@ -369,6 +370,7 @@
                                             <tr>
                                                 <th>Name</th>
                                                 <th>Address</th>
+                                                <th>Phone</th>
                                             </tr>
                                         </thead>
                                         <tbody class='client-list-contents'>
@@ -725,7 +727,7 @@
                 </t>
             </div>
             <div class="product-name">
-                <t t-esc="product.name"/>
+                <t t-esc="product.display_name"/>
             </div>
         </span>
     </t>
@@ -733,7 +735,7 @@
     <t t-name="Orderline">
         <li t-attf-class="orderline #{ line.selected ? 'selected' : '' }">
             <span class="product-name">
-                <t t-esc="line.get_product().name"/>
+                <t t-esc="line.get_product().display_name"/>
             </span>
             <span class="price">
                 <t t-esc="widget.format_currency(line.get_display_price())"/>
@@ -900,7 +902,7 @@
             <br />
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
-            User: <t t-esc="widget.pos.user.name"/><br />
+            User: <t t-esc="widget.pos.cashier.name"/><br />
             Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
             <t t-if="widget.pos.config.receipt_header">
@@ -917,7 +919,7 @@
                 </colgroup>
                 <tr t-foreach="orderlines" t-as="orderline">
                     <td>
-                        <t t-esc="orderline.get_product().name"/>
+                        <t t-esc="orderline.get_product().display_name"/>
                          <t t-if="orderline.get_discount() > 0">
                             <div class="pos-disc-font">
                                 With a <t t-esc="orderline.get_discount()"/>% discount

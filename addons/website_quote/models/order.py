@@ -64,11 +64,14 @@ class sale_quote_line(osv.osv):
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        name = product_obj.name
+        if product_obj.description_sale:
+            name += '\n' + product_obj.description_sale
         vals.update({
             'price_unit': product_obj.list_price,
             'product_uom_id': product_obj.uom_id.id,
             'website_description': product_obj.website_description,
-            'name': product_obj.name,
+            'name': name,
         })
         return {'value': vals}
 

@@ -265,6 +265,7 @@ class mail_compose_message(osv.TransientModel):
                 'author_id': wizard.author_id.id,
                 'email_from': wizard.email_from,
                 'record_name': wizard.record_name,
+                'no_auto_thread': wizard.no_auto_thread,
             }
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and wizard.model:

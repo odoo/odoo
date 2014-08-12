@@ -21,7 +21,6 @@
 
 import base64
 import logging
-import re
 from urlparse import urljoin
 
 from openerp import api, tools
@@ -68,7 +67,6 @@ class mail_mail(osv.Model):
 
     _defaults = {
         'state': 'outgoing',
-        'headers': '{}',
     }
 
     def default_get(self, cr, uid, fields, context=None):

@@ -67,6 +67,7 @@ class mail_followers(osv.Model):
         self.invalidate_cache(cr, uid, context=context)
         return res
 
+    _sql_constraints = [('mail_followers_res_partner_res_model_id_uniq','unique(res_model,res_id,partner_id)','Error, a partner cannot follow twice the same object.')]
 
 class mail_notification(osv.Model):
     """ Class holding notifications pushed to partners. Followers and partners
