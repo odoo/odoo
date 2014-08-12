@@ -686,13 +686,13 @@
         <!-- because of the needaction badge, groups needs to be specified -->
         <menuitem id="menu_bank_reconcile_bank_statements" name="Reconciliation on Bank Statements" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_bank_reconcile" sequence="20"/>
         
-        <record id="action_new_manual_reconcile" model="ir.actions.client">
+        <record id="action_manual_reconcile" model="ir.actions.client">
             <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
             <field name="name">Journal Items to Reconcile</field>
             <field name="res_model">account.move.line</field>
             <field name="tag">manual_reconciliation_view</field>
         </record>
-        <menuitem id="menu_bank_new_manual_reconciliation" name="NEW Manual Reconciliation" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_new_manual_reconcile" sequence="21"/>
+        <menuitem id="menu_bank_manual_reconciliation" name="NEW Manual Reconciliation" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_manual_reconcile" sequence="21"/>
 
 
         <record id="view_account_statement_operation_template_form" model="ir.ui.view">
