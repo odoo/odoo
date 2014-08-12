@@ -1139,7 +1139,8 @@ class ir_model_data(osv.osv):
                 to_unlink.append((model,res_id))
         if not config.get('import_partial'):
             for (model, res_id) in to_unlink:
-                if self.pool.get(model):
+                obj = self.pool.get(model)
+                if obj and obj.search(cr, uid, [('id','=',res_id)]):
                     _logger.info('Deleting %s@%s', res_id, model)
                     self.pool.get(model).unlink(cr, uid, [res_id])
 
