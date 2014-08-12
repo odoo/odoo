@@ -29,7 +29,7 @@ class crm_claim(base_stage, osv.osv):
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(crm_claim, self).default_get(cr, uid, fields, context=context)
-        if isinstance(res.get('partner_id'), (int, long)):
+        if type(res.get('partner_id')) in (int, long):
             # Special case for portal users, as they are not allowed to call name_get on res.partner
             # We save this call for the web client by returning it in default get
             res['partner_id'] = self.pool['res.partner'].name_get(
