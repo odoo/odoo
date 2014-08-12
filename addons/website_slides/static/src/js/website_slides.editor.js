@@ -15,6 +15,10 @@
         template: 'website.addslide.dialog',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
             'change .slide-upload': 'slide_upload',
+            'click .list-group-item': function(ev) {
+                this.$('.list-group-item').removeClass('active');
+                $(ev.target).closest('li').addClass('active');
+            }
         }),
         init: function(){
             this._super.apply(this, arguments);
@@ -22,9 +26,9 @@
         },
 
         start: function (){
-            this.$('.save').text('Create Slide');
+            this.$('.save').text('Create');
             var r = this._super.apply(this, arguments);
-            this.set_tags("");
+            this.set_tags();
             return r;
         },
         slide_upload: function(ev){
@@ -68,20 +72,30 @@
             };
         },
 
-        set_tags: function(tags){
+        set_tags: function(){
+            var self = this;
             this.$("input.slide-tags").textext({
                 plugins: 'tags focus autocomplete ajax',
-            tagsItems: tags.split(","),
-            // Note: The following list of keyboard keys is added. All entries are default except {32 : 'whitespace!'}.
-            keys: {8: 'backspace', 9: 'tab', 13: 'enter!', 27: 'escape!', 37: 'left', 38: 'up!', 39: 'right',
-                40: 'down!', 46: 'delete', 108: 'numpadEnter', 32: 'whitespace!'},
-            ajax: {
-                url: '/slides/get_tags',
-            dataType: 'json',
-            cacheResults: true
-            }
+                keys: {8: 'backspace', 9: 'tab', 13: 'enter!', 27: 'escape!', 37: 'left', 38: 'up!', 39: 'right',
+                    40: 'down!', 46: 'delete', 108: 'numpadEnter', 32: 'whitespace!'},
+                ajax: {
+                    url: '/slides/get_tags',
+                    dataType: 'json',
+                    cacheResults: true,
+                },
             });
-        },
+            // Adds: create tags on space + blur
+            $("input.slide-tags").on('whitespaceKeyDown blur', function () {
+                $(this).textext()[0].tags().addTags([ $(this).val() ]);
+                $(this).val("");
+            });
+            $("input.slide-tags").on('isTagAllowed', function(e, data) {
+                if (_.indexOf($(this).textext()[0].tags()._formData, data.tag) != -1) {
+                    data.result = false;
+                }
+            });
+
+            },
         get_value: function(){
             var self = this;
             var default_val = {
@@ -90,8 +104,7 @@
             };
             var values = {
                 'name' : this.$('#name').val(),
-                'description' : this.$('#description').val(),
-                //'tags' : this.$('.slide-tags').textext()[0].tags()._formData,
+                'tag_ids' : this.$('.slide-tags').textext()[0].tags()._formData,
                 'datas': self.file.data,
                 'datas_fname': self.file.name,
                 'image': this.$('#the-canvas')[0].toDataURL().split(',')[1],
