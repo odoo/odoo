@@ -662,7 +662,7 @@ class DateTimeConverter(osv.AbstractModel):
 
         if options and options.get('hide_seconds'):
             pattern = pattern.replace(":ss", "").replace(":s", "")
-        
+
         return babel.dates.format_datetime(value, format=pattern, locale=locale)
 
 class TextConverter(osv.AbstractModel):
@@ -771,7 +771,7 @@ class MonetaryConverter(osv.AbstractModel):
 
         lang_code = context.get('lang') or 'en_US'
         lang = self.pool['res.lang']
-        formatted_amount = lang.format(cr, uid, [lang_code], 
+        formatted_amount = lang.format(cr, uid, [lang_code],
             fmt, Currency.round(cr, uid, display, record[field_name]),
             grouping=True, monetary=True)
 
@@ -1120,7 +1120,10 @@ class WebAsset(object):
                     except ValueError:
                         self.last_modified =  datetime.datetime.strptime(attach[0]['__last_update'], server_format)
                 except Exception:
-                    raise KeyError("Could not find asset '%s' for '%s' addon" % (self.url, module))
+                    self._missingAsset(module)
+
+    def _missingAsset(self, module):
+        raise KeyError("Could not find asset '%s' for '%s' addon" % (self.url, module))
 
     @openerp.tools.func.lazy_property
     def content(self):
@@ -1146,6 +1149,11 @@ class JavascriptAsset(WebAsset):
             return '<script type="text/javascript" src="%s"></script>' % self.url
         else:
             return '<script type="text/javascript" charset="utf-8">%s</script>' % self.source
+
+    def _missingAsset(self, module):
+        self.source = "console.error('Missing javascript asset: %s');" % self.url
+        self.url = None
+        self.last_modified = datetime.datetime.now()
 
 class StylesheetAsset(WebAsset):
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
@@ -1196,6 +1204,20 @@ class StylesheetAsset(WebAsset):
             return '<link rel="stylesheet" href="%s" type="text/css"/>' % self.url
         else:
             return '<style type="text/css">%s</style>' % self.source
+
+    def _missingAsset(self, module):
+        self.source = """
+            body:before {
+                background: #ffc;
+                width: 100%%;
+                font-size: 14px;
+                font-family: monospace;
+                white-space: pre;
+                content: "Missing stylesheet asset: %s";
+            }
+        """ % self.url
+        self.url = None
+        self.last_modified = datetime.datetime.now()
 
 def rjsmin(script):
     """ Minify js with a clever regex.
