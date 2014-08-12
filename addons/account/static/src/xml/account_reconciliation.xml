@@ -13,7 +13,7 @@
             	</div>
             </div>
             <div class="oe_clear"></div>
-            <div class="interface_options"></div>
+            <div class="interface_options oe_form"></div>
             <div class="reconciliation_lines_container"></div>
         </div></div>
     </t>
@@ -219,6 +219,48 @@
     </t>
 
     <!-- accounts reconciliation -->
+    
+    <t t-name="manual_reconciliation_nothing_to_reconcile" t-extend="nothing_to_reconcile">
+        <t t-jquery=".oe_view_nocontent" t-operation="inner">
+            <p><b>Good Job!</b> There is nothing to reconcile.</p>
+            <p>All invoices and payments have been reconciled, your accounts' balances are clean.</p>
+        </t>
+    </t>
 
+    <t t-name="manual_reconciliation" t-extend="reconciliation">
+        <t t-jquery=".interface_options" t-operation="append">
+            <table border="0" cellpadding="0" cellspacing="0" class="oe_form_group"><tbody>
+                <tr class="oe_form_group_row">
+                    <td class="oe_form_group_cell oe_form_group_cell_label" colspan="1">
+                        <label for="oe-field-input-5" class="oe_form_label oe_align_right">Show</label>
+                    </td>
+                    <td class="oe_form_group_cell" colspan="1" width="99%">
+                        <span class="oe_form_field oe_form_field_radio oe_vertical oe_form_required">
+                            <span>
+                                <div>
+                                    <span class="oe_radio_input"><input type="radio" name="show_reconciliations_type" val="partners" id="reconciliations_type_partner_accounts" t-att-checked="(show_partner_accounts and !show_other_accounts ? true : undefined)" /></span><label for="reconciliations_type_partner_accounts">Partner accounts</label>
+                                </div>
+                                <div>
+                                    <span class="oe_radio_input"><input type="radio" name="show_reconciliations_type" val="others" id="reconciliations_type_other_accounts" t-att-checked="(!show_partner_accounts and show_other_accounts ? true : undefined)" /></span><label for="reconciliations_type_other_accounts">Other reconciliable accounts</label>
+                                </div>
+                                <div>
+                                    <span class="oe_radio_input"><input type="radio" name="show_reconciliations_type" val="both" id="reconciliations_type_both_accounts" t-att-checked="(show_partner_accounts and show_other_accounts ? true : undefined)" /></span><label for="reconciliations_type_both_accounts">Both</label>
+                                </div>
+                            </span>
+                        </span>
+                    </td>
+                </tr>
+            </tbody></table>
+        </t>
+    </t>
+
+    <t t-name="manual_reconciliation_line" t-extend="reconciliation_line">
+        <t t-jquery=".accounting_view caption" t-operation="inner">
+            <t t-esc="data.account_name" /> - <t t-esc="data.partner_name" />
+        </t>
+    </t>
+
+    <t t-name="manual_reconciliation_done_message" t-extend="reconciliation_done_message">
+    </t>
 
 </templates>
