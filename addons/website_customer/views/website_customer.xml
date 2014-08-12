@@ -68,8 +68,8 @@
 <template id="opt_country" inherit_option_id="website_customer.index" name="Show Map">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
 
-        <iframe t-attf-src="/google_map/?partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/&amp;output=embed/"
-            style="width:100%; border:0; padding:0; margin:0;"></iframe>
+        <iframe t-attf-src="/google_map?partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/&amp;output=embed/"
+            style="width:100%; border:0; padding:0; margin:0;" scrolling="no"></iframe>
     </xpath>
 </template>
 
