@@ -178,20 +178,24 @@
                 </div>
                 <div class="page-header">
 					<h2><t t-esc="slideview.name"/><small class="pull-right"><t t-esc="slideview.slide_views"/> Views</small></h2>
-				</div>
-				<t t-call="website.publish_management">
-	                <t t-set="object" t-value="slideview"/>
-	                <t t-set="publish_edit" t-value="True"/>
-	            </t>
-                <div t-if="slideview.tag_ids">
-                    <i class="fa fa-tags"></i>
-                    <t t-foreach="slideview.tag_ids" t-as="att_tag">
-                        <a t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=att_tag.name)">
-                            <span t-attf-class="badge slide-badge #{tags and tags == att_tag.name and 'badge-active' ''}" t-field="att_tag.name"/>
-                        </a>
-                    </t>
-                </div>
-                <div>
+				</div>				
+                <div class="row">
+	                <div t-if="slideview.tag_ids" class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+	                    <i class="fa fa-tags"></i>
+	                    <t t-foreach="slideview.tag_ids" t-as="att_tag">
+	                        <a t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=att_tag.name)">
+	                            <span t-attf-class="badge slide-badge #{tags and tags == att_tag.name and 'badge-active' ''}" t-field="att_tag.name"/>
+	                        </a>
+	                    </t>
+	                </div>
+	                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+	                	<t t-call="website.publish_management">
+			                <t t-set="object" t-value="slideview"/>
+			                <t t-set="publish_edit" t-value="True"/>
+			            </t>
+	                </div>
+            	</div>
+                <div class="row">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="active"><a href="#about" role="tab" data-toggle="tab">About</a></li>
@@ -220,7 +224,7 @@
 							<span class="help-block"> -- copy above link to share</span>
 							<h4>Embed</h4>
 							<div class="row">	
-								<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+								<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 								<div class="input-group">
 								  <span class="input-group-addon"><span class="glyphicon glyphicon-share"></span></span>
 								  <textarea id="slide_embed_code" class="form-control"><t t-esc="embedcode"/></textarea>
@@ -228,7 +232,7 @@
 								<span class="help-block"> -- copy above embed code to share</span>
 								</div>
 								<t t-if="slideview.datas">								
-								<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-inline">
+								<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 form-inline">
 									<div class="input-group">
 								      <div class="input-group-addon"><a href="javascript:void(0);" id="btnminus" field="page"><span class="glyphicon glyphicon-minus"/></a></div>
 								      <input class="form-control" type="text" size="1" value="0" name="page"/>
