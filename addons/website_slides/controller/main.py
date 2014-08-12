@@ -195,11 +195,24 @@ class main(http.Controller):
     @http.route('/slides/get_tags', type='http', auth="public", methods=['GET'], website=True)
     def tag_read(self, **post):
         tags = request.registry['ir.attachment.tag'].search_read(request.cr, request.uid, [], ['name'], context=request.context)
-        return simplejson.dumps(tags)
+        data = [tag['name'] for tag in tags]
+        return simplejson.dumps(data)
+
 
     @http.route(['/slides/add_slide'], type='http', auth="user", methods=['POST'], website=True)
     def add_slide(self, *args, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        Tag = pool['ir.attachment.tag']
+        tag_ids = []
+        if post.get('tag_ids').strip('[]'):
+            tags = post.get('tag_ids').strip('[]').replace('"', '').split(",")
+            for tag in tags:
+                tag_id = Tag.search(cr, uid, [('name', '=', tag)], context=context)
+                if tag_id:
+                    tag_ids.append((4, tag_id[0]))
+                else:
+                    tag_ids.append((0, 0, {'name': tag}))
+        post['tag_ids'] = tag_ids
         slide_obj = pool.get('ir.attachment')
         slide_id = slide_obj.create(cr, uid, post, context=context)
         slide = slide_obj.browse(cr, uid, slide_id, context=context)

@@ -79,22 +79,19 @@
                     dataType: 'json',
                     cacheResults: true,
                 },
-                ext: {
-                    itemManager: {
-                        itemToString: function(item) {
-                            return item.name;
-                        },
-                        stringToItem: function(str) {
-                            var suggestions = self.$('.slide-tags').textext()[0]._plugins.ajax._suggestions;
-                            var res = _.filter(suggestions, function(obj){ return obj.name == str; });
-                            return res[0];
-                        },
-
-                    },
-                  
+            });
+            // Adds: create tags on space + blur
+            $("input.slide-tags").on('whitespaceKeyDown blur', function () {
+                $(this).textext()[0].tags().addTags([ $(this).val() ]);
+                $(this).val("");
+            });
+            $("input.slide-tags").on('isTagAllowed', function(e, data) {
+                if (_.indexOf($(this).textext()[0].tags()._formData, data.tag) != -1) {
+                    data.result = false;
                 }
             });
-        },
+
+            },
         get_value: function(){
             var self = this;
             var default_val = {
@@ -104,7 +101,7 @@
             var values = {
                 'name' : this.$('#name').val(),
                 'description' : this.$('#description').val(),
-                'tags' : this.$('.slide-tags').textext()[0].tags()._formData,
+                'tag_ids' : this.$('.slide-tags').textext()[0].tags()._formData,
                 'datas': self.file.data,
                 'datas_fname': self.file.name,
                 'image': this.$('#the-canvas')[0].toDataURL().split(',')[1],
