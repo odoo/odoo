@@ -22,6 +22,7 @@
 import base64
 import logging
 import re
+from email.utils import formataddr
 from urllib import urlencode
 from urlparse import urljoin
 
@@ -184,10 +185,9 @@ class mail_mail(osv.Model):
           - elif 'partner', no notificatoin or no doc: recipient specific (Partner Name <email>)
           - else fallback on mail.email_to splitting """
         if partner and mail.notification and mail.record_name:
-            sanitized_record_name = re.sub(r'[^\w+.]+', '-', mail.record_name)
-            email_to = [_('"Followers of %s" <%s>') % (sanitized_record_name, partner.email)]
+            email_to = [formataddr((_('Followers of %s') % mail.record_name, partner.email))]
         elif partner:
-            email_to = ['%s <%s>' % (partner.name, partner.email)]
+            email_to = [formataddr((partner.name, partner.email))]
         else:
             email_to = tools.email_split(mail.email_to)
         return email_to

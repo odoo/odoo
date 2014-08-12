@@ -59,8 +59,11 @@ class WebsiteCustomer(http.Controller):
         partner_count = partner_obj.search_count(cr, openerp.SUPERUSER_ID, domain, context=request.context)
 
         # pager
+        url = '/customers/'
+        if country_id:
+            url += 'country/%s/' % country_id
         pager = request.website.pager(
-            url="/customers", total=partner_count, page=page, step=self._references_per_page,
+            url=url, total=partner_count, page=page, step=self._references_per_page,
             scope=7, url_args=post
         )
 

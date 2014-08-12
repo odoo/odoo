@@ -28,6 +28,7 @@ from openerp.osv import fields
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp import tools
+from psycopg2 import OperationalError
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
@@ -70,33 +71,45 @@ class procurement_order(osv.osv):
                     cr.commit()
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-            offset = 0
+            prev_ids = []
             while True:
-                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order')], offset=offset, limit=500, order='priority, date_planned', context=context)
+                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order'), ('date_planned', '<', maxdate)], limit=500, order='priority, date_planned', context=context)
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
-                    if maxdate >= proc.date_planned:
+                    try:
                         self.signal_button_check(cr, uid, [proc.id])
-                    else:
-                        offset += 1
 
-                if use_new_cursor:
-                    cr.commit()
-                if not ids:
+                        if use_new_cursor:
+                            cr.commit()
+                    except OperationalError:
+                        if use_new_cursor:
+                            cr.rollback()
+                            continue
+                        else:
+                            raise
+                if not ids or prev_ids == ids:
                     break
-            offset = 0
+                else:
+                    prev_ids = ids
             ids = []
+            prev_ids = []
             while True:
-                report_ids = []
-                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
+                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock'), ('date_planned', '<', maxdate)], limit=500)
                 for proc in procurement_obj.browse(cr, uid, ids):
-                    if maxdate >= proc.date_planned:
+                    try:
                         self.signal_button_check(cr, uid, [proc.id])
-                        report_ids.append(proc.id)
 
-                if use_new_cursor:
-                    cr.commit()
-                offset += len(ids)
-                if not ids: break
+                        if use_new_cursor:
+                            cr.commit()
+                    except OperationalError:
+                        if use_new_cursor:
+                            cr.rollback()
+                            continue
+                        else:
+                            raise
+                if not ids or prev_ids == ids:
+                    break
+                else:
+                    prev_ids = ids
 
             if use_new_cursor:
                 cr.commit()
@@ -203,52 +216,66 @@ class procurement_order(osv.osv):
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
         
         procurement_obj = self.pool.get('procurement.order')
-        offset = 0
         ids = [1]
+        prev_ids = []
         if automatic:
             self.create_automatic_op(cr, uid, context=context)
-        while ids:
-            ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
+        orderpoint_ids = orderpoint_obj.search(cr, uid, [])
+        while orderpoint_ids:
+            ids = orderpoint_ids[:100]
+            del orderpoint_ids[:100]
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
-                prods = self._product_virtual_get(cr, uid, op)
-                if prods is None:
-                    continue
-                if prods < op.product_min_qty:
-                    qty = max(op.product_min_qty, op.product_max_qty)-prods
-
-                    reste = qty % op.qty_multiple
-                    if reste > 0:
-                        qty += op.qty_multiple - reste
-
-                    if qty <= 0:
+                try:
+                    prods = self._product_virtual_get(cr, uid, op)
+                    if prods is None:
                         continue
-                    if op.product_id.type not in ('consu'):
-                        if op.procurement_draft_ids:
-                        # Check draft procurement related to this order point
-                            pro_ids = [x.id for x in op.procurement_draft_ids]
-                            procure_datas = procurement_obj.read(
-                                cr, uid, pro_ids, ['id', 'product_qty'], context=context)
-                            to_generate = qty
-                            for proc_data in procure_datas:
-                                if to_generate >= proc_data['product_qty']:
-                                    self.signal_button_confirm(cr, uid, [proc_data['id']])
-                                    procurement_obj.write(cr, uid, [proc_data['id']],  {'origin': op.name}, context=context)
-                                    to_generate -= proc_data['product_qty']
-                                if not to_generate:
-                                    break
-                            qty = to_generate
+                    if prods < op.product_min_qty:
+                        qty = max(op.product_min_qty, op.product_max_qty)-prods
 
-                    if qty:
-                        proc_id = procurement_obj.create(cr, uid,
-                                                         self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
-                                                         context=context)
-                        self.signal_button_confirm(cr, uid, [proc_id])
-                        self.signal_button_check(cr, uid, [proc_id])
-                        orderpoint_obj.write(cr, uid, [op.id],
-                                {'procurement_id': proc_id}, context=context)
-            offset += len(ids)
-            if use_new_cursor:
-                cr.commit()
+                        reste = qty % op.qty_multiple
+                        if reste > 0:
+                            qty += op.qty_multiple - reste
+
+                        if qty <= 0:
+                            continue
+                        if op.product_id.type not in ('consu'):
+                            if op.procurement_draft_ids:
+                            # Check draft procurement related to this order point
+                                pro_ids = [x.id for x in op.procurement_draft_ids]
+                                procure_datas = procurement_obj.read(
+                                    cr, uid, pro_ids, ['id', 'product_qty'], context=context)
+                                to_generate = qty
+                                for proc_data in procure_datas:
+                                    if to_generate >= proc_data['product_qty']:
+                                        self.signal_button_confirm(cr, uid, [proc_data['id']])
+                                        procurement_obj.write(cr, uid, [proc_data['id']],  {'origin': op.name}, context=context)
+                                        to_generate -= proc_data['product_qty']
+                                    if not to_generate:
+                                        break
+                                qty = to_generate
+
+                        if qty:
+                            proc_id = procurement_obj.create(cr, uid,
+                                                             self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
+                                                             context=context)
+                            self.signal_button_confirm(cr, uid, [proc_id])
+                            self.signal_button_check(cr, uid, [proc_id])
+                            orderpoint_obj.write(cr, uid, [op.id],
+                                    {'procurement_id': proc_id}, context=context)
+                    if use_new_cursor:
+                        cr.commit()
+                except OperationalError:
+                    if use_new_cursor:
+                        orderpoint_ids.append(op.id)
+                        cr.rollback()
+                        continue
+                    else:
+                        raise
+            if prev_ids == ids:
+                break
+            else:
+                prev_ids = ids
+
         if use_new_cursor:
             cr.commit()
             cr.close()

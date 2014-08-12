@@ -81,8 +81,8 @@ class TestMailMessage(TestMail):
         alias_domain = 'schlouby.fr'
         raoul_from = 'Raoul Grosbedon <raoul@raoul.fr>'
         raoul_from_alias = 'Raoul Grosbedon <raoul@schlouby.fr>'
-        raoul_reply = '"Followers of Pigs" <raoul@raoul.fr>'
-        raoul_reply_alias = '"Followers of Pigs" <group+pigs@schlouby.fr>'
+        raoul_reply = 'Followers of Pigs <raoul@raoul.fr>'
+        raoul_reply_alias = 'Followers of Pigs <group+pigs@schlouby.fr>'
 
         # --------------------------------------------------
         # Case1: without alias_domain
