@@ -1205,6 +1205,20 @@ class StylesheetAsset(WebAsset):
         else:
             return '<style type="text/css">%s</style>' % self.source
 
+    def _missingAsset(self, module):
+        self.source = """
+            body:before {
+                background: #ffc;
+                width: 100%%;
+                font-size: 14px;
+                font-family: monospace;
+                white-space: pre;
+                content: "Missing stylesheet asset: %s";
+            }
+        """ % self.url
+        self.url = None
+        self.last_modified = datetime.datetime.now()
+
 def rjsmin(script):
     """ Minify js with a clever regex.
     Taken from http://opensource.perlig.de/rjsmin
