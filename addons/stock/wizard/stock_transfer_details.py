@@ -21,12 +21,13 @@
 
 from openerp import models, fields, api
 from openerp.tools.translate import _
-
+import openerp.addons.decimal_precision as dp
 
 class stock_transfer_details(models.TransientModel):
     _name = 'stock.transfer_details'
     _description = 'Picking wizard'
 
+    picking_id = fields.Many2one('stock.picking', 'Picking')
     item_ids = fields.One2many('stock.transfer_details_items', 'transfer_id', 'Items')
     packop_ids = fields.One2many('stock.transfer_details_packs', 'transfer_id', 'Packs')
 
@@ -42,26 +43,59 @@ class stock_transfer_details(models.TransientModel):
         assert active_model in ('stock.picking', 'stock.picking.in', 'stock.picking.out'), 'Bad context propagation'
         picking_id, = picking_ids
         picking = self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context)
-        items=[]
+        items = []
+        packs = []
         for op in picking.pack_operation_ids:
+            item = {
+                'packop_id': op.id,
+                'name': op.product_id.id,
+                'product_uom_id': op.product_uom_id.id if op.product_uom_id else False,
+                'quantity': op.product_qty,
+                'package_id': op.package_id.id if op.package_id else False,
+                'lot_id': op.lot_id.id if op.lot_id else False,
+                'sourceloc_id': op.location_id.id if op.location_id else False,
+                'destinationloc_id': op.location_dest_id.id if op.location_dest_id else False,
+                'result_package_id': op.result_package_id.id if op.result_package_id else False,
+                'date': op.date,
+                'owner_id': op.owner_id.id if op.owner_id else False,
+                'cost': op.cost,
+                'currency': op.currency.id if op.currency else False,
+            }
             if op.product_id:
-                item = {
-                    'packop_id': op.id,
-                    'name': op.product_id.id,
-                    'quantity': op.product_qty,
-                    'sourceloc_id': op.location_id.id if op.location_id else False,
-                    'destinationloc_id': op.location_dest_id.id if op.location_dest_id else False,
-                    'package_id': op.result_package_id.id if op.result_package_id else False,
-                    'lot_id': op.lot_id.id if op.lot_id else False,
-                }
                 items.append(item)
             elif op.package_id:
-                print "Package %s" % op.package_id.id
-            else:
-                print "other"
+                packs.append(item)
 
         res.update(item_ids=items)
+        res.update(packop_ids=packs)
         return res
+
+    @api.one
+    def do_detailed_transfer(self):
+        for lstits in [self.item_ids, self.packop_ids]:
+            for prod in lstits:
+                pack_datas = {
+                    'product_id': prod.name.id if prod.name else False,
+                    'product_uom_id': prod.product_uom_id.id if prod.product_uom_id else False,
+                    'qty_done': prod.quantity,
+                    'package_id': prod.package_id.id if prod.package_id else False,
+                    'lot_id': prod.lot_id.id if prod.lot_id else False,
+                    'location_id': prod.sourceloc_id.id if prod.sourceloc_id else False,
+                    'location_dest_id': prod.destinationloc_id.id if prod.destinationloc_id else False,
+                    'result_package_id': prod.result_package_id.id if prod.result_package_id else False,
+                    'date': prod.date,
+                    'owner_id': prod.owner_id.id if prod.owner_id else False,
+                    'cost': prod.cost,
+                    'currency': prod.currency.id if prod.currency else False,
+                }
+                if prod.packop_id:
+                    prod.packop_id.write(pack_datas)
+                else:
+                    pack_datas['picking_id'] = self.picking_id.id
+                    pack_datas['product_qty'] = prod.quantity
+                    pack_datas['processed'] = 'false'
+                    self.env['stock.pack.operation'].create(pack_datas)
+        return True
 
     @api.multi
     def wizard_view(self):
@@ -77,7 +111,7 @@ class stock_transfer_details(models.TransientModel):
             'view_id': view.id,
             'target': 'new',
             'res_id': self.ids[0],
-            'context': self._context,
+            'context': self.env.context,
         }
 
 
@@ -87,40 +121,41 @@ class stock_transfer_details_items(models.TransientModel):
 
     transfer_id = fields.Many2one('stock.transfer_details', 'Transfer')
     packop_id = fields.Many2one('stock.pack.operation', 'Operation')
-    name = fields.Many2one('product.product', 'Item')
-    quantity = fields.Float('Quantity')
-    sourceloc_id = fields.Many2one('stock.location', 'Source Location')
-    destinationloc_id = fields.Many2one('stock.location', 'Destination Location')
-    package_id = fields.Many2one('stock.quant.package', 'Package')
+    name = fields.Many2one('product.product', 'Product')
+    product_uom_id = fields.Many2one('product.uom', 'Product Unit of Measure')
+    quantity = fields.Float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'))
+    package_id = fields.Many2one('stock.quant.package', 'Source package')
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
+    sourceloc_id = fields.Many2one('stock.location', 'Source Location', )
+    destinationloc_id = fields.Many2one('stock.location', 'Destination Location')
+    result_package_id = fields.Many2one('stock.quant.package', 'Destination package')
+    date = fields.Datetime('Date')
+    owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
+    cost = fields.Float("Cost", help="Unit Cost for this product line")
+    currency = fields.Many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE')
 
-    def split_in_packages(self, cr, uid, ids, context=None):
-        dets = self.pool['stock.transfer_details_items'].browse(cr, uid, ids, context)
-        for det in dets:
+    @api.multi
+    def split_quantities(self):
+        for det in self:
             if det.quantity>1:
                 det.quantity = (det.quantity-1)
-                new_id = det.copy(context=context)
+                new_id = det.copy(context=self.env.context)
                 new_id.quantity = 1
                 new_id.packop_id = False
-        if dets and dets[0]:
-            return self.pool['stock.transfer_details'].wizard_view(cr, uid, dets[0].transfer_id.id, context=context)
+        if self and self[0]:
+            return self[0].transfer_id.wizard_view()
 
     @api.multi
     def put_in_pack(self):
-        newpack = self.pool['stock.quant.package'].create(self._cr, self._uid, {}, self._context)
+        newpack = None
         for packop in self:
-            packop.package_id = newpack
-            result = packop.transfer_id.wizard_view()
-            print result
-            return result
+            if not packop.result_package_id:
+                if not newpack:
+                    newpack = self.pool['stock.quant.package'].create(self._cr, self._uid, {}, self._context)
+                packop.result_package_id = newpack
+        if self and self[0]:
+            return self[0].transfer_id.wizard_view()
 
-class stock_transfer_details_packs(models.TransientModel):
+class stock_transfer_details_packs(stock_transfer_details_items):
     _name = 'stock.transfer_details_packs'
     _description = 'Picking wizard packs'
-
-    transfer_id = fields.Many2one('stock.transfer_details', 'Transfer')
-    packop_id = fields.Many2one('stock.pack.operation', 'Operation')
-    name = fields.Many2one('stock.quant.package', 'Package')
-    sourceloc_id = fields.Many2one('stock.location', 'Source Location')
-    destinationloc_id = fields.Many2one('stock.location', 'Destination Location')
-    package_id = fields.Many2one('stock.quant.package', 'Destination Package')

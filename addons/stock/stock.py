@@ -1290,9 +1290,9 @@ class stock_picking(osv.osv):
             'active_id': len(picking) and picking[0] or False
         })
 
-        created_id = self.pool['stock.transfer_details'].create(cr, uid, {}, context)
+        created_id = self.pool['stock.transfer_details'].create(cr, uid, {'picking_id': len(picking) and picking[0] or False}, context)
         return self.pool['stock.transfer_details'].wizard_view(cr, uid, created_id, context)
-        
+
 
     @api.cr_uid_ids_context
     def do_transfer(self, cr, uid, picking_ids, context=None):

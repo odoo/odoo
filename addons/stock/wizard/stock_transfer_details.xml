@@ -10,35 +10,32 @@
                         <page string="Products" >
                             <field name="item_ids">
                                 <tree string="Inventory Details" create="false" editable="bottom">
-
-                                    <field name="transfer_id" invisible="True"/>
+                                    <field name="package_id" groups="stock.group_tracking_lot"/>
                                     <field name="name" readonly="True"/>
                                     <field name="quantity"/>
-                                    <button name="split_in_packages" string="Split" type="object"/>
+                                    <button name="split_quantities" string="Split" type="object" icon="STOCK_PREFERENCES" attrs="{'invisible': [('quantity', '=', 1)]}"/>
                                     <field name="sourceloc_id"/>
                                     <field name="destinationloc_id"/>
-                                    <field name="package_id" groups="stock.group_tracking_lot"/>
-                                    <button name="put_in_pack" string="Pack" type="object"/>
+                                    <field name="result_package_id" groups="stock.group_tracking_lot"/>
+                                    <button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}" groups="stock.group_tracking_lot"/>
                                     <field name="lot_id" groups="stock.group_production_lot"/>
-
-                                    <!-- attrs="{'invisible': [('result_package_id', '!=', False)]}"  groups="stock.group_tracking_lot stock.group_production_lot"-->
                                 </tree>
                             </field>
                         </page>
                         <page string="Packages" groups="stock.group_tracking_lot">
                             <field name="packop_ids">
                                 <tree editable="bottom">
-                                    <field name="transfer_id" invisible="True"/>
-                                    <field name="name"/>
+                                    <field name="package_id"/>
                                     <field name="sourceloc_id"/>
                                     <field name="destinationloc_id"/>
-                                    <field name="package_id"/>
+                                    <field name="result_package_id"/>
+                                    <button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}"/>
                                 </tree>
                             </field>
                         </page>
                     </notebook>
                     <footer>
-                        <button name="do_detailled_transfer" string="_Apply" type="object" class="oe_highlight"/>
+                        <button name="do_detailed_transfer" string="_Apply" type="object" class="oe_highlight"/>
                         or
                         <button string="_Cancel" class="oe_link" special="cancel" />
                     </footer>
