@@ -61,8 +61,11 @@ class WebsiteCustomer(http.Controller):
         google_map_partner_ids = ",".join([str(p) for p in partner_ids])
 
         # pager
+        url = '/customers/'
+        if country_id:
+            url += 'country/%s/' % country_id
         pager = request.website.pager(
-            url="/customers/", total=len(partner_ids), page=page, step=self._references_per_page,
+            url=url, total=len(partner_ids), page=page, step=self._references_per_page,
             scope=7, url_args=post
         )
 
