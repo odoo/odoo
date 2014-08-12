@@ -22,13 +22,11 @@
                             <div class="form-group">
                                 <input name="upload" type="file" value="Choose images" multiple="multiple" accept="image/*"/> 
                             </div>
-                            <div class="form-group">
+                            <div class="form-group hidden">
                                 <input type="submit" value="Upload images" class="btn btn-default" />
                             </div>
                         </form>
-                        <div class="progress" >
-                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">0</div>
-                        </div>
+                        <div class="text-center"><span class="fa fa-refresh fa-5x fa-spin hidden"></span></div>
                         <div class="alert alert-success" role="alert">Upload successful.</div>
                         <div class="alert alert-danger" role="alert">Upload failed, some images might not have been uploaded. Check your network connectivity.</div>
                     </div>

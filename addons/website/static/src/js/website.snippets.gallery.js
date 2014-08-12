@@ -84,6 +84,7 @@
                 }
             });
             $row.append($imgs);
+            this.$target.css("height", "");
         },
         masonry : function() {
             var self     = this,
@@ -118,6 +119,7 @@
                 else self.block = false;
             }
             if (imgs.length) add();
+            this.$target.css("height", "");
         },
         grid : function() {
             var self     = this,
@@ -140,6 +142,7 @@
                     $row.appendTo($container);
                 }
             });
+            this.$target.css("height", "");
         },
         slideshow :function () {
             var self = this;
@@ -154,7 +157,7 @@
                 },
                 $slideshow = $(openerp.qweb.render('website.gallery.slideshow', params));
             this.replace($slideshow);
-            $slideshow.css("height", Math.round(window.innerHeight*0.7));
+            this.$target.css("height", Math.round(window.innerHeight*0.7));
         },
         columns : function(type, value) {
             if (this.block) return;
@@ -169,7 +172,7 @@
             var self = this,
                 $container = this.$target.find(".container:first"),
                 $upload_form = $(openerp.qweb.render('website.gallery.dialog.upload')),
-                $progressbar = $upload_form.find(".progress-bar");
+                $progress = $upload_form.find(".fa");
 
             $upload_form.appendTo(document.body);
             
@@ -177,11 +180,14 @@
             
             $upload_form.find(".alert-success").hide();
             $upload_form.find(".alert-danger").hide();
-            $progressbar.hide();
 
-            $upload_form.on("submit", function(event) {
+            $upload_form.on("change", 'input[name="upload"]', function(event) {
+                $upload_form.find('input[type="submit"]').parent().removeClass("hidden");
+                $upload_form.find(".alert").hide();
+            });
+
+            $upload_form.find("form").on("submit", function(event) {
                 event.preventDefault();
-                $progressbar.show();
                 var files = $(this).find('input[type="file"]')[0].files;
                 var formData = new FormData();
                 for (var i = 0; i < files.length; i++ ) {
@@ -192,7 +198,12 @@
                 /* 
                  * hide submit button
                  */
-                $upload_form.find('input[name="upload"], input[type="submit"]').parent().addClass("hidden");
+                $('input[name="upload"], input[type="submit"]', this).parent().addClass("hidden");
+
+                /* 
+                 * show progress
+                 */
+                $progress.removeClass("hidden");
 
                 /* 
                  * Images upload callback
@@ -202,22 +213,22 @@
                 window[callback] = function (attachments, error) {
                     delete window[callback];
 
-                    $upload_form.find('input[name="upload"]').parent().removeClass("hidden");
+                    $('input[name="upload"]', this).parent().removeClass("hidden");
 
                     if (error) { /* failure */
 
-                        $progressbar.addClass("progress-bar-danger");
                         $upload_form.find(".alert-danger").show();
 
                     } else { /* success */
 
-                        $progressbar.addClass("progress-bar-success");
                         $upload_form.find(".alert-success").show();
                         for (var i = 0 ; i < attachments.length; i++) {
                             $('<img class="img img-thumbnail img-responsive mb8 mt8"/>')
                                 .attr("src", attachments[i].website_url)
                                 .appendTo($container);
                         }
+                        $progress.addClass("hidden");
+                        $upload_form.remove();
                         self.reapply(); // refresh the $target
                     }
                 };
@@ -235,24 +246,14 @@
                     data: formData,
                     contentType: false,  /* multipart/form-data for files */
                     processData: false,
-                    dataType: 'text',
-                    xhrFields: { /* progress bar support */
-                        onprogress: function(up) {
-                            var pc = Math.floor((up.total / up.totalSize) * 100);
-                            var text = " "+pc+" %";
-                            $progressbar.css({'width': pc+'%' }).attr("aria-valuenow", pc).text(text);
-                        }}
+                    dataType: 'text'
                     }).done(function (script) {
                         $(script).appendTo('head').remove();
                     });
             });
             $upload_form.modal({ backdrop : false });
 
-            var $filepicker = $upload_form.find('input[name="upload"]');
-            $filepicker.click(function () {
-                $upload_form.find('input[type="submit"]').parent().removeClass("hidden");
-            });
-            $filepicker.click();
+            $upload_form.find('input[name="upload"]').click();
         },
         images_rm   : function() {
             this.replace($('<div class="alert alert-info"/>').text(_t("Add Images from the menu")));
