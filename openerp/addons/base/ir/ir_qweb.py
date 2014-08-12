@@ -1151,7 +1151,7 @@ class JavascriptAsset(WebAsset):
             return '<script type="text/javascript" charset="utf-8">%s</script>' % self.source
 
     def _missingAsset(self, module):
-        self.source="console.log('Missing JS source : %s')" % self.url
+        self.source = "console.error('Missing javascript asset: %s');" % self.url
         self.url = None
         self.last_modified = datetime.datetime.now()
 
