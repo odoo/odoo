@@ -63,10 +63,9 @@ class stock_transfer_details(models.TransientModel):
         res.update(item_ids=items)
         return res
 
-    def wizard_view(self, cr, uid, id, context):
-        data_obj = self.pool.get('ir.model.data')
-        result = data_obj._get_id(cr, uid, 'stock', 'view_stock_enter_transfer_details')
-        view_id = data_obj.browse(cr, uid, result).res_id
+    @api.multi
+    def wizard_view(self):
+        view = self.env.ref('stock.view_stock_enter_transfer_details')
 
         return {
             'name': _('Enter transfer details'),
@@ -74,11 +73,11 @@ class stock_transfer_details(models.TransientModel):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.transfer_details',
-            'views': [(view_id, 'form')],
-            'view_id': view_id,
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
             'target': 'new',
-            'res_id': id,
-            'context': context,
+            'res_id': self.ids[0],
+            'context': self._context,
         }
 
 
@@ -106,11 +105,14 @@ class stock_transfer_details_items(models.TransientModel):
         if dets and dets[0]:
             return self.pool['stock.transfer_details'].wizard_view(cr, uid, dets[0].transfer_id.id, context=context)
 
-    @api.one
+    @api.multi
     def put_in_pack(self):
         newpack = self.pool['stock.quant.package'].create(self._cr, self._uid, {}, self._context)
-        self.package_id = newpack
-        return self.transfer_id.wizard_view()
+        for packop in self:
+            packop.package_id = newpack
+            result = packop.transfer_id.wizard_view()
+            print result
+            return result
 
 class stock_transfer_details_packs(models.TransientModel):
     _name = 'stock.transfer_details_packs'
