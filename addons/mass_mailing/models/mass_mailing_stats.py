@@ -19,7 +19,10 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
+import openerp
+from openerp.osv import fields, osv
+from openerp import models, api, _
+
 
 class MailMailStats(osv.Model):
     """ MailMailStats models the statistics collected about emails. Those statistics
@@ -31,6 +34,20 @@ class MailMailStats(osv.Model):
     _description = 'Email Statistics'
     _rec_name = 'message_id'
     _order = 'message_id'
+
+    def get_first_click(self, cr, uid, ids, name, args, context=None):
+        click_obj = self.pool.get('website.alias.click')
+        res = {}
+        for alias in self.browse(cr, uid, ids, context=context):
+            max_id = max([al.id for al in alias.alias_click_ids if al])
+            alias_click = self.pool.get('website.alias.click').browse(cr, uid, max_id, context=context)
+            res[alias.id] = alias_click.click_date
+        return res
+
+    def click_alias(self, cr, uid, ids, context=None):
+        for click in self.browse(cr, uid, ids, context=context):
+            return self.pool.get('mail.mail.statistics').search(cr, uid, [('id', '=', click.mail_stat_id.id)], context=context)
+        return []
 
     _columns = {
         'mail_mail_id': fields.many2one('mail.mail', 'Mail ID', ondelete='set null'),
@@ -56,6 +73,10 @@ class MailMailStats(osv.Model):
         'opened': fields.datetime('Opened', help='Date when the email has been opened the first time'),
         'replied': fields.datetime('Replied', help='Date when this email has been replied for the first time.'),
         'bounced': fields.datetime('Bounced', help='Date when this email has bounced.'),
+        'alias_click_ids': fields.one2many('website.alias.click','mail_stat_id', 'Alias click'),
+        'first_click': fields.function(get_first_click,'First Click', type='date',
+                    store = {'mail.mail.statistics': (lambda self, cr, uid, ids, ctx: ids, ['alias_click_ids'], 10),
+                             'website.alias.click': (click_alias, ['mail_stat_id'], 10)}),
     }
 
     _defaults = {
@@ -87,3 +108,10 @@ class MailMailStats(osv.Model):
         stat_ids = self._get_ids(cr, uid, ids, mail_mail_ids, mail_message_ids, [('bounced', '=', False)], context)
         self.write(cr, uid, stat_ids, {'bounced': fields.datetime.now()}, context=context)
         return stat_ids
+
+class website_alias_click(models.Model):
+    _inherit = "website.alias.click"
+
+    mail_stat_id = openerp.fields.Many2one('mail.mail.statistics', string='Mail Statistics',
+            help="It will link the statistics with the click data")
+

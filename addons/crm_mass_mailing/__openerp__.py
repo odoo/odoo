@@ -10,9 +10,6 @@ Mass Mailing with Crm Marketing
 Link module mass mailing with the marketing mixin from crm.
         """,
     'depends': ['crm', 'mass_mailing'],
-    'data': [
-        'mass_mailing.xml',
-    ],
     'installable': True,
     'auto_install': True,
 }

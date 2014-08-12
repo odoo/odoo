@@ -54,6 +54,12 @@
             </field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_view_mass_mailing_statistics">
+            <field name="name">Statistics of Clicks</field>
+            <field name="res_model">website.alias.click</field>
+            <field name="view_mode">graph</field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
             <field name="name">Mailing List Subscribers</field>
             <field name="res_model">mail.mass_mailing.contact</field>
@@ -218,6 +224,10 @@
                             <button name="%(action_view_mass_mailing_contacts)d"
                                 type="action" class="oe_stat_button">
                                 <field name="replied_ratio" string="Replied" widget="percentpie"/>
+                            </button>
+                            <button name="get_mass_mailing_statistics"
+                                type="object" class="oe_stat_button">
+                                <field name="clicks" string="clicks" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mass_mailing_contacts)d"
                                 type="action" class="oe_stat_button oe_inline">
@@ -475,6 +485,10 @@
                                     <button name="%(action_view_mass_mailing_contacts)d"
                                         type="action" class="oe_stat_button oe_inline">
                                         <field name="replied_ratio" widget="percentpie" string="Replied"/>
+                                    </button>
+                                    <button name="get_mass_mailing_statistics"
+                                        type="object" class="oe_stat_button">
+                                        <field name="clicks" string="clicks" widget="percentpie"/>
                                     </button>
                                 </div>
                             </group>

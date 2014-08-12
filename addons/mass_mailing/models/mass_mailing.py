@@ -153,6 +153,13 @@ class MassMailingCampaign(osv.Model):
             row['replied_ratio'] = 100.0 * row['replied'] / total
         return results
 
+    def _get_clicks(self, cr, uid, ids, name, arg, context=None):
+        res = dict.fromkeys(ids,0)
+        for record in self.browse(cr, uid, ids, context=context):
+            for mass_mailing_id in record.mass_mailing_ids:
+                res[record.id] += mass_mailing_id.clicks
+        return res
+
     _columns = {
         'name': fields.char('Name', required=True),
         'stage_id': fields.many2one('mail.mass_mailing.stage', 'Stage', required=True),
@@ -173,6 +180,10 @@ class MassMailingCampaign(osv.Model):
                  'various mailings in a single campaign to test the effectiveness'
                  'of the mailings.'),
         'color': fields.integer('Color Index'),
+        'clicks' : fields.function(
+            _get_clicks, string="Number of clicks",
+            type="integer",
+         ),
         # stat fields
         'total': fields.function(
             _get_statistics, string='Total',
@@ -228,6 +239,16 @@ class MassMailingCampaign(osv.Model):
         'user_id': lambda self, cr, uid, ctx=None: uid,
         'stage_id': lambda self, *args: self._get_default_stage_id(*args),
     }
+
+    def get_mass_mailing_statistics(self, cr, uid, ids, context=None):
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'mass_mailing', 'action_view_mass_mailing_statistics', context=context)
+        cr.execute("""SELECT wc.id FROM mail_mass_mailing mm
+            JOIN mail_mail_statistics ms ON ms.mass_mailing_id = mm.id
+            JOIN website_alias_click wc on wc.mail_stat_id = ms.id
+            WHERE mm.mass_mailing_campaign_id IN %s""", (tuple(ids),))
+        alias_click_ids = [result[0] for result in cr.fetchall()]
+        res['domain'] = [('id', 'in', alias_click_ids)]
+        return res
 
     def get_recipients(self, cr, uid, ids, model=None, context=None):
         """Return the recipients of a mailing campaign. This is based on the statistics
@@ -343,6 +364,15 @@ class MassMailing(osv.Model):
         res.append(('mail.mass_mailing.contact', _('Mailing List')))
         return res
 
+    def _get_clicks(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        cr.execute("""SELECT COUNT(*) AS clicks, ms.mass_mailing_id AS id FROM website_alias_click wc
+                JOIN mail_mail_statistics ms ON ms.id = wc.mail_stat_id
+                WHERE ms.mass_mailing_id IN %s GROUP BY ms.mass_mailing_id""", (tuple(ids), ))
+        for record in cr.dictfetchall():
+            res[record['id']] = record['clicks']
+        return res
+
     # indirections for inheritance
     _mailing_model = lambda self, *args, **kwargs: self._get_mailing_model(*args, **kwargs)
 
@@ -359,6 +389,10 @@ class MassMailing(osv.Model):
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
             ondelete='set null',
+        ),
+        'clicks' : fields.function(
+            _get_clicks, string="Number of Clicks",
+            type="integer",
         ),
         'state': fields.selection(
             [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')],
@@ -444,6 +478,15 @@ class MassMailing(osv.Model):
             type='char', multi='_get_daily_statistics',
         )
     }
+
+    def get_mass_mailing_statistics(self, cr, uid, ids, context=None):
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'mass_mailing', 'action_view_mass_mailing_statistics', context=context)
+        cr.execute("""SELECT wc.id FROM website_alias_click wc
+            JOIN mail_mail_statistics ms ON ms.id = wc.mail_stat_id
+            WHERE ms.mass_mailing_id IN %s""", (tuple(ids),))
+        alias_click_ids = [result[0] for result in cr.fetchall()]
+        res['domain'] = [('id', 'in', alias_click_ids)]
+        return res
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(MassMailing, self).default_get(cr, uid, fields, context=context)

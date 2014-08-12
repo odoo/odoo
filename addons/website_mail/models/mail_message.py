@@ -79,7 +79,7 @@ class MailMessage(osv.Model):
         """
         group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
         group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_public')[1]
-        if group_user_id in [group.id for group in group_ids]:
+        if (uid != SUPERUSER_ID) and (group_user_id in [group.id for group in group_ids]):
             cr.execute('SELECT id FROM "%s" WHERE website_published IS FALSE AND id = ANY (%%s)' % (self._table), (ids,))
             if cr.fetchall():
                 raise osv.except_osv(

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Website alias views -->
+        <record id="view_website_alias_form" model="ir.ui.view">
+            <field name="name">website.alias.form</field>
+            <field name="model">website.alias</field>
+            <field name="arch" type="xml">
+                <form string="Website Alias">
+                    <sheet>
+                        <group>
+                            <field name="url"/>
+                            <field name="code" class="oe_read_only" />
+                            <field name="count" class="oe_read_only" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_website_alias_tree" model="ir.ui.view">
+            <field name="name">website.alias.tree</field>
+            <field name="model">website.alias</field>
+            <field name="arch" type="xml">
+                <tree string="Website Alias">
+                    <field name="url"/>
+                    <field name="code"/>
+                    <field name="count"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_website_alias_graph" model="ir.ui.view" >
+            <field name="name">website.alias.graph</field>
+            <field name="model">website.alias</field>
+            <field name="arch" type="xml">
+                <graph string="Website Alias"  type="bar">
+                    <field name="url" type="row"/>
+                    <field name="count" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <!-- Action for website alias-->
+        <record model="ir.actions.act_window" id="action_website_alias">
+            <field name="name">URL Shortener</field>
+            <field name="res_model">website.alias</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+        </record>
+
+        <!-- Website alias click views -->
+        <record id="view_website_alias_click_form" model="ir.ui.view">
+            <field name="name">website.alias.click.form</field>
+            <field name="model">website.alias.click</field>
+            <field name="arch" type="xml">
+                <form string="Website Alias Click">
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="alias_id"/>
+                            <field name="ip"/>
+                            <field name="country_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_website_alias_click_tree" model="ir.ui.view">
+            <field name="name">website.alias.click.tree</field>
+            <field name="model">website.alias.click</field>
+            <field name="arch" type="xml">
+                <tree string="Website Alias Click">
+                    <field name="alias_id"/>
+                    <field name="ip"/>
+                    <field name="country_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_website_alias_click_graph" model="ir.ui.view" >
+            <field name="name">website.alias.click.graph</field>
+            <field name="model">website.alias.click</field>
+            <field name="arch" type="xml">
+                <graph string="Website Alias Click">
+                    <field name="alias_id"/>
+                    <field name="ip"/>
+                    <field name="country_id"/>
+                </graph>
+            </field>
+        </record>
+        <!-- Action for website alias click-->
+        <record model="ir.actions.act_window" id="action_website_alias_click">
+            <field name="name">URL Shortener</field>
+            <field name="res_model">website.alias.click</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree,form</field>
+        </record>
+        <menuitem id="menu_url_shortener_main" name="URL Shortener" parent="base.marketing_menu"/>
+        <menuitem id="menu_url_shortener_alias" name="URL Shortener" parent="menu_url_shortener_main" action="action_website_alias"/>
+        <menuitem id="menu_url_shortener_click" name="URL Shortener" parent="base.marketing_reporting_menu" action="action_website_alias_click"/>
+    </data>
+</openerp>
