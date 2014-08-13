@@ -249,6 +249,14 @@ def load_information_from_description_file(module, mod_path=None):
             finally:
                 f.close()
 
+            if not info.get('description'):
+                README = ['README.rst', 'README.txt']
+                readme_path = [opj(mod_path, x) for x in README
+                               if os.path.isfile(opj(mod_path, x))]
+                if readme_path:
+                    readme_text = tools.file_open(readme_path[0]).read()
+                    info['description'] = readme_text
+
             if 'active' in info:
                 # 'active' has been renamed 'auto_install'
                 info['auto_install'] = info['active']
