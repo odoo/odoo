@@ -1,5 +1,8 @@
 jQuery(document).ready(function() {
-	jQuery("timeago.timeago").timeago();
+	$("timeago.timeago").timeago();
+    $('.slide-container').click(function(ev){
+        window.location = $(this).find("a").attr("href");
+    });
 
     /*modify embed code based on options*/
     jQuery.modifyembedcode = function(currentVal) {

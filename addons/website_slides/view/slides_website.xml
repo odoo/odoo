@@ -301,7 +301,7 @@
             </div>
         </template>
         <template id="slide-box" name="Slide Box">
-            <li class="media">
+            <li class="media slide-container">
                 <a class="pull-left" t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
                     <t t-if="not attachment.youtube_id">
                         <img class="media-object image-box" t-attf-src="/slides/thumb/#{attachment.id}"/>
@@ -312,7 +312,7 @@
                     </t>
                 </a>
                 <div class="media-heading">
-                    <div class="h5 text-truncation" t-att-title="attachment.name">
+                    <div class="text-truncation" t-att-title="attachment.name">
                         <t t-esc="attachment.name"/>
                     </div>
                     <div class="h6">
