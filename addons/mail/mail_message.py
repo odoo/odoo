@@ -32,11 +32,6 @@ from HTMLParser import HTMLParser
 
 _logger = logging.getLogger(__name__)
 
-try:
-    from mako.template import Template as MakoTemplate
-except ImportError:
-    _logger.warning("payment_acquirer: mako templates not available, payment acquirer will not work!")
-
 
 """ Some tools for parsing / creating email fields """
 def decode(text):
