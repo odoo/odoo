@@ -177,38 +177,34 @@
 	                <iframe t-if="slideview.youtube_id" t-attf-src="//www.youtube.com/embed/#{slideview.youtube_id}?theme=light"></iframe>
                 </div>
                 <div class="page-header">
-					<h2><t t-esc="slideview.name"/><small class="pull-right"><t t-esc="slideview.slide_views"/> Views</small></h2>
-				</div>				
-                <div class="row">
-	                <div t-if="slideview.tag_ids" class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-	                    <i class="fa fa-tags"></i>
-	                    <t t-foreach="slideview.tag_ids" t-as="att_tag">
-	                        <a t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=att_tag.name)">
-	                            <span t-attf-class="badge slide-badge #{tags and tags == att_tag.name and 'badge-active' ''}" t-field="att_tag.name"/>
-	                        </a>
-	                    </t>
-	                </div>
-	                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	                	<t t-call="website.publish_management">
-			                <t t-set="object" t-value="slideview"/>
-			                <t t-set="publish_edit" t-value="True"/>
-			            </t>
-	                </div>
-            	</div>
-                <div class="row">
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li><a href="#about" role="tab" data-toggle="tab">About</a></li>
-                        <li><a href="#share" role="tab" data-toggle="tab">Share</a></li>
-                        <li class="active"><a href="#discuss" role="tab" data-toggle="tab">Discuss</a></li>
-                        <li><a href="#transscript" role="tab" data-toggle="tab">Transscript</a></li>
-                    </ul>
-                    <!-- Tab panes -->
-                    <div class="tab-content" style="background: none repeat scroll 0 0 #f8f8f8;padding: 20px;">
-                        <div class="tab-pane fade" id="about">
-                            <p t-field="slideview.description"></p>
-                        </div>
-                        <div class="tab-pane fade" id="share">                            
+					<h3><t t-esc="slideview.name"/><small class="pull-right"><t t-esc="slideview.slide_views"/> Views</small></h3>
+				</div>
+				<div t-if="slideview.tag_ids" style="display:inline;">
+				    <i class="fa fa-tags"></i>
+				    <t t-foreach="slideview.tag_ids" t-as="att_tag">
+				        <a t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=att_tag.name)">
+				            <span t-attf-class="badge slide-badge #{tags and tags == att_tag.name and 'badge-active' ''}" t-field="att_tag.name"/>
+				        </a>
+				    </t>
+				</div>
+				<t t-call="website.publish_management">
+			        <t t-set="object" t-value="slideview"/>
+			        <t t-set="publish_edit" t-value="True"/>
+			    </t>
+	            <div style="clear:both;">
+	                <!-- Nav tabs -->
+	                <ul class="nav nav-tabs" role="tablist">
+	                    <li><a href="#about" role="tab" data-toggle="tab">About</a></li>
+	                    <li><a href="#share" role="tab" data-toggle="tab">Share</a></li>
+	                    <li class="active"><a href="#discuss" role="tab" data-toggle="tab">Discuss</a></li>
+	                    <li><a href="#transscript" role="tab" data-toggle="tab">Transscript</a></li>
+	                </ul>
+	                <!-- Tab panes -->
+	                <div class="tab-content" style="background: none repeat scroll 0 0 #f8f8f8;padding: 20px;">
+	                    <div class="tab-pane fade" id="about">
+	                        <p t-field="slideview.description"></p>
+	                    </div>
+	                    <div class="tab-pane fade" id="share">                            
 				            <h4>Share</h4>
 				            <h3>					                
 				                <a target="_Blank" class="oe_share_facebook" t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{shareurl}"><i class="fa fa-facebook-square"></i></a>
@@ -222,28 +218,22 @@
 							  <input type="text" class="form-control" t-att-value="shareurl"/>
 							</div>
 							<span class="help-block"> -- copy above link to share</span>
-							<h4>Embed</h4>
-							<div class="row">	
-								<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-								<div class="input-group">
-								  <span class="input-group-addon"><span class="glyphicon glyphicon-share"></span></span>
-								  <textarea id="slide_embed_code" class="form-control"><t t-esc="embedcode"/></textarea>
-								</div>
-								<span class="help-block"> -- copy above embed code to share</span>
-								</div>
-								<t t-if="slideview.datas">								
-								<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 form-inline">
-									<div class="input-group">
-								      <div class="input-group-addon"><a href="javascript:void(0);" id="btnminus" field="page"><span class="glyphicon glyphicon-minus"/></a></div>
-								      <input class="form-control" type="text" size="1" value="0" name="page"/>
-								      <div class="input-group-addon"><a href="javascript:void(0);" id="btnplus" field="page"><span class="glyphicon glyphicon-plus"/></a></div>
-								    </div>
-									<span class="help-block"> -- Enter start page</span>
-								</div>
-								</t>
+							<h4>Embed</h4>						
+							<div class="input-group">
+								<span class="input-group-addon"><span class="glyphicon glyphicon-share"></span></span>
+								<textarea id="slide_embed_code" class="form-control"><t t-esc="embedcode"/></textarea>
 							</div>
-                        </div>
-                        <div class="tab-pane fade in active" id="discuss">                       	
+							<span class="help-block"> -- copy above embed code to share</span>						
+							<t t-if="slideview.datas">														
+							<div class="input-group col-xs-2">
+								<div class="input-group-addon"><a href="javascript:void(0);" id="btnminus" field="page"><span class="glyphicon glyphicon-minus"/></a></div>
+								<input class="form-control" type="text" size="1" value="0" name="page"/>
+								<div class="input-group-addon"><a href="javascript:void(0);" id="btnplus" field="page"><span class="glyphicon glyphicon-plus"/></a></div>
+						    </div>
+							<span class="help-block"> -- Enter start page</span>						
+							</t>
+						</div>				                       
+	                    <div class="tab-pane fade in active" id="discuss">                       	
 				            <form id="comment" t-attf-action="/slides/comment/#{slideview.id}" method="POST">
 				                <div class="media">
 				                    <span class="pull-left">
@@ -273,12 +263,12 @@
 					                </div>
 					            </li>
 					        </ul>						    
-                        </div>
-                        <div class="tab-pane fade" id="transscript">
-                            <p t-field="slideview.index_content"></p>
-                        </div>
-                    </div>
-                </div>
+	                    </div>
+	                    <div class="tab-pane fade" id="transscript">
+	                        <p t-field="slideview.index_content"></p>
+	                    </div>                    
+	                </div>
+	            </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                 <div style="margin-bottom:20px">
