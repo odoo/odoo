@@ -48,7 +48,7 @@ class stock_transfer_details(models.TransientModel):
         for op in picking.pack_operation_ids:
             item = {
                 'packop_id': op.id,
-                'name': op.product_id.id,
+                'product_id': op.product_id.id,
                 'product_uom_id': op.product_uom_id.id if op.product_uom_id else False,
                 'quantity': op.product_qty,
                 'package_id': op.package_id.id if op.package_id else False,
@@ -75,7 +75,7 @@ class stock_transfer_details(models.TransientModel):
         for lstits in [self.item_ids, self.packop_ids]:
             for prod in lstits:
                 pack_datas = {
-                    'product_id': prod.name.id if prod.name else False,
+                    'product_id': prod.product_id.id if prod.product_id else False,
                     'product_uom_id': prod.product_uom_id.id if prod.product_uom_id else False,
                     'qty_done': prod.quantity,
                     'package_id': prod.package_id.id if prod.package_id else False,
@@ -121,18 +121,20 @@ class stock_transfer_details_items(models.TransientModel):
 
     transfer_id = fields.Many2one('stock.transfer_details', 'Transfer')
     packop_id = fields.Many2one('stock.pack.operation', 'Operation')
-    name = fields.Many2one('product.product', 'Product')
+    product_id = fields.Many2one('product.product', 'Product')
     product_uom_id = fields.Many2one('product.uom', 'Product Unit of Measure')
     quantity = fields.Float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'))
     package_id = fields.Many2one('stock.quant.package', 'Source package')
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
-    sourceloc_id = fields.Many2one('stock.location', 'Source Location', )
-    destinationloc_id = fields.Many2one('stock.location', 'Destination Location')
+    sourceloc_id = fields.Many2one('stock.location', 'Source Location', domain="[('id', 'child_of', master_source_location_id),('id', '=', master_source_location_id)]")
+    destinationloc_id = fields.Many2one('stock.location', 'Destination Location', domain="[('id', 'child_of', master_destination_location_id)]")
     result_package_id = fields.Many2one('stock.quant.package', 'Destination package')
     date = fields.Datetime('Date')
     owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
     cost = fields.Float("Cost", help="Unit Cost for this product line")
     currency = fields.Many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE')
+    master_source_location_id = fields.Many2one('stock.location', string="Head source location", related='transfer_id.picking_id.location_id', store=True, readonly=True)
+    master_destination_location_id = fields.Many2one('stock.location', string="Head destination location", related='transfer_id.picking_id.location_dest_id', store=True, readonly=True)
 
     @api.multi
     def split_quantities(self):

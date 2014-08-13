@@ -10,11 +10,14 @@
                         <page string="Products" >
                             <field name="item_ids">
                                 <tree string="Inventory Details" create="false" editable="bottom">
+                                    <field name="transfer_id" invisible="True"/>
                                     <field name="package_id" groups="stock.group_tracking_lot"/>
-                                    <field name="name" readonly="True"/>
+                                    <field name="product_id" readonly="True"/>
                                     <field name="quantity"/>
                                     <button name="split_quantities" string="Split" type="object" icon="STOCK_PREFERENCES" attrs="{'invisible': [('quantity', '=', 1)]}"/>
+                                    <field name="master_source_location_id" invisible="True"/>
                                     <field name="sourceloc_id"/>
+                                    <field name="master_destination_location_id" invisible="True"/>
                                     <field name="destinationloc_id"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                                     <button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}" groups="stock.group_tracking_lot"/>
@@ -25,8 +28,11 @@
                         <page string="Packages" groups="stock.group_tracking_lot">
                             <field name="packop_ids">
                                 <tree editable="bottom">
+                                    <field name="transfer_id" invisible="True"/>
                                     <field name="package_id"/>
+                                    <field name="master_source_location_id" invisible="True"/>
                                     <field name="sourceloc_id"/>
+                                    <field name="master_destination_location_id" invisible="True"/>
                                     <field name="destinationloc_id"/>
                                     <field name="result_package_id"/>
                                     <button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}"/>
