@@ -545,8 +545,7 @@ class TestTemplating(ViewCase):
                         'data-oe-field': 'arch',
                         'data-oe-xpath': '/xpath/item/content[1]',
                     }), {
-                        'order': '2',
-                        'data-oe-source-id': str(id)
+                        'order': '2'
                     }),
                 E.item({
                     'order': '1',
@@ -612,7 +611,7 @@ class TestTemplating(ViewCase):
                     {'t-ignore': 'true', 'order': '1'},
                     E.t({'t-esc': 'foo'}),
                     E.item(
-                        {'order': '2', 'data-oe-source-id': str(id)},
+                        {'order': '2'},
                         E.content(
                             {'t-att-href': 'foo'},
                             "bar")

@@ -444,7 +444,6 @@ class view(osv.osv):
                 self.inherit_branding(node, view_id, root_id)
             else:
                 node.set('data-oe-id', str(view_id))
-                node.set('data-oe-source-id', str(root_id))
                 node.set('data-oe-xpath', xpath)
                 node.set('data-oe-model', 'ir.ui.view')
                 node.set('data-oe-field', 'arch')

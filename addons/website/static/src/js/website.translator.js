@@ -80,16 +80,13 @@
         },
         processTranslatableNodes: function () {
             var self = this;
-            var source_attr = 'data-oe-source-id';
+            // to be improved: add any translatable field with methods, not only ir.ui.view
             var $editables = $('[data-oe-model="ir.ui.view"]')
                     .not('link, script')
-                    .not('.oe_snippets,.oe_snippet, .oe_snippet *, .navbar-toggle')
-                    .not('[data-oe-type]');
+                    .not('.oe_snippets,.oe_snippet, .oe_snippet *, .navbar-toggle');
 
             $editables.each(function () {
-                var $node = $(this);
-                var source_id = $node.parents('[' + source_attr + ']:first').attr(source_attr)|0;
-                var view_id = $node.attr('data-oe-source-id') || source_id || $node.attr('data-oe-id');
+                var view_id = $(this).attr('data-oe-id');
                 self.transNode(this, view_id|0);
             });
             $('.oe_translatable_text').on('paste', function () {

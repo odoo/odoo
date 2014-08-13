@@ -280,12 +280,13 @@ class Website(openerp.addons.web.controllers.main.Home):
                     if old_trans:
                         tid = old_trans[0]['id']
                 if tid:
-                    vals = {'value': new_content}
+                    vals = {'value': new_content, 'state': 'translated'}
                     irt.write(request.cr, request.uid, [tid], vals)
                 else:
                     new_trans = {
                         'type': 'model',
                         'name': 'ir.ui.view,arch',
+                        'state': 'translated',
                         'res_id': view_id,
                         'lang': lang,
                         'src': initial_content,
