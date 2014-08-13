@@ -49,6 +49,8 @@ _logger = logging.getLogger(__name__)
 # used to notify web client that these translations should be loaded in the UI
 WEB_TRANSLATION_COMMENT = "openerp-web"
 
+SKIPPED_ELEMENTS = ('script', 'style')
+
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',
     'sq_AL': 'Albanian_Albania',
@@ -536,28 +538,34 @@ def trans_parse_rml(de):
         res.extend(trans_parse_rml(n))
     return res
 
-def trans_parse_view(de):
-    res = []
-    if not isinstance(de, SKIPPED_ELEMENT_TYPES) and de.text and de.text.strip():
-        res.append(de.text.strip().encode("utf8"))
-    if de.tail and de.tail.strip():
-        res.append(de.tail.strip().encode("utf8"))
-    if de.tag == 'attribute' and de.get("name") == 'string':
-        if de.text:
-            res.append(de.text.encode("utf8"))
-    if de.get("string"):
-        res.append(de.get('string').encode("utf8"))
-    if de.get("help"):
-        res.append(de.get('help').encode("utf8"))
-    if de.get("sum"):
-        res.append(de.get('sum').encode("utf8"))
-    if de.get("confirm"):
-        res.append(de.get('confirm').encode("utf8"))
-    if de.get("placeholder"):
-        res.append(de.get('placeholder').encode("utf8"))
-    for n in de:
-        res.extend(trans_parse_view(n))
-    return res
+def _push(callback, term, source_line):
+    """ Sanity check before pushing translation terms """
+    term = (term or "").strip().encode('utf8')
+    # Avoid non-char tokens like ':' '...' '.00' etc.
+    if len(term) > 8 or any(x.isalpha() for x in term):
+        callback(term, source_line)
+
+def trans_parse_view(element, callback):
+    """ Helper method to recursively walk an etree document representing a
+        regular view and call ``callback(term)`` for each translatable term
+        that is found in the document.
+
+        :param ElementTree element: root of etree document to extract terms from
+        :param callable callback: a callable in the form ``f(term, source_line)``,
+            that will be called for each extracted term.
+    """
+    if (not isinstance(element, SKIPPED_ELEMENT_TYPES)
+            and element.tag.lower() not in SKIPPED_ELEMENTS
+            and element.text):
+        _push(callback, element.text, element.sourceline)
+    if element.tail:
+        _push(callback, element.tail, element.sourceline)
+    for attr in ('string', 'help', 'sum', 'confirm', 'placeholder'):
+        value = element.get(attr)
+        if value:
+            _push(callback, value, element.sourceline)
+    for n in element:
+        trans_parse_view(n, callback)
 
 # tests whether an object is in a list of modules
 def in_modules(object_name, modules):
@@ -573,6 +581,30 @@ def in_modules(object_name, modules):
     module = module_dict.get(module, module)
     return module in modules
 
+def _extract_translatable_qweb_terms(element, callback):
+    """ Helper method to walk an etree document representing
+        a QWeb template, and call ``callback(term)`` for each
+        translatable term that is found in the document.
+
+        :param ElementTree element: root of etree document to extract terms from
+        :param callable callback: a callable in the form ``f(term, source_line)``,
+            that will be called for each extracted term.
+    """
+    # not using elementTree.iterparse because we need to skip sub-trees in case
+    # the ancestor element had a reason to be skipped
+    for el in element:
+        if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
+        if (el.tag.lower() not in SKIPPED_ELEMENTS
+                and "t-js" not in el.attrib
+                and not ("t-jquery" in el.attrib and "t-operation" not in el.attrib)
+                and not ("t-translation" in el.attrib and
+                         el.attrib["t-translation"].strip() == "off")):
+            _push(callback, el.text, el.sourceline)
+            for att in ('title', 'alt', 'label', 'placeholder'):
+                if att in el.attrib:
+                    _push(callback, el.attrib[att], el.sourceline)
+            _extract_translatable_qweb_terms(el, callback)
+        _push(callback, el.tail, el.sourceline)
 
 def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     """Babel message extractor for qweb template files.
@@ -588,30 +620,10 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     """
     result = []
     def handle_text(text, lineno):
-        text = (text or "").strip()
-        if len(text) > 1: # Avoid mono-char tokens like ':' ',' etc.
-            result.append((lineno, None, text, []))
-
-    # not using elementTree.iterparse because we need to skip sub-trees in case
-    # the ancestor element had a reason to be skipped
-    def iter_elements(current_element):
-        for el in current_element:
-            if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
-            if "t-js" not in el.attrib and \
-                    not ("t-jquery" in el.attrib and "t-operation" not in el.attrib) and \
-                    not ("t-translation" in el.attrib and el.attrib["t-translation"].strip() == "off"):
-                handle_text(el.text, el.sourceline)
-                for att in ('title', 'alt', 'label', 'placeholder'):
-                    if att in el.attrib:
-                        handle_text(el.attrib[att], el.sourceline)
-                iter_elements(el)
-            handle_text(el.tail, el.sourceline)
-
+        result.append((lineno, None, text, []))
     tree = etree.parse(fileobj)
-    iter_elements(tree.getroot())
-
+    _extract_translatable_qweb_terms(tree.getroot(), handle_text)
     return result
-
 
 def trans_generate(lang, modules, cr):
     dbname = cr.dbname
@@ -649,7 +661,6 @@ def trans_generate(lang, modules, cr):
         # empty and one-letter terms are ignored, they probably are not meant to be
         # translated, and would be very hard to translate anyway.
         if not source or len(source.strip()) <= 1:
-            _logger.debug("Ignoring empty or 1-letter source term: %r", tuple)
             return
         if tuple not in _to_translate:
             _to_translate.append(tuple)
@@ -658,6 +669,19 @@ def trans_generate(lang, modules, cr):
         if isinstance(s, unicode):
             return s.encode('utf8')
         return s
+
+    def push(mod, type, name, res_id, term):
+        term = (term or '').strip()
+        if len(term) > 2:
+            push_translation(mod, type, name, res_id, term)
+
+    def get_root_view(xml_id):
+        view = model_data_obj.xmlid_to_object(cr, uid, xml_id)
+        if view:
+            while view.mode != 'primary':
+                view = view.inherit_id
+        xml_id = view.get_external_id(cr, uid).get(view.id, xml_id)
+        return xml_id
 
     for (xml_name,model,res_id,module) in cr.fetchall():
         module = encode(module)
@@ -680,8 +704,13 @@ def trans_generate(lang, modules, cr):
 
         if model=='ir.ui.view':
             d = etree.XML(encode(obj.arch))
-            for t in trans_parse_view(d):
-                push_translation(module, 'view', encode(obj.model), 0, t)
+            if obj.type == 'qweb':
+                view_id = get_root_view(xml_name)
+                push_qweb = lambda t,l: push(module, 'view', 'website', view_id, t)
+                _extract_translatable_qweb_terms(d, push_qweb)
+            else:
+                push_view = lambda t,l: push(module, 'view', obj.model, xml_name, t)
+                trans_parse_view(d, push_view)
         elif model=='ir.actions.wizard':
             pass # TODO Can model really be 'ir.actions.wizard' ?
 
@@ -745,13 +774,16 @@ def trans_generate(lang, modules, cr):
                     _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
         for field_name, field_def in obj._columns.items():
+            if model == 'ir.model' and field_name == 'name' and obj.name == obj.model:
+                # ignore model name if it is the technical one, nothing to translate
+                continue
             if field_def.translate:
                 name = model + "," + field_name
                 try:
-                    trad = getattr(obj, field_name) or ''
+                    term = obj[field_name] or ''
                 except:
-                    trad = ''
-                push_translation(module, 'model', name, xml_name, encode(trad))
+                    term = ''
+                push_translation(module, 'model', name, xml_name, encode(term))
 
         # End of data for ir.model.data query results
 
