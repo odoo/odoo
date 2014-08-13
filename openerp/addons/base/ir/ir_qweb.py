@@ -1172,17 +1172,17 @@ class AssetsBundle(object):
         command = to_compile[0].get_command()
         source = '\n'.join([asset.get_source() for asset in to_compile])
 
-        # move up all @import rules to the top and exclude file imports
+        # sanitize @import rules and avoid duplicates imports
         imports = []
-        def push(matchobj):
+        def sanitize(matchobj):
+            # TODO: check if a duplicate removal opt-out is necessary
             ref = matchobj.group(2)
             line = '@import "%s"%s' % (ref, matchobj.group(3))
             if '.' not in ref and line not in imports and not ref.startswith(('.', '/', '~')):
                 imports.append(line)
+                return line
             return ''
-        source = re.sub(self.rx_preprocess_imports, push, source)
-        imports.append(source)
-        source = u'\n'.join(imports)
+        source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
         try:
             compiler = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE)
