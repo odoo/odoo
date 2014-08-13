@@ -1254,7 +1254,7 @@ class procurement_order(osv.osv):
         from openerp import workflow
         if vals.get('state') in ['done', 'cancel', 'exception']:
             for proc in self.browse(cr, uid, ids, context=context):
-                if proc.sale_line_id and proc.sale_line_id.order_id and proc.move_ids:
+                if proc.sale_line_id and proc.sale_line_id.order_id:
                     order_id = proc.sale_line_id.order_id.id
                     if self.pool.get('sale.order').test_procurements_done(cr, uid, [order_id], context=context):
                         workflow.trg_validate(uid, 'sale.order', order_id, 'ship_end', cr)
