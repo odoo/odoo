@@ -39,6 +39,7 @@ their documents through the portal.</field>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field name="domain_force">[('message_follower_ids','child_of',[user.commercial_partner_id.id])]</field>
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
 
         <record id="portal_account_invoice_line_rule" model="ir.rule">
             <field name="name">Portal Invoice Lines</field>
