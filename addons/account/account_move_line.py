@@ -758,7 +758,7 @@ class account_move_line(osv.osv):
         """
         # Fetch data for the partner accounts
         cr.execute(
-             """SELECT partner_id, partner_name, last_reconciliation_date, account_id, account_name, account_code FROM (
+             """SELECT partner_id, partner_name, to_char(last_reconciliation_date, 'YYYY-MM-DD') AS last_reconciliation_date, account_id, account_name, account_code FROM (
                     SELECT l.partner_id,
                         p.last_reconciliation_date,
                         p.name AS partner_name,
@@ -797,15 +797,16 @@ class account_move_line(osv.osv):
                     ('partner_id','=',row['partner_id']),
                     ('reconcile_id','=',False),
                     ('state','!=','draft')
-                ], ['id', 'name', 'ref', 'date_maturity', 'date'], context=context)
+                ], ['id', 'name', 'ref', 'date_maturity', 'date', 'debit', 'credit'], context=context)
             # line.period_id.name
             # line.journal_id.name
 
         # Fetch data for the other reconciliable accounts
         cr.execute(
-             """SELECT account_id, account_name, last_reconciliation_date FROM (
+             """SELECT account_id, account_name, account_code, to_char(last_reconciliation_date, 'YYYY-MM-DD') AS last_reconciliation_date FROM (
                     SELECT a.id AS account_id,
                         a.name AS account_name,
+                        a.code AS account_code,
                         a.last_reconciliation_date,
                         SUM(l.debit) AS debit,
                         SUM(l.credit) AS credit,
@@ -820,8 +821,7 @@ class account_move_line(osv.osv):
                     GROUP BY a.id, a.name
                 ) AS s
                 WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
-                ORDER BY last_reconciliation_date
-            """)
+                ORDER BY last_reconciliation_date""")
         
         # Apply ir_rules by filtering out
         other_acc_rows = cr.dictfetchall()
@@ -835,7 +835,7 @@ class account_move_line(osv.osv):
                     ('account_id','=',row['account_id']),
                     ('reconcile_id','=',False),
                     ('state','!=','draft')
-                ], ['id', 'name', 'ref', 'date_maturity', 'date'], context=context)
+                ], ['id', 'name', 'ref', 'date_maturity', 'date', 'debit', 'credit'], context=context)
             # line.period_id.name
             # line.journal_id.name
 

@@ -62,21 +62,21 @@
 
     <t t-name="reconciliation_move_line">
         <tr class="mv_line" t-att-data-lineid="line.id" t-att-data-selected="selected">
-            <td><span class="glyphicon glyphicon-add-remove"></span></td>
-            <td><t t-esc="line.account_code"/></td>
-            <td><t t-esc="line.q_due_date"/></td>
-            <td><t t-esc="line.q_label"/></td>
-            <td><t t-if="line.debit !== 0">
+            <td class="cell_action"><span class="glyphicon glyphicon-add-remove"></span></td>
+            <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
+            <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
+            <td class="cell_label"><t t-esc="line.q_label"/></td>
+            <td class="cell_debit"><t t-if="line.debit !== 0">
                 <t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t>
                 <t t-if="line.partial_reconcile" t-call="icon_undo_partial_reconciliation"></t>
                 <t t-esc="line.debit_str"/>
             </t></td>
-            <td><t t-if="line.credit !== 0">
+            <td class="cell_credit"><t t-if="line.credit !== 0">
                 <t t-if="line.propose_partial_reconcile"><t t-call="icon_do_partial_reconciliation" /></t>
                 <t t-if="line.partial_reconcile"><t t-call="icon_undo_partial_reconciliation" /></t>
                 <t t-esc="line.credit_str"/>
             </t></td>
-            <td><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
+            <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
         </tr>
     </t>
 
@@ -139,16 +139,16 @@
         <t t-jquery=".accounting_view caption" t-operation="after">
             <tbody class="tbody_initial_line">
                 <tr class="initial_line">
-                    <td><span class="toggle_match glyphicon glyphicon-cog"></span></td>
-                    <td><t t-esc="line.account_code"/></td>
-                    <td><t t-esc="line.date"/></td>
-                    <td><t t-esc="line.name"/>
+                    <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
+                    <td class="cell_account_code"><t t-esc="line.account_code"/></td>
+                    <td class="cell_due_date"><t t-esc="line.date"/></td>
+                    <td class="cell_label"><t t-esc="line.name"/>
                         <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td>
-                    <td><t t-if="line.amount &gt; 0">
+                    <td class="cell_debit"><t t-if="line.amount &gt; 0">
                           <t t-esc="line.amount_str"/></t></td>
-                    <td><t t-if="line.amount &lt; 0">
+                    <td class="cell_credit"><t t-if="line.amount &lt; 0">
                           <t t-esc="line.amount_str"/></t></td>
-                    <td><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
+                    <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
                 </tr>
             </tbody>
         </t>
@@ -196,25 +196,25 @@
 
     <t t-name="bank_statement_reconciliation_created_line">
         <tr class="created_line" t-att-data-lineid="line.id">
-            <td><t t-if="! line.no_remove_action"><span class="line_remove_button glyphicon glyphicon-remove"></span></t></td>
-            <td><t t-esc="line.account_num"/></td>
-            <td></td>
-            <td><t t-esc="line.label"/></td>
-            <td><t t-if="line.amount &lt; 0"><t t-esc="line.amount_str"/></t></td>
-            <td><t t-if="line.amount &gt; 0"><t t-esc="line.amount_str"/></t></td>
-            <td></td>
+            <td class="cell_action"><t t-if="! line.no_remove_action"><span class="line_remove_button glyphicon glyphicon-remove"></span></t></td>
+            <td class="cell_account_code"><t t-esc="line.account_num"/></td>
+            <td class="cell_due_date"></td>
+            <td class="cell_label"><t t-esc="line.label"/></td>
+            <td class="cell_debit"><t t-if="line.amount &lt; 0"><t t-esc="line.amount_str"/></t></td>
+            <td class="cell_credit"><t t-if="line.amount &gt; 0"><t t-esc="line.amount_str"/></t></td>
+            <td class="cell_info_popover"></td>
         </tr>
     </t>
 
     <t t-name="bank_statement_reconciliation_line_open_balance">
         <tr class="line_open_balance">
-            <td><span class="toggle_create glyphicon glyphicon-play"></span></td>
-            <td><t t-esc="account_code"/></td>
-            <td></td>
-            <td class="js_open_balance">Open balance</td>
-            <td><t t-esc="debit"/></td>
-            <td><t t-esc="credit"/></td>
-            <td></td>
+            <td class="cell_action"><span class="toggle_create glyphicon glyphicon-play"></span></td>
+            <td class="cell_account_code"><t t-esc="account_code"/></td>
+            <td class="cell_due_date"></td>
+            <td class="cell_label js_open_balance">Open balance</td>
+            <td class="cell_debit"><t t-esc="debit"/></td>
+            <td class="cell_credit"><t t-esc="credit"/></td>
+            <td class="cell_info_popover"></td>
         </tr>
     </t>
 
@@ -255,8 +255,14 @@
     </t>
 
     <t t-name="manual_reconciliation_line" t-extend="reconciliation_line">
-        <t t-jquery=".accounting_view caption" t-operation="inner">
-            <t t-esc="data.account_name" /> - <t t-esc="data.partner_name" />
+        <t t-jquery=".accounting_view caption" t-operation="replace">
+            <thead><tr>
+                <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
+                <td class="cell_partner_name"><t t-if="data.partner_name" t-esc="data.partner_name" /></td>
+                <td class="cell_last_reconciliation_date">Last Manual Reconciliation : <t t-esc="data.last_reconciliation_date or 'Never'" /></td>
+                <td class="cell_title_account_code" colspan="2"><t t-esc="data.account_code" /></td>
+                <td class="cell_info_popover"></td>
+            </tr></thead>
         </t>
     </t>
 

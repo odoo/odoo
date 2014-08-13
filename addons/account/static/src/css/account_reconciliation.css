@@ -10,7 +10,7 @@
   .openerp .oe_reconciliation h1 {
     width: 48%;
     padding: 0 0 0 15px;
-    margin: 0 0 35px 0;
+    margin: 0;
     float: left;
     font-size: 2.3em; }
   .openerp .oe_reconciliation h2 {
@@ -29,6 +29,12 @@
       top: 2px;
       z-index: 10;
       text-shadow: -1px -1px 0 #f5f5f5, 1px -1px 0 #f5f5f5, -1px 1px 0 #f5f5f5, 1px 1px 0 #f5f5f5; }
+  .openerp .oe_reconciliation .interface_options {
+    margin: 25px 0;
+    padding-left: 15px; }
+    .openerp .oe_reconciliation .interface_options .oe_radio_input {
+      border: none;
+      display: inline; }
   .openerp .oe_reconciliation .oe_form_sheet {
     position: relative;
     padding-bottom: 30px; }
@@ -136,24 +142,24 @@
       .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td, .openerp .oe_reconciliation .oe_reconciliation_line .match table td {
         padding: 1px 8px;
         vertical-align: middle; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td:nth-child(1), .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td:nth-child(7), .openerp .oe_reconciliation .oe_reconciliation_line .match table td:nth-child(1), .openerp .oe_reconciliation .oe_reconciliation_line .match table td:nth-child(7) {
+      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td.cell_action, .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td.cell_info_popover, .openerp .oe_reconciliation .oe_reconciliation_line .match table td.cell_action, .openerp .oe_reconciliation .oe_reconciliation_line .match table td.cell_info_popover {
         width: 15px;
         padding: 0; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td:nth-child(1), .openerp .oe_reconciliation .oe_reconciliation_line .match table td:nth-child(1) {
+      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td.cell_action, .openerp .oe_reconciliation .oe_reconciliation_line .match table td.cell_action {
         text-align: left; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td:nth-child(2), .openerp .oe_reconciliation .oe_reconciliation_line .match table td:nth-child(2) {
+      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td.cell_account_code, .openerp .oe_reconciliation .oe_reconciliation_line .match table td.cell_account_code {
         width: 80px;
         padding-left: 3px; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td:nth-child(3), .openerp .oe_reconciliation .oe_reconciliation_line .match table td:nth-child(3) {
+      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td.cell_due_date, .openerp .oe_reconciliation .oe_reconciliation_line .match table td.cell_due_date {
         width: 100px; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td:nth-child(5), .openerp .oe_reconciliation .oe_reconciliation_line .match table td:nth-child(5) {
+      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td.cell_debit, .openerp .oe_reconciliation .oe_reconciliation_line .match table td.cell_debit {
         text-align: right;
         width: 15%; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td:nth-child(6), .openerp .oe_reconciliation .oe_reconciliation_line .match table td:nth-child(6) {
+      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td.cell_credit, .openerp .oe_reconciliation .oe_reconciliation_line .match table td.cell_credit {
         width: 15%;
         text-align: right;
         padding-right: 3px; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td:nth-child(7), .openerp .oe_reconciliation .oe_reconciliation_line .match table td:nth-child(7) {
+      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td.cell_info_popover, .openerp .oe_reconciliation .oe_reconciliation_line .match table td.cell_info_popover {
         text-align: right; }
       .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr.line_open_balance, .openerp .oe_reconciliation .oe_reconciliation_line .match table tr.line_open_balance {
         color: #bbb; }
@@ -177,7 +183,7 @@
       -moz-transition-property: background-color;
       -ms-transition-property: background-color;
       transition-property: background-color; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view .initial_line > td:nth-child(1), .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view .initial_line > td:nth-child(7) {
+      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view .initial_line > td.cell_action, .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view .initial_line > td.cell_info_popover {
         border-top: none;
         background: white !important;
         padding-top: 6px;
@@ -198,7 +204,7 @@
         /* meh */
         font-weight: bold;
         cursor: pointer; }
-    .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td:nth-child(6) {
+    .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td.cell_credit {
       border-left: 1px solid black; }
     .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls {
       padding: 0 0 5px 18px; }
@@ -256,3 +262,25 @@
           text-align: center; }
         .openerp .oe_reconciliation .oe_reconciliation_line .create .oe_form > table.add_line_container .add_line {
           line-height: 26px; }
+
+.openerp .oe_manual_reconciliation_line .accounting_view thead {
+  background: none;
+  cursor: pointer; }
+  .openerp .oe_manual_reconciliation_line .accounting_view thead td {
+    vertical-align: bottom !important; }
+  .openerp .oe_manual_reconciliation_line .accounting_view thead .cell_partner_name {
+    padding-left: 0; }
+  .openerp .oe_manual_reconciliation_line .accounting_view thead .cell_last_reconciliation_date {
+    font-weight: normal; }
+  .openerp .oe_manual_reconciliation_line .accounting_view thead .cell_title_account_code {
+    text-align: center; }
+.openerp .oe_manual_reconciliation_line .accounting_view .filler_line td {
+  height: 23px;
+  cursor: default !important; }
+.openerp .oe_manual_reconciliation_line .accounting_view tbody tr:first-child td {
+  border-top: 1px solid #bbbbbb;
+  padding-top: 4px; }
+  .openerp .oe_manual_reconciliation_line .accounting_view tbody tr:first-child td.cell_action, .openerp .oe_manual_reconciliation_line .accounting_view tbody tr:first-child td.cell_info_popover {
+    border-top: none; }
+.openerp .oe_manual_reconciliation_line td.cell_due_date {
+  padding-left: 3px !important; }
