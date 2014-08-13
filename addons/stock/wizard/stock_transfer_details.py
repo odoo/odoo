@@ -30,6 +30,8 @@ class stock_transfer_details(models.TransientModel):
     picking_id = fields.Many2one('stock.picking', 'Picking')
     item_ids = fields.One2many('stock.transfer_details_items', 'transfer_id', 'Items')
     packop_ids = fields.One2many('stock.transfer_details_packs', 'transfer_id', 'Packs')
+    picking_source_location_id = fields.Many2one('stock.location', string="Head source location", related='picking_id.location_id', store=False, readonly=True)
+    picking_destination_location_id = fields.Many2one('stock.location', string="Head destination location", related='picking_id.location_dest_id', store=False, readonly=True)
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}
@@ -133,8 +135,8 @@ class stock_transfer_details_items(models.TransientModel):
     owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
     cost = fields.Float("Cost", help="Unit Cost for this product line")
     currency = fields.Many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE')
-    master_source_location_id = fields.Many2one('stock.location', string="Head source location", related='transfer_id.picking_id.location_id', store=True, readonly=True)
-    master_destination_location_id = fields.Many2one('stock.location', string="Head destination location", related='transfer_id.picking_id.location_dest_id', store=True, readonly=True)
+    master_source_location_id = fields.Many2one('stock.location', string="Head source location", related='transfer_id.picking_id.location_id', store=False, readonly=True)
+    master_destination_location_id = fields.Many2one('stock.location', string="Head destination location", related='transfer_id.picking_id.location_dest_id', store=False, readonly=True)
 
     @api.multi
     def split_quantities(self):

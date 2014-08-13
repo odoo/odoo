@@ -6,11 +6,12 @@
             <field name="model">stock.transfer_details</field>
             <field name="arch" type="xml">
                 <form string="Transfer details" version="7">
+                    <field name="picking_source_location_id" invisible="True"/>
+                    <field name="picking_destination_location_id" invisible="True"/>
                     <notebook>
                         <page string="Products" >
                             <field name="item_ids">
-                                <tree string="Inventory Details" create="false" editable="bottom">
-                                    <field name="transfer_id" invisible="True"/>
+                                <tree string="Inventory Details" create="false" editable="bottom" >
                                     <field name="package_id" groups="stock.group_tracking_lot"/>
                                     <field name="product_id" readonly="True"/>
                                     <field name="quantity"/>
@@ -26,9 +27,12 @@
                             </field>
                         </page>
                         <page string="Packages" groups="stock.group_tracking_lot">
-                            <field name="packop_ids">
+                            <field name="packop_ids"
+                                context="{'default_master_source_location_id':picking_source_location_id,
+                                            'default_sourceloc_id':picking_source_location_id,
+                                            'default_master_destination_location_id':picking_destination_location_id,
+                                            'default_destinationloc_id':picking_destination_location_id}">
                                 <tree editable="bottom">
-                                    <field name="transfer_id" invisible="True"/>
                                     <field name="package_id"/>
                                     <field name="master_source_location_id" invisible="True"/>
                                     <field name="sourceloc_id"/>
