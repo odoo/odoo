@@ -163,8 +163,8 @@ class ir_cron(osv.osv):
 
         """
         try:
-            now = fields.datetime.context_timestamp(cr, SUPERUSER_ID, now)
-            nextcall = fields.datetime.context_timestamp(cr, SUPERUSER_ID, datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
+            now = fields.datetime.context_timestamp(cr, job['user_id'], now)
+            nextcall = fields.datetime.context_timestamp(cr, job['user_id'], datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
             numbercall = job['numbercall']
 
             ok = False
@@ -290,8 +290,8 @@ class ir_cron(osv.osv):
         :param job: job to be run (as a dictionary).
         """
         try:
-            now = fields.datetime.context_timestamp(cr, SUPERUSER_ID, datetime.now())
-            nextcall = fields.datetime.context_timestamp(cr, SUPERUSER_ID, datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
+            now = fields.datetime.context_timestamp(cr, job['user_id'], now)
+            nextcall = fields.datetime.context_timestamp(cr, job['user_id'], datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
             numbercall = job['numbercall']
 
             ok = False
