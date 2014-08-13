@@ -56,13 +56,14 @@ This is the base module to manage the accounting chart for Dominican Republic.
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
         # configuration wizard, views, reports...
-        'data/l10n_do_wizard.xml'
+        'account_view.xml',
+        'data/l10n_do_wizard.xml',
     ],
     'test': [],
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'images': ['images/config_chart_l10n_lu.jpeg','images/l10n_lu_chart.jpeg'],
+    'images': [],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
