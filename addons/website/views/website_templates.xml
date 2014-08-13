@@ -707,7 +707,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="sitemap_index_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <sitemapindex t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap t-foreach="pages" t-as="page">
+  <sitemap t-translate="off" t-foreach="pages" t-as="page">
     <loc><t t-esc="url_root"/>sitemap-<t t-esc="page"/>.xml</loc>
   </sitemap>
 </sitemapindex>
