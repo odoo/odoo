@@ -8,13 +8,19 @@
                 <form string="Transfer details" version="7">
                     <field name="picking_source_location_id" invisible="True"/>
                     <field name="picking_destination_location_id" invisible="True"/>
+
                     <notebook>
                         <page string="Products" >
-                            <field name="item_ids">
-                                <tree string="Inventory Details" create="false" editable="bottom" >
+                            <field name="item_ids"
+                                context="{'default_master_source_location_id':picking_source_location_id,
+                                            'default_sourceloc_id':picking_source_location_id,
+                                            'default_master_destination_location_id':picking_destination_location_id,
+                                            'default_destinationloc_id':picking_destination_location_id}">
+                                <tree string="Inventory Details" editable="bottom" >
                                     <field name="package_id" groups="stock.group_tracking_lot"/>
-                                    <field name="product_id" readonly="True"/>
+                                    <field name="product_id" required="True"/>
                                     <field name="quantity"/>
+                                    <field name="product_uom_id" groups="product.group_uom"/>
                                     <button name="split_quantities" string="Split" type="object" icon="STOCK_PREFERENCES" attrs="{'invisible': [('quantity', '=', 1)]}"/>
                                     <field name="master_source_location_id" invisible="True"/>
                                     <field name="sourceloc_id"/>
@@ -22,7 +28,7 @@
                                     <field name="destinationloc_id"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                                     <button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}" groups="stock.group_tracking_lot"/>
-                                    <field name="lot_id" groups="stock.group_production_lot"/>
+                                    <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}"/>
                                 </tree>
                             </field>
                         </page>

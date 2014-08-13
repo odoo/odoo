@@ -22,6 +22,7 @@
 from openerp import models, fields, api
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from datetime import datetime
 
 class stock_transfer_details(models.TransientModel):
     _name = 'stock.transfer_details'
@@ -47,6 +48,8 @@ class stock_transfer_details(models.TransientModel):
         picking = self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context)
         items = []
         packs = []
+        if not picking.pack_operation_ids:
+            picking.do_prepare_partial()
         for op in picking.pack_operation_ids:
             item = {
                 'packop_id': op.id,
@@ -74,29 +77,41 @@ class stock_transfer_details(models.TransientModel):
 
     @api.one
     def do_detailed_transfer(self):
+        processed_ids = []
+        #create and update
         for lstits in [self.item_ids, self.packop_ids]:
             for prod in lstits:
                 pack_datas = {
                     'product_id': prod.product_id.id if prod.product_id else False,
                     'product_uom_id': prod.product_uom_id.id if prod.product_uom_id else False,
+                    'product_qty': prod.quantity,
                     'qty_done': prod.quantity,
                     'package_id': prod.package_id.id if prod.package_id else False,
                     'lot_id': prod.lot_id.id if prod.lot_id else False,
                     'location_id': prod.sourceloc_id.id if prod.sourceloc_id else False,
                     'location_dest_id': prod.destinationloc_id.id if prod.destinationloc_id else False,
                     'result_package_id': prod.result_package_id.id if prod.result_package_id else False,
-                    'date': prod.date,
+                    'date': prod.date if prod.date else datetime.now(),
                     'owner_id': prod.owner_id.id if prod.owner_id else False,
                     'cost': prod.cost,
                     'currency': prod.currency.id if prod.currency else False,
                 }
                 if prod.packop_id:
                     prod.packop_id.write(pack_datas)
+                    processed_ids.append(prod.packop_id.id)
                 else:
                     pack_datas['picking_id'] = self.picking_id.id
-                    pack_datas['product_qty'] = prod.quantity
                     pack_datas['processed'] = 'false'
-                    self.env['stock.pack.operation'].create(pack_datas)
+                    packop_id = self.env['stock.pack.operation'].create(pack_datas)
+                    processed_ids.append(packop_id.id)
+        #delete the others
+        packops = self.env['stock.pack.operation'].search(['&', ('picking_id', '=', self.picking_id.id), '!', ('id', 'in', processed_ids)])
+        for packop in packops:
+            packop.unlink()
+
+        #Datas transfered from wizard to pack operations.
+        self.picking_id.do_transfer()
+
         return True
 
     @api.multi
@@ -126,11 +141,11 @@ class stock_transfer_details_items(models.TransientModel):
     product_id = fields.Many2one('product.product', 'Product')
     product_uom_id = fields.Many2one('product.uom', 'Product Unit of Measure')
     quantity = fields.Float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'))
-    package_id = fields.Many2one('stock.quant.package', 'Source package')
+    package_id = fields.Many2one('stock.quant.package', 'Source package', domain="[('location_id', 'child_of', master_source_location_id)]")
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
-    sourceloc_id = fields.Many2one('stock.location', 'Source Location', domain="[('id', 'child_of', master_source_location_id),('id', '=', master_source_location_id)]")
+    sourceloc_id = fields.Many2one('stock.location', 'Source Location', domain="[('id', 'child_of', master_source_location_id)]")
     destinationloc_id = fields.Many2one('stock.location', 'Destination Location', domain="[('id', 'child_of', master_destination_location_id)]")
-    result_package_id = fields.Many2one('stock.quant.package', 'Destination package')
+    result_package_id = fields.Many2one('stock.quant.package', 'Destination package', domain="[('location_id', 'child_of', master_destination_location_id)]")
     date = fields.Datetime('Date')
     owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
     cost = fields.Float("Cost", help="Unit Cost for this product line")
