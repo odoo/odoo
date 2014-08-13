@@ -31,7 +31,6 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="shortcut"/>
-                        <field name="domain"/>
                     </group>
                 </form>
             </field>
@@ -184,8 +183,7 @@
                             <field name="fax"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
-                            <field name="title" domain="[('domain','=','contact')]" options='{"no_open": True}' attrs="{'invisible': [('is_company','=',True)]}" context="{'default_domain': 'contact'}"/>
-                            <field name="title" domain="[('domain','=','partner')]" options='{"no_open": True}' attrs="{'invisible': [('is_company','=',False)]}" context="{'default_domain': 'partner'}"/>
+                            <field name="title" domain="[('domain', '=', 'contact')]" options='{"no_open": True}'/>
                         </group>
                     </group>
 
