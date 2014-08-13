@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.fields import Many2one
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -118,27 +119,28 @@ class product_product(osv.osv):
 class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
+    
     _columns = {
         'valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodical (manual)'),
                                         ('real_time', 'Real Time (automated)')], string='Inventory Valuation',
                                         help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
-                                        , required=True),
+                                        , required=True, copy=True),
         'cost_method': fields.property(type='selection', selection=[('standard', 'Standard Price'), ('average', 'Average Price'), ('real', 'Real Price')],
             help="""Standard Price: The cost price is manually updated at the end of a specific period (usually every year).
                     Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
                     Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).""",
-            string="Costing Method", required=True),
+            string="Costing Method", required=True, copy=True),
         'property_stock_account_input': fields.property(
             type='many2one',
             relation='account.account',
-            string='Stock Input Account',
+            string='Stock Input Account', 
             help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used."),
         'property_stock_account_output': fields.property(
             type='many2one',
             relation='account.account',
-            string='Stock Output Account',
+            string='Stock Output Account', 
             help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
     }
