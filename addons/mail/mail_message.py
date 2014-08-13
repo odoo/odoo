@@ -24,6 +24,7 @@ import logging
 from openerp import tools
 
 from email.header import decode_header
+from email.utils import formataddr
 from openerp import SUPERUSER_ID, api
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_email_clean
@@ -170,9 +171,9 @@ class mail_message(osv.Model):
     def _get_default_from(self, cr, uid, context=None):
         this = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         if this.alias_name and this.alias_domain:
-            return '%s <%s@%s>' % (this.name, this.alias_name, this.alias_domain)
+            return formataddr((this.name, '%s@%s' % (this.alias_name, this.alias_domain)))
         elif this.email:
-            return '%s <%s>' % (this.name, this.email)
+            return formataddr((this.name, this.email))
         raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     def _get_default_author(self, cr, uid, context=None):

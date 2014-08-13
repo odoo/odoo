@@ -3168,6 +3168,11 @@ class BaseModel(object):
         env = self.env
         cr, user, context = env.args
 
+        # FIXME: The query construction needs to be rewritten using the internal Query
+        # object, as in search(), to avoid ambiguous column references when
+        # reading/sorting on a table that is auto_joined to another table with
+        # common columns (e.g. the magical columns)
+
         # Construct a clause for the security rules.
         # 'tables' holds the list of tables necessary for the SELECT, including
         # the ir.rule clauses, and contains at least self._table.

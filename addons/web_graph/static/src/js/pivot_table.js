@@ -423,14 +423,15 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
                         attrs.value = [attrs.value];
                     }
                     attrs.value = _.range(grouped_on.length).map(function (i) {
+                        var grp = grouped_on[i],
+                            field = self.fields[grp];
                         if (attrs.value[i] === false) {
                             return _t('Undefined');
                         } else if (attrs.value[i] instanceof Array) {
                             return attrs.value[i][1];
-                        }else if (grouped_on && self.fields[grouped_on].type === 'selection'){
-                            var selection = self.fields[grouped_on].selection;
-                            var value_lookup = _.where(selection, {0:attrs.value[i]});
-                            return value_lookup ? value_lookup[0][1] : _t('Undefined');
+                        } else if (field && field.type === 'selection') {
+                            var selected = _.where(field.selection, {0: attrs.value[i]})[0];
+                            return selected ? selected[1] : attrs.value[i];
                         }
                         return attrs.value[i];
                     });

@@ -160,8 +160,8 @@ class ir_cron(osv.osv):
         """
         try:
             with api.Environment.manage():
-                now = fields.datetime.context_timestamp(job_cr, SUPERUSER_ID, datetime.now())
-                nextcall = fields.datetime.context_timestamp(job_cr, SUPERUSER_ID, datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
+                now = fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.now())
+                nextcall = fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
                 numbercall = job['numbercall']
 
                 ok = False

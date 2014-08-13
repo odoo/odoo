@@ -468,7 +468,7 @@
                                 <field name="expiration_date" />
                             </group>
                             <group>
-                                <field name="insurer_id" />
+                                <field name="insurer_id" context="{'default_supplier': True}"/>
                                 <field name="purchaser_id" />
                                 <field name="ins_ref" />
                             </group>
@@ -676,7 +676,7 @@
                                 <field name="date" />
                                 <field name="purchaser_id" />
                                 <field name="inv_ref" />
-                                <field name="vendor_id" />
+                                <field name="vendor_id" context="{'default_supplier': True}"/>
                             </group>
                         </group>
                         <group string="Notes">
@@ -778,7 +778,7 @@
                             <group string="Additional Details">
                                 <field name="date" />
                                 <field name="purchaser_id" />
-                                <field name="vendor_id" />
+                                <field name="vendor_id" context="{'default_supplier': True}"/>
                                 <field name="inv_ref" />
                             </group>
                         </group>

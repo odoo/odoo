@@ -21,6 +21,7 @@
 
 import base64
 import logging
+from email.utils import formataddr
 from urlparse import urljoin
 
 from openerp import api, tools
@@ -184,11 +185,10 @@ class mail_mail(osv.Model):
 
     def send_get_mail_to(self, cr, uid, mail, partner=None, context=None):
         """Forge the email_to with the following heuristic:
-          - if 'partner' and mail is a notification on a document: followers (Followers of 'Doc' <email>)
-          - elif 'partner', no notificatoin or no doc: recipient specific (Partner Name <email>)
+          - if 'partner', recipient specific (Partner Name <email>)
           - else fallback on mail.email_to splitting """
         if partner:
-            email_to = ['"%s" <%s>' % (partner.name, partner.email)]
+            email_to = [formataddr((partner.name, partner.email))]
         else:
             email_to = tools.email_split(mail.email_to)
         return email_to
