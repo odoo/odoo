@@ -134,7 +134,7 @@ start the server specifying the ``--unaccent`` flag.
 
 import logging
 import traceback
-import hashlib
+import binascii
 
 import openerp.modules
 from openerp.osv import fields
@@ -345,13 +345,13 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
         alias += '__' + link[1]
     # Use an alternate alias scheme if length exceeds the PostgreSQL limit
     #  of 63 characters.
-    if len(alias) >= 64:
-        # We have to fit a 160 bit hash (= 40 characters) and one underscore
+    if len(alias) >= 63:
+        # We have to fit a 32 bit hash (= 8 characters) and one underscore
         #  into a 63 character alias. The remaining space we can use to add
         #  a human readable prefix.
-        ALIAS_PREFIX_LENGTH = 63 - 40 - 1
-        alias = "%s_%s" % (alias[:ALIAS_PREFIX_LENGTH],
-                           hashlib.sha1(alias).hexdigest())
+        ALIAS_PREFIX_LENGTH = 63 - 8 - 1
+        alias = "%s_%08x" % (alias[:ALIAS_PREFIX_LENGTH],
+                             binascii.crc32(alias) & 0xffffffff)
     return '%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias))
 
 
