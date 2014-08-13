@@ -187,7 +187,7 @@ class gamification_goal(osv.Model):
 
     _columns = {
         'definition_id': fields.many2one('gamification.goal.definition', string='Goal Definition', required=True, ondelete="cascade"),
-        'user_id': fields.many2one('res.users', string='User', required=True),
+        'user_id': fields.many2one('res.users', string='User', required=True, auto_join=True),
         'line_id': fields.many2one('gamification.challenge.line', string='Goal Line', ondelete="cascade"),
         'challenge_id': fields.related('line_id', 'challenge_id',
             string="Challenge",
@@ -231,7 +231,7 @@ class gamification_goal(osv.Model):
         'state': 'draft',
         'start_date': fields.date.today,
     }
-    _order = 'create_date desc, end_date desc, definition_id, id'
+    _order = 'start_date desc, end_date desc, definition_id, id'
 
     def _check_remind_delay(self, cr, uid, goal, context=None):
         """Verify if a goal has not been updated for some time and send a

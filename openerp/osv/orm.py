@@ -3347,6 +3347,11 @@ class BaseModel(object):
                     return 'length(%s) as "%s"' % (f_qual, f)
                 return f_qual
 
+            # FIXME: The query construction needs to be rewritten using the internal Query
+            # object, as in search(), to avoid ambiguous column references when
+            # reading/sorting on a table that is auto_joined to another table with
+            # common columns (e.g. the magical columns)
+
             # Construct a clause for the security rules.
             # 'tables' hold the list of tables necessary for the SELECT including the ir.rule clauses,
             # or will at least contain self._table.
