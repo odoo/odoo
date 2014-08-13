@@ -80,7 +80,9 @@
         },
         processTranslatableNodes: function () {
             var self = this;
-            // to be improved: add any translatable field with methods, not only ir.ui.view
+            // TODO: to be improved: add any translatable field with methods,
+            // not only ir.ui.view. (change the date-oe-model="..." and
+            // data-oe-field in ...)
             var $editables = $('[data-oe-model="ir.ui.view"]')
                     .not('link, script')
                     .not('.oe_snippets,.oe_snippet, .oe_snippet *, .navbar-toggle');
