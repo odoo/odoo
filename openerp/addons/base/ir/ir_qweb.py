@@ -1073,7 +1073,8 @@ class AssetsBundle(object):
         response = []
         if debug:
             if css and self.stylesheets:
-                self.preprocess_css()
+                compiled = self.preprocess_css()
+                self.recompose(compiled)
                 for style in self.stylesheets:
                     response.append(style.to_html())
             if js:
@@ -1197,12 +1198,14 @@ class AssetsBundle(object):
             self.css_errors.append(error)
             return
         compiled = result[0].strip().decode('utf8')
+        return compiled
+
+    def recompose(self, compiled):
         fragments = self.rx_css_split.split(compiled)[1:]
         while fragments:
             asset_id = fragments.pop(0)
-            asset = next(asset for asset in to_compile if asset.id == asset_id)
+            asset = next(asset for asset in self.stylesheets if asset.id == asset_id)
             asset._content = fragments.pop(0)
-        return compiled
 
     def get_preprocessor_error(self, stderr, source=None):
         # TODO: try to find out which asset the error belongs to
