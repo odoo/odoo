@@ -653,8 +653,6 @@ class account_bank_statement_line(osv.osv):
                     ctx.update({'date': st_line.date})
                     ret_line['debit'] = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, ret_line['debit'], context=ctx)
                     ret_line['credit'] = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, ret_line['credit'], context=ctx)
-                ret_line['debit_str'] = rml_parser.formatLang(ret_line['debit'], currency_obj=st_line_currency)
-                ret_line['credit_str'] = rml_parser.formatLang(ret_line['credit'], currency_obj=st_line_currency)
                 ret.append(ret_line)
                 if line.reconcile_partial_id:
                     reconcile_partial_ids.append(line.reconcile_partial_id.id)
