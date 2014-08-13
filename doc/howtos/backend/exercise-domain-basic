@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 550ae9ce5593cb80294f13cb601efdb7dbacaecf
+# Parent 142c5065ff1b7266d944d4ef5239e814ae22f0df
 
 diff --git a/openacademy/course.py b/openacademy/course.py
 --- a/openacademy/course.py
@@ -14,4 +14,4 @@ diff --git a/openacademy/course.py b/openacademy/course.py
 +        domain=[('instructor', '=', True)])
      course_id = fields.Many2one('openacademy.course',
          ondelete='cascade', string="Course", required=True)
-     attendee_ids = fields.One2many(
+     attendee_ids = fields.Many2many(

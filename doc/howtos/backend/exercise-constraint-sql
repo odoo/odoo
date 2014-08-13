@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 61b0200bde7c159ddb0f80c3c4283321c4bded86
+# Parent 121bbfe120be3007f5e04611dbc27038abafcce8
 
 diff --git a/openacademy/course.py b/openacademy/course.py
 --- a/openacademy/course.py
@@ -21,13 +21,3 @@ diff --git a/openacademy/course.py b/openacademy/course.py
  class Session(models.Model):
      _name = 'openacademy.session'
  
-@@ -71,3 +81,9 @@ class Attendee(models.Model):
-         string="Partner", required=True, ondelete='cascade')
-     session_id = fields.Many2one('openacademy.session',
-         string="Session", required=True, ondelete='cascade')
-+
-+    _sql_constraints = [
-+        ('partner_session_unique',
-+         'UNIQUE(partner_id, session_id)',
-+         "An attendee can not attend the same session multiple times"),
-+    ]

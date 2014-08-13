@@ -5,6 +5,8 @@ Web Controllers
 Routing
 =======
 
+.. autofunction:: openerp.http.route
+
 .. _reference/http/request:
 
 Request

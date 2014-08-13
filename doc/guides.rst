@@ -8,3 +8,4 @@ Guides
     guides/themes
     guides/snippets
     guides/workflows
+    guides/deployment

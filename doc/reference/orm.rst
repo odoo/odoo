@@ -150,6 +150,11 @@ Method decorators
 Fields
 ======
 
+.. _reference/orm/fields/basic:
+
+Basic fields
+------------
+
 .. autodoc documents descriptors as attributes, even for the *definition* of
    descriptors. As a result automodule:: openerp.fields lists all the field
    classes as attributes without providing inheritance info or methods (though
@@ -184,6 +189,11 @@ Fields
 
 .. autoclass:: openerp.fields.Datetime
     :show-inheritance:
+
+.. _reference/orm/fields/relational:
+
+Relational fields
+-----------------
 
 .. autoclass:: openerp.fields.Many2one
     :show-inheritance:

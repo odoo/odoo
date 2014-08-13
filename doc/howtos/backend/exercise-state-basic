@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent b4c7b55ea911a6d0afa90fb763e05b1b4639b1e0
+# Parent 8c721171aa16a41e94059f53d6780c67b5ef2dfc
 
 diff --git a/openacademy/course.py b/openacademy/course.py
 --- a/openacademy/course.py
@@ -54,9 +54,6 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
 -                        <!-- ’editable’ attribute will set the position
 -                             to push new elements in the list -->
 -                        <tree string="" editable="bottom">
--                            <field name="partner_id"/>
--                        </tree>
--                    </field>
 +                    <header>
 +                        <button name="action_draft" type="object"
 +                                string="Reset to draft"
@@ -74,7 +71,9 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
 +                        <group colspan="2" col="2">
 +                            <separator string="General" colspan="2"/>
 +                            <field name="course_id"/>
-+                            <field name="name"/>
+                             <field name="name"/>
+-                        </tree>
+-                    </field>
 +                            <field name="instructor_id"/>
 +                        </group>
 +                        <group colspan="2" col="2">
@@ -89,7 +88,7 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
 +                            <!-- ’editable’ attribute will set the position
 +                                 to push new elements in the list -->
 +                            <tree string="" editable="bottom">
-+                                <field name="partner_id"/>
++                                <field name="name"/>
 +                            </tree>
 +                        </field>
 +                    </sheet>

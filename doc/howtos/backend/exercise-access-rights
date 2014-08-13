@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 415f9a1cc944d6de82b3749a5a9ce91756cc4d7c
+# Parent 303a5f4f011822dcb42b5833d579eabd3f03f4bf
 
 diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
 --- a/openacademy/__openerp__.py
@@ -10,21 +10,20 @@ diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
      'data' : [
 +        'security/security.xml',
 +        'security/ir.model.access.csv',
-         'views/partner.xml',
          'views/openacademy.xml',
+         'views/partner.xml',
          'views/session_workflow.xml',
 diff --git a/openacademy/security/ir.model.access.csv b/openacademy/security/ir.model.access.csv
 new file mode 100644
 --- /dev/null
 +++ b/openacademy/security/ir.model.access.csv
-@@ -0,0 +1,7 @@
+@@ -0,0 +1,6 @@
 +id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
 +course_manager,course manager,model_openacademy_course,group_manager,1,1,1,1
 +session_manager,session manager,model_openacademy_session,group_manager,1,1,1,1
-+attendee_manager,attendee manager,model_openacademy_attendee,group_manager,1,1,1,1
 +course_read_all,course all,model_openacademy_course,,1,0,0,0
 +session_read_all,session all,model_openacademy_session,,1,0,0,0
-+attendee_read_all,attendee all,model_openacademy_attendee,,1,0,0,0
++
 diff --git a/openacademy/security/security.xml b/openacademy/security/security.xml
 new file mode 100644
 --- /dev/null

@@ -1,13 +1,14 @@
 # HG changeset patch
-# Parent ee398d15107bb599cb232a84c02ed29cc3be58c6
+# Parent 8d5573b704b2867788dd6895503f1871c2976a29
 
 diff --git a/openacademy/course.py b/openacademy/course.py
 --- a/openacademy/course.py
 +++ b/openacademy/course.py
-@@ -39,6 +39,23 @@ class Session(models.Model):
+@@ -38,3 +38,20 @@ class Session(models.Model):
+             self.seats_taken = 0.0
          else:
              self.seats_taken = 100.0 * len(self.attendee_ids) / self.seats
- 
++
 +    @api.onchange('seats', 'attendee_ids')
 +    def _verify_valid_seats(self):
 +        if self.seats < 0:
@@ -24,7 +25,3 @@ diff --git a/openacademy/course.py b/openacademy/course.py
 +                    'message': "Increase seats or remove excess attendees",
 +                },
 +            }
-+
- class Attendee(models.Model):
-     _name = 'openacademy.attendee'
-     _rec_name = 'partner_id'

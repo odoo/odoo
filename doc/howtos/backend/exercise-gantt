@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 54c38dab6e24ac3d177c1fac6abbf2c6a5fc0edb
+# Parent dba00a105dd2a82490394b8dec5fea5f1d8847e1
 
 diff --git a/openacademy/course.py b/openacademy/course.py
 --- a/openacademy/course.py
@@ -29,7 +29,7 @@ diff --git a/openacademy/course.py b/openacademy/course.py
 +    @api.one
      @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
-         partners = [att.partner_id for att in self.attendee_ids]
+         if self.instructor_id and self.instructor_id in self.attendee_ids:
 diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
 --- a/openacademy/views/openacademy.xml
 +++ b/openacademy/views/openacademy.xml

@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 78cb900750d8c0df9adef153607f2d86441ef14e
+# Parent 7a7d003fe38426a405ce0657a627a139133ec4dd
 
 diff --git a/openacademy/course.py b/openacademy/course.py
 --- a/openacademy/course.py
@@ -11,17 +11,13 @@ diff --git a/openacademy/course.py b/openacademy/course.py
  
  class Course(models.Model):
      _name = 'openacademy.course'
-@@ -56,6 +56,13 @@ class Session(models.Model):
+@@ -55,3 +55,9 @@ class Session(models.Model):
+                     'message': "Increase seats or remove excess attendees",
                  },
              }
- 
++
 +    @api.one
 +    @api.constrains('instructor_id', 'attendee_ids')
 +    def _check_instructor_not_in_attendees(self):
-+        partners = [att.partner_id for att in self.attendee_ids]
-+        if self.instructor_id and self.instructor_id in partners:
++        if self.instructor_id and self.instructor_id in self.attendee_ids:
 +            raise exceptions.ValidationError("A session's instructor can't be an attendee")
-+
- class Attendee(models.Model):
-     _name = 'openacademy.attendee'
-     _rec_name = 'partner_id'

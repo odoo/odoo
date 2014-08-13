@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 9d882cbdeb6a51fcf6ee6328a38ae9dc9d63e637
+# Parent a358be0a577b0569831958a8ec1302825c645dee
 
 diff --git a/openacademy/course.py b/openacademy/course.py
 --- a/openacademy/course.py
@@ -11,10 +11,11 @@ diff --git a/openacademy/course.py b/openacademy/course.py
  
  class Course(models.Model):
      _name = 'openacademy.course'
-@@ -29,6 +29,16 @@ class Session(models.Model):
-     attendee_ids = fields.One2many(
-         'openacademy.attendee', 'session_id', string="Attendees")
- 
+@@ -28,3 +28,13 @@ class Session(models.Model):
+         ondelete='cascade', string="Course", required=True)
+     attendee_ids = fields.Many2many(
+         'res.partner', string="Attendees")
++
 +    seats_taken = fields.Float(string="Taken seats", compute='_taken_seats')
 +
 +    @api.one
@@ -24,10 +25,6 @@ diff --git a/openacademy/course.py b/openacademy/course.py
 +            self.seats_taken = 0.0
 +        else:
 +            self.seats_taken = 100.0 * len(self.attendee_ids) / self.seats
-+
- class Attendee(models.Model):
-     _name = 'openacademy.attendee'
-     _rec_name = 'partner_id'
 diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
 --- a/openacademy/views/openacademy.xml
 +++ b/openacademy/views/openacademy.xml

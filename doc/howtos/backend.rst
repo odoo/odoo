@@ -653,25 +653,22 @@ instead of a single view its ``arch`` field is composed of any number of
 
     * Using model inheritance, modify the existing *Partner* model to add an
       ``instructor`` boolean field
+    * remove the *Attendee* model which is an unnecessary indirection:
+      attendees are directly partners
     * Using view inheritance, display this fields in the partner form view
 
-    .. note::
-
-        Instroduce devmode: inspect the view to find its xml_id and where to
-        put the new field.
-
     .. only:: solutions
-
-        #. Create a ``openacademy/partner.py`` and import it in
-           ``__init__.py``
-        #. Create an ``openacademy/views/partner.xml`` and add it to
-           ``__openerp__.py``
 
            .. note::
 
                This is the opportunity to introduce the developer mode to
                inspect the view find its ``xml_id`` and the place to put the
                new field.
+
+        #. Create a ``openacademy/partner.py`` and import it in
+           ``__init__.py``
+        #. Create an ``openacademy/views/partner.xml`` and add it to
+           ``__openerp__.py``
 
         .. patch::
 
@@ -850,8 +847,6 @@ and take a table_constraint_ expression as a string.
 
     #. CHECK that the course description and the course title are different
     #. Make the Course's name UNIQUE
-    #. Make sure the Attendee table can not contain the same partner for the
-       same session multiple times (UNIQUE on pair)
 
     .. only:: solutions
 
@@ -1248,9 +1243,8 @@ rights are usually created by a CSV file named after its model:
 .. admonition:: Exercise 1 - Add access control through the OpenERP interface
     :class: exercise
 
-    Create a new user “John Smith”. Then create a group
-    “OpenAcademy / Session Read” with read access to the Session and Attendee
-    objects.
+    Create a new user "John Smith". Then create a group
+    "OpenAcademy / Session Read" with read access to the *Session* model.
 
     .. only:: solutions
 
@@ -1258,7 +1252,7 @@ rights are usually created by a CSV file named after its model:
            :menuselection:`Settings --> Users --> Users`
         #. Create a new group ``session_read`` through
            :menuselection:`Settings --> Users --> Groups`, it should have
-           read access on the *Session* and *Attendee* models
+           read access on the *Session* model
         #. Edit *John Smith* to make them a member of ``session_read``
         #. Log in as *John Smith* to check the access rights are correct
 

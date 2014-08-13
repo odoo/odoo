@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 3686c3fac5dae1f367bf8b98a284fe2c44921438
+# Parent 85a8d7317b9e13480f39ad739955442d15144451
 
 diff --git a/openacademy/course.py b/openacademy/course.py
 --- a/openacademy/course.py
@@ -13,7 +13,7 @@ diff --git a/openacademy/course.py b/openacademy/course.py
  
  class Course(models.Model):
 @@ -56,6 +59,9 @@ class Session(models.Model):
-         'openacademy.attendee', 'session_id', string="Attendees")
+         'res.partner', string="Attendees")
  
      seats_taken = fields.Float(string="Taken seats", compute='_taken_seats')
 +    end_date = fields.Date(
@@ -54,7 +54,7 @@ diff --git a/openacademy/course.py b/openacademy/course.py
 +    @api.one
      @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
-         partners = [att.partner_id for att in self.attendee_ids]
+         if self.instructor_id and self.instructor_id in self.attendee_ids:
 diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
 --- a/openacademy/views/openacademy.xml
 +++ b/openacademy/views/openacademy.xml

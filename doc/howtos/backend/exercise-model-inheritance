@@ -10,19 +10,39 @@ diff --git a/openacademy/__init__.py b/openacademy/__init__.py
 diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
 --- a/openacademy/__openerp__.py
 +++ b/openacademy/__openerp__.py
-@@ -11,6 +11,7 @@
-         - training sessions
+@@ -12,6 +12,7 @@
          - attendees registration""",
      'data' : [
-+        'views/partner.xml',
          'views/openacademy.xml',
++        'views/partner.xml',
      ],
      'demo': [
+         'demo.xml',
+diff --git a/openacademy/course.py b/openacademy/course.py
+--- a/openacademy/course.py
++++ b/openacademy/course.py
+@@ -23,14 +23,5 @@ class Session(models.Model):
+     instructor_id = fields.Many2one('res.partner', string="Instructor")
+     course_id = fields.Many2one('openacademy.course',
+         ondelete='cascade', string="Course", required=True)
+-    attendee_ids = fields.One2many(
+-        'openacademy.attendee', 'session_id', string="Attendees")
+-
+-class Attendee(models.Model):
+-    _name = 'openacademy.attendee'
+-    _rec_name = 'partner_id'
+-
+-    partner_id = fields.Many2one('res.partner',
+-        string="Partner", required=True, ondelete='cascade')
+-    session_id = fields.Many2one('openacademy.session',
+-        string="Session", required=True, ondelete='cascade')
++    attendee_ids = fields.Many2many(
++        'res.partner', string="Attendees")
 diff --git a/openacademy/partner.py b/openacademy/partner.py
 new file mode 100644
 --- /dev/null
 +++ b/openacademy/partner.py
-@@ -0,0 +1,9 @@
+@@ -0,0 +1,11 @@
 +# -*- coding: utf-8 -*-
 +from openerp import fields, models
 +
@@ -32,6 +52,20 @@ new file mode 100644
 +    # Add a new column to the res.partner model, by default partners are not
 +    # instructors
 +    instructor = fields.Boolean("Instructor", default=False)
++
++    session_ids = fields.Many2many('openacademy.session', string="Attended Sessions")
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -104,7 +104,7 @@
+                         <!-- ’editable’ attribute will set the position
+                              to push new elements in the list -->
+                         <tree string="" editable="bottom">
+-                            <field name="partner_id"/>
++                            <field name="name"/>
+                         </tree>
+                     </field>
+                 </form>
 diff --git a/openacademy/views/partner.xml b/openacademy/views/partner.xml
 new file mode 100644
 --- /dev/null
