@@ -347,17 +347,16 @@ class datetime(_column):
             registry = openerp.modules.registry.RegistryManager.get(cr.dbname)
             tz_name = registry.get('res.users').read(cr, SUPERUSER_ID, uid,
                                                      ['context_tz'])['context_tz']
+        utc_timestamp = pytz.utc.localize(timestamp, is_dst=False) # UTC = no DST
         if tz_name:
             try:
-                utc = pytz.timezone('UTC')
                 context_tz = pytz.timezone(tz_name)
-                utc_timestamp = utc.localize(timestamp, is_dst=False) # UTC = no DST
                 return utc_timestamp.astimezone(context_tz)
             except Exception:
                 _logger.debug("failed to compute context/client-specific timestamp, "
                               "using the UTC value",
                               exc_info=True)
-        return timestamp
+        return utc_timestamp
 
 class time(_column):
     _type = 'time'
