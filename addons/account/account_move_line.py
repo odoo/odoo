@@ -802,11 +802,11 @@ class account_move_line(osv.osv):
             # line.journal_id.name
 
         # Fetch data for the other reconciliable accounts
-        # ajouter last_reconciliation_date dans account_account puis dans les deux SELECT
         cr.execute(
-             """SELECT account_id, account_name FROM (
+             """SELECT account_id, account_name, last_reconciliation_date FROM (
                     SELECT a.id AS account_id,
                         a.name AS account_name,
+                        a.last_reconciliation_date,
                         SUM(l.debit) AS debit,
                         SUM(l.credit) AS credit,
                         MAX(l.create_date) AS max_date
@@ -819,8 +819,8 @@ class account_move_line(osv.osv):
                     AND a.type <> 'receivable' -- ?
                     GROUP BY a.id, a.name
                 ) AS s
-                WHERE debit > 0 AND credit > 0 -- AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
-                -- ORDER BY last_reconciliation_date
+                WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
+                ORDER BY last_reconciliation_date
             """)
         
         # Apply ir_rules by filtering out
@@ -1054,6 +1054,9 @@ class account_move_line(osv.osv):
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False
             if partner_id and not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
                 partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
+            account_id = lines[0].account_id and lines[0].account_id.id or False
+            if account_id and not account_obj.has_something_to_reconcile(cr, uid, account_id, context=context):
+                account_obj.mark_as_reconciled(cr, uid, [account_id], context=context)
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context=None):
