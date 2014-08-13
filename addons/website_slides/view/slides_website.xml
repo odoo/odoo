@@ -141,8 +141,8 @@
 			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" t-foreach="attachment_ids" t-as="attachment">
 				<div class="thumbnail oe-slides-grid-thumbnail">
 					<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
-						<img t-if="not attachment.youtube_id" t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive"/>
-						<img t-if="attachment.youtube_id" t-att-src="attachment.image" class="img-responsive"/>
+						<img t-if="not attachment.youtube_id" t-attf-src="/slides/thumb/#{attachment.id}" class="img-responsive shadow"/>
+						<img t-if="attachment.youtube_id" t-att-src="attachment.image" class="img-responsive shadow"/>
 					</a>
 					<a t-attf-href="/slides/view/#{attachment.id}#{url_for('') + '?' + keep_query( 'search', 'filters', 'sorting', 'tags')}">
 						<h4 class="oe-slides-text-truncation">
