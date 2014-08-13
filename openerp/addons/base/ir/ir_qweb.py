@@ -1074,7 +1074,7 @@ class AssetsBundle(object):
         if debug:
             if css and self.stylesheets:
                 compiled = self.preprocess_css()
-                self.recompose(compiled)
+                self.recompose_css(compiled)
                 for style in self.stylesheets:
                     response.append(style.to_html())
             if js:
@@ -1120,6 +1120,7 @@ class AssetsBundle(object):
         return self.cache[key][1]
 
     def css(self):
+        """Generate css content from given bundle"""
         key = 'css_%s' % self.xmlid
         if key in self.cache and self.cache[key][0] != self.version:
             # Invalidate cache on version mismach
@@ -1162,20 +1163,33 @@ class AssetsBundle(object):
     def preprocess_css(self):
         """
             Checks if the bundle contains any sass/less content, then compiles it to css.
+            Returns the bundle's flat css.
         """
-        to_preprocess = [asset for asset in self.stylesheets if isinstance(asset, PreprocessedCSS)]
-        if not to_preprocess:
-            return '\n'.join(asset.minify() for asset in self.stylesheets)
-        to_compile = [asset for asset in to_preprocess if type(asset) == type(to_preprocess[0])]
-        if len(to_preprocess) != len(to_compile):
-            self.css_errors.append("You can't mix css preprocessors languages in the same bundle. (%s)" % self.xmlid)
-        command = to_compile[0].get_command()
-        source = '\n'.join([asset.get_source() for asset in to_compile])
+        sass = [asset for asset in self.stylesheets if isinstance(asset, SassStylesheetAsset)]
+        if sass:
+            cmd = sass[0].get_command()
+            source = '\n'.join([asset.get_source() for asset in sass])
+            compiled = self.compile_css(cmd, source)
+            self.recompose_css(compiled)
 
-        # sanitize @import rules and avoid duplicates imports
+        less = [asset for asset in self.stylesheets if isinstance(asset, LessStylesheetAsset)]
+        if less:
+            cmd = less[0].get_command()
+            source = ''
+            for asset in self.stylesheets:
+                if isinstance(asset, LessStylesheetAsset):
+                    source += asset.get_source()
+                else:
+                    source += asset.content
+            compiled = self.compile_css(cmd, source)
+            return compiled
+
+        return '\n'.join(asset.minify() for asset in self.stylesheets)
+
+    def compile_css(self, cmd, source):
+        """Sanitizes @import rules, remove duplicates @import rules, then compile"""
         imports = []
         def sanitize(matchobj):
-            # TODO: check if a duplicate removal opt-out is necessary
             ref = matchobj.group(2)
             line = '@import "%s"%s' % (ref, matchobj.group(3))
             if '.' not in ref and line not in imports and not ref.startswith(('.', '/', '~')):
@@ -1185,9 +1199,9 @@ class AssetsBundle(object):
         source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
         try:
-            compiler = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            compiler = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         except Exception:
-            msg = "Could not execute command %r" % command[0]
+            msg = "Could not execute command %r" % cmd[0]
             _logger.error(msg)
             self.css_errors.append(msg)
             return
@@ -1200,7 +1214,8 @@ class AssetsBundle(object):
         compiled = result[0].strip().decode('utf8')
         return compiled
 
-    def recompose(self, compiled):
+    def recompose_css(self, compiled):
+        """Flattenize StylesheetAsset's content from compiled source"""
         fragments = self.rx_css_split.split(compiled)[1:]
         while fragments:
             asset_id = fragments.pop(0)
@@ -1208,7 +1223,7 @@ class AssetsBundle(object):
             asset._content = fragments.pop(0)
 
     def get_preprocessor_error(self, stderr, source=None):
-        # TODO: try to find out which asset the error belongs to
+        """Improve and remove sensitive information from sass/less compilator error messages"""
         error = stderr.split('Load paths')[0].replace('  Use --trace for backtrace.', '')
         if 'Cannot load compass' in error:
             error += "Maybe you should install the compass gem using this extra argument:\n\n" \
