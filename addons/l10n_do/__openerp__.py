@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2014 Marcos Organizador de Negocios- Eneldo Serrata - www.marcos.do
+# First author: Jose Ernesto Mendez <tecnologia@obsdr.com> (Open Business Solutions SRL.)
+# Copyright (c) 2012 -TODAY Open Business Solutions, SRL. (http://obsdr.com). All rights reserved.
+#
+# This is a fork by Marcos Organizador de Negocios - Eneldo Serrata - www.marcos.org.do
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -32,7 +35,7 @@
     'category': 'Localization/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Dominican Republic.
-======================================================================
+==============================================================================
 
     * Chart of Accounts.
     * The Tax Code Chart for Domincan Republic
@@ -46,24 +49,22 @@ This is the base module to manage the accounting chart for Dominican Republic.
         'data/ir_sequence_type.xml',
         'data/ir_sequence.xml',
         'data/account_journal.xml',
-        # 'account_financial_report.xml',
         'data/account.account.type.csv',
         'data/account.account.template.csv',
         'data/account.tax.code.template.csv',
         'data/account_chart_template.xml',
         'data/account.tax.template.csv',
+        'data/l10n_do_base_data.xml',
         # Change BRE: adds fiscal position
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
         # configuration wizard, views, reports...
-        'account_view.xml',
-        'data/l10n_do_wizard.xml',
+        'data/l10n_do_wizard.xml'
     ],
     'test': [],
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'images': [],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
