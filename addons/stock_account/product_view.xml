@@ -25,12 +25,6 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='weight']" position="after">
-                    <group string="Accounting Entries">
-                        <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                    </group>
-                </xpath>
                 <field name="standard_price" position="replace">
                     <field name="cost_method" groups="stock_account.group_inventory_valuation"/>
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
