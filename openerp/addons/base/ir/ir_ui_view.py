@@ -71,6 +71,12 @@ def keep_query(*keep_params, **additional_params):
                 params[param] = ','.join(request.httprequest.args.getlist(param))
     return werkzeug.urls.url_encode(params)
 
+def encode(s):
+    if isinstance(s, unicode):
+        return s.encode('utf8')
+    return s
+
+
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
@@ -125,7 +131,7 @@ def xml_chunk(attr=['string', 'help', 'sum', 'confirm', 'placeholder']):
             for n in de:
                 for val in _xml_parse(n):
                     yield val
-        de = etree.XML(data)    # encode(data) ?
+        de = etree.XML(encode(data))
         return _xml_parse(de)
     return xml_chunk_translate
 
@@ -617,11 +623,6 @@ class view(osv.osv):
         if Model is None:
             self.raise_view_error(cr, user, _('Model not found: %(model)s') % dict(model=model),
                                   view_id, context)
-
-        def encode(s):
-            if isinstance(s, unicode):
-                return s.encode('utf8')
-            return s
 
         def check_group(node):
             """Apply group restrictions,  may be set at view level or model level::
