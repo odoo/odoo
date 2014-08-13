@@ -3160,7 +3160,7 @@ class BaseModel(object):
                         for vals in result:
                             for term in self._columns[f].translate(vals[f]):
                                 res_trans = ir_translation._get_source(
-                                    '%s,%s' % (self._name, f), 'field', context['lang'], term, vals['id'])
+                                    '%s,%s' % (self._name, f), 'model', context['lang'], term, vals['id'])
                                 if res_trans:
                                     vals[f] = vals[f].replace(term, res_trans)
 
