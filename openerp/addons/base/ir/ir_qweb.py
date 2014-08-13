@@ -1124,8 +1124,7 @@ class AssetsBundle(object):
             # Invalidate cache on version mismach
             self.cache.pop(key)
         if key not in self.cache:
-            self.preprocess_css()
-            content = '\n'.join(asset.minify() for asset in self.stylesheets)
+            content = self.preprocess_css()
 
             if self.css_errors:
                 msg = '\n'.join(self.css_errors)
@@ -1165,7 +1164,7 @@ class AssetsBundle(object):
         """
         to_preprocess = [asset for asset in self.stylesheets if isinstance(asset, PreprocessedCSS)]
         if not to_preprocess:
-            return
+            return '\n'.join(asset.minify() for asset in self.stylesheets)
         to_compile = [asset for asset in to_preprocess if type(asset) == type(to_preprocess[0])]
         if len(to_preprocess) != len(to_compile):
             self.css_errors.append("You can't mix css preprocessors languages in the same bundle. (%s)" % self.xmlid)
@@ -1203,6 +1202,7 @@ class AssetsBundle(object):
             asset_id = fragments.pop(0)
             asset = next(asset for asset in to_compile if asset.id == asset_id)
             asset._content = fragments.pop(0)
+        return compiled
 
     def get_preprocessor_error(self, stderr, source=None):
         # TODO: try to find out which asset the error belongs to
