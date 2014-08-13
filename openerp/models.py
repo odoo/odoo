@@ -3150,7 +3150,13 @@ class BaseModel(object):
                             '%s,%s' % (self._name, f), 'model', context['lang'], ids)
                         for vals in result:
                             vals[f] = res_trans.get(vals['id'], False) or vals[f]
-                    elif self._columns[f].translate:
+                    elif self._columns[f].translate and True: 
+                        # TODO: replace "and True" by something like this:
+                        # context.get('website'): translate=lambda ... fields
+                        # should not be translated in the backend but must be
+                        # translated in the frontend. (e.g. ir.ui.view, you see
+                        # and write the english version only in the backend,
+                        # but it's translated in the frontend)
                         for vals in result:
                             for term in self._columns[f].translate(vals[f]):
                                 res_trans = ir_translation._get_source(
