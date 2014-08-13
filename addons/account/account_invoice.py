@@ -24,7 +24,7 @@ from lxml import etree
 import openerp.addons.decimal_precision as dp
 import openerp.exceptions
 
-from openerp import netsvc
+from openerp import netsvc, SUPERUSER_ID
 from openerp import pooler
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
@@ -101,7 +101,7 @@ class account_invoice(osv.osv):
         ctx = context.copy()
         result = {}
         currency_obj = self.pool.get('res.currency')
-        for invoice in self.browse(cr, uid, ids, context=context):
+        for invoice in self.browse(cr, SUPERUSER_ID, ids, context=context):
             nb_inv_in_partial_rec = max_invoice_id = 0
             result[invoice.id] = 0.0
             if invoice.move_id:
@@ -322,7 +322,7 @@ class account_invoice(osv.osv):
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             },
             help="Remaining amount due."),
-        'payment_ids': fields.function(_compute_lines, relation='account.move.line', type="many2many", string='Payments'),
+        'payment_ids': fields.function(_compute_lines, relation='account.move.line', type="many2many", string='Payments', groups='base.group_user'),
         'move_name': fields.char('Journal Entry', size=64, readonly=True, states={'draft':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True, track_visibility='onchange', states={'draft':[('readonly',False)]}),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]})
