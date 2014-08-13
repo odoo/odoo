@@ -102,6 +102,7 @@ def py2exe_options():
                         "pychart",
                         "pydot",
                         "pyparsing",
+                        "pyPdf",
                         "pytz",
                         "reportlab",
                         "requests",
@@ -127,10 +128,10 @@ execfile(join(os.path.dirname(__file__), 'openerp', 'release.py'))
 
 # Notes for OpenERP developer on windows:
 #
-# To setup a windows developer evironement install python2.7 then pip and use
-# "pip install <depencey>" for every dependency listed below.
+# To setup a windows developer environment install python2.7 then pip and use
+# "pip install <dependency>" for every dependency listed below.
 #
-# Dependecies that requires DLLs are not installable with pip install, for
+# Dependencies that requires DLLs are not installable with pip install, for
 # them we added comments with links where you can find the installers.
 #
 # OpenERP on windows also require the pywin32, the binary can be found at
@@ -172,6 +173,7 @@ setuptools.setup(
           'psycopg2 >= 2.2',
           'pydot',
           'pyparsing < 2',
+          'pyPdf',
           'pyserial',
           'python-dateutil < 2',
           'python-ldap', # optional
