@@ -8,6 +8,13 @@
         mode: 'test',
         steps: [
             {
+                title:  "search ipod",
+                element: 'form:has(input[name="search"]) a.a-submit',
+                onload: function() {
+                    $('input[name="search"]').val("ipod");
+                }
+            },
+            {
                 title:     "select ipod",
                 element:   '.oe_product_cart a:contains("iPod")',
             },
@@ -19,7 +26,7 @@
             {
                 title:     "click on add to cart",
                 waitFor:   'label:contains(32 GB) input[checked]',
-                element:   'form[action="/shop/cart/update"] .btn',
+                element:   'form[action^="/shop/cart/update"] .btn',
             },
             {
                 title:     "add suggested",

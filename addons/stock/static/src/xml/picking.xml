@@ -162,8 +162,8 @@
                                      <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
-                                        <t t-if="!row.cols.lot &amp;&amp; row.cols.product_id">
-                                            <li><a class="js_create_lot" href="#">Create Lot</a></li>
+                                        <t t-if="row.cols.product_id">
+                                            <li><a class="js_create_lot" href="#">Create &#47; Change Lot</a></li>
                                         </t>
                                         <t t-if="!row.cols.head_container &amp;&amp; !row.cols.container">
                                             <li><a class="js_change_src" href="#">Change source location</a></li>
