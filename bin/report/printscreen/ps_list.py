@@ -221,7 +221,7 @@ class report_printscreen_list(report_int):
                 if fields[f]['type'] == 'datetime' and line[f]:
                     new_d1 = line[f]
                     if not line.get('__group'):
-                        d1 = datetime.strptime(line[f], '%Y-%m-%d %H:%M:%S')
+                        d1 = datetime.strptime(line[f][:19], '%Y-%m-%d %H:%M:%S')
                         new_d1 = d1.strftime(self.d_t_fmt)
                     line[f] = new_d1
 
