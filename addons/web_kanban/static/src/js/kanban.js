@@ -302,6 +302,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
                 if (!_.isEmpty(self.dataset.ids) && (self.dataset.index === null || self.dataset.index >= self.dataset.ids.length)) {
                     self.dataset.index = 0;
+                } else if (_.isEmpty(self.dataset.ids)){
+                    self.dataset.index = null;
                 }
                 self.do_add_groups([kgroup]).done(function() {
                     if (_.isEmpty(records)) {

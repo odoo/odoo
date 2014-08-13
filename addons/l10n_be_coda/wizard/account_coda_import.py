@@ -40,7 +40,7 @@ class account_coda_import(osv.osv_memory):
     }
 
     _defaults = {
-        'coda_fname': lambda *a: '',
+        'coda_fname': 'coda.txt',
     }
 
     def coda_parsing(self, cr, uid, ids, context=None, batch=False, codafile=None, codafilename=None):

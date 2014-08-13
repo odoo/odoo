@@ -25,6 +25,7 @@ import re
 from openerp import tools
 
 from email.header import decode_header
+from email.utils import formataddr
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_email_clean
@@ -175,9 +176,9 @@ class mail_message(osv.Model):
     def _get_default_from(self, cr, uid, context=None):
         this = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         if this.alias_name and this.alias_domain:
-            return '%s <%s@%s>' % (this.name, this.alias_name, this.alias_domain)
+            return formataddr((this.name, '%s@%s' % (this.alias_name, this.alias_domain)))
         elif this.email:
-            return '%s <%s>' % (this.name, this.email)
+            return formataddr((this.name, this.email))
         raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     def _get_default_author(self, cr, uid, context=None):
@@ -794,10 +795,8 @@ class mail_message(osv.Model):
                 email_reply_to = emails[0]
             document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
             if document_name:
-                # sanitize document name
-                sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1])
                 # generate reply to
-                email_reply_to = _('"Followers of %s" <%s>') % (sanitized_doc_name, email_reply_to)
+                email_reply_to = formataddr((_('Followers of %s') % document_name[1], email_reply_to))
 
         return email_reply_to
 
