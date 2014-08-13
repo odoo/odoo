@@ -1606,16 +1606,18 @@ class ExportFormat(object):
 
     @openerpweb.httprequest
     def index(self, req, data, token):
+        params = simplejson.loads(data)
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain',
                                 'import_compat')(
-                simplejson.loads(data))
+                params)
 
         Model = req.session.model(model)
-        ids = ids or Model.search(domain, 0, False, False, req.context)
+        context = dict(req.context or {}, **params.get('context', {}))
+        ids = ids or Model.search(domain, 0, False, False, context)
 
         field_names = map(operator.itemgetter('name'), fields)
-        import_data = Model.export_data(ids, field_names, req.context).get('datas',[])
+        import_data = Model.export_data(ids, field_names, context).get('datas',[])
 
         if import_compat:
             columns_headers = field_names
