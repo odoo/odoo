@@ -656,7 +656,7 @@
             var $li = this.$el.find('li:not(.dropdown-submenu)').add(this.$el).filter(function () {
                     return !!_.toArray($(this).data()).length;
                 }).children();
-            $li.off('mouseenter click').on('mouseenter click', _.bind(this._mouse, this));
+            $li.find("a").off('mouseenter click').on('mouseenter click', _.bind(this._mouse, this));
             this.$el.find("ul").add(this.$el).off('mouseleave').on('mouseleave', _.bind(this.reset, this));
 
             this.reset_methods = [];
@@ -734,16 +734,37 @@
                 $el;
             clearTimeout(this.reset_time);
 
+            function filter (k) { return k !== 'oeId' && k !== 'oeModel' && k !== 'oeField' && k !== 'oeXpath' && k !== 'oeSourceId';}
+            function hasData(el) {
+                for (var k in el.dataset) {
+                    if (filter (k)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            function method(el) {
+                var data = {};
+                for (var k in el.dataset) {
+                    if (filter (k)) {
+                        data[k] = el.dataset[k];
+                    }
+                }
+                return data;
+            }
+
             while (el && this.$el.is(el) || _.some(this.$el.map(function () {return $.contains(this, el);}).get()) ) {
-                if (_.size($(el).data())) {
+                if (hasData(el)) {
                     $methods.push(el);
                 }
                 el = el.parentNode;
             }
 
+            $methods.reverse();
+
             _.each($methods, function (el) {
                 var $el = $(el);
-                var methods = $el.data();
+                var methods = method(el);
                 for (var k in methods) {
                     if (self[k]) {
                         if (self.reset_methods.indexOf(k) === -1) {
@@ -784,7 +805,7 @@
             this._super();
             var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
             if (this.$target.hasClass('oe_custom_bg')) {
-                this.$el.find('li[data-method="choose_image"]').data("background", src);
+                this.$el.find('li[data-choose_image]').data("background", src).attr("data-background", src);
             }
         },
         background: function(type, value, $li) {
@@ -823,9 +844,12 @@
             });
         },
         set_active: function () {
+            var self = this;
             var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
+            this._super();
 
             this.$el.find('li[data-background]')
+                .filter(':not([data-background=""])')
                 .removeClass("active")
                 .each(function () {
                     var background = $(this).data("background");
@@ -833,8 +857,12 @@
                         $(this).addClass("active");
                     }
                 });
-            if (this.$target.hasClass('oe_custom_bg')) {
-                this.$el.find('li[data-choose_image]').addClass("active");
+            if(!this.$el.find('li.active').size()) {
+                this.$el.find('li[data-select_class=""][data-background=""], '+
+                    'li[data-select_class=""] li[data-background=""], '+
+                    'li[data-background=""] li[data-select_class=""]').addClass("active");
+                this.$el.filter('li[data-select_class=""]').find('li[data-background=""]').addClass("active");
+                this.$el.filter('li[data-background=""]').find('li[data-select_class=""]').addClass("active");
             }
         }
     });
