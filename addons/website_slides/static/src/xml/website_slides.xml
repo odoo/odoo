@@ -19,7 +19,7 @@
                     </label>
                     <div class="controls col-sm-9">
                         <br/>
-                        <input type="text" name="tags" style="width: 200px" placeholder="Tags" class="form-control slide-tags"/>
+                        <input type="text" name="slide-tags" style="width: 200px" placeholder="Tags" class="form-control slide-tags"/>
                     </div>
                 </div>
 
@@ -33,7 +33,7 @@
                                         File
                                     </label>
                                 </h5>
-                                <input id="slide-file" name="file" accept="application/pdf" class="slide-upload" type="file"/> 
+                                <input id="slide-file" name="file" accept="application/pdf" class="slide-upload" type="file"/>
                             </li>
                             <li class="list-group-item">
                                 <h5 class="list-group-item-heading">
@@ -44,11 +44,48 @@
 
                                 <input name="slide-url" class="form-control h5" placeholder="Video URL" id="url"/>
                             </li>
-                        </ul> 
+                        </ul>
                     </div>
                 </div>
-               <canvas id="the-canvas" style="display: none;"></canvas>
+                <div class="control-group">
+                    <label for="slide-channel" class="col-sm-3 control-label">
+                        Channel:
+                    </label>
+                    <div class="col-sm-9">
+                        <select name="slide-channel" id="channel" class="form-control">
+                            <t t-foreach="widget.channels" t-as="channel">
+                                <option t-att-value="channel.id"
+                                    t-att="{'selected': channel.default ? 'selected' : null}">
+                                    <t t-esc="channel.name"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+                <canvas id="the-canvas" style="display: none;"></canvas>
             </form>
         </t>
     </t>
+
+    <t t-name="website.addslide.error">
+        <div class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                        <div class="h2">Error</div>
+                    </div>
+                    <div class="modal-body">
+                        <h4>
+                            <p>Error occurred on fetching the data.</p>
+                            <p>make sure server is operating correctly</p>
+                        </h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-primary">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </t>
 </templates>

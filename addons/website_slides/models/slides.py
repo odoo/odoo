@@ -84,6 +84,11 @@ class ir_attachment(osv.osv):
     def _get_slide_views(self, cr, uid, context):
         return context.get('slide_views', 0)
 
+    def get_default_channel(self, cr, uid, context):
+        directory = self.pool.get('document.directory')
+        vals = directory.search(cr, uid, [('name','=','Documents')])
+        return vals
+
     _defaults = {
         'is_slide': _get_slide_setting,
         'slide_type':_get_slide_type,
