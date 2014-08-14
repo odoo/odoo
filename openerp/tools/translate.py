@@ -827,18 +827,20 @@ def trans_generate(lang, modules, cr):
         if model_obj._sql_constraints:
             push_local_constraints(module, model_obj, 'sql_constraints')
 
-    def get_module_from_path(path, mod_paths=None):
-        if not mod_paths:
-            # First, construct a list of possible paths
-            def_path = os.path.abspath(os.path.join(config.config['root_path'], 'addons'))     # default addons path (base)
-            ad_paths= map(lambda m: os.path.abspath(m.strip()),config.config['addons_path'].split(','))
-            mod_paths=[def_path]
-            for adp in ad_paths:
-                mod_paths.append(adp)
-                if not os.path.isabs(adp):
-                    mod_paths.append(adp)
-                elif adp.startswith(def_path):
-                    mod_paths.append(adp[len(def_path)+1:])
+    def get_module_paths():
+        # default addons path (base)
+        def_path = os.path.abspath(os.path.join(config.config['root_path'], 'addons'))
+        mod_paths = { def_path }
+        ad_paths = map(lambda m: os.path.abspath(m.strip()),config.config['addons_path'].split(','))
+        for adp in ad_paths:
+            mod_paths.add(adp)
+            if not os.path.isabs(adp):
+                mod_paths.add(adp)
+            elif adp != def_path and adp.startswith(def_path):
+                mod_paths.add(adp[len(def_path)+1:])
+        return mod_paths
+
+    def get_module_from_path(path, mod_paths):
         for mp in mod_paths:
             if path.startswith(mp) and (os.path.dirname(path) != mp):
                 path = path[len(mp)+1:]
@@ -863,7 +865,7 @@ def trans_generate(lang, modules, cr):
 
     _logger.debug("Scanning modules at paths: %s", path_list)
 
-    mod_paths = []
+    mod_paths = get_module_paths()
 
     def verified_module_filepaths(fname, path, root):
         fabsolutepath = join(root, fname)
