@@ -38,6 +38,7 @@ You can link and publish documents and slides to the event and talks also you ca
     'data': [
         'view/slides_website.xml',
         'view/slides_backend.xml',
+        'security/ir.model.access.csv',
     ],   
     'installable': True,
     'auto_install': False,   
