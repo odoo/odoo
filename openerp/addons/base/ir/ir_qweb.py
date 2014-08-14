@@ -1204,13 +1204,13 @@ class AssetsBundle(object):
             msg = "Could not execute command %r" % cmd[0]
             _logger.error(msg)
             self.css_errors.append(msg)
-            return
+            return ''
         result = compiler.communicate(input=source.encode('utf-8'))
         if compiler.returncode:
             error = self.get_preprocessor_error(''.join(result), source=source)
             _logger.warning(error)
             self.css_errors.append(error)
-            return
+            return ''
         compiled = result[0].strip().decode('utf8')
         return compiled
 
@@ -1360,22 +1360,26 @@ class StylesheetAsset(WebAsset):
             content = super(StylesheetAsset, self)._fetch_content()
             web_dir = os.path.dirname(self.url)
 
-            content = self.rx_import.sub(
-                r"""@import \1%s/""" % (web_dir,),
-                content,
-            )
+            if self.rx_import:
+                content = self.rx_import.sub(
+                    r"""@import \1%s/""" % (web_dir,),
+                    content,
+                )
 
-            content = self.rx_url.sub(
-                r"url(\1%s/" % (web_dir,),
-                content,
-            )
+            if self.rx_url:
+                content = self.rx_url.sub(
+                    r"url(\1%s/" % (web_dir,),
+                    content,
+                )
 
-            # remove charset declarations, we only support utf-8
-            content = self.rx_charset.sub('', content)
+            if self.rx_charset:
+                # remove charset declarations, we only support utf-8
+                content = self.rx_charset.sub('', content)
+
+            return content
         except AssetError, e:
             self.bundle.css_errors.append(e.message)
             return ''
-        return content
 
     def minify(self):
         # remove existing sourcemaps, make no sense after re-mini
@@ -1397,6 +1401,7 @@ class StylesheetAsset(WebAsset):
 
 class PreprocessedCSS(StylesheetAsset):
     html_url = '%s.css'
+    rx_import = None
 
     def minify(self):
         return self.with_header()
