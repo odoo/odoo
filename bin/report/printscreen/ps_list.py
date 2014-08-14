@@ -202,21 +202,21 @@ class report_printscreen_list(report_int):
                 if fields[f]['type'] == 'date' and line[f]:
                     new_d1 = line[f]
                     if not line.get('__group'):
-                        d1 = datetime.strptime(line[f],'%Y-%m-%d')
+                        d1 = datetime.strptime(line[f], tools.DEFAULT_SERVER_DATE_FORMAT)
                         new_d1 = d1.strftime(self.d_fmt)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'time' and line[f]:
                     new_d1 = line[f]
                     if not line.get('__group'):
-                        d1 = datetime.strptime(line[f], '%H:%M:%S')
+                        d1 = datetime.strptime(line[f], tools.DEFAULT_SERVER_TIME_FORMAT)
                         new_d1 = d1.strftime(self.t_fmt)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'datetime' and line[f]:
                     new_d1 = line[f]
                     if not line.get('__group'):
-                        d1 = datetime.strptime(line[f][:19], '%Y-%m-%d %H:%M:%S')
+                        d1 = datetime.strptime(line[f][:19], tools.DEFAULT_SERVER_DATETIME_FORMAT)
                         new_d1 = d1.strftime(self.d_t_fmt)
                     line[f] = new_d1
 
