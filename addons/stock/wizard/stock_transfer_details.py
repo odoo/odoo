@@ -170,10 +170,18 @@ class stock_transfer_details_items(models.TransientModel):
         for packop in self:
             if not packop.result_package_id:
                 if not newpack:
-                    newpack = self.pool['stock.quant.package'].create(self._cr, self._uid, {}, self._context)
+                    newpack = self.pool['stock.quant.package'].create(self._cr, self._uid, {'location_id': packop.destinationloc_id.id if packop.destinationloc_id else False}, self._context)
                 packop.result_package_id = newpack
         if self and self[0]:
             return self[0].transfer_id.wizard_view()
+
+    @api.multi
+    def product_id_change(self, product, uom=False):
+        result = {}
+        if product:
+            prod = self.env['product.product'].browse(product)
+            result['product_uom_id'] = prod.uom_id and prod.uom_id.id
+        return {'value': result, 'domain': {}, 'warning':{} }
 
 class stock_transfer_details_packs(stock_transfer_details_items):
     _name = 'stock.transfer_details_packs'
