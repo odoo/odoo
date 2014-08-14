@@ -26,5 +26,7 @@ Kanban
 Graphs
 ======
 
+.. _reference/views/qweb:
+
 QWeb (?)
 ========

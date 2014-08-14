@@ -1396,15 +1396,76 @@ PO/POT files.
 Reporting
 =========
 
-Reports
--------
+Printed reports
+---------------
 
-.. todo:: sle
+Odoo v8 comes with a new report engine based on :ref:`reference/qweb`,
+`Twitter Bootstrap`_ and Wkhtmltopdf_. 
+
+A report is a combination two elements:
+
+* an ``ir.actions.report.xml``, for which a ``<report>`` shortcut element is
+  provided, it sets up various basic parameters for the report (default
+  type, whether the report should be saved to the database after generation,…)
+
+
+  .. code-block:: xml
+
+      <report
+          id="account_invoices"
+          model="account.invoice"
+          string="Invoices"
+          report_type="qweb-pdf"
+          name="account.report_invoice"
+          file="account.report_invoice"
+          attachment_use="True"
+          attachment="(object.state in ('open','paid')) and
+              ('INV'+(object.number or '').replace('/','')+'.pdf')"
+      />
+
+* A standard :ref:`QWeb view <reference/views/qweb>` for the actual report:
+
+  .. code-block:: xml
+
+    <t t-call="report.html_container">
+      <t t-foreach="docs" t-as="o">
+        <t t-call="report.external_layout">
+          <div class="page">
+            <h2>Report title</h2>
+          </div>
+        </t>
+      </t>
+    </t>
+
+    the standard rendering context provides a number of elements, the most
+    important being:
+
+    ``docs``
+        the records for which the report is printed
+    ``user``
+        the user printing the report
+
+Because reports are standard web pages, they are available through a URL and
+output parameters can be manipulated through this URL, for instance the HTML
+version of the *Invoice* report is available through
+http://localhost:8069/report/html/account.report_invoice/1 (if ``account`` is
+installed) and the PDF version through
+http://localhost:8069/report/pdf/account.report_invoice/1.
+
+.. admonition:: Exercise 1 - Create a report for the Session model
+   :class: exercise
+
+   For each session, it should display session's name, its start and end,
+   and list the session's attendees.
+
+   .. only:: solutions
+
+        .. patch::
 
 Dashboards
 ----------
 
-.. admonition:: Exercise 6 - Define a Dashboard
+.. admonition:: Exercise 2 - Define a Dashboard
    :class: exercise
 
    Define a dashboard containing the graph view you created, the sessions
@@ -1542,3 +1603,7 @@ server with the library xmlrpclib.
 .. _python: http://python.org
 
 .. _XPath: http://w3.org/TR/xpath
+
+.. _twitter bootstrap: http://getbootstrap.com
+
+.. _wkhtmltopdf: http://wkhtmltopdf.org
