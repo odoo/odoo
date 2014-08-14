@@ -216,19 +216,19 @@
 					        </div>
 					        <div class="input-group">
 							  <span class="input-group-addon"><span class="glyphicon glyphicon-share"></span></span>
-							  <input type="text" class="form-control" t-att-value="shareurl"/>
+							  <input type="text" class="form-control" t-att-value="shareurl" readonly="readonly" onClick="this.select();"/>
 							</div>
 							<span class="help-block"> -- copy above link to share</span>
 							<h4>Embed:</h4>						
 							<div class="input-group">
 								<span class="input-group-addon"><span class="glyphicon glyphicon-share"></span></span>
-								<textarea id="slide_embed_code" class="form-control"><t t-esc="embedcode"/></textarea>
+								<textarea id="slide_embed_code" class="form-control" readonly="readonly" onClick="this.select();"><t t-esc="embedcode"/></textarea>
 							</div>
 							<span class="help-block"> -- copy above embed code to share</span>						
 							<t t-if="slideview.datas">														
 							<div class="input-group col-xs-2">
 								<div class="input-group-addon"><a href="javascript:void(0);" id="btnminus" field="page"><span class="glyphicon glyphicon-minus"/></a></div>
-								<input class="form-control" type="text" size="1" value="0" name="page"/>
+								<input class="form-control" type="text" size="1" value="0" name="page" readonly="readonly"/>
 								<div class="input-group-addon"><a href="javascript:void(0);" id="btnplus" field="page"><span class="glyphicon glyphicon-plus"/></a></div>
 						    </div>
 							<span class="help-block"> -- Enter start page</span>						

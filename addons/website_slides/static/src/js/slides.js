@@ -7,7 +7,7 @@ jQuery(document).ready(function() {
     /*modify embed code based on options*/
     jQuery.modifyembedcode = function(currentVal) {
         var slide_embed_code = jQuery('#slide_embed_code').val();
-        var new_slide_embed_code = slide_embed_code.replace(/(page=).*?()/,'$1' + currentVal + '$2');
+        var new_slide_embed_code = slide_embed_code.replace(/(page=).*?([^\d]+)/,'$1' + currentVal + '$2');
         jQuery('#slide_embed_code').val(new_slide_embed_code);
     };
 	// This button will increment the value
