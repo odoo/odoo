@@ -792,14 +792,7 @@ class account_move_line(osv.osv):
 
         # Fetch account move lines
         for row in part_acc_rows:
-            row['move_lines'] = self.search_read(cr, uid, [
-                    ('account_id','=',row['account_id']),
-                    ('partner_id','=',row['partner_id']),
-                    ('reconcile_id','=',False),
-                    ('state','!=','draft')
-                ], ['id', 'name', 'ref', 'date_maturity', 'date', 'debit', 'credit'], context=context)
-            # line.period_id.name
-            # line.journal_id.name
+            row['move_lines'] = self.get_move_lines_for_manual_reconciliation(cr, uid, row['account_id'], row['partner_id'], context=context)
 
         # Fetch data for the other reconciliable accounts
         cr.execute(
@@ -831,15 +824,43 @@ class account_move_line(osv.osv):
 
         # Fetch account move lines
         for row in other_acc_rows:
-            row['move_lines'] = self.search_read(cr, uid, [
-                    ('account_id','=',row['account_id']),
-                    ('reconcile_id','=',False),
-                    ('state','!=','draft')
-                ], ['id', 'name', 'ref', 'date_maturity', 'date', 'debit', 'credit'], context=context)
-            # line.period_id.name
-            # line.journal_id.name
+            row['move_lines'] = self.get_move_lines_for_manual_reconciliation(cr, uid, row['account_id'], context=context)
 
         return [part_acc_rows, other_acc_rows]
+
+    def get_move_lines_for_manual_reconciliation(self, cr, uid, account_id, partner_id=False, context=None):
+        """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
+        lines = []
+        reconcile_partial_ids = []
+        domain = [('account_id','=',account_id), ('reconcile_id','=',False), ('state','!=','draft')]
+        if partner_id:
+            domain.append(('partner_id','=',partner_id))
+
+        aml_ids = self.search(cr, uid, domain, context=context)
+        for line in self.browse(cr, uid, aml_ids, context=context): # TODO : ?
+            if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
+                continue
+            ret_line = {
+                'id': line.id,
+                'name': line.move_id.name,
+                'ref': line.move_id.ref,
+                'date_maturity': line.date_maturity,
+                'date': line.date,
+                'period_name': line.period_id.name,
+                'journal_name': line.journal_id.name,
+            }
+            # TODO : amount_residual_currency ?
+            if line.amount_residual_currency < 0:
+                ret_line['debit'] = 0
+                ret_line['credit'] = -line.amount_residual_currency
+            else:
+                ret_line['debit'] = line.amount_residual_currency if line.credit != 0 else 0
+                ret_line['credit'] = line.amount_residual_currency if line.debit != 0 else 0
+            if line.reconcile_partial_id:
+                reconcile_partial_ids.append(line.reconcile_partial_id.id)
+            lines.append(ret_line)
+
+        return lines
 
     # Utilisé dans :
     # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/account_move_line.py:                partner = self.list_partners_to_reconcile(cr, uid, context=context)

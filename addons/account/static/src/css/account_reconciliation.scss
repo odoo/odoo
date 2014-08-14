@@ -17,9 +17,9 @@ $initialLineBackground: #f0f0f0;
     h1 {
         width: 48%;
         padding: 0 0 0 $actionColWidth;
-        margin: 0;
+        margin: 0 0 35px 0;
         float: left;
-        font-size: 2.3em;
+        font-size: 2em;
     }
 
     h2 {
@@ -28,7 +28,7 @@ $initialLineBackground: #f0f0f0;
 
     .progress {
         width: 49%;
-        margin: 6px $actionColWidth 0 0;
+        margin: 4px $actionColWidth 0 0;
         float: right;
         position: relative;
         display: inline-block;
@@ -328,7 +328,7 @@ $initialLineBackground: #f0f0f0;
                 height: 26px;
                 margin: 0 $actionColWidth 4px $actionColWidth;
 
-                .button_ok {
+                button {
                     float: right;
 
                     &:disabled {
@@ -446,45 +446,68 @@ $initialLineBackground: #f0f0f0;
     }
 }
 
-.openerp .oe_manual_reconciliation_line {
-    .accounting_view {
-        thead {
-            background: none;
-            cursor: pointer;
+.openerp .oe_manual_reconciliation {
+    h1 {
+        margin: 0 !important;
+    }
 
-            td {
-                vertical-align: bottom !important;
+    .oe_manual_reconciliation_line {
+        .accounting_view {
+            thead {
+                background: none;
+                cursor: pointer;
+
+                td {
+                    vertical-align: bottom !important;
+                }
+                
+                td:nth-child(2) {
+                    padding-left: 0;
+                }
+
+                .cell_last_reconciliation_date {
+                    font-weight: normal;
+                }
+
+                .cell_title_account_code {
+                    text-align: center;
+                }
             }
             
-            .cell_partner_name {
-                padding-left: 0;
+            .filler_line td {
+                height: 23px;
+                cursor: default !important;
             }
+            
+            tbody tr:first-child td {
+                border-top: $lightBorder;
+                padding-top: 4px;
 
-            .cell_last_reconciliation_date {
-                font-weight: normal;
-            }
-
-            .cell_title_account_code {
-                text-align: center;
+                &.cell_action, &.cell_info_popover {
+                    border-top: none;
+                }
             }
         }
         
-        .filler_line td {
-            height: 23px;
-            cursor: default !important;
+        td.cell_due_date {
+            padding-left: $mainTableBordersPadding !important;
+        }
+
+        .toggle_match {
+            display: none;
         }
         
-        tbody tr:first-child td {
-            border-top: $lightBorder;
-            padding-top: 4px;
-
-            &.cell_action, &.cell_info_popover {
-                border-top: none;
-            }
+        /* Bouton entre les 2 tables */
+        .reconcile_button_container {
+            width: 30%;
+            float: right;
+            text-align: center;
+            margin: 5px $actionColWidth 5px 0;
         }
-    }
-    
-    td.cell_due_date {
-        padding-left: $mainTableBordersPadding !important;
+
+        > table > tbody > tr:nth-child(1) > td table {
+            margin-bottom: 0 !important;
+        }
+        /* / Bouton entre les 2 tables */
     }
 }
