@@ -255,7 +255,7 @@ openerp.web.list_editable = function (instance) {
                         if (!focus_field){
                             focus_field = _.find(self.editor.form.fields_order, function(field){ return fields[field] && fields[field].$el.is(':visible:has(input)'); });
                         }
-                        if (focus_field) fields[focus_field].$el.find('input').select();
+                        if (focus_field  && fields[focus_field]) fields[focus_field].$el.find('input').select();
                         return record.attributes;
                     });
                 }).fail(function () {
