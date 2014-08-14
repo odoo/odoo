@@ -643,8 +643,8 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box">
-                        <button name="do_partial_open_barcode" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','not in',('assigned', 'partially_available'))]}"><img src="/stock/static/src/img/scan.png"/></button>
-                        <button name="open_barcode_interface" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}"><img src="/stock/static/src/img/scan.png"/></button>
+                        <button name="do_partial_open_barcode" groups="stock.group_stock_user" type="object" class="oe_stock_scan_button" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','not in',('assigned', 'partially_available'))]}"><img src="/stock/static/src/img/scan.png" class="oe_stock_scan_image"/></button>
+                        <button name="open_barcode_interface" groups="stock.group_stock_user" type="object" class="oe_stock_scan_button" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}"><img src="/stock/static/src/img/scan.png" class="oe_stock_scan_image"/></button>
                     </div>
                     <h1>
                         <field name="name" class="oe_inline" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
