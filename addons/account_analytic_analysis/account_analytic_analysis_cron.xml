@@ -82,9 +82,9 @@ Odoo Automatic Email
             <field name="interval_type">weeks</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
-            <field name="model" eval="'account.analytic.account'"/>
-            <field name="function" eval="'cron_account_analytic_account'"/>
-            <field name="args" eval="'()'" />
+            <field name="model" eval="'ir.actions.server'"/>
+            <field name="function" eval="'run'"/>
+            <field name="args" eval="(ref('account_analytic_analysis.action_contract_expiration_reminder'), )" />
         </record>
 
         <record model="ir.cron" id="account_analytic_cron_for_invoice">
