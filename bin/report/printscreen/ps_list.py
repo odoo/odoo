@@ -68,14 +68,10 @@ class report_printscreen_list(report_int):
         self.groupby_no_leaf = context.get('group_by_no_leaf',False)
         pool = pooler.get_pool(cr.dbname)
         lang_obj = pool.get('res.lang')
-        lang_id = lang_obj.search(cr, uid, [('code','=',context.get('lang'))], context=context)
-        if lang_id:
-            lang = lang_obj.browse(cr, uid, lang_id[0], context=context)
-            self.d_fmt = lang.date_format
-            self.t_fmt = lang.time_format
-        else:
-            self.d_fmt = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))
-            self.t_fmt = str(locale.nl_langinfo(locale.T_FMT))
+        lang_id = lang_obj.search(cr, uid, [('code','=',context.get('lang') or 'en_US')], context=context)
+        lang = lang_obj.browse(cr, uid, lang_id[0], context=context)
+        self.d_fmt = lang.date_format
+        self.t_fmt = lang.time_format
         self.d_t_fmt = self.d_fmt + ' ' + self.t_fmt
         model = pool.get(datas['model'])
         model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
