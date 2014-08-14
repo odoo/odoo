@@ -5628,7 +5628,12 @@ class BaseModel(object):
 
         # dummy assignment: trigger invalidations on the record
         for name in todo:
-            record[name] = record[name]
+            value = record[name]
+            field = self._fields[name]
+            if not field_name and field.type == 'many2one' and field.delegate and not value:
+                # do not nullify all fields of parent record for new records
+                continue
+            record[name] = value
 
         result = {'value': {}}
 
