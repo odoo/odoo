@@ -27,7 +27,6 @@ class procurement_order(osv.osv):
     _inherit = "procurement.order"
     _columns = {
         'task_id': fields.many2one('project.task', 'Task', copy=False),
-        'sale_line_id': fields.many2one('sale.order.line', 'Sales order line', copy=False)
     }
 
     def _is_procurement_task(self, cr, uid, procurement, context=None):

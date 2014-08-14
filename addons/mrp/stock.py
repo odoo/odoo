@@ -93,11 +93,11 @@ class StockMove(osv.osv):
                         'procurement_id': move.procurement_id.id,
                         'split_from': move.id, #Needed in order to keep purchase connection, but will be removed by unlink
                     }
-                    mid = move_obj.copy(cr, uid, move.id, default=valdef)
+                    mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
                     to_explode_again_ids.append(mid)
                 else:
                     if prod_obj.need_procurement(cr, uid, [product.id], context=context):
-                        vals = {
+                        valdef = {
                             'name': move.rule_id and move.rule_id.name or "/",
                             'origin': move.origin,
                             'company_id': move.company_id and move.company_id.id or False,
@@ -110,16 +110,22 @@ class StockMove(osv.osv):
                             'group_id': move.group_id.id,
                             'priority': move.priority,
                             'partner_dest_id': move.partner_id.id,
+                            'move_dest_id': move.id,
                             }
-                        proc = proc_obj.create(cr, uid, vals, context=context)
+                        if move.procurement_id:
+                            proc = proc_obj.copy(cr, uid, move.procurement_id.id, default=valdef, context=context)
+                        else:
+                            proc = proc_obj.create(cr, uid, valdef, context=context)
                         proc_obj.run(cr, uid, [proc], context=context)
 
-            #delete the move with original product which is not relevant anymore
-            move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
+            
             #check if new moves needs to be exploded
             if to_explode_again_ids:
                 for new_move in self.browse(cr, uid, to_explode_again_ids, context=context):
                     processed_ids.extend(self._action_explode(cr, uid, new_move, context=context))
+            
+            #delete the move with original product which is not relevant anymore
+            move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
         #return list of newly created move or the move id otherwise
         return processed_ids or [move.id]
 
