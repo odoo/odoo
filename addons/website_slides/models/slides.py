@@ -71,6 +71,7 @@ class ir_attachment(osv.osv):
             string='Website Messages',
             help="Website communication history",
         ),
+        'website_desccription': fields.html('Website Desription', tranalate=True)
     }
 
     def _get_slide_setting(self, cr, uid, context):

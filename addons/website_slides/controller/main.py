@@ -36,7 +36,6 @@ class main(http.Controller):
 
     def _slides_urldata(self):
         urldata = urlparse(request.httprequest.url)
-        # print ">>>>>>>>",urldata
         values = {}
         values.update({
             'urlscheme':urldata.scheme+'://',
