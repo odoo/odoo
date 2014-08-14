@@ -31,7 +31,8 @@ class ir_attachment_tags(osv.osv):
     }
 
 class document_directory(osv.osv):
-    _inherit = 'document.directory'
+    _name = 'document.directory'
+    _inherit = ['document.directory','mail.thread']
 
     _columns = {
         'website_published': fields.boolean(
