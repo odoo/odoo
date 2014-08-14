@@ -1729,7 +1729,7 @@ class ExportFormat(object):
                 params)
 
         Model = request.session.model(model)
-        context = dict(req.context or {}, **params.get('context', {}))
+        context = dict(request.context or {}, **params.get('context', {}))
         ids = ids or Model.search(domain, 0, False, False, context)
 
         field_names = map(operator.itemgetter('name'), fields)
