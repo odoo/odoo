@@ -25,7 +25,6 @@ import tools
 from tools.safe_eval import safe_eval as eval
 from lxml  import etree
 from report import render
-import locale
 
 import time, os
 from operator import itemgetter
