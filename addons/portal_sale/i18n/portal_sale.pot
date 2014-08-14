@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-14 00:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,11 @@ msgstr ""
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_config_settings
 msgid "account.config.settings"
+msgstr ""
+
+#. module: portal_sale
+#: model:email.template,subject:portal_sale.email_template_edi_invoice
+msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
 msgstr ""
 
 #. module: portal_sale
@@ -43,11 +48,6 @@ msgstr ""
 #. module: portal_sale
 #: field:account.config.settings,group_payment_options:0
 msgid "Show payment buttons to employees too"
-msgstr ""
-
-#. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_sale
-msgid "${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 
 #. module: portal_sale
@@ -155,8 +155,8 @@ msgid "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draf
 msgstr ""
 
 #. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_invoice
-msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
+#: model:email.template,subject:portal_sale.email_template_edi_sale
+msgid "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 
 #. module: portal_sale
@@ -171,8 +171,8 @@ msgid "Quotations"
 msgstr ""
 
 #. module: portal_sale
-#: model:ir.model,name:portal_sale.model_sale_order
-msgid "Sales Order"
+#: model:ir.actions.act_window,name:portal_sale.action_orders_portal
+msgid "Sale Orders"
 msgstr ""
 
 #. module: portal_sale
@@ -287,7 +287,7 @@ msgid "Invoice"
 msgstr ""
 
 #. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.action_orders_portal
-msgid "Sale Orders"
+#: model:ir.model,name:portal_sale.model_sale_order
+msgid "Sales Order"
 msgstr ""
 

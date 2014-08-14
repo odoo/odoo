@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
+"PO-Revision-Date: 2014-08-14 00:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgid "Deliveries to Invoice"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:570
+#: code:addons/sale_stock/sale_stock.py:579
 #, python-format
 msgid "Picking Information ! : "
 msgstr ""
@@ -43,7 +43,12 @@ msgid "Pick List"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:565
+#: field:sale.order.line,product_packaging:0
+msgid "Packaging"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:574
 #, python-format
 msgid "You selected a quantity of %d Units.\n"
 "But it's not compatible with the selected packaging.\n"
@@ -72,7 +77,7 @@ msgid "Cancel Order"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:209
+#: code:addons/sale_stock/sale_stock.py:210
 #, python-format
 msgid "You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
@@ -113,7 +118,7 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:163
+#: code:addons/sale_stock/sale_stock.py:164
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -129,8 +134,8 @@ msgid "Allow a different address for delivery and invoicing "
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:572
-#: code:addons/sale_stock/sale_stock.py:623
+#: code:addons/sale_stock/sale_stock.py:581
+#: code:addons/sale_stock/sale_stock.py:634
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -223,6 +228,11 @@ msgid "Project MRP"
 msgstr ""
 
 #. module: sale_stock
+#: view:sale.order:0
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
+msgstr ""
+
+#. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid "If the sale order was set to create the invoice 'On Delivery Order', then an invoice is automatically created based on what you delivered. If you rather want to create your invoice based on your sale order, you can set the sale order to create invoice 'On Demand', then track and process the sales order that have been fully delivered and invoice them from there."
 msgstr ""
@@ -240,14 +250,9 @@ msgid "Shipped"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:265
+#: code:addons/sale_stock/sale_stock.py:266
 #, python-format
 msgid "invalid mode for test_state"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_saleprocurement0
-msgid "A procurement order is automatically created as soon as a sales order is confirmed or as the invoice is paid. It drives the purchasing and the production of products regarding to the rules and to the sales order's parameters. "
 msgstr ""
 
 #. module: sale_stock
@@ -271,8 +276,8 @@ msgid "days"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.order.line,product_packaging:0
-msgid "Packaging"
+#: model:process.transition,note:sale_stock.process_transition_saleprocurement0
+msgid "A procurement order is automatically created as soon as a sales order is confirmed or as the invoice is paid. It drives the purchasing and the production of products regarding to the rules and to the sales order's parameters. "
 msgstr ""
 
 #. module: sale_stock
@@ -313,7 +318,7 @@ msgid "Pick 'Deliver each product when available' if you allow partial delivery.
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:208
+#: code:addons/sale_stock/sale_stock.py:209
 #, python-format
 msgid "Cannot cancel sales order!"
 msgstr ""
@@ -382,7 +387,7 @@ msgid "Assign"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:618
+#: code:addons/sale_stock/sale_stock.py:629
 #, python-format
 msgid "Not enough stock ! : "
 msgstr ""
@@ -414,7 +419,7 @@ msgid "Cancel"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:163
+#: code:addons/sale_stock/sale_stock.py:164
 #, python-format
 msgid "In order to delete a confirmed sales order, you must cancel it.\n"
 "To do so, you must first cancel related picking for delivery orders."
@@ -446,13 +451,13 @@ msgid "Sales Advance Payment Invoice"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:523
+#: code:addons/sale_stock/sale_stock.py:532
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:561
+#: code:addons/sale_stock/sale_stock.py:570
 #, python-format
 msgid "(n/a)"
 msgstr ""
@@ -463,9 +468,15 @@ msgid "Incoterm"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:522
+#: code:addons/sale_stock/sale_stock.py:531
 #, python-format
 msgid "Cannot cancel sales order line!"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/res_config.py:81
+#, python-format
+msgid "Only administrators can change the settings"
 msgstr ""
 
 #. module: sale_stock
@@ -514,7 +525,7 @@ msgid "Ignore Exception"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:614
+#: code:addons/sale_stock/sale_stock.py:625
 #, python-format
 msgid "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"

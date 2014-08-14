@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
+"PO-Revision-Date: 2014-08-14 00:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -81,7 +81,9 @@ msgstr ""
 
 #. module: fleet
 #: view:fleet.vehicle.cost:0
+#: view:fleet.vehicle.log.fuel:0
 #: view:fleet.vehicle.model:0
+#: view:fleet.vehicle.odometer:0
 msgid "Group By..."
 msgstr ""
 
@@ -463,6 +465,7 @@ msgid "Vehicles Services Logs"
 msgstr ""
 
 #. module: fleet
+#: view:fleet.vehicle.log.fuel:0
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
 msgid "Vehicles Fuel Logs"
@@ -577,8 +580,8 @@ msgid "Driver of the vehicle"
 msgstr ""
 
 #. module: fleet
-#: view:fleet.vehicle:0
-msgid "other(s)"
+#: view:fleet.vehicle.odometer:0
+msgid "Vehicles odometers"
 msgstr ""
 
 #. module: fleet
@@ -1618,6 +1621,8 @@ msgstr ""
 #: view:fleet.vehicle:0
 #: view:fleet.vehicle.cost:0
 #: field:fleet.vehicle.cost,vehicle_id:0
+#: view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.odometer:0
 #: field:fleet.vehicle.odometer,vehicle_id:0
 msgid "Vehicle"
 msgstr ""
@@ -1777,6 +1782,11 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_53
 msgid "Windshield Wiper(s) Replacement"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle:0
+msgid "other(s)"
 msgstr ""
 
 #. module: fleet

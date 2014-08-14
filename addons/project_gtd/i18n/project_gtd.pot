@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-14 00:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,14 +51,19 @@ msgid "Timebox Empty Process Completed Successfully."
 msgstr ""
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one!"
+msgstr ""
+
+#. module: project_gtd
 #: view:project.task:0
 msgid "Pending Tasks"
 msgstr ""
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
 msgstr ""
 
 #. module: project_gtd
@@ -207,11 +212,6 @@ msgstr ""
 #: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
-msgstr ""
-
-#. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
 msgstr ""
 
 #. module: project_gtd
