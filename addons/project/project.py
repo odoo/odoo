@@ -591,12 +591,12 @@ def Project():
         if vals.get('type', False) not in ('template', 'contract'):
             vals['type'] = 'contract'
 
+        ir_values = self.pool.get('ir.values').get_default(cr, uid, 'project.config.settings', 'generate_project_alias')
+        if ir_values:
+            vals['alias_name'] = vals.get('alias_name') or vals.get('name')
         project_id = super(project, self).create(cr, uid, vals, context=create_context)
         project_rec = self.browse(cr, uid, project_id, context=context)
-        ir_values = self.pool.get('ir.values').get_default( cr, uid, 'project.config.settings', 'generate_project_alias' )
-        values = { 'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}
-        if ir_values:
-            values = dict(values, alias_name=vals['name'])
+        values = {'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}
         self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], values, context=context)
         return project_id
 

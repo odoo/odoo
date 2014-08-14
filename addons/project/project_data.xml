@@ -24,6 +24,9 @@
             <field name="type">view</field>
         </record>
         <function id="parent_project_default_set" model="ir.values" name="set" eval="('default',False,'parent_id', [('project.project', False)], all_projects_account, True, False, False, False, True)"/>
+        
+        <!-- alias domain: project.config.settings -->
+        <function id="default_alias_domain_project" model="ir.values" name="set_default" eval="('project.config.settings', 'generate_project_alias', True)"/>
 
         <!-- Task Stages -->
 
