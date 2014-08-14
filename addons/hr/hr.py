@@ -281,6 +281,11 @@ class hr_employee(osv.osv):
         if context.get("mail_broadcast"):
             context['mail_create_nolog'] = True
 
+        if data.get('user_id', False) == SUPERUSER_ID and data.get('name',False) == 'Administrator':
+            user_name = self.pool.get('res.users').browse(cr, uid, data.get('user_id'), context=context).name
+            if data['name'] != user_name:
+                data['name'] = user_name
+
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
 
         if context.get("mail_broadcast"):
@@ -446,3 +451,19 @@ class hr_department(osv.osv):
             if employee.user_id:
                 self.message_subscribe_users(cr, uid, [ids], user_ids=[employee.user_id.id], context=context)
         return super(hr_department, self).write(cr, uid, ids, vals, context=context)
+
+
+class res_users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
+
+    def write(self, cr, uid, ids, vals, context=None):
+        result = super(res_users, self).write(cr, uid, ids, vals, context=context)
+        employee_obj = self.pool.get('hr.employee')
+        if vals.get('name'):
+            for user_id in ids:
+                if user_id == SUPERUSER_ID:
+                    employee_ids = employee_obj.search(cr, uid, [('user_id', '=', user_id)])
+                    employee_obj.write(cr, uid, employee_ids, {'name': vals['name']}, context=context)
+        return result
+
