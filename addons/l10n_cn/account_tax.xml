@@ -1,17 +1,109 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <!--
 
     Copyright (C) 2008-2008 凯源吕鑫 lvxin@gmail.com   <basic chart data>
+    Copyright (C) 2014-now 凯源吕鑫 hans.yonathan@falinwa.com   <general business chart data>
     Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
 
 增值税
 -->
     <data noupdate="True">
         <!-- Tax Code Configuration -->
+        <!-- root -->
         <record id="vat_cn_chart_root" model="account.tax.code.template">
             <field name="name">中国税务报表</field>
             <field name="parent_id" eval="False"/>
         </record>
+        <!-- view -->
+        <record id="vat_cn_chart_tb" model="account.tax.code.template">
+            <field name="name">纳税基础</field>
+            <field name="parent_id" eval="vat_cn_chart_root"/>
+        </record>
+        <record id="vat_cn_chart_tbp" model="account.tax.code.template">
+            <field name="name">应交税费</field>
+            <field name="parent_id" eval="vat_cn_chart_root"/>
+        </record>
+
+        <!-- view 2 -->
+        <record id="vat_cn_chart_tr" model="account.tax.code.template">
+            <field name="name">销项税</field>
+            <field name="parent_id" eval="vat_cn_chart_tbp"/>
+        </record>        
+        <record id="vat_cn_chart_tp" model="account.tax.code.template">
+            <field name="name">进项税</field>
+            <field name="parent_id" eval="vat_cn_chart_tbp"/>
+        </record>        
+        <record id="vat_cn_chart_tsb" model="account.tax.code.template">
+            <field name="name">销项税纳税基础</field>
+            <field name="parent_id" eval="vat_cn_chart_tb"/>
+        </record>
+        <record id="vat_cn_chart_tpb" model="account.tax.code.template">
+            <field name="name">进项税纳税基础</field>
+            <field name="parent_id" eval="vat_cn_chart_tb"/>
+        </record>        
+        
+        <!-- child -->        
+        <record id="vat_cn_chart_tr17" model="account.tax.code.template">
+            <field name="name">销项税 - 税率 17%</field>
+            <field name="parent_id" eval="vat_cn_chart_tr"/>
+        </record>
+        <record id="vat_cn_chart_tr3" model="account.tax.code.template">
+            <field name="name">销项税 - 税率 3%</field>
+            <field name="parent_id" eval="vat_cn_chart_tr"/>
+        </record>        
+        <record id="vat_cn_chart_tp17" model="account.tax.code.template">
+            <field name="name">进项税 - 税率 17%</field>
+            <field name="parent_id" eval="vat_cn_chart_tp"/>
+        </record>
+        <record id="vat_cn_chart_tp3" model="account.tax.code.template">
+            <field name="name">进项税 - 税率 3%</field>
+            <field name="parent_id" eval="vat_cn_chart_tp"/>
+        </record>
+        <record id="vat_cn_chart_tp6" model="account.tax.code.template">
+            <field name="name">进项税 - 税率 6%</field>
+            <field name="parent_id" eval="vat_cn_chart_tp"/>
+        </record>
+        <record id="vat_cn_chart_tp7" model="account.tax.code.template">
+            <field name="name">进项税 - 税率 7%</field>
+            <field name="parent_id" eval="vat_cn_chart_tp"/>
+        </record>
+        <record id="vat_cn_chart_tp11" model="account.tax.code.template">
+            <field name="name">进项税 - 税率 11%</field>
+            <field name="parent_id" eval="vat_cn_chart_tp"/>
+        </record>
+        
+        <record id="vat_cn_chart_tpb17" model="account.tax.code.template">
+            <field name="name">进项税纳税基础 - 税率 17%</field>
+            <field name="parent_id" eval="vat_cn_chart_tpb"/>
+        </record>
+        <record id="vat_cn_chart_tpb3" model="account.tax.code.template">
+            <field name="name">进项税纳税基础 - 税率 3%</field>
+            <field name="parent_id" eval="vat_cn_chart_tpb"/>
+        </record>        
+        <record id="vat_cn_chart_tsb17" model="account.tax.code.template">
+            <field name="name">销项税纳税基础 - 税率 17%</field>
+            <field name="parent_id" eval="vat_cn_chart_tsb"/>
+        </record>
+        <record id="vat_cn_chart_tsb3" model="account.tax.code.template">
+            <field name="name">销项税纳税基础 - 税率 3%</field>
+            <field name="parent_id" eval="vat_cn_chart_tsb"/>
+        </record>
+        <record id="vat_cn_chart_tpb6" model="account.tax.code.template">
+            <field name="name">销项税纳税基础 - 税率 6%</field>
+            <field name="parent_id" eval="vat_cn_chart_tpb"/>
+        </record>
+        <record id="vat_cn_chart_tpb7" model="account.tax.code.template">
+            <field name="name">销项税纳税基础 - 税率 7%</field>
+            <field name="parent_id" eval="vat_cn_chart_tpb"/>
+        </record>
+        <record id="vat_cn_chart_tpb11" model="account.tax.code.template">
+            <field name="name">销项税纳税基础 - 税率 11%</field>
+            <field name="parent_id" eval="vat_cn_chart_tpb"/>
+        </record>
+        
+        
     </data>
+    
+    
 </openerp>
