@@ -110,7 +110,6 @@ class StockMove(osv.osv):
                             'group_id': move.group_id.id,
                             'priority': move.priority,
                             'partner_dest_id': move.partner_id.id,
-                            'move_dest_id': move.id,
                             }
                         if move.procurement_id:
                             proc = proc_obj.copy(cr, uid, move.procurement_id.id, default=valdef, context=context)
@@ -124,10 +123,16 @@ class StockMove(osv.osv):
                 for new_move in self.browse(cr, uid, to_explode_again_ids, context=context):
                     processed_ids.extend(self._action_explode(cr, uid, new_move, context=context))
             
+            if not move.split_from and move.procurement_id:
+                # Check if procurements have been made to wait for
+                moves = move.procurement_id.move_ids
+                if len(moves) == 1:
+                    proc_obj.write(cr, uid, [move.procurement_id.id], {'state': 'done'}, context=context)
+                
             #delete the move with original product which is not relevant anymore
             move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
         #return list of newly created move or the move id otherwise
-        return processed_ids or [move.id]
+        return processed_ids or []
 
     def action_confirm(self, cr, uid, ids, context=None):
         move_ids = []

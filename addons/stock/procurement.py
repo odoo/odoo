@@ -234,6 +234,8 @@ class procurement_order(osv.osv):
                 return True
             elif all_cancel:
                 self.message_post(cr, uid, [procurement.id], body=_('All stock moves have been cancelled for this procurement.'), context=context)
+            elif not cancel_test_list:
+                self.write(cr, uid, [procurement.id], {'state': 'done'}, context=context)
             self.write(cr, uid, [procurement.id], {'state': 'cancel'}, context=context)
             return False
 
