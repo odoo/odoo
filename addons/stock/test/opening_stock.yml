@@ -38,6 +38,36 @@
     product = self.browse(cr, uid, ref('product_product_6'), context=context)
     assert product.qty_available == 10, "Stock is not updated."
 -
+  I update the current stock of the Ice-cream with 10 kgm without Production Lot.
+-
+  !record {model: stock.change.product.qty, id: change_qty_nolot}:
+    location_id: location_monitor_small
+    new_quantity: 10
+    product_id: product_product_6
+-
+  !python {model: stock.change.product.qty}: |
+    self.change_product_qty(cr, uid, [ref('change_qty_nolot')], context=dict(context, active_id=ref('product_product_6')))
+-
+  I check available stock of Ice-cream after update stock.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref('product_product_6'), context=context)
+    assert product.qty_available == 20, "Real stock is not updated."
+-
+  I revert 10kgm updated stock again with no production lot in order to level the stock
+-
+  !record {model: stock.change.product.qty, id: change_qty_nolot_1}:
+    location_id: location_monitor_small
+    new_quantity: 0
+    product_id: product_product_6
+-
+  !python {model: stock.change.product.qty}: |
+    self.change_product_qty(cr, uid, [ref('change_qty_nolot_1')], context=dict(context, active_id=ref('product_product_6')))
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref('product_product_6'), context=context)
+    assert product.qty_available == 10, "Real stock is not updated."
+-
   Stock user can merge inventory, so let's check data with giving the access rights of user.
 -
   !context
