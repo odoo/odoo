@@ -27,7 +27,7 @@ class pos_order_report(osv.osv):
     _description = "Point of Sale Orders Statistics"
     _auto = False
     _columns = {
-        'date': fields.date('Date Order', readonly=True),
+        'date': fields.datetime('Date Order', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
