@@ -845,7 +845,10 @@ class mrp_production(osv.osv):
                 dicts[product_id] = {}
 
             # total qty of consumed product we need after this consumption
-            total_consume = ((product_qty + produced_qty) * scheduled.product_qty / production.product_qty)
+            if product_qty + produced_qty <= production.product_qty: #TODO: Need to add rounding over here?
+                total_consume = ((product_qty + produced_qty) * scheduled.product_qty / production.product_qty)
+            else:
+                total_consume = (production.product_qty * scheduled.product_qty / production.product_qty)
             qty = total_consume - consumed_qty
 
             # Search for quants related to this related move
@@ -918,17 +921,13 @@ class mrp_production(osv.osv):
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
                 subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
                 rest_qty = (subproduct_factor * production.product_qty) - produced_qty
-                if float_compare(rest_qty, (subproduct_factor * production_qty), precision_rounding=produce_product.product_id.uom_id.rounding) < 0:
-                    prod_name = produce_product.product_id.name_get()[0][1]
-                    raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can only produce up to total %s quantities.') % ((subproduct_factor * production_qty), prod_name, rest_qty))
-                if float_compare(rest_qty, 0, precision_rounding=produce_product.product_id.uom_id.rounding) > 0:
-                    lot_id = False
-                    if wiz:
-                        lot_id = wiz.lot_id.id
-                    new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
-                    stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
-                    if produce_product.product_id.id == production.product_id.id and new_moves:
-                        main_production_move = new_moves[0]
+                lot_id = False
+                if wiz:
+                    lot_id = wiz.lot_id.id
+                new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
+                stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
+                if produce_product.product_id.id == production.product_id.id and new_moves:
+                    main_production_move = new_moves[0]
 
         if production_mode in ['consume', 'consume_produce']:
             if wiz:
