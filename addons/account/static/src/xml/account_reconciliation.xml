@@ -229,7 +229,7 @@
 
     <t t-name="manual_reconciliation" t-extend="reconciliation">
         <t t-jquery=".interface_options" t-operation="append">
-            <table border="0" cellpadding="0" cellspacing="0" class="oe_form_group"><tbody>
+            <table t-if="show_accounts_type_controller" border="0" cellpadding="0" cellspacing="0" class="oe_form_group"><tbody>
                 <tr class="oe_form_group_row">
                     <td class="oe_form_group_cell oe_form_group_cell_label" colspan="1">
                         <label for="oe-field-input-5" class="oe_form_label oe_align_right">Show</label>
@@ -255,11 +255,14 @@
     </t>
 
     <t t-name="manual_reconciliation_line" t-extend="reconciliation_line">
+        <t t-jquery=".accounting_view" t-operation="after">
+            <div class="reconcile_button_container"><button class="button_reconcile">Reconcile</button></div>
+        </t>
         <t t-jquery=".accounting_view caption" t-operation="replace">
             <thead><tr>
                 <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
-                <td class="cell_partner_name"><t t-if="data.partner_name" t-esc="data.partner_name" /></td>
-                <td class="cell_last_reconciliation_date">Last Manual Reconciliation : <t t-esc="data.last_reconciliation_date or 'Never'" /></td>
+                <td t-if="data.partner_name" class="cell_partner_name"><t t-esc="data.partner_name" /></td>
+                <td t-att-colspan="(data.partner_name ? undefined : '2')" class="cell_last_reconciliation_date">Last Manual Reconciliation : <t t-esc="data.last_reconciliation_date or 'Never'" /></td>
                 <td class="cell_title_account_code" colspan="2"><t t-esc="data.account_code" /></td>
                 <td class="cell_info_popover"></td>
             </tr></thead>
