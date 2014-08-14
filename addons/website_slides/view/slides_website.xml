@@ -201,25 +201,25 @@
 	                    <li><a href="#transscript" role="tab" data-toggle="tab">Transscript</a></li>
 	                </ul>
 	                <!-- Tab panes -->
-	                <div class="tab-content" style="background: none repeat scroll 0 0 #f8f8f8;padding: 20px;">
+	                <div class="tab-content" style="padding: 20px;">
 	                    <div class="tab-pane fade" id="about">
 	                        <div t-field="slideview.website_desccription"/>
 	                    </div>
 	                    <div class="tab-pane fade" id="share">                            
-				            <h4>Share</h4>
-				            <h3>					                
-				                <a target="_Blank" class="oe_share_facebook" t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{shareurl}"><i class="fa fa-facebook-square"></i></a>
-				                <a target="_Blank" class="oe_share_twitter" t-attf-href="https://twitter.com/intent/tweet?text={title}&amp;url=#{shareurl}"><i class="fa fa-twitter"></i></a>
-				                <a target="_Blank" class="oe_share_linkedin" t-attf-href="http://www.linkedin.com/shareArticle?mini=true&amp;url=#{shareurl}&amp;title={title}&amp;"><i class="fa fa-linkedin"></i></a>
-				                <a target="_Blank" class="oe_share_google" t-attf-href="https://plus.google.com/share?url=#{shareurl}"><i class="fa fa-google-plus-square"></i></a>
-				                <a t-attf-href="mailto:?body=#{shareurl}&amp;subject={title}"><i class="fa fa-envelope-o"></i></a>
-				            </h3>					        
+				            <h4>Share:</h4>
+				            <div class="oe_share">
+				                <a target="_Blank" class="oe_share_facebook" href="https://www.facebook.com/sharer/sharer.php?u={url}"><i class="fa fa-facebook-square fa-2x"></i></a>
+				                <a target="_Blank" class="oe_share_twitter" href="https://twitter.com/intent/tweet?text={title}&amp;url={url}"><i class="fa fa-twitter fa-2x"></i></a>
+				                <a target="_Blank" class="oe_share_linkedin" href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;"><i class="fa fa-linkedin fa-2x"></i></a>
+				                <a target="_Blank" class="oe_share_google" href="https://plus.google.com/share?url={url}"><i class="fa fa-google-plus-square fa-2x"></i></a>
+				                <a href="mailto:?body={url}&amp;subject={title}"><i class="fa fa-envelope-o fa-2x"></i></a>					            
+					        </div>
 					        <div class="input-group">
 							  <span class="input-group-addon"><span class="glyphicon glyphicon-share"></span></span>
 							  <input type="text" class="form-control" t-att-value="shareurl"/>
 							</div>
 							<span class="help-block"> -- copy above link to share</span>
-							<h4>Embed</h4>						
+							<h4>Embed:</h4>						
 							<div class="input-group">
 								<span class="input-group-addon"><span class="glyphicon glyphicon-share"></span></span>
 								<textarea id="slide_embed_code" class="form-control"><t t-esc="embedcode"/></textarea>
