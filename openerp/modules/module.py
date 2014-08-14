@@ -39,6 +39,7 @@ import openerp.release as release
 from openerp.tools.safe_eval import safe_eval as eval
 
 MANIFEST = '__openerp__.py'
+README = ['README.rst', 'README.md', 'README.txt']
 
 _logger = logging.getLogger(__name__)
 
@@ -250,7 +251,6 @@ def load_information_from_description_file(module, mod_path=None):
                 f.close()
 
             if not info.get('description'):
-                README = ['README.rst', 'README.txt']
                 readme_path = [opj(mod_path, x) for x in README
                                if os.path.isfile(opj(mod_path, x))]
                 if readme_path:
