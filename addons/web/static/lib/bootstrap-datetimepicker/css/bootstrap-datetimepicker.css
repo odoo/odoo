@@ -1,5 +1,6 @@
 /*!
  * Datetimepicker for Bootstrap v3
+//! version : 3.0.3
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
 .bootstrap-datetimepicker-widget {
@@ -110,15 +111,15 @@
   line-height: 54px;
   width: 54px;
 }
-.bootstrap-datetimepicker-widget td.day {
-  height: 20px;
-  line-height: 20px;
-  width: 20px;
-}
 .bootstrap-datetimepicker-widget td.cw {
   font-size: 10px;
   height: 20px;
   line-height: 20px;
+}
+.bootstrap-datetimepicker-widget td.day {
+  height: 20px;
+  line-height: 20px;
+  width: 20px;
 }
 .bootstrap-datetimepicker-widget td.day:hover,
 .bootstrap-datetimepicker-widget td.hour:hover,
@@ -129,7 +130,7 @@
 }
 .bootstrap-datetimepicker-widget td.old,
 .bootstrap-datetimepicker-widget td.new {
-  color: #999999;
+  color: #777777;
 }
 .bootstrap-datetimepicker-widget td.today {
   position: relative;
@@ -156,15 +157,14 @@
 .bootstrap-datetimepicker-widget td.disabled,
 .bootstrap-datetimepicker-widget td.disabled:hover {
   background: none;
-  color: #999999;
+  color: #777777;
   cursor: not-allowed;
 }
 .bootstrap-datetimepicker-widget td span {
-  display: block;
+  display: inline-block;
   width: 54px;
   height: 54px;
   line-height: 54px;
-  float: left;
   margin: 2px 1.5px;
   cursor: pointer;
   border-radius: 4px;
@@ -178,12 +178,12 @@
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 .bootstrap-datetimepicker-widget td span.old {
-  color: #999999;
+  color: #777777;
 }
 .bootstrap-datetimepicker-widget td span.disabled,
 .bootstrap-datetimepicker-widget td span.disabled:hover {
   background: none;
-  color: #999999;
+  color: #777777;
   cursor: not-allowed;
 }
 .bootstrap-datetimepicker-widget th {
@@ -191,7 +191,7 @@
   line-height: 20px;
   width: 20px;
 }
-.bootstrap-datetimepicker-widget th.switch {
+.bootstrap-datetimepicker-widget th.picker-switch {
   width: 145px;
 }
 .bootstrap-datetimepicker-widget th.next,
@@ -201,7 +201,7 @@
 .bootstrap-datetimepicker-widget th.disabled,
 .bootstrap-datetimepicker-widget th.disabled:hover {
   background: none;
-  color: #999999;
+  color: #777777;
   cursor: not-allowed;
 }
 .bootstrap-datetimepicker-widget thead tr:first-child th {

@@ -1,5 +1,6 @@
 /*!
  * Datetimepicker for Bootstrap v3
+//! version : 3.0.3
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
 .bootstrap-datetimepicker-widget {
@@ -9,7 +10,7 @@
     padding: 4px;
     margin-top: 1px;
     z-index: 99999 !important;
-    border-radius: 4px;
+    border-radius: @border-radius-base;
 
     &.timepicker-sbs {
         width: 600px;
@@ -123,13 +124,21 @@
     td,
     th {
         text-align: center;
-        border-radius: 4px;
+        border-radius: @border-radius-base;
     }
 
     td {
         height: 54px;
         line-height: 54px;
         width: 54px;
+
+        &.cw
+        {
+            font-size: 10px;
+            height: 20px;
+            line-height: 20px;
+            color: @gray-light;
+        }
 
         &.day
         {
@@ -185,14 +194,13 @@
         }
 
         span {
-            display: block;
+            display: inline-block;
             width: 54px;
             height: 54px;
             line-height: 54px;
-            float: left;
             margin: 2px 1.5px;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: @border-radius-base;
 
             &:hover {
                 background: @gray-lighter;
@@ -222,7 +230,7 @@
         line-height: 20px;
         width: 20px;
 
-        &.switch {
+        &.picker-switch {
             width: 145px;
         }
 

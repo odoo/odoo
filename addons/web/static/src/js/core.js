@@ -300,101 +300,6 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
         ].join(';');
     },
     /**
-     * match between moment js locale and odoo locale
-     *
-     */
-    match_locale: function(){
-        var self = this;
-        var conversion = {
-            // 'ab_RU': 'en',
-            // 'am_ET': 'en',
-            'ar_SY': 'ar',
-            'bg_BG': 'bg',
-            'bs_BS': 'bs',
-            'ca_ES': 'ca',
-            'cs_CZ': 'cs',
-            'da_DK': 'da',
-            'de_DE': 'de',
-            'el_GR': 'el',
-            'en_CA': 'en-ca',
-            'en_GB': 'en-gb',
-            // 'en_US': 'en',
-            'es_AR': 'es',
-            'es_BO': 'es',
-            'es_CL': 'es',
-            'es_CO': 'es',
-            'es_CR': 'es',
-            'es_DO': 'es',
-            'es_EC': 'es',
-            'es_ES': 'es',
-            'es_GT': 'es',
-            'es_HN': 'es',
-            'es_MX': 'es',
-            'es_NI': 'es',
-            'es_PA': 'es',
-            'es_PE': 'es',
-            'es_PR': 'es',
-            'es_PY': 'es',
-            'es_SV': 'es',
-            'es_UY': 'es',
-            'es_VE': 'es',
-            'et_EE': 'et',
-            'fa_IR': 'fa',
-            'fi_FI': 'fi',
-            'fr_BE': 'fr',
-            'fr_CA': 'fr-ca',
-            'fr_CH': 'fr',
-            'fr_FR': 'fr',
-            'gl_ES': 'gl',
-            // 'gu_IN': 'en',
-            'he_IL': 'he',
-            'hi_IN': 'hi',
-            'hr_HR': 'hr',
-            'hu_HU': 'hu',
-            'id_ID': 'id',
-            'it_IT': 'it',
-            // 'iu_CA': 'en',
-            'ja_JP': 'ja',
-            'ko_KP': 'ko',
-            'ko_KR': 'ko',
-            // 'lo_LA': 'en',
-            'lt_LT': 'lt',
-            'lv_LV': 'lv',
-            'mk_MK': 'mk',
-            'ml_IN': 'ml',
-            // 'mn_MN': 'en',
-            'nb_NO': 'nb',
-            'nl_NL': 'nl',
-            'nl_BE': 'nl',
-            // 'oc_FR': 'en',
-            'pl_PL': 'pl',
-            'pt_BR': 'pt-br',
-            'pt_PT': 'pt',
-            'ro_RO': 'ro',
-            'ru_RU': 'ru',
-            // 'si_LK': 'en',
-            'sl_SI': 'sl',
-            'sk_SK': 'sk',
-            'sq_AL': 'sq',
-            'sr_RS': 'sr',
-            // 'sr@latin': 'en',
-            'sv_SE': 'sv',
-            // 'te_IN': 'en',
-            'tr_TR': 'tr',
-            'vi_VN': 'vi',
-            'uk_UA': 'uk',
-            // 'ur_PK': 'en',
-            'zh_CN': 'zh-cn',
-            // 'zh_HK': 'en',
-            'zh_TW': 'zh-tw',
-            'th_TH': 'th',
-            // 'tlh_TLH': 'en',
-        };
-
-        var lang = self.user_context.lang || 'en_US';
-        return conversion[lang] || 'en';
-    },
-    /**
      * Load additional web addons of that instance and init them
      *
      */
@@ -406,9 +311,8 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
             self.module_list = all_modules;
 
             var loaded = self.load_translations();
-            var datejs_locale = "/web/static/lib/datejs/globalization/" + self.user_context.lang.replace("_", "-") + ".js";
-
-            var file_list = [ datejs_locale ];
+            var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
+            var file_list = [ locale ];
             if(to_load.length) {
                 loaded = $.when(
                     loaded,

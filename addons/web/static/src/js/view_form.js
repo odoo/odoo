@@ -2581,7 +2581,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     type_of_date: "datetime",
     events: {
         'dp.change .oe_datepicker_main': 'change_datetime',
-        'dp.show .oe_datepicker_main': 'change_datetime',
+        'dp.show .oe_datepicker_main': 'set_datetime_default',
         'keypress .oe_datepicker_master': 'change_datetime',
     },
     init: function(parent) {
@@ -2603,7 +2603,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
                 up: 'fa fa-chevron-up',
                 down: 'fa fa-chevron-down'
                },
-            language: this.session.match_locale(),
+            language : moment.locale(),
             format : instance.web.convert_to_moment_format(l10n.date_format +' '+ l10n.time_format),
         };
         this.$input = this.$el.find('input.oe_datepicker_master');
@@ -2625,7 +2625,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     },
     set_value_from_ui_: function() {
         var value_ = this.$input.val() || false;
-        this.set({'value': this.parse_client(value_)});
+        this.set_value(this.parse_client(value_));
     },
     set_readonly: function(readonly) {
         this.readonly = readonly;
@@ -2650,20 +2650,21 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     format_client: function(v) {
         return instance.web.format_value(v, {"widget": this.type_of_date});
     },
+    set_datetime_default: function(){
+        //when opening datetimepicker the date and time by default should be the one from
+        //the input field if any or the current day otherwise
+        if (this.type_of_date === 'datetime') {
+            value = new moment().second(0);
+            if (this.$input.val().length !== 0 && this.is_valid_()){
+                var value = this.$input.val();
+            }
+            this.$('.oe_datepicker_main').data('DateTimePicker').setValue(value);
+        }
+    },
     change_datetime: function(e) {
         if ((e.type !== "keypress" || e.which === 13) && this.is_valid_()) {
             this.set_value_from_ui_();
-            this.set_value(this.get('value')); //reformat date and show it correctly
             this.trigger("datetime_changed");
-            //when opening datetimepicker the date and time by default should be the one from
-            //the input field if any or the current day otherwise
-            if (this.type_of_date === 'datetime') {
-                value = new moment().second(0);
-                if (this.$input.val().length !== 0 && this.is_valid_()){
-                    var value = this.$input.val();
-                }
-                this.$('.oe_datepicker_main').data('DateTimePicker').setValue(value);
-            }
         }
     },
     commit_value: function () {
