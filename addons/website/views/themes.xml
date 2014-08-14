@@ -8,84 +8,14 @@
 
     <template id="website.theme" name="Theme">
         <!-- Boostrap Fallback if server can't compute less files -->
-        <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
-        
-        <link rel="stylesheet" href='/website/static/src/css/website.css' t-ignore="true"/>
+        <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
 
-        <!-- Boostrap less files -->
+        <link rel="stylesheet" href='/website/static/src/css/website.css'/>
 
         <!-- Boostrap -->
+        <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
 
-        <link href="/web/static/lib/bootstrap/less/mixins.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/alerts.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/background-variant.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/border-radius.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/buttons.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/center-block.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/clearfix.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/forms.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/gradients.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/grid-framework.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/grid.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/hide-text.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/image.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/labels.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/list-group.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/nav-divider.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/nav-vertical-align.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/opacity.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/pagination.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/panels.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/progress-bar.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/reset-filter.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/resize.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/responsive-visibility.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/size.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/tab-focus.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/table-row.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/text-emphasis.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/text-overflow.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/mixins/vendor-prefixes.less" rel="stylesheet" type="text/less"/>
-
-        <link href="/web/static/lib/bootstrap/less/variables.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/normalize.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/print.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/scaffolding.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/type.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/code.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/grid.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/tables.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/forms.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/buttons.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/component-animations.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/glyphicons.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/dropdowns.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/button-groups.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/input-groups.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/navs.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/navbar.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/breadcrumbs.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/pagination.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/pager.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/labels.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/badges.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/jumbotron.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/thumbnails.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/alerts.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/progress-bars.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/media.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/list-group.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/panels.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/wells.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/close.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/modals.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/tooltip.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/popovers.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/carousel.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/utilities.less" rel="stylesheet" type="text/less"/>
-        <link href="/web/static/lib/bootstrap/less/responsive-utilities.less" rel="stylesheet" type="text/less"/>
-
-        <link rel="stylesheet" href='/website/static/src/less/colors.less' t-ignore="true"/>
+        <link rel="stylesheet" href='/website/static/src/less/colors.less'/>
     </template>
 
 <!-- Option layout -->
