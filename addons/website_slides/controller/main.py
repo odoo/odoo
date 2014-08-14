@@ -204,6 +204,20 @@ class main(http.Controller):
         data = [tag['name'] for tag in tags]
         return simplejson.dumps(data)
 
+    @http.route('/slides/get_channel', type='json', auth="public", website=True)
+    def get_channel(self, **post):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        directory = pool['document.directory']
+        attachment = request.registry['ir.attachment']
+        channels = directory.name_search(cr, uid, name='', args=None, operator='ilike', context=context, limit=100)
+        default_channel = attachment.get_default_channel(cr, uid, context)
+        res = []
+        for channel in channels:
+            res.append({'id': channel[0],
+                        'name': channel[1],
+                        'default': channel[0] == default_channel[0]
+                        })
+        return res
 
     @http.route(['/slides/add_slide'], type='http', auth="user", methods=['POST'], website=True)
     def add_slide(self, *args, **post):

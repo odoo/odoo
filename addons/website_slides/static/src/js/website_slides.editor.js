@@ -7,7 +7,16 @@
 
     website.EditorBarContent.include({
         new_slide: function() {
-            new website.editor.AddSlideDialog(this).appendTo(document.body);
+            var dialog = new website.editor.AddSlideDialog(this);
+            dialog.fetch_channel().then(function(channels){
+                dialog.channels = channels;
+                dialog.appendTo(document.body);
+            }).fail(function (err, data) {
+                var $error = $(openerp.qweb.render('website.addslide.error'));
+                $error.appendTo("body");
+                $error.modal('show');
+            });
+
         },
 
     });
@@ -23,6 +32,10 @@
         init: function(){
             this._super.apply(this, arguments);
             this.file = {};
+        },
+
+        fetch_channel: function(){
+            return openerp.jsonRpc('/slides/get_channel', 'call', {});
         },
 
         start: function (){
@@ -100,7 +113,7 @@
             var self = this;
             var default_val = {
                 'is_slide': true,
-                'website_published': false, 
+                'website_published': false,
             };
             var values = {
                 'name' : this.$('#name').val(),
@@ -108,7 +121,8 @@
                 'datas': self.file.data || '',
                 'datas_fname': self.file.name || '',
                 'image': this.$('#the-canvas')[0].toDataURL().split(',')[1],
-                'url': this.$('#url').val()
+                'url': this.$('#url').val(),
+                'parent_id': this.$('#channel').val()
             };
             return _.extend(values, default_val);
         },
