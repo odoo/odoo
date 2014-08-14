@@ -1304,10 +1304,6 @@ class BaseModel(object):
 
         # convert default values to the expected format
         result = self._convert_to_write(result)
-        for key, val in result.items():
-            if isinstance(val, NewId):
-                del result[key]                 # ignore new records in defaults
-
         return result
 
     def add_default_value(self, field):
@@ -5140,9 +5136,11 @@ class BaseModel(object):
         """ Convert the `values` dictionary into the format of :meth:`write`. """
         fields = self._fields
         return dict(
-            (name, fields[name].convert_to_write(value))
+            (name, write_value)
             for name, value in values.iteritems()
             if name in self._fields
+            for write_value in [fields[name].convert_to_write(value)]
+            if not isinstance(write_value, NewId)
         )
 
     #
