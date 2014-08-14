@@ -183,6 +183,14 @@ class stock_transfer_details_items(models.TransientModel):
             result['product_uom_id'] = prod.uom_id and prod.uom_id.id
         return {'value': result, 'domain': {}, 'warning':{} }
 
+    @api.multi
+    def source_package_change(self, sourcepackage):
+        result = {}
+        if sourcepackage:
+            pack = self.env['stock.quant.package'].browse(sourcepackage)
+            result['sourceloc_id'] = pack.location_id and pack.location_id.id
+        return {'value': result, 'domain': {}, 'warning':{} }
+
 class stock_transfer_details_packs(stock_transfer_details_items):
     _name = 'stock.transfer_details_packs'
     _description = 'Picking wizard packs'
