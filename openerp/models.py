@@ -4120,12 +4120,12 @@ class BaseModel(object):
                     self.pool[model_name]._store_set_values(cr, user, ids, fields2, context)
                     done.append((model_name, ids, fields2))
 
-            # recompute new-style fields
-            modified_fields = list(vals)
-            if self._log_access:
-                modified_fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
-            recs.modified(modified_fields)
-            recs.recompute()
+        # recompute new-style fields
+        modified_fields = list(vals)
+        if self._log_access:
+            modified_fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
+        recs.modified(modified_fields)
+        recs.recompute()
 
         if self._log_create and not (context and context.get('no_store_function', False)):
             message = self._description + \
