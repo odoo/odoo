@@ -5623,7 +5623,7 @@ class BaseModel(object):
             record._origin = self.with_context(__onchange=True)
 
         # determine which field should be triggered an onchange
-        todo = set([field_name]) if field_name else set(values)
+        todo = set([field_name]) if field_name else set([])
         done = set()
 
         # dummy assignment: trigger invalidations on the record
