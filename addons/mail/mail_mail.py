@@ -177,8 +177,10 @@ class mail_mail(osv.Model):
         is to be inherited to add custom content depending on some module."""
         body = mail.body_html
 
-        # generate footer
-        link = self._get_partner_access_link(cr, uid, mail, partner, context=context)
+        # generate access links for notifications or emails linked to a specific document with auto threading
+        link = None
+        if mail.notification or (mail.model and mail.res_id and not mail.no_auto_thread):
+            link = self._get_partner_access_link(cr, uid, mail, partner, context=context)
         if link:
             body = tools.append_content_to_html(body, link, plaintext=False, container_tag='div')
         return body
