@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="action_contract_expiration_reminder" model="ir.actions.server">
+            <field name="name">Contract expiration reminder</field>
+            <field name="model_id" ref="analytic.model_account_analytic_account"/>
+            <field name="state">code</field>
+            <field name="code"><![CDATA[
+context = dict(context or {})
+remind = {}
+
+# This is where you can edit the conditions under which to
+# remind of contract expiration. The dictionary is of the form
+# {'key': ([domain, rewrite_as_pending]), ...}
+# where key is the key to be used in the logging, domain is the
+# domain representing the conditions under which the contract
+# is considered to be expired (or about to expire), and
+# rewrite_as_pending is a boolean True or False that determines
+# whether reset the contract back to the "pending" state.
+fill_remind_map = {
+    # Already expired
+    'old': (
+        [('state', 'in', ['pending'])],
+        False),
+    # Expires now
+    'new': (
+        [
+            ('state', 'in', ['draft', 'open']),
+            ('date', '!=', False),
+            ('date', '<=', time.strftime('%Y-%m-%d'))
+        ],
+        True),
+    # Expires in less than 30 days
+    "future": (
+        [
+            ('state', 'in', ['draft', 'open']),
+            ('date', '!=', False),
+            ('date', '<', (datetime.datetime.now() + datetime.timedelta(30)).strftime("%Y-%m-%d"))
+        ],
+        False),
+}
+
+# What follows is the implementation. You should not have a need
+# to edit beyond this point.
+
+def fill_remind(key, domain, write_pending=False):
+    base_domain = [
+        ('type', '=', 'contract'),
+        ('partner_id', '!=', False),
+        ('manager_id', '!=', False),
+        ('manager_id.email', '!=', False),
+    ]
+    base_domain.extend(domain)
+
+    accounts_ids = self.search(cr, uid, base_domain, context=context, order='name asc')
+    accounts = self.browse(cr, uid, accounts_ids, context=context)
+    for account in accounts:
+        if write_pending:
+            account.write({'state' : 'pending'})
+        remind_user = remind.setdefault(account.manager_id.id, {})
+        remind_type = remind_user.setdefault(key, {})
+        remind_partner = remind_type.setdefault(account.partner_id, []).append(account)
+
+for key, params in fill_remind_map.items():
+    domain, write_pending = params
+    fill_remind(key, domain, write_pending)
+
+context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+context['action_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'action_account_analytic_overdue_all')[1]
+template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'account_analytic_cron_email_template')[1]
+for user_id, data in remind.items():
+    context["data"] = data
+    # Leaving in here for now, but commented out. Logging currently doesn't work
+    # but an effort is underway to allow logging to the DB in server actions.
+    # When that's completed, logging can be re-enabled for this.
+    # _logger.debug("Sending reminder to uid %s", user_id)
+    self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, force_send=True, context=context)
+]]>
+            </field>
+        </record>
+
+    </data>
+</openerp>
