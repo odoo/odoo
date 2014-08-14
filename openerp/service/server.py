@@ -131,7 +131,7 @@ class FSWatcher(object):
                         source = open(path, 'rb').read() + '\n'
                         compile(source, path, 'exec')
                     except SyntaxError:
-                        _logger.info('autoreload: python code change detected, SyntaxError in %s', path)
+                        _logger.error('autoreload: python code change detected, SyntaxError in %s', path)
                     else:
                         _logger.info('autoreload: python code updated, autoreload activated')
                         restart()
