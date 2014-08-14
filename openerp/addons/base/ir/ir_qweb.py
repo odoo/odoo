@@ -1195,6 +1195,9 @@ class AssetsBundle(object):
             if '.' not in ref and line not in imports and not ref.startswith(('.', '/', '~')):
                 imports.append(line)
                 return line
+            msg = "Local import '%s' is forbidden for security reasons." % ref
+            _logger.warning(msg)
+            self.css_errors.append(msg)
             return ''
         source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
