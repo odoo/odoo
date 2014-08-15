@@ -1444,8 +1444,6 @@ class account_move(osv.osv):
 
         for move in self.browse(cr, uid, ids, context):
             # Unlink old analytic lines on move_lines
-            if not move.line_id and not context.get('lines_cancel'):
-                raise osv.except_osv(_('No Move Lines !'), _('Please create some move lines.'))
             for obj_line in move.line_id:
                 for obj in obj_line.analytic_lines:
                     obj_analytic_line.unlink(cr,uid,obj.id)
