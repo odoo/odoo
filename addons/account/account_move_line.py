@@ -1099,18 +1099,19 @@ class account_move_line(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None, check=True):
-        if context is None:
-            context = {}
+        context = context or {}
         move_obj = self.pool.get('account.move')
         self._update_check(cr, uid, ids, context)
         result = False
+        move_ids = set()
         for line in self.browse(cr, uid, ids, context=context):
+            move_ids.add(line.move_id.id)
             context['journal_id'] = line.journal_id.id
             context['period_id'] = line.period_id.id
             result = super(account_move_line, self).unlink(cr, uid, [line.id], context=context)
-            if check:
-                context.update({'lines_cancel': 'cancel'})
-                move_obj.validate(cr, uid, [line.move_id.id], context=context)
+        move_ids = list(move_ids)
+        if check and move_ids:
+            move_obj.validate(cr, uid, move_ids, context=context)
         return result
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
