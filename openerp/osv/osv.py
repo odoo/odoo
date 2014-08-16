@@ -35,6 +35,7 @@ import openerp.sql_db as sql_db
 from openerp.tools.translate import translate
 from openerp.osv.orm import MetaModel, Model, TransientModel, AbstractModel
 import openerp.exceptions
+from openerp.tools.config import config
 
 import time
 import random
@@ -142,11 +143,13 @@ class object_proxy(object):
                     _logger.info("%s, retry %d/%d in %.04f sec..." % (errorcodes.lookup(e.pgcode), tries, MAX_TRIES_ON_CONCURRENCY_FAILURE, wait_time))
                     time.sleep(wait_time)
                 except orm.except_orm, inst:
+                    if config['debug_mode']: raise
                     _, _, tb = sys.exc_info()
                     raise except_osv(inst.name, inst.value), None, tb
                 except except_osv:
                     raise
                 except IntegrityError, inst:
+                    if config['debug_mode']: raise
                     osv_pool = pooler.get_pool(dbname)
                     for key in osv_pool._sql_error.keys():
                         if key in inst[0]:
