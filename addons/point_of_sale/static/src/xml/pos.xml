@@ -721,8 +721,13 @@
                     </span>
                 </t>
                 <t t-if="product.to_weight">
-                    <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price)+'/Kg'"/>
+                    <span class="price-tag to-weigh">
+                        <t t-if="product.uos_id">
+                            <t t-esc="widget.format_currency(product.price) + (product.uos_id[0] !== 1 ? '/'+product.uos_id[1] : '')"/>
+                        </t>
+                        <t t-if="!product.uos_id">
+                            <t t-esc="widget.format_currency(product.price)+'/Kg'"/>
+                        </t>
                     </span>
                 </t>
             </div>
