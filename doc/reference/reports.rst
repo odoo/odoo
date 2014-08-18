@@ -71,4 +71,4 @@ render_html method.  Classically, this method returns a call to the original
             }
             return report_obj.render('<<module.reportname>>', docargs)
 
-.. _time:: https://docs.python.org/2/library/time.html
+.. _time: https://docs.python.org/2/library/time.html

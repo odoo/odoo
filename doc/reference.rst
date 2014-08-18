@@ -16,4 +16,4 @@ Reference
     reference/qweb
     reference/javascript
 
-    references/reports
+    reference/reports
