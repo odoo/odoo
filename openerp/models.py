@@ -3148,11 +3148,11 @@ class BaseModel(object):
             pass
 
         # check the cache, and update it if necessary
-        if field not in self._cache:
+        if not self._cache.contains(field):
             for values in result:
                 record = self.browse(values.pop('id'))
                 record._cache.update(record._convert_to_cache(values, validate=False))
-            if field not in self._cache:
+            if not self._cache.contains(field):
                 e = AccessError("No value found for %s.%s" % (self, field.name))
                 self._cache[field] = FailedValue(e)
 
@@ -5676,6 +5676,12 @@ class RecordCache(MutableMapping):
     """
     def __init__(self, records):
         self._recs = records
+
+    def contains(self, field):
+        """ Return whether `records[0]` has a value for `field` in cache. """
+        if isinstance(field, basestring):
+            field = self._recs._fields[field]
+        return self._recs.id in self._recs.env.cache[field]
 
     def __contains__(self, field):
         """ Return whether `records[0]` has a regular value for `field` in cache. """
