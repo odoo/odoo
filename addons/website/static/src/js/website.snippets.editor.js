@@ -655,9 +655,9 @@
         _bind_li_menu: function () {
             var $li = this.$el.find('li:not(.dropdown-submenu)').add(this.$el).filter(function () {
                     return !!_.toArray($(this).data()).length;
-                }).children();
+                });
             $li.find("a").off('mouseenter click').on('mouseenter click', _.bind(this._mouse, this));
-            this.$el.find("ul").add(this.$el).off('mouseleave').on('mouseleave', _.bind(this.reset, this));
+            this.$el.find("ul").add(this.$el).add(this.$el.closest("ul")).off('mouseleave').on('mouseleave', _.bind(this.reset, this));
 
             this.reset_methods = [];
             this.reset_time = null;
@@ -686,9 +686,12 @@
         set_active: function () {
             var classes = _.uniq((this.$target.attr("class") || '').split(/\s+/));
             this.$el.find('[data-check_class], [data-select_class]')
+                .add(this.$el)
+                .filter('[data-check_class], [data-select_class]')
                 .removeClass("active")
                 .filter('[data-check_class="' + classes.join('"], [data-check_class="') + '"] ,'+
-                    '[data-select_class="' + classes.join('"], [data-select_class="') + '"]').addClass("active");
+                    '[data-select_class="' + classes.join('"], [data-select_class="') + '"]')
+                .addClass("active");
         },
 
         start: function () {
@@ -717,9 +720,14 @@
                 var $el, method;
                 for (var k in self.reset_methods) {
                     method = self.reset_methods[k];
-                    self.$el.find('[data-'+method+'].active, [data-'+method+']:has(.active)').each(function () {
-                        self.select("reset", $(this));
-                    });
+                    var $li = self.$el.find('[data-'+method+']').add(self.$el).filter('.active, :has(.active)');
+                    if ($li.size()) {
+                        $li.each(function () {
+                            self.select("reset", $(this));
+                        });
+                    } else {
+                        self[method]("reset", null, null);
+                    }
                 }
                 self.reset_methods = [];
                 self.$target.trigger("snippet-option-reset", [this]);
@@ -780,10 +788,13 @@
 
         // default method for snippet
         check_class: function (type, value, $li) {
-            var classes = " "+this.$el.find('[data-check_class]')
-                .map(function () {return $(this).data("check_class");}).get().join(" ")+" ";
-            var active_classes = " "+this.$el.find('[data-check_class].active, [data-check_class]:has(.active)')
-                .map(function () {return $(this).data("check_class");}).get().join(" ")+" ";
+            var $lis = this.$el.find('[data-check_class]').add(this.$el).filter('[data-check_class]');
+
+            function map ($lis) {
+                return $lis.map(function () {return $(this).data("check_class");}).get().join(" ");
+            }
+            var classes = map($lis);
+            var active_classes = map($lis.filter('.active, :has(.active)'));
 
             this.$target.removeClass(classes);
             this.$target.addClass(active_classes);
@@ -793,7 +804,10 @@
             }
         },
         select_class: function (type, value, $li) {
-            var classes = this.$el.find('[data-select_class]').map(function () {return $(this).data('select_class');}).get();
+            var $lis = this.$el.find('[data-select_class]').add(this.$el).filter('[data-select_class]');
+
+            var classes = $li.map(function () {return $(this).data('select_class');}).get();
+
             this.$target.removeClass(classes.join(" "));
             if(value) this.$target.addClass(value);
         },
@@ -1314,20 +1328,8 @@
             return false;
         },
         on_remove: function () {
-            if (!this.$target.siblings().length) {
-                var $parent = this.$target.parents(".row:first");
-                if($parent.find("[class*='col-md']").length > 1) {
-                    return false;
-                } else {
-                    if (!$parent.data("snippet-editor")) {
-                        this.BuildingBlock.create_overlay($parent);
-                    }
-                    $parent.data("snippet-editor").on_remove();
-                }
-            }
             this._super();
             this.hide_remove_button();
-            return false;
         },
         on_resize: function (compass, beginClass, current) {
             if (compass === 'w') {
@@ -1659,7 +1661,29 @@
                 this.styles[i].on_remove();
             }
             delete this.BuildingBlock.snippets[index];
+
+            // remove node and his empty
+            var parent,
+                node = this.$target.parent()[0];
+
             this.$target.remove();
+            function check(node) {
+                if ($(node).outerHeight() > 8) {
+                    return false;
+                }
+                for (var k=0; k<node.children.length; k++) {
+                    if (node.children[k].tagName || node.children[k].textContent.match(/[^\s]/)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            while (check(node)) {
+                parent = node.parentNode;
+                parent.removeChild(node);
+                node = parent;
+            }
+
             this.$overlay.remove();
             return false;
         },
