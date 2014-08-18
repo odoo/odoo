@@ -979,7 +979,7 @@ class product_product(osv.osv):
 
         def _name_get(d):
             name = d.get('name','')
-            code = d.get('default_code',False)
+            code = context.get('display_default_code', True) and d.get('default_code',False) or False
             if code:
                 name = '[%s] %s' % (code,name)
             return (d['id'], name)
