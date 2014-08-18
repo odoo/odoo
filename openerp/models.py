@@ -3972,15 +3972,10 @@ class BaseModel(object):
 
             record_id = tocreate[table].pop('id', None)
 
-            # When linking/creating parent records, force context without 'no_store_function' key that
-            # defers stored functions computing, as these won't be computed in batch at the end of create().
-            parent_context = dict(context)
-            parent_context.pop('no_store_function', None)
-
             if record_id is None or not record_id:
-                record_id = self.pool[table].create(cr, user, tocreate[table], context=parent_context)
+                record_id = self.pool[table].create(cr, user, tocreate[table], context=context)
             else:
-                self.pool[table].write(cr, user, [record_id], tocreate[table], context=parent_context)
+                self.pool[table].write(cr, user, [record_id], tocreate[table], context=context)
 
             updates.append((self._inherits[table], '%s', record_id))
 
@@ -4105,13 +4100,13 @@ class BaseModel(object):
         # check Python constraints
         recs._validate_fields(vals)
 
-        # Mark new-style fields to recompute
+        # invalidate and mark new-style fields to recompute
         modified_fields = list(vals)
         if self._log_access:
             modified_fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
         recs.modified(modified_fields)
 
-        if not context.get('no_store_function', False):
+        if context.get('recompute', True):
             result += self._store_get_values(cr, user, [id_new],
                 list(set(vals.keys() + self._inherits.values())),
                 context)
@@ -4124,7 +4119,7 @@ class BaseModel(object):
             # recompute new-style fields
             recs.recompute()
 
-        if self._log_create and not (context and context.get('no_store_function', False)):
+        if self._log_create and context.get('recompute', True):
             message = self._description + \
                 " '" + \
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
@@ -4269,7 +4264,7 @@ class BaseModel(object):
                         cr.execute('update "' + self._table + '" set ' + \
                             '"'+f+'"='+self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value), id))
 
-        # invalidate the cache for the modified fields
+        # invalidate and mark new-style fields to recompute
         self.browse(cr, uid, ids, context).modified(fields)
 
         return True
