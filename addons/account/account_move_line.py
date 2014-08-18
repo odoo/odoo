@@ -830,6 +830,11 @@ class account_move_line(osv.osv):
 
     def get_move_lines_for_manual_reconciliation(self, cr, uid, account_id, partner_id=False, context=None):
         """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
+        # TODO : amount_currency_str ?
+        if context is None:
+            context = {}
+        currency_obj = self.pool.get('res.currency')
+        company_currency_id = self.pool.get("account.account").browse(cr, uid, account_id, context=context).company_id.currency_id.id
         lines = []
         reconcile_partial_ids = []
         domain = [('account_id','=',account_id), ('reconcile_id','=',False), ('state','!=','draft')]
@@ -849,13 +854,24 @@ class account_move_line(osv.osv):
                 'period_name': line.period_id.name,
                 'journal_name': line.journal_id.name,
             }
-            # TODO : amount_residual_currency ?
-            if line.amount_residual_currency < 0:
-                ret_line['debit'] = 0
-                ret_line['credit'] = -line.amount_residual_currency
+            if line.currency_id:
+                if line.amount_residual_currency < 0:
+                    ret_line['credit'] = 0
+                    ret_line['debit'] = -line.amount_residual_currency
+                else:
+                    ret_line['credit'] = line.amount_residual_currency if line.credit != 0 else 0
+                    ret_line['debit'] = line.amount_residual_currency if line.debit != 0 else 0
             else:
-                ret_line['debit'] = line.amount_residual_currency if line.credit != 0 else 0
-                ret_line['credit'] = line.amount_residual_currency if line.debit != 0 else 0
+                if line.amount_residual < 0:
+                    ret_line['credit'] = 0
+                    ret_line['debit'] = -line.amount_residual
+                else:
+                    ret_line['credit'] = line.amount_residual if line.credit != 0 else 0
+                    ret_line['debit'] = line.amount_residual if line.debit != 0 else 0
+                ctx = context.copy()
+                ctx.update({'date': line.date})
+                ret_line['debit'] = currency_obj.compute(cr, uid, line.currency_id.id, company_currency_id, ret_line['debit'], context=ctx)
+                ret_line['credit'] = currency_obj.compute(cr, uid, line.currency_id.id, company_currency_id, ret_line['credit'], context=ctx)
             if line.reconcile_partial_id:
                 reconcile_partial_ids.append(line.reconcile_partial_id.id)
             lines.append(ret_line)
@@ -864,7 +880,6 @@ class account_move_line(osv.osv):
 
     # Utilisé dans :
     # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/account_move_line.py:                partner = self.list_partners_to_reconcile(cr, uid, context=context)
-    # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/account_move_line.py:                def list_partners_to_reconcile(self, cr, uid, context=None):
     # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/static/src/js/account_widgets.js:    return mod.call("list_partners_to_reconcile", []).then(function(result) {
     # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/wizard/account_reconcile_partner_process.py:        partner = move_line_obj.list_partners_to_reconcile(cr, uid, context=context)
     def list_partners_to_reconcile(self, cr, uid, context=None):

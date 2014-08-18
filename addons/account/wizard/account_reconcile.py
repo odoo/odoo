@@ -52,6 +52,7 @@ class account_move_line_reconcile(osv.osv_memory):
             res.update({'writeoff':data['writeoff']})
         return res
 
+    # TODO : utiliser amount_residual
     def trans_rec_get(self, cr, uid, ids, context=None):
         account_move_line_obj = self.pool.get('account.move.line')
         if context is None:
