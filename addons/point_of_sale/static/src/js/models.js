@@ -166,9 +166,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 self.db.add_partners(partners);
             },
         },{
-            model:  'account.tax',
-            fields: ['name','amount', 'price_include', 'type'],
-            domain: null,
+            model:  'pos.order',
+            call:   'get_all_taxes',
+            args:   function(self){ return [['amount','price_include','type','child_ids','child_depend','include_base_amount'], new instance.web.CompoundContext()]; },
             loaded: function(self,taxes){ self.taxes = taxes; },
         },{
             model:  'pos.session',
@@ -331,11 +331,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
                     var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context; 
+                    var call    = typeof model.call === 'function' ? model.call(self,tmp) : model.call;
+                    var args    = typeof model.args === 'function' ? model.args(self,tmp) : model.args;
+
                     progress += progress_step;
                     
-                    if( model.model ){
-                        new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
-                            .then(function(result){
+                    if (model.model) {
+                        
+                        if (call) {
+                            var data = new instance.web.Model(model.model).call(call,args);
+                        } else { 
+                            var data = new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
+                        }
+                        data.then(function(result){
                                 try{    // catching exceptions in model.loaded(...)
                                     $.when(model.loaded(self,result,tmp))
                                         .then(function(){ load_model(index + 1); },
@@ -747,48 +755,86 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         get_tax_details: function(){
             return this.get_all_prices().taxDetails;
         },
-        get_all_prices: function(){
+        compute_all: function(taxes, price_unit) {
             var self = this;
+            var res = []
             var currency_rounding = this.pos.currency.rounding;
-            var base = round_pr(this.get_quantity() * this.get_unit_price() * (1.0 - (this.get_discount() / 100.0)), currency_rounding);
+            var base = price_unit;
+            _(taxes).each(function(tax) {
+                if (tax.price_include) {
+                    if (tax.type === "percent") {
+                        tmp =  round_pr(base - round_pr(base / (1 + tax.amount),currency_rounding),currency_rounding);
+                        data = {amount:tmp, price_include:true, id: tax.id};
+                        res.push(data) 
+                    } else if (tax.type === "fixed") {
+                        tmp = round_pr(tax.amount * self.get_quantity(),currency_rounding);
+                        data = {amount:tmp, price_include:true, id: tax.id};
+                        res.push(data)
+                    } else {
+                        throw "This type of tax is not supported by the point of sale: " + tax.type;
+                    }
+                } else {
+                    if (tax.type === "percent") {
+                        tmp = round_pr(tax.amount * base, currency_rounding);
+                        data = {amount:tmp, price_include:false, id: tax.id};
+                        res.push(data)
+                    } else if (tax.type === "fixed") {
+                        tmp = round_pr(tax.amount * self.get_quantity(), currency_rounding);
+                        data = {amount:tmp, price_include:false, id: tax.id};
+                        res.push(data)
+                    } else {
+                        throw "This type of tax is not supported by the point of sale: " + tax.type;
+                    }
+                    amount2 = data.amount;
+                    var amount3 = 0.0;
+                    if (tax.child_ids) {
+                        if (tax.child_depend) {
+                            latest = res.pop()
+                        }
+                        amount = amount2
+                        child_tax = self.compute_all(tax.child_ids, amount);
+                        res.push(child_tax)
+                        _(child_tax).each(function(child) {
+                            amount3 += child.amount
+                        });
+                    }
+                }
+                if (tax.include_base_amount) {
+                    base += amount2 + amount3
+                }
+            });
+            return res
+        },
+        get_all_prices: function(){
+            var base = round_pr(this.get_quantity() * this.get_unit_price() * (1.0 - (this.get_discount() / 100.0)), this.pos.currency.rounding);
             var totalTax = base;
             var totalNoTax = base;
+            var taxtotal = 0;
             
             var product =  this.get_product(); 
             var taxes_ids = product.taxes_id;
-            var taxes =  self.pos.taxes;
-            var taxtotal = 0;
+            var taxes =  this.pos.taxes;
             var taxdetail = {};
-            _.each(taxes_ids, function(el) {
-                var tax = _.detect(taxes, function(t) {return t.id === el;});
-                if (tax.price_include) {
-                    var tmp;
-                    if (tax.type === "percent") {
-                        tmp =  base - round_pr(base / (1 + tax.amount),currency_rounding); 
-                    } else if (tax.type === "fixed") {
-                        tmp = round_pr(tax.amount * self.get_quantity(),currency_rounding);
-                    } else {
-                        throw "This type of tax is not supported by the point of sale: " + tax.type;
-                    }
-                    tmp = round_pr(tmp,currency_rounding);
-                    taxtotal += tmp;
-                    totalNoTax -= tmp;
-                    taxdetail[tax.id] = tmp;
-                } else {
-                    var tmp;
-                    if (tax.type === "percent") {
-                        tmp = tax.amount * base;
-                    } else if (tax.type === "fixed") {
-                        tmp = tax.amount * self.get_quantity();
-                    } else {
-                        throw "This type of tax is not supported by the point of sale: " + tax.type;
-                    }
-                    tmp = round_pr(tmp,currency_rounding);
-                    taxtotal += tmp;
-                    totalTax += tmp;
-                    taxdetail[tax.id] = tmp;
-                }
+            var product_taxes = [];
+
+            _(taxes_ids).each(function(el){
+                product_taxes.push(_.detect(taxes, function(t){
+                    return t.id === el;
+                }));
             });
+
+            var all_taxes = _(this.compute_all(product_taxes, base)).flatten();
+
+            _(all_taxes).each(function(tax) {
+                if (tax.price_include) { 
+                    totalNoTax -= tax.amount;
+                } else {
+                    totalTax += tax.amount;
+                }
+                taxtotal += tax.amount;
+                taxdetail[tax.id] = tax.amount;
+            });
+
             return {
                 "priceWithTax": totalTax,
                 "priceWithoutTax": totalNoTax,
