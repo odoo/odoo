@@ -132,6 +132,23 @@
             <field name="default" eval="False" />
         </record>
 
+        <!-- Email action for tasks -->
+        <record id="action_task_set_responsible" model="ir.actions.server">
+            <field name="name">Set Task Responsible</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="model_id" ref="model_project_task"/>
+            <field name="condition">True</field>
+            <field name="code">self.write(cr, uid, [obj.id], {'user_id': uid}, context=context)</field>
+        </record>
+        <record id="mail_action_task_set_responsible" model="mail.action">
+            <field name="name">I take it</field>
+            <field name="subtype_id" ref="mt_task_new"/>
+            <field name="server_action_id" ref="action_task_set_responsible"/>
+            <field name="recipients">followers</field>
+            <field name="action_condition">obj.user_id == False</field>
+        </record>
+
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">
             <field name="model">mail.group</field>

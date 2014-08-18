@@ -1,30 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2009-today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
 
 import threading
 
 from openerp.osv import osv, fields
 from openerp import tools, SUPERUSER_ID
 from openerp.tools.translate import _
-from openerp.tools.mail import plaintext2html
+
 
 class mail_followers(osv.Model):
     """ mail_followers holds the data related to the follow mechanism inside
@@ -72,6 +53,7 @@ class mail_followers(osv.Model):
 
     _sql_constraints = [('mail_followers_res_partner_res_model_id_uniq','unique(res_model,res_id,partner_id)','Error, a partner cannot follow twice the same object.')]
 
+
 class mail_notification(osv.Model):
     """ Class holding notifications pushed to partners. Followers and partners
         added in 'contacts to notify' receive notifications. """
@@ -88,6 +70,7 @@ class mail_notification(osv.Model):
             help='Starred message that goes into the todo mailbox'),
         'message_id': fields.many2one('mail.message', string='Message',
                         ondelete='cascade', required=True, select=1),
+        'action_user_ids': fields.one2many('mail.action.user', 'notification_id', string='Actions'),
     }
 
     _defaults = {
@@ -108,7 +91,7 @@ class mail_notification(osv.Model):
                 the notifications to process
         """
         notify_pids = []
-        for notification in self.browse(cr, uid, ids, context=context):
+        for notification in self.browse(cr, SUPERUSER_ID, ids, context=context):
             if notification.is_read:
                 continue
             partner = notification.partner_id
@@ -116,12 +99,19 @@ class mail_notification(osv.Model):
             if not partner.email:
                 continue
             # Do not send to partners having same email address than the author (can cause loops or bounce effect due to messy database)
-            if message.author_id and message.author_id.email == partner.email:
+            if (message.author_id and message.author_id.email == partner.email) or (message.email_from and message.email_from == partner.email):
                 continue
             # Partner does not want to receive any emails or is opt-out
             if partner.notify_email == 'none':
                 continue
-            notify_pids.append(partner.id)
+
+            action_user_ids = []
+            if notification.action_user_ids:
+                action_user_ids = [{
+                    'name': act.mail_action_id.name,
+                    'token': act.access_token,
+                    'url': act.access_url} for act in notification.action_user_ids]
+            notify_pids.append((partner.id, action_user_ids))
         return notify_pids
 
     def get_signature_footer(self, cr, uid, user_id, res_model=None, res_id=None, context=None, user_signature=True):
@@ -165,21 +155,32 @@ class mail_notification(osv.Model):
 
         return footer
 
-    def update_message_notification(self, cr, uid, ids, message_id, partner_ids, context=None):
-        existing_pids = set()
-        new_pids = set()
-        new_notif_ids = []
-
-        for notification in self.browse(cr, uid, ids, context=context):
-            existing_pids.add(notification.partner_id.id)
-
+    def update_message_notification(self, cr, uid, message_id, partner_ids, context=None):
+        message = self.pool['mail.message'].browse(cr, SUPERUSER_ID, message_id, context=context)
         # update existing notifications
-        self.write(cr, uid, ids, {'is_read': False}, context=context)
+        existing_notif_ids = self.search(cr, SUPERUSER_ID, [('message_id', '=', message_id), ('partner_id', 'in', partner_ids)], context=context)
+        self.write(cr, SUPERUSER_ID, existing_notif_ids, {'is_read': False}, context=context)
 
         # create new notifications
-        new_pids = set(partner_ids) - existing_pids
+        new_pids = set(partner_ids) - set(n.partner_id.id for n in self.browse(cr, SUPERUSER_ID, existing_notif_ids, context=context))
+        new_notif_ids = []
         for new_pid in new_pids:
-            new_notif_ids.append(self.create(cr, uid, {'message_id': message_id, 'partner_id': new_pid, 'is_read': False}, context=context))
+            action_user_ids = []
+            # prepare actions
+            if message.subtype_id and message.subtype_id.mail_action_ids:
+                for mail_action in message.subtype_id.mail_action_ids:
+                    if mail_action.recipients == 'followers':
+                        print 'followers'
+                        action_user_ids.append((0, 0, {'mail_action_id': mail_action.id, 'partner_id': new_pid}))
+                    elif mail_action.recipients == 'custom':
+                        print 'custom'
+                        action_user_ids.append((0, 0, {'mail_action_id': mail_action.id, 'partner_id': new_pid}))
+            new_notif_ids.append(self.create(cr, uid, {
+                'message_id': message_id,
+                'partner_id': new_pid,
+                'is_read': False,
+                'action_user_ids': action_user_ids,
+            }, context=context))
         return new_notif_ids
 
     def _notify_email(self, cr, uid, ids, message_id, force_send=False, user_signature=True, context=None):
@@ -205,21 +206,36 @@ class mail_notification(osv.Model):
         custom_values = dict()
         if message.model and message.res_id and self.pool.get(message.model) and hasattr(self.pool[message.model], 'message_get_email_values'):
             custom_values = self.pool[message.model].message_get_email_values(cr, uid, message.res_id, message, context=context)
+        mail_values = {
+            'mail_message_id': message.id,
+            'auto_delete': True,
+            'body_html': body_html,
+            'references': references,
+        }
+        mail_values.update(custom_values)
 
-        # create email values
+        # send emails without buttons (uncustomized)
+        std_email_pids = [item[0] for item in email_pids if not item[1]]
         max_recipients = 50
-        chunks = [email_pids[x:x + max_recipients] for x in xrange(0, len(email_pids), max_recipients)]
+        chunks = [std_email_pids[x:x + max_recipients] for x in xrange(0, len(std_email_pids), max_recipients)]
         email_ids = []
         for chunk in chunks:
-            mail_values = {
-                'mail_message_id': message.id,
-                'auto_delete': True,
-                'body_html': body_html,
-                'recipient_ids': [(4, id) for id in chunk],
-                'references': references,
-            }
-            mail_values.update(custom_values)
-            email_ids.append(self.pool.get('mail.mail').create(cr, uid, mail_values, context=context))
+            mail_values['recipient_ids'] = [(4, pid) for pid in chunk]
+            email_ids.append(self.pool.get('mail.mail').create(cr, SUPERUSER_ID, mail_values, context=context))
+
+        # send emails with button, asking custo for each email (partner dependant)
+        for pid, action_data in [item for item in email_pids if item[1]]:
+            # print pid, action_data
+            mail_values['recipient_ids'] = [(4, pid)]
+            cust_body_html = body_html
+            for data in action_data:
+                # print data
+                action_button = "<a href='%s' target='_blank'><span style='font-family:arial;font-size:12px;display:block;width:auto;text-align:left;white-space:nowrap'>%s</span></a>" % (data['url'], data['name'])
+                cust_body_html = tools.append_content_to_html(message.body, action_button, plaintext=False, container_tag='div')
+                if signature_company:
+                    cust_body_html = tools.append_content_to_html(cust_body_html, signature_company, plaintext=False, container_tag='div')
+            mail_values['body_html'] = cust_body_html
+            email_ids.append(self.pool.get('mail.mail').create(cr, SUPERUSER_ID, mail_values, context=context))
         # NOTE:
         #   1. for more than 50 followers, use the queue system
         #   2. do not send emails immediately if the registry is not loaded,
@@ -243,14 +259,12 @@ class mail_notification(osv.Model):
             :param bool user_signature: if True, the generated mail.mail body is
                 the body of the related mail.message with the author's signature
         """
-        notif_ids = self.search(cr, SUPERUSER_ID, [('message_id', '=', message_id), ('partner_id', 'in', partners_to_notify)], context=context)
-
         # update or create notifications
-        new_notif_ids = self.update_message_notification(cr, SUPERUSER_ID, notif_ids, message_id, partners_to_notify, context=context)
+        new_notif_ids = self.update_message_notification(cr, uid, message_id, partners_to_notify, context=context)
 
         # mail_notify_noemail (do not send email) or no partner_ids: do not send, return
         if context and context.get('mail_notify_noemail'):
             return True
 
         # browse as SUPERUSER_ID because of access to res_partner not necessarily allowed
-        self._notify_email(cr, SUPERUSER_ID, new_notif_ids, message_id, force_send, user_signature, context=context)
+        self._notify_email(cr, uid, new_notif_ids, message_id, force_send, user_signature, context=context)

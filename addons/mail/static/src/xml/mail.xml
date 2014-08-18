@@ -264,6 +264,12 @@
                         <t t-if="! widget.body_short">
                             <t t-raw="widget.body"/>
                         </t>
+                        <t t-if="widget.action_ids and widget.action_ids.length">
+                            <h3>Action for this notification</h3>
+                            <t t-foreach="widget.action_ids" t-as="action">
+                                <a class="btn btn-primary" t-attf-href="#{action.action_url}"><t t-esc="action.action_name"/></a>
+                            </t>
+                        </t>
                     </div>
                 </div>
                 <div class="oe_msg_footer">

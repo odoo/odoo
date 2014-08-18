@@ -298,7 +298,8 @@ class mail_message(osv.Model):
 
     def _message_read_dict_postprocess(self, cr, uid, messages, message_tree, context=None):
         """ Post-processing on values given by message_read. This method will
-            handle partners in batch to avoid doing numerous queries.
+            handle partners, attachments and actions in batch to avoid doing
+            numerous queries.
 
             :param list messages: list of message, as get_dict result
             :param dict message_tree: {[msg.id]: msg browse record}
@@ -332,6 +333,16 @@ class mail_message(osv.Model):
             'file_type_icon': attachment['file_type_icon'],
         }) for attachment in attachments)
 
+        # 3. Notifications
+        action_ids = {}
+        notif_ids = self.pool['mail.notification'].search(cr, uid, [('action_user_ids', '!=', False), ('message_id', 'in', message_tree.keys()), ('partner_id', '=', pid)], context=context)
+        for notification in self.pool['mail.notification'].browse(cr, uid, notif_ids, context=context):
+            for action_user in notification.action_user_ids:
+                action_ids.setdefault(notification.message_id.id, list()).append({
+                    'action_name': action_user.mail_action_id.name,
+                    'action_url': action_user.access_url,
+                })
+
         # 3. Update message dictionaries
         for message_dict in messages:
             message_id = message_dict.get('id')
@@ -343,10 +354,10 @@ class mail_message(osv.Model):
             partner_ids = []
             if message.subtype_id:
                 partner_ids = [partner_tree[partner.id] for partner in message.notified_partner_ids
-                                if partner.id in partner_tree]
+                               if partner.id in partner_tree]
             else:
                 partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
-                                if partner.id in partner_tree]
+                               if partner.id in partner_tree]
             attachment_ids = []
             for attachment in message.attachment_ids:
                 if attachment.id in attachments_tree:
@@ -356,8 +367,9 @@ class mail_message(osv.Model):
                 'author_id': author,
                 'partner_ids': partner_ids,
                 'attachment_ids': attachment_ids,
-                'user_pid': pid
-                })
+                'user_pid': pid,
+                'action_ids': action_ids.get(message_id),
+            })
         return True
 
     def _message_read_dict(self, cr, uid, message, parent_id=False, context=None):

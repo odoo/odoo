@@ -1,29 +1,10 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
 
 from openerp.osv import osv
 from openerp.osv import fields
 
 
-class mail_message_subtype(osv.osv):
+class mail_message_subtype(osv.Model):
     """ Class holding subtype definition for messages. Subtypes allow to tune
         the follower subscription, allowing only some subtypes to be pushed
         on the Wall. """
@@ -53,7 +34,8 @@ class mail_message_subtype(osv.osv):
         'default': fields.boolean('Default',
             help="Activated by default when subscribing."),
         'sequence': fields.integer('Sequence', help="Used to order subtypes."),
-        'hidden': fields.boolean('Hidden', help="Hide the subtype in the follower options")
+        'hidden': fields.boolean('Hidden', help="Hide the subtype in the follower options"),
+        'mail_action_ids': fields.one2many('mail.action', 'subtype_id', string='Actions'),
     }
 
     _defaults = {

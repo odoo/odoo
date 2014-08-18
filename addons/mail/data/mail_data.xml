@@ -68,5 +68,70 @@
             <field name="name">Discussions</field>
             <field name="sequence" eval="0"/>
         </record>
+
+        <!--Email template -->
+        <record id="notification_email" model="mail.template">
+            <field name="name">Notification Email</field>
+            <field name="subject">${object.subject}</field>
+            <field name="model_id" ref="mail.model_mail_message"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+<div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777" data-snippet-theme="basic_theme">
+    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+        <tbody><tr>
+            <td valign="center" width="270" style="padding:10px 10px 10px 5px;font-size: 30px">
+                &nbsp;
+                <a href="#" style="-webkit-user-select: none; padding: 6px 12px; font-size: 14px; line-height: 20px; color: rgb(255,255,255); border: none; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #428BCA;border-radius:4px" class="o_default_snippet_text">View Task</a>
+                &nbsp;
+                <a href="#" style="-webkit-user-select: none; padding: 6px 12px; font-size: 14px; line-height: 20px; color: rgb(255,255,255); border: none; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #428BCA;border-radius:4px" class="o_default_snippet_text">Follow</a>
+                &nbsp;
+            </td>
+            <td valign="center" align="right" width="270" style="padding:10px 15px 10px 10px">
+                <a href="http://www.example.com" style="text-decoration:none;color: inherit">
+                    <strong class="o_default_snippet_text">New Task</strong>
+                </a>
+            </td>
+        </tr>
+    </tbody></table>
+</div><div style="padding:0px;width:600px;margin:auto;color:#777777;background-color:#FFFFFF" class="">
+    <table cellspacing="0" cellpadding="0" style="vertical-align:top;padding:0px;font-family:arial;font-size:12px;border-collapse:collapse;background:inherit;color:inherit">
+        <tbody>
+            <tr>
+                <td valign="top" style="width:600px">
+                    <div>
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div><div class="snippet_row bg-color" style="padding:0;width:600px;max-width:600px;margin:0 auto;background: #fff repeat top /100%;color:#777777">
+    <table style="width:100%;text-align:justify;margin:0 auto;background:inherit;color:inherit;border-collapse:collapse;color:inherit">
+        <tbody><tr>
+            <td style="padding:10px 0;font-size:14px">
+                <p style="margin:0" class="o_default_snippet_text">Dear John</p>
+                <p style="margin:0" class="o_default_snippet_text">Great stories have personality. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
+                <p style="margin:0" class="o_default_snippet_text">Great stories are for everyone even when only written for just one person. If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
+                <p style="margin:0" class="o_default_snippet_text">Kind Regards,</p>
+                <p style="margin:0" class="o_default_snippet_text">Michael Fletcher</p>
+            </td>
+        </tr>
+    </tbody></table>
+</div><div class="snippet_row bg-color" style="padding:0;width:600px;max-width:600px;margin:0 auto;background: #fff repeat top /100%;color:#777777"><table style="width:600px;text-align:center;margin:0 auto;border-collapse:collapse;background:inherit;color:inherit"><tbody><tr></tr></tbody></table></div><div style="padding:0px;width:600px;margin:auto;color:#777777;background-color:#FFFFFF" class="">
+    <table cellspacing="0" cellpadding="0" style="vertical-align:top;padding:0px;font-family:arial;font-size:12px;border-collapse:collapse;background:inherit;color:inherit">
+        <tbody>
+            <tr>
+                <td valign="top" style="width:600px">
+                    <div>
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+            ]]></field>
+        </record>
+
     </data>
 </openerp>

@@ -21,6 +21,7 @@
 
 import ir_attachment
 import mail_message_subtype
+import mail_action
 import mail_alias
 import mail_followers
 import mail_message

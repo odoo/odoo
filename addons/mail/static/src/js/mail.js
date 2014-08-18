@@ -186,6 +186,8 @@ openerp.mail = function (session) {
             this.partner_ids = datasets.partner_ids || [];
             this.date = datasets.date;
             this.user_pid = datasets.user_pid || false;
+            this.action_ids = datasets.action_ids || [];
+            console.log(this.action_ids);
             this.format_data();
 
             // update record_name: Partner profile

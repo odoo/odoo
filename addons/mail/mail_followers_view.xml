@@ -50,6 +50,30 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_notification_form">
+            <field name="name">mail.notification.form</field>
+            <field name="model">mail.notification</field>
+            <field name="arch" type="xml">
+                <form string="Notifications Form">
+                    <sheet>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="message_id"/>
+                            <field name="is_read"/>
+                            <field name="starred"/>
+                            <field name="action_user_ids">
+                                <tree>
+                                    <field name="mail_action_id"/>
+                                    <field name="access_token"/>
+                                    <field name="done"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="action_view_followers" model="ir.actions.act_window">
             <field name="name">Followers</field>
             <field name="res_model">mail.followers</field>

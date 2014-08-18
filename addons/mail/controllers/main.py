@@ -1,5 +1,6 @@
 import base64
 import psycopg2
+import werkzeug
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -42,3 +43,16 @@ class MailController(http.Controller):
             except psycopg2.Error:
                 pass
         return True
+
+    #------------------------------------------------------
+    # Email actions
+    #------------------------------------------------------
+
+    @http.route('/mail/action', type='http', auth='user')  # custom authentification method like calendar ?
+    def mail_action(self, token, id, **kwargs):
+        print 'Incoming mail_action with token', token, 'id', id, 'and user', request.uid
+        res = request.registry['mail.action.user'].execute(
+            request.cr, request.uid, id, token, context=request.context)
+        if isinstance(res, werkzeug.wrappers.Response):
+            return res
+        return request.redirect('/web?action=mail.action_mail_redirect&model=')
