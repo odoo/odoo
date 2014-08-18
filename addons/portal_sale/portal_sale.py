@@ -138,7 +138,7 @@ class account_invoice(osv.Model):
         user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
         if user.share:
             return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', 'portal_action_invoices', context=context)
-        return super(sale_order, self).get_formview_action(cr, uid, id, context=context)
+        return super(account_invoice, self).get_formview_action(cr, uid, id, context=context)
 
 
 class mail_mail(osv.osv):
