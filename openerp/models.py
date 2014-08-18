@@ -5135,13 +5135,13 @@ class BaseModel(object):
     def _convert_to_write(self, values):
         """ Convert the `values` dictionary into the format of :meth:`write`. """
         fields = self._fields
-        return dict(
-            (name, write_value)
-            for name, value in values.iteritems()
-            if name in self._fields
-            for write_value in [fields[name].convert_to_write(value)]
-            if not isinstance(write_value, NewId)
-        )
+        result = {}
+        for name, value in values.iteritems():
+            if name in fields:
+                value = fields[name].convert_to_write(value)
+                if not isinstance(value, NewId):
+                    result[name] = value
+        return result
 
     #
     # Record traversal and update
