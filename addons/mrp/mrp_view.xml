@@ -27,10 +27,11 @@
             <field name="model">mrp.property.group</field>
             <field name="arch" type="xml">
                 <form string="Properties categories">
-                    <label for="name"/>
-                    <field name="name"/>
-                    <label for="description"/>
-                    <field name="description"/>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <separator string="Description"/>
+                    <field name="description" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -84,8 +85,8 @@
                         <field name="group_id"/>
                         <field name="composition"/>
                     </group>
-                    <label for="description"/>
-                    <field name="description"/>
+                    <separator string="Description"/>
+                    <field name="description" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -198,8 +199,8 @@
                                     <field name="costs_general_account_id" attrs="{ 'required':['|',('costs_cycle_account_id', '=', True),('costs_hour_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
                                 </group>
                             </group>
-                            <label for="note"/>
-                            <field name="note"/>
+                            <separator string="Description"/>
+                            <field name="note" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>

@@ -441,26 +441,24 @@
             <field name="model">hr.holidays.status</field>
             <field name="arch" type="xml">
                 <form string="Leave Type">
-                <sheet string="Leave Type">
                     <group col="4">
                         <field name="name"/>
                         <field name="categ_id"/>
                     </group>
                     <notebook>
-                      <page string="Details">
-                          <group>
-                              <group name="selection" string="Validation">
-                                  <field name="double_validation"/>
-                                  <field name="limit"/>
-                              </group>
-                              <group name="second" string="Misc">
-                                  <field name="color_name"/>
-                                  <field name="active"/>
-                              </group>
-                          </group>
-                      </page>
+                        <page string="Details">
+                            <group>
+                                <group name="selection" string="Validation">
+                                    <field name="double_validation"/>
+                                    <field name="limit"/>
+                                </group>
+                                <group name="second" string="Misc">
+                                    <field name="color_name"/>
+                                    <field name="active"/>
+                                </group>
+                            </group>
+                        </page>
                     </notebook>
-                </sheet>
                 </form>
             </field>
         </record>
