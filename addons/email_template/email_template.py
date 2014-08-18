@@ -341,7 +341,7 @@ class email_template(osv.osv):
             service = netsvc.LocalService(report_service)
             (result, format) = service.create(cr, uid, [res_id], {'model': template.model}, ctx)
             # TODO in trunk, change return format to binary to match message_post expected format
-            if not ctx['default_composition_mode'] == 'mass_mail':
+            if not ctx.get('default_composition_mode', False) == 'mass_mail':
                 result = base64.b64encode(result)
             if not report_name:
                 report_name = report_service
