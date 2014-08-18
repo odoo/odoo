@@ -1214,6 +1214,10 @@ class Root(object):
 
     def setup_db(self, httprequest):
         db = httprequest.session.db
+        if not db:
+            if 'db' in httprequest.args:
+                db = httprequest.args['db']
+                httprequest.session.db = db
         # Check if session.db is legit
         if db:
             if db not in db_filter([db], httprequest=httprequest):
