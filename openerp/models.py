@@ -1484,7 +1484,8 @@ class BaseModel(object):
         return view
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        """
+        """ fields_view_get([view_id | view_type='form'])
+
         Get the detailed composition of the requested view like fields, model, view architecture
 
         :param view_id: id of the view or None
@@ -2984,7 +2985,9 @@ class BaseModel(object):
                 field.computed_fields = []
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
-        """ Return the definition of each field.
+        """ fields_get([fields])
+
+        Return the definition of each field.
 
         The returned value is a dictionary (indiced by field name) of
         dictionaries. The _inherits'd fields are included. The string, help,

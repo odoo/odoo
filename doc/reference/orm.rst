@@ -127,6 +127,11 @@ Model
     .. automethod:: with_context
     .. automethod:: with_env
 
+    .. rubric:: Fields and views querying
+
+    .. automethod:: fields_get
+    .. automethod:: fields_view_get
+
     .. rubric:: ???
 
     .. automethod:: default_get
@@ -134,7 +139,6 @@ Model
     .. automethod:: add_default_value
     .. automethod:: name_get
     .. automethod:: name_create
-    .. automethod:: new
 
     .. rubric:: Automatic fields
 
