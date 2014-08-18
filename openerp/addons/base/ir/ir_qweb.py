@@ -1158,7 +1158,7 @@ class AssetsBundle(object):
         ira = self.registry['ir.attachment']
         url_prefix = '/web/%s/%s/' % (type, self.xmlid)
         # Invalidate previous caches
-        oids = ira.search(self.cr, self.uid, [('url', 'like', url_prefix)], context=self.context)
+        oids = ira.search(self.cr, self.uid, [('url', '=like', url_prefix + '%')], context=self.context)
         if oids:
             ira.unlink(self.cr, openerp.SUPERUSER_ID, oids, context=self.context)
         url = url_prefix + self.version
