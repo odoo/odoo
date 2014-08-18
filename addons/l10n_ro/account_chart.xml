@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="0">
+<data>
 
     <!-- Account Templates -->
 
@@ -1842,7 +1842,7 @@
     <record id="pcg_408" model="account.account.template">
         <field name="name">Furnizori - facturi nesosite</field>
         <field name="code">408</field>
-        <field name="type">other</field>
+        <field name="type">payable</field>
         <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="parent_id" ref="pcg_40"/>
         <field name="reconcile" eval="True"/>
@@ -1860,7 +1860,7 @@
     <record id="pcg_4091" model="account.account.template">
         <field name="name">Furnizori - debitori pentru cumparari de bunuri de natura stocurilor</field>
         <field name="code">4091</field>
-        <field name="type">other</field>
+        <field name="type">payable</field>
         <field name="user_type" ref="account.data_account_type_payable" />
         <field name="parent_id" ref="pcg_409"/>
         <field name="reconcile" eval="True"/>
@@ -1869,7 +1869,7 @@
     <record id="pcg_4092" model="account.account.template">
         <field name="name">Furnizori - debitori pentru prestari de servicii</field>
         <field name="code">4092</field>
-        <field name="type">other</field>
+        <field name="type">payable</field>
         <field name="user_type" ref="account.data_account_type_payable" />
         <field name="parent_id" ref="pcg_409"/>
         <field name="reconcile" eval="True"/>
@@ -1923,7 +1923,7 @@
     <record id="pcg_418" model="account.account.template">
         <field name="name">Clienti - facturi de intocmit</field>
         <field name="code">418</field>
-        <field name="type">other</field>
+        <field name="type">receivable</field>
         <field name="user_type" ref="account.data_account_type_receivable"/>
         <field name="parent_id" ref="pcg_41"/>
         <field name="reconcile" eval="True"/>
@@ -1932,7 +1932,7 @@
     <record id="pcg_419" model="account.account.template">
         <field name="name">Clienti creditori</field>
         <field name="code">419</field>
-        <field name="type">other</field>
+        <field name="type">receivable</field>
         <field name="user_type" ref="account.data_account_type_receivable"/>
         <field name="parent_id" ref="pcg_41"/>
         <field name="reconcile" eval="True"/>
