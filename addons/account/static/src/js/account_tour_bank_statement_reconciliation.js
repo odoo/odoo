@@ -96,21 +96,16 @@
             // Check mutual exclusion of move lines
             {
                 title:      "deselect SAJ/2014/003 from second reconciliation",
-                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .mv_line[data-lineid="9"]'
+                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .accounting_view .mv_line[data-lineid="9"]'
             },
             {
-                title:      "check it appeared in first reconciliation's matches list then set second reconciliation in match mode",
-                // huh… fail… si pas en mode match, la liste des mv_lines n'est pas updated semble-il
-                //waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(2) .mv_line[data-lineid="9"]',
-                waitFor:    '.oe_bank_statement_reconciliation_line:first-child .mv_line[data-lineid="9"]',
-                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .initial_line'
+                title:      "check it appeared in first reconciliation's matches list and select SAJ/2014/003 in second reconciliation",
+                waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(2) .accounting_view .mv_line[data-lineid="9"]',
+                waitFor:    '.oe_bank_statement_reconciliation_line:first-child .match .mv_line[data-lineid="9"]',
+                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .match .mv_line[data-lineid="9"]'
             },
             {
-                title:      "select SAJ/2014/003 in second reconciliation",
-                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .mv_line[data-lineid="9"]'
-            },
-            {
-                title:      "check SAJ/2014/003 disappeared in first reconciliation, second is in mode no-partner and validate it",
+                title:      "check SAJ/2014/003 disappeared in first reconciliation, second is in mode no-match and validate it",
                 waitNot:    '.oe_bank_statement_reconciliation_line:first-child .mv_line[data-lineid="9"]',
                 waitFor:    '.oe_bank_statement_reconciliation_line:nth-child(2).no_match',
                 element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .button_ok.oe_highlight'
