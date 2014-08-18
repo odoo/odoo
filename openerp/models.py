@@ -1304,10 +1304,6 @@ class BaseModel(object):
 
         # convert default values to the expected format
         result = self._convert_to_write(result)
-        for key, val in result.items():
-            if isinstance(val, NewId):
-                del result[key]                 # ignore new records in defaults
-
         return result
 
     def add_default_value(self, field):
@@ -5140,11 +5136,13 @@ class BaseModel(object):
     def _convert_to_write(self, values):
         """ Convert the `values` dictionary into the format of :meth:`write`. """
         fields = self._fields
-        return dict(
-            (name, fields[name].convert_to_write(value))
-            for name, value in values.iteritems()
-            if name in self._fields
-        )
+        result = {}
+        for name, value in values.iteritems():
+            if name in fields:
+                value = fields[name].convert_to_write(value)
+                if not isinstance(value, NewId):
+                    result[name] = value
+        return result
 
     #
     # Record traversal and update
@@ -5629,7 +5627,12 @@ class BaseModel(object):
 
         # dummy assignment: trigger invalidations on the record
         for name in todo:
-            record[name] = record[name]
+            value = record[name]
+            field = self._fields[name]
+            if not field_name and field.type == 'many2one' and field.delegate and not value:
+                # do not nullify all fields of parent record for new records
+                continue
+            record[name] = value
 
         result = {'value': {}}
 
