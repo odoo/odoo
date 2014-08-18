@@ -1337,10 +1337,14 @@ class account_voucher(osv.osv):
             if voucher.payment_option == 'with_writeoff':
                 account_id = voucher.writeoff_acc_id.id
                 write_off_name = voucher.comment
-            elif voucher.type in ('sale', 'receipt'):
-                account_id = voucher.partner_id.property_account_receivable.id
+            elif voucher.partner_id:
+                if voucher.type in ('sale', 'receipt'):
+                    account_id = voucher.partner_id.property_account_receivable.id
+                else:
+                    account_id = voucher.partner_id.property_account_payable.id
             else:
-                account_id = voucher.partner_id.property_account_payable.id
+                # fallback on account of voucher
+                account_id = voucher.account_id.id
             sign = voucher.type == 'payment' and -1 or 1
             move_line = {
                 'name': write_off_name or name,
