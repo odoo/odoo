@@ -704,7 +704,7 @@ class Database(http.Controller):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
-        
+
         try:
             if request.session.proxy("db").drop(password, db):
                 return True
@@ -1218,7 +1218,7 @@ class Binary(http.Controller):
 class Action(http.Controller):
 
     @http.route('/web/action/load', type='json', auth="user")
-    def load(self, action_id, do_not_eval=False):
+    def load(self, action_id, do_not_eval=False, additional_context=None):
         Actions = request.session.model('ir.actions.actions')
         value = False
         try:
@@ -1233,11 +1233,12 @@ class Action(http.Controller):
 
         base_action = Actions.read([action_id], ['type'], request.context)
         if base_action:
-            ctx = {}
+            ctx = request.context
             action_type = base_action[0]['type']
             if action_type == 'ir.actions.report.xml':
                 ctx.update({'bin_size': True})
-            ctx.update(request.context)
+            if additional_context:
+                ctx.update(additional_context)
             action = request.session.model(action_type).read([action_id], False, ctx)
             if action:
                 value = clean_action(action[0])
@@ -1418,16 +1419,18 @@ class ExportFormat(object):
         raise NotImplementedError()
 
     def base(self, data, token):
+        params = simplejson.loads(data)
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain',
                                 'import_compat')(
-                simplejson.loads(data))
+                params)
 
         Model = request.session.model(model)
-        ids = ids or Model.search(domain, 0, False, False, request.context)
+        context = dict(request.context or {}, **params.get('context', {}))
+        ids = ids or Model.search(domain, 0, False, False, context)
 
         field_names = map(operator.itemgetter('name'), fields)
-        import_data = Model.export_data(ids, field_names, self.raw_data, context=request.context).get('datas',[])
+        import_data = Model.export_data(ids, field_names, self.raw_data, context=context).get('datas',[])
 
         if import_compat:
             columns_headers = field_names
@@ -1615,7 +1618,7 @@ class Apps(http.Controller):
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
         return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
-        
+
 
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

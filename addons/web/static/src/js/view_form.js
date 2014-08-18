@@ -2525,13 +2525,9 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         this._super.apply(this, arguments);
         this.on("change:effective_readonly", this, function () {
             this.display_field();
-            this.render_value();
         });
         this.display_field();
         return this._super();
-    },
-    render_value: function() {
-        this.$('button.select_records').css('visibility', this.get('effective_readonly') ? 'hidden': '');
     },
     set_value: function(value_) {
         var self = this;
@@ -2547,7 +2543,12 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
             var ds = new instance.web.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
                 $('.oe_domain_count', self.$el).text(results + ' records selected');
-                $('button span', self.$el).text(' Change selection');
+                if (self.get('effective_readonly')) {
+                    $('button span', self.$el).text(' See selection');
+                }
+                else {
+                    $('button span', self.$el).text(' Change selection');
+                }
             });
         } else {
             $('.oe_domain_count', this.$el).text('0 record selected');
@@ -2561,8 +2562,12 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
         this.pop = new instance.web.form.SelectCreatePopup(this);
         this.pop.select_element(
-            model, {title: 'Select records...'},
-            [], this.build_context());
+            model, {
+                title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
+                readonly: this.get('effective_readonly'),
+                disable_multiple_selection: this.get('effective_readonly'),
+                no_create: this.get('effective_readonly'),
+            }, [], this.build_context());
         this.pop.on("elements_selected", self, function(element_ids) {
             if (this.pop.$('input.oe_list_record_selector').prop('checked')) {
                 var search_data = this.pop.searchview.build_search_data();

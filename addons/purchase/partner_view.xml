@@ -36,6 +36,7 @@
             <field name="name">res.partner.kanban.purchaseorder.inherit</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
                 <field name="mobile" position="after">
                     <field name="purchase_order_count"/>
@@ -82,7 +83,7 @@
                     </button>
                     <button class="oe_inline oe_stat_button" name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
                         attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o" help="Supplier Invoices"
-                        groups="account.group_account_user,account.group_account_manager">
+                        groups="account.group_account_user">
                         <field string="Supplier Inv." name="supplier_invoice_count" widget="statinfo"/>
                     </button>
                 </xpath>

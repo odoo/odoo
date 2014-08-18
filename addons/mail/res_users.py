@@ -136,7 +136,7 @@ class res_users(osv.Model):
         if user_pid not in current_pids:
             partner_ids.append(user_pid)
         kwargs['partner_ids'] = partner_ids
-        return self.pool.get('mail.thread').message_post(cr, uid, False, **kwargs)
+        return self.pool['res.partner'].message_post(cr, uid, user_pid, **kwargs)
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
         return True

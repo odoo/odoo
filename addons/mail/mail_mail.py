@@ -21,6 +21,7 @@
 
 import base64
 import logging
+from email.utils import formataddr
 from urlparse import urljoin
 
 from openerp import api, tools
@@ -176,19 +177,20 @@ class mail_mail(osv.Model):
         is to be inherited to add custom content depending on some module."""
         body = mail.body_html
 
-        # generate footer
-        link = self._get_partner_access_link(cr, uid, mail, partner, context=context)
+        # generate access links for notifications or emails linked to a specific document with auto threading
+        link = None
+        if mail.notification or (mail.model and mail.res_id and not mail.no_auto_thread):
+            link = self._get_partner_access_link(cr, uid, mail, partner, context=context)
         if link:
             body = tools.append_content_to_html(body, link, plaintext=False, container_tag='div')
         return body
 
     def send_get_mail_to(self, cr, uid, mail, partner=None, context=None):
         """Forge the email_to with the following heuristic:
-          - if 'partner' and mail is a notification on a document: followers (Followers of 'Doc' <email>)
-          - elif 'partner', no notificatoin or no doc: recipient specific (Partner Name <email>)
+          - if 'partner', recipient specific (Partner Name <email>)
           - else fallback on mail.email_to splitting """
         if partner:
-            email_to = ['"%s" <%s>' % (partner.name, partner.email)]
+            email_to = [formataddr((partner.name, partner.email))]
         else:
             email_to = tools.email_split(mail.email_to)
         return email_to

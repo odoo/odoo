@@ -81,7 +81,7 @@ class TestMailMessage(TestMail):
         alias_domain = 'schlouby.fr'
         raoul_from = 'Raoul Grosbedon <raoul@raoul.fr>'
         raoul_from_alias = 'Raoul Grosbedon <raoul@schlouby.fr>'
-        raoul_reply_alias = '"YourCompany Pigs" <group+pigs@schlouby.fr>'
+        raoul_reply_alias = 'YourCompany Pigs <group+pigs@schlouby.fr>'
 
         # --------------------------------------------------
         # Case1: without alias_domain
@@ -151,7 +151,7 @@ class TestMailMessage(TestMail):
         msg_id = self.mail_message.create(cr, user_raoul_id, {})
         msg = self.mail_message.browse(cr, user_raoul_id, msg_id)
         # Test: generated reply_to
-        self.assertEqual(msg.reply_to, '"YourCompany" <gateway@schlouby.fr>',
+        self.assertEqual(msg.reply_to, 'YourCompany <gateway@schlouby.fr>',
                          'mail_mail: reply_to should equal the catchall email alias')
 
         # Do: create a mail_mail

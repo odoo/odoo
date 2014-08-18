@@ -124,7 +124,7 @@ class account_invoice_line(osv.osv):
                         account_prec = decimal_precision.precision_get(cr, uid, 'Account')
                         # calculate and write down the possible price difference between invoice price and product price
                         for line in res:
-                            if a == line['account_id'] and i_line.product_id.id == line['product_id']:
+                            if line.get('invl_id', 0) == i_line.id and a == line['account_id']:
                                 uom = i_line.product_id.uos_id or i_line.product_id.uom_id
                                 valuation_price_unit = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.product_id.standard_price, i_line.uos_id.id)
                                 if inv.currency_id.id != company_currency:
