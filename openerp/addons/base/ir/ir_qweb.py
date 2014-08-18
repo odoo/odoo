@@ -1075,6 +1075,9 @@ class AssetsBundle(object):
             if css and self.stylesheets:
                 compiled = self.preprocess_css()
                 self.recompose_css(compiled)
+                if self.css_errors:
+                    msg = '\n'.join(self.css_errors)
+                    self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
                 for style in self.stylesheets:
                     response.append(style.to_html())
             if js:
@@ -1130,7 +1133,7 @@ class AssetsBundle(object):
 
             if self.css_errors:
                 msg = '\n'.join(self.css_errors)
-                content += self.css_message(msg.replace('\n', '\\A '))
+                content += self.css_message(msg)
 
             # move up all @import rules to the top
             matches = []
@@ -1149,6 +1152,8 @@ class AssetsBundle(object):
         return self.cache[key][1]
 
     def css_message(self, message):
+        # '\A' == css content carriage return
+        message = message.replace('\n', '\\A ').replace('"', '\\"')
         return """
             body:before {
                 background: #ffc;
@@ -1158,7 +1163,7 @@ class AssetsBundle(object):
                 white-space: pre;
                 content: "%s";
             }
-        """ % message.replace('"', '\\"')
+        """ % message
 
     def preprocess_css(self):
         """
