@@ -88,6 +88,15 @@ Model
         list of ``(name, sql_definition, message)`` triples defining SQL
         constraints to execute when generating the backing table
 
+    .. attribute:: _parent_store
+
+        Alongside :attr:`~.parent_left` and :attr:`~.parent_right`, sets up a
+        `nested set <http://en.wikipedia.org/wiki/Nested_set_model>`_  to
+        enable fast hierarchical queries on the records of the current model
+        (default: ``False``)
+
+        :type: bool
+
     .. rubric:: CRUD
 
     .. automethod:: create
@@ -161,6 +170,56 @@ Model
         Relational field to the last user who modified the record
 
         :type: ``res.users``
+
+    .. rubric:: Reserved field names
+
+    A few field names are reserved for pre-defined behaviors beyond that of
+    automated fields. They should be defined on a model when the related
+    behavior is desired:
+
+    .. attribute:: name
+
+        default value for :attr:`~._rec_name`, used to
+        display records in context where a representative "naming" is
+        necessary.
+
+        :type: :class:`~openerp.fields.Char`
+
+    .. attribute:: active
+
+        toggles the global visibility of the record, if ``active`` is set to
+        ``False`` the record is invisible in most searches and listing
+
+        :type: :class:`~openerp.fields.Boolean`
+
+    .. attribute:: sequence
+
+        Alterable ordering criteria, allows drag-and-drop reordering of models
+        in list views
+
+        :type: :class:`~openerp.fields.Integer`
+
+    .. attribute:: state
+
+        lifecycle stages of the object, used by the ``states`` attribute on
+        :class:`fields <openerp.fields.Field>`
+
+        :type: :class:`~openerp.fields.Selection`
+
+    .. attribute:: parent_id
+
+        used to order records in a tree structure and enables the ``child_of``
+        operator in domains
+
+        :type: :class:`~openerp.fields.Many2one`
+
+    .. attribute:: parent_left
+
+        used with :attr:`~._parent_store`, allows faster tree structure access
+
+    .. attribute:: parent_right
+
+        see :attr:`~.parent_left`
 
 .. _reference/orm/decorators:
 
