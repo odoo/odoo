@@ -741,7 +741,7 @@
             var styles = this.$target.data("snippet-option-ids") || {};
             styles[snippet_id] = this;
             this.$target.data("snippet-option-ids", styles);
-            this.$overlay = this.$target.data('overlay');
+            this.$overlay = this.$target.data('overlay') || $('<div>');
             this['snippet-option-id'] = snippet_id;
             var $option = website.snippet.templateOptions[snippet_id].$el;
             this.$el = $option.find(">li").clone();
