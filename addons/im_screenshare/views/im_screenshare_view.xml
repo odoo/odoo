@@ -28,7 +28,6 @@
 
                         <group>
                             <field name="starttime" />
-                            <field name="endtime" />
                             <field name="duration" />
                         </group>
                         <notebook>
@@ -54,7 +53,6 @@
                     <field name="id" />
                     <field name="name" />
                     <field name="starttime" />
-                    <field name="endtime" />
                     <field name="duration" />
                     <field name="user_id" />
                 </tree>
@@ -72,19 +70,16 @@
 
                     </header>
                     <sheet>
-                        <label for="timestamp_date" class="oe_edit_only"></label>
-                        <h1><field name="timestamp_date" /></h1>
+                        <!--<label for="timestamp_date" class="oe_edit_only"></label>
+                        <h1><field name="timestamp_date" /></h1>-->
                         <label for="screen_record_id"></label>
                         <h2><field name="screen_record_id" /></h2>
                         <group>
                             <field name="timestamp" />
                         </group>
                         <notebook>
-                            <page string="Notes">
-                                <field name="notes" style="min-height: 50px;" />
-                            </page>
                             <page string="Messages">
-                                <field name="msglist" />
+                                <field name="mutations" />
                             </page>
                         </notebook>
                     </sheet>

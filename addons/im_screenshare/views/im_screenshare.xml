@@ -35,10 +35,11 @@
                     <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
                     <script src="/web/webclient/js"></script>
                     <script src="/im_screenshare/static/lib/mutation-summary/tree-mirror.js"></script>
-                -->
+
                     <script src="/im_screenshare/static/lib/smt2/smt-aux.js"></script>
                     <script src="/im_screenshare/static/lib/smt2/wz_jsgraphics.js"></script>
                     <script src="/im_screenshare/static/lib/mouse_track.js"></script>
+                -->
 
                     <script>
                         window.addEventListener('DOMContentLoaded', function() {
@@ -67,9 +68,9 @@
 
                             var player = new instance.im_screenshare.Player(treeMirror, cursorMirror);
 
-                            var params = <t t-raw="params" />
+                            var params = <t t-raw="params" />;
                             console.log(params);
-                            if(params.id &amp;&amp; params.db){
+                            if(!params.uuid){
                                 console.log("DB reciever");
                                 window.receiver = new instance.im_screenshare.DbReceiver(params.id, params.db, player);
                             }else{

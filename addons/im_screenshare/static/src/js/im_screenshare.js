@@ -122,6 +122,7 @@
         start_record: function(){
             var self = this;
             return openerp.session.rpc("/im_screenshare/start", {mode : this.mode}).then(function(result){
+                console.log("result : ", result);
                 if(self.mode === 'share'){
                     self.uuid = result;
                 }else{
@@ -134,22 +135,22 @@
         _start_record: function(){
             var self = this;
             this.queue({
-                'base': location.href.match(/^(.*\/)[^\/]*$/)[1],
-                'timestamp': Date.now(),
+                base: location.href.match(/^(.*\/)[^\/]*$/)[1],
+                timestamp: Date.now(),
             });
             this.treeMirrorClient = new TreeMirrorClient(document.body, {
                 initialize: function(rootId, children) {
                     self.queue({
                         f: 'initialize',
                         args: [rootId, children],
-                        'timestamp': Date.now(),
+                        timestamp: Date.now(),
                     });
                 },
                 applyChanged: function(removed, addedOrMoved, attributes, text) {
                     self.queue({
                         f: 'applyChanged',
                         args: [removed, addedOrMoved, attributes, text],
-                        'timestamp': Date.now(),
+                        timestamp: Date.now(),
                     });
                 }
             });
@@ -158,7 +159,7 @@
                     self.queue({
                         f: 'forwardData',
                         args: [page, coords, elem],
-                        'timestamp': Date.now(),
+                        timestamp: Date.now(),
                     });
                 },
             });
@@ -176,7 +177,6 @@
         },
         send_record: function(mutations){
             console.log('============================================');
-            //var mutations = JSON.parse(json_mutations);
             // find the TreeMirroir id of the loading node
             this.loading_node_id = this._find_loading_node_id();
             // find new child of the loading node
@@ -186,12 +186,12 @@
             // remove the empty mutations
             mutations = this._remove_empty_mutations(mutations);
             if(mutations.length !== 0){
-                console.log("SEND : ", mutations);
+                console.log("SEND : ", JSON.stringify(mutations));
                 return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, record_id : this.record_id, mutations : mutations});
             }else{
                 return $.Deferred().resolve();
             }
-        },
+        }
     });
 
     // Class which replay the recieved mutation on the current DOM
@@ -227,11 +227,10 @@
     });
 
     //----------------------------------------------------------
-    // Screen recoding in the Database
+    // Screen recording in the Database
     //----------------------------------------------------------
 
     // Class recording the summary mutation of the current DOM and save them in the Database
-    // TODO : change the way the object are created --> use the new controller and remove all the js !
     instance.im_screenshare.DbRecordHandler = instance.im_screenshare.RecordHandler.extend({
         init: function(parent){
             this._super();
@@ -251,45 +250,6 @@
                 this.start_record();
             }
             this.$el.html(this.generate_button());
-        },
-        start_record: function(){
-            //create the record
-            var self =  this;
-            var date = new Date();
-            var screenRecord = new instance.web.Model('im_screenshare.record');
-            screenRecord.call('create', [{
-                'name': 'New Screen Recording Session: ' + date.toString(),
-                'starttime': date.toISOString(),
-            }]).then(function(result) {
-                self.currentScreenRecord = result;
-            });
-            // start recording
-            this._super();
-        },
-        stop_record: function(){
-            // stop recording
-            this._super();
-            // save the end time
-            var self = this;
-            var date = new Date();
-            var screenRecord = new instance.web.Model('im_screenshare.record');
-            screenRecord.call('write', [this.currentScreenRecord, {
-                    'endtime': date.toISOString(),
-            }]).then(function(result) {
-                console.log("Screen Record with id: " + self.currentScreenRecord + " modified");
-            });
-        },
-        send_record: function(json_mutations){
-            var date = new Date();
-            var ts = this.msgQueue[0]['timestamp'];
-            var screenRecordEvent = new instance.web.Model('im_screenshare.record.event');
-            var def = screenRecordEvent.call('create', [{
-                    'screen_record_id': this.currentScreenRecord,
-                    'timestamp': ts,
-                    'timestamp_date': date.toISOString(),
-                    'msglist': json_mutations,
-            }]);
-            return def;
         }
     });
 
@@ -307,9 +267,11 @@
                 var screenRecordEvent = new instance.web.Model('im_screenshare.record.event');
                 screenRecord.query(['event_ids']).filter([['id', '=', self.id]]).all().then(function(r) {
                     var sre_ids = r[0].event_ids;
-                    screenRecordEvent.query(['msglist']).filter([['id', 'in', sre_ids]]).all().done(function(sre_list) {
+                    screenRecordEvent.query(['mutations']).filter([['id', 'in', sre_ids]]).all().done(function(sre_list) {
                         _.each(sre_list, function(sre) {
-                            var list = JSON.parse(sre.msglist);
+                            console.log("SRE : ", sre.mutations);
+                            var list = JSON.parse(sre.mutations);
+                            console.log("list : ", list);
                             _.each(list, function(item) {
                                 self.sre_msglist.push(item);
                             });
@@ -339,7 +301,7 @@
             var self = this;
             this.update_promise.then(function() {
                 var button = new instance.im_screenshare.DbRecordHandler(this);
-//                button.appendTo(openerp.webclient.$el.find('.oe_systray'));
+                button.appendTo(openerp.webclient.$el.find('.oe_systray'));
             });
             return this._super.apply(this, arguments);
         },
