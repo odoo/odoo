@@ -673,18 +673,9 @@
                             <field name="pack_operation_exist" invisible="1"/>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
-<<<<<<< HEAD
-                        <page string="Operations" attrs="{'invisible': [('state', '=', 'draft')]}">
-                            <div class="oe_right oe_button_box">
-                                <button name="do_prepare_partial" string="Prepare Operations" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('pack_operation_exist', '=', True)]}"/>
-                            </div>
-                            <field name="pack_operation_ids">
-                                <tree editable="top">   
-=======
                         <page string="Operations" attrs="{'invisible': ['|', ('state','!=','done'), ('pack_operation_ids','=',[])]}">
                             <field name="pack_operation_ids">
                                 <tree editable="top">
->>>>>>> ae56930b0cf67a60bb315fc76641b8517ff3fe4f
                                     <field name="package_id" groups="stock.group_tracking_lot"/>
                                     <field name="product_id"/>
                                     <field name="product_uom_id" groups="product.group_uom"/>
