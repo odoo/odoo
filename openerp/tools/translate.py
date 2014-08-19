@@ -830,7 +830,7 @@ def trans_generate(lang, modules, cr):
     def get_module_paths():
         # default addons path (base)
         def_path = os.path.abspath(os.path.join(config.config['root_path'], 'addons'))
-        mod_paths = { def_path }
+        mod_paths = set([ def_path ])
         ad_paths = map(lambda m: os.path.abspath(m.strip()),config.config['addons_path'].split(','))
         for adp in ad_paths:
             mod_paths.add(adp)
