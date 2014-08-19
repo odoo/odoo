@@ -458,6 +458,8 @@ class res_users(osv.osv):
     _inherit = 'res.users'
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         result = super(res_users, self).write(cr, uid, ids, vals, context=context)
         employee_obj = self.pool.get('hr.employee')
         if vals.get('name'):
