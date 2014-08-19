@@ -79,6 +79,8 @@ class account_move_line_reconcile(osv.osv_memory):
         return self.web_client_notification(cr, uid, context=context)
 
     def web_client_notification(self, cr, uid, context=None):
+        if not 'account_id' in context:
+            return True
         action = {
             'type': 'ir.actions.client',
             'tag': 'action_manual_reconciliation_widget_reload_item',
