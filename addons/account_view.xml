@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="marcos_account_view_account_position_form">
+            <field name="name">marcos.account.fiscal.position.form</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="inherit_id" ref="account.view_account_position_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="fiscal_type"/>
+                    <field name="for_supplier"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
