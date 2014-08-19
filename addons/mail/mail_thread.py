@@ -59,52 +59,68 @@ def decode_header(message, header, separator=' '):
 
 class mail_thread(osv.AbstractModel):
     ''' mail_thread model is meant to be inherited by any model that needs to
-        act as a discussion topic on which messages can be attached. Public
-        methods are prefixed with ``message_`` in order to avoid name
-        collisions with methods of the models that will inherit from this class.
+    act as a discussion topic on which messages can be attached. Public methods
+    are prefixed with ``message_`` in order to avoid name collisions with methods
+    of the models that will inherit from this class.
 
-        ``mail.thread`` defines fields used to handle and display the
-        communication history. ``mail.thread`` also manages followers of
-        inheriting classes. All features and expected behavior are managed
-        by mail.thread. Widgets has been designed for the 7.0 and following
-        versions of OpenERP.
+    ``mail.thread`` defines fields used to handle and display the communication
+    history. It also manages followers of inheriting classes. All features and
+    expected behavior are managed by mail.thread. Widgets has been designed for
+    the 7.0 and following versions of OpenERP.
 
-        Inheriting classes are not required to implement any method, as the
-        default implementation will work for any model. However it is common
-        to override at least the ``message_new`` and ``message_update``
-        methods (calling ``super``) to add model-specific behavior at
-        creation and update of a thread when processing incoming emails.
+    Inheriting classes are not required to implement any method, as the default
+    implementation will work for any model. However it is common to override at
+    least the ``message_new`` and ``message_update`` methods (calling ``super``)
+    to add model-specific behavior at creation and update of a thread when
+    processing incoming emails.
 
-        Options:
-            - _mail_flat_thread: if set to True, all messages without parent_id
-                are automatically attached to the first message posted on the
-                ressource. If set to False, the display of Chatter is done using
-                threads, and no parent_id is automatically set.
+    New field parameters:
+
+     - track_visibility: automatic tracking of the field value. The parameter
+       value is supposed to be either :
+       - False: default value, no tracking done
+       - 'onchange': the changes are tracked, and the value is displayed in a
+         message each time it has changed
+       - 'always': the changes are tracked, and the value is displayed in a
+         message everytime any tracked field changes its value
+
+    Options:
+
+     - _mail_flat_thread=<bool>: if set to True (default value), all messages are
+     automatically attached to the first posted message on the resource, leading to
+     a discussion build as a unique discussion thread. If set to False, no automatic
+     set of parent_id is done and it allows to have multiple discussion threads
+     inside a given document.
+     - _track: automatic logging using subtypes of tracked fields. This dict has
+       to be formatted like
+
+        _track = {
+            'field': {
+                'module.subtype_xml': lambda self, cr, uid, obj, context=None: obj[state] == done,
+                'module.subtype_xml2': lambda self, cr, uid, obj, context=None: obj[state] != done,
+            }, 'field2': {
+                ...
+            },
+        }
+
+        where
+        :param string field: field name. Each field present in the dict should
+                            have the track_visiblity attribute set (see above).
+        :param module.subtype_xml: xml_id of a mail.message.subtype (i.e. mail.mt_comment)
+        :param function lambda: returns whether the tracking should trigger the
+                                subtype, according to a condition
+        :param obj: is the browse_record of the current document on which the
+                    condition will be evaluated
+
+     - _mail_mass_mailing=<string>: when using the mass_mailing module, allow performing
+       mass mailing on the model, using the string as the displayed selection value.
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
     _mail_flat_thread = True
     _mail_post_access = 'write'
-
-    # Automatic logging system if mail installed
-    # _track = {
-    #   'field': {
-    #       'module.subtype_xml': lambda self, cr, uid, obj, context=None: obj[state] == done,
-    #       'module.subtype_xml2': lambda self, cr, uid, obj, context=None: obj[state] != done,
-    #   },
-    #   'field2': {
-    #       ...
-    #   },
-    # }
-    # where
-    #   :param string field: field name
-    #   :param module.subtype_xml: xml_id of a mail.message.subtype (i.e. mail.mt_comment)
-    #   :param obj: is a browse_record
-    #   :param function lambda: returns whether the tracking should record using this subtype
-    _track = {}
-
-    # Mass mailing feature
     _mail_mass_mailing = False
+    _track = {}
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         """ Override of BaseModel.get_empty_list_help() to generate an help message
