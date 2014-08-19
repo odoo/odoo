@@ -223,6 +223,9 @@ class procurement_order(osv.osv):
         '''
         if procurement.rule_id and procurement.rule_id.action == 'move':
             uom_obj = self.pool.get('product.uom')
+            if not procurement.move_ids:
+                import pdb; pdb.set_trace()
+                return True
             cancel_test_list = [x.state == 'cancel' for x in procurement.move_ids]
             done_cancel_test_list = [x.state in ('done', 'cancel') for x in procurement.move_ids]
             at_least_one_cancel = any(cancel_test_list)
