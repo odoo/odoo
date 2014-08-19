@@ -684,7 +684,7 @@ class one2many(_column):
         result = []
         context = dict(context or {})
         context.update(self._context)
-        context['no_store_function'] = True
+        context['recompute'] = False    # recomputation is done by outer create/write
         if not values:
             return
         obj = obj.pool[self._obj]

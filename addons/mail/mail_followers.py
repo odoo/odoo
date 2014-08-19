@@ -80,7 +80,7 @@ class mail_notification(osv.Model):
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
-        'is_read': fields.boolean('Read', select=1),
+        'is_read': fields.boolean('Read', select=1, oldname='read'),
         'starred': fields.boolean('Starred', select=1,
             help='Starred message that goes into the todo mailbox'),
         'message_id': fields.many2one('mail.message', string='Message',

@@ -1304,10 +1304,6 @@ class BaseModel(object):
 
         # convert default values to the expected format
         result = self._convert_to_write(result)
-        for key, val in result.items():
-            if isinstance(val, NewId):
-                del result[key]                 # ignore new records in defaults
-
         return result
 
     def add_default_value(self, field):
@@ -3152,11 +3148,11 @@ class BaseModel(object):
             pass
 
         # check the cache, and update it if necessary
-        if field not in self._cache:
+        if not self._cache.contains(field):
             for values in result:
                 record = self.browse(values.pop('id'))
                 record._cache.update(record._convert_to_cache(values, validate=False))
-            if field not in self._cache:
+            if not self._cache.contains(field):
                 e = AccessError("No value found for %s.%s" % (self, field.name))
                 self._cache[field] = FailedValue(e)
 
@@ -3976,15 +3972,10 @@ class BaseModel(object):
 
             record_id = tocreate[table].pop('id', None)
 
-            # When linking/creating parent records, force context without 'no_store_function' key that
-            # defers stored functions computing, as these won't be computed in batch at the end of create().
-            parent_context = dict(context)
-            parent_context.pop('no_store_function', None)
-
             if record_id is None or not record_id:
-                record_id = self.pool[table].create(cr, user, tocreate[table], context=parent_context)
+                record_id = self.pool[table].create(cr, user, tocreate[table], context=context)
             else:
-                self.pool[table].write(cr, user, [record_id], tocreate[table], context=parent_context)
+                self.pool[table].write(cr, user, [record_id], tocreate[table], context=context)
 
             updates.append((self._inherits[table], '%s', record_id))
 
@@ -4109,7 +4100,13 @@ class BaseModel(object):
         # check Python constraints
         recs._validate_fields(vals)
 
-        if not context.get('no_store_function', False):
+        # invalidate and mark new-style fields to recompute
+        modified_fields = list(vals)
+        if self._log_access:
+            modified_fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
+        recs.modified(modified_fields)
+
+        if context.get('recompute', True):
             result += self._store_get_values(cr, user, [id_new],
                 list(set(vals.keys() + self._inherits.values())),
                 context)
@@ -4119,15 +4116,10 @@ class BaseModel(object):
                 if not (model_name, ids, fields2) in done:
                     self.pool[model_name]._store_set_values(cr, user, ids, fields2, context)
                     done.append((model_name, ids, fields2))
-
             # recompute new-style fields
-            modified_fields = list(vals)
-            if self._log_access:
-                modified_fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
-            recs.modified(modified_fields)
             recs.recompute()
 
-        if self._log_create and not (context and context.get('no_store_function', False)):
+        if self._log_create and context.get('recompute', True):
             message = self._description + \
                 " '" + \
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
@@ -4272,7 +4264,7 @@ class BaseModel(object):
                         cr.execute('update "' + self._table + '" set ' + \
                             '"'+f+'"='+self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value), id))
 
-        # invalidate the cache for the modified fields
+        # invalidate and mark new-style fields to recompute
         self.browse(cr, uid, ids, context).modified(fields)
 
         return True
@@ -5139,11 +5131,13 @@ class BaseModel(object):
     def _convert_to_write(self, values):
         """ Convert the `values` dictionary into the format of :meth:`write`. """
         fields = self._fields
-        return dict(
-            (name, fields[name].convert_to_write(value))
-            for name, value in values.iteritems()
-            if name in self._fields
-        )
+        result = {}
+        for name, value in values.iteritems():
+            if name in fields:
+                value = fields[name].convert_to_write(value)
+                if not isinstance(value, NewId):
+                    result[name] = value
+        return result
 
     #
     # Record traversal and update
@@ -5677,6 +5671,12 @@ class RecordCache(MutableMapping):
     """
     def __init__(self, records):
         self._recs = records
+
+    def contains(self, field):
+        """ Return whether `records[0]` has a value for `field` in cache. """
+        if isinstance(field, basestring):
+            field = self._recs._fields[field]
+        return self._recs.id in self._recs.env.cache[field]
 
     def __contains__(self, field):
         """ Return whether `records[0]` has a regular value for `field` in cache. """
