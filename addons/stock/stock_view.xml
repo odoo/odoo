@@ -174,7 +174,7 @@
             <field name="search_view_id" ref="view_inventory_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to start an inventory. 
+                Click to start an inventory.
               </p><p>
                 Periodical Inventories are used to count the number of products
                 available per location. You can use it once a year when you do
@@ -186,7 +186,7 @@
         <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="30"/>
 
 
-        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" 
+        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root"
             sequence="3"/>
 
         <record id="view_production_lot_form" model="ir.ui.view">
@@ -264,7 +264,7 @@
                 Click to add a serial number.
               </p><p>
                 This is the list of all the production lots you recorded. When
-                you select a lot, you can get the 
+                you select a lot, you can get the
                 traceability of the products contained in lot. By default, the
                 list is filtered on the serial numbers that are available in
                 your warehouse but you can uncheck the 'Available' button to
@@ -313,8 +313,8 @@
             <field name="arch" type="xml">
                 <form string="Stock Location">
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button string="Current Stock" 
-                                class="oe_stat_button" 
+                        <button string="Current Stock"
+                                class="oe_stat_button"
                                 icon="fa-building-o" name="%(location_open_quants)d" type="action"
                                 context="{'search_default_internal_loc': 1}"/>
                     </div>
@@ -374,7 +374,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_putaway" model="ir.ui.view">
             <field name="name">product.putaway.form</field>
             <field name="model">product.putaway</field>
@@ -389,8 +389,8 @@
                        <field name="fixed_location_ids" colspan="4" nolabel="1">
                            <tree editable="top">
                                <field name="sequence" widget='handle'/>
-                               <field name="category_id"/> 
-                               <field name="fixed_location_id"/> 
+                               <field name="category_id"/>
+                               <field name="fixed_location_id"/>
                            </tree>
                        </field>
                    </div>
@@ -458,7 +458,7 @@
                         <field name="route_ids" widget="many2many_tags"/>
                         <div class="oe_inline" colspan="2">
                             <p attrs="{'invisible':[('parent_id','=',False)]}">
-                            The following routes will apply to the products in this category taking into account parent categories: 
+                            The following routes will apply to the products in this category taking into account parent categories:
                             <field name="total_route_ids" nolabel="1" widget="many2many_tags"/>
                             </p>
                         </div>
@@ -467,7 +467,7 @@
                 </xpath>
             </field>
         </record>
-        
+
 
         <record id="action_location_form" model="ir.actions.act_window">
             <field name="name">Locations</field>
@@ -487,7 +487,7 @@
                 suppliers) and virtual locations which are the counterpart of
                 the stock operations like the manufacturing orders
                 consumptions, inventories, etc.
-              </p><p>  
+              </p><p>
                 Every stock operation in Odoo moves the products from one
                 location to another one.  For instance, if you receive products
                 from a supplier, Odoo will move products from the Supplier
@@ -512,12 +512,12 @@
             <field name="arch" type="xml">
                 <form string="Warehouse">
                     <sheet>
-                        <div class="oe_right oe_button_box">                        
-                            <button name="view_all_routes_for_wh" 
+                        <div class="oe_right oe_button_box">
+                            <button name="view_all_routes_for_wh"
                                     string="Routes"
                                     icon="fa-refresh"
-                                    class="oe_stat_button" 
-                                    type="object"/> 
+                                    class="oe_stat_button"
+                                    type="object"/>
                         </div>
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -535,7 +535,7 @@
                                         <field name="reception_steps" widget='radio'/>
                                         <field name="delivery_steps" widget='radio'/>
                                         <field name="default_resupply_wh_id" widget='selection' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/>
-                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/> 
+                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/>
                                     </group>
                                 </page>
                                 <page string="Technical Information" groups='base.group_no_one'>
@@ -634,9 +634,7 @@
                     <button name="action_confirm" states="draft" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_assign" states="confirmed,partially_available" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="force_assign" states="confirmed,waiting,partially_available" string="Force Availability" type="object" groups="base.group_user"/>
-                    <button name="do_transfer" states="assigned" string="Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-                    <button name="do_partial_open_barcode" string="Enter Transfer Details" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','not in',('assigned', 'partially_available'))]}"/>
-                    <button name="open_barcode_interface" string="Open Barcode interface" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}"/>
+                    <button name="do_enter_transfer_details" states="assigned" string="Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
                     <button name="do_print_picking" string="Print Picking List" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '=', 'outgoing'), ('state', '!=', 'assigned')]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
                     <button name="action_cancel" states="assigned,confirmed,partially_available,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
@@ -645,13 +643,15 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box">
+                        <button name="do_partial_open_barcode" groups="stock.group_stock_user" type="object" class="oe_stock_scan_button" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','not in',('assigned', 'partially_available'))]}"><img src="/stock/static/src/img/scan.png" class="oe_stock_scan_image oe_stock_scan_image_btn"/></button>
+                        <button name="open_barcode_interface" groups="stock.group_stock_user" type="object" class="oe_stock_scan_button" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}"><img src="/stock/static/src/img/scan.png" class="oe_stock_scan_image oe_stock_scan_image_btn"/></button>
                     </div>
                     <h1>
                         <field name="name" class="oe_inline" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
                     </h1>
                     <group>
                         <group>
-                            <field name="partner_id"/>                            
+                            <field name="partner_id"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
@@ -673,12 +673,18 @@
                             <field name="pack_operation_exist" invisible="1"/>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
+<<<<<<< HEAD
                         <page string="Operations" attrs="{'invisible': [('state', '=', 'draft')]}">
                             <div class="oe_right oe_button_box">
                                 <button name="do_prepare_partial" string="Prepare Operations" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('pack_operation_exist', '=', True)]}"/>
                             </div>
                             <field name="pack_operation_ids">
                                 <tree editable="top">   
+=======
+                        <page string="Operations" attrs="{'invisible': ['|', ('state','!=','done'), ('pack_operation_ids','=',[])]}">
+                            <field name="pack_operation_ids">
+                                <tree editable="top">
+>>>>>>> ae56930b0cf67a60bb315fc76641b8517ff3fe4f
                                     <field name="package_id" groups="stock.group_tracking_lot"/>
                                     <field name="product_id"/>
                                     <field name="product_uom_id" groups="product.group_uom"/>
@@ -690,7 +696,7 @@
                                     <field name="location_dest_id"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                                     <!--<button name="split_in_packages" string="Split in Packages" icon="terp-product" groups="stock.group_tracking_lot" attrs="{'invisible': [('result_package_id', '!=', False)]}"/>--> <!-- TODO -->
-                                </tree>                         
+                                </tree>
                             </field>
                             <label class="oe_grey" string="Setting a product and a source package will result in a partial unpack of the source package (products will be taken out from that package). Set a source package without any product to move it as a whole."/>
                         </page>
@@ -700,7 +706,7 @@
                                     <field name="move_type"/>
                                     <field name="picking_type_id"/>
                                     <field name="picking_type_code" invisible="1"/>
-                                    <field name="quant_reserved_exist" invisible="1"/>                                    
+                                    <field name="quant_reserved_exist" invisible="1"/>
                                     <field name="location_id" invisible="1"/>
                                     <field name="location_dest_id" invisible="1"/>
                                 </group>
@@ -888,7 +894,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a stock operation. 
+                Click to create a stock operation.
               </p><p>
                 Most operations are prepared automatically by Odoo according
                 to your preconfigured logistics rules, but you can also record
@@ -1135,7 +1141,7 @@
               </p>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window.view" id="action_stock_move_tree_all">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
@@ -1219,7 +1225,7 @@
             <field name="context">{'product_receive': True, 'search_default_future': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to register a product receipt. 
+                Click to register a product receipt.
               </p><p>
                 Here you can receive individual products, no matter what
                 purchase order or picking order they come from. You will find
@@ -1344,7 +1350,7 @@
                                     <h4 class="text-center"><strong><field name="complete_name"/></strong></h4>
                                     <div class="oe_right">
                                         <a name="open_barcode_interface" type="object">
-                                            <img src="/stock/static/src/img/scan.png" 
+                                            <img src="/stock/static/src/img/scan.png"
                                                 alt="Click to launch the barcode interface"
                                                 class="oe_stock_scan_image" title="Click to launch the barcode interface"/>
                                         </a>
@@ -1400,22 +1406,22 @@
             <field name="view_mode">kanban,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new picking type. 
+                Click to create a new picking type.
               </p><p>
                 The picking type system allows you to assign each stock
-                operation a specific type which will alter its views accordingly.  
-                On the picking type you could e.g. specify if packing is needed by default, 
-                if it should show the customer.  
+                operation a specific type which will alter its views accordingly.
+                On the picking type you could e.g. specify if packing is needed by default,
+                if it should show the customer.
               </p>
             </field>
         </record>
-        
+
         <record id="action_picking_type_list" model="ir.actions.act_window">
             <field name="name">All Operations</field>
             <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">list,form</field>            
+            <field name="view_mode">list,form</field>
         </record>
 
         <menuitem
@@ -1423,12 +1429,12 @@
             id="menu_action_picking_type_form"
             parent="menu_stock_warehouse_mgmt" sequence="1"/>
 
-        <menuitem 
-            id="menu_pickingtype" 
-            name="Types of Operation" 
-            parent="stock.menu_stock_configuration" 
+        <menuitem
+            id="menu_pickingtype"
+            name="Types of Operation"
+            parent="stock.menu_stock_configuration"
             action="action_picking_type_list" />
-        
+
 
         <!-- Order Point -->
         <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">
@@ -1472,7 +1478,7 @@
                 <form string="Reordering Rules">
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button name="action_view_proc_to_process" type="object" string="Procurement Orders to Process"/>                            
+                            <button name="action_view_proc_to_process" type="object" string="Procurement Orders to Process"/>
                         </div>
                         <group>
                             <group>
@@ -1496,7 +1502,7 @@
                             <group string="Misc">
                                 <field name="active" />
                             </group>
-                        </group>                        
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -1598,13 +1604,13 @@
                 </xpath>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="procrules">
             <field name="context">{}</field>
             <field name="name">Pull Rules</field>
             <field name="res_model">procurement.rule</field>
         </record>
-        
+
         <record id="quant_search_view" model="ir.ui.view">
             <field name="name">stock.quant.search</field>
             <field name="model">stock.quant</field>
@@ -1631,7 +1637,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="quantsact">
             <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
@@ -1647,7 +1653,7 @@
             <field name="arch" type="xml">
                 <form string="Quants">
                     <div class="oe_right oe_button_box">
-                        <button name="action_view_quant_history" type="object" string="Quant History"/>                            
+                        <button name="action_view_quant_history" type="object" string="Quant History"/>
                     </div>
                     <group>
                         <field name="product_id"/>
@@ -1719,13 +1725,13 @@
             <field name="name">Reordering Rules</field>
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="product_open_quants">
             <field name="context">{'search_default_internal_loc': 1, 'search_default_product_id': active_id, 'search_default_locationgroup':1}</field>
             <field name="name">Current Stock</field>
             <field name="res_model">stock.quant</field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_quant_package_form">
             <field name="name">stock.quant.package.form</field>
             <field name="model">stock.quant.package</field>
@@ -1777,13 +1783,13 @@
                                     </tree>
                                 </field>
                             </page>
-                        </notebook> 
+                        </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
-        
-        
+
+
         <record model="ir.ui.view" id="view_quant_package_tree">
             <field name="name">stock.quant.package.tree</field>
             <field name="model">stock.quant.package</field>
@@ -1826,8 +1832,8 @@
             </field>
         </record>
         <menuitem id="menu_package" name="Packages" parent="menu_stock_product" action="action_package_view" groups="stock.group_tracking_lot"/>
-        
-        
+
+
         <!--Routes-->
         <record id="stock_location_route_tree" model="ir.ui.view">
             <field name="name">stock.location.route.tree</field>
@@ -1881,7 +1887,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="action_routes_form" model="ir.actions.act_window">
             <field name="name">Routes</field>
             <field name="res_model">stock.location.route</field>
@@ -1899,7 +1905,7 @@
                     on procurement or sales order. </p>
             </field>
         </record>
-        
+
         <menuitem action="action_routes_form" id="menu_stock_routes"
             parent="stock.menu_stock_configuration" sequence="11" />
 
@@ -1917,9 +1923,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="%(do_view_pickings)d" string="Pickings" type="action"/>
-                </xpath>        
+                </xpath>
             </field>
         </record>
-        
+
     </data>
 </openerp>
