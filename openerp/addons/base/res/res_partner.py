@@ -24,6 +24,7 @@ from lxml import etree
 import math
 import pytz
 import re
+import logging
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -32,6 +33,8 @@ from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
 from openerp.tools.yaml_import import is_comment
+
+_logger = logging.getLogger(__name__)
 
 class format_address(object):
     def fields_view_get_address(self, cr, uid, arch, context={}):
@@ -558,10 +561,13 @@ class res_partner(osv.osv, format_address):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = []
-        for record in self.browse(cr, uid, ids, context=context):
-            name = record.name
+        records = self.browse(cr, uid, ids, context=context)
+        parents = {r.parent_id.id:None for r in records if r.parent_id}
+        parents = {p:p.name for p in self.browse(cr, SUPERUSER_ID, parents.keys(), context=context)}
+        for record in records:
+            name = record.display_name
             if record.parent_id and not record.is_company:
-                name =  "%s, %s" % (record.parent_id.name, name)
+                name =  "%s, %s" % (parents[record.parent_id], name)
             if context.get('show_address'):
                 name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
                 name = name.replace('\n\n','\n')
