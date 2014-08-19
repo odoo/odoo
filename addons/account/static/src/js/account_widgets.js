@@ -1536,6 +1536,31 @@ openerp.account = function (instance) {
                 .call("process_reconciliation", [self.st_line_id, mv_line_dicts]);
         },
     });
+    
+
+    instance.web.client_actions.add("action_manual_reconciliation_widget_reload_item", "instance.web.action_manual_reconciliation_widget_reload_item");
+    // Find the manual reconciliation line identified by the account id (and the partner id) and asks it to update its data
+    instance.web.action_manual_reconciliation_widget_reload_item = function(element, action) {
+        function nodeTest(node) {
+            return instance.web.account.manualReconciliationLine.prototype.isPrototypeOf(node)
+                && node.data.account_id === action.account_id
+                && (action.partner_id ? node.data.partner_id === action.partner_id : true);
+        }
+        function findRelevantNode(node, test) {
+            if (test(node)) return node;
+            var children = node.getChildren();
+            for (var i=0; i<children.length; i++) {
+                var node = findRelevantNode(children[i], test);
+                if (node) return node;
+            }
+            return false;
+        }
+        // element is the action manager and the widget we're looking for is a child/descendent
+        var widget = findRelevantNode(element, nodeTest);
+        if (widget) widget.reloadMoveLines();
+        // now close eventual caller wizard
+        return {'type': 'ir.actions.act_window_close'};
+    };
 
     instance.web.client_actions.add('manual_reconciliation_view', 'instance.web.account.manualReconciliation');
     instance.web.account.manualReconciliation = instance.web.account.abstractReconciliation.extend({
@@ -1855,15 +1880,17 @@ openerp.account = function (instance) {
         reconcile: function(dialog) {
             var self = this;
             var ids = _.pluck(self.get("mv_lines_selected"), 'id');
-            var deferred = new $.Deferred();
 
             if (dialog) {
                 new instance.web.Model("ir.model.data").call("get_object_reference", ["account", "action_view_account_move_line_reconcile"]).then(function(result) {
-                    var additional_context = _.extend({
-                        active_id: ids[0],
+                    var additional_context = {
+                        active_id: ids[0], // TODO : never used ?
                         active_ids: ids,
-                        active_model: "account.move.line"
-                    });
+                        active_model: "account.move.line",
+                        account_id: self.data.account_id
+                    };
+                    if (self.data.partner_id) additional_context['partner_id'] = self.data.partner_id;
+
                     self.rpc("/web/action/load", {
                         action_id: result[1],
                         context: additional_context
@@ -1871,36 +1898,19 @@ openerp.account = function (instance) {
                         result.context = instance.web.pyeval.eval('contexts', [result.context, additional_context]);
                         result.flags = result.flags || {};
                         result.flags.new_window = true;
-                        return self.do_action(result, {
-                            on_close: function () {
-                                deferred.resolve();
-                            }
-                        });
+                        return self.do_action(result);
+                        // Beware ! The way the widget is updated when the wizard finished its job is cruel and unusual
+                        // The wizard receives the account_id and eventual partner_id in its context. When the reconciliation
+                        // is done, it calls the client action action_manual_reconciliation_widget_reload_item passing it
+                        // the id(s). This client action then closes the wizard, checks if the widget exists and, if so,
+                        // calls its reloadMoveLines method.
                     });
                 });
             } else {
-                deferred = self.model_aml.call("reconcile_partial", [ids, 'manual']);
-            }
-
-            return deferred.done(function() {
-                var params = [self.data.account_id];
-                if (self.data.partner_id) params.push(self.data.partner_id);
-                return $.when(self.model_aml.call("get_move_lines_for_manual_reconciliation", params)).then(function(lines) {
-                    if (lines.length === 0) self.persistAndDestroy();
-                    else {
-                        var ids_lines = _.pluck(lines, 'id');
-                        var ids_mv_lines_selected = _.pluck(self.get("mv_lines_selected"), 'id');
-                        var ids_new_mv_lines = _.difference(ids_lines, ids_mv_lines_selected);
-                        var ids_new_mv_lines_selected = _.intersection(ids_lines, ids_mv_lines_selected);
-                        _.each(lines, function(o){ self.getParent().decorateMoveLine(o) });
-                        self.set("mv_lines_selected", _.filter(lines, function(o){ return ids_new_mv_lines_selected.indexOf(o.id) !== -1; }));
-                        self.set("mv_lines", _.filter(lines, function(o){ return ids_new_mv_lines.indexOf(o.id) !== -1; }));
-                        // change event is not always fired
-                        if (ids_new_mv_lines_selected) self.mvLinesSelectedChanged();
-                        if (ids_new_mv_lines) self.mvLinesChanged();
-                    }
+                self.model_aml.call("reconcile_partial", [ids, 'manual']).done(function() {
+                    self.reloadMoveLines();
                 });
-            });
+            }
         },
 
         markAsReconciled: function() {
@@ -1914,6 +1924,25 @@ openerp.account = function (instance) {
             }
             return $.when(new instance.web.Model(model).call("mark_as_reconciled", [[id]])).then(function() {
                 return self.persistAndDestroy();
+            });
+        },
+
+        reloadMoveLines: function() {
+            var self = this;
+            var params = [self.data.account_id];
+            if (self.data.partner_id) params.push(self.data.partner_id);
+            return $.when(self.model_aml.call("get_move_lines_for_manual_reconciliation_by_account_and_parter", params)).then(function(lines) {
+                if (lines.length === 0) self.persistAndDestroy();
+                else {
+                    // TODO : mettre les nouvelles lignes dans l'ordre préexistant
+                    var ids_mv_lines_selected = _.pluck(self.get("mv_lines_selected"), 'id');
+                    _.each(lines, function(o){ self.getParent().decorateMoveLine(o) });
+                    self.set("mv_lines_selected", _.filter(lines, function(o){ return ids_mv_lines_selected.indexOf(o.id) !== -1; }));
+                    self.set("mv_lines", _.filter(lines, function(o){ return ids_mv_lines_selected.indexOf(o.id) === -1; }));
+                    // change event is not always fired
+                    self.mvLinesSelectedChanged();
+                    self.mvLinesChanged();
+                }
             });
         },
     });
