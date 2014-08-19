@@ -57,6 +57,7 @@
                             <div itemscope="itemscope" itemtype="http://schema.org/Event" class="media-body">
                                 <h4 class="media-heading">
                                     <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
+                                    <small t-if="not event.address_id" class="label label-info">Online</small>
                                     <small t-if="not event.website_published" class="label label-danger">not published</small>
                                 </h4>
                                 <div>
@@ -179,7 +180,13 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries" t-as="country">
                 <li t-if="country['country_id']" t-att-class="searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active' or ''">
-                    <a t-attf-href="/event?{{ keep_query('type', 'data', country=country['country_id'][0]) }}"><t t-esc="country['country_id'][1]"/>
+                    <a t-attf-href="/event?{{ keep_query('type', 'date', country=country['country_id'][0]) }}"><t t-esc="country['country_id'][1]"/>
+                        <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
+                    </a>
+                </li>
+                <li t-if="not country['country_id']" t-att-class="searches.get('country') == 'online' and 'active' or ''">
+                    <a t-attf-href="/event?{{ keep_query('type', 'date', country='online') }}">
+                        <span>Online Events</span>
                         <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
                     </a>
                 </li>
@@ -429,6 +436,21 @@
         </t>
     </t>
 </template>
+
+<template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
+  <xpath expr="//footer" position="inside">
+      <div class="container mt16 mb8">
+          <div class="pull-right" t-ignore="true" t-if="not editable">
+            Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>.
+            Try the <a href="http://www.odoo.com/page/website-builder">open source website builder</a>.
+          </div>
+          <div class="pull-left text-muted">
+              Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+          </div>
+      </div>
+  </xpath>
+</template>
+
 
 <!-- User Navbar -->
 <template id="content_new_event" inherit_id="website.user_navbar" groups="event.group_event_manager">

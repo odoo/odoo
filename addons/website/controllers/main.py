@@ -359,14 +359,12 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route(['/website/seo_suggest/<keywords>'], type='http', auth="public", website=True)
     def seo_suggest(self, keywords):
         url = "http://google.com/complete/search"
-        param = {
-            'ie': 'utf8',
-            'oe': 'utf8',
-            'output': 'toolbar',
-            'q': keywords
-        }
-        req = urllib2.Request("%s?%s" % (url, werkzeug.url_encode(param)))
-        request = urllib2.urlopen(req)
+        try:
+            req = urllib2.Request("%s?%s" % (url, werkzeug.url_encode({
+                'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords})))
+            request = urllib2.urlopen(req)
+        except (urllib2.HTTPError, urllib2.URLError):
+            return []
         xmlroot = ET.fromstring(request.read())
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
@@ -399,10 +397,15 @@ class Website(openerp.addons.web.controllers.main.Home):
         The requested field is assumed to be base64-encoded image data in
         all cases.
         """
-        response = werkzeug.wrappers.Response()
-        return request.registry['website']._image(
-                    request.cr, request.uid, model, id, field, response, max_width, max_height)
-
+        try:
+            response = werkzeug.wrappers.Response()
+            return request.registry['website']._image(
+                request.cr, request.uid, model, id, field, response, max_width, max_height)
+        except Exception:
+            logger.exception("Cannot render image field %r of record %s[%s] at size(%s,%s)",
+                             field, model, id, max_width, max_height)
+            response = werkzeug.wrappers.Response()
+            return self.placeholder(response)
 
     #------------------------------------------------------
     # Server actions

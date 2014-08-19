@@ -27,7 +27,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                             oldest_key  = key;
                         }
                     }
-                    if(oldestKey){
+                    if(oldest_key){
                         delete this.cache[oldest_key];
                         delete this.access_time[oldest_key];
                     }
@@ -1131,7 +1131,21 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.close_button = new module.HeaderButtonWidget(this,{
                 label: _t('Close'),
-                action: function(){ self.close(); },
+                action: function(){ 
+                    var self = this;
+                    if (!this.confirmed) {
+                        this.$el.addClass('confirm');
+                        this.$el.text(_t('Confirm'));
+                        this.confirmed = setTimeout(function(){
+                            self.$el.removeClass('confirm');
+                            self.$el.text(_t('Close'));
+                            self.confirmed = false;
+                        },2000);
+                    } else {
+                        clearTimeout(this.confirmed);
+                        this.pos_widget.close();
+                    }
+                },
             });
             this.close_button.appendTo(this.$('.pos-rightheader'));
 

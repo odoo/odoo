@@ -339,7 +339,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
             return this.do_action(action_client, options);
         } else if (_.isNumber(action) || _.isString(action)) {
             var self = this;
-            return self.rpc("/web/action/load", { action_id: action }).then(function(result) {
+            var additional_context = {
+                active_id : options.additional_context.active_id,
+                active_ids : options.additional_context.active_ids,
+                active_model : options.additional_context.active_model
+            };
+            return self.rpc("/web/action/load", { action_id: action, additional_context : additional_context }).then(function(result) {
                 return self.do_action(result, options);
             });
         }
@@ -598,7 +603,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     action_views_ids : views_ids
                 }, self.flags, self.flags[view.view_type] || {}, view.options || {})
             });
-            
+
             views_ids[view.view_type] = view.view_id;
         });
         if (this.flags.views_switcher === false) {
@@ -606,10 +611,10 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
-  
+
         return this.switch_mode(default_view, null, this.flags[default_view] && this.flags[default_view].options);
-      
-        
+
+
     },
     switch_mode: function(view_type, no_store, view_options) {
         var self = this;
@@ -687,7 +692,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         controller.on('switch_mode', self, this.switch_mode);
         controller.on('previous_view', self, this.prev_view);
-        
+
         var container = this.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
@@ -1120,7 +1125,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     return self.switch_mode(state.view_type, true);
                 })
             );
-        } 
+        }
 
         $.when(this.views[this.active_view] ? this.views[this.active_view].deferred : $.when(), defs).done(function() {
             self.views[self.active_view].controller.do_load_state(state, warm);
@@ -1516,7 +1521,7 @@ instance.web.View = instance.web.Widget.extend({
     /**
      * Switches to a specific view type
      */
-    do_switch_view: function() { 
+    do_switch_view: function() {
         this.trigger.apply(this, ['switch_mode'].concat(_.toArray(arguments)));
     },
     /**

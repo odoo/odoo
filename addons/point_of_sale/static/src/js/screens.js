@@ -492,7 +492,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         get_product_name: function(){
             var product = this.get_product();
-            return (product ? product.name : undefined) || 'Unnamed Product';
+            return (product ? product.display_name : undefined) || 'Unnamed Product';
         },
         get_product_price: function(){
             var product = this.get_product();
@@ -637,7 +637,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         perform_search: function(query, associate_result){
             if(query){
                 var customers = this.pos.db.search_partner(query);
-                console.log(customers);
                 this.display_client_details('hide');
                 if ( associate_result && customers.length === 1){
                     this.new_client = customers[0];

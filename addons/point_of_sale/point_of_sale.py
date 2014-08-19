@@ -464,6 +464,7 @@ class pos_session(osv.osv):
                         'amount': st.difference,
                         'ref': record.name,
                         'name': name,
+                        'partner_id': order.partner_id and order.partner_id.id or False,
                     }, context=context)
 
                 if st.journal_id.type == 'bank':

@@ -2335,26 +2335,31 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = self.view.datarecord.id;
-        this.states = self.prepare_dropdown_selection();;
+        this.record_id = this.view.datarecord.id;
+        this.states = this.prepare_dropdown_selection();;
         this.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('li').on('click', this.set_kanban_selection.bind(this));
     },
-    do_action: function(e) {
+    /* setting the value: in view mode, perform an asynchronous call and reload
+    the form view; in edit mode, use set_value to save the new value that will
+    be written when saving the record. */
+    set_kanban_selection: function (ev) {
         var self = this;
-        var li = $(e.target).closest( "li" );
+        var li = $(ev.target).closest('li');
         if (li.length) {
-            var value = {};
-            value[self.name] = String(li.data('value'));
-            self.record_id = self.view.datarecord.id;
-            if (self.record_id) {
-                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-            } else {
-                return self.view.on_button_save().done(function(result) {
-                    if (result) {
-                        self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-                    }
-                });
+            var value = String(li.data('value'));
+            if (this.view.get('actual_mode') == 'view') {
+                var write_values = {}
+                write_values[self.name] = value;
+                return this.view.dataset._model.call(
+                    'write', [
+                        [self.record_id],
+                        write_values,
+                        self.view.dataset.get_context()
+                    ]).done(self.reload_record.bind(self));
+            }
+            else {
+                return this.set_value(value);
             }
         }
     },
@@ -2386,27 +2391,34 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = self.view.datarecord.id;
-        this.priorities = self.prepare_priority();
+        this.record_id = this.view.datarecord.id;
+        this.priorities = this.prepare_priority();
         this.$el.html(QWeb.render("Priority", {'widget': this}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('li').on('click', this.set_priority.bind(this));
     },
-    do_action: function(e) {
+    /* setting the value: in view mode, perform an asynchronous call and reload
+    the form view; in edit mode, use set_value to save the new value that will
+    be written when saving the record. */
+    set_priority: function (ev) {
         var self = this;
-        var li = $(e.target).closest( "li" );
+        var li = $(ev.target).closest('li');
         if (li.length) {
-            var value = {};
-            value[self.name] = String(li.data('value'));
-            if (self.record_id) {
-                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-            } else {
-                return self.view.on_button_save().done(function(result) {
-                    if (result) {
-                        self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-                    }
-                });
+            var value = String(li.data('value'));
+            if (this.view.get('actual_mode') == 'view') {
+                var write_values = {}
+                write_values[self.name] = value;
+                return this.view.dataset._model.call(
+                    'write', [
+                        [self.record_id],
+                        write_values,
+                        self.view.dataset.get_context()
+                    ]).done(self.reload_record.bind(self));
+            }
+            else {
+                return this.set_value(value);
             }
         }
+
     },
     reload_record: function() {
         this.view.reload();
@@ -2513,13 +2525,9 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         this._super.apply(this, arguments);
         this.on("change:effective_readonly", this, function () {
             this.display_field();
-            this.render_value();
         });
         this.display_field();
         return this._super();
-    },
-    render_value: function() {
-        this.$('button.select_records').css('visibility', this.get('effective_readonly') ? 'hidden': '');
     },
     set_value: function(value_) {
         var self = this;
@@ -2535,7 +2543,12 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
             var ds = new instance.web.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
                 $('.oe_domain_count', self.$el).text(results + ' records selected');
-                $('button span', self.$el).text(' Change selection');
+                if (self.get('effective_readonly')) {
+                    $('button span', self.$el).text(' See selection');
+                }
+                else {
+                    $('button span', self.$el).text(' Change selection');
+                }
             });
         } else {
             $('.oe_domain_count', this.$el).text('0 record selected');
@@ -2549,8 +2562,12 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
         this.pop = new instance.web.form.SelectCreatePopup(this);
         this.pop.select_element(
-            model, {title: 'Select records...'},
-            [], this.build_context());
+            model, {
+                title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
+                readonly: this.get('effective_readonly'),
+                disable_multiple_selection: this.get('effective_readonly'),
+                no_create: this.get('effective_readonly'),
+            }, [], this.build_context());
         this.pop.on("elements_selected", self, function(element_ids) {
             if (this.pop.$('input.oe_list_record_selector').prop('checked')) {
                 var search_data = this.pop.searchview.build_search_data();
@@ -5702,6 +5719,20 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         this._super.apply(this, arguments);
         this.render_value();
         this.set_filename('');
+    },
+    set_value: function(value_){
+        var changed = value_ !== this.get_value();
+        this._super.apply(this, arguments);
+        // By default, on binary images read, the server returns the binary size
+        // This is possible that two images have the exact same size
+        // Therefore we trigger the change in case the image value hasn't changed
+        // So the image is re-rendered correctly
+        if (!changed){
+            this.trigger("change:value", this, {
+                oldValue: value_,
+                newValue: value_
+            });
+        }
     }
 });
 

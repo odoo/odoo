@@ -603,10 +603,6 @@ command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 # group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
 reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?.*@(.*)>", re.UNICODE)
 
-# Bounce regex
-# Typical form of bounce is bounce-128-crm.lead-34@domain
-# group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
-bounce_re = re.compile("[\w]+-(\d+)-?([\w.]+)?-?(\d+)?", re.UNICODE)
 
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field

@@ -174,7 +174,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             model:  'pos.session',
             fields: ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number'],
             domain: function(self){ return [['state','=','opened'],['user_id','=',self.session.uid]]; },
-            loaded: function(self,pos_sessions){ self.pos_session = pos_sessions[0]; },
+            loaded: function(self,pos_sessions){
+                self.pos_session = pos_sessions[0]; 
+                self.pos_session_id = parseInt(self.pos_session.name.split('/')[1]);
+
+                var orders = self.db.get_orders();
+                for (var i = 0; i < orders.length; i++) {
+                    self.pos_session.sequence_number = Math.max(self.pos_session.sequence_number, orders[i].data.sequence_number+1);
+                }
+            },
         },{
             model: 'pos.config',
             fields: [],
@@ -229,11 +237,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             },
         },{
             model:  'product.product',
-            fields: ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 'variants',
+            fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 
                      'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
                      'product_tmpl_id'],
             domain:  function(self){ return [['sale_ok','=',true],['available_in_pos','=',true]]; },
-            context: function(self){ return { pricelist: self.pricelist.id }; },
+            context: function(self){ return { pricelist: self.pricelist.id, display_default_code: false }; },
             loaded: function(self, products){
                 self.db.add_products(products);
             },
@@ -705,7 +713,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 unit_name:          this.get_unit().name,
                 price:              this.get_unit_price(),
                 discount:           this.get_discount(),
-                product_name:       this.get_product().name,
+                product_name:       this.get_product().display_name,
                 price_display :     this.get_display_price(),
                 price_with_tax :    this.get_price_with_tax(),
                 price_without_tax:  this.get_price_without_tax(),
@@ -849,6 +857,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
     module.Order = Backbone.Model.extend({
         initialize: function(attributes){
             Backbone.Model.prototype.initialize.apply(this, arguments);
+            this.pos = attributes.pos; 
+            this.sequence_number = this.pos.pos_session.sequence_number++;
             this.uid =     this.generateUniqueId();
             this.set({
                 creationDate:   new Date(),
@@ -857,20 +867,28 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 name:           "Order " + this.uid,
                 client:         null,
             });
-            this.pos = attributes.pos; 
             this.selected_orderline   = undefined;
             this.selected_paymentline = undefined;
             this.screen_data = {};  // see ScreenSelector
             this.receipt_type = 'receipt';  // 'receipt' || 'invoice'
             this.temporary = attributes.temporary || false;
-            this.sequence_number = this.pos.pos_session.sequence_number++;
             return this;
         },
         is_empty: function(){
             return (this.get('orderLines').models.length === 0);
         },
+        // Generates a public identification number for the order.
+        // The generated number must be unique and sequential. They are made 12 digit long
+        // to fit into EAN-13 barcodes. 
         generateUniqueId: function() {
-            return new Date().getTime();
+            function zero_pad(num,size){
+                var s = ""+num;
+                while (s.length < size) {
+                    s = "0" + s;
+                }
+                return s;
+            }
+            return zero_pad(this.pos.pos_session_id,6) + zero_pad(this.sequence_number,6);
         },
         addOrderline: function(line){
             if(line.order){

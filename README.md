@@ -3,21 +3,20 @@
 Odoo
 ----
 
-Odoo is a suite of web based open source business apps.  More info at http://www.odoo.com
+Odoo is a suite of web based open source business apps.
 
-The easiest way to play with it is the <a href="https://www.odoo.com/page/start">Odoo free trial</a>, email registration is NOT required, use the "skip this step" link on the registration page to skip it.
+It's main apps include an <a href="https://www.odoo.com/page/crm">Open Source CRM</a>, <a href="https://www.odoo.com/page/website-builder">Website Builder</a>, <a href="https://www.odoo.com/page/e-commerce">eCommerce</a>, <a href="https://www.odoo.com/page/project-management">Project Management</a>, <a href="https://www.odoo.com/page/accounting">Billing & Accounting</a>, <a href="https://www.odoo.com/page/point-of-sale">Point of Sale</a>, <a href="https://www.odoo.com/page/employees">Human Resources</a>, Marketing, Manufacturing, Purchase Management, ...  Each application is standalone but you get a full featured <a href="https://www.odoo.com">Open Source ERP</a> if you install several apps as they integrate to each others.
 
 
 Getting started with Odoo development
 --------------------------------------
 
-If you are a developer type the following command at your terminal [1]:
+If you are a developer type the following command at your terminal:
 
     wget -O- https://raw.githubusercontent.com/odoo/odoo/master/odoo.py | python
 
 Then follow <a href="https://doc.openerp.com/trunk/server/howto/howto_website/">the developer tutorial</a>
 
-[1] You may want to check the content of the <a href="https://raw.githubusercontent.com/odoo/odoo/master/odoo.py">odoo.py file</a> before executing it.
 
 
 Packages, tarballs and installers

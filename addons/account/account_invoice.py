@@ -114,7 +114,7 @@ class account_invoice(models.Model):
     def _compute_residual(self):
         nb_inv_in_partial_rec = max_invoice_id = 0
         self.residual = 0.0
-        for line in self.move_id.line_id:
+        for line in self.sudo().move_id.line_id:
             if line.account_id.type in ('receivable', 'payable'):
                 if line.currency_id == self.currency_id:
                     self.residual += line.amount_residual_currency
@@ -177,6 +177,8 @@ class account_invoice(models.Model):
     def _compute_payments(self):
         partial_lines = lines = self.env['account.move.line']
         for line in self.move_id.line_id:
+            if line.account_id != self.account_id:
+                continue
             if line.reconcile_id:
                 lines |= line.reconcile_id.line_id
             elif line.reconcile_partial_id:
@@ -1395,8 +1397,7 @@ class account_invoice_line(models.Model):
         res = []
         for line in inv.invoice_line:
             mres = self.move_line_get_item(line)
-            if not mres:
-                continue
+            mres['invl_id'] = line.id
             res.append(mres)
             tax_code_found = False
             taxes = line.invoice_line_tax_id.compute_all(

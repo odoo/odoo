@@ -967,8 +967,9 @@ class Char(_String):
     _description_size = property(attrgetter('size'))
 
     def convert_to_cache(self, value, record, validate=True):
-        return bool(value) and ustr(value)[:self.size]
-
+        if value is None or value is False:
+            return False
+        return ustr(value)[:self.size]
 
 class Text(_String):
     """ Text field. Very similar to :class:`Char`, but typically for longer
@@ -981,15 +982,18 @@ class Text(_String):
     type = 'text'
 
     def convert_to_cache(self, value, record, validate=True):
-        return bool(value) and ustr(value)
-
+        if value is None or value is False:
+            return False
+        return ustr(value)
 
 class Html(_String):
     """ Html field. """
     type = 'html'
 
     def convert_to_cache(self, value, record, validate=True):
-        return bool(value) and html_sanitize(value)
+        if value is None or value is False:
+            return False
+        return html_sanitize(value)
 
 
 class Date(Field):

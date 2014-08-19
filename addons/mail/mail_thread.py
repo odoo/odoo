@@ -37,6 +37,7 @@ import time
 import xmlrpclib
 import re
 from email.message import Message
+from email.utils import formataddr
 from urllib import urlencode
 
 from openerp import api, tools
@@ -722,12 +723,10 @@ class mail_thread(osv.AbstractModel):
                     aliases.update(dict((res_id, '%s@%s' % (catchall_alias, alias_domain)) for res_id in left_ids))
             # compute name of reply-to
             company_name = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).company_id.name
-            res.update(
-                dict((res_id, '"%(company_name)s%(document_name)s" <%(email)s>' %
-                     {'company_name': company_name,
-                      'document_name': doc_names.get(res_id) and ' ' + re.sub(r'[^\w+.]+', '-', doc_names[res_id]) or '',
-                      'email': aliases[res_id]
-                      } or False) for res_id in aliases.keys()))
+            for res_id in aliases.keys():
+                email_name = '%s%s' % (company_name, doc_names.get(res_id) and (' ' + doc_names[res_id]) or '')
+                email_addr = aliases[res_id]
+                res[res_id] = formataddr((email_name, email_addr))
         left_ids = set(ids).difference(set(aliases.keys()))
         if left_ids and default:
             res.update(dict((res_id, default) for res_id in left_ids))

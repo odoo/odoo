@@ -67,6 +67,7 @@ class mail_followers(osv.Model):
         self.invalidate_cache(cr, uid, context=context)
         return res
 
+    _sql_constraints = [('mail_followers_res_partner_res_model_id_uniq','unique(res_model,res_id,partner_id)','Error, a partner cannot follow twice the same object.')]
 
 class mail_notification(osv.Model):
     """ Class holding notifications pushed to partners. Followers and partners
@@ -79,7 +80,7 @@ class mail_notification(osv.Model):
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
-        'is_read': fields.boolean('Read', select=1),
+        'is_read': fields.boolean('Read', select=1, oldname='read'),
         'starred': fields.boolean('Starred', select=1,
             help='Starred message that goes into the todo mailbox'),
         'message_id': fields.many2one('mail.message', string='Message',

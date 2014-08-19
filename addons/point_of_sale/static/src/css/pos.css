@@ -254,7 +254,7 @@ td {
     left:0;
     top:0;
     width: 100%;
-    height: 34px;
+    height: 48px;
     margin:0;
     padding:0;
     color: gray;
@@ -278,9 +278,9 @@ td {
     vertical-align: middle;
 }
 .pos .pos-logo {
-    height: 32px;
-    width: 116px;
-    margin-left:5px;
+    height: 35px;
+    margin-left: 7px;
+    margin-top: 2px;
     vertical-align:middle;
 } 
 .pos .pos-branding .username{
@@ -288,7 +288,7 @@ td {
     color:#DDD;
     font-size:16px;
     margin-right:32px;
-    margin-top:10px;
+    line-height: 48px;
     font-style:italic;
 }
 
@@ -307,7 +307,7 @@ td {
     display: inline-block;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
-    height: 32px;
+    height: 46px;
     padding: 4px 8px;
     margin: 3px;
     margin-bottom: 0px;
@@ -317,17 +317,17 @@ td {
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     vertical-align: top;
-    line-height: 26px;
+    line-height: 42px;
     text-align: center;
     box-shadow: 0px -5px 10px -6px rgb(82,82,82) inset;
     cursor: pointer;
-    min-width: 34px;
+    min-width: 45px;
 }
 .pos .order-button.selected{
     font-weight: 900;
     background: #EEEEEE;
     color: rgb(75,75,75);
-    height: 31px;
+    height: 45px;
     border-bottom: solid 1px rgb(196, 196, 196);
     box-shadow: none;
 }
@@ -349,10 +349,11 @@ td {
 }
 
 .pos .order-button.square{
-    width: 34px;
     margin-left:1px;
     background: #5c5c5c;
     color: rgb(160,160,160);
+    font-size: 18px;
+    line-height: 45px;
 }
 .pos .order-button:not(.square) > .fa {
     font-size: 16px;
@@ -376,15 +377,15 @@ td {
 /*  c) The session buttons */
 
 .pos .pos-rightheader .header-button{
-    float:right;
-    height:32px;
-    padding-left:10px;
-    padding-right:10px;
-    border-right:  1px solid #292929;
-    border-left:  1px solid #292929;
-    color:#DDD;
-    line-height:32px;
-    text-align:center;
+    float: right;
+    height: 48px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-right: 1px solid #292929;
+    border-left: 1px solid #292929;
+    color: #DDD;
+    line-height: 48px;
+    text-align: center;
     cursor: pointer;
 
     -webkit-transition-property: background;
@@ -398,15 +399,20 @@ td {
     background: rgba(0,0,0,0.2);
     color:#EEE;
 }
+.pos .pos-rightheader .header-button.confirm {
+    background: #359766;
+    color: white;
+    font-weight: bold;
+}
 
 /*  c) The notifications indicator */
 
 .pos .oe_status{
     float:right; 
     color: rgba(255,255,255,0.4);
-    padding: 8px;
-    line-height:16px;
-    font-size:16px;
+    padding: 14px;
+    line-height: 20px;
+    font-size: 20px;
     vertical-align:middle;
     font-style: italic;
     cursor:pointer;
@@ -438,7 +444,7 @@ td {
 .pos .pos-content {
     width: 100%;
     position: absolute;
-    top: 34px;
+    top: 48px;
     bottom: 0;
     background: #F0EEEE;
 }

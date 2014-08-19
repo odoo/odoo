@@ -72,7 +72,7 @@ class report_rappel(report_sxw.rml_parse):
             }
             lines_per_currency[currency].append(line_data)
 
-        return [{'line': lines} for lines in lines_per_currency.values()]
+        return [{'line': lines, 'currency': currency} for currency, lines in lines_per_currency.items()]
 
     def _get_text(self, stat_line, followup_id, context=None):
         context = dict(context or {}, lang=stat_line.partner_id.lang)

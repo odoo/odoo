@@ -289,7 +289,7 @@ class mrp_production(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if po.allow_reorder:
                 continue
-            todo = po.move_lines
+            todo = list(po.move_lines)
             dt = datetime.strptime(po.date_start,'%Y-%m-%d %H:%M:%S')
             while todo:
                 l = todo.pop(0)
