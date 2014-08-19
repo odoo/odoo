@@ -155,7 +155,7 @@
 
 <!-- Display a post -->
 <template id="display_post">
-    <div class="question clearfix">
+    <div class="question row">
         <div class="col-md-2 hidden-xs text-center">
             <div t-attf-class="box #{question.is_correct and 'oe_green' or 'oe_grey'} #{(question.child_count == 0) and 'text-muted' or ''}">
                 <span t-esc="question.child_count"/>
