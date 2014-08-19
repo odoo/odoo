@@ -131,8 +131,8 @@ class StockMove(osv.osv):
                 
             #delete the move with original product which is not relevant anymore
             move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
-        #return list of newly created move or the move id otherwise
-        return processed_ids or []
+        #return list of newly created move or the move id otherwise, unless there is no move anymore
+        return processed_ids or (not bis and [move.id]) or []
 
     def action_confirm(self, cr, uid, ids, context=None):
         move_ids = []
