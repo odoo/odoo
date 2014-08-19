@@ -321,13 +321,14 @@
             var self = this;
             var snipped_event_flag;
             $("#wrapwrap").on('click', function (event) {
-                if (snipped_event_flag || !event.srcElement) {
+                var srcElement = event.srcElement || (event.originalEvent && (event.originalEvent.originalTarget || event.originalEvent.target));
+                if (snipped_event_flag || !srcElement) {
                     return;
                 }
                 snipped_event_flag = true;
 
                 setTimeout(function () {snipped_event_flag = false;}, 0);
-                var $target = $(event.srcElement);
+                var $target = $(srcElement);
 
                 if ($target.parents(".oe_overlay").length) {
                     return;
@@ -1537,6 +1538,9 @@
                 new website.editor.MediaDialog(self, self.element).appendTo(document.body);
                 self.BuildingBlock.make_active(false);
             }
+            setTimeout(function () {
+                self.$target.find(".css_editable_mode_display").removeAttr("_moz_abspos");
+            },0);
         },
     });
 
