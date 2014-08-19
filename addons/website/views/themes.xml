@@ -2,6 +2,160 @@
 <openerp>
 <data>
 
+
+<!--
+    Customize Themes
+
+    Use INPUT type 'checkbox' or 'radio' or use OPTION in select box
+    'data-xmlid' (optional) xml id of the template to add if the input is checked.
+        You can set a list of xml id separate by comma (all template is enable or 
+        disable in same time)
+    'data-enable' (optional) to checked one or more HTML ids, or list separate by comma
+    'data-disable' (optional) to unchecked one or more HTML ids, or list separate by comma
+    'data-reload="/"' (optional) force the reloading of the page if the url match with
+        the string ( = regexp).
+        Otherwise, only the '/web/css/website.assets_frontend' is reloaded
+
+    For the sets (data-enable and/or data-disable without data-xmlid), the set is
+    automatically checked if:
+    - all related fields are enabled for data-enable
+    - all related fields are disabled for data-disable
+    else unchecked
+    
+    HTML apply classes:
+    - 'checked': on the parent label when input is checked
+    - 'in': on the container (e.g.: bootstrap modal) after added in DOM (removed together 
+       out is added)
+    - 'out': on the container 1 second before removed from ths DOM
+    - 'loading': on the container/modal when the new css is loading
+-->
+
+<template id="website.theme_customize" name="Theme Modal for Customization">
+  <div id="theme_customize_modal" class="modal fade">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="loading_backdrop"></div>
+              <div class="modal-header">
+                  <button type="button" class="close">×</button>
+                  <h4 class="modal-title" id="mySmallModalLabel">Customize your theme</h4>
+              </div>
+              <div class="modal-body">
+                  <h5 class="modal-h5">LAYOUT</h5>
+                  <table name="layout">
+                      <tr>
+                          <td class=" text-center" width="50%">
+                              <label class=" center-block">
+                                  <div class="text-center" style="background-image: url(/website/static/src/img/theme/layout-full.gif); background-size: 100%; line-height: 40px;">FULL WIDTH</div>
+                                  <input name="layoutvar" type="radio" data-xmlid="" />
+                              </label>                                 
+                          </td>
+                          <td class=" text-center">
+                              <label class=" center-block">
+                                 <div class="text-center" style="background-image: url(/website/static/src/img/theme/layout-boxed.gif); background-size: 100%; line-height: 40px;">BOXED</div>
+                                  <input name="layoutvar" type="radio" data-xmlid="website.option_layout_boxed"/>
+                              </label>
+                          </td>
+                      </tr>
+                  </table>
+
+                  <h5 class="modal-h5">MAIN COLOR</h5>
+                  <table name="color">
+                      <tr>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-stone.gif" alt="Stone" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="" />
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-emerald.gif" alt="Emerald" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_emerald" />
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-cobalt.gif" alt="Cobalt" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_cobalt" />
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-amethyst.gif" alt="Amethyst" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_amethyst" />
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-ruby.gif" alt="Blue" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_ruby" />
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-gold.gif" alt="Gold" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_gold" />
+                              </label>
+                          </td>
+                      </tr>
+                  </table>
+
+                  <h5 class="modal-h5">FONTS COMBINATIONS</h5>
+                  <table name="font">
+                      <tr>
+                          <td width="50%">
+                              <label>
+                                  <div>
+                                      <span style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:11px">Helvetica</span>
+                                      <span style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px" >/ Georgia</span>
+                                  </div>
+                                  <input name="theme" type="radio" data-xmlid=""/>
+                              </label>
+                          </td>
+                          <td width="50%">
+                              <label>
+                                  <div>
+                                      <span style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px" >Georgia</span>
+                                      <span style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:11px">/ Helvetica</span>
+                                    <input name="theme" type="radio" data-xmlid="website.option_font"/>
+                                  </div>
+                              </label>
+                          </td>
+                      </tr>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+</template>
+
+<!-- color-picker -->
+<!-- HTML class to hide option for one mode : only-text, only-bg -->
+
+<template id="website.colorpicker" name="Color-Picker">
+    <table class="colorpicker">
+        <tr>
+            <td><button class="automatic-color" title="Automatic Color"/></td>
+            <td><button class="bg-primary" title="Primary Color"/></td>
+            <td><button class="bg-success" title="Success Color"/></td>
+            <td><button class="bg-info" title="Info Color"/></td>
+            <td><button class="bg-warning" title="Warning Color"/></td>
+            <td><button class="bg-danger" title="Danger Color"/></td>
+        </tr>
+        <tr><td colspan="8"><hr style="width: 100%; height: 1px;"/></td></tr>
+        <tr>
+            <td><button class="bg-blue"/></td>
+            <td><button class="bg-turquoise"/></td>
+            <td><button class="bg-green"/></td>
+            <td><button class="bg-yellow"/></td>
+            <td><button class="bg-red"/></td>
+            <td><button class="bg-pink"/></td>
+            <td><button class="bg-purple"/></td>
+            <td><button class="bg-brown"/></td>
+        </tr>
+    </table>
+</template>
+
 <!--
      Theme
 -->
