@@ -37,13 +37,25 @@ _logger = logging.getLogger(__name__)
 class Controller(openerp.addons.bus.bus.Controller):
 
     @openerp.http.route('/im_screenshare/start', type="json", auth="none")
-    def start(self, **kwargs):
-        return '%s' % uuid.uuid4()
+    def start(self, mode='record', **kwargs):
+        # mode must be in ['record', 'share']
+        if( mode == 'record'):
+            registry, cr, context, uid = request.registry, request.cr, request.context, request.session.uid
+            print 'todo'
+            # TODO : create a new screenshare.record and return the id
+            data = {}
+            return registry['im_screenshare.record'].create(cr, uid, data, context=context)
+        else:
+            return '%s' % uuid.uuid4()
 
     @openerp.http.route('/im_screenshare/share', type="json", auth="none")
-    def share(self, uuid, message):
+    def share(self, mutations, uuid=None, record_id=None):
         registry, cr, context, uid = request.registry, request.cr, request.context, request.session.uid
-        return registry.get('bus.bus').sendone(cr, uid, uuid, message)
+        if uuid:
+            registry.get('bus.bus').sendone(cr, uid, uuid, mutations)
+        if record_id:
+            print 'TODO'
+            # TODO : create a screenshare.record.event
 
     @openerp.http.route(['/im_screenshare/player/<string:uuid>','/im_screenshare/player/<int:id>/<string:dbname>'], type='http', auth='none')
     def player(self, uuid=None, id=None, dbname=None):

@@ -9,14 +9,98 @@
     //      * timestamp : the timestamp of the mutations
     instance.im_screenshare.RecordHandler = instance.Widget.extend({
         init: function() {
+            this.mode = 'share';
+            this.uuid = false;
+            this.record_id = false;
+            // filter nodes
+            this.loading_node_id = false;
+            this.loading_children_ids = [];
+            // business
             this.treeMirrorClient = null;
             this.cursorMirrorClient = null;
             this.def = $.when();
             this.msgQueue = [];
         },
+        // mutations filter
+        _child_of_loading_node: function(mutations){
+            var self = this;
+            var children = [];
+            _.each(mutations, function(m){
+                if(m.f === 'applyChanged'){
+                    _.each(m.args[1], function(item){
+                        if(item.parentNode && item.parentNode.id && item.parentNode.id === self.loading_node_id){
+                            children.push(item.id);
+                        }
+                    });
+                }
+             });
+            return children;
+        },
+        _find_loading_node_id: function(){
+            var self = this;
+            var node_id = this.loading_node_id;
+            if(this.treeMirrorClient && !this.loading_node_id){
+                _.each(this.treeMirrorClient.knownNodes.nodes, function(n){
+                    var classes = n.classList || [];
+                    if(_.contains(classes, 'oe_loading')){
+                        node_id = self.treeMirrorClient.knownNodes.nodeId(n);
+                    }
+                });
+                // find the real id of the loading node
+                if(node_id){
+                    node_id = this.treeMirrorClient.knownNodes.values[node_id];
+                }
+            }
+            return node_id;
+        },
+        _filter: function(mutations){
+            var self = this;
+            _.each(mutations, function(m){
+                // remove 'loading' mutations
+                if(m.f === 'applyChanged'){
+                    // remove the Removed Element (generally child of loading node)
+                    m.args[0] = _.filter(m.args[0], function(item){
+                        return !(item.id && _.contains(self.loading_children_ids, item.id));
+                    });
+                    // remove the element from addedOrMoved containing the node_id
+                    m.args[1] = _.filter(m.args[1], function(item){
+                        return !(item.parentNode && item.parentNode.id && item.parentNode.id === self.loading_node_id);
+                    });
+                    // remove the element from attributes category containing the node_id
+                    m.args[2] = _.filter(m.args[2], function(item){
+                        return !(item.id && item.id === self.loading_node_id);
+                    });
+                }
+            });
+            return mutations;
+        },
+        _remove_empty_mutations: function(mutations){
+            var self = this;
+            var clean_mutations = [];
+            _.each(mutations, function(m){
+                if(m.f === 'forwardData'){
+                    clean_mutations.push(m);
+                }
+                if(m.f === 'initialize'){
+                    clean_mutations.push(m);
+                }
+                if(m.f === 'applyChanged'){
+                    // remove mutation id=1 and attribute is empty key-array
+                    m.args[2] = _.filter(m.args[2], function(item){
+                        return !(item.id && item.id === 1 && item.attributes);
+                    })
+                    // filter the empty mutations
+                    if(!(_.isEmpty(m.args[0]) && _.isEmpty(m.args[1]) && _.isEmpty(m.args[2]) && _.isEmpty(m.args[3]))){
+                        clean_mutations.push(m);
+                    }
+                }
+            });
+            return clean_mutations;
+        },
+        // mutations queue
         send_queue: function(msg) {
             var self = this;
-            var msglist = JSON.stringify(self.msgQueue);
+            var msglist = self.msgQueue;
             this.def = this.send_record(msglist);
             this.msgQueue = [];
             this.def.then(function(result) {
@@ -31,10 +115,23 @@
                 this.send_queue();
             }
         },
+        // recording function
         is_recording: function(){
             return this.treeMirrorClient !== null;
         },
         start_record: function(){
+            var self = this;
+            return openerp.session.rpc("/im_screenshare/start", {mode : this.mode}).then(function(result){
+                if(self.mode === 'share'){
+                    self.uuid = result;
+                }else{
+                    self.record_id = result;
+                }
+                self._start_record();
+                return result;
+            });
+        },
+        _start_record: function(){
             var self = this;
             this.queue({
                 'base': location.href.match(/^(.*\/)[^\/]*$/)[1],
@@ -56,7 +153,6 @@
                     });
                 }
             });
-
             this.cursorMirrorClient = new CursorMirrorClient({
                 forwardData: function(page, coords, elem) {
                     self.queue({
@@ -66,18 +162,35 @@
                     });
                 },
             });
-
         },
         stop_record: function(){
-            if(this.is_recording()){
-                this.treeMirrorClient.disconnect();
-                this.treeMirrorClient = null;
-                this.cursorMirrorClient.disconnect();
-                this.cursorMirrorClient = null;
-            }
+            this.treeMirrorClient.disconnect();
+            this.treeMirrorClient = null;
+            this.cursorMirrorClient.disconnect();
+            this.cursorMirrorClient = null;
+
+            this.loading_node_id = false;
+            this.loading_children_ids = [];
+            this.uuid = false;
+            this.record_id = false;
         },
-        send_record: function(json_mutations){
-            return $.Deferred().resolve();
+        send_record: function(mutations){
+            console.log('============================================');
+            //var mutations = JSON.parse(json_mutations);
+            // find the TreeMirroir id of the loading node
+            this.loading_node_id = this._find_loading_node_id();
+            // find new child of the loading node
+            this.loading_children_ids = this.loading_children_ids.slice((this.loading_children_ids.length-1), this.loading_children_ids.length).concat(this._child_of_loading_node(mutations));
+            // filter the mutations
+            mutations = this._filter(mutations);
+            // remove the empty mutations
+            mutations = this._remove_empty_mutations(mutations);
+            if(mutations.length !== 0){
+                console.log("SEND : ", mutations);
+                return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, record_id : this.record_id, mutations : mutations});
+            }else{
+                return $.Deferred().resolve();
+            }
         },
     });
 
@@ -114,13 +227,15 @@
     });
 
     //----------------------------------------------------------
-    // Screenshare recoding in the Database
+    // Screen recoding in the Database
     //----------------------------------------------------------
 
     // Class recording the summary mutation of the current DOM and save them in the Database
+    // TODO : change the way the object are created --> use the new controller and remove all the js !
     instance.im_screenshare.DbRecordHandler = instance.im_screenshare.RecordHandler.extend({
         init: function(parent){
             this._super();
+            this.mode = 'record';
         },
         start: function() {
             this.$el.html(this.generate_button());
@@ -240,11 +355,7 @@
         init: function(conv){
             this._super();
             this.conv = conv;
-            this.count = 0;
-            this.uuid = false;
-            // check mutations to send
-            this.loading_node_id = false;
-            this.loading_children_ids = [];
+            this.mode = 'share';
         },
         start: function() {
             this.$el.html('<button class="oe_im_screenshare_button" title="Share your screen"><i class="fa fa-caret-square-o-right"></i></button>');//this.generate_button());
@@ -255,137 +366,22 @@
             event.stopPropagation();
             if(this.is_recording()){
                 this.stop_record();
-                this.send_record("[]", "finish");
                 this.$('.oe_im_screenshare_button').css('color','gray');
                 this.$('.oe_im_screenshare_button').css('title','Share your screen');
             }else{
-                openerp.session.rpc("/im_screenshare/start").then(function(uuid){
-                    self.uuid = uuid;
-                    self.start_record();
-                    self.count = 0;
-                    self.$('.oe_im_screenshare_button').css('color','red');
-                    self.$('.oe_im_screenshare_button').css('title','Stop sharing screen');
-                });
+                self.start_record();
+                self.$('.oe_im_screenshare_button').css('color','red');
+                self.$('.oe_im_screenshare_button').css('title','Stop sharing screen');
             }
         },
-        _child_of_loading_node: function(mutations){
-            var self = this;
-            var children = [];
-            _.each(mutations, function(m){
-                if(m.f === 'applyChanged'){
-                    _.each(m.args[1], function(item){
-                        if(item.parentNode && item.parentNode.id && item.parentNode.id === self.loading_node_id){
-                            children.push(item.id);
-                        }
-                    });
-                }
-             });
-            return children;
-        },
-        _find_loading_node_id: function(){
-            var self = this;
-            var node_id = this.loading_node_id;
-            if(this.treeMirrorClient && !this.loading_node_id){
-                _.each(this.treeMirrorClient.knownNodes.nodes, function(n){
-                    var classes = n.classList || [];
-                    if(_.contains(classes, 'oe_loading')){
-                        node_id = self.treeMirrorClient.knownNodes.nodeId(n);
-                    }
-                });
-                // find the real id of the loading node
-                if(node_id){
-                    node_id = this.treeMirrorClient.knownNodes.values[node_id];
-                }
-            }
-            return node_id;
-        },
-        _filter: function(mutations){
-            var self = this;
-            _.each(mutations, function(m){
-                // remove 'loading' mutations
-                if(m.f === 'applyChanged'){
-                    // remove the Removed Element (generally child of loading node)
-                    m.args[0] = _.filter(m.args[0], function(item){
-                        return !(item.id && _.contains(self.loading_children_ids, item.id));
-                    });
-                    // remove the element from addedOrMoved containing the node_id
-                    m.args[1] = _.filter(m.args[1], function(item){
-                        return !(item.parentNode && item.parentNode.id && item.parentNode.id === self.loading_node_id);
-                    });
-                    // remove the element from attributes category containing the node_id
-                    m.args[2] = _.filter(m.args[2], function(item){
-                        return !(item.id && item.id === self.loading_node_id);
-                    });
-                }
-            });
-            return mutations;
-        },
-        _remove_empty_mutations: function(mutations){
-            var self = this;
-            var clean_mutations = [];
-            _.each(mutations, function(m){
-                if(m.f === 'forwardData'){
-                    clean_mutations.push(m);
-                }
-                if(m.f === 'initialize'){
-                    clean_mutations.push(m);
-                }
-                if(m.f === 'applyChanged'){
-                    // remove mutation id=1 and attribute is empty key-array
-                    m.args[2] = _.filter(m.args[2], function(item){
-                        return !(item.id && item.id === 1 && item.attributes);
-                    })
-                    // filter the empty mutations
-                    if(!(_.isEmpty(m.args[0]) && _.isEmpty(m.args[1]) && _.isEmpty(m.args[2]) && _.isEmpty(m.args[3]))){
-                        clean_mutations.push(m);
-                    }
-                }
-            });
-            return clean_mutations;
-        },
-        // override functions (stop_recording don't need to be)
+        // override functions
         start_record: function(){
-            // send the invitation
             var self = this;
-            var invit = "Screensharing with you, follow the link : " + openerp.session.server + '/im_screenshare/player/' + self.uuid;
-            self.conv.send_message(invit, 'meta');
-            // start recording
-            self._super();
-        },
-        stop_record: function(){
-            this._super();
-            this.loading_node_id = false;
-            this.loading_children_ids = [];
-        },
-        send_record: function(json_mutations, type){
-            console.log('============================================');
-            var mutations = JSON.parse(json_mutations);
-
-            // find the TreeMirroir id of the loading node
-            this.loading_node_id = this._find_loading_node_id();
-
-            // find new child of the loading node
-            this.loading_children_ids = this.loading_children_ids.slice((this.loading_children_ids.length-1), this.loading_children_ids.length).concat(this._child_of_loading_node(mutations));
-
-            // filter the mutations
-            mutations = this._filter(mutations);
-
-            // remove the empty mutations
-            mutations = this._remove_empty_mutations(mutations);
-            if(mutations.length !== 0){
-                var type = type || "base";
-                var message = {
-                    "num" : this.count,
-                    "mutations" : mutations,
-                    "type" : mutations[0] ? mutations[0].f : type,
-                    "uuid" : this.uuid
-                };
-                this.count++;
-                return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, message : message});
-            }else{
-                return $.Deferred().resolve();
-            }
-        },
+            this._super().then(function(res){
+                var invit = "Screensharing with you, follow the link : " + openerp.session.server + '/im_screenshare/player/' + self.uuid;
+                self.conv.send_message(invit, 'meta');
+            });
+        }
     });
 
     // Class listening the bus, and keeping the im_screenshare messages to send them to the player
@@ -401,22 +397,18 @@
         on_notification: function(notification){
             var self = this;
             var channel = notification[0];
-            var message = notification[1];
+            var mutations = notification[1];
+
+            console.log("RECEIVE mutations : ", JSON.stringify(mutations));
 
             if(channel === this.channel){
-                //console.log("RECEIVE : ", JSON.stringify(message));
-                if(message.type === 'finish'){
-                   //window.close();
-                }else{
-                    _.each(message.mutations, function(m){
-                       //console.log(JSON.stringify(m));
-                        try{
-                            self.player.handleMessage(m);
-                        }catch(e){
-                            console.warn(e);
-                        }
-                    });
-                }
+                _.each(mutations, function(m){
+                    try{
+                        self.player.handleMessage(m);
+                    }catch(e){
+                        console.warn(e);
+                    }
+                });
             }
         }
     });
