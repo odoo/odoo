@@ -2,7 +2,9 @@
 
 .. glossary::
 
+    external id
     external identifier
+    external identifiers
         string identifier stored in ``ir.model.data``, can be used to refer
         to a record regardless of its database identifier during data imports
         or export/import roundtrips.
