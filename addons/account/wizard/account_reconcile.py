@@ -76,12 +76,17 @@ class account_move_line_reconcile(osv.osv_memory):
         if context is None:
             context = {}
         self.pool.get('account.move.line').reconcile(cr, uid, context['active_ids'], 'manual', context=context)
-        return {
+        return self.web_client_notification(cr, uid, context=context)
+
+    def web_client_notification(self, cr, uid, context=None):
+        action = {
             'type': 'ir.actions.client',
             'tag': 'action_manual_reconciliation_widget_reload_item',
             'account_id': context['account_id'],
-            'partner_id': context['partner_id'] or False,
         }
+        if 'partner_id' in context:
+            action['partner_id'] = context['partner_id']
+        return action
 
 
 class account_move_line_reconcile_writeoff(osv.osv_memory):
@@ -124,12 +129,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         if context is None:
             context = {}
         account_move_line_obj.reconcile_partial(cr, uid, context['active_ids'], 'manual', context=context)
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'action_manual_reconciliation_widget_reload_item',
-            'account_id': context['account_id'],
-            'partner_id': context['partner_id'] or False,
-        }
+        return self.pool.get('account.move.line.reconcile').web_client_notification(cr, uid, context=context)
 
     def trans_rec_reconcile(self, cr, uid, ids, context=None):
         context = dict(context or {})
@@ -152,12 +152,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
 
         account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
                 period_id, journal_id, context=context)
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'action_manual_reconciliation_widget_reload_item',
-            'account_id': context['account_id'],
-            'partner_id': context['partner_id'] or False,
-        }
+        return self.pool.get('account.move.line.reconcile').web_client_notification(cr, uid, context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
