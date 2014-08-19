@@ -1423,14 +1423,15 @@ class PreprocessedCSS(StylesheetAsset):
         if self.url:
             ira = self.registry['ir.attachment']
             url = self.html_url % self.url
-            domain = [('type', '=', 'binary'), ('url', '=', self.url)]
+            domain = [('type', '=', 'binary'), ('url', '=', url)]
             ira_id = ira.search(self.cr, self.uid, domain, context=self.context)
+            datas = self.content.encode('utf8').encode('base64')
             if ira_id:
                 # TODO: update only if needed
-                ira.write(self.cr, openerp.SUPERUSER_ID, [ira_id], {'datas': self.content}, context=self.context)
+                ira.write(self.cr, openerp.SUPERUSER_ID, ira_id, {'datas': datas}, context=self.context)
             else:
                 ira.create(self.cr, openerp.SUPERUSER_ID, dict(
-                    datas=self.content.encode('utf8').encode('base64'),
+                    datas=datas,
                     mimetype='text/css',
                     type='binary',
                     name=url,
