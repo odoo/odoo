@@ -1050,13 +1050,9 @@ Graph views contain ``<field>`` with a mandatory ``@type`` attribute taking
 the values:
 
 ``row`` (default)
-    the field should be aggregated by rows
-
-    .. todo:: wtf does that even mean?
+    the field should be aggregated by default
 ``measure``
     the field should be aggregated rather than grouped on
-
-.. todo:: @type=col
 
 .. code-block:: xml
 

@@ -258,6 +258,7 @@
                   <rng:value>bottom</rng:value>
                 </rng:choice>
               </rng:attribute>
+              <rng:optional><rng:attribute name="on_write"/></rng:optional>
             </rng:optional>
             <rng:optional>
               <rng:attribute name="toolbar">
@@ -267,7 +268,6 @@
                 </rng:choice>
               </rng:attribute>
             </rng:optional>
-            <rng:optional><rng:attribute name="on_write"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field"/>
