@@ -850,7 +850,8 @@ class Proxy(http.Controller):
         from werkzeug.test import Client
         from werkzeug.wrappers import BaseResponse
 
-        return Client(request.httprequest.app, BaseResponse).get(path).data
+        base_url = request.httprequest.base_url
+        return Client(request.httprequest.app, BaseResponse).get(path, base_url=base_url).data
 
 class Database(http.Controller):
 
