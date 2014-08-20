@@ -244,14 +244,15 @@
 
     openerp.website.ready().done(function() {
         function theme_customize() {
-            var error = window.getComputedStyle(document.body, ':before').getPropertyValue('content');
-            if (error && error !== 'none') {
-                return themeError(eval(error));
-            }
             var Theme = openerp.website.Theme;
             if (Theme.open && !Theme.open.isDestroyed()) return;
             Theme.open = new Theme();
             Theme.open.appendTo("body");
+            
+            var error = window.getComputedStyle(document.body, ':before').getPropertyValue('content');
+            if (error && error !== 'none') {
+                themeError(eval(error));
+            }
         }
         $(document).on('click', "#theme_customize a",theme_customize);
         if ((window.location.hash || "").indexOf("theme=true") !== -1) {
