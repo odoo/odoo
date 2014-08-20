@@ -155,7 +155,7 @@
 
 <!-- Display a post -->
 <template id="display_post">
-    <div class="question clearfix">
+    <div class="question row">
         <div class="col-md-2 hidden-xs text-center">
             <div t-attf-class="box #{question.is_correct and 'oe_green' or 'oe_grey'} #{(question.child_count == 0) and 'text-muted' or ''}">
                 <span t-esc="question.child_count"/>
@@ -410,7 +410,7 @@
     <form t-attf-action="/forum/#{ slug(forum) }/post/#{slug(question)}/new" method="post" role="form">
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
         <textarea name="content" class="form-control load_editor" required="True"/>
-        <button class="btn btn-primary" id="btn_ask_your_question">Post Your Answer</button>
+        <button class="btn btn-primary mt16" id="btn_ask_your_question">Post Your Answer</button>
     </form>
     <script type="text/javascript">
         CKEDITOR.replace("content");
@@ -438,7 +438,7 @@
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
     <t t-call="website_forum.header">
-        <div t-attf-class="question #{not question.active and 'alert alert-danger' or ''}">
+        <div t-attf-class="row question #{not question.active and 'alert alert-danger' or ''}">
             <div class="col-md-2 hidden-xs text-center">
                 <t t-call="website_forum.vote">
                     <t t-set="post" t-value="question"/>

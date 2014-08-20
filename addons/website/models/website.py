@@ -121,7 +121,8 @@ def slug(value):
     return "%s-%d" % (slugname, id)
 
 
-_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[a-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)', re.I)
+# NOTE: as the pattern is used as it for the ModelConverter (ir_http.py), do not use any flags
+_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
 
 def unslug(s):
     """Extract slug and id from a string.
