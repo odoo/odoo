@@ -239,7 +239,8 @@ class pos_session(osv.osv):
                 required=True, readonly=True,
                 select=1, copy=False),
         
-        'sequence_number': fields.integer('Order Sequence Number'),
+        'sequence_number': fields.integer('Order Sequence Number', help='A sequence number that is incremented with each order'),
+        'login_number':  fields.integer('Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session'),
 
         'cash_control' : fields.function(_compute_cash_all,
                                          multi='cash',
@@ -303,6 +304,7 @@ class pos_session(osv.osv):
         'user_id' : lambda obj, cr, uid, context: uid,
         'state' : 'opening_control',
         'sequence_number': 1,
+        'login_number': 0,
     }
 
     _sql_constraints = [
@@ -396,7 +398,6 @@ class pos_session(osv.osv):
                 statement.unlink(context=context)
         return super(pos_session, self).unlink(cr, uid, ids, context=context)
 
-
     def open_cb(self, cr, uid, ids, context=None):
         """
         call the Point Of Sale interface and set the pos.session to 'opened' (in progress)
@@ -417,6 +418,12 @@ class pos_session(osv.osv):
             'url'  : '/pos/web/',
             'target': 'self',
         }
+
+    def login(self, cr, uid, ids, context=None):
+        this_record = self.browse(cr, uid, ids[0], context=context)
+        this_record.write({
+            'login_number': this_record.login_number+1,
+        })
 
     def wkf_action_open(self, cr, uid, ids, context=None):
         # second browse because we need to refetch the data from the DB for cash_register_id

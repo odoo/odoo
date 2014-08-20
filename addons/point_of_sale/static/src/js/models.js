@@ -172,7 +172,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             loaded: function(self,taxes){ self.taxes = taxes; },
         },{
             model:  'pos.session',
-            fields: ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number'],
+            fields: ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number','login_number'],
             domain: function(self){ return [['state','=','opened'],['user_id','=',self.session.uid]]; },
             loaded: function(self,pos_sessions){
                 self.pos_session = pos_sessions[0]; 
@@ -885,7 +885,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 creationDate:   new Date(),
                 orderLines:     new module.OrderlineCollection(),
                 paymentLines:   new module.PaymentlineCollection(),
-                name:           "Order " + this.uid,
+                name:           _t("Order ") + this.uid,
                 client:         null,
             });
             this.selected_orderline   = undefined;
@@ -900,7 +900,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // Generates a public identification number for the order.
         // The generated number must be unique and sequential. They are made 12 digit long
-        // to fit into EAN-13 barcodes. 
+        // to fit into EAN-13 barcodes, should it be needed 
         generateUniqueId: function() {
             function zero_pad(num,size){
                 var s = ""+num;
@@ -909,7 +909,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }
                 return s;
             }
-            return zero_pad(this.pos.pos_session_id,6) + zero_pad(this.sequence_number,6);
+            return zero_pad(this.pos.pos_session_id,5) +'-'+
+                   zero_pad(this.pos.pos_session.login_number,3) +'-'+
+                   zero_pad(this.sequence_number,4);
         },
         addOrderline: function(line){
             if(line.order){
