@@ -5,7 +5,7 @@ jQuery(document).ready(function() {
 // security restrictions, we have to use a file server with special headers
 // (CORS) - most servers don't support cross-origin browser requests.
 //
-var url = '/website_slides/thibaultopenchatterpresv2-120417043700-phpapp01.pdf';
+var url = '/website_slides/compressed.tracemonkey-pldi-09.pdf';
 
 //
 // Disable workers to avoid yet another cross-origin issue (workers need the URL of
@@ -18,8 +18,9 @@ var pdfDoc = null,
     pageRendering = false,
     pageNumPending = null,
     scale = 1,
-    canvas = document.getElementById('pdfholder'),
-    ctx = canvas.getContext('2d');
+    canvas = document.createElement('canvas'),
+    ctx = canvas.getContext('2d'),
+    pdfimage = document.getElementById('pdfimage');
 
 /**
  * Get page info from document, resize canvas accordingly, and render page.
@@ -48,6 +49,8 @@ function renderPage(num) {
         renderPage(pageNumPending);
         pageNumPending = null;
       }
+      //render page as image       
+      pdfimage.src = canvas.toDataURL();
     });
   });
 
