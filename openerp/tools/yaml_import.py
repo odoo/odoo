@@ -447,7 +447,7 @@ class YamlInterpreter(object):
 
                     # Evaluation args
                     args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                    result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
+                    result = getattr(model, match.group(1))(self.cr, self.uid, [], *args)
                     for key, val in (result or {}).get('value', {}).items():
                         if key in fg:
                             record_dict[key] = process_val(key, val)
