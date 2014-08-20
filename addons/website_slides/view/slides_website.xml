@@ -253,22 +253,33 @@
 	                <iframe t-if="slideview.datas" t-attf-src="/website_slides/static/lib/pdfjs/web/viewer.html?file=#{slideview.url}"></iframe>
 	                <iframe t-if="slideview.youtube_id" t-attf-src="//www.youtube.com/embed/#{slideview.youtube_id}?theme=light"></iframe>
                 </div>
-                <div class="page-header">
-					<h3><t t-esc="slideview.name"/><small class="pull-right"><t t-esc="slideview.slide_views"/> Views</small></h3>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
+                	<h3><t t-esc="slideview.name"/><small class="pull-right"><t t-esc="slideview.slide_views"/> Views</small></h3>
+                </div>
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
+					<div class="col-lg-1 col-md-1 col-sm-1 col-xs-2" style="padding: 0px;">
+						<img t-if="not slideview.youtube_id" t-attf-src="/slides/thumb/#{slideview.id}" class="img-responsive shadow"/>
+						<img t-if="slideview.youtube_id" t-att-src="slideview.image" class="img-responsive shadow"/>
+					</div>
+					<div class="col-lg-11 col-md-11 col-sm-11 col-xs-10">
+						<div>chanel name</div>
+						<div t-if="slideview.tag_ids">
+						    <i class="fa fa-tags"></i>
+						    <t t-foreach="slideview.tag_ids" t-as="att_tag">
+						        <a t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=att_tag.name)">
+						            <span t-attf-class="badge slide-badge #{tags and tags == att_tag.name and 'badge-active' ''}" t-field="att_tag.name"/>
+						        </a>
+						    </t>
+						</div>																    
+					</div>
 				</div>
-				<div t-if="slideview.tag_ids" style="display:inline;">
-				    <i class="fa fa-tags"></i>
-				    <t t-foreach="slideview.tag_ids" t-as="att_tag">
-				        <a t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=att_tag.name)">
-				            <span t-attf-class="badge slide-badge #{tags and tags == att_tag.name and 'badge-active' ''}" t-field="att_tag.name"/>
-				        </a>
-				    </t>
-				</div>
-				<t t-call="website.publish_management">
-			        <t t-set="object" t-value="slideview"/>
-			        <t t-set="publish_edit" t-value="True"/>
-			    </t>
-	            <div style="clear:both;">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
+					<t t-call="website.publish_management">
+				        <t t-set="object" t-value="slideview"/>
+				        <t t-set="publish_edit" t-value="True"/>
+			    	</t>
+		    	</div>
+	            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 10px 0px 10px 0px;">
 	                <!-- Nav tabs -->
 	                <ul class="nav nav-tabs" role="tablist">
 	                    <li><a href="#about" role="tab" data-toggle="tab">About</a></li>
