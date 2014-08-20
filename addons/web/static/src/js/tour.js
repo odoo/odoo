@@ -323,7 +323,7 @@ var Tour = {
     },
     log: function (message, add_user) {
         if (add_user) {
-            var user = $(".navbar .dropdown:has(>.js_usermenu) a:first, .navbar .oe_topbar_name").text();
+            var user = $(".navbar .dropdown:has(>.js_usermenu) a:first, .navbar .oe_topbar_name, .pos .username").text();
             if (!user && $('a[href*="/login"]')) user = 'Public User';
             message += " (" + (user||"").replace(/^\s*|\s*$/g, '') + ")";
         }

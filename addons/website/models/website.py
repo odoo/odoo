@@ -220,7 +220,10 @@ class website(osv.osv):
 
     def page_exists(self, cr, uid, ids, name, module='website', context=None):
         try:
-           return self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
+            name = (name or "").replace("/page/website.", "").replace("/page/", "")
+            if not name:
+                return False
+            return self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
         except:
             return False
 
@@ -394,9 +397,14 @@ class website(osv.osv):
                 yield page
 
     def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
-        return list(itertools.islice(
-            self.enumerate_pages(cr, uid, ids, query_string=needle, context=context),
-            limit))
+        name = (needle or "").replace("/page/website.", "").replace("/page/", "")
+        res = []
+        for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
+            if needle in page['loc']:
+                res.append(page)
+                if len(res) == limit:
+                    break
+        return res
 
     def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
         step = step and int(step) or 10
