@@ -110,7 +110,6 @@ class im_screenshare_record(osv.Model):
 
     def play_screen_record(self, cr, uid, id, context=None):
         url="/im_screenshare/player/" + str(id[0]) + "/" + cr.dbname
-        _logger.debug(url)
         return {
             'type': 'ir.actions.act_url',
             'url':url,
@@ -119,6 +118,7 @@ class im_screenshare_record(osv.Model):
 
 class im_screenshare_record_event(osv.Model):
     _name = "im_screenshare.record.event"
+    _order = "id, timestamp"
     _rec_name = "screen_record_id"
     _columns = {
         'screen_record_id' : fields.many2one('im_screenshare.record', 'Screen Record', readonly=True),

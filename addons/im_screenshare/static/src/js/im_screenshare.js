@@ -115,7 +115,7 @@
                 this.send_queue();
             }
         },
-        // recording function
+        // recording functions
         is_recording: function(){
             return this.treeMirrorClient !== null;
         },
@@ -176,7 +176,7 @@
             this.record_id = false;
         },
         send_record: function(mutations){
-            console.log('============================================');
+            //console.log('============================================');
             // find the TreeMirroir id of the loading node
             this.loading_node_id = this._find_loading_node_id();
             // find new child of the loading node
@@ -194,12 +194,75 @@
         }
     });
 
-    // Class which replay the recieved mutation on the current DOM
-    instance.im_screenshare.Player = instance.Widget.extend({
-        init: function(treeMirror, cursorMirror){
+    // Unique Player for Screen recording and Screen sharing
+    // Class which replay the recieved mutation on the current DOM.
+    //      For the screensharing, it will listen to the bus, and replay the received mutations
+    //      For the screenrecording, it will fetch the mutations, and replay them
+    instance.im_screenshare.Player = instance.Class.extend({
+        init: function(treeMirror, cursorMirror, params){
+            // common init
             this.cursorMirror = cursorMirror;
             this.treeMirror = treeMirror;
+            if(params.uuid){
+                // screen sharing
+                this.channel = params.uuid;
+                this.bus = openerp.bus.bus;
+                this.bus.add_channel(params.uuid);
+                this.bus.on("notification", this, this.on_notification);
+                this.bus.start_polling();
+            }else{
+                // screen record
+                this.record_id = params.id;
+                this.dbname = params.dbname;
+                this.sre_msglist = [];
+                this.counter = 0;
+                this._init_screen_record();
+            }
         },
+        // screen recording
+        _init_screen_record: function(){
+            var self = this;
+            instance.session.session_bind().done(function() {
+                var screenRecordEvent = new instance.web.Model('im_screenshare.record.event');
+                screenRecordEvent.query(['mutations']).filter([['screen_record_id', '=', self.record_id]]).all().done(function(sre_list) {
+                    _.each(sre_list, function(sre) {
+                        var list = JSON.parse(sre.mutations);
+                        _.each(list, function(item) {
+                            self.sre_msglist.push(item);
+                        });
+                    });
+                    self.load();
+                });
+            });
+        },
+        load: function(){
+            var self = this;
+            var next_event_delay = 0;
+            var current = this.sre_msglist[this.counter];
+            if (this.counter < this.sre_msglist.length-1) {
+                var next = this.sre_msglist[this.counter+1];
+                next_event_delay = next.timestamp - current.timestamp;
+                window.setTimeout(function(){self.load();}, next_event_delay);
+            }
+            this.handleMessage(current);
+            this.counter++;
+        },
+        // screen sharing (bus notifications)
+        on_notification: function(notification){
+            var self = this;
+            var channel = notification[0];
+            var mutations = notification[1];
+            if(channel === this.channel){
+                _.each(mutations, function(m){
+                    try{
+                        self.handleMessage(m);
+                    }catch(e){
+                        console.warn(e);
+                    }
+                });
+            }
+        },
+        // common functions
         clearPage : function() {
             while (document.firstChild) {
                 document.removeChild(document.firstChild);
@@ -226,10 +289,7 @@
         }
     });
 
-    //----------------------------------------------------------
     // Screen recording in the Database
-    //----------------------------------------------------------
-
     // Class recording the summary mutation of the current DOM and save them in the Database
     instance.im_screenshare.DbRecordHandler = instance.im_screenshare.RecordHandler.extend({
         init: function(parent){
@@ -253,48 +313,6 @@
         }
     });
 
-    // Class fetching the record and send the events to the player
-    instance.im_screenshare.DbReceiver = instance.Widget.extend({
-        init: function(id, dbname, player){
-            var self = this;
-            this.id = id;
-            this.dbname = dbname;
-            this.counter = 0;
-            this.sre_msglist = [];
-            this.player = player;
-            instance.session.session_bind().done(function() {
-                var screenRecord = new instance.web.Model('im_screenshare.record');
-                var screenRecordEvent = new instance.web.Model('im_screenshare.record.event');
-                screenRecord.query(['event_ids']).filter([['id', '=', self.id]]).all().then(function(r) {
-                    var sre_ids = r[0].event_ids;
-                    screenRecordEvent.query(['mutations']).filter([['id', 'in', sre_ids]]).all().done(function(sre_list) {
-                        _.each(sre_list, function(sre) {
-                            console.log("SRE : ", sre.mutations);
-                            var list = JSON.parse(sre.mutations);
-                            console.log("list : ", list);
-                            _.each(list, function(item) {
-                                self.sre_msglist.push(item);
-                            });
-                        });
-                        self.load();
-                    });
-                });
-            });
-        },
-        load: function(){
-            var self = this;
-            var next_event_delay = 0;
-            var current = this.sre_msglist[this.counter];
-            if (this.counter < this.sre_msglist.length-1) {
-                var next = this.sre_msglist[this.counter+1];
-                next_event_delay = next.timestamp - current.timestamp;
-                window.setTimeout(function(){self.load();}, next_event_delay);
-            }
-            this.player.handleMessage(current);
-            this.counter++;
-        }
-    });
-
     // add the button in the webclient menu bar
     instance.web.UserMenu.include({
         do_update: function(){
@@ -308,11 +326,8 @@
     });
 
 
-    //----------------------------------------------------------
     // IM Screenshare with other users, depends on im_chat
-    //----------------------------------------------------------
-
-    // Class sending the records to the server. This is the button on the header of the conversation
+    // This is the button on the header of the conversation : it starts and stops the screensharing.
     instance.im_screenshare.IMSenderButton = openerp.im_screenshare.RecordHandler.extend({
         init: function(conv){
             this._super();
@@ -346,35 +361,6 @@
         }
     });
 
-    // Class listening the bus, and keeping the im_screenshare messages to send them to the player
-    instance.im_screenshare.BusListener = openerp.Class.extend({
-        init: function(channel, player){
-            this.player = player;
-            this.channel = channel;
-            this.bus = openerp.bus.bus;
-            this.bus.add_channel(channel);
-            this.bus.on("notification", this, this.on_notification);
-            this.bus.start_polling();
-        },
-        on_notification: function(notification){
-            var self = this;
-            var channel = notification[0];
-            var mutations = notification[1];
-
-            console.log("RECEIVE mutations : ", JSON.stringify(mutations));
-
-            if(channel === this.channel){
-                _.each(mutations, function(m){
-                    try{
-                        self.player.handleMessage(m);
-                    }catch(e){
-                        console.warn(e);
-                    }
-                });
-            }
-        }
-    });
-
     // add the button to the header of the conversation
     instance.im_chat.Conversation.include({
         start: function() {
@@ -382,7 +368,7 @@
             var b = new instance.im_screenshare.IMSenderButton(this);
             b.prependTo(this.$('.oe_im_chatview_right'));
         },
-        /* TODO : make it work with im_livechat
+        /* TODO : make it work with im_livechat (for saas6)
         add_options: function(){
             this._super();
             this._add_option('Screensharing', 'im_chat_option_screenshare', 'fa fa-desktop');

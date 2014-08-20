@@ -30,23 +30,12 @@
 
                     <link href="/web/css/web.assets_backend" rel="stylesheet"/>
                     <script type="text/javascript" src="/web/js/web.assets_backend"></script>
-                    <!--
-                    <link rel="stylesheet" href="/web/webclient/css">
-                    <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-                    <script src="/web/webclient/js"></script>
-                    <script src="/im_screenshare/static/lib/mutation-summary/tree-mirror.js"></script>
-
-                    <script src="/im_screenshare/static/lib/smt2/smt-aux.js"></script>
-                    <script src="/im_screenshare/static/lib/smt2/wz_jsgraphics.js"></script>
-                    <script src="/im_screenshare/static/lib/mouse_track.js"></script>
-                -->
 
                     <script>
                         window.addEventListener('DOMContentLoaded', function() {
 
                             var instance = openerp.init(["web"]);
 
-                            // business : initialize the TreeMirroir, the Player and the Receiver (according the parameters recieved, screen_record replaying will get record_id and db name, im_screensharing will get the uuid of the session).
                             var base;
                             var treeMirror = new TreeMirror(document.body, {
                                 createElement: function(tagName) {
@@ -66,17 +55,8 @@
 
                             var cursorMirror = new CursorMirror();
 
-                            var player = new instance.im_screenshare.Player(treeMirror, cursorMirror);
-
                             var params = <t t-raw="params" />;
-                            console.log(params);
-                            if(!params.uuid){
-                                console.log("DB reciever");
-                                window.receiver = new instance.im_screenshare.DbReceiver(params.id, params.db, player);
-                            }else{
-                                console.log("screenshare reciever");
-                                window.receiver = new instance.im_screenshare.BusListener(params.uuid, player);
-                            }
+                            window.player = new instance.im_screenshare.Player(treeMirror, cursorMirror, params);
                         });
                     </script>
                 </head>
