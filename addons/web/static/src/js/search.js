@@ -1623,7 +1623,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             facet: {
                 category: this.attrs.string,
                 field: this,
-                values: [{label: value, value: value}]
+                values: [{label: value, value: value, operator: 'ilike'}]
             },
             expand: this.expand.bind(this),
         }]);
@@ -1671,9 +1671,13 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         return facetValue.get('label');
     },
     make_domain: function (name, operator, facetValue) {
+        operator = facetValue.get('operator') || operator;
+
         switch(operator){
         case this.default_operator:
             return [[name, '=', facetValue.get('value')]];
+        case 'ilike':
+            return [[name, 'ilike', facetValue.get('value')]];
         case 'child_of':
             return [[name, 'child_of', facetValue.get('value')]];
         }
