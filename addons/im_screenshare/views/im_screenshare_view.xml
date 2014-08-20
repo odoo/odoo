@@ -5,6 +5,25 @@
         <menuitem id="screen_record_menu_main" name="Screen record"/>
         <menuitem id="screen_record_menu" parent="screen_record_menu_main" name="Screen Records" sequence="19" />
 
+
+         <!-- Screen Record Action -->
+        <record model="ir.actions.act_window" id="action_screen_record_form">
+                <field name="name">Screen Records</field>
+                <field name="res_model">im_screenshare.record</field>
+                <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_screen_record_event_list">
+            <field name="name">Screen Record Events</field>
+            <field name="res_model">im_screenshare.record.event</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Recordings" parent="screen_record_menu" id="screen_record_form" action="action_screen_record_form" />
+        <menuitem name="Record Events" parent="screen_record_menu" id="screen_record_event_list" action="action_screen_record_event_list" />
+
+
         <!-- Screen Record Form view -->
         <record model="ir.ui.view" id="im_screenshare_record_form_view">
             <field name="name">im_screenshare.record.form.view</field>
@@ -12,21 +31,21 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Screen Record" version="7.0">
-                    <header>
-
-                    </header>
                     <sheet>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <button class="oe_inline oe_stat_button" name="play_screen_record" string="Play" type="object" icon="fa-play"/>
+                            <button class="oe_inline oe_stat_button" type="action" context="{'default_screen_record_id': active_id, 'search_default_screen_record_id': active_id}" name="%(im_screenshare.action_screen_record_event_list)d" icon="fa-film">
+                                <field string="Record Events" name="event_count" widget="statinfo"/>
+                            </button>
+                        </div>
                         <div class="oe_title">
-                            <label for="name" class="oe_inline" ></label>
-                            <h1><field name="name" /></h1>
-                            <label for="user_id" class="oe_inline"></label>
-                            <h2><field name="user_id" /></h2>
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="Describe the Record ..."/></h1>
                         </div>
                         <div class="oe_right oe_button_box">
-                            <button name="play_screen_record" string="Play Screen Record" type="object" class="oe_highlight" />
                         </div>
-
                         <group>
+                            <field name="user_id" />
                             <field name="starttime" />
                             <field name="duration" />
                         </group>
@@ -66,22 +85,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Screen Record" version="7.0">
-                    <header>
-
-                    </header>
                     <sheet>
-                        <!--<label for="timestamp_date" class="oe_edit_only"></label>
-                        <h1><field name="timestamp_date" /></h1>-->
-                        <label for="screen_record_id"></label>
-                        <h2><field name="screen_record_id" /></h2>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="screen_record_id" placeholder="Describe the Record ..."/></h1>
+                        </div>
                         <group>
                             <field name="timestamp" />
                         </group>
-                        <notebook>
-                            <page string="Messages">
-                                <field name="mutations" />
-                            </page>
-                        </notebook>
+                        <label for="mutations" />
+                        <field name="mutations" />
                     </sheet>
                 </form>
             </field>
@@ -96,18 +109,10 @@
                 <tree string="Screen Record Events" version="7.0">
                     <field name="id" />
                     <field name="screen_record_id" />
+                    <field name="create_date" />
                 </tree>
             </field>
         </record>
-
-        <!-- Screen Record Action -->
-        <record model="ir.actions.act_window" id="action_screen_record_form">
-                <field name="name">Screen Records</field>
-                <field name="res_model">im_screenshare.record</field>
-                <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem name="Recordings" parent="screen_record_menu" id="screen_record_form" action="action_screen_record_form" />
 
     </data>
 </openerp>
