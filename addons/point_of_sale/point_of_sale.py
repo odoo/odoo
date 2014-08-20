@@ -471,9 +471,9 @@ class pos_session(osv.osv):
                         'amount': st.difference,
                         'ref': record.name,
                         'name': name,
-                        'partner_id': order.partner_id and order.partner_id.id or False,
                     }, context=context)
 
+                # Add a st._update_balance(...)
                 if st.journal_id.type == 'bank':
                     st.write({'balance_end_real' : st.balance_end})
                 getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
@@ -1039,6 +1039,7 @@ class pos_order(osv.osv):
                 values.update({
                     'date': order.date_order[:10],
                     'ref': order.name,
+                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                     'journal_id' : sale_journal_id,
                     'period_id' : period,
                     'move_id' : move_id,
