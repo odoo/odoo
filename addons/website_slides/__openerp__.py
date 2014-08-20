@@ -34,11 +34,12 @@ You can link and publish documents and slides to the event and talks also you ca
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['website', 'document'],
+    'depends': ['website', 'website_mail', 'document'],
     'data': [
         'view/slides_website.xml',
         'view/slides_backend.xml',
         'security/ir.model.access.csv',
+        'data/website_slides_data.xml',
     ],   
     'installable': True,
     'auto_install': False,   

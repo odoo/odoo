@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record model="document.directory" id="dir_public">
+            <field name="name">Public</field>
+            <field name="user_id" eval="False"/>
+            <field name="ressource_id">0</field>
+            <field name="description">Public directy is default channel for slide share, all website user can access content of public directory.</field>
+        </record>
+        <record model="document.directory" id="dir_private">
+            <field name="name">Private</field>
+            <field name="user_id" eval="False"/>
+            <field name="ressource_id">0</field>
+        </record>
+    </data>
+</openerp>
