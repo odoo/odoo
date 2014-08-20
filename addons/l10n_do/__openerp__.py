@@ -4,7 +4,9 @@
 # First author: Jose Ernesto Mendez <tecnologia@obsdr.com> (Open Business Solutions SRL.)
 # Copyright (c) 2012 -TODAY Open Business Solutions, SRL. (http://obsdr.com). All rights reserved.
 #
-# This is a fork by Marcos Organizador de Negocios - Eneldo Serrata - www.marcos.org.do
+# This is a fork to upgrade to odoo 8.0
+# by Marcos Organizador de Negocios - Eneldo Serrata - www.marcos.org.do
+#
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -41,7 +43,7 @@
     * The Tax Code Chart for Domincan Republic
     * The main taxes used in Domincan Republic
     * Fiscal position for local """,
-    'author': 'Marcos Organizador de Negocios, SRL.',
+    'author': 'Eneldo Serrata - Marcos Organizador de Negocios, SRL.',
     'website': 'http://marcos.do',
     'depends': ['account', 'base_iban'],
     'data': [
@@ -55,7 +57,7 @@
         'data/account_chart_template.xml',
         'data/account.tax.template.csv',
         'data/l10n_do_base_data.xml',
-        # Change BRE: adds fiscal position
+        # Adds fiscal position
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
         # configuration wizard, views, reports...
