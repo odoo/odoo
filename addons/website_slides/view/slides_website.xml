@@ -132,11 +132,11 @@
                     <div class="row">
                         <div t-foreach="channels" t-as="channel" class="col-sm-4 mb32">
                             <div class="well well-sm">
-                                <div class="media">
-                                    <a class="thumbnail pull-left" t-attf-href="/slides/#{ slug(channel) }">
+                                <div>
+                                    <a class="thumbnail pull-left channel-img" t-attf-href="/slides/#{ slug(channel) }">
                                         <div class="fa fa-5x fa-comment"/>
                                     </a>
-                                    <div class="media-body">
+                                    <div>
                                         <p>
                                             <h2 class="media-heading"><div t-field="channel.name"/></h2>
                                             <t t-call="website.publish_management">
