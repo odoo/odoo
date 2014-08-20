@@ -277,6 +277,27 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 self.cashregisters = bankstatements;
             },
         },{
+            label: 'fonts',
+            loaded: function(self){
+                var fonts_loaded = new $.Deferred();
+
+                // Waiting for fonts to be loaded to prevent receipt printing
+                // from printing empty receipt while loading Inconsolata
+                // ( The font used for the receipt ) 
+                waitForWebfonts(['Lato','Inconsolata'], function(){
+                    fonts_loaded.resolve();
+                });
+
+                // The JS used to detect font loading is not 100% robust, so
+                // do not wait more than 5sec
+                setTimeout(function(){
+                    fonts_loaded.resolve();
+                },5000);
+
+                return fonts_loaded;
+            },
+        },{
+            label: 'pictures',
             loaded: function(self){
                 self.company_logo = new Image();
                 self.company_logo.crossOrigin = 'anonymous';
@@ -327,7 +348,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     loaded.resolve();
                 }else{
                     var model = self.models[index];
-                    self.pos_widget.loading_message(_t('Loading')+' '+(model.model || ''), progress);
+                    self.pos_widget.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
                     var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
                     var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context; 

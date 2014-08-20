@@ -791,8 +791,8 @@ class task(osv.osv):
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=ctx),
         'partner_id': lambda self, cr, uid, ctx=None: self._get_default_partner(cr, uid, context=ctx),
     }
-    _order = "priority, sequence, date_start, name, id"
-    
+    _order = "priority desc, sequence, date_start, name, id"
+
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
             visited_branch = set()
