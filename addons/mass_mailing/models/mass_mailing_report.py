@@ -4,7 +4,7 @@ from openerp.osv import fields, osv
 from openerp import tools
 
 
-class MassMailingnReport(osv.Model):
+class MassMailingReport(osv.Model):
     _name = 'mail.statistics.report'
     _auto = False
     _description = 'Mass Mailing Statistics'
