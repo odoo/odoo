@@ -569,7 +569,7 @@
 
         <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32">
             <a t-attf-id="answer-#{str(answer.id)}"/>
-            <div t-attf-class="forum_answer" t-attf-id="answer_#{answer.id}" >
+            <div t-attf-class="forum_answer row" t-attf-id="answer_#{answer.id}" >
                 <div class="col-md-2 hidden-xs text-center">
                     <t t-call="website_forum.vote">
                         <t t-set="post" t-value="answer"/>
