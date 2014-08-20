@@ -3620,7 +3620,7 @@ class stock_package(osv.osv):
 
     def action_print(self, cr, uid, ids, context=None):
         context = dict(context or {}, active_ids=ids)
-        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_package_barcode', context=context)
+        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_package_barcode_small', context=context)
     
     
     def unpack(self, cr, uid, ids, context=None):
