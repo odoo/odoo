@@ -144,7 +144,7 @@ root can have the following attributes:
     * ``expr`` should be a Python expression evaluated with the current
       record's attributes as context values. Other context values are ``uid``
       (the id of the current user) and ``current_date`` (the current date as
-      a string of the form ``yyyy-MM-dd`)
+      a string of the form ``yyyy-MM-dd``)
 ``fonts``
     allows changing a row's font style based on the corresponding record's
     attributes.
@@ -154,7 +154,7 @@ root can have the following attributes:
     evaluating to ``true`` will apply the corresponding style to the row's
     text. Contrary to ``colors``, multiple pairs can match each record
 ``create``, ``edit``, ``delete``
-    allows *dis*abling the corresponding action in the view by setting the
+    allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
 ``on_write``
     only makes sense on an ``editable`` list. Should be the name of a method
@@ -170,6 +170,70 @@ root can have the following attributes:
         not displayed anymore
 
 .. toolbar attribute is for tree-tree views
+
+Possible children elements of the list view are:
+
+``button``
+    displays a button in a list cell
+
+    ``icon``
+        icon to use to display the button
+    ``string``
+        * if there is no ``icon``, the button's text
+        * if there is an ``icon``, ``alt`` text for the icon
+    ``type``
+        type of button, indicates how it clicking it affects Odoo:
+
+        ``workflow`` (default)
+            sends a signal to a workflow. The button's ``name`` is the
+            workflow signal, the row's record is passed as argument to the
+            signal
+        ``object``
+            call a method on the list's model. The button's ``name`` is the
+            method, which is called with the current row's record id and the
+            current context.
+
+            .. web client also supports a @args, which allows providing
+               additional arguments as JSON. Should that be documented? Does
+               not seem to be used anywhere
+
+        ``action``
+            load an execute an ``ir.actions``, the button's ``name`` is the
+            database id of the action. The context is expanded with the list's
+            model (as ``active_model``), the current row's record
+            (``active_id``) and all the records currently loaded in the list
+            (``active_ids``, may be just a subset of the database records
+            matching the current search)
+    ``name``
+        see ``type``
+    ``args``
+        see ``type``
+    ``attrs``
+        dynamic attributes based on record values.
+
+        A mapping of attributes to domains, domains are evaluated in the
+        context of the current row's record, if ``True`` the corresponding
+        attribute is set on the cell.
+
+        Possible attributes are ``invisible`` (hides the button) and
+        ``readonly`` (disables the button but still shows it)
+    ``states``
+        shorthand for ``invisible`` ``attrs``: a list of space, separated
+        states, requires that the model has a ``state`` field and that it is
+        used in the view.
+
+        Makes the button ``invisible`` if the record is *not* in one of the
+        listed states
+    ``context``
+        merged into the view's context when performing the button's Odoo call
+    ``confirm``
+        confirmation message to display (and for the user to accept) before
+        performing the button's Odoo call
+
+    .. declared but unused: help
+
+``field``
+    displays a field's value in a list cell
 
 .. _reference/views/form:
 
