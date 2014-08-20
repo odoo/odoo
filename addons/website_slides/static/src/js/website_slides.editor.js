@@ -65,7 +65,7 @@
                 // https://github.com/mozilla/pdf.js/blob/master/src/pdf.js#L41
                 var path = '';
                 var pathArray = window.location.pathname.split( '/' );
-                pathArray.forEach(function(){path +='../'});
+                pathArray.forEach(function(){path +='../';});
                 PDFJS.workerSrc = path + 'website_slides/static/lib/pdfjs/build/pdf.worker.js';
 
                 PDFJS.getDocument(buffer).then(function getPdf(pdf) {

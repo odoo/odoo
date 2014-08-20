@@ -21,7 +21,6 @@ import werkzeug
 from urlparse import urlparse
 import simplejson
 
-from openerp import tools
 from openerp import SUPERUSER_ID
 
 from openerp.addons.web import http
@@ -36,7 +35,7 @@ class main(http.Controller):
         urldata = urlparse(request.httprequest.url)
         values = {}
         values.update({
-            'urlscheme':urldata.scheme+'://',
+            'urlscheme':urldata.scheme + '://',
             'urlhost':urldata.netloc,
             'urlpath':urldata.path,
             'urlquery':urldata.query,
@@ -65,21 +64,37 @@ class main(http.Controller):
             context=dict(context, mail_create_nosubcribe=True))
         return message_id
 
+    @http.route('/slides/channels', type='http', auth="public", website=True)
+    def channels(self, *args, **post):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        attachment = pool['ir.attachment']
+        directory = pool['document.directory']
+        dir_group = attachment.read_group(
+            cr, uid, [], [],
+            groupby="parent_id", orderby=False, context=context)
+        ids = [group['parent_id'][0] for group in dir_group if group['parent_id']]
+        channels = directory.browse(cr, uid, ids, context)
+        user = pool['res.users'].browse(cr, uid, uid, context)
+
+        # todo: pass count of read_group to display number of slides in channels
+        return request.website.render('website_slides.channels',{'channels': channels, 'user': user})
 
     @http.route(['/slides',
-                 '/slides/page/<int:page>',                 
+                 '/slides/<model("document.directory"):channel>',
+                 '/slides/page/<int:page>',
                  ], type='http', auth="public", website=True)
-    def slides(self, page=1, filters='all', sorting='creation', search='', tags=''):
+    def slides(self, channel=1, page=1, filters='all', sorting='creation', search='', tags=''):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         attachment = request.registry['ir.attachment']
-
         domain = [("is_slide","=","TRUE")]
+        if not isinstance(channel, int):
+            domain += [('parent_id','=',channel.id)]
         if search:
             domain += [('name', 'ilike', search)]
-        
+
         if tags:
             domain += [('tag_ids.name', '=', tags)]
-        
+
         if filters == 'ppt':
             domain += [('slide_type', '=', 'ppt')]
         elif filters == 'doc':
@@ -88,7 +103,7 @@ class main(http.Controller):
             domain += [('slide_type', '=', 'video')]
         else:
             filters = 'all'
-        
+
         if sorting == 'date':
             order = 'write_date desc'
         elif sorting == 'view':
@@ -128,14 +143,13 @@ class main(http.Controller):
         })
         return request.website.render('website_slides.home', values)
 
-
     @http.route('/slides/view/<model("ir.attachment"):slideview>', type='http', auth="public", website=True)
-    def slide_view(self, slideview, filters='', sorting='', search='', tags=''):        
+    def slide_view(self, slideview, filters='', sorting='', search='', tags=''):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         attachment = request.registry['ir.attachment']
         domain = [("is_slide","=","TRUE")]
-        
-        # increment view counter 
+
+        # increment view counter
         attachment.set_viewed(cr, uid, [slideview.id], context=context)
 
         # most viewed slides
@@ -149,18 +163,18 @@ class main(http.Controller):
         ids = attachment.search(cr, uid, domain, limit=self._slides_per_list, offset=0, context=context)
         related_ids = attachment.browse(cr, uid, ids, context=context)
 
-        # get comments 
+        # get comments
         comments = slideview.website_message_ids
-        
+
         # get share url
         urldata = self._slides_urldata()
-        shareurl = urldata['urlscheme']+urldata['urlhost']+urldata['urlpath']
+        shareurl = urldata['urlscheme'] + urldata['urlhost'] + urldata['urlpath']
 
         # create slide embed code
         if slideview.datas:
-            embedcode = '<iframe  src="'+urldata['urlscheme']+urldata['urlhost']+'/website_slides/static/lib/pdfjs/web/viewer.html?file='+slideview.url+'#page="></iframe>'
-        if slideview.youtube_id:    
-            embedcode = '<iframe src="//www.youtube.com/embed/'+slideview.youtube_id+'?theme=light"></iframe>'
+            embedcode = '<iframe  src="' + urldata['urlscheme'] + urldata['urlhost'] + '/website_slides/static/lib/pdfjs/web/viewer.html?file=' + slideview.url + '#page="></iframe>'
+        if slideview.youtube_id:
+            embedcode = '<iframe src="//www.youtube.com/embed/' + slideview.youtube_id + '?theme=light"></iframe>'
 
         values = {}
         values.update({
@@ -173,7 +187,6 @@ class main(http.Controller):
         })
         return request.website.render('website_slides.slide_view', values)
 
-
     @http.route('/slides/comment/<model("ir.attachment"):slideview>', type='http', auth="public", methods=['POST'], website=True)
     def slides_comment(self, slideview, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -182,9 +195,8 @@ class main(http.Controller):
             user = request.registry['res.users'].browse(cr, uid, uid, context=context)
             attachment = request.registry['ir.attachment']
             attachment.check_access_rights(cr, uid, 'read')
-            self._slides_message(user, slideview.id, **post)            
+            self._slides_message(user, slideview.id, **post)
         return werkzeug.utils.redirect(request.httprequest.referrer + "#discuss")
-
 
     @http.route('/slides/thumb/<int:document_id>', type='http', auth="public", website=True)
     def slide_thumb(self, document_id=0, **post):
@@ -194,7 +206,6 @@ class main(http.Controller):
         Website = request.registry['website']
         user = Files.browse(cr, uid, document_id, context=context)
         return Website._image(cr, uid, 'ir.attachment', user.id, 'image', response, max_height=225)
-
 
     @http.route('/slides/get_tags', type='http', auth="public", methods=['GET'], website=True)
     def tag_read(self, **post):

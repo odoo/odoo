@@ -30,15 +30,16 @@ class ir_attachment_tags(osv.osv):
         'name': fields.char('Name')
     }
 
+
 class document_directory(osv.osv):
     _name = 'document.directory'
     _inherit = ['document.directory','mail.thread']
 
     _columns = {
-        'website_published': fields.boolean(
-            'Publish', help="Publish on the website", copy=False,
-        ),
+        'website_published': fields.boolean('Publish', help="Publish on the website", copy=False),
+        'description': fields.text('Website Description', tranalate=True)
     }
+
 
 class MailMessage(osv.Model):
     _inherit = 'mail.message'
@@ -49,10 +50,11 @@ class MailMessage(osv.Model):
             help='Used to display messages in a paragraph-based chatter using a unique path;'),
     }
 
+
 class ir_attachment(osv.osv):
     _name = 'ir.attachment'
     _inherit = ['ir.attachment','mail.thread']
-    
+
     _order = "id desc"
     _columns = {
         'is_slide': fields.boolean('Is Slide'),
@@ -72,7 +74,7 @@ class ir_attachment(osv.osv):
             string='Website Messages',
             help="Website communication history",
         ),
-        'website_desccription': fields.html('Website Desription', tranalate=True)
+        'website_description': fields.html('Website Description', tranalate=True)
     }
 
     def _get_slide_setting(self, cr, uid, context):
@@ -116,7 +118,7 @@ class ir_attachment(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         ids = super(ir_attachment, self)._search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
         return len(ids) if count else ids
- 
+
     def extract_youtube_id(self, url):
         youtube_id = ""
         query = urlparse(url)
