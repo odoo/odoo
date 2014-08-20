@@ -112,6 +112,12 @@
 		<template id='home' name="slide">			
 			<t t-set="head"><t t-call="website_slides.head"/></t>
 			<t t-call="website.layout">
+                <t t-if="channel">
+                    <div t-field="channel.website_description"></div>
+                </t>
+                <t t-if="not channel">
+                    <div class="oe_structure"></div>
+                </t>
 				<t t-call="website_slides.header"></t>
 				<div class="container">
 					<div class="row">
@@ -137,7 +143,6 @@
                                         <div class="fa fa-5x fa-comment"/>
                                     </a>
                                     <div>
-                                        <p>
                                             <h2 class="media-heading"><div t-field="channel.name"/></h2>
                                             <t t-call="website.publish_management">
                                                 <t t-set="object" t-value="channel"/>
@@ -152,7 +157,6 @@
                                                     <t t-set="object" t-value="channel"/>
                                                 </t>
                                             </t>
-                                        </p>
                                     </div>
                                 </div>
                                 <t t-if="public_user">
@@ -172,8 +176,6 @@
 		<template id='slide_view' name="slide_view">            
 			<t t-set="head">
 				<t t-call="website_slides.head"/>
-				<!-- <script type="text/javascript" src="/website_slides/static/lib/pdfjs/build/pdf.js"></script>
-				<script type="text/javascript" src="/website_slides/static/src/js/pdfviewer.js"></script> -->
 			</t>
 			<t t-call="website.layout">
 				<br/>
@@ -262,15 +264,27 @@
 						<img t-if="slideview.youtube_id" t-att-src="slideview.image" class="img-responsive shadow"/>
 					</div>
 					<div class="col-lg-11 col-md-11 col-sm-11 col-xs-10">
-						<div>chanel name</div>
-						<div t-if="slideview.tag_ids">
+						<div class="pull-right" t-if="slideview.tag_ids">
 						    <i class="fa fa-tags"></i>
 						    <t t-foreach="slideview.tag_ids" t-as="att_tag">
 						        <a t-att-href="url_for('/slides') + '?' + keep_query( 'search', 'filters', 'sorting' ,tags=att_tag.name)">
 						            <span t-attf-class="badge slide-badge #{tags and tags == att_tag.name and 'badge-active' ''}" t-field="att_tag.name"/>
 						        </a>
 						    </t>
-						</div>																    
+						</div>		
+                        <a t-attf-href="/slides/#{slug(channel)}">
+                            <h3 class="mt0">
+                                <div t-field="channel.name"/>
+                            </h3>
+                        </a>
+                        <div class="col-md-6" style="padding-left:0">
+                            <t t-call="website_mail.follow">
+                                <t t-set="email" t-value="user.email"/>
+                                <t t-set="object" t-value="channel"/>
+                            </t>
+                        </div>
+
+														    
 					</div>
 				</div>
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">

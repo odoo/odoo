@@ -83,7 +83,7 @@ class main(http.Controller):
                  '/slides/<model("document.directory"):channel>',
                  '/slides/page/<int:page>',
                  ], type='http', auth="public", website=True)
-    def slides(self, channel=1, page=1, filters='all', sorting='creation', search='', tags=''):
+    def slides(self, channel=0, page=1, filters='all', sorting='creation', search='', tags=''):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         attachment = request.registry['ir.attachment']
         domain = [("is_slide","=","TRUE")]
@@ -140,6 +140,7 @@ class main(http.Controller):
             'sorting': sorting,
             'search': search,
             'tags':tags,
+            'channel': channel
         })
         return request.website.render('website_slides.home', values)
 
@@ -147,8 +148,9 @@ class main(http.Controller):
     def slide_view(self, slideview, filters='', sorting='', search='', tags=''):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         attachment = request.registry['ir.attachment']
-        domain = [("is_slide","=","TRUE")]
+        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
 
+        domain = [("is_slide","=","TRUE")]
         # increment view counter
         attachment.set_viewed(cr, uid, [slideview.id], context=context)
 
@@ -184,6 +186,8 @@ class main(http.Controller):
             'comments': comments,
             'shareurl':shareurl,
             'embedcode':embedcode,
+            'channel': slideview.parent_id,
+            'user':user
         })
         return request.website.render('website_slides.slide_view', values)
 

@@ -37,7 +37,8 @@ class document_directory(osv.osv):
 
     _columns = {
         'website_published': fields.boolean('Publish', help="Publish on the website", copy=False),
-        'description': fields.text('Website Description', tranalate=True)
+        'description': fields.text('Website Description', tranalate=True),
+        'website_description': fields.html('Website Description', tranalate=True)
     }
 
 
