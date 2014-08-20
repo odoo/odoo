@@ -128,6 +128,7 @@
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}"/>
                             <field name="partner_shipping_id" on_change="onchange_delivery_id(company_id, partner_id, partner_shipping_id, fiscal_position_id)" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
                             <field name="project_id" context="{'partner_id':partner_invoice_id, 'manager_id': user_id, 'default_pricelist_id':pricelist_id, 'default_name':name, 'default_type': 'contract'}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
+                            <field name="contract_state" groups="sale.group_analytic_accounting" widget="label_selection" attrs="{'invisible': [('project_id', '=', False)]}" options="{'classes': {'template': 'default', 'draft': 'info', 'open': 'success', 'pending': 'warning', 'close': 'danger', 'cancelled': 'warning'}}" readonly="1"/>
                         </group>
                         <group>
                             <field name="date_order"/>

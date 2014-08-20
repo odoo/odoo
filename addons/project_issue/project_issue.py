@@ -171,7 +171,7 @@ class project_issue(osv.Model):
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
                 return {'value': {'partner_id': project.partner_id.id}}
-        return {}
+        return {'value': {'partner_id': False}}
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -292,11 +292,10 @@ class project_issue(osv.Model):
         """ This function returns value of partner email address based on partner
             :param part: Partner's id
         """
-        result = {}
         if partner_id:
             partner = self.pool['res.partner'].browse(cr, uid, partner_id, context)
-            result['email_from'] = partner.email
-        return {'value': result}
+            return {'value': {'email_from': partner.email}}
+        return {'value': {'email_from': False}}
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         context = dict(context or {})

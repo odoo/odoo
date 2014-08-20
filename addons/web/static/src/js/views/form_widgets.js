@@ -934,6 +934,21 @@ var TimezoneMismatch = FieldSelection.extend({
     }
 });
 
+var LabelSelection = FieldSelection.extend({
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
+        this.classes = this.options && this.options.classes || {};
+    },
+    render_value: function() {
+        this._super.apply(this, arguments);
+        if (this.get("effective_readonly")) {
+            var value = this.get('value'),
+            bt_class = this.classes[value] || 'default';
+            this.$el.html(_.str.sprintf("<span class='label label-%s'>%s<span>", bt_class, this.$el.html()));
+        }
+    },
+});
+
 var FieldRadio = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     template: 'FieldRadio',
     events: {
@@ -1626,7 +1641,8 @@ core.form_widget_registry
     .add('priority', Priority)
     .add('kanban_state_selection', KanbanSelection)
     .add('statinfo', StatInfo)
-    .add('timezone_mismatch', TimezoneMismatch);
+    .add('timezone_mismatch', TimezoneMismatch)
+    .add('label_selection', LabelSelection);
 
 
 /**
