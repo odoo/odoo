@@ -124,7 +124,7 @@
                                         <field name="method_time" on_change="onchange_method_time(method_time)" class="oe_inline"/>
                                         <button name="%(action_asset_modify)d" states="open" string="Change Duration" type="action" icon="terp-stock_effects-object-colorize" class="oe_inline" colspan="1"/>
                                     </div>
-                                    <field name="prorata" attrs="{'invisible': [('method_time','=','end')]}"/>
+                                    <field name="prorata" attrs="{'invisible': [('method_time','=','end')]}"  on_change="onchange_prorata(prorata, purchase_date)"/>
                                     <field name="method_number" attrs="{'invisible':[('method_time','=','end')], 'required':[('method_time','=','number')]}"/>
                                     <field name="method_period"/>
                                     <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>

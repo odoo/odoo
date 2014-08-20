@@ -51,7 +51,7 @@ class account_asset_category(osv.osv):
                                        "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
                                        "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
         'method_end': fields.date('Ending date'),
-        'prorata':fields.boolean('Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done from the depreciation start date instead of the first January'),
+        'prorata':fields.boolean('Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first January'),
         'open_asset': fields.boolean('Skip Draft State', help="Check this if you want to automatically confirm the assets of this category when created by invoices."),
     }
 
@@ -237,6 +237,7 @@ class account_asset_asset(osv.osv):
             if salvage_value:
                 val['value_residual'] = purchase_value - salvage_value
         return {'value': val}    
+    
     def _entry_count(self, cr, uid, ids, field_name, arg, context=None):
         MoveLine = self.pool('account.move.line')
         return {
@@ -275,7 +276,7 @@ class account_asset_asset(osv.osv):
                                   help="Choose the method to use to compute the dates and number of depreciation lines.\n"\
                                        "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
                                        "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
-        'prorata':fields.boolean('Prorata Temporis', readonly=True, states={'draft':[('readonly',False)]}, help='Indicates that the first depreciation entry for this asset have to be done from the depreciation start date instead of the first January'),
+        'prorata':fields.boolean('Prorata Temporis', readonly=True, states={'draft':[('readonly',False)]}, help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
         'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True, states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=True, states={'draft':[('readonly',False)]}),
@@ -329,6 +330,11 @@ class account_asset_asset(osv.osv):
         res = {'value': {}}
         if method_time != 'number':
             res['value'] = {'prorata': False}
+        return res
+
+    def onchange_prorata(self, cr, uid, ids, prorata, purchase_date, context=None):
+        res = {'value': {}}
+        res['value'] = prorata and {'depreciation_start_date': datetime.strptime(purchase_date, '%Y-%m-%d')} or {'depreciation_start_date': datetime(datetime.strptime(purchase_date, '%Y-%m-%d').year, 1, 1)}
         return res
 
     def _compute_entries(self, cr, uid, ids, period_id, context=None):
