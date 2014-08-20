@@ -1484,6 +1484,15 @@ class _RelationalMulti(_Relational):
     def convert_to_display_name(self, value):
         raise NotImplementedError()
 
+    def _compute_related(self, records):
+        """ Compute the related field `self` on `records`. """
+        for record in records:
+            value = record
+            # traverse the intermediate fields, and keep at most one record
+            for name in self.related[:-1]:
+                value = value[name][:1]
+            record[self.name] = value[self.related[-1]]
+
 
 class One2many(_RelationalMulti):
     """ One2many field; the value of such a field is the recordset of all the
