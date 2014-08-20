@@ -22,6 +22,7 @@ import time
 import datetime
 from dateutil.relativedelta import relativedelta
 
+from openerp.addons.analytic.models import analytic
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
@@ -220,6 +221,7 @@ class task(osv.osv):
         'timesheet_ids': fields.one2many('account.analytic.line', 'task_id', 'Timesheets'),
         'analytic_account_id': fields.related('project_id', 'analytic_account_id',
             type='many2one', relation='account.analytic.account', string='Analytic Account', store=True),
+        'contract_state': fields.related('project_id', 'analytic_account_id', 'state', relation="account.analytic.account", string='Contract Status', type='selection', selection=analytic.ANALYTIC_ACCOUNT_STATE),
     }
 
     _defaults = {
@@ -231,6 +233,16 @@ class task(osv.osv):
         for task in self.browse(cr, uid, ids, context=context):
             vals[task.id]['planned_hours'] += task.effective_hours
         return vals
+
+    def onchange_project(self, cr, uid, ids, project_id, context=None):
+        result = super(task, self).onchange_project(cr, uid, ids, project_id, context=context)
+        if not project_id:
+            return result
+        if 'value' not in result:
+            result['value'] = {}
+        project = self.pool['project.project'].browse(cr, uid, project_id, context=context)
+        result['value']['contract_state'] = project.analytic_account_id.state
+        return result
 
 
 class res_partner(osv.osv):

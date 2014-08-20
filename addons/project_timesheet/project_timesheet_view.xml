@@ -150,6 +150,13 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2" />
             <field name="arch" type="xml">
+                <field name="project_id" position="attributes">
+                    <attribute name="on_change">onchange_project(project_id)</attribute>
+                </field>
+                <xpath expr='//field[@name="project_id"]' position='after'>
+                    <field name="contract_state" widget="label_selection" attrs="{'invisible': ['|', ('project_id', '=', False), ('partner_id', '=', False)]}"
+                    options="{'classes': {'template': 'default', 'draft': 'info', 'open': 'success', 'pending': 'warning', 'close': 'danger', 'cancelled': 'warning'}}" readonly="1"/>
+                </xpath>
                 <field name="categ_ids" position="after">
                     <field name="analytic_account_id" invisible="1"/>
                     <field name="progress" widget="progressbar"

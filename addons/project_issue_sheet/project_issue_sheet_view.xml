@@ -17,6 +17,10 @@
                         domain="[('parent_id','!=',False),('partner_id', '=', partner_id),('type', '!=', 'view')]"
                         on_change='on_change_account_id(analytic_account_id)'/>
                 </field>
+                <xpath expr='//div[@name="project"]' position='after'>
+                    <field name="contract_state" widget="label_selection" attrs="{'invisible': ['|', ('partner_id', '=', False), ('analytic_account_id', '=', False)]}"
+                    options="{'classes': {'template': 'default', 'draft': 'info', 'open': 'success', 'pending': 'warning', 'close': 'danger', 'cancelled': 'warning'}}" readonly="1"/>
+                </xpath>
                 <xpath expr="//notebook/page[@name='extra_info']" position="before">
                     <page string="Timesheets">
                         <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : uid, 'default_account_id' : analytic_account_id, 'default_is_timesheet':1}"
