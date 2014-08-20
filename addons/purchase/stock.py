@@ -126,7 +126,7 @@ class stock_partial_picking(osv.osv_memory):
     # Overridden to inject the purchase price as true 'cost price' when processing
     # incoming pickings.
     def _product_cost_for_average_update(self, cr, uid, move):
-        if move.picking_id.purchase_id:
+        if move.picking_id.purchase_id and move.purchase_line_id:
             return {'cost': move.purchase_line_id.price_unit,
                     'currency': move.picking_id.purchase_id.currency_id.id}
         return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)

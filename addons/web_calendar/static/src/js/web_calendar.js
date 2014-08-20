@@ -1091,6 +1091,7 @@ openerp.web_calendar = function(instance) {
             var self = this;
             var def = $.Deferred();
             var defaults = {};
+            var created = false;
 
             _.each($.extend({}, this.data_template, data), function(val, field_name) {
                 defaults['default_' + field_name] = val;
@@ -1130,9 +1131,14 @@ openerp.web_calendar = function(instance) {
                 }
             });
             pop.on('create_completed', self, function(id) {
-                 self.trigger('slowadded');
+                created = true;
+                self.trigger('slowadded');
             });
             def.then(function() {
+                if (created) {
+                    var parent = self.getParent();
+                    parent.$calendar.fullCalendar('refetchEvents');
+                }
                 self.trigger('close');
             });
             return def;
