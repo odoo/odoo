@@ -2367,6 +2367,15 @@ class stock_move(osv.osv):
                     account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_src, acc_valuation, reference_amount, reference_currency_id, context))]
 
             move_obj = self.pool.get('account.move')
+            move_line_obj = self.pool.get('account.move.line')
+            move_line_ids = move_line_obj.search(cr, uid, [('name','=', move.name)])
+            if move_line_ids and not account_moves:
+                journal_id = self.pool.get('product.product').get_product_accounts(cr, uid, move.product_id.id, context)['stock_journal']
+                reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, src_company_ctx)
+                for move_line in move_line_obj.browse(cr, uid, move_line_ids, context):
+                    if move_line.debit: acc_src = move_line.account_id.id
+                    if move_line.credit: acc_dest = move_line.account_id.id
+                account_moves +=[(journal_id, self._create_account_move_line(cr, uid, move, acc_src, acc_dest, reference_amount, reference_currency_id, context))]
             for j_id, move_lines in account_moves:
                 move_obj.create(cr, uid,
                         {
