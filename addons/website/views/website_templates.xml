@@ -150,19 +150,24 @@
                 <footer>
                     <div id="footer_container">
                     </div>
-                    <div class="container mt16 mb8">
-                        <div class="pull-right" t-ignore="true" t-if="not editable">
-                            Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
-                            <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
-                        </div>
-                        <div class="pull-left text-muted">
-                            Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
-                        </div>
-                    </div>
                 </footer>
             </div>
         </body>
     </html>
+</template>
+
+<template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
+    <xpath expr="//footer" position="inside">
+        <div class="container mt16 mb8">
+            <div class="pull-right" t-ignore="true" t-if="not editable">
+                Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
+                <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
+            </div>
+            <div class="pull-left text-muted">
+                Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+            </div>
+        </div>
+    </xpath>
 </template>
 
 <template id="layout_logo_show" inherit_id="website.layout" optional="enabled" name="Show Logo">
@@ -702,7 +707,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="sitemap_index_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <sitemapindex t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap t-foreach="pages" t-as="page">
+  <sitemap t-translate="off" t-foreach="pages" t-as="page">
     <loc><t t-esc="url_root"/>sitemap-<t t-esc="page"/>.xml</loc>
   </sitemap>
 </sitemapindex>

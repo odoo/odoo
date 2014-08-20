@@ -21,6 +21,7 @@
 
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
+from openerp import SUPERUSER_ID
 
 
 class sale_order(osv.Model):
@@ -36,7 +37,7 @@ class sale_order(osv.Model):
     def _portal_payment_block(self, cr, uid, ids, fieldname, arg, context=None):
         result = dict.fromkeys(ids, False)
         payment_acquirer = self.pool['payment.acquirer']
-        for this in self.browse(cr, uid, ids, context=context):
+        for this in self.browse(cr, SUPERUSER_ID, ids, context=context):
             if this.state not in ('draft', 'cancel') and not this.invoiced:
                 result[this.id] = payment_acquirer.render_payment_block(
                     cr, uid, this.name, this.amount_total, this.pricelist_id.currency_id.id,
@@ -137,7 +138,7 @@ class account_invoice(osv.Model):
         user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
         if user.share:
             return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', 'portal_action_invoices', context=context)
-        return super(sale_order, self).get_formview_action(cr, uid, id, context=context)
+        return super(account_invoice, self).get_formview_action(cr, uid, id, context=context)
 
 
 class mail_mail(osv.osv):

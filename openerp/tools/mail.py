@@ -386,6 +386,11 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
             node.set('in_quote', '1')
             node.set('tail_remove', '1')
         if node.tag == 'blockquote' or node.get('text_quote') or node.get('text_signature'):
+            # here no quote_begin because we want to be able to remove some quoted
+            # text without removing all the remaining context
+            node.set('in_quote', '1')
+        if node.getparent() is not None and node.getparent().get('in_quote'):
+            # inside a block of removed text but not in quote_begin (see above)
             node.set('in_quote', '1')
 
         # shorten:

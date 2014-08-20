@@ -967,8 +967,9 @@ class Char(_String):
     _description_size = property(attrgetter('size'))
 
     def convert_to_cache(self, value, record, validate=True):
-        return bool(value) and ustr(value)[:self.size]
-
+        if value is None or value is False:
+            return False
+        return ustr(value)[:self.size]
 
 class Text(_String):
     """ Text field. Very similar to :class:`Char`, but typically for longer
@@ -981,15 +982,18 @@ class Text(_String):
     type = 'text'
 
     def convert_to_cache(self, value, record, validate=True):
-        return bool(value) and ustr(value)
-
+        if value is None or value is False:
+            return False
+        return ustr(value)
 
 class Html(_String):
     """ Html field. """
     type = 'html'
 
     def convert_to_cache(self, value, record, validate=True):
-        return bool(value) and html_sanitize(value)
+        if value is None or value is False:
+            return False
+        return html_sanitize(value)
 
 
 class Date(Field):
@@ -1479,6 +1483,15 @@ class _RelationalMulti(_Relational):
 
     def convert_to_display_name(self, value):
         raise NotImplementedError()
+
+    def _compute_related(self, records):
+        """ Compute the related field `self` on `records`. """
+        for record in records:
+            value = record
+            # traverse the intermediate fields, and keep at most one record
+            for name in self.related[:-1]:
+                value = value[name][:1]
+            record[self.name] = value[self.related[-1]]
 
 
 class One2many(_RelationalMulti):

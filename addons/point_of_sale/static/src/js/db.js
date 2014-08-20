@@ -128,7 +128,7 @@ function openerp_pos_db(instance, module){
             this.cache[store] = data;
         },
         _product_search_string: function(product){
-            var str = '' + product.id + ':' + product.name;
+            var str = '' + product.id + ':' + product.display_name;
             if(product.ean13){
                 str += '|' + product.ean13;
             }

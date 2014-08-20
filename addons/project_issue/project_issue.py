@@ -44,7 +44,7 @@ class project_issue_version(osv.Model):
 class project_issue(osv.Model):
     _name = "project.issue"
     _description = "Project Issue"
-    _order = "priority, create_date desc"
+    _order = "priority desc, create_date desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _mail_post_access = 'read'
