@@ -115,7 +115,7 @@ class StockMove(osv.osv):
                             proc = proc_obj.copy(cr, uid, move.procurement_id.id, default=valdef, context=context)
                         else:
                             proc = proc_obj.create(cr, uid, valdef, context=context)
-                        proc_obj.run(cr, uid, [proc], context=context)
+                        proc_obj.run(cr, uid, [proc], context=context) #could be omitted
 
             
             #check if new moves needs to be exploded
