@@ -190,7 +190,14 @@ class ir_http(orm.AbstractModel):
                 exception=exception,
                 traceback=traceback.format_exc(exception),
             )
-            code = getattr(exception, 'code', code)
+
+            if isinstance(exception, werkzeug.exceptions.HTTPException):
+                if exception.code is None:
+                    # Hand-crafted HTTPException likely coming from abort(),
+                    # usually for a redirect response -> return it directly
+                    return exception
+                else:
+                    code = exception.code
 
             if isinstance(exception, openerp.exceptions.AccessError):
                 code = 403
@@ -199,11 +206,6 @@ class ir_http(orm.AbstractModel):
                 values.update(qweb_exception=exception)
                 if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
                     code = 403
-
-            if isinstance(exception, werkzeug.exceptions.HTTPException) and code is None:
-                # Hand-crafted HTTPException likely coming from abort(),
-                # usually for a redirect response -> return it directly
-                return exception
 
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
