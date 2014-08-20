@@ -267,7 +267,7 @@ $sheet-padding: 16px
         font-size: inherit
     // }}}
     // Button style {{{
-    a.button:link, a.button:visited, button, .oe_button, input[type='submit']
+    a.button:link, a.button:visited, .oe_button, input[type='submit']
         display: inline-block
         border: 1px solid rgba(0,0,0,0.4)
         color: #4c4c4c
@@ -282,22 +282,22 @@ $sheet-padding: 16px
         -webkit-font-smoothing: antialiased
         outline: none
 
-    a.button:hover, button:hover,.oe_button:hover, input[type='submit']:hover
+    a.button:hover,.oe_button:hover, input[type='submit']:hover
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         cursor: pointer
         background-position: 0
 
-    a.button:focus, button:focus, .oe_button:focus, input[type='submit']:focus
+    a.button:focus, .oe_button:focus, input[type='submit']:focus
         border: 1px solid #80bfff
         background-position: 0
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
-    a.button:active, a.button.active, button:active, .oe_button:active, .oe_button.active, input[type='submit']:active, input[type='submit'].active
+    a.button:active, a.button.active, .oe_button:active, .oe_button.active, input[type='submit']:active, input[type='submit'].active
         @include vertical-gradient(#e3e3e3, #f6f6f6)
         @include box-shadow(none)
 
-    a.button.disabled, button:disabled, .oe_button:disabled, input[type='submit']:disabled
+    a.button.disabled, .oe_button:disabled, input[type='submit']:disabled
         background: #efefef !important
         border: 1px solid #d1d1d1 !important
         @include box-shadow(none !important)
@@ -899,8 +899,11 @@ $sheet-padding: 16px
     .oe_application
         width: 100%
         height: 100%
-        a
-            color: $link-color
+        .oe-view-manager-body
+            a
+                color: $link-color
+            .oe-view-manager-view-kanban:not(:empty)
+                height: 100%
         > div
             position: relative
             height: 100%
@@ -931,6 +934,52 @@ $sheet-padding: 16px
             font-weight: bold
     // }}}
     // ViewManager common {{{
+    .oe-view-manager-header
+        height: 90px
+        overflow: hidden
+        border-bottom: 1px solid black
+        display: none
+        .row
+            height: 45px
+        .oe-view-title
+            float: left
+            font-size: 18px
+            font-weight: bold
+            margin: 0
+        .oe-header-title
+            padding-left: 0
+        .oe-view-manager-search-view
+            float: right
+            padding-top: 5px
+        .oe-view-manager-switch
+            float: right
+            .oe-vm-switch-kanban:before
+                content: "\f009"
+            .oe-vm-switch-list:before
+                content: "\f0c9"
+            .oe-vm-switch-form:before
+                content: "\f044"
+            .oe-vm-switch-graph:before
+                content: "\f080"
+            .oe-vm-switch-calendar:before
+                content: "\f073"
+            .oe-vm-switch-gantt:before
+                content: "\f0ae"
+        .oe-view-manager-buttons
+            float: left
+            > div
+                display: none
+
+    .oe_application 
+        > div    
+            > div
+                > .oe-view-manager-body
+                    position: absolute
+                    top: 90px
+                    bottom: 0
+                    left: 0
+                    right: 0
+                    overflow: auto
     .oe_view_manager
         display: table
         height: inherit
@@ -1076,18 +1125,18 @@ $sheet-padding: 16px
         display: none
     // }}}
     // ViewManager application {{{
-    .oe_view_manager_current
-        height: 100%
-        > .oe_view_manager_header
-            border-bottom: 1px solid #cacaca
-            @include vertical-gradient(#fcfcfc, #dedede)
-            @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
-            .oe_header_row
-                td
-                    padding: 8px
-            .oe_header_row:first-child
-                td
-                    padding-top: 8px
+    // .oe_view_manager_current
+    //     height: 100%
+    //     > .oe_view_manager_header
+    //         border-bottom: 1px solid #cacaca
+    //         @include vertical-gradient(#fcfcfc, #dedede)
+    //         @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
+    //         .oe_header_row
+    //             td
+    //                 padding: 8px
+    //         .oe_header_row:first-child
+    //             td
+    //                 padding-top: 8px
     // }}}
     // ViewManager inline {{{
     .oe_view_manager_inline, .oe_view_manager_inlineview
@@ -1111,14 +1160,10 @@ $sheet-padding: 16px
     .oe_searchview
         cursor: text
         position: relative
-        float: right
         padding: 1px 0
-        line-height: 18px
         min-width: 400px
-        border: 1px solid #ababab
-        background: white
+        width: 400px
         @include radius(13px)
-        @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
         input, textarea
             padding: 3px
             height: 14px
@@ -1139,54 +1184,39 @@ $sheet-padding: 16px
         .oe_searchview_clear
             cursor: pointer
             position: absolute
-            top: 0
+            top: 3px
             right: 18px
             width: 15px
             height: 24px
-            background: url(../img/search_reset.gif) center center no-repeat
         .oe_searchview_unfold_drawer
             position: absolute
             top: 0
             right: 0
-            height: 24px
-            padding: 0 7px 0 4px
             color: #ccc
             cursor: pointer
             &:hover
                 color: #999
             &:before
                 position: absolute
-                top: 10px
-                right: 7px
+                top: 7px
+                right: 18px
                 width: 0
-                height: 0
-                display: inline-block
-                content: ""
-                vertical-align: top
-                border-top: 5px solid #4C4C4C
-                border-left: 5px solid transparent
-                border-right: 5px solid transparent
-                @include opacity()
 
         .oe_searchview_search
-            @include text-to-icon("r", #a3a3a3)
-            @include box-shadow(none)
-            @include radius(0)
+            cursor: pointer
             position: absolute
-            left: 3px
-            top: 1px
-            padding: 0
-            border: none
-            background: transparent
+            left: 6px
+            top: 8px
 
         .oe_searchview_facets
             min-height: 22px
-            margin: 0 35px 0 15px
+            margin: 2px 35px 0 20px
             *
                 vertical-align: top
                 display: inline-block
-                line-height: 17px
+                font-size: 100%
             .oe_searchview_facet
+                height: 20px
                 margin: 1px 0
                 font-size: 11px
                 &:focus
@@ -1204,12 +1234,13 @@ $sheet-padding: 16px
                 padding: 0
                 -webkit-font-smoothing: auto
                 // spacing for opera, FF
+                span
+                    height: 18px
                 &:focus
                     border-color: $tag-border-selected
                     @include box-shadow(0 0 3px 1px $tag-border-selected)
                 .oe_facet_values
                     background: $tag-bg-light
-                    @include radius(0 3px 3px 0)
                 .oe_facet_category, .oe_facet_value
                     padding: 0 4px
                 .oe_facet_category
@@ -1218,8 +1249,6 @@ $sheet-padding: 16px
                 .oe_facet_category.oe_i
                     font-size: 16px
                 .oe_facet_value
-                    border-left: 1px solid $tag-border
-                    text-shadow: 0 1px 1px white
                     color: #4C4C4C
                     &:last-child
                         padding-right: 16px

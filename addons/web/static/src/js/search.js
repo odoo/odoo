@@ -330,7 +330,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             }
         },
         // search button
-        'click button.oe_searchview_search': function (e) {
+        'click i.oe_searchview_search': function (e) {
             e.stopImmediatePropagation();
             this.do_search();
         },
@@ -448,6 +448,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
     set_drawer: function (drawer) {
         this.drawer = drawer;
+    },
+
+    toggle_visibility: function (is_visible) {
+        this.$el.toggle(is_visible);
     },
 
     show: function () {

@@ -476,57 +476,45 @@
     </div>
 </t>
 
-<t t-name="ViewManager">
-    <div class="oe_view_manager">
-        <table class="oe_view_manager_header">
-            <col width="20%"/>
-            <col width="35%"/>
-            <col width="15%"/>
-            <col width="30%"/>
-            <tr class="oe_header_row oe_header_row_top">
-                <td colspan="2">
-                        <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
-                            <span class="oe_view_title_text oe_breadcrumb_title"/>
-                        </h2>
-                </td>
-                <td colspan="2">
-                        <div class="oe_view_manager_view_search"/>
-                </td>
-            </tr>
-            <tr class="oe_header_row">
-                <td>
-                        <div class="oe_view_manager_buttons"/>
-                </td>
-                <td colspan="2">
-                        <div class="oe_view_manager_sidebar"/>
-                </td>
-                <td>
-                    <ul class="oe_view_manager_switch oe_button_group oe_right">
-                        <t t-if="widget.views_src.length > 1" t-foreach="widget.views_src" t-as="view">
-                          <li class="oe_e">
-                            <a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type"
-                               t-att-title="view.button_label"/>
-                          </li>
-                        </t>
-                    </ul>
-                    <div class="oe_view_manager_pager oe_right"/>
-                </td>
-            </tr>
-        </table>
-
-    <div class="oe_view_manager_wrapper">
-        <div>
-            <div class="oe_view_manager_body">
-                <div class="oe_searchview_drawer_container"/>
-                    <t t-foreach="widget.views_src" t-as="view">
-                        <div t-attf-class="oe_view_manager_view_#{view.view_type}"/>
-                    </t>
+<div t-name="ViewManager">
+    <div class="oe-view-manager-header container-fluid">
+        <div class="row">
+            <div class="col-md-12 oe-header-title">
+                <ol class="oe-view-title breadcrumb" t-if="widget.flags.display_title !== false">
+                </ol>
+                <div class="oe-view-manager-search-view">
                 </div>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="oe-view-manager-buttons">
+                    <t t-foreach="widget.views" t-as="view">
+                        <div t-attf-class="oe-#{view}-buttons"/>
+                    </t>                    
+                </div>
+                <div class="oe-view-manager-sidebar"></div>
+                <div class="oe-view-manager-pager"></div>
+
+                <t t-if="widget.view_order.length > 1">
+                    <div class="oe-view-manager-switch btn-group btn-group-sm">
+                        <t t-foreach="widget.view_order" t-as="view_type">
+                            <a type="button" t-attf-class="btn btn-default fa oe-vm-switch-#{view_type}" t-att-data-view-type="view_type" t-att-title="view_type" t-if="view_type!=='form'">
+                            </a>
+                        </t>
+                    </div>
+                </t>
+
             </div>
         </div>
     </div>
-</t>
-
+    <div class="oe-view-manager-body">
+        <div class="oe_searchview_drawer_container"/>
+        <t t-foreach="widget.views" t-as="view">
+            <div t-attf-class="oe-view-manager-view-#{view}"/>
+        </t>
+    </div>
+</div>
 <t t-name="ViewManagerAction" t-extend="ViewManager">
     <t t-jquery="h2.oe_view_title" t-operation="before">
         <select t-if="widget.session.debug" class="oe_debug_view"/>
@@ -745,7 +733,7 @@
 <t t-name="ListView.buttons">
     <div class="oe_list_buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-        <button type="button" class="oe_button oe_list_add oe_highlight">
+        <button type="button" class="oe_list_add btn btn-primary">
             <t t-esc="widget.options.addable"/>
         </button>
     </t>
@@ -830,13 +818,13 @@
         <span class="oe_form_buttons_view">
             <!-- required for the bounce effect on button -->
             <div t-if="widget.is_action_enabled('edit')" style="display: inline-block;">
-                <button type="button" class="oe_button oe_form_button_edit" accesskey="E">Edit</button>
+                <button type="button" class="oe_form_button_edit btn btn-default" accesskey="E">Edit</button>
             </div>
             <button t-if="widget.is_action_enabled('create')"
-                type="button" class="oe_button oe_form_button_create" accesskey="C">Create</button>
+                type="button" class="oe_form_button_create btn btn-default" accesskey="C">Create</button>
         </span>
         <span class="oe_form_buttons_edit">
-            <button type="button" class="oe_button oe_form_button_save oe_highlight" accesskey="S">Save</button>
+            <button type="button" class="oe_form_button_save btn btn-primary" accesskey="S">Save</button>
             <span class="oe_fade">or</span>
             <a href="#" class="oe_bold oe_form_button_cancel" accesskey="D">Discard</a>
         </span>
@@ -1537,7 +1525,7 @@
 
 <t t-name="One2Many.viewmanager" t-extend="ViewManager">
     <t t-jquery=".oe-view-manager-header">
-        this.attr('t-if', 'views.length != 1');
+        this.attr('t-if', 'widget.view_order.length != 1');
     </t>
 </t>
 <t t-name="One2Many.formview" t-extend="FormView">
@@ -1558,12 +1546,12 @@
     </t>
 </t>
 
-<div t-name="SearchView" class="oe_searchview">
+<div t-name="SearchView" class="oe_searchview form-control input-sm">
     <div class="oe_searchview_facets"/>
-    <div class="oe_searchview_clear"/>
-    <div class="oe_searchview_unfold_drawer" title="Advanced Search..."/>
-    <button type="button" class="oe_searchview_search"
-            title="Search Again">Search</button>
+    <div class="oe_searchview_clear"><i class="fa fa-times fa-lg"></i></div>
+    <div class="oe_searchview_unfold_drawer fa fa-lg fa-chevron-down" title="Advanced Search..."/>
+    <i type="button" class="oe_searchview_search fa fa-lg fa-search"
+            title="Search Again"></i>
 </div>
 
 <div t-name="SearchViewDrawer" class="oe_searchview_drawer" style="display:none;">
@@ -1577,16 +1565,17 @@
      tabindex="0"/>
 <!-- tabindex: makes div focusable -->
 <div t-name="SearchView.FacetView"
-     class="oe_tag oe_tag_dark oe_searchview_facet"
-     tabindex="0"
-    ><span class="oe_facet_remove">x</span
-    ><span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">
+     class="oe_tag oe_searchview_facet"
+     tabindex="0">
+    <span class="oe_facet_remove">x</span>
+    <span class="label label-default oe_i" t-if="widget.model.has('icon')">
         <t t-esc="widget.model.get('icon')"/>
-    </span
-    ><span class="oe_facet_category" t-if="!widget.model.has('icon')">
+    </span>
+    <span class="label label-default" t-if="!widget.model.has('icon')">
         <t t-esc="widget.model.get('category')"/>
-    </span ><span class="oe_facet_values"
-/></div>
+    </span >
+    <span class="oe_facet_values"/>
+</div>
 <span t-name="SearchView.FacetView.Value" class="oe_facet_value">
     <t t-esc="widget.model.get('label')"/>
 </span>
