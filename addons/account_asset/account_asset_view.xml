@@ -102,6 +102,7 @@
                         </group>
                         <group>
                             <field name="purchase_date"/>
+                            <field name="depreciation_start_date"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
                         </group>
@@ -186,6 +187,7 @@
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="purchase_date"/>
+                <field name="depreciation_start_date"/>
                 <field name="partner_id"/>
                 <field name="purchase_value"/>
                 <field name="value_residual"/>
@@ -206,6 +208,7 @@
                 <field name="code"/>
                 <field name="category_id"/>
                 <field name="purchase_date"/>
+                <field name="depreciation_start_date"/>
                 <field name="purchase_value"/>
                 <field name="value_residual"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
@@ -222,6 +225,7 @@
             <search string="Account Asset">
                 <field name="name" string="Asset"/>
                 <field name="purchase_date"/>
+                <field name="depreciation_start_date"/>
                 <filter icon="terp-check" string="Current" domain="[('state','in', ('draft','open'))]" help="Assets in draft and open states"/>
                 <filter icon="terp-dialog-close" string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
                 <field name="category_id"/>

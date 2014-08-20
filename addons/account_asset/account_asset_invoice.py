@@ -57,6 +57,7 @@ class account_invoice_line(osv.osv):
                     'company_id': line.invoice_id.company_id.id,
                     'currency_id': line.invoice_id.currency_id.id,
                     'purchase_date' : line.invoice_id.date_invoice,
+                    'depreciation_date' : line.invoice_id.date_invoice,
                 }
                 changed_vals = asset_obj.onchange_category_id(cr, uid, [], vals['category_id'], context=context)
                 vals.update(changed_vals['value'])

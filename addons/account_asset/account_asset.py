@@ -51,7 +51,7 @@ class account_asset_category(osv.osv):
                                        "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
                                        "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
         'method_end': fields.date('Ending date'),
-        'prorata':fields.boolean('Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first January'),
+        'prorata':fields.boolean('Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done from the depreciation start date instead of the first January'),
         'open_asset': fields.boolean('Skip Draft State', help="Check this if you want to automatically confirm the assets of this category when created by invoices."),
     }
 
@@ -91,14 +91,14 @@ class account_asset_asset(osv.osv):
     def _get_last_depreciation_date(self, cr, uid, ids, context=None):
         """
         @param id: ids of a account.asset.asset objects
-        @return: Returns a dictionary of the effective dates of the last depreciation entry made for given asset ids. If there isn't any, return the purchase date of this asset
+        @return: Returns a dictionary of the effective dates of the last depreciation entry made for given asset ids. If there isn't any, return the depreciation start date of this asset
         """
         cr.execute("""
-            SELECT a.id as id, COALESCE(MAX(l.date),a.purchase_date) AS date
+            SELECT a.id as id, COALESCE(MAX(l.date),a.depreciation_start_date) AS date
             FROM account_asset_asset a
             LEFT JOIN account_move_line l ON (l.asset_id = a.id)
             WHERE a.id IN %s
-            GROUP BY a.id, a.purchase_date """, (tuple(ids),))
+            GROUP BY a.id, a.depreciation_start_date """, (tuple(ids),))
         return dict(cr.fetchall())
 
     def _compute_board_amount(self, cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=None):
@@ -153,14 +153,14 @@ class account_asset_asset(osv.osv):
             if asset.prorata:
                 depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             else:
-                # depreciation_date = 1st January of purchase year
-                purchase_date = datetime.strptime(asset.purchase_date, '%Y-%m-%d')
+                # depreciation_date = 1st January of depreciation start year
+                depreciation_start_date = datetime.strptime(asset.depreciation_start_date, '%Y-%m-%d')
                 #if we already have some previous validated entries, starting date isn't 1st January but last entry + method period
                 if (len(posted_depreciation_line_ids)>0):
                     last_depreciation_date = datetime.strptime(depreciation_lin_obj.browse(cr,uid,posted_depreciation_line_ids[0],context=context).depreciation_date, '%Y-%m-%d')
                     depreciation_date = (last_depreciation_date+relativedelta(months=+asset.method_period))
                 else:
-                    depreciation_date = datetime(purchase_date.year, 1, 1)
+                    depreciation_date = datetime(depreciation_start_date.year, 1, 1)
             day = depreciation_date.day
             month = depreciation_date.month
             year = depreciation_date.year
@@ -256,6 +256,7 @@ class account_asset_asset(osv.osv):
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=True, states={'draft':[('readonly',False)]}),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets', copy=True),
         'purchase_date': fields.date('Purchase Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'depreciation_start_date': fields.date('Depreciation Start Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', required=True, copy=False,
                                   help="When an asset is created, the status is 'Draft'.\n" \
                                        "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n" \
@@ -274,7 +275,7 @@ class account_asset_asset(osv.osv):
                                   help="Choose the method to use to compute the dates and number of depreciation lines.\n"\
                                        "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
                                        "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
-        'prorata':fields.boolean('Prorata Temporis', readonly=True, states={'draft':[('readonly',False)]}, help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first January'),
+        'prorata':fields.boolean('Prorata Temporis', readonly=True, states={'draft':[('readonly',False)]}, help='Indicates that the first depreciation entry for this asset have to be done from the depreciation start date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
         'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True, states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=True, states={'draft':[('readonly',False)]}),
@@ -282,6 +283,7 @@ class account_asset_asset(osv.osv):
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
         'purchase_date': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d'),
+        'depreciation_start_date': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d'),
         'active': True,
         'state': 'draft',
         'method': 'linear',
