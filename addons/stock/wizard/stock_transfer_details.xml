@@ -9,20 +9,16 @@
                     <field name="picking_source_location_id" invisible="True"/>
                     <field name="picking_destination_location_id" invisible="True"/>
                     <field name="item_ids"
-                        context="{'default_master_source_location_id':picking_source_location_id,
-                                    'default_sourceloc_id':picking_source_location_id,
-                                    'default_master_destination_location_id':picking_destination_location_id,
-                                    'default_destinationloc_id':picking_destination_location_id}">
+                        context="{'default_sourceloc_id':picking_source_location_id,
+                                  'default_destinationloc_id':picking_destination_location_id}">
                         <tree string="Inventory Details" editable="bottom" >
                             <field name="package_id" groups="stock.group_tracking_lot"/>
                             <field name="product_id" required="True"  context="{'uom':product_uom_id}" on_change="product_id_change(product_id,product_uom_id,context)"/>
                             <field name="quantity"/>
                             <button name="split_quantities" string="Split" type="object" icon="STOCK_PREFERENCES" attrs="{'invisible': [('quantity', '=', 1)]}"/>
                             <field name="product_uom_id" options="{&quot;no_open&quot;: True}" groups="product.group_uom"/>
-                            <field name="master_source_location_id" invisible="True"/>
-                            <field name="sourceloc_id"/>
-                            <field name="master_destination_location_id" invisible="True"/>
-                            <field name="destinationloc_id"/>
+                            <field name="sourceloc_id" domain="[('id', 'child_of', parent.picking_source_location_id)]"/>
+                            <field name="destinationloc_id" domain="[('id', 'child_of', parent.picking_destination_location_id)]"/>
                             <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': destinationloc_id}"/>
                             <button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}" groups="stock.group_tracking_lot"/>
                             <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}"/>
@@ -30,17 +26,13 @@
                     </field>
                     <label class="oe_grey" string="Setting a product and a source package will result in a partial unpack of the source package (products will be taken out from that package)."/>
                     <field name="packop_ids" groups="stock.group_tracking_lot"
-                        context="{'default_master_source_location_id':picking_source_location_id,
-                                    'default_sourceloc_id':picking_source_location_id,
-                                    'default_master_destination_location_id':picking_destination_location_id,
-                                    'default_destinationloc_id':picking_destination_location_id}">
+                        context="{'default_sourceloc_id':picking_source_location_id,
+                                  'default_destinationloc_id':picking_destination_location_id}">
                         <tree editable="bottom">
                             <field name="package_id" required="True" on_change="source_package_change(package_id)"/>
-                            <field name="master_source_location_id" invisible="True"/>
-                            <field name="sourceloc_id" required="True"/>
-                            <field name="master_destination_location_id" invisible="True"/>
-                            <field name="destinationloc_id" required="True"/>
-                            <field name="result_package_id" required="True"/>
+                            <field name="sourceloc_id" domain="[('id', 'child_of', parent.picking_source_location_id)]"/>
+                            <field name="destinationloc_id" domain="[('id', 'child_of', parent.picking_destination_location_id)]"/>
+                            <field name="result_package_id"/>
                             <button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}"/>
                         </tree>
                     </field>
