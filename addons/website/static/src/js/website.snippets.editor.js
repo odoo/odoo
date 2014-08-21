@@ -819,8 +819,8 @@
         },
         select_class: function (type, value, $li) {
             var $lis = this.$el.find('[data-select_class]').add(this.$el).filter('[data-select_class]');
-
-            var classes = $li.map(function () {return $(this).data('select_class');}).get();
+            
+            var classes = $lis.map(function () {return $(this).data('select_class');}).get();
 
             this.$target.removeClass(classes.join(" "));
             if(value) this.$target.addClass(value);
