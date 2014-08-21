@@ -649,7 +649,7 @@ class account_invoice(models.Model):
     def _convert_ref(ref):
         return (ref or '').replace('/','')
 
-    @api.one
+    @api.multi
     def _get_analytic_lines(self):
         """ Return a list of dict for creating analytic lines for self[0] """
         company_currency = self.company_id.currency_id
