@@ -28,12 +28,12 @@ class hr_evaluation_report(osv.Model):
     _description = "Evaluations Statistics"
     _auto = False
     _columns = {
-        'create_date': fields.date('Create Date', readonly=True),
+        'create_date': fields.datetime('Create Date', readonly=True),
         'delay_date': fields.float('Delay to Start', digits=(16, 2), readonly=True),
         'overpass_delay': fields.float('Overpassed Deadline', digits=(16, 2), readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
-        'request_id': fields.many2one('survey.user_input', 'Request_id', readonly=True),
-        'closed': fields.date("closed", readonly=True),
+        'request_id': fields.many2one('survey.user_input', 'Request ID', readonly=True),
+        'close_date': fields.date("Close Date", readonly=True, oldname='closed'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee", readonly=True),
         'rating': fields.selection([
@@ -43,7 +43,7 @@ class hr_evaluation_report(osv.Model):
             ('3', 'Exceeds expectations'),
             ('4', 'Significantly exceeds expectations'),
         ], "Overall Rating", readonly=True),
-        'nbr': fields.integer('# of Requests', readonly=True),
+        'nbr_requests': fields.integer('# of Requests', readonly=True, oldname='nbr'),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('wait', 'Plan In Progress'),
@@ -68,14 +68,14 @@ class hr_evaluation_report(osv.Model):
             create or replace view hr_evaluation_report as (
                  select
                      min(l.id) as id,
-                     date(s.create_date) as create_date,
+                     s.create_date as create_date,
                      s.employee_id,
                      l.request_id,
                      s.plan_id,
                      s.rating,
                      s.date as deadline,
-                     s.date_close as closed,
-                     count(l.*) as nbr,
+                     s.date_close as close_date,
+                     count(l.*) as nbr_requests,
                      s.state,
                      avg(extract('epoch' from age(s.create_date,CURRENT_DATE)))/(3600*24) as  delay_date,
                      avg(extract('epoch' from age(s.date,CURRENT_DATE)))/(3600*24) as overpass_delay
@@ -97,4 +97,3 @@ class hr_evaluation_report(osv.Model):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -23,11 +23,12 @@ from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
 
-class crm_lead_report(osv.Model):
-    """ CRM Lead Analysis """
-    _name = "crm.lead.report"
+
+class crm_opportunity_report(osv.Model):
+    """ CRM Opportunity Analysis """
+    _name = "crm.opportunity.report"
     _auto = False
-    _description = "CRM Lead Analysis"
+    _description = "CRM Opportunity Analysis"
     _rec_name = 'date_deadline'
     _inherit = ["crm.tracking.mixin"]
 
@@ -49,8 +50,8 @@ class crm_lead_report(osv.Model):
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
-        'total_revenue': fields.float('Total Revenue',digits=(16,2),readonly=True, oldname='planned_revenue'),
-        'expected_revenue': fields.float('Expected Revenue', digits=(16,2),readonly=True, oldname='probable_revenue'),
+        'total_revenue': fields.float('Total Revenue',digits=(16,2),readonly=True),
+        'expected_revenue': fields.float('Expected Revenue', digits=(16,2),readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
@@ -62,14 +63,9 @@ class crm_lead_report(osv.Model):
     }
 
     def init(self, cr):
-
-        """
-            CRM Lead Report
-            @param cr: the current row, from the database cursor
-        """
-        tools.drop_view_if_exists(cr, 'crm_lead_report')
+        tools.drop_view_if_exists(cr, 'crm_opportunity_report')
         cr.execute("""
-            CREATE OR REPLACE VIEW crm_lead_report AS (
+            CREATE OR REPLACE VIEW crm_opportunity_report AS (
                 SELECT
                     id,
                     c.date_deadline,
@@ -103,6 +99,3 @@ class crm_lead_report(osv.Model):
                 WHERE c.active = 'true'
                 GROUP BY c.id
             )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

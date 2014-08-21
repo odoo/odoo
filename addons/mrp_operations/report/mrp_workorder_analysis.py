@@ -28,7 +28,7 @@ class mrp_workorder(osv.osv):
     _description = "Work Order Report"
     _auto = False
     _columns = {
-        'nbr': fields.integer('# of Lines', readonly=True),
+        'nbr_lines': fields.integer('# of Lines', readonly=True, oldname='nbr'),
         'date': fields.date('Date', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
@@ -54,7 +54,7 @@ class mrp_workorder(osv.osv):
                     wl.production_id as production_id,
                     wl.workcenter_id as workcenter_id,
                     sum(wl.cycle) as total_cycles,
-                    count(*) as nbr,
+                    count(*) as nbr_lines,
                     sum(mp.product_qty) as product_qty,
                     wl.state as state
                 from mrp_production_workcenter_line wl
