@@ -553,6 +553,7 @@ class Field(object):
     def _description_searchable(self, env):
         return self._description_store(env) or bool(self.search)
 
+    _description_manual = property(attrgetter('manual'))
     _description_depends = property(attrgetter('depends'))
     _description_related = property(attrgetter('related'))
     _description_company_dependent = property(attrgetter('company_dependent'))
@@ -607,6 +608,7 @@ class Field(object):
     # properties used by to_column() to create a column instance
     _column_copy = property(attrgetter('copyable'))
     _column_select = property(attrgetter('index'))
+    _column_manual = property(attrgetter('manual'))
     _column_string = property(attrgetter('string'))
     _column_help = property(attrgetter('help'))
     _column_readonly = property(attrgetter('readonly'))
@@ -989,11 +991,18 @@ class Text(_String):
 class Html(_String):
     """ Html field. """
     type = 'html'
+    sanitize = True                     # whether value must be sanitized
+
+    _column_sanitize = property(attrgetter('sanitize'))
+    _related_sanitize = property(attrgetter('sanitize'))
+    _description_sanitize = property(attrgetter('sanitize'))
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return False
-        return html_sanitize(value)
+        if validate and self.sanitize:
+            return html_sanitize(value)
+        return value
 
 
 class Date(Field):
