@@ -688,7 +688,9 @@
                                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                                 </tree>
                             </field>
-                            <label class="oe_grey" string="Setting a product and a source package will result in a partial unpack of the source package (products will be taken out from that package). Set a source package without any product to move it as a whole."/>
+                            <p class="oe_grey" groups="stock.group_tracking_lot">
+                            If there is no product but a source package, this means the source package was moved entirely.  If there is a product and a source package, the product was taken from the source package.  
+                            </p>
                         </page>
                         <page string="Additional Info">
                             <group string="General Informations">
