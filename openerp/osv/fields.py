@@ -1567,10 +1567,17 @@ class property(function):
             values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
             if column._type == 'many2one':
                 # name_get the values as SUPERUSER_ID
-                vals = sum(values.itervalues())
-                vals_name = dict(vals.sudo().name_get())
+                vals = None
+                for v in values.itervalues():
+                    if v:
+                        vals = v if not vals else (vals | v)
+
+                vals_name = dict(vals.sudo().name_get()) if vals else {}
                 for id, value in values.iteritems():
-                    res[id][prop_name] = vals_name.get(value.id, False)
+                    ng = False
+                    if value and value.id in vals_name:
+                        ng = value.id, vals_name[value.id]
+                    res[id][prop_name] = ng
             else:
                 for id, value in values.iteritems():
                     res[id][prop_name] = value
