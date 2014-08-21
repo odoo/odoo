@@ -125,14 +125,8 @@ class account_invoice_line(osv.osv):
                         # calculate and write down the possible price difference between invoice price and product price
                         for line in res:
                             if line.get('invl_id', 0) == i_line.id and a == line['account_id']:
-                                uom = i_line.product_id.uos_id or i_line.product_id.uom_id
-                                valuation_price_unit = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.product_id.standard_price, i_line.uos_id.id)
-                                if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
-                                    #for average/fifo/lifo costing method, fetch real cost price from incomming moves
-                                    stock_move_obj = self.pool.get('stock.move')
-                                    valuation_stock_move = stock_move_obj.search(cr, uid, [('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1, context=context)
-                                    if valuation_stock_move:
-                                        valuation_price_unit = stock_move_obj.browse(cr, uid, valuation_stock_move[0], context=context).price_unit
+                                uom = i_line.move_id.product_uom or i_line.product_id.uom_id
+                                valuation_price_unit = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.move_id.price_unit, i_line.uos_id.id)
                                 if inv.currency_id.id != company_currency:
                                     valuation_price_unit = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, valuation_price_unit, context={'date': inv.date_invoice})
                                 if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:

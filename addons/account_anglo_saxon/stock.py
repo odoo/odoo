@@ -22,20 +22,28 @@
 from openerp.osv import osv
 
 #----------------------------------------------------------
+# Stock Move
+#----------------------------------------------------------
+    
+class stock_move(osv.osv):
+    _inherit = "stock.move"
+    _description = "Stock Moves"
+
+    def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
+        """Overwrite to add move_id reference"""
+        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+        res.update({
+            'move_id': move.id,
+        })
+        return res
+        
+#----------------------------------------------------------
 # Stock Picking
 #----------------------------------------------------------
+
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
     _description = "Picking List"
-
-    def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id,
-        invoice_vals, context=None):
-        """Overwrite to add move_id reference"""
-        res = super(stock_picking, self)._prepare_invoice_line(cr, uid, group, picking, move_line, invoice_id, invoice_vals, context=context)
-        res.update({
-            'move_id': move_line.id,
-        })
-        return res
 
     def action_invoice_create(self, cr, uid, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
