@@ -740,26 +740,30 @@ class ir_actions_server(osv.osv):
     def on_change_write_expression(self, cr, uid, ids, write_expression, model_id, context=None):
         """ Check the write_expression and update crud_model_id accordingly """
         values = {}
-        valid, model_name, message = self._check_expression(cr, uid, write_expression, model_id, context=context)
-        if valid:
+        if write_expression:
+            valid, model_name, message = self._check_expression(cr, uid, write_expression, model_id, context=context)
+        else:
+            valid, model_name, message = True, None, False
+            if model_id:
+                model_name = self.pool['ir.model'].browse(cr, uid, model_id, context).model
+        if not valid:
+            return {
+                'warning': {
+                    'title': 'Incorrect expression',
+                    'message': message or 'Invalid expression',
+                }
+            }
+        if model_name:
             ref_model_id = self.pool['ir.model'].search(cr, uid, [('model', '=', model_name)], context=context)[0]
             values['crud_model_id'] = ref_model_id
             return {'value': values}
-        if not message:
-            message = 'Invalid expression'
-        return {
-            'warning': {
-                'title': 'Incorrect expression',
-                'message': message,
-            }
-        }
+        return {'value': {}}
 
     def on_change_crud_model_id(self, cr, uid, ids, crud_model_id, context=None):
         """ When changing the CRUD model, update its stored name also """
         crud_model_name = False
         if crud_model_id:
             crud_model_name = self.pool.get('ir.model').browse(cr, uid, crud_model_id, context).model
-        
         values = {'link_field_id': False, 'crud_model_name': crud_model_name}
         return {'value': values}
 
