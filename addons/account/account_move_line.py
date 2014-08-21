@@ -753,28 +753,58 @@ class account_move_line(osv.osv):
         return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def get_data_for_manual_reconciliation(self, cr, uid, context=None):
-        """ Returns two lists of dicts containing all data required by manual reconciliation reconcile :
+        """ Returns two lists of dicts containing all data required by manual reconciliation :
             one for each reconciliable tuple partner-account and one for each other reconciliable account
         """
         # Fetch data for the partner accounts
         cr.execute(
              """SELECT partner_id, partner_name, to_char(last_reconciliation_date, 'YYYY-MM-DD') AS last_reconciliation_date, account_id, account_name, account_code FROM (
-                    SELECT l.partner_id,
-                        p.last_reconciliation_date,
-                        p.name AS partner_name,
-                        a.id AS account_id,
-                        a.name AS account_name,
-                        a.code AS account_code,
-                        SUM(l.debit) AS debit,
-                        SUM(l.credit) AS credit,
-                        MAX(l.create_date) AS max_date
-                    FROM account_move_line l
-                    RIGHT JOIN account_account a ON (a.id = l.account_id)
-                    RIGHT JOIN res_partner p ON (l.partner_id = p.id)
-                    WHERE a.reconcile IS TRUE
-                    AND l.reconcile_id IS NULL
-                    AND l.state <> 'draft'
-                    GROUP BY l.partner_id, p.last_reconciliation_date, p.name, a.id, a.name, a.code
+                    SELECT partner_id, partner_name, last_reconciliation_date, account_id, account_name, account_code,
+                        MAX(max_date) AS max_date,
+                        SUM(debit) AS debit,
+                        SUM(credit) AS credit
+                    FROM (
+                        -- The first subrequest is required in order for all lines in a partial reconciliations
+                        -- to be considered as ONE debit OR ONE credit (since amount_residual isn't stored in the DB) 
+                        SELECT p.id AS partner_id,
+                            p.last_reconciliation_date,
+                            p.name AS partner_name,
+                            a.id AS account_id,
+                            a.name AS account_name,
+                            a.code AS account_code,
+                            MAX(l.create_date) AS max_date,
+                            CASE WHEN SUM(l.debit) - SUM(l.credit) > 0 THEN SUM(l.debit) - SUM(l.credit) ELSE 0 END AS debit,
+                            CASE WHEN SUM(l.credit) - SUM(l.debit) > 0 THEN SUM(l.credit) - SUM(l.debit) ELSE 0 END AS credit
+                        FROM account_move_line l
+                        RIGHT JOIN account_account a ON (a.id = l.account_id)
+                        RIGHT JOIN res_partner p ON (l.partner_id = p.id)
+                        WHERE a.reconcile IS TRUE
+                        AND l.reconcile_id IS NULL
+                        AND l.state <> 'draft'
+                        AND l.reconcile_partial_id IS NOT NULL
+                        GROUP BY l.reconcile_partial_id, l.partner_id, p.id, a.id
+
+                        UNION
+
+                        SELECT p.id AS partner_id,
+                            p.last_reconciliation_date,
+                            p.name AS partner_name,
+                            a.id AS account_id,
+                            a.name AS account_name,
+                            a.code AS account_code,
+                            MAX(l.create_date) AS max_date,
+                            SUM(l.debit) AS debit,
+                            SUM(l.credit) AS credit
+                        FROM account_move_line l
+                        RIGHT JOIN account_account a ON (a.id = l.account_id)
+                        RIGHT JOIN res_partner p ON (l.partner_id = p.id)
+                        WHERE a.reconcile IS TRUE
+                        AND l.reconcile_id IS NULL
+                        AND l.state <> 'draft'
+                        AND reconcile_partial_id IS NULL
+                        GROUP BY l.partner_id, p.id, a.id
+                    ) AS s 
+                    GROUP BY partner_id, partner_name, last_reconciliation_date, account_id, account_name, account_code
                 ) AS s
                 WHERE debit > 0
                 AND credit > 0
@@ -796,24 +826,55 @@ class account_move_line(osv.osv):
 
         # Fetch data for the other reconciliable accounts
         cr.execute(
-             """SELECT account_id, account_name, account_code, to_char(last_reconciliation_date, 'YYYY-MM-DD') AS last_reconciliation_date FROM (
-                    SELECT a.id AS account_id,
-                        a.name AS account_name,
-                        a.code AS account_code,
-                        a.last_reconciliation_date,
-                        SUM(l.debit) AS debit,
-                        SUM(l.credit) AS credit,
-                        MAX(l.create_date) AS max_date
-                    FROM account_move_line l
-                    RIGHT JOIN account_account a ON (a.id = l.account_id)
-                    WHERE a.reconcile IS TRUE
-                    AND l.reconcile_id IS NULL
-                    AND l.state <> 'draft'
-                    AND a.type <> 'payable' -- ?
-                    AND a.type <> 'receivable' -- ?
-                    GROUP BY a.id, a.name
+            """SELECT to_char(last_reconciliation_date, 'YYYY-MM-DD') AS last_reconciliation_date, account_id, account_name, account_code FROM (
+                    SELECT last_reconciliation_date, account_id, account_name, account_code,
+                        MAX(max_date) AS max_date,
+                        SUM(debit) AS debit,
+                        SUM(credit) AS credit
+                    FROM (
+                        -- The first subrequest is required in order for all lines in a partial reconciliations
+                        -- to be considered as ONE debit OR ONE credit (since amount_residual isn't stored in the DB) 
+                        SELECT a.last_reconciliation_date,
+                            a.id AS account_id,
+                            a.name AS account_name,
+                            a.code AS account_code,
+                            MAX(l.create_date) AS max_date,
+                            CASE WHEN SUM(l.debit) - SUM(l.credit) > 0 THEN SUM(l.debit) - SUM(l.credit) ELSE 0 END AS debit,
+                            CASE WHEN SUM(l.credit) - SUM(l.debit) > 0 THEN SUM(l.credit) - SUM(l.debit) ELSE 0 END AS credit
+                        FROM account_move_line l
+                        RIGHT JOIN account_account a ON (a.id = l.account_id)
+                        WHERE a.reconcile IS TRUE
+                        AND l.reconcile_id IS NULL
+                        AND l.state <> 'draft'
+                        AND a.type <> 'payable' -- ?
+                        AND a.type <> 'receivable' -- ?
+                        AND l.reconcile_partial_id IS NOT NULL
+                        GROUP BY l.reconcile_partial_id, a.id
+
+                        UNION
+
+                        SELECT a.last_reconciliation_date,
+                            a.id AS account_id,
+                            a.name AS account_name,
+                            a.code AS account_code,
+                            MAX(l.create_date) AS max_date,
+                            SUM(l.debit) AS debit,
+                            SUM(l.credit) AS credit
+                        FROM account_move_line l
+                        RIGHT JOIN account_account a ON (a.id = l.account_id)
+                        WHERE a.reconcile IS TRUE
+                        AND l.reconcile_id IS NULL
+                        AND l.state <> 'draft'
+                        AND a.type <> 'payable' -- ?
+                        AND a.type <> 'receivable' -- ?
+                        AND reconcile_partial_id IS NULL
+                        GROUP BY l.reconcile_partial_id, a.id
+                    ) AS s 
+                    GROUP BY last_reconciliation_date, account_id, account_name, account_code
                 ) AS s
-                WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
+                WHERE debit > 0
+                AND credit > 0
+                AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
                 ORDER BY last_reconciliation_date""")
         
         # Apply ir_rules by filtering out
