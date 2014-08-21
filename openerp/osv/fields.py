@@ -1566,8 +1566,11 @@ class property(function):
             column = obj._all_columns[prop_name].column
             values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
             if column._type == 'many2one':
+                # name_get the values as SUPERUSER_ID
+                vals = sum(values.itervalues())
+                vals_name = dict(vals.sudo().name_get())
                 for id, value in values.iteritems():
-                    res[id][prop_name] = value.name_get()[0] if value else False
+                    res[id][prop_name] = vals_name.get(value.id, False)
             else:
                 for id, value in values.iteritems():
                     res[id][prop_name] = value
