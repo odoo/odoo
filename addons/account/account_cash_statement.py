@@ -77,7 +77,10 @@ class account_cash_statement(osv.osv):
         """
         res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            if (statement.journal_id.type not in ('cash',)) or (not statement.journal_id.cash_control):
+            if (statement.journal_id.type not in ('cash',)):
+                continue
+            if not statement.journal_id.cash_control:
+                statement.write({'balance_end_real' : statement.balance_end})
                 continue
             start = end = 0
             for line in statement.details_ids:
