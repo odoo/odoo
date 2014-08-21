@@ -134,7 +134,7 @@ class account_invoice_line(osv.osv):
                                     if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                                         #for average/fifo/lifo costing method, fetch real cost price from incomming moves
                                         stock_move_obj = self.pool.get('stock.move')
-                                        valuation_stock_move = stock_move_obj.search(cr, uid, [('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1, context=con
+                                        valuation_stock_move = stock_move_obj.search(cr, uid, [('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1, context=context)
                                         if valuation_stock_move:
                                             valuation_price_unit = stock_move_obj.browse(cr, uid, valuation_stock_move[0], context=context).price_unit
                                 if inv.currency_id.id != company_currency:
