@@ -728,24 +728,20 @@
         },
 
         reset: function (event) {
-            var self = this;
-            clearTimeout(this.reset_time);
-            this.reset_time = setTimeout(function () {
-                var $el, method;
-                for (var k in self.reset_methods) {
-                    method = self.reset_methods[k];
-                    var $li = self.$el.find('[data-'+method+']').add(self.$el).filter('.active, :has(.active)');
-                    if ($li.size()) {
-                        $li.each(function () {
-                            self.select("reset", $(this));
-                        });
-                    } else {
-                        self[method]("reset", null, null);
-                    }
+            var self = this, $el, method;
+            for (var k in self.reset_methods) {
+                method = self.reset_methods[k];
+                var $li = self.$el.find('[data-'+method+']').add(self.$el).filter('.active, :has(.active)');
+                if ($li.size()) {
+                    $li.each(function () {
+                        self.select("reset", $(this));
+                    });
+                } else {
+                    self[method]("reset", null, null);
                 }
-                self.reset_methods = [];
-                self.$target.trigger("snippet-option-reset", [this]);
-            },0);
+            }
+            self.reset_methods = [];
+            self.$target.trigger("snippet-option-reset", [this]);
         },
 
         // call data-method args as method
@@ -819,7 +815,7 @@
         },
         select_class: function (type, value, $li) {
             var $lis = this.$el.find('[data-select_class]').add(this.$el).filter('[data-select_class]');
-            
+
             var classes = $lis.map(function () {return $(this).data('select_class');}).get();
 
             this.$target.removeClass(classes.join(" "));
