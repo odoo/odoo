@@ -306,24 +306,24 @@ class account_cash_statement(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.difference == 0.0:
                 continue
-
-            for item_label, item_account in TABLES:
-                if not getattr(obj.journal_id, item_account):
-                    raise osv.except_osv(_('Error!'),
-                                         _('There is no %s Account on the journal %s.') % (item_label, obj.journal_id.name,))
-
-            is_profit = obj.difference < 0.0
-
-            account = getattr(obj.journal_id, TABLES[is_profit][1])
+            elif obj.difference < 0.0:
+                account = obj.journal_id.loss_account_id
+                name = _('Loss')
+                if not obj.journal_id.loss_account_id:
+                    raise osv.except_osv(_('Error!'), _('There is no Loss Account on the journal %s.') % (obj.journal_id.name,))
+            else: # obj.difference > 0.0
+                account = obj.journal_id.profit_account_id
+                name = _('Profit')
+                if not obj.journal_id.profit_account_id:
+                    raise osv.except_osv(_('Error!'), _('There is no Profit Account on the journal %s.') % (obj.journal_id.name,))
 
             values = {
                 'statement_id' : obj.id,
                 'journal_id' : obj.journal_id.id,
                 'account_id' : account.id,
                 'amount' : obj.difference,
-                'name' : 'Exceptional %s' % TABLES[is_profit][0],
+                'name' : name,
             }
-
             absl_proxy.create(cr, uid, values, context=context)
 
         return super(account_cash_statement, self).button_confirm_bank(cr, uid, ids, context=context)
