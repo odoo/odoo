@@ -82,7 +82,7 @@ class main(http.Controller):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         attachment = request.registry['ir.attachment']
         domain = [("is_slide","=","TRUE")]
-        if not isinstance(channel, int):
+        if channel:
             domain += [('parent_id','=',channel.id)]
         if search:
             domain += [('name', 'ilike', search)]

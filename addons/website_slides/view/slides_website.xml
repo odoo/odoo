@@ -281,16 +281,12 @@
                                 <t t-set="object" t-value="channel"/>
                             </t>
                         </div>
-
-														    
+                        <t t-call="website.publish_management">
+                            <t t-set="object" t-value="slideview"/>
+                            <t t-set="publish_edit" t-value="True"/>
+                        </t>
 					</div>
 				</div>
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
-					<t t-call="website.publish_management">
-				        <t t-set="object" t-value="slideview"/>
-				        <t t-set="publish_edit" t-value="True"/>
-			    	</t>
-		    	</div>
 	            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 10px 0px 10px 0px;">
 	                <!-- Nav tabs -->
 	                <ul class="nav nav-tabs" role="tablist">
