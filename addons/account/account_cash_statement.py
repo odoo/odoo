@@ -299,7 +299,6 @@ class account_cash_statement(osv.osv):
         return state=='open'
 
     def button_confirm_cash(self, cr, uid, ids, context=None):
-        super(account_cash_statement, self).button_confirm_bank(cr, uid, ids, context=context)
         absl_proxy = self.pool.get('account.bank.statement.line')
 
         TABLES = ((_('Profit'), 'profit_account_id'), (_('Loss'), 'loss_account_id'),)
@@ -309,7 +308,7 @@ class account_cash_statement(osv.osv):
                 continue
 
             for item_label, item_account in TABLES:
-                if getattr(obj.journal_id, item_account):
+                if not getattr(obj.journal_id, item_account):
                     raise osv.except_osv(_('Error!'),
                                          _('There is no %s Account on the journal %s.') % (item_label, obj.journal_id.name,))
 
@@ -327,7 +326,7 @@ class account_cash_statement(osv.osv):
 
             absl_proxy.create(cr, uid, values, context=context)
 
-        return self.write(cr, uid, ids, {'closing_date': time.strftime("%Y-%m-%d %H:%M:%S")}, context=context)
+        return super(account_cash_statement, self).button_confirm_bank(cr, uid, ids, context=context)
 
 
 class account_journal(osv.osv):
