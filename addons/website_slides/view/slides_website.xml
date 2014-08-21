@@ -174,8 +174,8 @@
         </template>
 
 		<template id='slide_view' name="slide_view">            
-            <title><t t-esc="res_company.name"/> - <t t-esc="slideview.name"/></title>
-			<t t-set="head">
+            <t t-set="head">
+            	<title><t t-esc="res_company.name"/> - <t t-esc="slideview.name"/></title>			
 				<t t-call="website_slides.head"/>
 			</t>
 			<t t-call="website.layout">
@@ -261,10 +261,9 @@
                 </div>
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
 					<div class="col-lg-1 col-md-1 col-sm-1 col-xs-2" style="padding: 0px;">
-						<img t-if="not slideview.youtube_id" t-attf-src="/slides/thumb/#{slideview.id}" class="img-responsive shadow"/>
-						<img t-if="slideview.youtube_id" t-att-src="slideview.image" class="img-responsive shadow"/>
+						<img src="/website_slides/static/description/odoo-logo.jpg" class="img-responsive shadow"/>
 					</div>
-					<div class="col-lg-11 col-md-11 col-sm-11 col-xs-10">
+					<div class="col-lg-11 col-md-11 col-sm-11 col-xs-10" style="padding-right:0px;">
 						<div class="pull-right" t-if="slideview.tag_ids">
 						    <i class="fa fa-tags"></i>
 						    <t t-foreach="slideview.tag_ids" t-as="att_tag">
@@ -274,9 +273,7 @@
 						    </t>
 						</div>		
                         <a t-attf-href="/slides/#{slug(channel)}">
-                            <h3 class="mt0">
-                                <div t-field="channel.name"/>
-                            </h3>
+                            <p t-field="channel.name"/>
                         </a>
                         <div class="col-md-6" style="padding-left:0">
                             <t t-call="website_mail.follow">
