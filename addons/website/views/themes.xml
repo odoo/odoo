@@ -34,29 +34,27 @@
   <div id="theme_customize_modal" class="modal fade">
       <div class="modal-dialog">
           <div class="modal-content">
+              <input id="less" data-xmlid="website.option_bootstrap_less" style="display: none;"/>
+
               <div class="loading_backdrop"></div>
               <div class="modal-header">
                   <button type="button" class="close">×</button>
-                  <div class="modal-title text-center">
-                    <a href="/web#return_label=Website&amp;action=website.action_module_theme" class="btn btn-primary">Click here to install a new theme</a>
-                  </div>
+                  <h4 class="modal-title" id="mySmallModalLabel">Customize your theme</h4>
               </div>
               <div class="modal-body">
-                  <h4 class="modal-title text-center">Customize this default theme</h4>
-
                   <h5 class="modal-h5">LAYOUT</h5>
                   <table name="layout">
                       <tr>
                           <td class=" text-center" width="50%">
                               <label class=" center-block">
                                   <div class="text-center" style="background-image: url(/website/static/src/img/theme/layout-full.gif); background-size: 100%; line-height: 40px;">FULL WIDTH</div>
-                                  <input name="layoutvar" type="radio" data-xmlid="" />
+                                  <input name="layoutvar" type="radio" data-xmlid=""/>
                               </label>                                 
                           </td>
                           <td class=" text-center">
                               <label class=" center-block">
                                  <div class="text-center" style="background-image: url(/website/static/src/img/theme/layout-boxed.gif); background-size: 100%; line-height: 40px;">BOXED</div>
-                                  <input name="layoutvar" type="radio" data-xmlid="website.option_layout_boxed"/>
+                                  <input name="layoutvar" type="radio" data-xmlid="website.option_layout_boxed" data-enable="less"/>
                               </label>
                           </td>
                       </tr>
@@ -68,37 +66,37 @@
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-stone.gif" alt="Stone" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="" />
+                                  <input name="colorvar" type="radio" data-xmlid="" data-disable="less"/>
                               </label>
                           </td>
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-emerald.gif" alt="Emerald" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_emerald" />
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_emerald" data-enable="less"/>
                               </label>
                           </td>
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-cobalt.gif" alt="Cobalt" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_cobalt" />
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_cobalt" data-enable="less"/>
                               </label>
                           </td>
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-amethyst.gif" alt="Amethyst" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_amethyst" />
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_amethyst" data-enable="less"/>
                               </label>
                           </td>
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-ruby.gif" alt="Blue" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_ruby" />
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_ruby" data-enable="less"/>
                               </label>
                           </td>
                           <td>
                               <label class="chd-color-combi">
                                   <img src="/website/static/src/img/theme/variant-gold.gif" alt="Gold" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_gold" />
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_gold" data-enable="less"/>
                               </label>
                           </td>
                       </tr>
@@ -121,7 +119,7 @@
                                   <div>
                                       <span style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px" >Georgia</span>
                                       <span style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:11px">/ Helvetica</span>
-                                    <input name="theme" type="radio" data-xmlid="website.option_font"/>
+                                    <input name="theme" type="radio" data-xmlid="website.option_font" data-enable="less"/>
                                   </div>
                               </label>
                           </td>
