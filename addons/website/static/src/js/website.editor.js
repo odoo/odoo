@@ -1046,6 +1046,7 @@
         make_link: function (url, new_window, label, classes) {
         },
         bind_data: function () {
+            var self = this;
             var href = this.element && (this.element.data( 'cke-saved-href')
                                     ||  this.element.getAttribute('href'));
             var new_window = this.element
@@ -1053,8 +1054,13 @@
                         : false;
             var text = this.element ? this.element.getText() : '';
             if (!text.length) {
-                var selection = this.editor.getSelection();
-                text = selection.getSelectedText();
+                if (this.editor) {
+                    text = this.editor.getSelection().getSelectedText();
+                } else {
+                    text = this.data.name;
+                    href = this.data.url;
+                    new_window = this.data.new_window;
+                }
             }
 
             this.$('input#link-text').val(text);
@@ -1075,8 +1081,14 @@
                 this.$('input.email-address').val(match[1]).change();
             }
             if (href && !$control) {
-                this.$('input.url').val(href).change();
-                this.$('input.window-new').closest("div").show();
+                this.page_exists(href).then(function (exist) {
+                    if (exist) {
+                        self.$('#link-page').select2('data', {'id': href, 'text': href});
+                    } else {
+                        self.$('input.url').val(href).change();
+                        self.$('input.window-new').closest("div").show();
+                    }
+                });
             }
             this.preview();
         },

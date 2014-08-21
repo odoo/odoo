@@ -182,7 +182,7 @@
                             <field name="fax"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
-                            <field name="title" domain="[('domain', '=', 'contact')]" options='{"no_open": True}'/>
+                            <field name="title" options='{"no_open": True}'/>
                         </group>
                     </group>
 
