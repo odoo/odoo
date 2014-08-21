@@ -1,7 +1,20 @@
 (function () {
     'use strict';
 
-    openerp.website.add_template_file('/website/static/src/xml/website.theme.xml');
+    openerp.jsonRpc('/web/dataset/call', 'call', {
+            'model': 'ir.ui.view',
+            'method': 'read_template',
+            'args': ['website.theme_customize', openerp.website.get_context()]
+        }).done(function (data) {
+        openerp.qweb.add_template(data);
+    });
+    openerp.jsonRpc('/web/dataset/call', 'call', {
+            'model': 'ir.ui.view',
+            'method': 'read_template',
+            'args': ['website.colorpicker', openerp.website.get_context()]
+        }).done(function (data) {
+        openerp.qweb.add_template(data);
+    });
 
     openerp.website.Theme = openerp.Widget.extend({
         template: 'website.theme_customize',

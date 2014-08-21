@@ -273,46 +273,51 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
     def attach(self, func, upload=None, url=None):
-        Attachments = request.registry['ir.attachment']
+        # the upload argument doesn't allow us to access the files if more than
+        # one file is uploaded, as upload references the first file
+        # therefore we have to recover the files from the request object
+        Attachments = request.registry['ir.attachment']  # registry for the attachment table
 
-        website_url = message = None
-        if not upload:
-            website_url = url
-            name = url.split("/").pop()
+        uploads = []
+        message = None
+        if not upload: # no image provided, storing the link and the image name
+            uploads.append({'website_url': url})
+            name = url.split("/").pop()                       # recover filename
             attachment_id = Attachments.create(request.cr, request.uid, {
                 'name':name,
                 'type': 'url',
                 'url': url,
                 'res_model': 'ir.ui.view',
             }, request.context)
-        else:
+        else:                                                  # images provided
             try:
-                image_data = upload.read()
-                image = Image.open(cStringIO.StringIO(image_data))
-                w, h = image.size
-                if w*h > 42e6: # Nokia Lumia 1020 photo resolution
-                    raise ValueError(
-                        u"Image size excessive, uploaded images must be smaller "
-                        u"than 42 million pixel")
-
-                attachment_id = Attachments.create(request.cr, request.uid, {
-                    'name': upload.filename,
-                    'datas': image_data.encode('base64'),
-                    'datas_fname': upload.filename,
-                    'res_model': 'ir.ui.view',
-                }, request.context)
-
-                [attachment] = Attachments.read(
-                    request.cr, request.uid, [attachment_id], ['website_url'],
-                    context=request.context)
-                website_url = attachment['website_url']
+                for c_file in request.httprequest.files.getlist('upload'):
+                    image_data = c_file.read()
+                    image = Image.open(cStringIO.StringIO(image_data))
+                    w, h = image.size
+                    if w*h > 42e6: # Nokia Lumia 1020 photo resolution
+                        raise ValueError(
+                            u"Image size excessive, uploaded images must be smaller "
+                            u"than 42 million pixel")
+    
+                    attachment_id = Attachments.create(request.cr, request.uid, {
+                        'name': c_file.filename,
+                        'datas': image_data.encode('base64'),
+                        'datas_fname': c_file.filename,
+                        'res_model': 'ir.ui.view',
+                    }, request.context)
+    
+                    [attachment] = Attachments.read(
+                        request.cr, request.uid, [attachment_id], ['website_url'],
+                        context=request.context)
+                    uploads.append(attachment)
             except Exception, e:
                 logger.exception("Failed to upload image to attachment")
                 message = unicode(e)
 
         return """<script type='text/javascript'>
             window.parent['%s'](%s, %s);
-        </script>""" % (func, json.dumps(website_url), json.dumps(message))
+        </script>""" % (func, json.dumps(uploads), json.dumps(message))
 
     @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):

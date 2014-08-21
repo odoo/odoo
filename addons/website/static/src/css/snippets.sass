@@ -43,6 +43,7 @@
         display: inline-block
         white-space: nowrap
         background: black
+        margin-right: 60px
         > div
             background: rgb(0,0,0)
             label
@@ -87,7 +88,11 @@
             line-height: 18px
     & > :not(.oe_snippet_thumbnail)
         display: none !important
-
+    &.disable
+        .oe_snippet_thumbnail
+            background-color: rgba(255, 0, 0, 0.75)
+        .oe_snippet_thumbnail_img
+            opacity: 0.8
 #oe_snippets .oe_snippet_thumbnail
     @include background(#747474, radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4)))
 
@@ -286,6 +291,8 @@
                 display: inline-block
                 float: none
                 margin: 0 -3px
+            > div
+                float: none
         .btn, a
             cursor: pointer
         .dropdown
