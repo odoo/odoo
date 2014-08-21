@@ -91,14 +91,14 @@ class account_asset_asset(osv.osv):
     def _get_last_depreciation_date(self, cr, uid, ids, context=None):
         """
         @param id: ids of a account.asset.asset objects
-        @return: Returns a dictionary of the effective dates of the last depreciation entry made for given asset ids. If there isn't any, return the purchase date of this asset
+        @return: Returns a dictionary of the effective dates of the last depreciation entry made for given asset ids. If there isn't any, return the depreciation start date of this asset
         """
         cr.execute("""
-            SELECT a.id as id, COALESCE(MAX(l.date),a.purchase_date) AS date
+            SELECT a.id as id, COALESCE(MAX(l.date),a.depreciation_start_date) AS date
             FROM account_asset_asset a
             LEFT JOIN account_move_line l ON (l.asset_id = a.id)
             WHERE a.id IN %s
-            GROUP BY a.id, a.purchase_date """, (tuple(ids),))
+            GROUP BY a.id, a.depreciation_start_date """, (tuple(ids),))
         return dict(cr.fetchall())
 
     def _compute_board_amount(self, cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=None):
@@ -153,14 +153,14 @@ class account_asset_asset(osv.osv):
             if asset.prorata:
                 depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             else:
-                # depreciation_date = 1st January of purchase year
-                purchase_date = datetime.strptime(asset.purchase_date, '%Y-%m-%d')
+                # depreciation_date = 1st January of depreciation start year
+                depreciation_start_date = datetime.strptime(asset.depreciation_start_date, '%Y-%m-%d')
                 #if we already have some previous validated entries, starting date isn't 1st January but last entry + method period
                 if (len(posted_depreciation_line_ids)>0):
                     last_depreciation_date = datetime.strptime(depreciation_lin_obj.browse(cr,uid,posted_depreciation_line_ids[0],context=context).depreciation_date, '%Y-%m-%d')
                     depreciation_date = (last_depreciation_date+relativedelta(months=+asset.method_period))
                 else:
-                    depreciation_date = datetime(purchase_date.year, 1, 1)
+                    depreciation_date = datetime(depreciation_start_date.year, 1, 1)
             day = depreciation_date.day
             month = depreciation_date.month
             year = depreciation_date.year
@@ -237,6 +237,7 @@ class account_asset_asset(osv.osv):
             if salvage_value:
                 val['value_residual'] = purchase_value - salvage_value
         return {'value': val}    
+    
     def _entry_count(self, cr, uid, ids, field_name, arg, context=None):
         MoveLine = self.pool('account.move.line')
         return {
@@ -256,6 +257,7 @@ class account_asset_asset(osv.osv):
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=True, states={'draft':[('readonly',False)]}),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets', copy=True),
         'purchase_date': fields.date('Purchase Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'depreciation_start_date': fields.date('Depreciation Start Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', required=True, copy=False,
                                   help="When an asset is created, the status is 'Draft'.\n" \
                                        "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n" \
@@ -282,6 +284,7 @@ class account_asset_asset(osv.osv):
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
         'purchase_date': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d'),
+        'depreciation_start_date': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d'),
         'active': True,
         'state': 'draft',
         'method': 'linear',
@@ -327,6 +330,11 @@ class account_asset_asset(osv.osv):
         res = {'value': {}}
         if method_time != 'number':
             res['value'] = {'prorata': False}
+        return res
+
+    def onchange_prorata(self, cr, uid, ids, prorata, purchase_date, context=None):
+        res = {'value': {}}
+        res['value'] = prorata and {'depreciation_start_date': datetime.strptime(purchase_date, '%Y-%m-%d')} or {'depreciation_start_date': datetime(datetime.strptime(purchase_date, '%Y-%m-%d').year, 1, 1)}
         return res
 
     def _compute_entries(self, cr, uid, ids, period_id, context=None):
@@ -390,7 +398,7 @@ class account_asset_depreciation_line(osv.osv):
         created_move_ids = []
         asset_ids = []
         for line in self.browse(cr, uid, ids, context=context):
-            depreciation_date = context.get('depreciation_date') or time.strftime('%Y-%m-%d')
+            depreciation_date = context.get('depreciation_date') or line.depreciation_date or time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
             current_currency = line.asset_id.currency_id.id
@@ -422,6 +430,7 @@ class account_asset_depreciation_line(osv.osv):
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
                 'date': depreciation_date,
+                'asset_id': line.asset_id.id
             })
             move_line_obj.create(cr, uid, {
                 'name': asset_name,
@@ -437,7 +446,6 @@ class account_asset_depreciation_line(osv.osv):
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
                 'date': depreciation_date,
-                'asset_id': line.asset_id.id
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
             created_move_ids.append(move_id)
