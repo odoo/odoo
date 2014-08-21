@@ -51,15 +51,18 @@
     $.extend($.expr[':'],{
         checkData: function(node,i,m){
             var dataName = m[3];
-            while (node && node.dataset) {
-                if (node.dataset[dataName]) {
+            while (node) {
+                if (node.dataset && node.dataset[dataName]) {
                     return true;
                 } else {
                     node = node.parentNode;
                 }
             }
             return false;
-        }
+        },
+        hasData: function(node,i,m){
+            return !!_.toArray(node.dataset).length;
+        },
     });
 
     if (!website.snippet) website.snippet = {};
@@ -164,11 +167,11 @@
         _get_snippet_url: function () {
             return '/website/snippets';
         },
-        _add_check_selector : function (selector) {
+        _add_check_selector : function (selector, no_check) {
             var data = selector.split(",");
             var selectors = [];
             for (var k in data) {
-                selectors.push(data[k].replace(/^\s+|\s+$/g, '') + ":checkData(oeModel)");
+                selectors.push(data[k].replace(/^\s+|\s+$/g, '') + (no_check ? "" : ":checkData(oeModel)"));
             }
             return selectors.join(", ");
         },
@@ -183,15 +186,16 @@
                     var $styles = $html.find("[data-option], [data-selector]");
                     $styles.each(function () {
                         var $style = $(this);
+                        var no_check = $style.data('no-check');
                         var option_id = $style.data('option');
                         var option = {
                             'option' : option_id,
                             'base_selector': $style.data('selector'),
-                            'selector': self._add_check_selector($style.data('selector')),
+                            'selector': self._add_check_selector($style.data('selector'), no_check),
                             '$el': $style,
-                            'drop-near': $style.data('drop-near') && self._add_check_selector($style.data('drop-near')),
-                            'drop-in': $style.data('drop-in') && self._add_check_selector($style.data('drop-in')),
-                            'drop-in-vertical': $style.data('drop-in-vertical') && self._add_check_selector($style.data('drop-in-vertical')),
+                            'drop-near': $style.data('drop-near') && self._add_check_selector($style.data('drop-near'), no_check),
+                            'drop-in': $style.data('drop-in') && self._add_check_selector($style.data('drop-in'), no_check),
+                            'drop-in-vertical': $style.data('drop-in-vertical') && self._add_check_selector($style.data('drop-in-vertical'), no_check),
                             'data': $style.data()
                         };
                         website.snippet.templateOptions.push(option);
@@ -653,11 +657,21 @@
         },
 
         _bind_li_menu: function () {
-            var $li = this.$el.find('li:not(.dropdown-submenu)').add(this.$el).filter(function () {
-                    return !!_.toArray($(this).data()).length;
-                });
-            $li.find("a").off('mouseenter click').on('mouseenter click', _.bind(this._mouse, this));
-            this.$el.find("ul").add(this.$el).add(this.$el.closest("ul")).off('mouseleave').on('mouseleave', _.bind(this.reset, this));
+            this.$el.filter("li:hasData")
+                .off('mouseenter click')
+                .on('mouseenter click', _.bind(this._mouse, this));
+
+            this.$el
+                .off('mouseenter click', "li:hasData a")
+                .on('mouseenter click', "li:hasData a", _.bind(this._mouse, this));
+
+            this.$el.closest("ul").add(this.$el)
+                .off('mouseleave')
+                .on('mouseleave', _.bind(this.reset, this));
+
+            this.$el
+                .off('mouseleave', "ul")
+                .on('mouseleave', "ul", _.bind(this.reset, this));
 
             this.reset_methods = [];
             this.reset_time = null;

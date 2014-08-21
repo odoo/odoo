@@ -20,6 +20,7 @@
 
     website.snippet.options.website_sale = website.snippet.Option.extend({
         start: function () {
+            var self = this;
             this.product_tmpl_id = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
 
             var size_x = parseInt(this.$target.attr("colspan") || 1);
@@ -32,17 +33,25 @@
             if (size_y >= 4) $select = $select.add($size.find('tr:eq(3) td:lt('+size_x+')'));
             $select.addClass("selected");
 
-            website.session.model('product.template')
-                .call('read', [[this.product_tmpl_id], ['website_style_ids']])
-                .then(function (data) {
-                    console.log(data);
-                });
+            website.session.model('product.style')
+                .call('search_read', [[]])
+                    .then(function (data) {
+                        var $ul = self.$el.find('ul[name="style"]');
+                        for (var k in data) {
+                            $ul.append(
+                                $('<li data-style="'+data[k]['id']+'" data-check_class="'+data[k]['html_class']+'"/>')
+                                    .append( $('<a/>').text(data[k]['name']) ));
+                        }
+                    });
 
             this.bind_resize();
         },
         reload: function () {
-            var search = location.search.replace(/\?|$/, '?enable_editor=1&');
-            location.href = location.href.replace(/(\?|#|$).*/, search + location.hash);
+            if (location.href.match(/\?enable_editor/)) {
+                location.reload();
+            } else {
+                location.href = location.href.replace(/\?(enable_editor=1&)?|#.*|$/, '?enable_editor=1&');
+            }
         },
         bind_resize: function () {
             var self = this;
@@ -77,18 +86,14 @@
                     .then(self.reload);
             });
         },
-        style: function (type, value) {
+        style: function (type, value, $li) {
             if(type !== "click") return;
-            var self = this;
-            openerp.jsonRpc('/shop/change_styles', 'call', {'id': this.product_tmpl_id, 'style_id': value})
-                .then(function (result) {
-                    self.$target.toggleClass($a.data("class"));
-                });
+            openerp.jsonRpc('/shop/change_styles', 'call', {'id': this.product_tmpl_id, 'style_id': value});
         },
         go_to: function (type, value) {
             if(type !== "click") return;
             openerp.jsonRpc('/shop/change_sequence', 'call', {'id': this.product_tmpl_id, 'sequence': value})
-                .then(self.reload);
+                .then(this.reload);
         }
     });
 

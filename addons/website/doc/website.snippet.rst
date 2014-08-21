@@ -129,3 +129,6 @@ data attributes is optional:
 - HTML content like <li data-your_js_method="your_value"><a>...</a></li>:
   List of HTML li menu items displayed in customize menu. If the li tag have datas the methods are
   automatically called
+- ``no-check``:
+  The selectors are automatically compute to have elements inside the branding. If you use this option
+  the check is not apply (for e.g.: to have a snippet for the grid view of website_sale)
