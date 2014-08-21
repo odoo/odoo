@@ -1,0 +1,131 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="website.slide.upload">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title">Upload Presentation</h3>
+                    </div>
+                    <div class="oe_slides_upload_loading text-center" style="display:none">
+                        <h4><i class='fa fa-spinner fa-spin'></i> Uploading presentation...  </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="clearfix form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" class="img-responsive img-thumbnail"/>
+                                </div>
+                                <div class="col-sm-8">
+                                    <ul class="list-group">
+                                        <li class="list-group-item active">
+                                            <h5 class="list-group-item-heading">
+                                                <label for="upload" class="control-label">PDF or Image File</label>
+                                            </h5>
+                                            <input id="upload" name="file" class="form-control" accept="image/*,application/pdf" type="file"/>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <h5 class="list-group-item-heading">
+                                                <label for="url" class="control-label">Youtube or Google Doc URL</label>
+                                            </h5>
+                                            <input id="url" name="url" class="form-control" placeholder="Youtube Video URL"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="name" class="control-label col-sm-2">Title</label>
+                                <div class="col-sm-10">
+                                    <input id="name" placeholder="Title" class="form-control" required="required"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="tag_ids" class="control-label col-sm-2">Tags</label>
+                                <div class="controls col-sm-10">
+                                    <input id="tag_ids" type="hidden"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="category_id" class="control-label col-sm-2">Category</label>
+                                <div class="controls col-sm-10">
+                                    <input id="category_id" type="hidden"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="description" class="control-label col-sm-2">Description</label>
+                                <div class="controls col-sm-10">
+                                    <textarea id="description" rows="4" placeholder="Description" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <canvas id="data_canvas" style="display: none;"></canvas>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-loading-text="Loading..." class="btn btn-primary save">Save as Draft</button>
+                        <button type="button" data-loading-text="Loading..." data-published="true" class="btn btn-primary save">Save and Publish</button>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+<t t-name="website.slide.overlay">
+    <div class="oe_slides_pdf_suggestions">
+        <t t-foreach="slides" t-as="slide">
+            <div class="col-md-4 col-sm-4 col-xs-6">
+                <a t-att-href="slide.url">
+                    <div class="oe_slides_pdf_js_thumb">
+                        <div class="oe_slides_pdf_js_caption">
+                            <h4><t t-esc="slide.caption"/></h4>
+                        </div>
+                        <img class="img-responsive oe_slides_suggestions_thumb" t-att-src="slide.img_src" t-attf-alt="#{slide.caption}"/>
+                    </div>
+                </a>
+            </div>
+        </t>
+    </div>
+</t>
+
+    <t t-name="website.slide.PDFViewer">
+        <div>
+            <div id="PDFLoader" class="img-responsive">
+                <h3 class="slide-img-text text-center" id="PDFLoading" style="display:none"><i class='fa fa-spinner fa-spin'></i> Loading presentation... </h3>
+                <img t-attf-src="/website/image/slide.slide/#{widget.id}/image" id="PDFViewer-image" class="img-responsive"/>
+           </div>
+           <div class="slide-wrapper">
+                <canvas id="PDFViewer" class="img-responsive" style="display:none"></canvas>
+           </div>
+            <div class="panel-footer slides-penal-footer">
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-left">
+                        <input type="number" class="text-center" style="width: 45px;" id="page_number"></input> / <span id="page_count"></span>
+                    </div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                <a href="#" id="first" title="First slide"><i class="fa fa-step-backward slide-fa-1-5x"></i></a>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                <a href="#" id="previous" title="Previous slide" role="button"><i class="fa fa-arrow-circle-left slide-fa-1-5x"></i></a>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                <a href="#" id="next" title="Next slide" role="button"><i class="fa fa-arrow-circle-right slide-fa-1-5x"></i></a>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                <a href="#" id="last" title="Last slide" role="button"><i class="fa fa-step-forward slide-fa-1-5x"></i></a>
+                            </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
+                        <a t-if="widget.downloadable != 'none'" style="margin-right: 5px" t-attf-href="/slides/slide/#{widget.id}/download" title="Download this presentation" id="download">
+                            <i class="fa fa-download slide-fa-1-5x"></i>
+                        </a>
+                        <a href="#" id="fullscreen" title="View fullscreen"><i class="fa fa-arrows-alt slide-fa-1-5x"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

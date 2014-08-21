@@ -1,0 +1,138 @@
+.define-color-if-not-defined() {
+    @nav-tabs-border-color: #dddddd;
+    @brand-info: #dddddd;
+    @body-bg: #FFFFFF;
+    @brand-primary: #428bca;
+    @link-color: @brand-primary;
+    @panel-footer-bg: #f5f5f5;
+    @nav-link-hover-bg: #FFFFFF;
+    @navbar-default-link-color: #777;
+    @navbar-default-link-hover-color: #333;
+    @navbar-default-bg: #f8f8f8;
+} .define-color-if-not-defined();
+
+// website editor.sass override modal-footer but when editor assest not imported it change button
+// positioning in footer
+.modal-footer {
+    text-align: left;
+}
+
+.slides-penal-footer {
+    background-color: @navbar-default-bg;
+}
+
+.slide-option-toggle {
+    position: absolute;
+    padding: 30px 30px 30px 30px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: @body-bg;
+    opacity: 1;
+    display:none;
+    overflow-y: auto !important;
+}
+
+.slide-wrapper {
+  position: relative;
+}
+
+.slide-fa-1-5x{
+    font-size: 1.5em;
+}
+.oe_slides_channel_thumbnail {
+    height: 250px;
+    width: 100%
+}
+/* Seems legit but should be cleaned */
+
+section.oe_slides_promote_box {
+    background-color: @panel-footer-bg;
+    border-bottom: 1px solid @nav-tabs-border-color;
+    border-top: 1px solid @nav-tabs-border-color;
+}
+
+img.oe_slides_promote_image {
+    max-height: 300px;
+    width: 100%;
+    overflow: hidden;
+    display: block;
+}
+
+.oe_slides_box_shadow {
+    box-shadow: 0 0 5px #CCC;
+}
+
+.oe_slides_apart_small {
+    height: 60px;
+    width: 90px;
+}
+
+.oe_slides_statistics_title {
+    border-bottom: 1px solid @nav-tabs-border-color;
+    padding-bottom: 5px;
+}
+.oe_slides_transcript {
+    overflow-y: auto;
+    max-height: 500px;
+}
+.oe_slides_bottom_border {
+   border-bottom: 1px solid @nav-tabs-border-color;
+}
+
+.oe_slides_opacity {
+    opacity: .5;
+}
+
+/* Seems clean */
+.oe_slides_thumbnail_container{
+    height: 300px
+}
+
+.oe_slides_grid_thumbnail {
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+}
+.oe_slides_ellipsis {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+/* PDF - Overlay */
+
+.oe_slides_suggestions_thumb {
+    height: 170px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.oe_slides_pdf_js_caption {
+    position:absolute;
+    top:0;
+    right:0;
+    background:rgba(10, 10, 10, 0.75);
+    width:100%;
+    height:100%;
+    display: none;
+    text-align:center;
+    color:#fff !important;
+    z-index:2;
+}
+
+.oe_slides_pdf_js_thumb {
+    margin-top: 10px;
+    position: relative;
+}
+
+.oe_slides_pdf_suggestions {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  background: #cccccc;
+}
