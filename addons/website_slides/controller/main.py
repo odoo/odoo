@@ -83,6 +83,10 @@ class main(http.Controller):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         attachment = request.registry['ir.attachment']
         domain = [("is_slide","=","TRUE")]
+
+        if request.session.uid != 1:
+            domain += [("website_published","=","TRUE")]
+
         if channel:
             domain += [('parent_id','=',channel.id)]
         if search:
