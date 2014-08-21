@@ -92,10 +92,10 @@ might contain::
 
     import mymodule
 
-.. admonition:: Exercise 1 — module creation
+.. admonition:: Exercise 1 — Module creation
     :class: exercise
 
-    Create an empty module Open Academy, install it in Odoo
+    Create an empty module Open Academy, install it in Odoo.
 
     .. only:: solutions
 
@@ -194,7 +194,7 @@ By default, Odoo also requires a ``name`` field on all models for various
 display and search behaviors. The field used for these purposes can be
 overridden by setting :attr:`~openerp.models.Model._rec_name`.
 
-.. admonition:: Exercise 2 — define a model
+.. admonition:: Exercise 2 — Define a model
     :class: exercise
 
     Define a new data model *Course* in the *openacademy* module. A course
@@ -223,11 +223,11 @@ record.
 .. code-block:: xml
 
     <openerp>
-      <data>
-        <record model="{model name}" id="{record identifier}">
-          <field name="{a field name}">{a value}</field>
-        </record>
-      </data>
+        <data>
+            <record model="{model name}" id="{record identifier}">
+                <field name="{a field name}">{a value}</field>
+            </record>
+        </data>
     <openerp>
 
 * ``model`` is the name of the Odoo model for the record
@@ -240,11 +240,11 @@ Data files have to be declared in the manifest file to be loaded, they can
 be declared in the ``'data'`` list (always loaded) or in the ``'demo'`` list
 (only loaded in demonstration mode).
 
-.. admonition:: Exercise — define demonstration data
+.. admonition:: Exercise — Define demonstration data
     :class: exercise
 
     Create demonstration data filling the *Courses* model with a few
-    demonstration courses
+    demonstration courses.
 
     .. only:: solutions
 
@@ -270,9 +270,9 @@ action more easily.
 .. code-block:: xml
 
     <record model="ir.actions.act_window" id="action_list_ideas">
-      <field name="name">Ideas</field>
-      <field name="res_model">idea.idea</field>
-      <field name="view_mode">tree,form</field>
+        <field name="name">Ideas</field>
+        <field name="res_model">idea.idea</field>
+        <field name="view_mode">tree,form</field>
     </record>
     <menuitem id="menu_ideas" parent="menu_root" name="Ideas" sequence="10"
               action="action_list_ideas"/>
@@ -291,8 +291,8 @@ action more easily.
     Define new menu entries to access courses and sessions under the
     OpenAcademy menu entry. A user should be able to
 
-    #) display a list of all the courses
-    #) create/modify courses
+    - display a list of all the courses
+    - create/modify courses
 
     .. only:: solutions
 
@@ -325,12 +325,12 @@ is implied by the root element of the ``arch`` field:
 .. code-block:: xml
 
     <record model="ir.ui.view" id="view_id">
-      <field name="name">view.name</field>
-      <field name="model">object_name</field>
-      <field name="priority" eval="16"/>
-      <field name="arch" type="xml">
-        <!-- view content: <form>, <tree>, <graph>, ... -->
-      </field>
+        <field name="name">view.name</field>
+        <field name="model">object_name</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <!-- view content: <form>, <tree>, <graph>, ... -->
+        </field>
     </record>
 
 .. danger:: The view's content is XML.
@@ -350,8 +350,8 @@ lists all the fields to display in the table (each field as a column):
 .. code-block:: xml
 
     <tree string="Idea list">
-      <field name="name"/>
-      <field name="inventor_id"/>
+        <field name="name"/>
+        <field name="inventor_id"/>
     </tree>
 
 Form views
@@ -366,27 +366,27 @@ elements (groups, notebooks) and interactive elements (buttons and fields):
 .. code-block:: xml
 
     <form string="Idea form">
-      <group colspan="4">
-        <group colspan="2" col="2">
-          <separator string="General stuff" colspan="2"/>
-          <field name="name"/>
-          <field name="inventor_id"/>
+        <group colspan="4">
+            <group colspan="2" col="2">
+                <separator string="General stuff" colspan="2"/>
+                <field name="name"/>
+                <field name="inventor_id"/>
+            </group>
+
+            <group colspan="2" col="2">
+                <separator string="Dates" colspan="2"/>
+                <field name="active"/>
+                <field name="invent_date" readonly="1"/>
+            </group>
+
+            <notebook colspan="4">
+                <page string="Description">
+                    <field name="description" nolabel="1"/>
+                </page>
+            </notebook>
+
+            <field name="state"/>
         </group>
-
-        <group colspan="2" col="2">
-          <separator string="Dates" colspan="2"/>
-          <field name="active"/>
-          <field name="invent_date" readonly="1"/>
-        </group>
-
-        <notebook colspan="4">
-          <page string="Description">
-            <field name="description" nolabel="1"/>
-          </page>
-        </notebook>
-
-        <field name="state"/>
-      </group>
     </form>
 
 .. admonition:: Exercise 1 - Customise form view using XML
@@ -417,25 +417,25 @@ Form views can also use plain HTML for more flexible layouts:
 .. code-block:: xml
 
     <form string="Idea Form">
-      <header>
-        <button string="Confirm" type="object" name="action_confirm"
-                states="draft" class="oe_highlight" />
-        <button string="Mark as done" type="object" name="action_done"
-                states="confirmed" class="oe_highlight"/>
-        <button string="Reset to draft" type="object" name="action_draft"
-                states="confirmed,done" />
-        <field name="state" widget="statusbar"/>
-      </header>
-      <sheet>
-        <div class="oe_title">
-          <label for="name" class="oe_edit_only" string="Idea Name" />
-          <h1><field name="name" /></h1>
-        </div>
-        <separator string="General" colspan="2" />
-        <group colspan="2" col="2">
-          <field name="description" placeholder="Idea description..." />
-        </group>
-      </sheet>
+        <header>
+            <button string="Confirm" type="object" name="action_confirm"
+                    states="draft" class="oe_highlight" />
+            <button string="Mark as done" type="object" name="action_done"
+                    states="confirmed" class="oe_highlight"/>
+            <button string="Reset to draft" type="object" name="action_draft"
+                    states="confirmed,done" />
+            <field name="state" widget="statusbar"/>
+        </header>
+        <sheet>
+            <div class="oe_title">
+                <label for="name" class="oe_edit_only" string="Idea Name" />
+                <h1><field name="name" /></h1>
+            </div>
+            <separator string="General" colspan="2" />
+            <group colspan="2" col="2">
+                <field name="description" placeholder="Idea description..." />
+            </group>
+        </sheet>
     </form>
 
 Search views
@@ -455,7 +455,7 @@ composed of fields defining which fields can be searched on:
 If no search view exists for the model, Odoo generates one which only allows
 searching on the ``name`` field.
 
-.. admonition:: Exercise 3 — search courses
+.. admonition:: Exercise 3 — Search courses
 
     Allow searching for courses based on their title or their description.
 
@@ -608,16 +608,16 @@ instead of a single view its ``arch`` field is composed of any number of
 
     <!-- improved idea categories list -->
     <record id="idea_category_list2" model="ir.ui.view">
-      <field name="name">id.category.list2</field>
-      <field name="model">ir.ui.view</field>
-      <field name="inherit_id" ref="id_category_list"/>
-      <field name="arch" type="xml">
-        <!-- find field description inside tree, and add the field
-             idea_ids after it -->
-        <xpath expr="/tree/field[@name='description']" position="after">
-          <field name="idea_ids" string="Number of ideas"/>
-        </xpath>
-      </field>
+        <field name="name">id.category.list2</field>
+        <field name="model">ir.ui.view</field>
+        <field name="inherit_id" ref="id_category_list"/>
+        <field name="arch" type="xml">
+            <!-- find field description inside tree, and add the field
+                 idea_ids after it -->
+            <xpath expr="/tree/field[@name='description']" position="after">
+              <field name="idea_ids" string="Number of ideas"/>
+            </xpath>
+        </field>
     </record>
 
 ``expr``
@@ -638,7 +638,7 @@ instead of a single view its ``arch`` field is composed of any number of
         alters the attributes of the matched element using special
         ``attribute`` elements in the ``xpath``'s body
 
-.. admonition:: Exercise 1 — alter existing content
+.. admonition:: Exercise 1 — Alter existing content
     :class: exercise
 
     * Using model inheritance, modify the existing *Partner* model to add an
@@ -689,7 +689,7 @@ services *OR* have a unit price which is *NOT* between 1000 and 2000"::
 A ``domain`` parameter can be added to relational fields to limit valid
 records for the relation when trying to select records in the client UI.
 
-.. admonition:: Exercise 2 — relational fields
+.. admonition:: Exercise 2 — Domains on relational fields
     :class: exercise
 
     When selecting the instructor for a *Session*, only instructors (partners
@@ -706,7 +706,7 @@ records for the relation when trying to select records in the client UI.
             declared as a string is evaluated client-side and allows
             field names on the right-hand side
 
-.. admonition:: Exercise 3 — relational fields bis
+.. admonition:: Exercise 3 — More complex domains
     :class: exercise
 
     Create new partner categories *Teacher / Level 1* and *Teacher / Level 2*.
@@ -1414,13 +1414,13 @@ A report is a combination two elements:
   .. code-block:: xml
 
     <t t-call="report.html_container">
-      <t t-foreach="docs" t-as="o">
-        <t t-call="report.external_layout">
-          <div class="page">
-            <h2>Report title</h2>
-          </div>
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <h2>Report title</h2>
+                </div>
+            </t>
         </t>
-      </t>
     </t>
 
     the standard rendering context provides a number of elements, the most
