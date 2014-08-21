@@ -31,7 +31,7 @@
         },
         reapply : function() {
             var self    = this,
-                modes   = [ 'nomode', 'grid', 'masonry', 'slideshow' ],
+                modes   = [ 'o_nomode', 'o_grid', 'o_masonry', 'o_slideshow' ],
                 classes = this.$target.attr("class").split(/\s+/);
             if (this.block) return;
             modes.forEach(function(mode) {
@@ -58,7 +58,7 @@
             if (this.block) return;
             if (!value) value = 'nomode';
             this[value]();
-            this.$target.removeClass('nomode masonry grid slideshow').addClass(value);
+            this.$target.removeClass('o_nomode o_masonry o_grid o_slideshow').addClass("o_"+value);
             this.bind_change();
         },
         replace: function ($content) {
@@ -314,7 +314,7 @@
 
         set_active: function () {
             this._super();
-            var classes = _.uniq((this.$target.attr("class") || '').split(/\s+/));
+            var classes = _.uniq((this.$target.attr("class").replace(/(^|\s)o_/g, ' ') || '').split(/\s+/));
             var $li = this.$el.find('[data-mode]')
                 .removeClass("active")
                 .filter('[data-mode="' + classes.join('"], [data-mode="') + '"]').addClass("active");

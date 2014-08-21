@@ -50,30 +50,15 @@
         <div t-attf-id="#{id}" class="carousel slide" data-ride="carousel" t-attf-data-interval="#{interval}">
             <div class="carousel-inner container">
                  <t t-foreach="srcs" t-as="src">
-                    <t t-if="src_index == index">
-                        <div class="item img col-md-12 col-lg-12 active" style="text-align:center">                                       
-                            <img t-att-src="src" style="display: inline-block; text-align: center;"/>
-                            <div class="carousel-caption"></div>
-                        </div>
-                    </t>
-                    <t t-if="src_index gt index or src_index lt index ">
-                        <div class="item img col-md-12 col-lg-12" style="text-align:center" >
-                            <img t-att-src="src"/>
-                            <!-- Caption support -->
-                            <div class="carousel-caption"></div>
-                        </div>
-                    </t>
+                    <div t-attf-class="item #{src_index == index and 'active' or ''}">
+                        <img class="img" t-att-src="src"/>
+                    </div>
                  </t>
             </div>
-            
+
             <ul class="carousel-indicators">
                 <t t-foreach="srcs" t-as="src">
-                    <t t-if="src_index == index">
-                        <li t-attf-data-target="##{id}" t-att-data-slide-to="src_index" class="active" t-attf-style="background-image: url(#{src})"></li>
-                    </t>
-                    <t t-if="src_index gt index or src_index lt index">
-                        <li t-attf-data-target="##{id}" t-att-data-slide-to="src_index" t-attf-style="background-image: url(#{src})"></li>
-                    </t>
+                    <li t-attf-data-target="##{id}" t-att-data-slide-to="src_index" t-att-class="src_index == index and 'active'" t-attf-style="background-image: url(#{src})"></li>
                 </t>
             </ul>
             
@@ -102,10 +87,11 @@
 
         <div class="modal fade" aria-labbelledby="Image Gallery Dialog" aria-hidden="true">
 
-            <div class="modal-dialog modal-lg" role="Picture Gallery" t-attf-style="min-width: #{dim.min_width}px ; min-height: #{dim.min_height}px ; max-width: #{dim.max_width}px ; max-height: #{dim.max_height}px ;">
-                
+            <div class="modal-dialog modal-lg" role="Picture Gallery"
+                t-attf-style="min-width: #{dim.min_width}px ; min-height: #{dim.min_height}px ; max-width: #{dim.max_width}px ; max-height: #{dim.max_height}px ; height: #{dim.height}px ;">
                 <div class="modal-content">
-                    <div class="modal-body slideshow">
+                    <div class="modal-body o_slideshow">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
                         <t t-call="website.gallery.slideshow"></t>
                     </div>
 

@@ -4,9 +4,6 @@
 
     var website = openerp.website;
 
-    website.add_template_file('/website/static/src/xml/website.gallery.xml');
-
-
     if (!website.snippet) website.snippet = {};
     website.snippet.readyAnimation = [];
 
@@ -42,7 +39,14 @@
             }
         });
     };
+
+
     $(document).ready(function () {
+        if ($(".o_gallery:not(.oe_slideshow)").size()) {
+            // load gallery modal template
+            website.add_template_file('/website/static/src/xml/website.gallery.xml');
+        }
+
         website.snippet.start_animation();
     });
 
@@ -167,14 +171,10 @@
     inside a gallery 
    -------------------------------------------------------------------------*/
     website.snippet.animationRegistry.gallery = website.snippet.Animation.extend({
-        selector: ".gallery:not(.slideshow) img",
+        selector: ".o_gallery:not(.o_slideshow)",
         start: function() {
             var self = this;
-            this.$el.on("click", this.click_handler);
-        },
-        stop : function() {
-            var self = this;
-            this.$el.off("click", this.click_handler);
+            this.$el.on("click", "img", this.click_handler);
         },
         click_handler : function(event) {
             var self = this;
@@ -187,20 +187,22 @@
                     idx = undefined,
                     milliseconds = undefined,
                     params = undefined,
-                    $images = $cur.closest(".gallery").find("img"),
+                    $images = $cur.closest(".o_gallery").find("img"),
                     dimensions = {
                         min_width  : Math.round( window.innerWidth  *  0.7),
                         min_height : Math.round( window.innerHeight *  0.7),
                         max_width  : Math.round( window.innerWidth  *  0.7),
-                        max_height : Math.round( window.innerHeight *  0.7)
+                        max_height : Math.round( window.innerHeight *  0.7),
+                        height : Math.round( window.innerHeight *  0.7)
                 };
+
                 $images.each(function() {
                     urls.push($(this).attr("src"));
                 });
                 var $img = ($cur.is("img") === true) ? $cur : $cur.closest("img");
                 idx = urls.indexOf($img.attr("src"));
 
-                milliseconds = $cur.closest(".gallery").data("interval") || false;
+                milliseconds = $cur.closest(".o_gallery").data("interval") || false;
                 var params = {
                     srcs : urls,
                     index: idx,
@@ -219,6 +221,8 @@
                     $(this).remove();
 
                 });
+                $modal.find(".modal-content, .modal-body.o_slideshow").css("height", "100%");
+
                 $modal.appendTo(document.body);
                 $modal.find(".carousel").carousel();
             }
