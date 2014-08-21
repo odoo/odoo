@@ -732,7 +732,7 @@
                     <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                     <separator/>
-                    <filter name="late" string="Late" domain="[('min_date','&lt;', time.strftime('%%Y-%%m-%%d'))]" help="Pickings that are late on scheduled time"/>
+                    <filter name="late" string="Late" domain="[('min_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S'))]" help="Pickings that are late on scheduled time"/>
                     <separator/>
                     <filter name="backorder" string="Backorders" domain="[('backorder_id','&lt;&gt;', False)]" help="Remaining parts of picking partially processed"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
