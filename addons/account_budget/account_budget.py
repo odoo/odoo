@@ -120,10 +120,6 @@ class crossovered_budget_lines(osv.osv):
                 raise osv.except_osv(_('Error!'),_("The Budget '%s' has no accounts!") % ustr(line.general_budget_id.name))
             date_to = line.date_to
             date_from = line.date_from
-            if context.has_key('wizard_date_from'):
-                date_from = context['wizard_date_from']
-            if context.has_key('wizard_date_to'):
-                date_to = context['wizard_date_to']
             if line.analytic_account_id.id:
                 cr.execute("SELECT SUM(amount) FROM account_analytic_line WHERE account_id=%s AND (date "
                        "between to_date(%s,'yyyy-mm-dd') AND to_date(%s,'yyyy-mm-dd')) AND "
@@ -135,10 +131,7 @@ class crossovered_budget_lines(osv.osv):
         return res
 
     def _prac(self, cr, uid, ids, name, args, context=None):
-        res={}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = self._prac_amt(cr, uid, [line.id], context=context)[line.id]
-        return res
+        return self._prac_amt(cr, uid, ids, context=context)
 
     def _theo_amt(self, cr, uid, ids, context=None):
         res = {}
@@ -173,10 +166,7 @@ class crossovered_budget_lines(osv.osv):
         return res
 
     def _theo(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = self._theo_amt(cr, uid, [line.id], context=context)[line.id]
-        return res
+        return self._theo_amt(cr, uid, ids, context=context)
 
     def _perc(self, cr, uid, ids, name, args, context=None):
         res = {}
