@@ -1933,4 +1933,5 @@ openerp.account = function (instance) {
             });
         },
     });
+    
 };
