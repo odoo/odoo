@@ -239,7 +239,8 @@ class pos_session(osv.osv):
                 required=True, readonly=True,
                 select=1, copy=False),
         
-        'sequence_number': fields.integer('Order Sequence Number'),
+        'sequence_number': fields.integer('Order Sequence Number', help='A sequence number that is incremented with each order'),
+        'login_number':  fields.integer('Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session'),
 
         'cash_control' : fields.function(_compute_cash_all,
                                          multi='cash',
@@ -303,6 +304,7 @@ class pos_session(osv.osv):
         'user_id' : lambda obj, cr, uid, context: uid,
         'state' : 'opening_control',
         'sequence_number': 1,
+        'login_number': 0,
     }
 
     _sql_constraints = [
@@ -396,7 +398,6 @@ class pos_session(osv.osv):
                 statement.unlink(context=context)
         return super(pos_session, self).unlink(cr, uid, ids, context=context)
 
-
     def open_cb(self, cr, uid, ids, context=None):
         """
         call the Point Of Sale interface and set the pos.session to 'opened' (in progress)
@@ -417,6 +418,12 @@ class pos_session(osv.osv):
             'url'  : '/pos/web/',
             'target': 'self',
         }
+
+    def login(self, cr, uid, ids, context=None):
+        this_record = self.browse(cr, uid, ids[0], context=context)
+        this_record.write({
+            'login_number': this_record.login_number+1,
+        })
 
     def wkf_action_open(self, cr, uid, ids, context=None):
         # second browse because we need to refetch the data from the DB for cash_register_id
@@ -464,11 +471,10 @@ class pos_session(osv.osv):
                         'amount': st.difference,
                         'ref': record.name,
                         'name': name,
-                        'partner_id': order.partner_id and order.partner_id.id or False,
+                        'journal_id': st.journal_id.id,
                     }, context=context)
 
-                if st.journal_id.type == 'bank':
-                    st.write({'balance_end_real' : st.balance_end})
+                st.write({'balance_end_real': st.balance_end}) # will update balances for cash statements
                 getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
         self._confirm_orders(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
@@ -1032,6 +1038,7 @@ class pos_order(osv.osv):
                 values.update({
                     'date': order.date_order[:10],
                     'ref': order.name,
+                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
                     'journal_id' : sale_journal_id,
                     'period_id' : period,
                     'move_id' : move_id,
@@ -1369,7 +1376,7 @@ class product_template(osv.osv):
         'income_pdt': fields.boolean('Point of Sale Cash In', help="Check if, this is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, example: money lost, transfer to bank, etc."),
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
-        'to_weight' : fields.boolean('To Weigh', help="Check if the product should be weighted (mainly used with self check-out interface)."),
+        'to_weight' : fields.boolean('To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration"),
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category', help="Those categories are used to group similar products for point of sale."),
     }
 

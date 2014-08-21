@@ -5652,7 +5652,7 @@ class BaseModel(object):
                     if newval != oldval or getattr(newval, '_dirty', False):
                         field = self._fields[name]
                         result['value'][name] = field.convert_to_write(
-                            newval, record._origin, subfields[name],
+                            newval, record._origin, subfields.get(name),
                         )
                         todo.add(name)
 

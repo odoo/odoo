@@ -27,7 +27,7 @@ class pos_order_report(osv.osv):
     _description = "Point of Sale Orders Statistics"
     _auto = False
     _columns = {
-        'date': fields.date('Date Order', readonly=True),
+        'date': fields.datetime('Date Order', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'state': fields.selection([('draft', 'New'), ('paid', 'Closed'), ('done', 'Synchronized'), ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],

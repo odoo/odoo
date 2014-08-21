@@ -172,7 +172,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             loaded: function(self,taxes){ self.taxes = taxes; },
         },{
             model:  'pos.session',
-            fields: ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number'],
+            fields: ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number','login_number'],
             domain: function(self){ return [['state','=','opened'],['user_id','=',self.session.uid]]; },
             loaded: function(self,pos_sessions){
                 self.pos_session = pos_sessions[0]; 
@@ -277,6 +277,27 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 self.cashregisters = bankstatements;
             },
         },{
+            label: 'fonts',
+            loaded: function(self){
+                var fonts_loaded = new $.Deferred();
+
+                // Waiting for fonts to be loaded to prevent receipt printing
+                // from printing empty receipt while loading Inconsolata
+                // ( The font used for the receipt ) 
+                waitForWebfonts(['Lato','Inconsolata'], function(){
+                    fonts_loaded.resolve();
+                });
+
+                // The JS used to detect font loading is not 100% robust, so
+                // do not wait more than 5sec
+                setTimeout(function(){
+                    fonts_loaded.resolve();
+                },5000);
+
+                return fonts_loaded;
+            },
+        },{
+            label: 'pictures',
             loaded: function(self){
                 self.company_logo = new Image();
                 self.company_logo.crossOrigin = 'anonymous';
@@ -327,7 +348,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     loaded.resolve();
                 }else{
                     var model = self.models[index];
-                    self.pos_widget.loading_message(_t('Loading')+' '+(model.model || ''), progress);
+                    self.pos_widget.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
                     var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
                     var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context; 
@@ -864,7 +885,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 creationDate:   new Date(),
                 orderLines:     new module.OrderlineCollection(),
                 paymentLines:   new module.PaymentlineCollection(),
-                name:           "Order " + this.uid,
+                name:           _t("Order ") + this.uid,
                 client:         null,
             });
             this.selected_orderline   = undefined;
@@ -879,7 +900,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // Generates a public identification number for the order.
         // The generated number must be unique and sequential. They are made 12 digit long
-        // to fit into EAN-13 barcodes. 
+        // to fit into EAN-13 barcodes, should it be needed 
         generateUniqueId: function() {
             function zero_pad(num,size){
                 var s = ""+num;
@@ -888,7 +909,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }
                 return s;
             }
-            return zero_pad(this.pos.pos_session_id,6) + zero_pad(this.sequence_number,6);
+            return zero_pad(this.pos.pos_session_id,5) +'-'+
+                   zero_pad(this.pos.pos_session.login_number,3) +'-'+
+                   zero_pad(this.sequence_number,4);
         },
         addOrderline: function(line){
             if(line.order){
