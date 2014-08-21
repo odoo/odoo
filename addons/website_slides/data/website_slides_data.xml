@@ -2,15 +2,26 @@
 <openerp>
     <data noupdate="1">
         <record model="document.directory" id="dir_public">
-            <field name="name">Public</field>
+            <field name="name">Public Channel</field>
             <field name="user_id" eval="False"/>
+            <field name="website_published" eval="True"/>
             <field name="ressource_id">0</field>
-            <field name="description">Public directy is default channel for slide share, all website user can access content of public directory.</field>
+            <field name="description">Public channel is default channel for slides, all public user can access content of public channel.</field>
         </record>
         <record model="document.directory" id="dir_private">
-            <field name="name">Private</field>
+            <field name="name">Partner Channel</field>
             <field name="user_id" eval="False"/>
+            <field name="website_published" eval="True"/>
             <field name="ressource_id">0</field>
+            <field name="description">Partner channel use to publish slides in partner network privately.</field>
         </record>
+        <record model="document.directory" id="dir_employee">
+            <field name="name">Employee Channel</field>
+            <field name="user_id" eval="False"/>
+            <field name="website_published" eval="True"/>
+            <field name="ressource_id">0</field>
+            <field name="description">Employee channel use to publish internal slides of company.</field>
+        </record>
+
     </data>
 </openerp>
