@@ -36,27 +36,8 @@
 
                             var instance = openerp.init(["web"]);
 
-                            var base;
-                            var treeMirror = new TreeMirror(document.body, {
-                                createElement: function(tagName) {
-                                    if (tagName == 'SCRIPT') {
-                                        var node = document.createElement('NO-SCRIPT');
-                                        node.style.display = 'none';
-                                        return node;
-                                    }
-                                    if (tagName == 'HEAD') {
-                                        var node = document.createElement('HEAD');
-                                        node.appendChild(document.createElement('BASE'));
-                                        node.firstChild.href = base;
-                                        return node;
-                                    }
-                                }
-                            });
-
-                            var cursorMirror = new CursorMirror();
-
                             var params = <t t-raw="params" />;
-                            window.player = new instance.im_screenshare.Player(treeMirror, cursorMirror, params);
+                            window.player = new instance.im_screenshare.Player(params);
                         });
                     </script>
                 </head>

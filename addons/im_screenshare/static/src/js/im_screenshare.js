@@ -8,8 +8,10 @@
     //      * args : array containing hte DOM mutations ([removed, addedOrMoved, attributes, text] for TreeMirror)
     //      * timestamp : the timestamp of the mutations
     instance.im_screenshare.RecordHandler = instance.Widget.extend({
-        init: function() {
-            this.mode = 'share';
+        init: function(parent, mode) {
+            this._super(parent);
+
+            this.mode = mode || 'share';
             this.uuid = false;
             this.record_id = false;
             // filter nodes
@@ -20,6 +22,14 @@
             this.cursorMirrorClient = null;
             this.def = $.when();
             this.msgQueue = [];
+
+            var cookie = openerp.session.get_cookie('odoo-screenshare-' + this.mode);
+            if(cookie){
+                // then import data from cookie
+                this.record_id = cookie.record_id;
+                this.uuid = cookie.uuid;
+                this._start_record();
+            }
         },
         // mutations filter
         _child_of_loading_node: function(mutations){
@@ -78,6 +88,9 @@
             var self = this;
             var clean_mutations = [];
             _.each(mutations, function(m){
+                if(m.base){
+                    clean_mutations.push(m);
+                }
                 if(m.f === 'forwardData'){
                     clean_mutations.push(m);
                 }
@@ -122,12 +135,15 @@
         start_record: function(){
             var self = this;
             return openerp.session.rpc("/im_screenshare/start", {mode : this.mode}).then(function(result){
-                console.log("result : ", result);
                 if(self.mode === 'share'){
                     self.uuid = result;
                 }else{
                     self.record_id = result;
                 }
+                // create cookie for 1h
+                var data = {uuid : self.uuid, record_id : self.record_id};
+                openerp.session.set_cookie("odoo-screenshare-" + self.mode, data, 60*60*1000);
+                // start sending mutations
                 self._start_record();
                 return result;
             });
@@ -165,6 +181,9 @@
             });
         },
         stop_record: function(){
+            // erase cookie
+            openerp.session.set_cookie("odoo-screenshare-" + this.mode, "", -1);
+            // re-init data
             this.treeMirrorClient.disconnect();
             this.treeMirrorClient = null;
             this.cursorMirrorClient.disconnect();
@@ -176,7 +195,7 @@
             this.record_id = false;
         },
         send_record: function(mutations){
-            //console.log('============================================');
+            console.log('============================================');
             // find the TreeMirroir id of the loading node
             this.loading_node_id = this._find_loading_node_id();
             // find new child of the loading node
@@ -199,10 +218,9 @@
     //      For the screensharing, it will listen to the bus, and replay the received mutations
     //      For the screenrecording, it will fetch the mutations, and replay them
     instance.im_screenshare.Player = instance.Class.extend({
-        init: function(treeMirror, cursorMirror, params){
+        init: function(params){
             // common init
-            this.cursorMirror = cursorMirror;
-            this.treeMirror = treeMirror;
+            this._init_mirroirs();
             if(params.uuid){
                 // screen sharing
                 this.channel = params.uuid;
@@ -263,22 +281,37 @@
             }
         },
         // common functions
-        clearPage : function() {
-            while (document.firstChild) {
-                document.removeChild(document.firstChild);
-            }
+        _init_mirroirs: function(){
+            var self = this;
+            this.base = "";
+            // empty the body to allow the new mutation to be executed correctly
+            $("body").empty();
+            // init the mirroirs
+            this.treeMirror = new TreeMirror(document.body, {
+                createElement: function(tagName) {
+                    if (tagName == 'SCRIPT') {
+                        var node = document.createElement('NO-SCRIPT');
+                        node.style.display = 'none';
+                        return node;
+                    }
+                    if (tagName == 'HEAD') {
+                        var node = document.createElement('HEAD');
+                        node.appendChild(document.createElement('BASE'));
+                        node.firstChild.href = self.base;
+                        return node;
+                    }
+                }
+            });
+            this.cursorMirror = new CursorMirror();
         },
         handleMessage: function(msg) {
-            if (msg.clear) {
-                //console.log("msg.clear");
-                this.clearPage();
-            } else if (msg.base) {
+            console.log('-----');
+            if (msg.base) {
                 //console.log("msg.base");
-                base = msg.base;
+                this.base = msg.base;
+                this._init_mirroirs();
             } else {
-                //console.log(msg.f);
                 if (msg.f === 'forwardData') {
-                    console.log("msg.f = forwardData");
                     this.cursorMirror[msg.f].apply(this.cursorMirror, msg.args);
                     //console.log(this.cursorMirror[msg.f]);
                 } else {
@@ -293,8 +326,7 @@
     // Class recording the summary mutation of the current DOM and save them in the Database
     instance.im_screenshare.DbRecordHandler = instance.im_screenshare.RecordHandler.extend({
         init: function(parent){
-            this._super();
-            this.mode = 'record';
+            this._super(parent, 'record');
         },
         start: function() {
             this.$el.html(this.generate_button());
@@ -329,10 +361,9 @@
     // IM Screenshare with other users, depends on im_chat
     // This is the button on the header of the conversation : it starts and stops the screensharing.
     instance.im_screenshare.IMSenderButton = openerp.im_screenshare.RecordHandler.extend({
-        init: function(conv){
-            this._super();
-            this.conv = conv;
-            this.mode = 'share';
+        init: function(parent){
+            this._super(parent, 'share');
+            this.conv = parent;
         },
         start: function() {
             this.$el.html('<button class="oe_im_screenshare_button" title="Share your screen"><i class="fa fa-caret-square-o-right"></i></button>');//this.generate_button());
