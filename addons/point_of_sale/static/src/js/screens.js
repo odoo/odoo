@@ -662,7 +662,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 var partner    = partners[i];
                 var clientline = this.partner_cache.get_node(partner.id);
                 if(!clientline){
-                    var clientline_html = QWeb.render('ClientLine',{partner:partners[i]});
+                    var clientline_html = QWeb.render('ClientLine',{widget: this, partner:partners[i]});
                     var clientline = document.createElement('tbody');
                     clientline.innerHTML = clientline_html;
                     clientline = clientline.childNodes[1];

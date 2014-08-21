@@ -55,23 +55,27 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         }
 	},
 
-    set: function (domain, row_groupby, col_groupby) {
+    set: function (domain, row_groupby, col_groupby, measures_groupby) {
         var self = this;
         if (this.updating) {
             return this.updating.then(function () {
                 self.updating = false;
-                return self.set(domain, row_groupby,col_groupby);
+                return self.set(domain, row_groupby, col_groupby, measures_groupby);
             });
         }
         var row_gb_changed = !_.isEqual(row_groupby, this.rows.groupby),
-            col_gb_changed = !_.isEqual(col_groupby, this.cols.groupby);
+            col_gb_changed = !_.isEqual(col_groupby, this.cols.groupby),
+			measures_gb_changed = !_.isEqual(measures_groupby, this.measures);
 
         this.domain = domain;
         this.rows.groupby = row_groupby;
         this.cols.groupby = col_groupby;
 
+		if (measures_groupby.length) { this.measures = measures_groupby; }
+
         if (row_gb_changed) { this.rows.headers = null; }
         if (col_gb_changed) { this.cols.headers = null; }
+		if (measures_gb_changed && measures_groupby.length) { this.set_measures(measures_groupby); }
 
         return this.update_data();
     },
@@ -460,5 +464,3 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 });
 
 })();
-
-

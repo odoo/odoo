@@ -461,20 +461,6 @@ class pos_session(osv.osv):
                 if (st.journal_id.type not in ['bank', 'cash']):
                     raise osv.except_osv(_('Error!'), 
                         _("The type of the journal for your payment method should be bank or cash "))
-                if st.difference and st.journal_id.cash_control == True:
-                    if st.difference > 0.0:
-                        name= _('Point of Sale Profit')
-                    else:
-                        name= _('Point of Sale Loss')
-                    bsl.create(cr, uid, {
-                        'statement_id': st.id,
-                        'amount': st.difference,
-                        'ref': record.name,
-                        'name': name,
-                        'journal_id': st.journal_id.id,
-                    }, context=context)
-
-                st.write({'balance_end_real': st.balance_end}) # will update balances for cash statements
                 getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
         self._confirm_orders(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
