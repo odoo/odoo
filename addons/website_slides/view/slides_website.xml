@@ -292,11 +292,15 @@
 	                    <li><a href="#about" role="tab" data-toggle="tab">About</a></li>
 	                    <li><a href="#share" role="tab" data-toggle="tab">Share</a></li>
 	                    <li class="active"><a href="#discuss" role="tab" data-toggle="tab">Discuss</a></li>
+	                    <li t-att-class="not comments and 'active'"><a href="#about" role="tab" data-toggle="tab">About</a></li>
+	                    <li><a href="#share" role="tab" data-toggle="tab">Share</a></li>
+	                    <li t-att-class="comments and 'active'"><a href="#discuss" role="tab" data-toggle="tab">Discuss</a></li>
 	                    <li><a href="#transscript" role="tab" data-toggle="tab">Transscript</a></li>
 	                </ul>
 	                <!-- Tab panes -->
 	                <div class="tab-content" style="padding: 20px 5px 5px 5px;">
 	                    <div class="tab-pane fade" id="about">
+	                    <div t-att-class="not comments and 'tab-pane fade in active' or 'tab-pane fade'" id="about">
 	                        <div t-field="slideview.website_description"/>
 	                    </div>
 	                    <div class="tab-pane fade" id="share">
@@ -327,6 +331,7 @@
 							</t>
 						</div>				                       
 	                    <div class="tab-pane fade in active" id="discuss">                       	
+	                    <div t-att-class="comments and 'tab-pane fade in active' or 'tab-pane fade'" id="discuss">                       	
 				            <form id="comment" t-attf-action="/slides/comment/#{slideview.id}" method="POST">
 				                <div class="media">
 				                    <span class="pull-left">

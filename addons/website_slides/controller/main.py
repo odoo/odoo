@@ -25,6 +25,7 @@ from openerp import SUPERUSER_ID
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+from openerp.addons.website.models.website import slug
 
 
 class main(http.Controller):
