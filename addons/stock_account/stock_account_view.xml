@@ -26,6 +26,18 @@
             </field>
         </record>
 
+        <record id="view_picking_inherit_tree2" model="ir.ui.view">
+            <field name="name">stock.picking.tree.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='backorder_id']" position="after">
+                    <field name="invoice_state" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>
+
+
         <record id="view_picking_inherit_form2" model="ir.ui.view">
             <field name="name">stock.picking.form.inherit</field>
             <field name="model">stock.picking</field>
