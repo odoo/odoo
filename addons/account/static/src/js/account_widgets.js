@@ -1,4 +1,9 @@
+/*global _:false */
+/*global openerp:false */
+
 openerp.account = function (instance) {
+    'use strict';
+
     openerp.account.quickadd(instance);
     var _t = instance.web._t,
         _lt = instance.web._lt;
@@ -34,26 +39,6 @@ openerp.account = function (instance) {
         start: function() {
             var self = this;
             return $.when(this._super()).then(function(){
-
-                // Inject variable styles
-                var style = document.createElement("style");
-                style.appendChild(document.createTextNode(""));
-                document.head.appendChild(style);
-                var css_selector = ".oe_reconciliation_line .toggle_match, .oe_reconciliation_line .toggle_create,  .oe_reconciliation_line .initial_line > td";
-                if(style.sheet.insertRule) {
-                    style.sheet.insertRule(css_selector + " { -webkit-transition-duration: "+self.aestetic_animation_speed+"ms; }", 0);
-                    style.sheet.insertRule(css_selector + " { -moz-transition-duration: "+self.aestetic_animation_speed+"ms; }", 0);
-                    style.sheet.insertRule(css_selector + " { -ms-transition-duration: "+self.aestetic_animation_speed+"ms; }", 0);
-                    style.sheet.insertRule(css_selector + " { -o-transition-duration: "+self.aestetic_animation_speed+"ms; }", 0);
-                    style.sheet.insertRule(css_selector + " { transition-duration: "+self.aestetic_animation_speed+"ms; }", 0);
-                } else {
-                    style.sheet.addRule(css_selector, "-webkit-transition-duration: "+self.aestetic_animation_speed+"ms;");
-                    style.sheet.addRule(css_selector, "-moz-transition-duration: "+self.aestetic_animation_speed+"ms;");
-                    style.sheet.addRule(css_selector, "-ms-transition-duration: "+self.aestetic_animation_speed+"ms;");
-                    style.sheet.addRule(css_selector, "-o-transition-duration: "+self.aestetic_animation_speed+"ms;");
-                    style.sheet.addRule(css_selector, "-webkit-transition-duration: "+self.aestetic_animation_speed+"ms;");
-                }
-
                 var deferred_promises = [];
 
                 // Create a dict account id -> account code for display facilities
@@ -913,6 +898,7 @@ openerp.account = function (instance) {
                 self.is_valid = true;
                 self.is_consistent = true;
                 self.filter = "";
+                self.propositions_lines = [];
                 self.set("balance", undefined, {silent: true});
                 self.set("mode", undefined, {silent: true});
                 self.set("pager_index", 0, {silent: true});
@@ -1858,12 +1844,13 @@ openerp.account = function (instance) {
             self.set("balance", balance);
 
             self.$(".button_reconcile").removeClass("oe_highlight");
-            self.$(".button_reconcile").text("Reconcile");
             if (mv_lines_selected.length === 0) {
-                self.$(".button_reconcile").text("Don't reconcile"); // Leave unreconciled
+                self.$(".button_reconcile").text(_t("Keep Open"));
             } else if (Math.abs(balance).toFixed(3) === "0.000") {
                 self.$(".button_reconcile").addClass("oe_highlight");
+                self.$(".button_reconcile").text(_t("Full Reconcile"));
             } else {
+                self.$(".button_reconcile").text(_t("Partial Reconcile"));
             }
         },
 
@@ -1922,7 +1909,7 @@ openerp.account = function (instance) {
                 var id = this.data.account_id;
                 var model = "account.account";
             }
-            return $.when(new instance.web.Model(model).call("mark_as_reconciled", [[id]])).then(function() {
+            return new instance.web.Model(model).call("mark_as_reconciled", [[id]]).then(function() {
                 return self.persistAndDestroy();
             });
         },
@@ -1931,7 +1918,7 @@ openerp.account = function (instance) {
             var self = this;
             var params = [self.data.account_id];
             if (self.data.partner_id) params.push(self.data.partner_id);
-            return $.when(self.model_aml.call("get_move_lines_for_manual_reconciliation_by_account_and_parter", params)).then(function(lines) {
+            return self.model_aml.call("get_move_lines_for_manual_reconciliation_by_account_and_parter", params).then(function(lines) {
                 if (lines.length === 0) self.persistAndDestroy();
                 else {
                     // TODO : mettre les nouvelles lignes dans l'ordre préexistant
@@ -1946,5 +1933,4 @@ openerp.account = function (instance) {
             });
         },
     });
-    
 };

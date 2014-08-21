@@ -3,6 +3,8 @@ $mainTableBordersPadding: 3px;
 $lightBorder: 1px solid #bbb;
 $accountingBorder: 1px solid #000;
 $initialLineBackground: #f0f0f0;
+// Warning, this value is also specified in the instance.web.account.abstractReconciliation widget
+$aestetic_animation_speed: 300ms;
 
 
 .openerp .oe_reconciliation {
@@ -13,6 +15,21 @@ $initialLineBackground: #f0f0f0;
     -o-user-select: none;
     user-select: none;
     cursor: default;
+    height: 100%;
+
+    .oe_form_sheetbg {
+        border-bottom: 0;
+        padding: 0;
+        height: 100%;
+
+        .oe_form_sheet {
+            position: relative;
+            padding: 20px 15px 30px 15px;
+            border-top: 0;
+            border-bottom: 0;
+            height: 100%;
+        }
+    }
 
     h1 {
         width: 48%;
@@ -56,11 +73,6 @@ $initialLineBackground: #f0f0f0;
             border: none;
             display: inline;
         }
-    }
-
-    .oe_form_sheet {
-        position: relative;
-        padding-bottom: 30px;
     }
 
     .protip {
@@ -155,6 +167,11 @@ $initialLineBackground: #f0f0f0;
             -ms-transform: rotate(0deg);
             -o-transform: rotate(0deg);
             transform: rotate(0deg);
+            -webkit-transition-duration: $aestetic_animation_speed;
+            -moz-transition-duration: $aestetic_animation_speed;
+            -ms-transition-duration: $aestetic_animation_speed;
+            -o-transition-duration: $aestetic_animation_speed;
+            transition-duration: $aestetic_animation_speed;
         }
 
         .visible_toggle {
@@ -311,6 +328,11 @@ $initialLineBackground: #f0f0f0;
                 -moz-transition-property: background-color;
                 -ms-transition-property: background-color;
                 transition-property: background-color;
+                -webkit-transition-duration: $aestetic_animation_speed;
+                -moz-transition-duration: $aestetic_animation_speed;
+                -ms-transition-duration: $aestetic_animation_speed;
+                -o-transition-duration: $aestetic_animation_speed;
+                transition-duration: $aestetic_animation_speed;
 
                 &.cell_action, &.cell_info_popover {
                     border-top: none;

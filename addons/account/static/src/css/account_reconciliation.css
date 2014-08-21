@@ -6,7 +6,18 @@
   -o-user-select: none;
   user-select: none;
   cursor: default;
+  height: 100%;
   /* icons */ }
+  .openerp .oe_reconciliation .oe_form_sheetbg {
+    border-bottom: 0;
+    padding: 0;
+    height: 100%; }
+    .openerp .oe_reconciliation .oe_form_sheetbg .oe_form_sheet {
+      position: relative;
+      padding: 20px 15px 30px 15px;
+      border-top: 0;
+      border-bottom: 0;
+      height: 100%; }
   .openerp .oe_reconciliation h1 {
     width: 48%;
     padding: 0 0 0 15px;
@@ -35,9 +46,6 @@
     .openerp .oe_reconciliation .interface_options .oe_radio_input {
       border: none;
       display: inline; }
-  .openerp .oe_reconciliation .oe_form_sheet {
-    position: relative;
-    padding-bottom: 30px; }
   .openerp .oe_reconciliation .protip {
     margin: 0;
     position: absolute;
@@ -106,7 +114,12 @@
       -moz-transform: rotate(0deg);
       -ms-transform: rotate(0deg);
       -o-transform: rotate(0deg);
-      transform: rotate(0deg); }
+      transform: rotate(0deg);
+      -webkit-transition-duration: 300ms;
+      -moz-transition-duration: 300ms;
+      -ms-transition-duration: 300ms;
+      -o-transition-duration: 300ms;
+      transition-duration: 300ms; }
     .openerp .oe_reconciliation .oe_reconciliation_line .visible_toggle, .openerp .oe_reconciliation .oe_reconciliation_line[data-mode="match"] .toggle_match, .openerp .oe_reconciliation .oe_reconciliation_line[data-mode="create"] .toggle_create {
       visibility: visible !important;
       -webkit-transform: rotate(90deg);
@@ -182,7 +195,12 @@
       -webkit-transition-property: background-color;
       -moz-transition-property: background-color;
       -ms-transition-property: background-color;
-      transition-property: background-color; }
+      transition-property: background-color;
+      -webkit-transition-duration: 300ms;
+      -moz-transition-duration: 300ms;
+      -ms-transition-duration: 300ms;
+      -o-transition-duration: 300ms;
+      transition-duration: 300ms; }
       .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view .initial_line > td.cell_action, .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view .initial_line > td.cell_info_popover {
         border-top: none;
         background: white !important;

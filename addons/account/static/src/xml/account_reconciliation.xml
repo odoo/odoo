@@ -178,7 +178,7 @@
     <t t-name="bank_statement_reconciliation_statement_line_details">
         <table class='details'>
             <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
-            <tr><td>Partner</td><td><t t-esc="line.partner_name"/></td></tr>
+            <tr t-if="line.partner_name"><td>Partner</td><td><t t-esc="line.partner_name"/></td></tr>
             <tr t-if="line.ref"><td>Transaction</td><td><t t-esc="line.ref"/></td></tr>
             <tr><td>Description</td><td><t t-esc="line.name"/></td></tr>
             <tr><td>Amount</td><td><t t-esc="line.amount_str"/><t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td></tr>
@@ -262,7 +262,7 @@
             <thead><tr>
                 <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
                 <td t-if="data.partner_name" class="cell_partner_name"><t t-esc="data.partner_name" /></td>
-                <td t-att-colspan="(data.partner_name ? undefined : '2')" class="cell_last_reconciliation_date">Last Manual Reconciliation : <t t-esc="data.last_reconciliation_date or 'Never'" /></td>
+                <td t-att-colspan="(data.partner_name ? undefined : '2')" class="cell_last_reconciliation_date">Last Reconciliation : <t t-esc="data.last_reconciliation_date or 'Never'" /></td>
                 <td class="cell_title_account_code" colspan="2"><t t-esc="data.account_code" /></td>
                 <td class="cell_info_popover"></td>
             </tr></thead>
