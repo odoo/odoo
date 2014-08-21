@@ -218,7 +218,7 @@ class main(http.Controller):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         directory = pool['document.directory']
         attachment = request.registry['ir.attachment']
-        channels = directory.name_search(cr, uid, name='', args=None, operator='ilike', context=context, limit=100)
+        channels = directory.name_search(cr, uid, name='', args=[('website_published','=', True)], operator='ilike', context=context, limit=100)
         default_channel = attachment.get_default_channel(cr, uid, context)
         res = []
         for channel in channels:
