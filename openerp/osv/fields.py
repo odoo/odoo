@@ -294,6 +294,11 @@ class html(text):
         self._symbol_f = self._symbol_set_html
         self._symbol_set = (self._symbol_c, self._symbol_f)
 
+    def to_field_args(self):
+        args = super(html, self).to_field_args()
+        args['sanitize'] = self._sanitize
+        return args
+
 import __builtin__
 
 class float(_column):
