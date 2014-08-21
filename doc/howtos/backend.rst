@@ -463,22 +463,26 @@ searching on the ``name`` field.
 
         .. patch::
 
-Relations between objects
-=========================
+Relations between models
+========================
 
-.. admonition:: Exercise 1 — create models
+A record from a model may be related to a record from another model. For
+instance, a sale order record is related to a client record that contains the
+client data; it is also related to its sale order line records.
+
+.. admonition:: Exercise 1 — Create a session model
     :class: exercise
 
-    Create models for *sessions* and *attendees*, add an action and a menu
-    item to display the sessions.
+    For the module Open Academy, we consider a model for *sessions*: a session
+    is an occurrence of a course taught at a given time for a given audience.
 
-    A session has a name, a start date, a duration and a number of seats.
-
-    An attendee has a name.
+    Create a model for *sessions*. A session has a name, a start date, a
+    duration and a number of seats. Add an action and a menu item to display
+    them.
 
     .. only:: solutions
 
-        Create classes *Session* and *Attendee*:
+        Create class *Session*:
 
         .. patch::
 
@@ -524,46 +528,60 @@ Relational field types are:
         for other in foo.other_ids:
             print foo.name
 
-.. admonition:: Exercise 2 — Relations many2one
+.. admonition:: Exercise 2 — Many2one relations
     :class: exercise
 
-    Using a many2one, modify the *Course*, *Session* and *Attendee* models to
-    reflect their relation with one another
+    Using a many2one, modify the *Course* and *Session* models to reflect their
+    relation with other models:
+
+    - A course has a *responsible* user; the value of that field is a record of
+      the built-in model ``res.users``.
+    - A session has an *instructor*; the value of that field is a record of the
+      built-in model ``res.partner``.
+    - A session is related to a *course*; the value of that field is a record
+      of the model ``openacademy.course`` and is required.
 
     .. only:: solutions
 
-        #. Add the relevant ``Many2one`` fields to the models
+        #. Add the relevant ``Many2one`` fields to the models, and
         #. add access to the session object in
-           ``openacademy/view/openacademy.xml``
+           ``openacademy/view/openacademy.xml``.
 
         .. patch::
 
-        .. note::
-
-            In the ``Attendee`` class, the ``name`` field was removed and
-            replaced by the partner field directly. This is
-            :attr:`~openerp.models.Model._rec_name`'s purpose.
-
-.. admonition:: Exercise 3 — Inverse o2m
+.. admonition:: Exercise 3 — Inverse one2many relations
     :class: exercise
 
-    Using the inverse relational field o2m, modify the models to reflect their
-    inverse relations
+    Using the inverse relational field one2many, modify the models to reflect
+    the relation between courses and sessions.
 
     .. only:: solutions
 
-        Modify the classes as follows:
+        Modify the ``Course`` class as follows:
 
         .. patch::
 
-.. admonition:: Exercise 4 — Views modification
+.. admonition:: Exercise 4 — Multiple many2many relations
+    :class: exercise
+
+    Using the relational field many2many, modify the *Session* model to relate
+    every session to a set of *attendees*. Attendees will be represented by
+    partner records, so we will relate to the built-in model ``res.partner``.
+
+    .. only:: solutions
+
+        Modify the ``Session`` class as follows:
+
+        .. patch::
+
+.. admonition:: Exercise 5 — Views modification
     :class: exercise
 
     For the *Course* model,
 
     * the name and instructor for the course should be displayed in the tree
       view
-    * the form view should display the course name and responsible (wat?) at
+    * the form view should display the course name and responsible at
       the top, followed by the course description in a tab and the course
       sessions in a second tab
 
@@ -643,8 +661,6 @@ instead of a single view its ``arch`` field is composed of any number of
 
     * Using model inheritance, modify the existing *Partner* model to add an
       ``instructor`` boolean field
-    * remove the *Attendee* model which is an unnecessary indirection:
-      attendees are directly partners
     * Using view inheritance, display this fields in the partner form view
 
     .. only:: solutions

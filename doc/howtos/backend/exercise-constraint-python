@@ -1,9 +1,10 @@
 # HG changeset patch
 # Parent 7a7d003fe38426a405ce0657a627a139133ec4dd
 
-diff --git a/openacademy/course.py b/openacademy/course.py
---- a/openacademy/course.py
-+++ b/openacademy/course.py
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-21 14:53:28.192548371 +0200
++++ doc-backend/openacademy/course.py	2014-08-21 14:53:34.760548612 +0200
 @@ -1,5 +1,5 @@
  # -*- coding: utf-8 -*-
 -from openerp import api, fields, models
@@ -11,13 +12,13 @@ diff --git a/openacademy/course.py b/openacademy/course.py
  
  class Course(models.Model):
      _name = 'openacademy.course'
-@@ -55,3 +55,9 @@ class Session(models.Model):
-                     'message': "Increase seats or remove excess attendees",
+@@ -55,3 +55,9 @@
                  },
              }
-+
+ 
 +    @api.one
 +    @api.constrains('instructor_id', 'attendee_ids')
 +    def _check_instructor_not_in_attendees(self):
 +        if self.instructor_id and self.instructor_id in self.attendee_ids:
 +            raise exceptions.ValidationError("A session's instructor can't be an attendee")
++

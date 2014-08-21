@@ -1,9 +1,10 @@
 # HG changeset patch
 # Parent 85a8d7317b9e13480f39ad739955442d15144451
 
-diff --git a/openacademy/course.py b/openacademy/course.py
---- a/openacademy/course.py
-+++ b/openacademy/course.py
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-21 14:55:44.792553386 +0200
++++ doc-backend/openacademy/course.py	2014-08-21 15:00:36.248564085 +0200
 @@ -1,4 +1,7 @@
  # -*- coding: utf-8 -*-
 +from datetime import datetime, timedelta
@@ -12,17 +13,16 @@ diff --git a/openacademy/course.py b/openacademy/course.py
  from openerp import api, fields, models, exceptions
  
  class Course(models.Model):
-@@ -56,6 +59,9 @@ class Session(models.Model):
-         'res.partner', string="Attendees")
+@@ -54,6 +57,8 @@
+     attendee_ids = fields.Many2many('res.partner', string="Attendees")
  
      seats_taken = fields.Float(string="Taken seats", compute='_taken_seats')
-+    end_date = fields.Date(
-+        string="End Date", store=True,
++    end_date = fields.Date(string="End Date", store=True,
 +        compute='_get_end_date', inverse='_set_end_date')
  
      @api.one
      @api.depends('seats', 'attendee_ids')
-@@ -83,6 +89,32 @@ class Session(models.Model):
+@@ -81,6 +86,26 @@
              }
  
      @api.one
@@ -32,33 +32,28 @@ diff --git a/openacademy/course.py b/openacademy/course.py
 +            self.end_date = self.start_date
 +            return
 +
-+        start = datetime.strptime(
-+            self.start_date, openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
++        start = Datetime.from_string(self.start_date)
 +        duration = timedelta(days=self.duration)
-+
-+        self.end_date = (start + duration).strftime(
-+            openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
++        self.end_date = start + duration
 +
 +    @api.one
 +    def _set_end_date(self):
 +        if not (self.start_date and self.end_date):
 +            return
 +
-+        start_date = datetime.strptime(
-+            self.start_date, openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
-+        end_date = datetime.strptime(
-+            self.end_date, openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
-+
-+        self.duration = end_date - start_date
++        start_date = Datetime.from_string(self.start_date)
++        end_date = Datetime.from_string(self.end_date)
++        self.duration = (end_date - start_date).days
 +
 +    @api.one
      @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
          if self.instructor_id and self.instructor_id in self.attendee_ids:
-diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml
-+++ b/openacademy/views/openacademy.xml
-@@ -125,11 +125,24 @@
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 14:55:44.792553386 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 14:55:44.788553386 +0200
+@@ -119,11 +119,24 @@
              </field>
          </record>
  

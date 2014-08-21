@@ -1,11 +1,12 @@
 # HG changeset patch
 # Parent dba00a105dd2a82490394b8dec5fea5f1d8847e1
 
-diff --git a/openacademy/course.py b/openacademy/course.py
---- a/openacademy/course.py
-+++ b/openacademy/course.py
-@@ -63,6 +63,9 @@ class Session(models.Model):
-         string="End Date", store=True,
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-21 15:00:59.508564939 +0200
++++ doc-backend/openacademy/course.py	2014-08-21 15:00:59.504564939 +0200
+@@ -60,6 +60,9 @@
+     end_date = fields.Date(string="End Date", store=True,
          compute='_get_end_date', inverse='_set_end_date')
  
 +    hours = fields.Float(string="Duration in hours",
@@ -14,8 +15,8 @@ diff --git a/openacademy/course.py b/openacademy/course.py
      @api.one
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-@@ -115,6 +118,15 @@ class Session(models.Model):
-         self.duration = end_date - start_date
+@@ -106,6 +109,15 @@
+         self.duration = (end_date - start_date).days
  
      @api.one
 +    @api.depends('duration')
@@ -30,10 +31,11 @@ diff --git a/openacademy/course.py b/openacademy/course.py
      @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
          if self.instructor_id and self.instructor_id in self.attendee_ids:
-diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml
-+++ b/openacademy/views/openacademy.xml
-@@ -142,11 +142,24 @@
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 15:00:59.508564939 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 15:00:59.504564939 +0200
+@@ -136,11 +136,24 @@
              </field>
          </record>
  

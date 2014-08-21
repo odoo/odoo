@@ -1,9 +1,10 @@
 # HG changeset patch
 # Parent a358be0a577b0569831958a8ec1302825c645dee
 
-diff --git a/openacademy/course.py b/openacademy/course.py
---- a/openacademy/course.py
-+++ b/openacademy/course.py
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-21 14:49:50.044540363 +0200
++++ doc-backend/openacademy/course.py	2014-08-21 14:50:05.388540926 +0200
 @@ -1,5 +1,5 @@
  # -*- coding: utf-8 -*-
 -from openerp import fields, models
@@ -11,11 +12,10 @@ diff --git a/openacademy/course.py b/openacademy/course.py
  
  class Course(models.Model):
      _name = 'openacademy.course'
-@@ -28,3 +28,13 @@ class Session(models.Model):
+@@ -28,3 +28,13 @@
          ondelete='cascade', string="Course", required=True)
-     attendee_ids = fields.Many2many(
-         'res.partner', string="Attendees")
-+
+     attendee_ids = fields.Many2many('res.partner', string="Attendees")
+ 
 +    seats_taken = fields.Float(string="Taken seats", compute='_taken_seats')
 +
 +    @api.one
@@ -25,9 +25,11 @@ diff --git a/openacademy/course.py b/openacademy/course.py
 +            self.seats_taken = 0.0
 +        else:
 +            self.seats_taken = 100.0 * len(self.attendee_ids) / self.seats
-diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml
-+++ b/openacademy/views/openacademy.xml
++
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 14:49:50.044540363 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 14:49:50.040540363 +0200
 @@ -98,6 +98,7 @@
                          <field name="start_date"/>
                          <field name="duration"/>
@@ -35,8 +37,8 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
 +                        <field name="seats_taken" widget="progressbar"/>
                      </group>
                      <separator string="Attendees" colspan="4"/>
-                     <field name="attendee_ids" colspan="4" nolabel="1">
-@@ -118,6 +119,7 @@
+                     <field name="attendee_ids" colspan="4" nolabel="1"/>
+@@ -112,6 +113,7 @@
                  <tree string="Session Tree">
                      <field name="name"/>
                      <field name="course_id"/>

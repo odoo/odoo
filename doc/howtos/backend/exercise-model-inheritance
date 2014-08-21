@@ -1,15 +1,17 @@
 # HG changeset patch
 # Parent d903c828fb10f2b38e5f43e9ceaeae0a9db7f858
 
-diff --git a/openacademy/__init__.py b/openacademy/__init__.py
---- a/openacademy/__init__.py
-+++ b/openacademy/__init__.py
-@@ -1,1 +1,2 @@
+Index: doc-backend/openacademy/__init__.py
+===================================================================
+--- doc-backend.orig/openacademy/__init__.py	2014-08-21 15:13:13.756591893 +0200
++++ doc-backend/openacademy/__init__.py	2014-08-21 15:13:13.748591893 +0200
+@@ -1 +1,2 @@
 +import partner
  import course
-diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
---- a/openacademy/__openerp__.py
-+++ b/openacademy/__openerp__.py
+Index: doc-backend/openacademy/__openerp__.py
+===================================================================
+--- doc-backend.orig/openacademy/__openerp__.py	2014-08-21 15:13:13.756591893 +0200
++++ doc-backend/openacademy/__openerp__.py	2014-08-21 15:13:13.748591893 +0200
 @@ -12,6 +12,7 @@
          - attendees registration""",
      'data' : [
@@ -18,30 +20,10 @@ diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
      ],
      'demo': [
          'demo.xml',
-diff --git a/openacademy/course.py b/openacademy/course.py
---- a/openacademy/course.py
-+++ b/openacademy/course.py
-@@ -23,14 +23,5 @@ class Session(models.Model):
-     instructor_id = fields.Many2one('res.partner', string="Instructor")
-     course_id = fields.Many2one('openacademy.course',
-         ondelete='cascade', string="Course", required=True)
--    attendee_ids = fields.One2many(
--        'openacademy.attendee', 'session_id', string="Attendees")
--
--class Attendee(models.Model):
--    _name = 'openacademy.attendee'
--    _rec_name = 'partner_id'
--
--    partner_id = fields.Many2one('res.partner',
--        string="Partner", required=True, ondelete='cascade')
--    session_id = fields.Many2one('openacademy.session',
--        string="Session", required=True, ondelete='cascade')
-+    attendee_ids = fields.Many2many(
-+        'res.partner', string="Attendees")
-diff --git a/openacademy/partner.py b/openacademy/partner.py
-new file mode 100644
---- /dev/null
-+++ b/openacademy/partner.py
+Index: doc-backend/openacademy/partner.py
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ doc-backend/openacademy/partner.py	2014-08-21 15:13:13.748591893 +0200
 @@ -0,0 +1,11 @@
 +# -*- coding: utf-8 -*-
 +from openerp import fields, models
@@ -54,23 +36,11 @@ new file mode 100644
 +    instructor = fields.Boolean("Instructor", default=False)
 +
 +    session_ids = fields.Many2many('openacademy.session', string="Attended Sessions")
-diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml
-+++ b/openacademy/views/openacademy.xml
-@@ -104,7 +104,7 @@
-                         <!-- ’editable’ attribute will set the position
-                              to push new elements in the list -->
-                         <tree string="" editable="bottom">
--                            <field name="partner_id"/>
-+                            <field name="name"/>
-                         </tree>
-                     </field>
-                 </form>
-diff --git a/openacademy/views/partner.xml b/openacademy/views/partner.xml
-new file mode 100644
---- /dev/null
-+++ b/openacademy/views/partner.xml
-@@ -0,0 +1,27 @@
+Index: doc-backend/openacademy/views/partner.xml
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ doc-backend/openacademy/views/partner.xml	2014-08-21 15:13:26.748592370 +0200
+@@ -0,0 +1,28 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 + <openerp>
 +    <data>
@@ -86,6 +56,7 @@ new file mode 100644
 +                </field>
 +            </field>
 +        </record>
++
 +        <record model="ir.actions.act_window" id="contact_list_action">
 +            <field name="name">Contacts</field>
 +            <field name="res_model">res.partner</field>

@@ -1,40 +1,32 @@
 # HG changeset patch
 # Parent a6e217b1fbbc64111581c269629b1c25c23abb99
 
-diff --git a/openacademy/course.py b/openacademy/course.py
---- a/openacademy/course.py
-+++ b/openacademy/course.py
-@@ -6,16 +6,25 @@ class Course(models.Model):
- 
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-21 14:24:24.376484356 +0200
++++ doc-backend/openacademy/course.py	2014-08-21 14:26:35.040489152 +0200
+@@ -7,6 +7,9 @@
      name = fields.Char(string="Title", required=True)
      description = fields.Text()
+ 
 +    responsible_id = fields.Many2one('res.users',
 +        ondelete='set null', string="Responsible", index=True)
++
  
  class Session(models.Model):
      _name = 'openacademy.session'
- 
--    name = fields.Char(string="Name", required=True)
-+    name = fields.Char(required=True)
-     start_date = fields.Date()
+@@ -16,3 +19,7 @@
      duration = fields.Float(digits=(6, 2), help="Duration in days")
      seats = fields.Integer(string="Number of seats")
+ 
 +    instructor_id = fields.Many2one('res.partner', string="Instructor")
 +    course_id = fields.Many2one('openacademy.course',
 +        ondelete='cascade', string="Course", required=True)
- 
- class Attendee(models.Model):
-     _name = 'openacademy.attendee'
-+    _rec_name = 'partner_id'
- 
--    name = fields.Char()
-+    partner_id = fields.Many2one('res.partner',
-+        string="Partner", required=True, ondelete='cascade')
-+    session_id = fields.Many2one('openacademy.session',
-+        string="Session", required=True, ondelete='cascade')
-diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml
-+++ b/openacademy/views/openacademy.xml
++
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 14:24:24.376484356 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 14:25:48.000000000 +0200
 @@ -63,5 +63,16 @@
          <!-- Full id location:
               action="openacademy.course_list_action"

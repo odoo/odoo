@@ -1,9 +1,10 @@
 # HG changeset patch
 # Parent 1299668a15a9359d4ef77d8f5231816c7de476fa
 
-diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml
-+++ b/openacademy/views/openacademy.xml
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 14:43:18.968526007 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 14:45:10.264530092 +0200
 @@ -19,12 +19,18 @@
                      <sheet>
                          <group>
@@ -43,7 +44,7 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
  
          <!-- window action -->
          <!--
-@@ -64,6 +81,47 @@
+@@ -64,6 +81,41 @@
               action="openacademy.course_list_action"
               It is not required when it is the same module -->
  
@@ -66,13 +67,7 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
 +                        <field name="seats"/>
 +                    </group>
 +                    <separator string="Attendees" colspan="4"/>
-+                    <field name="attendee_ids" colspan="4" nolabel="1">
-+                        <!-- ’editable’ attribute will set the position
-+                             to push new elements in the list -->
-+                        <tree string="" editable="bottom">
-+                            <field name="partner_id"/>
-+                        </tree>
-+                    </field>
++                    <field name="attendee_ids" colspan="4" nolabel="1"/>
 +                </form>
 +            </field>
 +        </record>

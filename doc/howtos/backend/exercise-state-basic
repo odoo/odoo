@@ -1,10 +1,11 @@
 # HG changeset patch
 # Parent 8c721171aa16a41e94059f53d6780c67b5ef2dfc
 
-diff --git a/openacademy/course.py b/openacademy/course.py
---- a/openacademy/course.py
-+++ b/openacademy/course.py
-@@ -70,6 +70,24 @@ class Session(models.Model):
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-21 15:01:59.020567124 +0200
++++ doc-backend/openacademy/course.py	2014-08-21 15:01:59.016567124 +0200
+@@ -67,6 +67,24 @@
      attendees_count = fields.Integer(
          string="Attendees count", compute='_get_attendees_count', store=True)
  
@@ -29,10 +30,11 @@ diff --git a/openacademy/course.py b/openacademy/course.py
      @api.one
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
---- a/openacademy/views/openacademy.xml
-+++ b/openacademy/views/openacademy.xml
-@@ -91,27 +91,42 @@
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 15:01:59.020567124 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 15:03:27.436570369 +0200
+@@ -91,21 +91,36 @@
              <field name="model">openacademy.session</field>
              <field name="arch" type="xml">
                  <form string="Session Form">
@@ -50,10 +52,7 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
 -                        <field name="seats_taken" widget="progressbar"/>
 -                    </group>
 -                    <separator string="Attendees" colspan="4"/>
--                    <field name="attendee_ids" colspan="4" nolabel="1">
--                        <!-- ’editable’ attribute will set the position
--                             to push new elements in the list -->
--                        <tree string="" editable="bottom">
+-                    <field name="attendee_ids" colspan="4" nolabel="1"/>
 +                    <header>
 +                        <button name="action_draft" type="object"
 +                                string="Reset to draft"
@@ -71,9 +70,7 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
 +                        <group colspan="2" col="2">
 +                            <separator string="General" colspan="2"/>
 +                            <field name="course_id"/>
-                             <field name="name"/>
--                        </tree>
--                    </field>
++                            <field name="name"/>
 +                            <field name="instructor_id"/>
 +                        </group>
 +                        <group colspan="2" col="2">
@@ -84,13 +81,7 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
 +                            <field name="seats_taken" widget="progressbar"/>
 +                        </group>
 +                        <separator string="Attendees" colspan="4"/>
-+                        <field name="attendee_ids" colspan="4" nolabel="1">
-+                            <!-- ’editable’ attribute will set the position
-+                                 to push new elements in the list -->
-+                            <tree string="" editable="bottom">
-+                                <field name="name"/>
-+                            </tree>
-+                        </field>
++                        <field name="attendee_ids" colspan="4" nolabel="1"/>
 +                    </sheet>
                  </form>
              </field>
