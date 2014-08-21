@@ -746,16 +746,6 @@ function openerp_picking_widgets(instance){
             this.$('.js_pick_menu').click(function(){ self.menu(); });
             this.$('.js_reload_op').click(function(){ self.reload_pack_operation();});
 
-            this.hotkey_handler = function(event){
-                if(event.keyCode === 37 ){  // Left Arrow
-                    self.picking_prev();
-                }else if(event.keyCode === 39){ // Right Arrow
-                    self.picking_next();
-                }
-            };
-
-            $('body').on('keyup',this.hotkey_handler);
-
             $.when(this.loaded).done(function(){
                 self.picking_editor = new module.PickingEditorWidget(self);
                 self.picking_editor.replace(self.$('.oe_placeholder_picking_editor'));
@@ -1027,7 +1017,6 @@ function openerp_picking_widgets(instance){
             this._super();
             // this.disconnect_numpad();
             this.barcode_scanner.disconnect();
-            $('body').off('keyup',this.hotkey_handler);
             instance.webclient.set_content_full_screen(false);
         },
     });
