@@ -603,6 +603,22 @@ Inheritance
 Model inheritance
 -----------------
 
+Odoo provides two *inheritance* mechanisms to extend an existing model in a
+modular way.
+
+The first inheritance mechanism allows a module to modify the behavior of a
+model defined in another module:
+
+- add fields to a model,
+- override the definition of fields on a model,
+- add constraints to a model,
+- add methods to a model,
+- override existing methods on a model.
+
+The second inheritance mechanism (delegation) allows to link every record of a
+model to a record in a parent model, and provides transparent access to the
+fields of the parent record.
+
 .. image:: backend/inheritance_methods.png
     :align: center
 
@@ -614,9 +630,9 @@ Model inheritance
 View inheritance
 ----------------
 
-Rather than modify existing views in place (by overwriting them), Odoo uses
-view inheritance where children "extension" views are applied on top of root
-views and can add or remove content from their parent.
+Instead of modifying existing views in place (by overwriting them), Odoo
+provides view inheritance where children "extension" views are applied on top of
+root views, and can add or remove content from their parent.
 
 An extension view references its parent using the ``inherit_id`` field, and
 instead of a single view its ``arch`` field is composed of any number of
@@ -681,9 +697,9 @@ instead of a single view its ``arch`` field is composed of any number of
 Domains
 #######
 
-In Odoo, :ref:`reference/orm/domains` are lists of criteria used to select a subset
-of a model's records. Each criteria is a triple of a field name, an operator
-and a value.
+In Odoo, :ref:`reference/orm/domains` are values that encode conditions on
+records. A domain is a  list of criteria used to select a subset of a model's
+records. Each criteria is a triple with a field name, an operator and a value.
 
 For instance, when used on the *Product* model the following domain selects
 all *services* with a unit price over *1000*::
@@ -703,7 +719,7 @@ services *OR* have a unit price which is *NOT* between 1000 and 2000"::
             ('unit_price', '<', 2000)]
 
 A ``domain`` parameter can be added to relational fields to limit valid
-records for the relation when trying to select records in the client UI.
+records for the relation when trying to select records in the client interface.
 
 .. admonition:: Exercise 2 — Domains on relational fields
     :class: exercise
