@@ -68,16 +68,11 @@ class main(http.Controller):
     @http.route('/slides/channels', type='http', auth="public", website=True)
     def channels(self, *args, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        attachment = pool['ir.attachment']
         directory = pool['document.directory']
-        dir_group = attachment.read_group(
-            cr, uid, [], [],
-            groupby="parent_id", orderby=False, context=context)
-        ids = [group['parent_id'][0] for group in dir_group if group['parent_id']]
-        channels = directory.browse(cr, uid, ids, context)
         user = pool['res.users'].browse(cr, uid, uid, context)
 
-        # todo: pass count of read_group to display number of slides in channels
+        ids = directory.search(cr, uid, [('website_published','=', True)], context=context)
+        channels = directory.browse(cr, uid, ids, context)
         return request.website.render('website_slides.channels',{'channels': channels, 'user': user})
 
     @http.route(['/slides',
