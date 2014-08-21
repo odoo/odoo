@@ -694,7 +694,7 @@
             <field name="res_model">account.move.line</field>
             <field name="tag">manual_reconciliation_view</field>
         </record>
-        <menuitem id="menu_bank_manual_reconciliation" name="NEW Manual Reconciliation" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_manual_reconcile" sequence="21"/>
+        <menuitem id="menu_bank_manual_reconciliation" name="Manual Reconciliation" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_manual_reconcile"/>
 
 
         <record id="view_account_statement_operation_template_form" model="ir.ui.view">
@@ -1299,44 +1299,6 @@
             <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
             <field name="view_id" ref="view_move_line_tree"/>
         </record>
-        <record id="view_move_line_tree_reconcile" model="ir.ui.view">
-            <field name="model">account.move.line</field>
-            <field eval="24" name="priority"/>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree_account_reconciliation colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false">
-                    <field name="date"/>
-                    <field name="move_id"/>
-                    <field name="ref"/>
-                    <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="account_id"/>
-                    <field name="period_id" invisible="1"/>
-                    <field name="journal_id" invisible="1"/>
-                    <field name="reconcile_partial_id"/>
-                    <field name="state" invisible="1"/>
-                    <field name="debit" sum="Total debit"/>
-                    <field name="credit" sum="Total credit"/>
-                </tree_account_reconciliation>
-            </field>
-        </record>
-        <record id="action_account_manual_reconcile" model="ir.actions.act_window">
-            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
-            <field name="name">Journal Items to Reconcile</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="view_move_line_tree_reconcile"/>
-            <field name="view_mode">tree_account_reconciliation</field>
-            <field name="help" type="html">
-                <p>
-                    No journal items found.
-                </p>
-            </field>
-        </record>
-        <menuitem
-             name="Manual Reconciliation"
-             action="action_account_manual_reconcile"
-             id="menu_manual_reconcile"
-             parent="account.periodical_processing_reconciliation"/>
 
         <!-- Account.Entry Edition -->
         <record id="view_move_tree" model="ir.ui.view">
