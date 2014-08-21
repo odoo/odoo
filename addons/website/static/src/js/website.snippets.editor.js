@@ -657,7 +657,7 @@
         },
 
         _bind_li_menu: function () {
-            this.$el.filter("li:hasData")
+            this.$el.filter("li:hasData").find('a:first')
                 .off('mouseenter click')
                 .on('mouseenter click', _.bind(this._mouse, this));
 
