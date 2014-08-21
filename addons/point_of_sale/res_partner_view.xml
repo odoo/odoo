@@ -7,14 +7,12 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Point of Sale"> 
-                        <group>
-                            <field name="ean13" />
-                            <button name="edit_ean" type="object" string="Edit" />
-                        </group>
-                    </page>
-                </notebook>
+                <group name="point_of_sale" position="replace">
+                    <group string="Point of Sale">
+                        <field name="ean13" />
+                        <button name="edit_ean" type="object" string="Edit" />
+                    </group>
+                </group>
             </field>
         </record>
 

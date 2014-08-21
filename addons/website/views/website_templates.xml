@@ -129,7 +129,7 @@
                                     <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
-                                                <span t-esc="user_id.name"/>
+                                                <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') or user_id.name"/>
                                                 <span class="caret"></span>
                                             </b>
                                         </a>
@@ -239,7 +239,7 @@
 
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer_container']" position="replace">
-        <div class="oe_structure">
+        <div class="oe_structure" id="footer">
             <section data-snippet-id='three-columns' class="mt16 mb16">
                 <div class="container">
                     <div class="row">
@@ -269,7 +269,7 @@
 </template>
 
 <template id="footer_default" inherit_id="website.footer_custom" optional="enabled" name="Automatic Footer">
-    <xpath expr="//div[@class='oe_structure']" position="replace">
+    <xpath expr="//div[@id='footer']" position="replace">
         <div class="container hidden-print">
             <div class="row">
                 <div class="col-md-3">

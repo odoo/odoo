@@ -34,7 +34,6 @@
             <field name="model">project.issue.report</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <field name="creation_date"/>
                     <field name="project_id"/>
                     <field name="user_id"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
@@ -54,9 +53,7 @@
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}" help="Creation Date"/>
-                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Creation Date"/>
-                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'name'}" help="Creation Date"/>
+                        <filter string="Create Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" help="Create Date"/>
                         <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}"/>
                    </group>
                </search>

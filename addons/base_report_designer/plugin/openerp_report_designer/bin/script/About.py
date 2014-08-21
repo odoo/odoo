@@ -32,7 +32,7 @@ class About(unohelper.Base, XJobExecutor):
         self.ctx     = ctx
         self.module  = "openerp_report"
         self.version = "0.1"
-        self.win = DBModalDialog(60, 50, 175, 115, "About OpenERP Report Designer")
+        self.win = DBModalDialog(60, 50, 175, 115, "About Odoo Report Designer")
 
         fdBigFont = createUnoStruct("com.sun.star.awt.FontDescriptor")
         fdBigFont.Width = 20
@@ -61,7 +61,7 @@ class About(unohelper.Base, XJobExecutor):
         oLabelProdDesc.Model.Align = 1
         oLabelProdDesc.Model.FontRelief = 1
         oLabelProdDesc.Model.MultiLine = True
-        oLabelProdDesc.Text = "This  package  helps  you  to  create  or  modify\nreports  in  OpenERP.  Once  connected  to  the\nserver, you can design your template of reports\nusing fields  and expressions  and  browsing the\ncomplete structure of OpenERP object database."
+        oLabelProdDesc.Text = "This  package  helps  you  to  create  or  modify\nreports  in  Odoo.  Once  connected  to  the\nserver, you can design your template of reports\nusing fields  and expressions  and  browsing the\ncomplete structure of Odoo object database."
 
         oLabelFooter = self.win.addFixedText("lblFooter", -1, -1, 173, 25)
         oLabelFooter.Model.TextColor = 255
@@ -75,7 +75,7 @@ class About(unohelper.Base, XJobExecutor):
         oLabelFooter.Model.Align = 1
         oLabelFooter.Model.FontRelief = 1
         oLabelFooter.Model.MultiLine = True
-        sMessage = "OpenERP Report Designer v1.0 \nCopyright 2007-TODAY Tiny sprl \nThis product is free software, under the GNU Affero General Public License."
+        sMessage = "Odoo Report Designer v1.0 \nCopyright 2007-TODAY Tiny sprl \nThis product is free software, under the GNU Affero General Public License."
         oLabelFooter.Text = sMessage
 
         self.win.doModalDialog("",None)

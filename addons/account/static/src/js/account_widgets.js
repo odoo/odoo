@@ -139,7 +139,7 @@ openerp.account = function (instance) {
             }
     
             // Retreive statement infos and reconciliation data from the model
-            var lines_filter = [['journal_entry_id', '=', false]];
+            var lines_filter = [['journal_entry_id', '=', false], ['account_id', '=', false]];
             var deferred_promises = [];
     
             if (self.statement_id) {

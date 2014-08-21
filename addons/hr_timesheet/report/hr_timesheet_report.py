@@ -8,11 +8,6 @@ class hr_timesheet_report(osv.osv):
     _description = "Timesheet"
     _auto = False
     _columns = {
-        'year': fields.char('Year',size=64,required=False, readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'date': fields.date('Date', readonly=True),
         'name': fields.char('Description', size=64,readonly=True),
         'product_id' : fields.many2one('product.product', 'Product',readonly=True),
@@ -29,9 +24,6 @@ class hr_timesheet_report(osv.osv):
         select_str = """
              SELECT min(hat.id) as id,
                     aal.date as date,
-                    to_char(aal.date, 'YYYY-MM-DD') as day,
-                    to_char(aal.date,'YYYY') as year,
-                    to_char(aal.date,'MM') as month,
                     sum(aal.amount) as cost,
                     sum(aal.unit_amount) as quantity,
                     aal.account_id as account_id,

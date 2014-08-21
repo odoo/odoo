@@ -222,27 +222,18 @@ class procurement_order(osv.osv):
         '''
         if procurement.rule_id and procurement.rule_id.action == 'move':
             uom_obj = self.pool.get('product.uom')
-            done_test_list = []
-            done_cancel_test_list = []
-            qty_done = 0
-            for move in procurement.move_ids:
-                done_test_list.append(move.state == 'done')
-                done_cancel_test_list.append(move.state in ('done', 'cancel'))
-                qty_done += move.product_qty if move.state == 'done' else 0
-            qty_done = uom_obj._compute_qty(cr, uid, procurement.product_id.uom_id.id, qty_done, procurement.product_uom.id)
-            at_least_one_done = any(done_test_list)
+            cancel_test_list = [x.state == 'cancel' for x in procurement.move_ids]
+            done_cancel_test_list = [x.state in ('done', 'cancel') for x in procurement.move_ids]
+            at_least_one_cancel = any(cancel_test_list)
             all_done_or_cancel = all(done_cancel_test_list)
+            all_cancel = all(cancel_test_list)
             if not all_done_or_cancel:
                 return False
-            elif all_done_or_cancel and procurement.product_qty == qty_done:
+            elif all_done_or_cancel and not all_cancel:
                 return True
-            elif at_least_one_done:
-                #some move cancelled and some validated
-                self.message_post(cr, uid, [procurement.id], body=_('Some stock moves have been cancelled for this procurement. Run the procurement again to trigger a move for the remaining quantity or change the procurement quantity to finish it directly'), context=context)
-            else:
-                #all move are cancelled
+            elif all_cancel:
                 self.message_post(cr, uid, [procurement.id], body=_('All stock moves have been cancelled for this procurement.'), context=context)
-            self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)    
+            self.write(cr, uid, [procurement.id], {'state': 'cancel'}, context=context)
             return False
 
         return super(procurement_order, self)._check(cr, uid, procurement, context)

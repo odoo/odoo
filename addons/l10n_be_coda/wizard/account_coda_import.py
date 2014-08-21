@@ -167,13 +167,13 @@ class account_coda_import(osv.osv_memory):
                     statement['lines'].append(statementLine)
                 elif line[1] == '2':
                     if statement['lines'][-1]['ref'][0:4] != line[2:6]:
-                        raise osv.except_osv(_('Error') + 'R2004', _('CODA parsing error on movement data record 2.2, seq nr %s! Please report this issue via your OpenERP support channel.') % line[2:10])
+                        raise osv.except_osv(_('Error') + 'R2004', _('CODA parsing error on movement data record 2.2, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     statement['lines'][-1]['communication'] += rmspaces(line[10:63])
                     statement['lines'][-1]['payment_reference'] = rmspaces(line[63:98])
                     statement['lines'][-1]['counterparty_bic'] = rmspaces(line[98:109])
                 elif line[1] == '3':
                     if statement['lines'][-1]['ref'][0:4] != line[2:6]:
-                        raise osv.except_osv(_('Error') + 'R2005', _('CODA parsing error on movement data record 2.3, seq nr %s! Please report this issue via your OpenERP support channel.') % line[2:10])
+                        raise osv.except_osv(_('Error') + 'R2005', _('CODA parsing error on movement data record 2.3, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     if statement['version'] == '1':
                         statement['lines'][-1]['counterpartyNumber'] = rmspaces(line[10:22])
                         statement['lines'][-1]['counterpartyName'] = rmspaces(line[47:73])
@@ -206,11 +206,11 @@ class account_coda_import(osv.osv_memory):
                     statement['lines'].append(infoLine)
                 elif line[1] == '2':
                     if infoLine['ref'] != rmspaces(line[2:10]):
-                        raise osv.except_osv(_('Error') + 'R3004', _('CODA parsing error on information data record 3.2, seq nr %s! Please report this issue via your OpenERP support channel.') % line[2:10])
+                        raise osv.except_osv(_('Error') + 'R3004', _('CODA parsing error on information data record 3.2, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     statement['lines'][-1]['communication'] += rmspaces(line[10:100])
                 elif line[1] == '3':
                     if infoLine['ref'] != rmspaces(line[2:10]):
-                        raise osv.except_osv(_('Error') + 'R3005', _('CODA parsing error on information data record 3.3, seq nr %s! Please report this issue via your OpenERP support channel.') % line[2:10])
+                        raise osv.except_osv(_('Error') + 'R3005', _('CODA parsing error on information data record 3.3, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     statement['lines'][-1]['communication'] += rmspaces(line[10:100])
             elif line[0] == '4':
                     comm_line = {}

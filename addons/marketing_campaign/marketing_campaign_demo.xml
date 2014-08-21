@@ -4,7 +4,7 @@
         <record id="email_template_1" model="email.template">
             <field name="name">welcome new partner</field>
             <field name="email_from">info@openerp.com</field>
-            <field name="subject">Welcome to the OpenERP Partner Channel!</field>
+            <field name="subject">Welcome to the Odoo Partner Channel!</field>
             <field name="email_to">${(object.email or '')|safe}</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="body_html">Hello, you will receive your welcome pack via email shortly.</field>
@@ -31,7 +31,7 @@
 
     <!-- Campaign -->
         <record id="marketing_campaign_openerppartnerchannel" model="marketing.campaign">
-            <field name="name">OpenERP Partner Channel</field>
+            <field name="name">Odoo Partner Channel</field>
             <field name="object_id" ref="base.model_res_partner"/>
             <field name="mode">active</field>
         </record>
@@ -82,7 +82,7 @@
         </record>
         <record id="marketing_campaign_segment0" model="marketing.campaign.segment">
             <field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="date_run"/>
-            <field name="name">OpenERP Partner</field>
+            <field name="name">Odoo Partner</field>
             <field name="sync_mode">create_date</field>
             <field name="ir_filter_id" ref="filter0"/>
             <field name="campaign_id" ref="marketing_campaign_openerppartnerchannel"/>

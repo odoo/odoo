@@ -592,6 +592,19 @@ class module(osv.osv):
             'summary': terp.get('summary', ''),
         }
 
+
+    def create(self, cr, uid, vals, context=None):
+        new_id = super(module, self).create(cr, uid, vals, context=context)
+        module_metadata = {
+            'name': 'module_%s' % vals['name'],
+            'model': 'ir.module.module',
+            'module': 'base',
+            'res_id': new_id,
+            'noupdate': True,
+        }
+        self.pool['ir.model.data'].create(cr, uid, module_metadata)
+        return new_id
+
     # update the list of available packages
     def update_list(self, cr, uid, context=None):
         res = [0, 0]    # [update, add]

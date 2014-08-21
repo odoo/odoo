@@ -53,15 +53,6 @@ class fleet_vehicle_cost(osv.Model):
         odometer_id = self.pool.get('fleet.vehicle.odometer').create(cr, uid, data, context=context)
         return self.write(cr, uid, id, {'odometer_id': odometer_id}, context=context)
 
-    def _year_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            if (record.date):
-                res[record.id] = str(time.strptime(record.date, tools.DEFAULT_SERVER_DATE_FORMAT).tm_year)
-            else:
-                res[record.id] = _('Unknown')
-        return res
-
     _columns = {
         'name': fields.related('vehicle_id', 'name', type="char", string='Name', store=True),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log'),
@@ -76,7 +67,6 @@ class fleet_vehicle_cost(osv.Model):
         'date' :fields.date('Date',help='Date when the cost has been executed'),
         'contract_id': fields.many2one('fleet.vehicle.log.contract', 'Contract', help='Contract attached to this cost'),
         'auto_generated': fields.boolean('Automatically Generated', readonly=True, required=True),
-        'year': fields.function(_year_get_fnc, type="char", string='Year', store=True),
     }
 
     _defaults ={
@@ -146,7 +136,7 @@ class fleet_vehicle_model(osv.Model):
     _columns = {
         'name': fields.function(_model_name_get_fnc, type="char", string='Name', store=True),
         'modelname': fields.char('Model name', required=True), 
-        'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
+        'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Make', required=True, help='Make of the vehicle'),
         'vendors': fields.many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors'),
         'image': fields.related('brand_id', 'image', type="binary", string="Logo"),
         'image_medium': fields.related('brand_id', 'image_medium', type="binary", string="Logo (medium)"),
@@ -170,7 +160,7 @@ class fleet_vehicle_model_brand(osv.Model):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
-        'name': fields.char('Brand Name', required=True),
+        'name': fields.char('Make', required=True),
         'image': fields.binary("Logo",
             help="This field holds the image used as logo for the brand, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
@@ -761,7 +751,7 @@ class fleet_vehicle_log_contract(osv.Model):
     def on_change_indic_cost(self, cr, uid, ids, cost_ids, context=None):
         totalsum = 0.0
         for element in cost_ids:
-            if element and len(element) == 3 and element[2] is not False:
+            if element and len(element) == 3 and element[2]:
                 totalsum += element[2].get('amount', 0.0)
         return {
             'value': {

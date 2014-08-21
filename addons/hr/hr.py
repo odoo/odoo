@@ -270,7 +270,7 @@ class hr_employee(osv.osv):
         partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, SUPERUSER_ID, user_ids, context=context)))
         self.message_post(
             cr, uid, [employee_id],
-            body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
+            body=_('Welcome to %s! Please help him/her take the first steps with Odoo!') % (employee.name),
             partner_ids=partner_ids,
             subtype='mail.mt_comment', context=context
         )

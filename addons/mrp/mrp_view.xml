@@ -45,13 +45,13 @@
                 Click to create a group of properties.
               </p><p>
                 Define specific property groups that can be assigned to your
-                bill of materials and sales orders. Properties allows OpenERP
+                bill of materials and sales orders. Properties allows Odoo
                 to automatically select the right bill of materials according
                 to properties selected in the sales order by salesperson.
               </p><p>
                 For instance, in the property group "Warranty", you an have
                 two properties: 1 year warranty, 3 years warranty. Depending
-                on the propoerties selected in the sales order, OpenERP will
+                on the propoerties selected in the sales order, Odoo will
                 schedule a production using the matching bill of materials.
               </p>
             </field>
@@ -117,12 +117,12 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new property.
               </p><p>
-                The Properties in OpenERP are used to select the right bill of
+                The Properties in Odoo are used to select the right bill of
                 materials for manufacturing a product when you have different
                 ways of building the same product.  You can assign several
                 properties to each bill of materials.  When a salesperson
                 creates a sales order, they can relate it to several properties
-                and OpenERP will automatically select the BoM to use according
+                and Odoo will automatically select the BoM to use according
                 the needs.
               </p>
             </field>
@@ -470,7 +470,7 @@
                 materials used to make a finished product; through a manufacturing
                 order or a pack of products.
               </p><p>
-                OpenERP uses these BoMs to automatically propose manufacturing
+                Odoo uses these BoMs to automatically propose manufacturing
                 orders according to procurement needs.
               </p>
             </field>
@@ -547,29 +547,21 @@
                  </xpath>
              </field>
         </record>
-        
-        <record id="product_template_form_view_inherit" model="ir.ui.view">
-             <field name="name">product.product.form.view.inherited</field>
-             <field name="model">product.product</field>
-             <field name="inherit_id" ref="product.product_normal_form_view"/>
-             <field name="arch" type="xml">
+
+        <record id="view_mrp_product_template_form_inherited" model="ir.ui.view">
+            <field name="name">product.form.mrp.inherited</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//group[@name='lot']" position="inside">
+                    <field name="track_production" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                </xpath>
                 <group name="sale_condition" position="inside">
                     <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
                     <div attrs="{'invisible':[('type','=','service')]}">
                         <field name="produce_delay" class="oe_inline"/> days
                     </div>
                 </group>
-             </field>
-        </record>
-
-        <record id="view_mrp_product_form_inherited" model="ir.ui.view">
-            <field name="name">product.form.mrp.inherited</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
-            <field name="arch" type="xml">
-                 <xpath expr="//group[@name='lot']" position="inside">
-                    <field name="track_production" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
-                </xpath>
             </field>
         </record>
         
@@ -1052,6 +1044,7 @@
             <field name="res_model">mrp.production</field>
             <field name="view_id" ref="mrp_production_tree_view"/>
         </record>
+
         <record model="ir.ui.view" id="product_template_form_view_bom_button">
             <field name="name">product.template.procurement</field>
             <field name="model">product.template</field>
@@ -1065,6 +1058,7 @@
                 </div>
             </field>
         </record>
+
         <record model="ir.ui.view" id="product_product_form_view_bom_button">
             <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
@@ -1072,6 +1066,24 @@
             <field name="arch" type="xml">
                 <div name="buttons" position="inside">
                     <button class="oe_inline oe_stat_button" name="%(product_open_bom)d" type="action"
+                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
+                        <field string="Bill of Materials" name="bom_count" widget="statinfo" />
+                    </button>
+                    <button class="oe_inline oe_stat_button" name="action_view_mos" type="object" 
+                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
+                        <field string="Manufacturing" name="mo_count" widget="statinfo" />
+                    </button>
+                </div>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="product_normal_form_view_bom_button">
+            <field name="name">product.product.mrp.button</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <div name="buttons" position="inside">
+                    <button class="oe_inline oe_stat_button" name="action_view_bom" type="object" 
                         groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>

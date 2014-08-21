@@ -430,7 +430,7 @@ var Tour = {
                 return Tour.error(next, "Can't reach the next step");
             }
         }
-        checkNext();
+        setTimeout(checkNext, 0);
     },
     nextStep: function (step) {
         var state = Tour.getState();
@@ -458,21 +458,17 @@ var Tour = {
             step.onload();
         }
 
-        if (next) {
+        if (state.mode === "test") {
             setTimeout(function () {
-                if (Tour.getState()) {
+                Tour.autoNextStep(state.tour, step);
+                if (next && Tour.getState()) {
                     Tour.waitNextStep();
                 }
-                if (state.mode === "test") {
-                    setTimeout(function(){
-                        Tour.autoNextStep(state.tour, step);
-                    }, Tour.defaultDelay);
-                }
-            }, next.wait || 0);
-        } else {
-            setTimeout(function(){
-                Tour.autoNextStep(state.tour, step);
-            }, Tour.defaultDelay);
+            }, step.wait || Tour.defaultDelay);
+        } else if (next) {
+            setTimeout(Tour.waitNextStep, next.wait || 0);
+        }
+        if (!next) {
             Tour.endTour();
         }
     },
@@ -544,7 +540,7 @@ var Tour = {
             
             }
         }
-        Tour.testtimer = setTimeout(autoStep, 100);
+        Tour.testtimer = setTimeout(autoStep, 0);
     },
     autoDragAndDropSnippet: function (selector) {
         var $thumbnail = $(selector).first();

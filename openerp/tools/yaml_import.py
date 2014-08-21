@@ -963,19 +963,4 @@ def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=Fa
 # keeps convention of convert.py
 convert_yaml_import = yaml_import
 
-def threaded_yaml_import(db_name, module_name, file_name, delay=0):
-    def f():
-        time.sleep(delay)
-        cr = None
-        fp = None
-        try:
-            cr = sql_db.db_connect(db_name).cursor()
-            fp = misc.file_open(file_name)
-            convert_yaml_import(cr, module_name, fp, {}, 'update', True)
-        finally:
-            if cr: cr.close()
-            if fp: fp.close()
-    threading.Thread(target=f).start()
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

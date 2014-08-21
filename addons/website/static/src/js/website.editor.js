@@ -356,7 +356,13 @@
             observer.disconnect();
             var editor = this.rte.editor;
             var root = editor.element && editor.element.$;
-            editor.destroy();
+            try {
+                editor.destroy();
+            }
+            catch(err) {
+                // Hack to avoid the lost of all changes because ckeditor fails in destroy
+                console.log("Error in editor.destroy() : " + err.toString() + "\n  " + err.stack);
+            }
             // FIXME: select editables then filter by dirty?
             var defs = this.rte.fetch_editables(root)
                 .filter('.oe_dirty')

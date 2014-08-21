@@ -87,7 +87,7 @@
       <!--Inventory control-->
       <menuitem id="menu_procurement_management_inventory" name="Incoming Products"
             parent="base.menu_purchase_root" sequence="4"/>
-      <menuitem action="stock.action_reception_picking_move" id="menu_action_picking_tree_in_move"
+      <menuitem action="stock.action_receipt_picking_move" id="menu_action_picking_tree_in_move"
             parent="menu_procurement_management_inventory" sequence="11"/>
 
     <!--Invoice control-->
@@ -108,8 +108,8 @@
             Click to create a draft invoice.
           </p><p>
             Use this menu to control the invoices to be received from your
-            supplier. OpenERP generates draft invoices from your purchase
-            orders or receptions, according to your settings.
+            supplier. Odoo generates draft invoices from your purchase
+            orders or receipts, according to your settings.
           </p><p>
             Once you receive a supplier invoice, you can match it with the
             draft invoice and validate it.
@@ -382,7 +382,7 @@
                 quotation is converted into a purchase order.
               </p><p>
                 Most propositions of purchase orders are created automatically
-                by OpenERP based on inventory needs.
+                by Odoo based on inventory needs.
               </p>
             </field>
         </record>
@@ -620,18 +620,40 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
-                   <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
-                       groups="purchase.group_purchase_user" icon="fa-shopping-cart">
-                       <field string="Purchases" name="purchase_count" widget="statinfo" />
-                   </button>
-                </xpath>
                 <field name="property_account_expense" position="replace" >
                      <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>
                 </field>
                 <field name='supplier_taxes_id' position="replace" >
                      <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
                 </field>
+            </field>
+        </record>
+        
+        <record id="view_product_template_purchase_buttons_from" model="ir.ui.view">
+            <field name="name">product.template.purchase.button.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button class="oe_inline oe_stat_button" name="action_view_purchases" type="object" 
+                       groups="purchase.group_purchase_user" icon="fa-shopping-cart">
+                       <field string="Purchases" name="purchase_count" widget="statinfo"/>
+                   </button>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="view_product_normal_purchase_buttons_from" model="ir.ui.view">
+            <field name="name">product.product.purchase.button.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
+                       groups="purchase.group_purchase_user" icon="fa-shopping-cart">
+                       <field string="Purchases" name="purchase_count" widget="statinfo"/>
+                   </button>
+                </xpath>
             </field>
         </record>
     </data>

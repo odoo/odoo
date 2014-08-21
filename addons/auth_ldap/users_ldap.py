@@ -190,7 +190,7 @@ class CompanyLDAP(osv.osv):
             if res[1]:
                 user_id = res[0]
         elif conf['create_user']:
-            _logger.debug("Creating new OpenERP user \"%s\" from LDAP" % login)
+            _logger.debug("Creating new Odoo user \"%s\" from LDAP" % login)
             user_obj = self.pool['res.users']
             values = self.map_ldap_attributes(cr, uid, conf, login, ldap_entry)
             if conf['user']:

@@ -172,7 +172,7 @@
                                 </div>
                                 <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                             </div>
-                            <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
+                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
@@ -311,11 +311,16 @@
                                 <group>
                                     <field name="ref"/>
                                     <field name="lang"/>
-                                    <field name="date"/>
                                 </group>
-                                <group>
+                            </group>
+                            <group>
+                                <group string="Mailing" name="mailing">
                                     <field name="active"/>
                                 </group>
+                            </group>
+                            <group>
+                                <group name="invoicing"/>
+                                <group name="point_of_sale"/>
                             </group>
                         </page>
                     </notebook>
@@ -424,7 +429,7 @@
               <p class="oe_view_nocontent_create">
                 Click to add a contact in your address book.
               </p><p>
-                OpenERP helps you easily track all activities related to
+                Odoo helps you easily track all activities related to
                 a customer; discussions, history of business opportunities,
                 documents, etc.
               </p>
@@ -463,7 +468,7 @@
               <p class="oe_view_nocontent_create">
                 Click to add a contact in your address book.
               </p><p>
-                OpenERP helps you easily track all activities related to
+                Odoo helps you easily track all activities related to
                 a customer: discussions, history of business opportunities,
                 documents, etc.
               </p>
@@ -483,7 +488,7 @@
               <p class="oe_view_nocontent_create">
                 Click to add a contact in your address book.
               </p><p>
-                OpenERP helps you easily track all activities related to
+                Odoo helps you easily track all activities related to
                 a supplier: discussions, history of purchases,
                 documents, etc.
               </p>

@@ -350,15 +350,6 @@ class sale_order_line(osv.osv):
 class stock_move(osv.osv):
     _inherit = 'stock.move'
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        sale_ids = []
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.procurement_id and move.procurement_id.sale_line_id:
-                sale_ids.append(move.procurement_id.sale_line_id.order_id.id)
-        if sale_ids:
-            self.pool.get('sale.order').signal_workflow(cr, uid, sale_ids, 'ship_except')
-        return super(stock_move, self).action_cancel(cr, uid, ids, context=context)
-
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
         invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
         if move.procurement_id and move.procurement_id.sale_line_id:
