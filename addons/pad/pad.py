@@ -57,7 +57,7 @@ class pad_common(osv.osv_memory):
             #get content of the real field
             for record in model.browse(cr, uid, [context["object_id"]]):
                 if record[real_field]:
-                    myPad.setText(path, html2plaintext(record[real_field]))
+                    myPad.setText(path, (html2plaintext(record[real_field]).encode('utf-8')))
                     #Etherpad for html not functional
                     #myPad.setHTML(path, record[real_field])
 

@@ -8,6 +8,7 @@ import test_fields
 import test_func
 import test_ir_actions
 import test_ir_attachment
+import test_ir_model
 import test_ir_filters
 import test_ir_sequence
 import test_ir_values
