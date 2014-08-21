@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
+# #############################################################################
 #
 # First author: Jose Ernesto Mendez <tecnologia@obsdr.com> (Open Business Solutions SRL.)
 # Copyright (c) 2012 -TODAY Open Business Solutions, SRL. (http://obsdr.com). All rights reserved.
