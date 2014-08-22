@@ -3,8 +3,8 @@
 
 Index: doc-backend/openacademy/course.py
 ===================================================================
---- doc-backend.orig/openacademy/course.py	2014-08-22 14:38:25.550786918 +0200
-+++ doc-backend/openacademy/course.py	2014-08-22 14:38:25.546786918 +0200
+--- doc-backend.orig/openacademy/course.py	2014-08-22 17:04:08.103107858 +0200
++++ doc-backend/openacademy/course.py	2014-08-22 17:04:08.099107857 +0200
 @@ -67,6 +67,24 @@
      attendees_count = fields.Integer(
          string="Attendees count", compute='_get_attendees_count', store=True)
@@ -32,9 +32,9 @@ Index: doc-backend/openacademy/course.py
      def _taken_seats(self):
 Index: doc-backend/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 14:38:25.550786918 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 14:39:11.610788609 +0200
-@@ -91,21 +91,36 @@
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 17:04:08.103107858 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 17:04:30.939108696 +0200
+@@ -91,22 +91,37 @@
              <field name="model">openacademy.session</field>
              <field name="arch" type="xml">
                  <form string="Session Form">
@@ -43,6 +43,7 @@ Index: doc-backend/openacademy/views/openacademy.xml
 -                        <field name="course_id"/>
 -                        <field name="name"/>
 -                        <field name="instructor_id"/>
+-                        <field name="active"/>
 -                    </group>
 -                    <group colspan="2" col="2">
 -                        <separator string="Schedule" colspan="2"/>
@@ -72,6 +73,7 @@ Index: doc-backend/openacademy/views/openacademy.xml
 +                            <field name="course_id"/>
 +                            <field name="name"/>
 +                            <field name="instructor_id"/>
++                            <field name="active"/>
 +                        </group>
 +                        <group colspan="2" col="2">
 +                            <separator string="Schedule" colspan="2"/>

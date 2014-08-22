@@ -739,8 +739,8 @@ records for the relation when trying to select records in the client interface.
 
         .. patch::
 
-Computed fields
-===============
+Computed fields and default values
+==================================
 
 So far fields have been stored directly in and retrieved directly from the
 database. Fields can also be *computed*. In that case, the field's value is not
@@ -820,6 +820,32 @@ field whenever some of its dependencies have been modified::
         #. Show the field in the *Session* view:
 
         .. patch::
+
+Default values
+--------------
+
+Any field can be given a default value. In the field definition, add the option
+``default=X`` where ``X`` is either a Python literal value (boolean, integer,
+float, string), or a function taking a recordset and returning a value::
+
+    name = fields.Char(default="Unknown")
+    user_id = fields.Many2one('res.users', default=lambda self: self.env.user)
+
+.. exercise:: Active objects – Default values
+
+    * Define the start_date default value as today (see
+      :class:`~openerp.fields.Date`).
+    * Add a field ``active`` in the class Session, and set sessions as active by
+      default.
+
+    .. only:: solutions
+
+        .. patch::
+
+        .. note::
+
+            Odoo has built-in rules making fields with an ``active`` field set
+            to ``False`` invisible.
 
 Onchange
 ========
@@ -931,20 +957,6 @@ and ``message`` is the error message.
     .. only:: solutions
 
         .. patch::
-
-.. exercise:: Active objects – Default values
-
-    Define the start_date default value as today. Add a field ``active`` in
-    the class Session, and set sessions as active by default.
-
-    .. only:: solutions
-
-        .. patch::
-
-        .. note::
-
-            Odoo has built-in rules making fields with an ``active`` field set
-            to ``False`` invisible.
 
 Advanced Views
 ==============

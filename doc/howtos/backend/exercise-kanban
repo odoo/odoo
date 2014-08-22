@@ -3,8 +3,8 @@
 
 Index: doc-backend/openacademy/course.py
 ===================================================================
---- doc-backend.orig/openacademy/course.py	2014-08-21 15:01:48.700566745 +0200
-+++ doc-backend/openacademy/course.py	2014-08-21 15:01:48.692566745 +0200
+--- doc-backend.orig/openacademy/course.py	2014-08-22 17:03:55.463107394 +0200
++++ doc-backend/openacademy/course.py	2014-08-22 17:03:55.459107393 +0200
 @@ -48,6 +48,7 @@
      duration = fields.Float(digits=(6, 2), help="Duration in days")
      seats = fields.Integer(string="Number of seats")
@@ -15,9 +15,9 @@ Index: doc-backend/openacademy/course.py
          domain=['|', ('instructor', '=', True),
 Index: doc-backend/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 15:01:48.700566745 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 15:01:48.692566745 +0200
-@@ -160,11 +160,57 @@
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 17:03:55.463107394 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 17:03:55.459107393 +0200
+@@ -161,11 +161,57 @@
              </field>
          </record>
  

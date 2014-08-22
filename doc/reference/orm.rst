@@ -274,9 +274,11 @@ Basic fields
 
 .. autoclass:: openerp.fields.Date
     :show-inheritance:
+    :members: today, context_today, from_string, to_string
 
 .. autoclass:: openerp.fields.Datetime
     :show-inheritance:
+    :members: now, context_timestamp, from_string, to_string
 
 .. _reference/orm/fields/relational:
 
