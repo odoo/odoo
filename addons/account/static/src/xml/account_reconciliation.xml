@@ -66,16 +66,8 @@
             <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
             <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
             <td class="cell_label"><t t-esc="line.q_label"/></td>
-            <td class="cell_debit"><t t-if="line.debit !== 0">
-                <t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t>
-                <t t-if="line.partial_reconcile" t-call="icon_undo_partial_reconciliation"></t>
-                <t t-esc="line.debit_str"/>
-            </t></td>
-            <td class="cell_credit"><t t-if="line.credit !== 0">
-                <t t-if="line.propose_partial_reconcile"><t t-call="icon_do_partial_reconciliation" /></t>
-                <t t-if="line.partial_reconcile"><t t-call="icon_undo_partial_reconciliation" /></t>
-                <t t-esc="line.credit_str"/>
-            </t></td>
+            <td class="cell_debit"><t t-if="line.debit !== 0"><t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t><t t-if="line.partial_reconcile" t-call="icon_undo_partial_reconciliation"></t><t t-esc="line.debit_str"/></t></td>
+            <td class="cell_credit"><t t-if="line.credit !== 0"><t t-if="line.propose_partial_reconcile"><t t-call="icon_do_partial_reconciliation" /></t><t t-if="line.partial_reconcile"><t t-call="icon_undo_partial_reconciliation" /></t><t t-esc="line.credit_str"/></t></td>
             <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
         </tr>
     </t>
@@ -189,13 +181,9 @@
         </table>
     </t>
 
-    <t t-name="icon_do_partial_reconciliation">
-        <i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="This move's amount is higher than the transaction's amount. Click to do a partial reconciliation"></i>
-    </t>
+    <t t-name="icon_do_partial_reconciliation"><i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="This move's amount is higher than the transaction's amount. Click to do a partial reconciliation"></i></t>
 
-    <t t-name="icon_undo_partial_reconciliation">
-        <i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i>
-    </t>
+    <t t-name="icon_undo_partial_reconciliation"><i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i></t>
 
     <t t-name="bank_statement_reconciliation_created_line">
         <tr class="created_line" t-att-data-lineid="line.id">
