@@ -782,7 +782,7 @@ class task(osv.osv):
         'project_id': _get_default_project_id,
         'date_last_stage_update': fields.datetime.now,
         'kanban_state': 'normal',
-        'priority': '1',
+        'priority': '0',
         'progress': 0,
         'sequence': 10,
         'active': True,
