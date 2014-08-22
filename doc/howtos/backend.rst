@@ -1440,9 +1440,9 @@ PO/POT files.
                By default, Odoo's export only extracts labels inside XML
                records or Python field definitions, but arbitrary Python
                strings can be marked as translatable by calling
-               :func:`openerp.tools.translate._` with them e.g. ``_("Label")``)
+               :func:`openerp._` with them e.g. ``_("Label")``)
 
-        #. Add ``from openerp.tools.translate import _`` to ``course.py`` and
+        #. Add ``from openerp import _`` to ``course.py`` and
            mark missing strings as translatable
 
            .. todo:: there isn't any!
