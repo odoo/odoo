@@ -879,6 +879,7 @@ openerp.account = function (instance) {
                 self.$(".match").slideUp(0);
                 self.$el.addClass("no_partner");
                 self.set("mode", self.context.mode);
+                self.updateAccountingViewMatchedLines();
                 self.animation_speed = self.getParent().animation_speed;
                 self.aestetic_animation_speed = self.getParent().aestetic_animation_speed;
                 self.$el.animate({opacity: 1}, self.aestetic_animation_speed);
@@ -1455,7 +1456,8 @@ openerp.account = function (instance) {
             // Should work as long as currency's rounding factor is > 0.001 (ie: don't use gold kilos as a currency)
             balance = Math.round(balance*1000)/1000;
             self.set("balance", balance);
-    
+            
+            // TODO : place elsewhere (or balance is incorrect)
             // Propose partial reconciliation if necessary
             var lines_selected_num = mv_lines_selected.length;
             var lines_created_num = self.getCreatedLines().length;
@@ -1493,6 +1495,7 @@ openerp.account = function (instance) {
                 .then(function () {
                     return $.when(self.restart(self.get("mode"))).then(function(){
                         self.is_consistent = true;
+                        self.set("mode", "match");
                     });
                 });
         },
@@ -1936,7 +1939,13 @@ openerp.account = function (instance) {
             var params = [self.data.account_id];
             if (self.data.partner_id) params.push(self.data.partner_id);
             return self.model_aml.call("get_move_lines_for_manual_reconciliation_by_account_and_parter", params).then(function(lines) {
-                if (lines.length === 0) self.persistAndDestroy();
+                var mkay, mmkay = false;
+                for (var i=0; i<lines.length; i++) {
+                    if (lines[i].credit !== 0) mkay = true;
+                    if (lines[i].debit !== 0) mmkay = true;
+                    if (mkay && mmkay) break;
+                }
+                if (!(mkay && mmkay)) self.persistAndDestroy();
                 else {
                     // TODO : mettre les nouvelles lignes dans l'ordre préexistant
                     var ids_mv_lines_selected = _.pluck(self.get("mv_lines_selected"), 'id');
