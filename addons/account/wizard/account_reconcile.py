@@ -56,7 +56,7 @@ class account_move_line_reconcile(osv.osv_memory):
         if context is None:
             context = {}
         credit = debit = 0
-        lines = self.pool.get('account.move.line').get_move_lines_for_manual_reconciliation(cr, uid, context['active_ids'], context)
+        lines = self.pool.get('account.move.line').prepare_move_lines_for_reconciliation_widget(cr, uid, context['active_ids'], context)
         for line in lines:
             credit += line['credit']
             debit += line['debit']

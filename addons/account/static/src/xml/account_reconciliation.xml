@@ -82,7 +82,10 @@
 
     <t t-name="reconciliation_move_line_details">
         <table class='details'>
+            <!-- DEBUG -->
             <tr><td>ID</td><td><t t-esc="line.id"/></td></tr>
+            <tr><td>reconcile_partial_id</td><td><t t-esc="line.reconcile_partial_id"/></td></tr>
+
             <tr t-if="line.account_code"><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
             <tr><td>Journal</td><td><t t-esc="line.journal_name"/></td></tr>
             <tr><td>Period</td><td><t t-esc="line.period_name"/></td></tr>
@@ -142,7 +145,7 @@
                     <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
                     <td class="cell_account_code"><t t-esc="line.account_code"/></td>
                     <td class="cell_due_date"><t t-esc="line.date"/></td>
-                    <td class="cell_label"><t t-esc="line.name"/>
+                    <td class="cell_label"><t t-if="line.name" t-esc="line.name"/>
                         <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td>
                     <td class="cell_debit"><t t-if="line.amount &gt; 0">
                           <t t-esc="line.amount_str"/></t></td>
@@ -268,6 +271,11 @@
             </tr></thead>
         </t>
     </t>
+
+    <t t-name="manual_reconciliation_move_line" t-extend="reconciliation_move_line">
+        <t t-jquery=".cell_account_code" t-operation="replace"></t>
+    </t>
+
 
     <t t-name="manual_reconciliation_done_message" t-extend="reconciliation_done_message">
     </t>
