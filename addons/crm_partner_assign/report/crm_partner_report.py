@@ -36,7 +36,7 @@ class crm_partner_report_assign(osv.osv):
         'date_partnership' : fields.date('Partnership Date'),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
-        'nbr_opportunities': fields.integer('# of Opportunity', readonly=True, oldname='opp'),
+        'opp': fields.integer('# of Opportunity', readonly=True),
         'turnover': fields.float('Turnover', readonly=True),
         'period_id': fields.many2one('account.period', 'Invoice Period', readonly=True),
     }
@@ -58,7 +58,7 @@ class crm_partner_report_assign(osv.osv):
                     p.date_partnership,
                     p.user_id,
                     p.section_id,
-                    (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS nbr_opportunities,
+                    (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS opp,
                     i.price_total as turnover,
                     i.period_id
                 FROM

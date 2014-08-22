@@ -27,9 +27,9 @@ class account_entries_report(osv.osv):
     _name = "account.entries.report"
     _description = "Journal Items Analysis"
     _auto = False
-    _rec_name = 'date_effective'
+    _rec_name = 'date'
     _columns = {
-        'date_effective': fields.date('Effective Date', readonly=True, oldname='date'),
+        'date': fields.date('Effective Date', readonly=True),
         'date_created': fields.date('Date Created', readonly=True),
         'date_maturity': fields.date('Date Maturity', readonly=True),
         'ref': fields.char('Reference', readonly=True),
@@ -50,7 +50,7 @@ class account_entries_report(osv.osv):
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconciliation number', readonly=True),
         'partner_id': fields.many2one('res.partner','Partner', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'product_quantity': fields.float('Products Quantity', digits=(16,2), readonly=True, oldname='quantity'),
+        'quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),
         'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
         'type': fields.selection([
             ('receivable', 'Receivable'),
@@ -67,7 +67,7 @@ class account_entries_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
 
-    _order = 'date_effective desc'
+    _order = 'date desc'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -110,7 +110,7 @@ class account_entries_report(osv.osv):
             create or replace view account_entries_report as (
             select
                 l.id as id,
-                am.date as date_effective,
+                am.date as date,
                 l.date_maturity as date_maturity,
                 l.date_created as date_created,
                 am.ref as ref,
@@ -129,7 +129,7 @@ class account_entries_report(osv.osv):
                 a.type as type,
                 a.user_type as user_type,
                 1 as nbr,
-                l.quantity as product_quantity,
+                l.quantity as quantity,
                 l.currency_id as currency_id,
                 l.amount_currency as amount_currency,
                 l.debit as debit,

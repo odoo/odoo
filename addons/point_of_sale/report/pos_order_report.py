@@ -26,7 +26,6 @@ class pos_order_report(osv.osv):
     _name = "report.pos.order"
     _description = "Point of Sale Orders Statistics"
     _auto = False
-
     _columns = {
         'date': fields.datetime('Date Order', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
@@ -39,11 +38,10 @@ class pos_order_report(osv.osv):
         'average_price': fields.float('Average Price', readonly=True,group_operator="avg"),
         'location_id':fields.many2one('stock.location', 'Location', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'nbr_lines':fields.integer('# of Lines', readonly=True, oldname='nbr'),
-        'product_qty':fields.integer('Product Quantity', readonly=True),
+        'nbr':fields.integer('# of Lines', readonly=True),
+        'product_qty':fields.integer('# of Qty', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'delay_validation': fields.integer('Delay Validation'),
-        'product_categ_id': fields.many2one('product.category', 'Product Category', readonly=True),
     }
     _order = 'date desc'
 
@@ -53,7 +51,7 @@ class pos_order_report(osv.osv):
             create or replace view report_pos_order as (
                 select
                     min(l.id) as id,
-                    count(*) as nbr_lines,
+                    count(*) as nbr,
                     s.date_order as date,
                     sum(l.qty * u.factor) as product_qty,
                     sum(l.qty * l.price_unit) as price_total,
@@ -66,15 +64,14 @@ class pos_order_report(osv.osv):
                     s.location_id as location_id,
                     s.company_id as company_id,
                     s.sale_journal as journal_id,
-                    l.product_id as product_id,
-                    pt.categ_id as product_categ_id
+                    l.product_id as product_id
                 from pos_order_line as l
                     left join pos_order s on (s.id=l.order_id)
                     left join product_product p on (p.id=l.product_id)
                     left join product_template pt on (pt.id=p.product_tmpl_id)
                     left join product_uom u on (u.id=pt.uom_id)
                 group by
-                    s.date_order, s.partner_id,s.state, pt.categ_id,
+                    s.date_order, s.partner_id,s.state,
                     s.user_id,s.location_id,s.company_id,s.sale_journal,l.product_id,s.create_date
                 having
                     sum(l.qty * u.factor) != 0)""")

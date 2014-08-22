@@ -26,10 +26,10 @@ class sale_report(osv.osv):
     _name = "sale.report"
     _description = "Sales Orders Statistics"
     _auto = False
-    _rec_name = 'date_order'
+    _rec_name = 'date'
 
     _columns = {
-        'date_order': fields.datetime('Date Order', readonly=True, oldname='date'),
+        'date': fields.datetime('Date Order', readonly=True),
         'date_confirm': fields.date('Date Confirm', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', readonly=True),
@@ -41,7 +41,7 @@ class sale_report(osv.osv):
         'price_total': fields.float('Total Price', readonly=True),
         'delay': fields.float('Commitment Delay', digits=(16,2), readonly=True),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
-        'nbr_lines': fields.integer('# of Lines', readonly=True, oldname='nbr'),
+        'nbr': fields.integer('# of Lines', readonly=True),
         'state': fields.selection([
             ('draft', 'Quotation'),
             ('waiting_date', 'Waiting Schedule'),
@@ -55,7 +55,7 @@ class sale_report(osv.osv):
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
-    _order = 'date_order desc'
+    _order = 'date desc'
 
     def _select(self):
         select_str = """
@@ -64,8 +64,8 @@ class sale_report(osv.osv):
                     t.uom_id as product_uom,
                     sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
                     sum(l.product_uom_qty * l.price_unit * (100.0-l.discount) / 100.0) as price_total,
-                    count(*) as nbr_lines,
-                    s.date_order as date_order,
+                    count(*) as nbr,
+                    s.date_order as date,
                     s.date_confirm as date_confirm,
                     s.partner_id as partner_id,
                     s.user_id as user_id,
@@ -82,7 +82,7 @@ class sale_report(osv.osv):
     def _from(self):
         from_str = """
                 sale_order_line l
-                      join sale_order s on (l.order_id=s.id)
+                      join sale_order s on (l.order_id=s.id) 
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)

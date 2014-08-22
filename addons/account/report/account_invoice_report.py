@@ -56,7 +56,7 @@ class account_invoice_report(osv.osv):
     _columns = {
         'date': fields.date('Date', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'product_qty':fields.float('Product Quantity', readonly=True),
+        'product_qty':fields.float('Qty', readonly=True),
         'uom_name': fields.char('Reference Unit of Measure', size=128, readonly=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], readonly=True),
@@ -73,7 +73,7 @@ class account_invoice_report(osv.osv):
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'user_currency_price_average': fields.function(_compute_amounts_in_user_currency, string="Average Price", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'currency_rate': fields.float('Currency Rate', readonly=True),
-        'nbr_invoices':fields.integer('# of Invoices', readonly=True, oldname='nbr'),
+        'nbr':fields.integer('# of Lines', readonly=True),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
@@ -120,7 +120,7 @@ class account_invoice_report(osv.osv):
         select_str = """
             SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id,
                 sub.payment_term, sub.period_id, sub.uom_name, sub.currency_id, sub.journal_id,
-                sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr_invoices, sub.type, sub.state,
+                sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
                 sub.product_qty, sub.price_total / cr.rate as price_total, sub.price_average /cr.rate as price_average,
                 cr.rate as currency_rate, sub.residual / cr.rate as residual, sub.commercial_partner_id as commercial_partner_id
@@ -142,7 +142,7 @@ class account_invoice_report(osv.osv):
                         ELSE u.name
                     END AS uom_name,
                     ai.currency_id, ai.journal_id, ai.fiscal_position, ai.user_id, ai.company_id,
-                    count(ail.*) AS nbr_invoices,
+                    count(ail.*) AS nbr,
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
                     SUM(CASE
@@ -226,7 +226,7 @@ class account_invoice_report(osv.osv):
                                     OR (sub.date IS NULL AND cr2.name <= NOW()))
                           ORDER BY name DESC LIMIT 1)
         )""" % (
-                    self._table,
+                    self._table, 
                     self._select(), self._sub_select(), self._from(), self._group_by()))
 
 

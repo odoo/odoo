@@ -552,28 +552,6 @@ Andrew</field>
             <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/> -->
         </record>
 
-        <record id="crm_case_27" model="crm.lead">
-            <field name="type">opportunity</field>
-            <field name="name">Interest in your products</field>
-            <field eval="20000" name="planned_revenue"/>
-            <field eval="0.0" name="probability"/>
-            <field name="partner_name">Agrolait</field>
-            <field name="email_from">info@agrolait.com</field>
-            <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="street">69 rue de Chimay</field>
-            <field name="country_id" ref="base.be"/>
-            <field name="city">Wavre</field>
-            <field name="zip">1300</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor2])]"/>
-            <field name="priority">2</field>
-            <field eval="time.strftime('%Y-%m-23')" name="date_deadline"/>
-            <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
-            <field name="title_action">Send Catalogue by Email</field>
-            <field name="section_id" ref="sales_team.crm_case_section_2"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-        </record>
-
         <!-- Some messages linked to the previous opportunities -->
         <record id="msg_case15_attach1" model="ir.attachment">
             <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
