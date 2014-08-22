@@ -120,14 +120,18 @@
         -->
     <t t-name="mail.thread.list_recipients">
         <div class="oe_mail_list_recipients" t-if="!widget.is_log">
-            To:
             <t t-if="!widget.is_private">
                 <span class="oe_all_follower">
                     <t t-if="widget.parent_thread.parent_message.record_name">
-                        Followers of <t t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'"/>
+                        To: Followers of <t t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'"/>
                     </t>
-                    <t t-if="!widget.parent_thread.parent_message.record_name and widget.options.view_inbox">My Followers</t>
-                    <t t-if="!widget.parent_thread.parent_message.record_name and !widget.options.view_inbox">Followers of this document</t>
+                   <t t-if="!widget.parent_thread.parent_message.record_name and widget.options.view_inbox">To: My Followers</t>
+                    <t t-if="!widget.parent_thread.parent_message.record_name and !widget.options.view_inbox">
+                        <t t-if="widget.followers.value.length == 1 and widget.followers.message_is_follower === true">Only you follow this document <a class="oe_invite_click">Add Followers</a></t>
+                        <t t-if="widget.followers.value.length == 1 and widget.followers.message_is_follower === false">To: Followers of this Document</t>
+                        <t t-if="widget.followers.value.length > 1">To: Followers of this Document</t>
+                        <t t-if="widget.followers.value.length == 0"> No one follow this document <a class="oe_invite_click">Add Followers</a></t>
+                    </t>
                 </span>
             </t>
             <t t-set="inc" t-value="0"/>
