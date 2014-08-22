@@ -31,7 +31,7 @@ class purchase_report(osv.osv):
     _description = "Purchases Orders"
     _auto = False
     _columns = {
-        'date': fields.date('Order Date', readonly=True, help="Date on which this document has been created"),
+        'date_order': fields.datetime('Order Date', readonly=True, oldname='date', help="Date on which this document has been created"),
         'state': fields.selection([('draft', 'Request for Quotation'),
                                      ('confirmed', 'Waiting Supplier Ack'),
                                       ('approved', 'Approved'),
@@ -52,23 +52,23 @@ class purchase_report(osv.osv):
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
         'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),
         'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True),
-        'quantity': fields.float('Quantity', readonly=True),
+        'unit_quantity': fields.integer('Unit Quantity', readonly=True, oldname='quantity'),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
-        'nbr': fields.integer('# of Lines', readonly=True),
+        'nbr_lines': fields.integer('# of Lines', readonly=True, oldname='nbr'),
         'category_id': fields.many2one('product.category', 'Category', readonly=True)
 
     }
-    _order = 'date desc, price_total desc'
+    _order = 'date_order desc, price_total desc'
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'purchase_report')
         cr.execute("""
             create or replace view purchase_report as (
                 select
                     min(l.id) as id,
-                    date(s.date_order) as date,
+                    s.date_order as date_order,
                     s.state,
                     s.date_approve,
                     s.minimum_planned_date as expected_date,
@@ -83,10 +83,10 @@ class purchase_report(osv.osv):
                     t.categ_id as category_id,
                     t.uom_id as product_uom,
                     s.location_id as location_id,
-                    sum(l.product_qty/u.factor*u2.factor) as quantity,
+                    sum(l.product_qty/u.factor*u2.factor) as unit_quantity,
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
-                    count(*) as nbr,
+                    count(*) as nbr_lines,
                     sum(l.price_unit*l.product_qty)::decimal(16,2) as price_total,
                     avg(100.0 * (l.price_unit*l.product_qty) / NULLIF(ip.value_float*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
                     sum(ip.value_float*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,

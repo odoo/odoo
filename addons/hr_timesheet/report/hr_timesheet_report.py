@@ -16,8 +16,8 @@ class hr_timesheet_report(osv.osv):
         'user_id': fields.many2one('res.users', 'User',readonly=True),
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account',readonly=True),
         'company_id': fields.many2one('res.company', 'Company',readonly=True),
-        'cost': fields.float('#Cost',readonly=True, digits_compute=dp.get_precision('Account')),
-        'quantity': fields.float('Time',readonly=True),
+        'cost': fields.float('Cost', readonly=True, digits_compute=dp.get_precision('Account')),
+        'time': fields.float('Time', readonly=True, oldname='quantity'),
     }
 
     def _select(self):
@@ -25,7 +25,7 @@ class hr_timesheet_report(osv.osv):
              SELECT min(hat.id) as id,
                     aal.date as date,
                     sum(aal.amount) as cost,
-                    sum(aal.unit_amount) as quantity,
+                    sum(aal.unit_amount) as time,
                     aal.account_id as account_id,
                     aal.journal_id as journal_id,
                     aal.product_id as product_id,

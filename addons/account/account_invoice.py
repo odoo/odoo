@@ -83,7 +83,7 @@ class account_invoice(models.Model):
         return journal.currency or journal.company_id.currency_id
 
     @api.model
-    @api.returns('account.analytic.journal')
+    @api.returns('account.analytic.journal', lambda r: r.id)
     def _get_journal_analytic(self, inv_type):
         """ Return the analytic journal corresponding to the given invoice type. """
         journal_type = TYPE2JOURNAL.get(inv_type, 'sale')
@@ -91,7 +91,7 @@ class account_invoice(models.Model):
         if not journal:
             raise except_orm(_('No Analytic Journal!'),
                 _("You must define an analytic journal of type '%s'!") % (journal_type,))
-        return journal
+        return journal[0]
 
     @api.one
     @api.depends('account_id', 'move_id.line_id.account_id', 'move_id.line_id.reconcile_id')
