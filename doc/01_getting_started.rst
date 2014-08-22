@@ -97,7 +97,7 @@ General Options
   --version                           show program version number and exit
   -h, --help                          show this help message and exit
   -c CONFIG, --config=CONFIG          specify alternate config file
-  -s, --save                          save configuration to ~/.terp_serverrc
+  -s, --save                          save configuration to ~/.odoo_serverrc
   -v, --verbose                       enable debugging
   --pidfile=PIDFILE                   file where the server pid will be stored
   --logfile=LOGFILE                   file where the server log will be stored
@@ -160,7 +160,7 @@ Configuration
 Two configuration files are available:
 
     * one for the client: ``~/.openerprc``
-    * one for the server: ``~/.openerp_serverrc``
+    * one for the server: ``~/.odoo_serverrc``
 
 If they are not found, the server and the client will start with a
 default configuration. Those files follow the convention used by
@@ -186,7 +186,7 @@ server/bin/addons. It is possible to add new addons by
  - specifying another directory containing addons to the server. The
    later can be accomplished either by running the server with the
    ``--addons-path=`` option, or by configuring this option in the
-   openerp_serverrc file, automatically generated under Linux in your
+   odoo_serverrc file, automatically generated under Linux in your
    home directory by the server when executed with the ``--save``
    option. You can provide several addons to the ``addons_path`` =
    option, separating them using commas.
