@@ -37,7 +37,7 @@ Running the server
 .. option:: -s, --save
 
     saves the server configuration to the current configuration file
-    (:file:`{$HOME}/.openerp_serverrc` by default, overridable using
+    (:file:`{$HOME}/.odoo_serverrc` by default, overridable using
     :option:`-c`)
 
 .. _reference/cmdline/scaffold:
@@ -77,7 +77,7 @@ Configuration file
 Most of the command-line options can also be specified via a configuration
 file.
 
-The default configuration file is :file:`{$HOME}/.openerp_serverrc` which
+The default configuration file is :file:`{$HOME}/.odoo_serverrc` which
 can be overridden using :option:`--config <odoo.py -c>`. Specifying
 :option:`--save <odoo.py -s>` will save the current configuration state back
 to that file.
