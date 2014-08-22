@@ -1,0 +1,3 @@
+import mail_docsaway_customer_wizard
+import mail_docsaway_single_wizard
+import mail_docsaway_multiple_wizard

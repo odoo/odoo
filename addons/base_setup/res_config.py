@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 import re
 from openerp.report.render.rml2pdf import customfonts
 
+
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
@@ -36,6 +37,7 @@ class base_config_settings(osv.osv_memory):
         'module_portal': fields.boolean('Activate the customer portal',
             help="""Give your customers access to their documents."""),
         'module_auth_oauth': fields.boolean('Use external authentication providers, sign in with google, facebook, ...'),
+        'module_mail_docsaway': fields.boolean('Allow sending documents via DocsAway'),
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),

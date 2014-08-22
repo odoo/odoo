@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+        <record model="ir.ui.view" id="send_customer_post_wizard_form">
+            <field name="name">send_customer_post_wizard_form</field>
+            <field name="model">mail_docsaway.customer_wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Send Documents">
+                    <sheet>
+                        <field name="require_attention" invisible="1"/>
+                        <field name="free_count" invisible="1"/>
+                        <group attrs="{'invisible':[('free_count','&lt;=',0)]}">
+                            <div class="alert alert-info"><span class="oe_form_field oe_inline">You have &#160;</span><field name="free_count" readonly="1" class="oe_inline"/><span class="oe_form_field oe_inline">&#160; free letters to send.</span></div>
+                        </group>
+                        <group attrs="{'invisible':[('remaining','>=',0.0)]}">
+                            <div class="alert alert-danger">You have insufficient funds in your account. Please refill it.</div>
+                        </group>
+                        <group attrs="{'invisible':[('require_attention','=',False)]}">
+                            <div class="alert alert-warning">Some documents require your attention before being sent. Please check the icons associated to.</div>
+                        </group>
+                        <p class="oe_black" attrs="{'invisible':[('free_count','>',0)]}">
+                        All given documents will be sent by DocsAway at the address of
+                        the customers (which are shown in the table below). The service needs a prepayment in the DocsAway account.
+                        Upon mailings, the account will be deducted from the cost to deliver them.
+                        All prices related to DocsAway are shown in Australian Dollars (AUD).
+                        Please note that a document = a letter. The documents must be in PDF format.
+                        </p>
+                        
+                        <p class="oe_black" attrs="{'invisible':[('free_count','&lt;=',0)]}">
+                        All given documents will be sent by DocsAway at the address of
+                        the customers (which are shown in the table below). In order to try this service, Odoo gives free letters for your company.
+                        Please note that a document = a letter. The documents must be in PDF format.
+                        </p>
+                        
+                        <p class="oe_black">
+                            <span class="oe_form_field oe_inline">The ink that will be used is </span><field name="ink" readonly="1" class="oe_inline"/><span class="oe_form_field oe_inline">. You can change it in General Settings -> Send Documents -> Ink.</span>
+                        </p>
+                        
+                        <group>
+                            <field name="wiz_ids" nolabel="1" deleteonly="1">
+                            <!--#A94442:nb_pages == 0;#AC8348:already_sent == True -->
+                                <tree string="Mails" colors="#A94442:address_valid == False;gray:already_sent == True" toolbar="1">
+                                    <span class="label label-danger" attrs="{'invisible':[('address_valid','=',True)]}" string="Invalid Address"/>
+                                    <field name="partner_id"/>
+                                    <field name="nb_pages" invisible="1"/>
+                                    <field name="price" sum="Total Price" readonly="1"/>
+                                    <field name="already_sent" invisible="1"/>
+                                    <field name="sent_date" invisible="1"/>
+                                    <field name="ink" invisible="1"/>
+                                    <field name="station" invisible="1"/>
+                                    <field name="courier" invisible="1"/>
+                                    <field name="balance" invisible="1"/>
+                                    <field name="wizard_id" invisible="1"/>
+                                    <field name="wizard_customer_id" invisible="1"/>
+                                    <field name="pdf" invisible="1"/>
+                                    <field name="src_id" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="mail_id" invisible="1"/>
+                                    <field name="free_count" invisible="1"/>
+                                    <field name="no_multiple_wizard" invisible="1"/>
+                                    <field name="first_call" invisible="1"/>
+                                    <field name="address_valid" invisible="1"/>
+                                </tree>
+                            </field>
+                        </group>
+                        
+                        <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>
+                        
+                        <field name="currency_id" invisible="1"/>
+                        <group class="oe_subtotal_footer oe_left" attrs="{'invisible':[('free_count','>',0)]}">
+                            <field name="price" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <label for="balance"/>
+                            <div>
+                                <field name="balance" readonly="1" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <a name="action_reload"
+                                    href="https://www.docsaway.com/index_c.php"
+                                    target="_blank"
+                                    class="oe_form_field oe_link oe_inline">⇒ Refill</a>
+                            </div>
+                        </group>
+                        <field name="remaining" invisible="1"/>
+                        
+                    </sheet>
+                    <footer>
+                        <group attrs="{'invisible':[('remaining','>=',0.0),('price','>',0.0)]}">
+                            <span>
+                                <button string="Cancel" class="oe_link" special="cancel" />
+                            </span>
+                        </group>
+                        <group attrs="{'invisible':['|',('remaining','&lt;',0.0),('price','&lt;=',0.0)]}">
+                            <span>
+                                <button string="Send" type="object" class="oe_highlight" name="action_send_document_mails"/>
+                                 or
+                                <button string="Cancel" class="oe_link" special="cancel" />
+                            </span>
+                        </group>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="mail_docsaway_confirm_delivery_multiple_sale_orders_wizard"
+            name="Send Documents by Post..."
+            res_model="mail_docsaway.customer_wizard"
+            src_model="res.partner"
+            view_mode="form"
+            view_type="form"
+            target="new"
+            multi="True"
+            context="{'report_model': 'sale.report_saleorder'}"
+            key2="client_action_multi"/>
+    </data>
+</openerp>
