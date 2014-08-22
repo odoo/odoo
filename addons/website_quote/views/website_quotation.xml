@@ -509,7 +509,7 @@
             <h1 class="page-header">Suggested Products</h1>
         </section>
         <section t-if="quotation.options" id="options">
-            <table class="table table-hover wq-table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Products</th>
@@ -544,9 +544,9 @@
                                     </div>
                                 </strong>
                             </td>
-                            <td class="text-center" t-if="quotation.state in ['draft', 'sent']">
-                                <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print">
-                                    <span class="fa fa-shopping-cart"/>
+                            <td>
+                                <a t-if="quotation.state in ['draft', 'sent']" t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print">
+                                    <span class="fa fa-shopping-cart fa-2x" title="Buy the product"/>
                                 </a>
                             </td>
                         </t>
