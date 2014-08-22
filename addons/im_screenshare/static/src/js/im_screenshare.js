@@ -10,7 +10,6 @@
     instance.im_screenshare.RecordHandler = instance.Widget.extend({
         init: function(parent, mode) {
             this._super(parent);
-
             this.mode = mode || 'share';
             this.uuid = false;
             this.record_id = false;
@@ -187,6 +186,7 @@
             this.treeMirrorClient.disconnect();
             this.treeMirrorClient = null;
             this.cursorMirrorClient.disconnect();
+            delete this.cursorMirrorClient;
             this.cursorMirrorClient = null;
 
             this.loading_node_id = false;
@@ -195,7 +195,6 @@
             this.record_id = false;
         },
         send_record: function(mutations){
-            console.log('============================================');
             // find the TreeMirroir id of the loading node
             this.loading_node_id = this._find_loading_node_id();
             // find new child of the loading node
@@ -205,7 +204,6 @@
             // remove the empty mutations
             mutations = this._remove_empty_mutations(mutations);
             if(mutations.length !== 0){
-                console.log("SEND : ", JSON.stringify(mutations));
                 return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, record_id : this.record_id, mutations : mutations});
             }else{
                 return $.Deferred().resolve();
@@ -305,17 +303,13 @@
             this.cursorMirror = new CursorMirror();
         },
         handleMessage: function(msg) {
-            console.log('-----');
             if (msg.base) {
-                //console.log("msg.base");
                 this.base = msg.base;
                 this._init_mirroirs();
             } else {
                 if (msg.f === 'forwardData') {
                     this.cursorMirror[msg.f].apply(this.cursorMirror, msg.args);
-                    //console.log(this.cursorMirror[msg.f]);
                 } else {
-                    //console.log("msg.f = applyChanged or initialize");
                     this.treeMirror[msg.f].apply(this.treeMirror, msg.args);
                 }
             }
