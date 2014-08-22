@@ -17,7 +17,7 @@ class mother(models.Model):
 # We want to inherits from the parent model and we add some fields
 # in the child object
 class daughter(models.Model):
-    _name = 'test.inherit.daugther'
+    _name = 'test.inherit.daughter'
     _inherits = {'test.inherit.mother': 'template_id'}
 
     template_id = fields.Many2one('test.inherit.mother', 'Template',
@@ -54,5 +54,12 @@ class mother(models.Model):
 
     # extend again the selection of the state field
     state = fields.Selection(selection_add=[('d', 'D')])
+
+
+class daughter(models.Model):
+    _inherit = 'test.inherit.daughter'
+
+    # simply redeclare the field without adding any option
+    template_id = fields.Many2one()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
