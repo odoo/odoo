@@ -13,9 +13,13 @@ openerp.account = function (instance) {
 
     // NOTE
     // "implementation classes" must declare a
-    // this.childrenWidget = instance.web.account.implementationOfAbstractReconciliationLine
+    // this.children_widget = instance.web.account.implementationOfAbstractReconciliationLine
+    // and may specify a template_prefix property (ex : methods in the abstract widget that 
+    // renders templates will try template_prefix_some_template before to try some_template)
     instance.web.account.abstractReconciliation = instance.web.Widget.extend({
         className: 'oe_reconciliation',
+
+        events: {},
     
         init: function(parent, context) {
             this._super(parent);
@@ -99,7 +103,8 @@ openerp.account = function (instance) {
             line.q_label = line.name;
             line.debit_str = this.formatCurrencies(line.debit);
             line.credit_str = this.formatCurrencies(line.credit);
-            line.q_popover = QWeb.render("reconciliation_move_line_details", {line: line});
+            var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_move_line_details") ? this.template_prefix : "") + "reconciliation_move_line_details";
+            line.q_popover = QWeb.render(template_name, {line: line});
             if (line.has_no_partner)
                 line.q_label = line.partner_name + ': ' + line.q_label;
         
@@ -112,7 +117,15 @@ openerp.account = function (instance) {
     
     instance.web.account.abstractReconciliationLine = instance.web.Widget.extend({
         className: 'oe_reconciliation_line',
-    
+        
+        events: {
+            "click .mv_line": "moveLineClickHandler",
+            "click .pager_control_left:not(.disabled)": "pagerControlLeftHandler",
+            "click .pager_control_right:not(.disabled)": "pagerControlRightHandler",
+            "keyup .filter": "filterHandler",
+            "click .line_info_button": function(e){e.stopPropagation()},
+        },
+
         init: function(parent, context) {
             this._super(parent);
 
@@ -154,14 +167,6 @@ openerp.account = function (instance) {
         start: function() {
             var self = this;
             return self._super().then(function() {
-
-                // Event handlers are not defined via the shortcut in order
-                // not to be overwritten by implementation widgets
-                self.$el.on("click", ".mv_line", self.moveLineClickHandler.bind(self));
-                self.$el.on("click", ".pager_control_left:not(.disabled)", self.pagerControlLeftHandler.bind(self));
-                self.$el.on("click", ".pager_control_right:not(.disabled)", self.pagerControlRightHandler.bind(self));
-                self.$el.on("keyup", ".filter", self.filterHandler.bind(self));
-                self.$el.on("click", ".line_info_button", function(e){e.stopPropagation()});
 
                 // no animation while loading
                 self.animation_speed = 0;
@@ -256,9 +261,10 @@ openerp.account = function (instance) {
             var self = this;
             $.each(self.$(".tbody_matched_lines .bootstrap_popover"), function(){ $(this).popover('destroy') });
             self.$(".tbody_matched_lines").empty();
-    
+            
+            var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_move_line") ? this.template_prefix : "") + "reconciliation_move_line";
             _(self.get("mv_lines_selected")).each(function(line){
-                var $line = $(QWeb.render("reconciliation_move_line", {line: line, selected: true}));
+                var $line = $(QWeb.render(template_name, {line: line, selected: true}));
                 self.bindPopoverTo($line.find(".line_info_button"));
                 if (line.propose_partial_reconcile) self.bindPopoverTo($line.find(".do_partial_reconcile_button"));
                 if (line.partial_reconcile) self.bindPopoverTo($line.find(".undo_partial_reconcile_button"));
@@ -278,17 +284,20 @@ openerp.account = function (instance) {
             var slice_end = (self.get("pager_index")+1) * self.max_move_lines_displayed;
 
             var visible = 0;
+            var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_move_line") ? this.template_prefix : "") + "reconciliation_move_line";
             _(self.get("mv_lines")).each(function(line){
                 if (visible >= slice_start && visible < slice_end) {
-                    var $line = $(QWeb.render("reconciliation_move_line", {line: line, selected: false}));
+                    var $line = $(QWeb.render(template_name, {line: line, selected: false}));
                     self.bindPopoverTo($line.find(".line_info_button"));
                     table.append($line);
                     nothing_displayed = false;
                 }
                 visible = visible + 1;
             });
-            if (nothing_displayed && this.filter !== "")
-                table.append(QWeb.render("filter_no_match", {filter_str: self.filter}));
+            if (nothing_displayed && this.filter !== "") {
+                var template_name = (QWeb.has_template(this.template_prefix+"filter_no_match") ? this.template_prefix : "") + "filter_no_match";
+                table.append(QWeb.render(template_name, {filter_str: self.filter}));
+            }
         },
     
         updatePagerControls: function() {
@@ -394,11 +403,14 @@ openerp.account = function (instance) {
 
     instance.web.client_actions.add('bank_statement_reconciliation_view', 'instance.web.account.bankStatementReconciliation');
     instance.web.account.bankStatementReconciliation = instance.web.account.abstractReconciliation.extend({
-    
+        
+        events: _.defaults({}, instance.web.account.abstractReconciliation.prototype.events),
+
         init: function(parent, context) {
             this._super(parent, context);
 
-            this.childrenWidget = instance.web.account.bankStatementReconciliationLine;
+            this.children_widget = instance.web.account.bankStatementReconciliationLine;
+            this.template_prefix = "bank_statement_";
 
             this.statement_id = context.context.statement_id;
             this.lines = []; // list of reconciliations identifiers to instantiate children widgets
@@ -617,7 +629,7 @@ openerp.account = function (instance) {
                 line: initial_data_provided ? line : undefined,
                 reconciliation_proposition: initial_data_provided ? reconciliation_proposition : undefined,
             };
-            var widget = new self.childrenWidget(self, context);
+            var widget = new self.children_widget(self, context);
             return widget.appendTo(self.$(".reconciliation_lines_container"));
         },
 
@@ -763,7 +775,7 @@ openerp.account = function (instance) {
     
     instance.web.account.bankStatementReconciliationLine = instance.web.account.abstractReconciliationLine.extend({
 
-        events: {
+        events: _.defaults({
             "click .partner_name": "partnerNameClickHandler",
             "click .button_ok": "persistAndDestroy",
             "click .initial_line": "initialLineClickHandler",
@@ -772,10 +784,11 @@ openerp.account = function (instance) {
             "click .preset": "presetClickHandler",
             "click .do_partial_reconcile_button": "doPartialReconcileButtonClickHandler",
             "click .undo_partial_reconcile_button": "undoPartialReconcileButtonClickHandler",
-        },
-    
+        }, instance.web.account.abstractReconciliationLine.prototype.events),
+        
         init: function(parent, context) {
             this._super(parent, context);
+            this.template_prefix = this.getParent().template_prefix;
     
             if (context.initial_data_provided) {
                 // Process data
@@ -1076,11 +1089,10 @@ openerp.account = function (instance) {
             this._super(mv_line);
             var line_id = mv_line.dataset.lineid;
             var line = _.find(this.get("mv_lines"), function(o) { return o.id == line_id });
-            if (line.partial_reconcile) {
+            if (line.partial_reconcile)
                 this.unpartialReconcileLine(line);
+            if (line.propose_partial_reconcile)
                 line.propose_partial_reconcile = false;
-                this.updateMatchView();
-            }
             this.getParent().unexcludeMoveLines([line_id]);
         },
     
@@ -1440,6 +1452,8 @@ openerp.account = function (instance) {
             _.each(self.getCreatedLines(), function(o) {
                 balance += o.amount;
             });
+            // Should work as long as currency's rounding factor is > 0.001 (ie: don't use gold kilos as a currency)
+            balance = Math.round(balance*1000)/1000;
             self.set("balance", balance);
     
             // Propose partial reconciliation if necessary
@@ -1551,13 +1565,14 @@ openerp.account = function (instance) {
     instance.web.client_actions.add('manual_reconciliation_view', 'instance.web.account.manualReconciliation');
     instance.web.account.manualReconciliation = instance.web.account.abstractReconciliation.extend({
         
-        events: {
+        events: _.defaults({
             "change input[name='show_reconciliations_type']": "showReconciliationsTypeHandler",
-        },
+        }, instance.web.account.abstractReconciliation.prototype.events),
 
         init: function(parent, context) {
             this._super(parent, context);
-            this.childrenWidget = instance.web.account.manualReconciliationLine;
+            this.children_widget = instance.web.account.manualReconciliationLine;
+            this.template_prefix = "manual_";
             this.model_aml = new instance.web.Model("account.move.line");
             this.title = "Journal Items to Reconcile";
             this.show_partner_accounts = true;
@@ -1627,7 +1642,7 @@ openerp.account = function (instance) {
         },
 
         displayReconciliation: function(data, animate_entrance) {
-            var widget = new this.childrenWidget(this, {data: data, animate_entrance: animate_entrance});
+            var widget = new this.children_widget(this, {data: data, animate_entrance: animate_entrance});
             data.displayed = true;
             return widget.appendTo(this.$(".reconciliation_lines_container"));
         },
@@ -1756,16 +1771,18 @@ openerp.account = function (instance) {
     
     instance.web.account.manualReconciliationLine = instance.web.account.abstractReconciliationLine.extend({
 
-        events: {
+        events: _.defaults({
             "click .accounting_view thead": "headerClickHandler",
             "click .filler_line": "fillerLineClickHandler",
             "click .button_reconcile": "buttonReconcileClickHandler",
-        },
+        }, instance.web.account.abstractReconciliationLine.prototype.events),
     
         init: function(parent, context) {
             this._super(parent, context);
+            this.template_prefix = this.getParent().template_prefix;
             this.model_aml = this.getParent().model_aml;
             this.data = context.data;
+            this.propositions_lines = context.data.move_lines;
         },
     
         start: function() {
@@ -1779,7 +1796,7 @@ openerp.account = function (instance) {
                 data: self.data,
             }));
             self.updateBalance();
-            this.set("mv_lines", this.data.move_lines);
+            this.set("mv_lines", this.propositions_lines);
             self.set("mode", "match");
         },
 
@@ -1828,7 +1845,7 @@ openerp.account = function (instance) {
             // Make sure there's at least one (empty) line in the accounting view so the T appears
             // Should be done in CSS with sth like elt:empty:before { content: "HTML"; }
             // Unfortunately, "Generated content does not alter the document tree"
-            if (this.get("mv_lines_selected").length === 0)
+            if (this.$(".tbody_matched_lines > *").length === 0)
                 this.$(".tbody_matched_lines").append('<tr class="filler_line"><td class="cell_action"></td><td class="cell_due_date"></td><td class="cell_label"></td><td class="cell_debit"></td><td class="cell_credit"></td><td class="cell_info_popover"></td></tr>');
         },
 
@@ -1856,7 +1873,7 @@ openerp.account = function (instance) {
 
         filterMoveLines: function() {
             var self = this;
-            var lines_to_show = self.get("mv_lines");
+            var lines_to_show = [];
             _.each(self.propositions_lines, function(line){
                 if (line.q_label.toLowerCase().indexOf(self.filter.toLowerCase()) > -1)
                     lines_to_show.push(line);
