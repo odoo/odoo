@@ -1,0 +1,48 @@
+# HG changeset patch
+# Parent a358be0a577b0569831958a8ec1302825c645dee
+
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-22 14:30:38.650769778 +0200
++++ doc-backend/openacademy/course.py	2014-08-22 14:31:17.090771190 +0200
+@@ -1,5 +1,5 @@
+ # -*- coding: utf-8 -*-
+-from openerp import fields, models
++from openerp import api, fields, models
+ 
+ class Course(models.Model):
+     _name = 'openacademy.course'
+@@ -28,3 +28,13 @@
+         ondelete='cascade', string="Course", required=True)
+     attendee_ids = fields.Many2many('res.partner', string="Attendees")
+ 
++    taken_seats = fields.Float(string="Taken seats", compute='_taken_seats')
++
++    @api.one
++    @api.depends('seats', 'attendee_ids')
++    def _taken_seats(self):
++        if not self.seats:
++            self.taken_seats = 0.0
++        else:
++            self.taken_seats = 100.0 * len(self.attendee_ids) / self.seats
++
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 14:30:38.650769778 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 14:31:42.542772124 +0200
+@@ -98,6 +98,7 @@
+                         <field name="start_date"/>
+                         <field name="duration"/>
+                         <field name="seats"/>
++                        <field name="taken_seats" widget="progressbar"/>
+                     </group>
+                     <separator string="Attendees" colspan="4"/>
+                     <field name="attendee_ids" colspan="4" nolabel="1"/>
+@@ -112,6 +113,7 @@
+                 <tree string="Session Tree">
+                     <field name="name"/>
+                     <field name="course_id"/>
++                    <field name="taken_seats" widget="progressbar"/>
+                 </tree>
+             </field>
+         </record>

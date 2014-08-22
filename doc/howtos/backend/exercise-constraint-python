@@ -1,0 +1,24 @@
+# HG changeset patch
+# Parent 7a7d003fe38426a405ce0657a627a139133ec4dd
+
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-22 17:02:00.987103191 +0200
++++ doc-backend/openacademy/course.py	2014-08-22 17:02:00.983103191 +0200
+@@ -1,5 +1,5 @@
+ # -*- coding: utf-8 -*-
+-from openerp import api, fields, models
++from openerp import api, fields, models, exceptions
+ 
+ class Course(models.Model):
+     _name = 'openacademy.course'
+@@ -56,3 +56,9 @@
+                 },
+             }
+ 
++    @api.one
++    @api.constrains('instructor_id', 'attendee_ids')
++    def _check_instructor_not_in_attendees(self):
++        if self.instructor_id and self.instructor_id in self.attendee_ids:
++            raise exceptions.ValidationError("A session's instructor can't be an attendee")
++

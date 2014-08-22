@@ -1,0 +1,456 @@
+@import "bootstrap/less/bootstrap";
+@import url(http://fonts.googleapis.com/css?family=Lato);
+
+@icon-font-path: 'fonts/';
+@brand-primary: #a24689;
+@brand-dark: darken(@brand-primary, 6%);
+@brand-light: lighten(@brand-primary, 10%);
+@brand-text: saturate(lighten(@brand-primary, 46%), 5%);
+
+@headings-font-family: Lato, Arial, sans-serif;
+
+@navbar-margin-bottom: 0;
+
+@navbar-default-bg: white;
+@navbar-default-border: 0;
+
+// indent level for various items list e.g. dl, fields lists, ...
+@item-indent: 30px;
+
+body {
+  position: relative;
+}
+
+.document-super {
+  .container();
+}
+
+.document {
+  .make-row();
+}
+
+.documentwrapper {
+  .make-md-column(9);
+}
+.sphinxsidebar {
+  .make-md-column(3);
+}
+
+.sphinxsidebarwrapper {
+  width: 100%;
+
+  .hidden-xs();
+  .hidden-sm();
+  .hidden-print();
+
+  // hide level 0 (root title)
+  > .nav  > li > a {
+    display: none !important;
+  }
+  // hide levels 3+
+  > .nav .nav .nav .nav {
+    display: none !important;
+  }
+}
+
+.btn-outline {
+  color: @brand-primary;
+  background-color: transparent;
+  border-color: @brand-primary;
+  &:hover, &:focus, &:active {
+    color: #fff;
+    background-color: @brand-primary;
+    border-color: @brand-primary;
+  }
+}
+
+
+.btn-outline-inverse {
+  color: #fff;
+  background-color: transparent;
+  border-color: @brand-text;
+  &:hover, &:focus, &:active {
+    color: @brand-primary;
+    text-shadow: none;
+    background-color: #fff;
+    border-color: #fff;
+  }
+}
+/*
+ * Main navigation
+ */
+.docs-nav {
+  .navbar-brand,
+  .navbar-nav > li > a {
+    position: relative;
+  }
+
+  .navbar-nav > li {
+    > a:hover:before, &.current a:before {
+      bottom: 10px;
+      opacity: 1;
+    }
+    > a:before {
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 10px;
+      content: "";
+      right: 10px;
+      height: 3px;
+      background: @brand-primary;
+      opacity: 0;
+      .transition(all 0.3s ease-out);
+    }
+    > a:after {
+      content: " ";
+      display: inline-block;
+      width: 0;
+      height: 0;
+      margin-left: 5px;
+      vertical-align: middle;
+      border-top: 4px solid @gray-light;
+      border-right: 4px solid transparent;
+      border-left: 4px solid transparent;
+    }
+    .dropdown-menu > li.current > a.current {
+      background-color: @brand-primary;
+      color: white;
+    }
+  }
+}
+
+// FIXME: protocol-relative urls for remote but absolute for local (file://)?
+.o_logo {
+  display: inline-block;
+  font-size: 300%;
+  .o_logo_main {
+    background-image: url(odoo_logo_rgb.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    color: rgba(255, 255, 255, 0);
+    text-decoration: none;
+  }
+  .o_logo_app {
+    text-decoration: none;
+    color: rgb(143, 143, 143);
+    font-family: Lato, Arial, sans-serif;
+    font-size: 50%;
+    margin: 0.2em;
+  }
+}
+
+/*
+ * Side navigation
+ *
+ * Scrollspy and affixed enhanced navigation to highlight sections and secondary
+ * sections of docs content.
+ */
+
+/* By default it's not affixed in mobile views, so undo that */
+.sphinxsidebarwrapper.affix {
+  position: static;
+}
+@media (min-width: @screen-sm-min) {
+  .sphinxsidebarwrapper {
+    padding-left: 20px;
+  }
+}
+
+/* First level of nav */
+.sphinxsidebarwrapper > .nav {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* All levels of nav */
+.sphinxsidebarwrapper .nav {
+  > li > a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #999;
+
+    &:hover, &:focus {
+      padding-left: 19px;
+      color: @brand-primary;
+      text-decoration: none;
+      background-color: transparent;
+      border-left: 1px solid @brand-primary;
+    }
+  }
+
+  > .active > a, > .active:hover > a, > .active:focus > a {
+    padding-left: 18px;
+    font-weight: bold;
+    color: @brand-primary;
+    background-color: transparent;
+    border-left: 2px solid @brand-primary;
+  }
+}
+
+/* Nav: second level (shown on .active) */
+.sphinxsidebarwrapper .nav .nav .nav {
+  display: none; /* Hide by default, but at >768px, show it */
+  padding-bottom: 10px;
+
+  > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: normal;
+  }
+
+  > li > a:hover, > li > a:focus {
+    padding-left: 29px;
+  }
+
+  > .active > a, > .active:hover > a, > .active:focus > a {
+    padding-left: 28px;
+    font-weight: 500;
+  }
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: @screen-md-min) {
+  .sphinxsidebarwrapper {
+    .nav .nav > .active > ul {
+      display: block;
+    }
+    /* Widen the fixed sidebar */
+    &.affix, &.affix-bottom {
+      width: 213px;
+    }
+    &.affix {
+      position: fixed; /* Undo the static from mobile first approach */
+      top: 20px;
+    }
+    &.affix-bottom {
+      position: absolute; /* Undo the static from mobile first approach */
+    }
+    &.affix-bottom > .nav, &.affix > .nav {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+@media (min-width: @screen-lg-min) {
+  /* Widen the fixed sidebar again */
+  .sphinxsidebarwrapper.affix-bottom,
+  .sphinxsidebarwrapper.affix {
+    width: 263px;
+  }
+}
+
+/*
+ * Footer
+ *
+ * Separated section of content at the bottom of all pages, save the homepage.
+ */
+
+.footer {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin-top: 100px;
+  color: #777;
+  text-align: center;
+  border-top: 1px solid #e5e5e5;
+}
+.docs-footer-links {
+  padding-left: 0;
+  margin-top: 20px;
+  color: #999;
+}
+.docs-footer-links li {
+  display: inline;
+  padding: 0 2px;
+}
+.docs-footer-links li:first-child {
+  padding-left: 0;
+}
+
+@media (min-width: 768px) {
+  .footer p {
+    margin-bottom: 0;
+  }
+}
+
+// hide header ¶ link
+.headerlink {
+  display: none;
+}
+// either that or overwrite visit_attribution/depart_attribution
+blockquote p.attribution:extend(blockquote footer) {}
+
+div.section > h1 {
+  .page-header();
+  font-size: floor((@font-size-base * 3.05));
+}
+
+div.section > h2 {
+  .page-header();
+  font-size: @font-size-h1;
+  padding-top: 20px;
+  margin-top: 0;
+}
+// ~docs-section
+.body > .section > .section {
+  margin-bottom: 60px;
+}
+
+.literal:extend(code) {}
+
+.admonition {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid @gray-lighter;
+  border-left-width: 5px;
+  border-radius: 3px;
+
+  .admonition-title:after {
+    content: ": ";
+  }
+  > .admonition-title,
+  // only "aphorisms" should have the same size as the admonition category
+  &.aphorism > .admonition-title + p,
+  &.exercise > .admonition-title + p {
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 5px;
+
+    font-family: @headings-font-family;
+    font-weight: @headings-font-weight;
+    line-height: @headings-line-height;
+    color: @headings-color;
+
+    font-size: @font-size-h4;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  &.tip {
+    border-left-color: @brand-info;
+    > .admonition-title {
+      color: @brand-info;
+    }
+  }
+  &.warning {
+    border-left-color: @brand-warning;
+    > .admonition-title {
+      color: @brand-warning;
+    }
+  }
+  &.danger {
+    border-left-color: @brand-danger;
+    > .admonition-title {
+      color: @brand-danger;
+    }
+  }
+  &.exercise {
+    border-left-color: @gray-light;
+    > .admonition-title {
+      color: @gray;
+    }
+  }
+}
+
+/*
+ * Code snippets
+ *
+ * Generated via Pygments
+ */
+
+.highlight {
+  padding: 9px 14px;
+  margin-bottom: 14px;
+  background-color: #f7f7f9 !important;
+  border: 1px solid #e1e1e8;
+  border-radius: 4px;
+}
+.highlight pre {
+  color: #333;
+  padding: 0 45px 0 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: transparent;
+  border: 0;
+}
+
+/*
+ * ZeroClipboard styles
+ */
+
+.zero-clipboard {
+  position: relative;
+  display: none;
+}
+.btn-clipboard {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  display: block;
+  padding: 5px 8px;
+  font-size: 12px;
+  color: #777;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #e1e1e8;
+  border-radius: 0 4px 0 4px;
+}
+.btn-clipboard-hover {
+  color: #fff;
+  background-color: @brand-primary;
+  border-color: @brand-primary;
+}
+
+@media (min-width: 768px) {
+  .zero-clipboard {
+    display: block;
+  }
+}
+
+// rST styles
+img.align-center {
+  display: block;
+  margin: 0 auto;
+}
+
+dd {
+  // Reinstate dd indent, looks horrible and illegible otherwise
+  margin-left: @item-indent;
+}
+
+// By default there's (browser) padding on ``ul`` so lists of >1 field are
+// nicely separated from the section name (e.g. ``Parameters``) but single
+// fields/items are stuck to it and look horrible. Make everything neatly-ish
+// aligned. Other option: half and half so list bullets are aligned to text
+// instead of text to text
+td.field-body {
+  padding-left: @item-indent;
+  ul {
+    padding-left: @item-indent;
+  }
+  > ul {
+    padding-left: 0;
+  }
+}
+
+// naming collision, rST generates .container nodes with completely different
+// semantics so go away
+.section .container {
+    width: auto;
+    margin: 0;
+    padding: 0;
+}
+
+// code block lines should not wrap
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}

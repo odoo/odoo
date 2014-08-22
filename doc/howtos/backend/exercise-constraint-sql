@@ -1,0 +1,24 @@
+# HG changeset patch
+# Parent 121bbfe120be3007f5e04611dbc27038abafcce8
+
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-22 17:02:07.363103425 +0200
++++ doc-backend/openacademy/course.py	2014-08-22 17:02:07.359103425 +0200
+@@ -13,6 +13,16 @@
+         'openacademy.session', 'course_id', string="Session")
+ 
+ 
++    _sql_constraints = [
++        ('name_description_check',
++         'CHECK(name != description)',
++         "The title of the course should not be the description"),
++
++        ('name_unique',
++         'UNIQUE(name)',
++         "The course title must be unique"),
++    ]
++
+ class Session(models.Model):
+     _name = 'openacademy.session'
+ 

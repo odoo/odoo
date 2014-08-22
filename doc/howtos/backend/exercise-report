@@ -1,0 +1,47 @@
+# HG changeset patch
+# Parent c140f0a861a08881d8737bca0ffb83904a2059a3
+
+diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
+--- a/openacademy/__openerp__.py
++++ b/openacademy/__openerp__.py
+@@ -16,6 +16,7 @@
+         'views/openacademy.xml',
+         'views/partner.xml',
+         'views/session_workflow.xml',
++        'reports.xml',
+     ],
+     'demo': [
+         'demo.xml',
+diff --git a/openacademy/reports.xml b/openacademy/reports.xml
+new file mode 100644
+--- /dev/null
++++ b/openacademy/reports.xml
+@@ -0,0 +1,28 @@
++<openerp><data>
++   <report
++     id="report_session"
++     model="openacademy.session"
++     string="Session Report"
++     name="openacademy.report_session_view"
++     file="openacademy.report_session"
++     report_type="qweb-pdf" />
++
++  <template id="report_session_view">
++    <t t-call="report.html_container">
++      <t t-foreach="docs" t-as="doc">
++        <t t-call="report.external_layout">
++          <div class="page">
++            <h2 t-field="doc.name"/>
++            <p>From <span t-field="doc.start_date"/> to <span t-field="doc.end_date"/></p>
++            <h3>Attendees:</h3>
++            <ul>
++              <t t-foreach="doc.attendee_ids" t-as="attendee">
++                <li t-field="attendee.name"/>
++              </t>
++            </ul>
++          </div>
++        </t>
++      </t>
++    </t>
++  </template>
++</data></openerp>

@@ -1,0 +1,46 @@
+# HG changeset patch
+# Parent a6e217b1fbbc64111581c269629b1c25c23abb99
+
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-21 14:24:24.376484356 +0200
++++ doc-backend/openacademy/course.py	2014-08-21 14:26:35.040489152 +0200
+@@ -7,6 +7,9 @@
+     name = fields.Char(string="Title", required=True)
+     description = fields.Text()
+ 
++    responsible_id = fields.Many2one('res.users',
++        ondelete='set null', string="Responsible", index=True)
++
+ 
+ class Session(models.Model):
+     _name = 'openacademy.session'
+@@ -16,3 +19,7 @@
+     duration = fields.Float(digits=(6, 2), help="Duration in days")
+     seats = fields.Integer(string="Number of seats")
+ 
++    instructor_id = fields.Many2one('res.partner', string="Instructor")
++    course_id = fields.Many2one('openacademy.course',
++        ondelete='cascade', string="Course", required=True)
++
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 14:24:24.376484356 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 14:25:48.000000000 +0200
+@@ -63,5 +63,16 @@
+         <!-- Full id location:
+              action="openacademy.course_list_action"
+              It is not required when it is the same module -->
++
++        <record model="ir.actions.act_window" id="session_list_action">
++            <field name="name">Sessions</field>
++            <field name="res_model">openacademy.session</field>
++            <field name="view_type">form</field>
++            <field name="view_mode">tree,form</field>
++        </record>
++
++        <menuitem id="session_menu" name="Sessions"
++                  parent="openacademy_menu"
++                  action="session_list_action"/>
+     </data>
+ </openerp>

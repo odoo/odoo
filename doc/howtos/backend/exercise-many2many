@@ -1,0 +1,10 @@
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-21 14:42:26.508524081 +0200
++++ doc-backend/openacademy/course.py	2014-08-21 14:42:54.712525116 +0200
+@@ -24,4 +24,5 @@
+     instructor_id = fields.Many2one('res.partner', string="Instructor")
+     course_id = fields.Many2one('openacademy.course',
+         ondelete='cascade', string="Course", required=True)
++    attendee_ids = fields.Many2many('res.partner', string="Attendees")
+ 

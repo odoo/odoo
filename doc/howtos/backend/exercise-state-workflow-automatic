@@ -1,0 +1,18 @@
+# HG changeset patch
+# Parent 3b19489a47d41e72f88490eb389a05977761c8d2
+
+diff --git a/openacademy/views/session_workflow.xml b/openacademy/views/session_workflow.xml
+--- a/openacademy/views/session_workflow.xml
++++ b/openacademy/views/session_workflow.xml
+@@ -47,5 +47,11 @@
+       <field name="act_to" ref="done"/>
+       <field name="signal">done</field>
+     </record>
++
++    <record model="workflow.transition" id="session_auto_confirm_half_filled">
++      <field name="act_from" ref="draft"/>
++      <field name="act_to" ref="confirmed"/>
++      <field name="condition">seats_taken &gt; 50</field>
++    </record>
+   </data>
+ </openerp>

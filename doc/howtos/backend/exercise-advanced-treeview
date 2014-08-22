@@ -1,0 +1,19 @@
+# HG changeset patch
+# Parent f8d2422e87b3ff566dc947ad582608db3b15e077
+
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 17:03:26.743106339 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 17:03:26.739106339 +0200
+@@ -111,9 +111,10 @@
+             <field name="name">session.tree</field>
+             <field name="model">openacademy.session</field>
+             <field name="arch" type="xml">
+-                <tree string="Session Tree">
++                <tree string="Session Tree" colors="#0000ff:duration&lt;5;red:duration&gt;15">
+                     <field name="name"/>
+                     <field name="course_id"/>
++                    <field name="duration" invisible="1"/>
+                     <field name="taken_seats" widget="progressbar"/>
+                 </tree>
+             </field>

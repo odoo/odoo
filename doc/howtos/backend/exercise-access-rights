@@ -1,0 +1,38 @@
+# HG changeset patch
+# Parent 303a5f4f011822dcb42b5833d579eabd3f03f4bf
+
+diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
+--- a/openacademy/__openerp__.py
++++ b/openacademy/__openerp__.py
+@@ -11,6 +11,8 @@
+         - training sessions
+         - attendees registration""",
+     'data' : [
++        'security/security.xml',
++        'security/ir.model.access.csv',
+         'views/openacademy.xml',
+         'views/partner.xml',
+         'views/session_workflow.xml',
+diff --git a/openacademy/security/ir.model.access.csv b/openacademy/security/ir.model.access.csv
+new file mode 100644
+--- /dev/null
++++ b/openacademy/security/ir.model.access.csv
+@@ -0,0 +1,6 @@
++id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
++course_manager,course manager,model_openacademy_course,group_manager,1,1,1,1
++session_manager,session manager,model_openacademy_session,group_manager,1,1,1,1
++course_read_all,course all,model_openacademy_course,,1,0,0,0
++session_read_all,session all,model_openacademy_session,,1,0,0,0
++
+diff --git a/openacademy/security/security.xml b/openacademy/security/security.xml
+new file mode 100644
+--- /dev/null
++++ b/openacademy/security/security.xml
+@@ -0,0 +1,7 @@
++<openerp>
++  <data>
++    <record id="group_manager" model="res.groups">
++      <field name="name">OpenAcademy / Manager</field>
++    </record>
++  </data>
++</openerp>

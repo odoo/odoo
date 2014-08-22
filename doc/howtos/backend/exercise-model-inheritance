@@ -1,0 +1,71 @@
+# HG changeset patch
+# Parent d903c828fb10f2b38e5f43e9ceaeae0a9db7f858
+
+Index: doc-backend/openacademy/__init__.py
+===================================================================
+--- doc-backend.orig/openacademy/__init__.py	2014-08-21 15:13:13.756591893 +0200
++++ doc-backend/openacademy/__init__.py	2014-08-21 15:13:13.748591893 +0200
+@@ -1 +1,2 @@
++import partner
+ import course
+Index: doc-backend/openacademy/__openerp__.py
+===================================================================
+--- doc-backend.orig/openacademy/__openerp__.py	2014-08-21 15:13:13.756591893 +0200
++++ doc-backend/openacademy/__openerp__.py	2014-08-21 15:13:13.748591893 +0200
+@@ -12,6 +12,7 @@
+         - attendees registration""",
+     'data' : [
+         'views/openacademy.xml',
++        'views/partner.xml',
+     ],
+     'demo': [
+         'demo.xml',
+Index: doc-backend/openacademy/partner.py
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ doc-backend/openacademy/partner.py	2014-08-21 15:13:13.748591893 +0200
+@@ -0,0 +1,11 @@
++# -*- coding: utf-8 -*-
++from openerp import fields, models
++
++class Partner(models.Model):
++    _inherit = 'res.partner'
++
++    # Add a new column to the res.partner model, by default partners are not
++    # instructors
++    instructor = fields.Boolean("Instructor", default=False)
++
++    session_ids = fields.Many2many('openacademy.session', string="Attended Sessions")
+Index: doc-backend/openacademy/views/partner.xml
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ doc-backend/openacademy/views/partner.xml	2014-08-21 15:13:26.748592370 +0200
+@@ -0,0 +1,28 @@
++<?xml version="1.0" encoding="UTF-8"?>
++ <openerp>
++    <data>
++        <!-- Add instructor field to existing view -->
++        <record model="ir.ui.view" id="partner_instructor_form_view">
++            <field name="name">partner.instructor</field>
++            <field name="model">res.partner</field>
++            <field name="inherit_id" ref="base.view_partner_form"/>
++            <field name="arch" type="xml">
++                <field name="is_company" position="before">
++                    <field name="instructor"/>
++                    <label for="instructor" string="Is an Instructor?"/>
++                </field>
++            </field>
++        </record>
++
++        <record model="ir.actions.act_window" id="contact_list_action">
++            <field name="name">Contacts</field>
++            <field name="res_model">res.partner</field>
++            <field name="view_mode">tree,form</field>
++        </record>
++        <menuitem id="configuration_menu" name="Configuration"
++                  parent="main_openacademy_menu"/>
++        <menuitem id="contact_menu" name="Contacts"
++                  parent="configuration_menu"
++                  action="contact_list_action"/>
++    </data>
++</openerp>

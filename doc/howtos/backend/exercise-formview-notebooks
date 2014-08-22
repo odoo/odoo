@@ -1,0 +1,22 @@
+# HG changeset patch
+# Parent 5508a5440faa7b607d057c4e4ae70af6b6f7cac9
+
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -9,7 +9,14 @@
+                     <sheet>
+                         <group>
+                             <field name="name"/>
+-                            <field name="description"/>
++                            <notebook colspan="4">
++                                <page string="Description">
++                                    <field name="description"/>
++                                </page>
++                                <page string="About">
++                                    This is an example of notebooks
++                                </page>
++                            </notebook>
+                         </group>
+                     </sheet>
+                 </form>

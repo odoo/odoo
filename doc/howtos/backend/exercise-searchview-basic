@@ -1,0 +1,22 @@
+# HG changeset patch
+# Parent b9bfc8929e0ffc3eb153641e14952fe5d99eb908
+diff -r b9bfc8929e0f -r cf2bf8f8490a openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml	Thu Aug 07 16:51:23 2014 +0200
++++ b/openacademy/views/openacademy.xml	Mon Aug 11 13:05:29 2014 +0200
+@@ -1,6 +1,16 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <openerp>
+     <data>
++        <record model="ir.ui.view" id="course_search_view">
++            <field name="name">course.search</field>
++            <field name="model">openacademy.course</field>
++            <field name="arch" type="xml">
++                <search>
++                    <field name="name"/>
++                    <field name="description"/>
++                </search>
++            </field>
++        </record>
+         <record model="ir.ui.view" id="course_form_view">
+             <field name="name">course.form</field>
+             <field name="model">openacademy.course</field>

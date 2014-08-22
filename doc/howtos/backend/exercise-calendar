@@ -1,0 +1,81 @@
+# HG changeset patch
+# Parent 85a8d7317b9e13480f39ad739955442d15144451
+
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-22 17:03:34.383106620 +0200
++++ doc-backend/openacademy/course.py	2014-08-22 17:03:34.375106619 +0200
+@@ -1,4 +1,7 @@
+ # -*- coding: utf-8 -*-
++from datetime import datetime, timedelta
++
++import openerp.tools
+ from openerp import api, fields, models, exceptions
+ 
+ class Course(models.Model):
+@@ -54,6 +57,8 @@
+     attendee_ids = fields.Many2many('res.partner', string="Attendees")
+ 
+     taken_seats = fields.Float(string="Taken seats", compute='_taken_seats')
++    end_date = fields.Date(string="End Date", store=True,
++        compute='_get_end_date', inverse='_set_end_date')
+ 
+     @api.one
+     @api.depends('seats', 'attendee_ids')
+@@ -81,6 +86,26 @@
+             }
+ 
+     @api.one
++    @api.depends('start_date', 'duration')
++    def _get_end_date(self):
++        if not (self.start_date and self.duration):
++            self.end_date = self.start_date
++            return
++
++        start = Datetime.from_string(self.start_date)
++        duration = timedelta(days=self.duration)
++        self.end_date = start + duration
++
++    @api.one
++    def _set_end_date(self):
++        if not (self.start_date and self.end_date):
++            return
++
++        start_date = Datetime.from_string(self.start_date)
++        end_date = Datetime.from_string(self.end_date)
++        self.duration = (end_date - start_date).days
++
++    @api.one
+     @api.constrains('instructor_id', 'attendee_ids')
+     def _check_instructor_not_in_attendees(self):
+         if self.instructor_id and self.instructor_id in self.attendee_ids:
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 17:03:34.383106620 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 17:03:34.379106620 +0200
+@@ -120,11 +120,24 @@
+             </field>
+         </record>
+ 
++        <!-- calendar view -->
++        <record model="ir.ui.view" id="session_calendar_view">
++            <field name="name">session.calendar</field>
++            <field name="model">openacademy.session</field>
++            <field name="arch" type="xml">
++                <calendar string="Session Calendar" date_start="start_date"
++                          date_stop="end_date"
++                          color="instructor_id">
++                    <field name="name"/>
++                </calendar>
++            </field>
++        </record>
++
+         <record model="ir.actions.act_window" id="session_list_action">
+             <field name="name">Sessions</field>
+             <field name="res_model">openacademy.session</field>
+             <field name="view_type">form</field>
+-            <field name="view_mode">tree,form</field>
++            <field name="view_mode">tree,form,calendar</field>
+         </record>
+ 
+         <menuitem id="session_menu" name="Sessions"

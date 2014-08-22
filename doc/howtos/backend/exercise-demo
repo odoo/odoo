@@ -1,0 +1,39 @@
+# HG changeset patch
+# Parent 84e2b0b43fc61fd0bcbb44c1929755d44ee58ae5
+
+Index: doc-backend/openacademy/__openerp__.py
+===================================================================
+--- doc-backend.orig/openacademy/__openerp__.py	2014-08-21 15:18:40.892603902 +0200
++++ doc-backend/openacademy/__openerp__.py	2014-08-21 15:18:40.884603902 +0200
+@@ -12,4 +12,7 @@
+         - attendees registration""",
+     'data' : [
+     ],
++    'demo': [
++        'demo.xml',
++    ],
+ }
+Index: doc-backend/openacademy/demo.xml
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ doc-backend/openacademy/demo.xml	2014-08-21 15:19:26.200605566 +0200
+@@ -0,0 +1,19 @@
++<openerp>
++    <data>
++        <record model="openacademy.course" id="course0">
++            <field name="name">Course 0</field>
++            <field name="description">Course 0's description
++
++Can have multiple lines
++            </field>
++        </record>
++        <record model="openacademy.course" id="course1">
++            <field name="name">Course 1</field>
++            <!-- no description for this one -->
++        </record>
++        <record model="openacademy.course" id="course2">
++            <field name="name">Course 2</field>
++            <field name="description">Course 2's description</field>
++        </record>
++    </data>
++</openerp>

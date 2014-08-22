@@ -1,0 +1,90 @@
+# HG changeset patch
+# Parent 8c721171aa16a41e94059f53d6780c67b5ef2dfc
+
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-22 17:04:08.103107858 +0200
++++ doc-backend/openacademy/course.py	2014-08-22 17:04:08.099107857 +0200
+@@ -67,6 +67,24 @@
+     attendees_count = fields.Integer(
+         string="Attendees count", compute='_get_attendees_count', store=True)
+ 
++    state = fields.Selection([
++         ('draft', "Draft"),
++         ('confirmed', "Confirmed"),
++         ('done', "Done"),
++    ], default='draft')
++
++    @api.one
++    def action_draft(self):
++        self.state = 'draft'
++
++    @api.one
++    def action_confirm(self):
++        self.state = 'confirmed'
++
++    @api.one
++    def action_done(self):
++        self.state = 'done'
++
+     @api.one
+     @api.depends('seats', 'attendee_ids')
+     def _taken_seats(self):
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 17:04:08.103107858 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 17:04:30.939108696 +0200
+@@ -91,22 +91,37 @@
+             <field name="model">openacademy.session</field>
+             <field name="arch" type="xml">
+                 <form string="Session Form">
+-                    <group colspan="2" col="2">
+-                        <separator string="General" colspan="2"/>
+-                        <field name="course_id"/>
+-                        <field name="name"/>
+-                        <field name="instructor_id"/>
+-                        <field name="active"/>
+-                    </group>
+-                    <group colspan="2" col="2">
+-                        <separator string="Schedule" colspan="2"/>
+-                        <field name="start_date"/>
+-                        <field name="duration"/>
+-                        <field name="seats"/>
+-                        <field name="taken_seats" widget="progressbar"/>
+-                    </group>
+-                    <separator string="Attendees" colspan="4"/>
+-                    <field name="attendee_ids" colspan="4" nolabel="1"/>
++                    <header>
++                        <button name="action_draft" type="object"
++                                string="Reset to draft"
++                                states="confirmed,done"/>
++                        <button name="action_confirm" type="object"
++                                string="Confirm" states="draft"
++                                class="oe_highlight"/>
++                        <button name="action_done" type="object"
++                                string="Mark as done" states="confirmed"
++                                class="oe_highlight"/>
++                        <field name="state" widget="statusbar"/>
++                    </header>
++
++                    <sheet>
++                        <group colspan="2" col="2">
++                            <separator string="General" colspan="2"/>
++                            <field name="course_id"/>
++                            <field name="name"/>
++                            <field name="instructor_id"/>
++                            <field name="active"/>
++                        </group>
++                        <group colspan="2" col="2">
++                            <separator string="Schedule" colspan="2"/>
++                            <field name="start_date"/>
++                            <field name="duration"/>
++                            <field name="seats"/>
++                            <field name="taken_seats" widget="progressbar"/>
++                        </group>
++                        <separator string="Attendees" colspan="4"/>
++                        <field name="attendee_ids" colspan="4" nolabel="1"/>
++                    </sheet>
+                 </form>
+             </field>
+         </record>

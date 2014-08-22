@@ -1,0 +1,63 @@
+# HG changeset patch
+# Parent dba00a105dd2a82490394b8dec5fea5f1d8847e1
+
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-22 17:03:44.939107007 +0200
++++ doc-backend/openacademy/course.py	2014-08-22 17:03:44.931107007 +0200
+@@ -60,6 +60,9 @@
+     end_date = fields.Date(string="End Date", store=True,
+         compute='_get_end_date', inverse='_set_end_date')
+ 
++    hours = fields.Float(string="Duration in hours",
++                         compute='_get_hours', inverse='_set_hours')
++
+     @api.one
+     @api.depends('seats', 'attendee_ids')
+     def _taken_seats(self):
+@@ -106,6 +109,15 @@
+         self.duration = (end_date - start_date).days
+ 
+     @api.one
++    @api.depends('duration')
++    def _get_hours(self):
++        self.hours = self.duration * 24
++
++    @api.one
++    def _set_hours(self):
++        self.duration = self.hours / 24
++
++    @api.one
+     @api.constrains('instructor_id', 'attendee_ids')
+     def _check_instructor_not_in_attendees(self):
+         if self.instructor_id and self.instructor_id in self.attendee_ids:
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 17:03:44.939107007 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 17:03:44.931107007 +0200
+@@ -137,11 +137,24 @@
+             </field>
+         </record>
+ 
++        <record model="ir.ui.view" id="session_gantt_view">
++            <field name="name">session.gantt</field>
++            <field name="model">openacademy.session</field>
++            <field name="arch" type="xml">
++                <gantt string="Session Gantt" color="course_id"
++                       date_start="start_date" date_delay="hours">
++                    <level object="res.partner" link="instructor_id">
++                        <field name="name"/>
++                    </level>
++                </gantt>
++            </field>
++        </record>
++
+         <record model="ir.actions.act_window" id="session_list_action">
+             <field name="name">Sessions</field>
+             <field name="res_model">openacademy.session</field>
+             <field name="view_type">form</field>
+-            <field name="view_mode">tree,form,calendar</field>
++            <field name="view_mode">tree,form,calendar,gantt</field>
+         </record>
+ 
+         <menuitem id="session_menu" name="Sessions"

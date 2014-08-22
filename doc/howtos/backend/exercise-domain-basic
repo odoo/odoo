@@ -1,0 +1,17 @@
+# HG changeset patch
+# Parent 142c5065ff1b7266d944d4ef5239e814ae22f0df
+
+Index: doc-backend/openacademy/course.py
+===================================================================
+--- doc-backend.orig/openacademy/course.py	2014-08-21 14:47:27.140535117 +0200
++++ doc-backend/openacademy/course.py	2014-08-21 14:47:55.420536155 +0200
+@@ -21,7 +21,8 @@
+     duration = fields.Float(digits=(6, 2), help="Duration in days")
+     seats = fields.Integer(string="Number of seats")
+ 
+-    instructor_id = fields.Many2one('res.partner', string="Instructor")
++    instructor_id = fields.Many2one('res.partner', string="Instructor",
++        domain=[('instructor', '=', True)])
+     course_id = fields.Many2one('openacademy.course',
+         ondelete='cascade', string="Course", required=True)
+     attendee_ids = fields.Many2many('res.partner', string="Attendees")
