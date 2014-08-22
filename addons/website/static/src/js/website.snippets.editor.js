@@ -1479,13 +1479,11 @@
                     self.BuildingBlock.make_active($(item));
                 }
             });
-
-            this.$el.find(".edition").click(function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                self.element = new CKEDITOR.dom.element(self.$target[0]);
-                new website.editor.MediaDialog(self, self.element).appendTo(document.body);
-            });
+        },
+        edition: function (type, value) {
+            if(type !== "click") return;
+            this.element = new CKEDITOR.dom.element(this.$target[0]);
+            new website.editor.MediaDialog(this, this.element).appendTo(document.body);
         },
         on_focus : function () {
             var self = this;
