@@ -778,7 +778,7 @@ method should simply set the value of the field to compute on every record in
     itself a collection of size 1. You can access/assign fields on single
     records by using the dot notation, like ``record.name``.
 
-.. code::
+.. code-block:: python
 
     import random
     from openerp import models, fields
@@ -795,8 +795,6 @@ method should simply set the value of the field to compute on every record in
 Our compute method is very simple: it loops over ``self`` and performs the same
 operation on every record. We can make it slightly simpler by using the
 decorator :func:`~openerp.api.one` to automatically loop on the collection::
-
-    from openerp import models, fields, api
 
         @api.one
         def _compute_name(self):
@@ -841,6 +839,17 @@ field whenever some of its dependencies have been modified::
 Onchange
 ========
 
+The "onchange" mechanism provides a way for the client interface to update a
+form whenever the user has filled in a value in a field, without saving anything
+to the database.
+
+For instance, suppose a model has three fields ``amount``, ``unit_price`` and
+``price``, and you want to update the price on the form when any of the other
+fields is modified. To achieve this, define a method where ``self`` represents
+the record in the form view, and decorate it with :func:`~openerp.api.onchange`
+to specify on which field it has to be triggered. Any change you make on
+``self`` will be reflected on the form.
+
 .. code-block:: xml
 
     <!-- content of form view -->
@@ -863,14 +872,15 @@ Onchange
             }
         }
 
-For computed fields, valued ``onchange`` behavior is built-in as can be seen
-by playing with the *Session* form: change the number of seats and the
-``taken_seats`` progressbar is automatically updated.
+For computed fields, valued ``onchange`` behavior is built-in as can be seen by
+playing with the *Session* form: change the number of seats or participants, and
+the ``taken_seats`` progressbar is automatically updated.
 
-.. admonition:: Exercise 2 — warning
+.. admonition:: Exercise 2 — Warning
     :class: exercise
 
-    Add an explicit onchange to warn about invalid values
+    Add an explicit onchange to warn about invalid values, like a negative
+    number of seats, or more participants than seats.
 
     .. only:: solutions
 
