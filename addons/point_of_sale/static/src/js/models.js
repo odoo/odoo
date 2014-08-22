@@ -159,7 +159,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             loaded: function(self,users){ self.users = users; },
         },{
             model:  'res.partner',
-            fields: ['name','street','city','country_id','phone','zip','mobile','email','ean13'],
+            fields: ['name','street','city','country_id','phone','zip','mobile','email','ean13','write_date'],
             domain: null,
             loaded: function(self,partners){
                 self.partners = partners;
@@ -388,6 +388,26 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
 
             return loaded;
+        },
+
+        // reload the list of partner, returns as a deferred that resolves if there were
+        // updated partners, and fails if not
+        load_new_partners: function(){
+            var self = this;
+            var def  = new $.Deferred();
+            var fields = _.find(this.models,function(model){ return model.model === 'res.partner'; }).fields;
+            new instance.web.Model('res.partner')
+                .query(fields)
+                .filter([['write_date','>',this.db.get_partner_write_date()]])
+                .all({'timeout':3000, 'shadow': true})
+                .then(function(partners){
+                    if (self.db.add_partners(partners)) {   // check if the partners we got were real updates
+                        def.resolve();
+                    } else {
+                        def.reject();
+                    }
+                }, function(){ def.reject(); });    
+            return def;
         },
 
         // this is called when an order is removed from the order collection. It ensures that there is always an existing
