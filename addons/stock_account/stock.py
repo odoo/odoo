@@ -207,7 +207,6 @@ class stock_picking(osv.osv):
         """
         context = context or {}
         todo = {}
-
         for picking in self.browse(cr, uid, ids, context=context):
             partner = self._get_partner_to_invoice(cr, uid, picking, context)
             #grouping is based on the invoiced partner
@@ -222,7 +221,7 @@ class stock_picking(osv.osv):
                         todo[key].append(move)
         invoices = []
         for moves in todo.values():
-            invoices = self._invoice_create_line(cr, uid, moves, journal_id, type, context=context)
+            invoices += self._invoice_create_line(cr, uid, moves, journal_id, type, context=context)
         return invoices
 
     def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, origin, context=None):
