@@ -258,7 +258,7 @@
                                 <group>
                                     <field name="move_id" groups="account.group_account_user"/>
                                     <field name="period_id" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]" groups="account.group_account_user"/>
-                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
+                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id,context)" widget="selection" groups="base.group_multi_company"/>
                                 </group>
                             </group>
                         </page>
@@ -393,7 +393,7 @@
                         <page string="Other Info">
                             <group col="4">
                                 <group>
-                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
+                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id,context)" widget="selection" groups="base.group_multi_company"/>
                                     <field name="user_id" groups="base.group_user" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
                                     <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"/>
                                     <field name="period_id" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]"
@@ -460,6 +460,7 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id" string="Salesperson"/>
                     <field name="period_id" string="Period"/>
+                    <field name="state"/>
                     <separator/>
                     <filter domain="[('user_id','=',uid)]" help="My Invoices"/>
                     <group expand="0" string="Group By">

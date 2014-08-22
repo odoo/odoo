@@ -374,9 +374,10 @@
             <field name="arch" type="xml">
                 <search string="Search Account Journal">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Journal"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Sale" icon="terp-camera_test"/>
                     <filter domain="['|', ('type', '=', 'purchase'), ('type', '=', 'purchase_refund')]" string="Purchase" icon="terp-purchase"/>
-                    <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity" icon="terp-dolar"/>
+                    <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Bank &amp; Cash" icon="terp-dolar"/>
                     <filter domain="['|', ('type', '=', 'general'), ('type', '=', 'situation')]" string="Others" icon="terp-stock"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">

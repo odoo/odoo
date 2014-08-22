@@ -51,10 +51,10 @@ Note that if you want to check the follow-up level for a given partner/account e
         'security/account_followup_security.xml',
         'security/ir.model.access.csv',
         'report/account_followup_report.xml',
+        'wizard/account_followup_print_view.xml',
         'account_followup_data.xml',
         'account_followup_view.xml',
         'account_followup_customers.xml',
-        'wizard/account_followup_print_view.xml',
         'res_config_view.xml',
         'views/report_followup.xml',
         'account_followup_reports.xml'
