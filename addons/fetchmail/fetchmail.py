@@ -236,12 +236,12 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                                                                  save_original=server.original,
                                                                  strip_attachments=(not server.attach),
                                                                  context=context)
+                            pop_server.dele(num)
                         except Exception:
                             _logger.exception('Failed to process mail from %s server %s.', server.type, server.name)
                             failed += 1
                         if res_id and server.action_id:
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': context.get("thread_model", server.object_id.model)})
-                        pop_server.dele(num)
                         cr.commit()
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", numMsgs, server.type, server.name, (numMsgs - failed), failed)
                 except Exception:
