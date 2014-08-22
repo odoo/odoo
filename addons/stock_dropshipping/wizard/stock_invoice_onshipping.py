@@ -39,3 +39,8 @@ class stock_invoice_onshipping(osv.osv_memory):
             return 'purchase'
         else:
             return super(stock_invoice_onshipping, self)._get_journal_type(cr, uid, context=context)
+        
+        
+    _defaults = {
+        'journal_type': _get_journal_type,
+        }
