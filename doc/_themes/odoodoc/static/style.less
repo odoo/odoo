@@ -315,7 +315,8 @@ div.section > h2 {
   }
   > .admonition-title,
   // only "aphorisms" should have the same size as the admonition category
-  &.aphorism > .admonition-title + p {
+  &.aphorism > .admonition-title + p,
+  &.exercise > .admonition-title + p {
     display: inline-block;
     margin-top: 0;
     margin-bottom: 5px;
@@ -350,7 +351,8 @@ div.section > h2 {
       color: @brand-danger;
     }
   }
-  &.admonition-example {
+  &.exercise {
+    border-left-color: @gray-light;
     > .admonition-title {
       color: @gray;
     }

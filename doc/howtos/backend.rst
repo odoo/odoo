@@ -92,8 +92,7 @@ might contain::
 
     import mymodule
 
-.. admonition:: Exercise 1 — Module creation
-    :class: exercise
+.. exercise:: Module creation
 
     Create an empty module Open Academy, install it in Odoo.
 
@@ -194,8 +193,7 @@ By default, Odoo also requires a ``name`` field on all models for various
 display and search behaviors. The field used for these purposes can be
 overridden by setting :attr:`~openerp.models.Model._rec_name`.
 
-.. admonition:: Exercise 2 — Define a model
-    :class: exercise
+.. exercise:: Define a model
 
     Define a new data model *Course* in the *openacademy* module. A course
     has a title and a description. Courses must have a title.
@@ -240,8 +238,7 @@ Data files have to be declared in the manifest file to be loaded, they can
 be declared in the ``'data'`` list (always loaded) or in the ``'demo'`` list
 (only loaded in demonstration mode).
 
-.. admonition:: Exercise — Define demonstration data
-    :class: exercise
+.. exercise:: Define demonstration data
 
     Create demonstration data filling the *Courses* model with a few
     demonstration courses.
@@ -285,8 +282,7 @@ action more easily.
     Data files are executed sequentially, the action's ``id`` must be present
     in the database before the menu can be created.
 
-.. admonition:: Exercise 3 — Define new menu entries
-    :class: exercise
+.. exercise:: Define new menu entries
 
     Define new menu entries to access courses and sessions under the
     OpenAcademy menu entry. A user should be able to
@@ -389,8 +385,7 @@ elements (groups, notebooks) and interactive elements (buttons and fields):
         </group>
     </form>
 
-.. admonition:: Exercise 1 - Customise form view using XML
-    :class: exercise
+.. exercise:: Customise form view using XML
 
     Create your own form view for the Course object. Data displayed should be:
     the name and the description of the course.
@@ -399,8 +394,7 @@ elements (groups, notebooks) and interactive elements (buttons and fields):
 
         .. patch::
 
-.. admonition:: Exercise 2 - Notebooks
-    :class: exercise
+.. exercise:: Notebooks
 
     In the Course form view, put the description field under a tab, such that
     it will be easier to add other tabs later, containing additional
@@ -455,7 +449,7 @@ composed of fields defining which fields can be searched on:
 If no search view exists for the model, Odoo generates one which only allows
 searching on the ``name`` field.
 
-.. admonition:: Exercise 3 — Search courses
+.. exercise:: Search courses
 
     Allow searching for courses based on their title or their description.
 
@@ -470,8 +464,7 @@ A record from a model may be related to a record from another model. For
 instance, a sale order record is related to a client record that contains the
 client data; it is also related to its sale order line records.
 
-.. admonition:: Exercise 1 — Create a session model
-    :class: exercise
+.. exercise:: Create a session model
 
     For the module Open Academy, we consider a model for *sessions*: a session
     is an occurrence of a course taught at a given time for a given audience.
@@ -528,8 +521,7 @@ Relational field types are:
         for other in foo.other_ids:
             print foo.name
 
-.. admonition:: Exercise 2 — Many2one relations
-    :class: exercise
+.. exercise:: Many2one relations
 
     Using a many2one, modify the *Course* and *Session* models to reflect their
     relation with other models:
@@ -549,8 +541,7 @@ Relational field types are:
 
         .. patch::
 
-.. admonition:: Exercise 3 — Inverse one2many relations
-    :class: exercise
+.. exercise:: Inverse one2many relations
 
     Using the inverse relational field one2many, modify the models to reflect
     the relation between courses and sessions.
@@ -561,8 +552,7 @@ Relational field types are:
 
         .. patch::
 
-.. admonition:: Exercise 4 — Multiple many2many relations
-    :class: exercise
+.. exercise:: Multiple many2many relations
 
     Using the relational field many2many, modify the *Session* model to relate
     every session to a set of *attendees*. Attendees will be represented by
@@ -574,8 +564,7 @@ Relational field types are:
 
         .. patch::
 
-.. admonition:: Exercise 5 — Views modification
-    :class: exercise
+.. exercise:: Views modification
 
     For the *Course* model,
 
@@ -672,8 +661,7 @@ instead of a single view its ``arch`` field is composed of any number of
         alters the attributes of the matched element using special
         ``attribute`` elements in the ``xpath``'s body
 
-.. admonition:: Exercise 1 — Alter existing content
-    :class: exercise
+.. exercise:: Alter existing content
 
     * Using model inheritance, modify the existing *Partner* model to add an
       ``instructor`` boolean field
@@ -721,8 +709,7 @@ services *OR* have a unit price which is *NOT* between 1000 and 2000"::
 A ``domain`` parameter can be added to relational fields to limit valid
 records for the relation when trying to select records in the client interface.
 
-.. admonition:: Exercise 2 — Domains on relational fields
-    :class: exercise
+.. exercise:: Domains on relational fields
 
     When selecting the instructor for a *Session*, only instructors (partners
     with ``instructor`` set to ``True``) should be visible.
@@ -738,8 +725,7 @@ records for the relation when trying to select records in the client interface.
             declared as a string is evaluated client-side and allows
             field names on the right-hand side
 
-.. admonition:: Exercise 3 — More complex domains
-    :class: exercise
+.. exercise:: More complex domains
 
     Create new partner categories *Teacher / Level 1* and *Teacher / Level 2*.
     The instructor for a session can be either an instructor or a teacher
@@ -822,8 +808,7 @@ field whenever some of its dependencies have been modified::
         def _compute_name(self):
             self.name = "Record with value %s" % self.value
 
-.. admonition:: Exercise 1: Computed fields
-    :class: exercise
+.. exercise:: Computed fields
 
     * Add the percentage of taken seats to the *Session* model
     * Display that field in the tree and form views
@@ -876,8 +861,7 @@ For computed fields, valued ``onchange`` behavior is built-in as can be seen by
 playing with the *Session* form: change the number of seats or participants, and
 the ``taken_seats`` progressbar is automatically updated.
 
-.. admonition:: Exercise 2 — Warning
-    :class: exercise
+.. exercise:: Warning
 
     Add an explicit onchange to warn about invalid values, like a negative
     number of seats, or more participants than seats.
@@ -904,8 +888,7 @@ take a Python function which is called when creating or updating a record::
 
         # all records passed the test, don't return anything
 
-.. admonition:: Exercise 4 - Add Python constraints
-    :class: exercise
+.. exercise:: Add Python constraints
 
     Add a constraint that checks that the instructor is not present in the attendees of his/her own session.
 
@@ -916,8 +899,7 @@ take a Python function which is called when creating or updating a record::
 SQL constraints are defined through :attr:`~openerp.models.Model._constraints`
 and take a table_constraint_ expression as a string.
 
-.. admonition:: Exercise 5 - Add SQL constraints
-    :class: exercise
+.. exercise:: Add SQL constraints
 
     With the help of `PostgreSQL's documentation`_ , add the following
     constraints:
@@ -929,8 +911,7 @@ and take a table_constraint_ expression as a string.
 
         .. patch::
 
-.. admonition:: Exercise 6 - Add a duplicate option
-    :class: exercise
+.. exercise:: Exercise 6 - Add a duplicate option
 
     Since we added a constraint for the Course name uniqueness, it is not
     possible to use the "duplicate" function anymore (:menuselection:`Form -->
@@ -943,8 +924,7 @@ and take a table_constraint_ expression as a string.
 
         .. patch::
 
-.. admonition:: Exercise 7 - Active objects – Default values
-    :class: exercise
+.. exercise:: Active objects – Default values
 
     Define the start_date default value as today. Add a field ``active`` in
     the class Session, and set sessions as active by default.
@@ -986,8 +966,7 @@ behavior:
     (rather than having to go through the form view), the value is the
     position where new rows appear.
 
-.. admonition:: Exercise 1 - List coloring
-    :class: exercise
+.. exercise:: List coloring
 
     Modify the Session tree view in such a way that sessions lasting less than
     5 days are colored blue, and the ones lasting more than 15 days are
@@ -1023,8 +1002,7 @@ field (to define the label for each calendar event)
         <field name="name"/>
     </calendar>
 
-.. admonition:: Exercise 2 - Calendar view
-    :class: exercise
+.. exercise:: Calendar view
 
     Add a Calendar view to the *Session* model enabling the user to view the
     events associated to the Open Academy.
@@ -1071,8 +1049,7 @@ The action can also set default values for search fields through its
 provided value. Search filters must have an optional ``@name`` to have a
 default and behave as booleans (they can only be enabled by default).
 
-.. admonition:: Exercise 3 - Search views
-    :class: exercise
+.. exercise:: Search views
 
     Add a button to filter the courses for which the current user is the
     responsible in the course search view. Make it selected by default.
@@ -1095,8 +1072,7 @@ their root element is ``<gantt>``.
         </level>
     </gantt>
 
-.. admonition:: Exercise 4 - Gantt charts
-    :class: exercise
+.. exercise:: Gantt charts
 
     Add a Gantt Chart enabling the user to view the sessions scheduling linked
     to the Open Academy module. The sessions should be grouped by instructor.
@@ -1153,8 +1129,7 @@ the values:
     Graph views perform aggregations on database values, they do not work
     with non-stored computed fields.
 
-.. admonition:: Exercise 5 - Graph view
-    :class: exercise
+.. exercise:: Graph view
 
     Add a Graph view in the Session object that displays, for each course, the
     number of attendees under the form of a bar chart.
@@ -1181,8 +1156,7 @@ stage), or by responsible (each column is a user), and so on.
 Kanban views define the structure of each card as a mix of form elements
 (including basic HTML) and :ref:`reference/qweb`.
 
-.. admonition:: Exercise 6 - Kanban view
-    :class: exercise
+.. exercise:: Kanban view
 
     Add a Kanban view that displays sessions grouped by course (columns are
     thus courses).
@@ -1200,8 +1174,7 @@ Workflows
 Workflows are models associated to business objects describing their dynamics.
 Workflows are also used to track processes that evolve over time.
 
-.. admonition:: Exercise 1 - Almost a workflow
-    :class: exercise
+.. exercise:: Almost a workflow
 
     Add a ``state`` field to the *Session* model. It will be used to define
     a workflow-ish.
@@ -1233,8 +1206,7 @@ graphical tools. Workflows, activities (nodes or actions) and transitions
 (conditions) are declared as XML records, as usual. The tokens that navigate
 in workflows are called workitems.
 
-.. admonition:: Exercise 2 - Workflow
-    :class: exercise
+.. exercise:: Workflow
 
     Replace the ad-hoc *Session* workflow by a real workflow. Transform the
     *Session* form view so its buttons call the workflow instead of the
@@ -1259,8 +1231,7 @@ in workflows are called workitems.
 
 
 
-.. admonition:: Exercise 3 - Automatic transitions
-    :class: exercise
+.. exercise:: Automatic transitions
 
     Automatically transition sessions from *Draft* to *Confirmed* when more
     than half the session's seats are reserved.
@@ -1269,8 +1240,7 @@ in workflows are called workitems.
 
         .. patch::
 
-.. admonition:: Exercise 4 - Server actions
-    :class: exercise
+.. exercise:: Server actions
 
     Replace the Python methods for synchronizing session state by
     server actions.
@@ -1313,8 +1283,7 @@ rights are usually created by a CSV file named after its model:
     access_idea_idea,idea.idea,model_idea_idea,base.group_user,1,1,1,0
     access_idea_vote,idea.vote,model_idea_vote,base.group_user,1,1,1,0
 
-.. admonition:: Exercise 1 - Add access control through the OpenERP interface
-    :class: exercise
+.. exercise:: Add access control through the OpenERP interface
 
     Create a new user "John Smith". Then create a group
     "OpenAcademy / Session Read" with read access to the *Session* model.
@@ -1329,8 +1298,7 @@ rights are usually created by a CSV file named after its model:
         #. Edit *John Smith* to make them a member of ``session_read``
         #. Log in as *John Smith* to check the access rights are correct
 
-.. admonition:: Exercise 2 - Add access control through data files in your module
-    :class: exercise
+.. exercise:: Add access control through data files in your module
 
     Using data files,
 
@@ -1375,8 +1343,7 @@ the same convention as the method “write” of the ORM.
         <field name="domain_force">[('state','=','cancel')]</field>
     </record>
 
-.. admonition:: Exercise 4 - Record rule
-    :class: exercise
+.. exercise:: Record rule
 
     Add a record rule for the model Course and the group
     "OpenAcademy / Manager", that restricts ``write`` and ``unlink`` accesses
@@ -1423,8 +1390,7 @@ PO/POT files.
    translated this way by surrounding it with the tools.translate._ method
    (e.g. _(‘Label') )
 
-.. admonition:: Exercise 1 - Translate a module
-   :class: exercise
+.. exercise:: Translate a module
 
    Choose a second language for your Odoo installation. Translate your
    module using the facilities provided by Odoo.
@@ -1525,8 +1491,7 @@ http://localhost:8069/report/html/account.report_invoice/1 (if ``account`` is
 installed) and the PDF version through
 http://localhost:8069/report/pdf/account.report_invoice/1.
 
-.. admonition:: Exercise 1 - Create a report for the Session model
-   :class: exercise
+.. exercise:: Create a report for the Session model
 
    For each session, it should display session's name, its start and end,
    and list the session's attendees.
@@ -1538,8 +1503,7 @@ http://localhost:8069/report/pdf/account.report_invoice/1.
 Dashboards
 ----------
 
-.. admonition:: Exercise 2 - Define a Dashboard
-   :class: exercise
+.. exercise:: Define a Dashboard
 
    Define a dashboard containing the graph view you created, the sessions
    calendar view and a list view of the courses (switchable to a form
@@ -1602,8 +1566,7 @@ server with the library xmlrpclib.
    }
    idea_id = sock.execute(db, uid, password, 'idea.idea', 'create', args)
 
-.. admonition:: Exercise 1 - Add a new service to the client
-   :class: exercise
+.. exercise:: Add a new service to the client
 
    Write a Python program able to send XML-RPC requests to a PC running
    Odoo (yours, or your instructor's). This program should display all

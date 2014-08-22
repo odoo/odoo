@@ -6510,7 +6510,8 @@ div.section > h2 {
   content: ": ";
 }
 .admonition > .admonition-title,
-.admonition.aphorism > .admonition-title + p {
+.admonition.aphorism > .admonition-title + p,
+.admonition.exercise > .admonition-title + p {
   display: inline-block;
   margin-top: 0;
   margin-bottom: 5px;
@@ -6541,7 +6542,10 @@ div.section > h2 {
 .admonition.danger > .admonition-title {
   color: #d9534f;
 }
-.admonition.admonition-example > .admonition-title {
+.admonition.exercise {
+  border-left-color: #777777;
+}
+.admonition.exercise > .admonition-title {
   color: #555555;
 }
 /*
