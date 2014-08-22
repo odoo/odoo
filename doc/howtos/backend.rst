@@ -877,27 +877,35 @@ Odoo provides two ways to set up automatically verified invariants:
 :func:`Python constraints <openerp.api.constrains>` and
 :attr:`SQL constaints <openerp.models.Model._sql_constraints>`.
 
-Python constraints are defined through :func:`~openerp.api.constrains`, they
-take a Python function which is called when creating or updating a record::
+A Python constraint is defined as a method decorated with
+:func:`~openerp.api.constrains`, and invoked on a recordset. The decorator
+specifies which fields are involved in the constraint, so that the constraint is
+automatically evaluated when one of them is modified. The method is expected to
+raise an exception if its invariant is not satisfied::
 
-    @api.constrains(*fields)
+    from openerp.exceptions import ValidationError
+
+    @api.constrains('age')
     def _check_something(self):
         for record in self:
-            if not check_thing(record):
-                raise ValidationError("Why the check failed")
-
+            if record.age > 20:
+                raise ValidationError("Your record is too old: %s" % record.age)
         # all records passed the test, don't return anything
 
 .. exercise:: Add Python constraints
 
-    Add a constraint that checks that the instructor is not present in the attendees of his/her own session.
+    Add a constraint that checks that the instructor is not present in the
+    attendees of his/her own session.
 
     .. only:: solutions
 
         .. patch::
 
-SQL constraints are defined through :attr:`~openerp.models.Model._constraints`
-and take a table_constraint_ expression as a string.
+SQL constraints are defined through the model attribute
+:attr:`~openerp.models.Model._sql_constraints`. The latter is assigned to a list
+of triples of strings ``(name, sql_definition, message)``, where ``name`` is a
+valid SQL constraint name, ``sql_definition`` is a table_constraint_ expression,
+and ``message`` is the error message.
 
 .. exercise:: Add SQL constraints
 
