@@ -740,7 +740,7 @@ class account_bank_statement_line(osv.osv):
         move_id = am_obj.create(cr, uid, move_vals, context=context)
 
         # Create the move line for the statement line
-        if st_line.statement_id.currency.id != company_currency.id:
+        if st_line.statement_id.currency.id != company_currency.id and st_line.amount == 0.0:
             ctx = context.copy()
             ctx['date'] = st_line.date
             amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount_currency, context=ctx)
@@ -771,8 +771,15 @@ class account_bank_statement_line(osv.osv):
                     debit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['debit'] / st_line_currency_rate)
                     credit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['credit'] / st_line_currency_rate)
                 else:
-                    debit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=context)
-                    credit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=context)
+                    # use the amount provided by the user instead of forcing compute currency
+                    if st_line.amount != 0.0:
+                        debit_at_current_rate = st_line.amount < 0 and -st_line.amount or 0.0
+                        credit_at_current_rate = st_line.amount > 0 and st_line.amount or 0.0
+                    else:
+                        ctx = context.copy()
+                        ctx['date'] = st_line.date
+                        debit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=ctx)
+                        credit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
                 if mv_line_dict.get('counterpart_move_line_id'):
                     #post an account line that use the same currency rate than the counterpart (to balance the account) and post the difference in another line
                     ctx = context.copy()
