@@ -3,8 +3,8 @@
 
 Index: doc-backend/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 14:55:31.612552902 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 14:55:31.604552902 +0200
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 14:36:47.018783301 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 14:37:12.722784245 +0200
 @@ -110,9 +110,10 @@
              <field name="name">session.tree</field>
              <field name="model">openacademy.session</field>
@@ -14,6 +14,6 @@ Index: doc-backend/openacademy/views/openacademy.xml
                      <field name="name"/>
                      <field name="course_id"/>
 +                    <field name="duration" invisible="1"/>
-                     <field name="seats_taken" widget="progressbar"/>
+                     <field name="taken_seats" widget="progressbar"/>
                  </tree>
              </field>

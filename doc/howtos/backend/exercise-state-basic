@@ -3,8 +3,8 @@
 
 Index: doc-backend/openacademy/course.py
 ===================================================================
---- doc-backend.orig/openacademy/course.py	2014-08-21 15:01:59.020567124 +0200
-+++ doc-backend/openacademy/course.py	2014-08-21 15:01:59.016567124 +0200
+--- doc-backend.orig/openacademy/course.py	2014-08-22 14:38:25.550786918 +0200
++++ doc-backend/openacademy/course.py	2014-08-22 14:38:25.546786918 +0200
 @@ -67,6 +67,24 @@
      attendees_count = fields.Integer(
          string="Attendees count", compute='_get_attendees_count', store=True)
@@ -32,8 +32,8 @@ Index: doc-backend/openacademy/course.py
      def _taken_seats(self):
 Index: doc-backend/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 15:01:59.020567124 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 15:03:27.436570369 +0200
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 14:38:25.550786918 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 14:39:11.610788609 +0200
 @@ -91,21 +91,36 @@
              <field name="model">openacademy.session</field>
              <field name="arch" type="xml">
@@ -49,7 +49,7 @@ Index: doc-backend/openacademy/views/openacademy.xml
 -                        <field name="start_date"/>
 -                        <field name="duration"/>
 -                        <field name="seats"/>
--                        <field name="seats_taken" widget="progressbar"/>
+-                        <field name="taken_seats" widget="progressbar"/>
 -                    </group>
 -                    <separator string="Attendees" colspan="4"/>
 -                    <field name="attendee_ids" colspan="4" nolabel="1"/>
@@ -78,7 +78,7 @@ Index: doc-backend/openacademy/views/openacademy.xml
 +                            <field name="start_date"/>
 +                            <field name="duration"/>
 +                            <field name="seats"/>
-+                            <field name="seats_taken" widget="progressbar"/>
++                            <field name="taken_seats" widget="progressbar"/>
 +                        </group>
 +                        <separator string="Attendees" colspan="4"/>
 +                        <field name="attendee_ids" colspan="4" nolabel="1"/>

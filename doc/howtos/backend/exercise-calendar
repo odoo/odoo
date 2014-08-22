@@ -3,8 +3,8 @@
 
 Index: doc-backend/openacademy/course.py
 ===================================================================
---- doc-backend.orig/openacademy/course.py	2014-08-21 14:55:44.792553386 +0200
-+++ doc-backend/openacademy/course.py	2014-08-21 15:00:36.248564085 +0200
+--- doc-backend.orig/openacademy/course.py	2014-08-22 14:37:33.914785023 +0200
++++ doc-backend/openacademy/course.py	2014-08-22 14:37:52.110785691 +0200
 @@ -1,4 +1,7 @@
  # -*- coding: utf-8 -*-
 +from datetime import datetime, timedelta
@@ -16,7 +16,7 @@ Index: doc-backend/openacademy/course.py
 @@ -54,6 +57,8 @@
      attendee_ids = fields.Many2many('res.partner', string="Attendees")
  
-     seats_taken = fields.Float(string="Taken seats", compute='_taken_seats')
+     taken_seats = fields.Float(string="Taken seats", compute='_taken_seats')
 +    end_date = fields.Date(string="End Date", store=True,
 +        compute='_get_end_date', inverse='_set_end_date')
  
@@ -51,8 +51,8 @@ Index: doc-backend/openacademy/course.py
          if self.instructor_id and self.instructor_id in self.attendee_ids:
 Index: doc-backend/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 14:55:44.792553386 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 14:55:44.788553386 +0200
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 14:37:33.914785023 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 14:37:33.910785023 +0200
 @@ -119,11 +119,24 @@
              </field>
          </record>

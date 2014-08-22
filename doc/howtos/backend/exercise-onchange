@@ -3,11 +3,11 @@
 
 Index: doc-backend/openacademy/course.py
 ===================================================================
---- doc-backend.orig/openacademy/course.py	2014-08-21 14:50:54.184542718 +0200
-+++ doc-backend/openacademy/course.py	2014-08-21 14:51:07.248543197 +0200
+--- doc-backend.orig/openacademy/course.py	2014-08-22 14:36:18.106782240 +0200
++++ doc-backend/openacademy/course.py	2014-08-22 14:36:18.102782240 +0200
 @@ -38,3 +38,20 @@
          else:
-             self.seats_taken = 100.0 * len(self.attendee_ids) / self.seats
+             self.taken_seats = 100.0 * len(self.attendee_ids) / self.seats
  
 +    @api.onchange('seats', 'attendee_ids')
 +    def _verify_valid_seats(self):

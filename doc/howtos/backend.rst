@@ -757,32 +757,77 @@ Computed fields
 ===============
 
 So far fields have been stored directly in and retrieved directly from the
-database.
-
-Fields can also be *computed*. In that case, the field's value is not
+database. Fields can also be *computed*. In that case, the field's value is not
 retrieved from the database but computed on-the-fly by calling a method of the
 model.
 
-To create a computed field, create a field and set its
+To create a computed field, create a field and set its attribute
 :attr:`~openerp.fields.Field.compute` to the name of a method. The computation
-method should simply set the field to compute on ``self``::
+method should simply set the value of the field to compute on every record in
+``self``.
+
+.. danger:: ``self`` is a collection
+    :class: aphorism
+
+    The object ``self`` is a *recordset*, i.e., an ordered collection of
+    records. It supports the standard Python operations on collections, like
+    ``len(self)`` and ``iter(self)``, plus extra set operations like ``recs1 +
+    recs2``.
+
+    Iterating over ``self`` gives the records one by one, where each record is
+    itself a collection of size 1. You can access/assign fields on single
+    records by using the dot notation, like ``record.name``.
+
+.. code::
 
     import random
-    from openerp import api, models
+    from openerp import models, fields
 
     class ComputedModel(models.Model):
         _name = 'test.computed'
 
         name = fields.Char(compute='_compute_name')
 
+        def _compute_name(self):
+            for record in self:
+                record.name = str(random.randint(1, 1e6))
+
+Our compute method is very simple: it loops over ``self`` and performs the same
+operation on every record. We can make it slightly simpler by using the
+decorator :func:`~openerp.api.one` to automatically loop on the collection::
+
+    from openerp import models, fields, api
+
         @api.one
         def _compute_name(self):
             self.name = str(random.randint(1, 1e6))
 
-.. admonition:: Exercise 1: computed fields
+Dependencies
+------------
+
+The value of a computed field usually depends on the values of other fields on
+the computed record. The ORM expects the developer to specify those dependencies
+on the compute method with the decorator :func:`~openerp.api.depends`.
+The given dependencies are used by the ORM to trigger the recomputation of the
+field whenever some of its dependencies have been modified::
+
+    from openerp import models, fields, api
+
+    class ComputedModel(models.Model):
+        _name = 'test.computed'
+
+        name = fields.Char(compute='_compute_name')
+        value = fields.Integer()
+
+        @api.one
+        @api.depends('value')
+        def _compute_name(self):
+            self.name = "Record with value %s" % self.value
+
+.. admonition:: Exercise 1: Computed fields
     :class: exercise
 
-    * Add the percentage of filled seats to the *Session* model
+    * Add the percentage of taken seats to the *Session* model
     * Display that field in the tree and form views
     * Display the field as a progress bar
 
@@ -820,7 +865,7 @@ Onchange
 
 For computed fields, valued ``onchange`` behavior is built-in as can be seen
 by playing with the *Session* form: change the number of seats and the
-``seats_taken`` progressbar is automatically updated.
+``taken_seats`` progressbar is automatically updated.
 
 .. admonition:: Exercise 2 — warning
     :class: exercise
