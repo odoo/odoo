@@ -198,9 +198,9 @@ class mrp_bom(osv.osv):
         'type': fields.selection([('normal', 'Normal'), ('phantom', 'Set')], 'BoM Type', required=True,
                 help= "Set: When processing a sales order for this product, the delivery order will contain the raw materials, instead of the finished product."),
         'position': fields.char('Internal Reference', help="Reference to a position in an external plan."),
-        'product_tmpl_id': fields.many2one('product.template', 'Product', required=True),
+        'product_tmpl_id': fields.many2one('product.template', 'Product', domain="[('type', '!=', 'service')]", required=True),
         'product_id': fields.many2one('product.product', 'Product Variant',
-            domain="[('product_tmpl_id','=',product_tmpl_id)]",
+            domain="['&', ('product_tmpl_id','=',product_tmpl_id), ('type','!=', 'service')]",
             help="If a product variant is defined the BOM is available only for this product."),
         'bom_line_ids': fields.one2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True),
         'product_qty': fields.float('Product Quantity', required=True, digits_compute=dp.get_precision('Product Unit of Measure')),
@@ -1155,6 +1155,9 @@ class mrp_production(osv.osv):
                     stock_moves.append(stock_move_id)
             if stock_moves:
                 self.pool.get('stock.move').action_confirm(cr, uid, stock_moves, context=context)
+            else:
+                raise osv.except_osv(_('Error!'),
+                        _('It does not make sense to create a production order without any physical product to consume'))
             production.write({'state': 'confirmed'}, context=context)
         return 0
 

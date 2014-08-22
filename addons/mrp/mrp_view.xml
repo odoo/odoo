@@ -347,8 +347,8 @@
                 <form string="Bill of Material">
                     <group>
                         <group>
-                            <field name="product_tmpl_id" domain="[('type', '!=', 'service')]" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
-                            <field name="product_id" domain="[('type', '!=', 'service')]"/>
+                            <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
+                            <field name="product_id"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
                                 <field name="product_qty" class="oe_inline" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
