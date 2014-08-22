@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_order_print_docsaway_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <button name="print_quotation" position="before">
+                    <button name="send_letter_quotation" string="Send Letter" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
+                    <button name="send_letter_quotation" string="Send Letter" type="object" states="sent,progress,manual" groups="base.group_user"/>
+                </button>
+            </field>
+        </record>
+
+        <record id="invoice_print_docsaway_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <button name="invoice_print" position="before">
+                    <button name="invoice_send_letter" string="Send Letter" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight" groups="base.group_user"/>
+                    <button name="invoice_send_letter" string="Send Letter" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}" groups="base.group_user"/>
+                </button>
+            </field>
+        </record>
+    </data>
+</openerp>

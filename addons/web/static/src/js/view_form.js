@@ -3862,7 +3862,8 @@ instance.web.form.Many2OneButton = instance.web.form.AbstractField.extend({
  */
 instance.web.form.AddAnItemList = instance.web.ListView.List.extend({
     pad_table_to: function (count) {
-        if (!this.view.is_action_enabled('create') || this.is_readonly()) {
+        if (!this.view.is_action_enabled('create') || this.is_readonly() ||
+            this.is_deleteonly()) {
             this._super(count);
             return;
         }
@@ -4515,6 +4516,9 @@ instance.web.form.One2ManyList = instance.web.form.AddAnItemList.extend({
     is_readonly: function () {
         return this.view.o2m.get('effective_readonly');
     },
+    is_deleteonly: function () {
+        return this.view.o2m.node.attrs['deleteonly'];
+    },
 });
 
 instance.web.form.One2ManyFormView = instance.web.FormView.extend({
@@ -4896,7 +4900,10 @@ instance.web.form.Many2ManyList = instance.web.form.AddAnItemList.extend({
     _add_row_class: 'oe_form_field_many2many_list_row_add',
     is_readonly: function () {
         return this.view.m2m_field.get('effective_readonly');
-    }
+    },
+    is_deleteonly: function () {
+        return this.view.o2m.node.attrs['deleteonly'];
+    },
 });
 
 instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, {

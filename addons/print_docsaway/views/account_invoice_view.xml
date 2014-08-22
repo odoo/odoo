@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_invoice_docsaway_filter" model="ir.ui.view">
+            <field name="name">account.invoice.docsaway.select</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <field name="period_id" position="after">
+                    <filter name="unposted" string="Unposted" domain="[('sent_docsaway','=',False)]" help="Unposted via DocsAway web service"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

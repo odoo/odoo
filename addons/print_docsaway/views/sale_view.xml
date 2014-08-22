@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_sales_order_docsaway_filter" model="ir.ui.view">
+            <field name="name">sale.order.docsaway.select</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <filter name="message_unread" position="after">
+                    <separator/>
+                    <filter name="unposted" string="Unposted" domain="[('sent_docsaway','=',False)]" help="Unposted via DocsAway web service"/>
+                </filter>
+            </field>
+        </record>
+    </data>
+</openerp>
