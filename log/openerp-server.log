@@ -1,0 +1,175 @@
+2014-08-23 17:27:58,943 4962 INFO curso01 werkzeug: 127.0.0.1 - - [23/Aug/2014 17:27:58] "GET / HTTP/1.1" 303 -
+2014-08-23 17:27:59,015 4962 INFO curso01 werkzeug: 127.0.0.1 - - [23/Aug/2014 17:27:59] "GET /web HTTP/1.1" 200 -
+2014-08-23 17:27:59,089 4962 INFO curso01 werkzeug: 127.0.0.1 - - [23/Aug/2014 17:27:59] "GET /web/login?redirect=http%3A%2F%2Flocalhost%3A8069%2Fweb HTTP/1.1" 500 -
+2014-08-23 17:27:59,103 4962 ERROR curso01 werkzeug: Error on request:
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/dist-packages/werkzeug/serving.py", line 177, in run_wsgi
+    execute(self.server.app)
+  File "/usr/lib/python2.7/dist-packages/werkzeug/serving.py", line 165, in execute
+    application_iter = app(environ, start_response)
+  File "/opt/odoo70/openerp/service/server.py", line 280, in app
+    return self.app(e, s)
+  File "/opt/odoo70/openerp/service/wsgi_server.py", line 216, in application
+    return application_unproxied(environ, start_response)
+  File "/opt/odoo70/openerp/service/wsgi_server.py", line 202, in application_unproxied
+    result = handler(environ, start_response)
+  File "/opt/odoo70/openerp/http.py", line 1168, in __call__
+    return self.dispatch(environ, start_response)
+  File "/opt/odoo70/openerp/http.py", line 1142, in __call__
+    return self.app(environ, start_wrapped)
+  File "/usr/lib/python2.7/dist-packages/werkzeug/wsgi.py", line 579, in __call__
+    return self.app(environ, start_response)
+  File "/opt/odoo70/openerp/http.py", line 1314, in dispatch
+    response = self.get_response(httprequest, result, explicit_session)
+  File "/opt/odoo70/openerp/http.py", line 1249, in get_response
+    result = request.registry['ir.http']._handle_exception(e)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_http.py", line 104, in _handle_exception
+    return request._handle_exception(exception)
+  File "/opt/odoo70/openerp/http.py", line 558, in _handle_exception
+    return super(HttpRequest, self)._handle_exception(exception)
+  File "/opt/odoo70/openerp/http.py", line 1246, in get_response
+    result.flatten()
+  File "/opt/odoo70/openerp/http.py", line 1119, in flatten
+    self.response.append(self.render())
+  File "/opt/odoo70/openerp/http.py", line 1114, in render
+    context=request.context)
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_ui_view.py", line 1018, in render
+    return self.pool[engine].render(cr, uid, id_or_xml_id, qcontext, loader=loader, context=context)
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_qweb.py", line 243, in render
+    return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_qweb.py", line 183, in get_template
+    raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_qweb.py", line 181, in get_template
+    xml_doc = qwebcontext.loader(name)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_ui_view.py", line 1016, in loader
+    return self.read_template(cr, uid, name, context=context)
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "<string>", line 2, in read_template
+    
+  File "/opt/odoo70/openerp/tools/cache.py", line 119, in lookup
+    value = d[key] = self.method(*args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_ui_view.py", line 860, in read_template
+    view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_model.py", line 882, in xmlid_to_res_id
+    return self.xmlid_to_res_model_res_id(cr, uid, xmlid, raise_if_not_found)[1]
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_model.py", line 874, in xmlid_to_res_model_res_id
+    return self.xmlid_lookup(cr, uid, xmlid)[1:3]
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "<string>", line 2, in xmlid_lookup
+    
+  File "/opt/odoo70/openerp/tools/cache.py", line 71, in lookup
+    value = d[key] = self.method(*args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_model.py", line 864, in xmlid_lookup
+    raise ValueError('External ID not found in the system: %s' % (xmlid))
+QWebTemplateNotFound: External ID not found in the system: web.login
+2014-08-23 17:28:15,195 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:28:16,219 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:29:15,259 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:29:17,237 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:30:15,296 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:30:18,300 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:31:15,342 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:31:19,355 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:32:15,367 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:32:20,373 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:33:15,430 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:33:21,406 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:34:15,442 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:34:22,470 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:35:15,506 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:35:23,491 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:36:15,570 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:36:24,506 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:37:15,629 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:37:25,571 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:38:15,689 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:38:26,626 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:39:15,751 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:39:21,397 4962 INFO curso01 werkzeug: 127.0.0.1 - - [23/Aug/2014 17:39:21] "GET / HTTP/1.1" 200 -
+2014-08-23 17:39:21,595 4962 INFO curso01 werkzeug: 127.0.0.1 - - [23/Aug/2014 17:39:21] "GET /web HTTP/1.1" 200 -
+2014-08-23 17:39:21,777 4962 INFO curso01 werkzeug: 127.0.0.1 - - [23/Aug/2014 17:39:21] "GET /web/login?redirect=http%3A%2F%2Flocalhost%3A8069%2Fweb HTTP/1.1" 500 -
+2014-08-23 17:39:21,796 4962 ERROR curso01 werkzeug: Error on request:
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/dist-packages/werkzeug/serving.py", line 177, in run_wsgi
+    execute(self.server.app)
+  File "/usr/lib/python2.7/dist-packages/werkzeug/serving.py", line 165, in execute
+    application_iter = app(environ, start_response)
+  File "/opt/odoo70/openerp/service/server.py", line 280, in app
+    return self.app(e, s)
+  File "/opt/odoo70/openerp/service/wsgi_server.py", line 216, in application
+    return application_unproxied(environ, start_response)
+  File "/opt/odoo70/openerp/service/wsgi_server.py", line 202, in application_unproxied
+    result = handler(environ, start_response)
+  File "/opt/odoo70/openerp/http.py", line 1168, in __call__
+    return self.dispatch(environ, start_response)
+  File "/opt/odoo70/openerp/http.py", line 1142, in __call__
+    return self.app(environ, start_wrapped)
+  File "/usr/lib/python2.7/dist-packages/werkzeug/wsgi.py", line 579, in __call__
+    return self.app(environ, start_response)
+  File "/opt/odoo70/openerp/http.py", line 1314, in dispatch
+    response = self.get_response(httprequest, result, explicit_session)
+  File "/opt/odoo70/openerp/http.py", line 1249, in get_response
+    result = request.registry['ir.http']._handle_exception(e)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_http.py", line 104, in _handle_exception
+    return request._handle_exception(exception)
+  File "/opt/odoo70/openerp/http.py", line 558, in _handle_exception
+    return super(HttpRequest, self)._handle_exception(exception)
+  File "/opt/odoo70/openerp/http.py", line 1246, in get_response
+    result.flatten()
+  File "/opt/odoo70/openerp/http.py", line 1119, in flatten
+    self.response.append(self.render())
+  File "/opt/odoo70/openerp/http.py", line 1114, in render
+    context=request.context)
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_ui_view.py", line 1018, in render
+    return self.pool[engine].render(cr, uid, id_or_xml_id, qcontext, loader=loader, context=context)
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_qweb.py", line 243, in render
+    return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_qweb.py", line 183, in get_template
+    raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_qweb.py", line 181, in get_template
+    xml_doc = qwebcontext.loader(name)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_ui_view.py", line 1016, in loader
+    return self.read_template(cr, uid, name, context=context)
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "<string>", line 2, in read_template
+    
+  File "/opt/odoo70/openerp/tools/cache.py", line 119, in lookup
+    value = d[key] = self.method(*args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_ui_view.py", line 860, in read_template
+    view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_model.py", line 882, in xmlid_to_res_id
+    return self.xmlid_to_res_model_res_id(cr, uid, xmlid, raise_if_not_found)[1]
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_model.py", line 874, in xmlid_to_res_model_res_id
+    return self.xmlid_lookup(cr, uid, xmlid)[1:3]
+  File "/opt/odoo70/openerp/api.py", line 204, in wrapper
+    return old_api(self, *args, **kwargs)
+  File "<string>", line 2, in xmlid_lookup
+    
+  File "/opt/odoo70/openerp/tools/cache.py", line 71, in lookup
+    value = d[key] = self.method(*args, **kwargs)
+  File "/opt/odoo70/openerp/addons/base/ir/ir_model.py", line 864, in xmlid_lookup
+    raise ValueError('External ID not found in the system: %s' % (xmlid))
+QWebTemplateNotFound: External ID not found in the system: web.login
+2014-08-23 17:39:27,690 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:40:15,803 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:40:28,754 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
+2014-08-23 17:41:15,867 4962 WARNING curso01 openerp.addons.base.ir.ir_cron: Skipping database curso01 as its base version is not 8.0.1.3.
