@@ -1,13 +1,14 @@
 # HG changeset patch
 # Parent 22f8d180a7f9ad209d7e98cf7d1bd0fee1f05350
-Index: doc-backend/openacademy/course.py
+Index: doc-backend/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/course.py	2014-08-21 14:23:28.056482288 +0200
-+++ doc-backend/openacademy/course.py	2014-08-21 14:23:35.540482563 +0200
+--- doc-backend.orig/openacademy/models.py	2014-08-24 12:03:20.161366774 +0200
++++ doc-backend/openacademy/models.py	2014-08-24 12:03:35.149367121 +0200
 @@ -7,3 +7,12 @@
+ 
      name = fields.Char(string="Title", required=True)
      description = fields.Text()
- 
++
 +
 +class Session(models.Model):
 +    _name = 'openacademy.session'
@@ -16,4 +17,3 @@ Index: doc-backend/openacademy/course.py
 +    start_date = fields.Date()
 +    duration = fields.Float(digits=(6, 2), help="Duration in days")
 +    seats = fields.Integer(string="Number of seats")
-+

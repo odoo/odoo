@@ -1,25 +1,34 @@
 # HG changeset patch
 # Parent 84e2b0b43fc61fd0bcbb44c1929755d44ee58ae5
 
-Index: doc-backend/openacademy/__openerp__.py
-===================================================================
---- doc-backend.orig/openacademy/__openerp__.py	2014-08-21 15:18:40.892603902 +0200
-+++ doc-backend/openacademy/__openerp__.py	2014-08-21 15:18:40.884603902 +0200
-@@ -12,4 +12,7 @@
-         - attendees registration""",
-     'data' : [
-     ],
-+    'demo': [
-+        'demo.xml',
-+    ],
- }
 Index: doc-backend/openacademy/demo.xml
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ doc-backend/openacademy/demo.xml	2014-08-21 15:19:26.200605566 +0200
-@@ -0,0 +1,19 @@
-+<openerp>
-+    <data>
+--- doc-backend.orig/openacademy/demo.xml	2014-08-24 11:58:31.673360097 +0200
++++ doc-backend/openacademy/demo.xml	2014-08-24 11:58:49.353360506 +0200
+@@ -1,25 +1,19 @@
+ <openerp>
+     <data>
+-        <!--  -->
+-        <!--   <record id="object0" model="openacademy.openacademy"> -->
+-        <!--     <field name="name">Object 0</field> -->
+-        <!--   </record> -->
+-        <!--  -->
+-        <!--   <record id="object1" model="openacademy.openacademy"> -->
+-        <!--     <field name="name">Object 1</field> -->
+-        <!--   </record> -->
+-        <!--  -->
+-        <!--   <record id="object2" model="openacademy.openacademy"> -->
+-        <!--     <field name="name">Object 2</field> -->
+-        <!--   </record> -->
+-        <!--  -->
+-        <!--   <record id="object3" model="openacademy.openacademy"> -->
+-        <!--     <field name="name">Object 3</field> -->
+-        <!--   </record> -->
+-        <!--  -->
+-        <!--   <record id="object4" model="openacademy.openacademy"> -->
+-        <!--     <field name="name">Object 4</field> -->
+-        <!--   </record> -->
+-        <!--  -->
 +        <record model="openacademy.course" id="course0">
 +            <field name="name">Course 0</field>
 +            <field name="description">Course 0's description
@@ -35,5 +44,5 @@ Index: doc-backend/openacademy/demo.xml
 +            <field name="name">Course 2</field>
 +            <field name="description">Course 2's description</field>
 +        </record>
-+    </data>
-+</openerp>
+     </data>
+ </openerp>

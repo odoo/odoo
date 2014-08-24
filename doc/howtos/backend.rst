@@ -92,15 +92,28 @@ might contain::
 
     import mymodule
 
+Fortunately, there is a mechanism to help you set up an module. The command
+``odoo.py`` has a subcommand ``scaffold`` to create an empty module:
+
+.. code:: bash
+
+    odoo.py scaffold <module name> <where to put it>
+
+The command creates a subdirectory for your module, and automatically creates a
+bunch of standard files for a module. Most of them simply contain commented code
+or XML. The usage of most of those files will be explained along this tutorial.
+
 .. exercise:: Module creation
 
-    Create an empty module Open Academy, install it in Odoo.
+    Use the command line above to  create an empty module Open Academy, and
+    install it in Odoo.
 
     .. only:: solutions
 
-        #. Create a new folder ``openacademy``
-        #. Create an empty ``openacademy/__init__.py`` file
-        #. Create an ``openacademy/__openerp__.py`` file
+        #. Invoke the command ``./odoo.py scaffold openacademy addons`` in the
+           Odoo directory.
+        #. Adapt the manifest file to your module.
+        #. Don't bother about the other files.
 
         .. patch::
 
@@ -200,8 +213,7 @@ overridden by setting :attr:`~openerp.models.Model._rec_name`.
 
     .. only:: solutions
 
-        #. Create a new file ``openacademy/course.py``
-        #. Edit ``openacademy/__init__.py`` to import it
+        Edit the file ``openacademy/models.py`` to include a *Course* class.
 
         .. patch::
 
@@ -245,8 +257,7 @@ be declared in the ``'data'`` list (always loaded) or in the ``'demo'`` list
 
     .. only:: solutions
 
-        #. Create a new file ``openacademy/demo.xml``
-        #. Add the file to the ``'demo'`` list of your ``__openerp__.py``
+        Edit the file ``openacademy/demo.xml`` to include some data.
 
         .. patch::
 
@@ -475,7 +486,7 @@ client data; it is also related to its sale order line records.
 
     .. only:: solutions
 
-        Create class *Session*:
+        Create the class *Session* in ``openacademy/models.py``.
 
         .. patch::
 
@@ -675,9 +686,9 @@ instead of a single view its ``arch`` field is composed of any number of
            inspect the view, find its external ID and the place to put the
            new field.
 
-       #. Create a ``openacademy/partner.py`` and import it in
+       #. Create a file ``openacademy/partner.py`` and import it in
           ``__init__.py``
-       #. Create an ``openacademy/views/partner.xml`` and add it to
+       #. Create a file ``openacademy/views/partner.xml`` and add it to
           ``__openerp__.py``
 
        .. patch::
@@ -1330,9 +1341,9 @@ rights are usually created by a CSV file named after its model:
 
         #. Create a new file ``openacademy/security/security.xml`` to
            hold the OpenAcademy Manager group
-        #. Create a new file ``openacademy/security/ir.model.access.csv`` with
+        #. Edit the file ``openacademy/security/ir.model.access.csv`` with
            the access rights to the models
-        #. finally update ``openacademy/__openerp__.py`` to add the new data
+        #. Finally update ``openacademy/__openerp__.py`` to add the new data
            files to it
 
         .. patch::
@@ -1533,7 +1544,7 @@ Dashboards
 
    .. only:: solutions
 
-        #. Create a ``openacademy/views/session_board.xml``. It should contain
+        #. Create a file ``openacademy/views/session_board.xml``. It should contain
            the board view, the actions referenced in that view, an action to
            open the dashboard and a re-definition of the main menu item to add
            the dashboard action

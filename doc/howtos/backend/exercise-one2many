@@ -1,11 +1,11 @@
 # HG changeset patch
 # Parent cb05882d4fe73e97b9d34a69190ced14d1a50c24
 
-Index: doc-backend/openacademy/course.py
+Index: doc-backend/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/course.py	2014-08-21 14:27:15.108490623 +0200
-+++ doc-backend/openacademy/course.py	2014-08-21 14:27:37.860491458 +0200
-@@ -9,6 +9,8 @@
+--- doc-backend.orig/openacademy/models.py	2014-08-24 12:05:31.001369802 +0200
++++ doc-backend/openacademy/models.py	2014-08-24 12:05:30.997369802 +0200
+@@ -10,6 +10,8 @@
  
      responsible_id = fields.Many2one('res.users',
          ondelete='set null', string="Responsible", index=True)

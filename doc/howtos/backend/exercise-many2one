@@ -1,11 +1,11 @@
 # HG changeset patch
 # Parent a6e217b1fbbc64111581c269629b1c25c23abb99
 
-Index: doc-backend/openacademy/course.py
+Index: doc-backend/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/course.py	2014-08-21 14:24:24.376484356 +0200
-+++ doc-backend/openacademy/course.py	2014-08-21 14:26:35.040489152 +0200
-@@ -7,6 +7,9 @@
+--- doc-backend.orig/openacademy/models.py	2014-08-24 12:04:40.829368641 +0200
++++ doc-backend/openacademy/models.py	2014-08-24 12:04:57.509369027 +0200
+@@ -8,6 +8,9 @@
      name = fields.Char(string="Title", required=True)
      description = fields.Text()
  
@@ -16,17 +16,17 @@ Index: doc-backend/openacademy/course.py
  class Session(models.Model):
      _name = 'openacademy.session'
 @@ -16,3 +19,7 @@
+     start_date = fields.Date()
      duration = fields.Float(digits=(6, 2), help="Duration in days")
      seats = fields.Integer(string="Number of seats")
- 
++
 +    instructor_id = fields.Many2one('res.partner', string="Instructor")
 +    course_id = fields.Many2one('openacademy.course',
 +        ondelete='cascade', string="Course", required=True)
-+
 Index: doc-backend/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-21 14:24:24.376484356 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-21 14:25:48.000000000 +0200
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-24 12:04:40.829368641 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:04:40.825368641 +0200
 @@ -63,5 +63,16 @@
          <!-- Full id location:
               action="openacademy.course_list_action"

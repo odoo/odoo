@@ -1,11 +1,11 @@
 # HG changeset patch
 # Parent 8c721171aa16a41e94059f53d6780c67b5ef2dfc
 
-Index: doc-backend/openacademy/course.py
+Index: doc-backend/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/course.py	2014-08-22 17:04:08.103107858 +0200
-+++ doc-backend/openacademy/course.py	2014-08-22 17:04:08.099107857 +0200
-@@ -67,6 +67,24 @@
+--- doc-backend.orig/openacademy/models.py	2014-08-24 12:20:31.953390654 +0200
++++ doc-backend/openacademy/models.py	2014-08-24 12:20:31.949390654 +0200
+@@ -66,6 +66,24 @@
      attendees_count = fields.Integer(
          string="Attendees count", compute='_get_attendees_count', store=True)
  
@@ -32,8 +32,8 @@ Index: doc-backend/openacademy/course.py
      def _taken_seats(self):
 Index: doc-backend/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 17:04:08.103107858 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 17:04:30.939108696 +0200
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-24 12:20:31.953390654 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:20:31.949390654 +0200
 @@ -91,22 +91,37 @@
              <field name="model">openacademy.session</field>
              <field name="arch" type="xml">

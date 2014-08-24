@@ -1,11 +1,11 @@
 # HG changeset patch
 # Parent dba00a105dd2a82490394b8dec5fea5f1d8847e1
 
-Index: doc-backend/openacademy/course.py
+Index: doc-backend/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/course.py	2014-08-22 17:03:44.939107007 +0200
-+++ doc-backend/openacademy/course.py	2014-08-22 17:03:44.931107007 +0200
-@@ -60,6 +60,9 @@
+--- doc-backend.orig/openacademy/models.py	2014-08-24 12:18:54.645388402 +0200
++++ doc-backend/openacademy/models.py	2014-08-24 12:18:54.641388402 +0200
+@@ -59,6 +59,9 @@
      end_date = fields.Date(string="End Date", store=True,
          compute='_get_end_date', inverse='_set_end_date')
  
@@ -15,7 +15,7 @@ Index: doc-backend/openacademy/course.py
      @api.one
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-@@ -106,6 +109,15 @@
+@@ -105,6 +108,15 @@
          self.duration = (end_date - start_date).days
  
      @api.one
@@ -33,8 +33,8 @@ Index: doc-backend/openacademy/course.py
          if self.instructor_id and self.instructor_id in self.attendee_ids:
 Index: doc-backend/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-22 17:03:44.939107007 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-22 17:03:44.931107007 +0200
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-24 12:18:54.645388402 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:18:54.641388402 +0200
 @@ -137,11 +137,24 @@
              </field>
          </record>

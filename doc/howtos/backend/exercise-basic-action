@@ -1,19 +1,21 @@
 # HG changeset patch
 # Parent 16e4cb131d9f7f3a72a8a1b0bc46c2ce9ac76435
-diff -r 16e4cb131d9f -r bbfa610bfabd openacademy/__openerp__.py
---- a/openacademy/__openerp__.py	Thu Aug 07 12:10:05 2014 +0200
-+++ b/openacademy/__openerp__.py	Thu Aug 07 12:11:28 2014 +0200
-@@ -11,6 +11,7 @@
-         - training sessions
-         - attendees registration""",
-     'data' : [
+Index: doc-backend/openacademy/__openerp__.py
+===================================================================
+--- doc-backend.orig/openacademy/__openerp__.py	2014-08-24 12:02:32.169365663 +0200
++++ doc-backend/openacademy/__openerp__.py	2014-08-24 12:02:32.165365663 +0200
+@@ -27,6 +27,7 @@
+     'data': [
+         # 'security/ir.model.access.csv',
+         'templates.xml',
 +        'views/openacademy.xml',
      ],
+     # only loaded in demonstration mode
      'demo': [
-         'demo.xml',
-diff -r 16e4cb131d9f -r bbfa610bfabd openacademy/views/openacademy.xml
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/openacademy/views/openacademy.xml	Thu Aug 07 12:11:28 2014 +0200
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:02:32.165365663 +0200
 @@ -0,0 +1,35 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<openerp>
