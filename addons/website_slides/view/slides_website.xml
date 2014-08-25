@@ -172,22 +172,21 @@
         <template id='pdfview' name="pdfview">
             <div class="panel panel-default">
                 <div class="panel-body" style="padding:0px">
-                    <img id="pdfimage" class="img-responsive shadow" src="" style="width:100%;"/>
+                    <img id="pdfimage" class="img-responsive" src="" style="width:100%;"/>
                 </div>
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-3 text-left">
-                            <img style="width: 66px;" class="img img-responsive" src="/logo.png"/>
+                            <span class="lead"><span id="page_num"></span> / <span id="page_count"></span></span>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6 text-center">
-                            <a href="javascript:void(0);"><i class="fa fa-step-backward fa-2x"></i></a>
+                            <a id="firstpage" href="javascript:void(0);"><i class="fa fa-step-backward fa-2x"></i></a>
                             <a id="prev" href="javascript:void(0);"><i class="fa fa-chevron-left fa-2x"></i></a>
                             <a id="next" href="javascript:void(0);"><i class="fa fa-chevron-right fa-2x"></i></a>
-                            <a href="javascript:void(0);"><i class="fa fa-step-forward fa-2x"></i></a>
-                            <a id="fullscreen" href="javascript:void(0);"><i class="fa fa-arrows-alt fa-2x"></i></a>
+                            <a id="lastpage" href="javascript:void(0);"><i class="fa fa-step-forward fa-2x"></i></a>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-3 text-right">
-                            <span><span id="page_num"></span> / <span id="page_count"></span></span>
+                            <a id="fullscreen" href="javascript:void(0);"><i class="fa fa-arrows-alt fa-2x"></i></a>
                         </div>
                     </div>
                 </div>

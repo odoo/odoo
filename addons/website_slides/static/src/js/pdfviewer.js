@@ -95,6 +95,24 @@ function onNextPage() {
 document.getElementById('next').addEventListener('click', onNextPage);
 
 /**
+ * Displays last page.
+ */
+function onLastPage() {  
+  pageNum = pdfDoc.numPages;
+  queueRenderPage(pdfDoc.numPages);
+}
+document.getElementById('lastpage').addEventListener('click', onLastPage);
+
+/**
+ * Displays first page.
+ */
+function onFirstPage() {  
+  pageNum = 1;
+  queueRenderPage(1);
+}
+document.getElementById('firstpage').addEventListener('click', onFirstPage);
+
+/**
  * Asynchronously downloads PDF.
  */
 PDFJS.getDocument(url).then(function (pdfDoc_) {
