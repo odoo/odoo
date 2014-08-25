@@ -330,6 +330,11 @@ class view(osv.osv):
         if context is None:
             context = {}
 
+        # If view is modified we remove the arch_fs information thus activating the arch_db
+        # version. An `init` of the view will restore the arch_fs for the --dev mode
+        if 'arch' in vals and 'install_mode_data' not in context:
+            vals['arch_fs'] = False
+
         # drop the corresponding view customizations (used for dashboards for example), otherwise
         # not all users would see the updated views
         custom_view_ids = self.pool.get('ir.ui.view.custom').search(cr, uid, [('ref_id', 'in', ids)])
