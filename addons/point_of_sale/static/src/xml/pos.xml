@@ -42,13 +42,6 @@
                             </div>
                         </div>
 
-                        <div class='subwindow collapsed'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix'>
-                                    <div class='placeholder-LeftActionBar'></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -57,14 +50,6 @@
                         <div class='subwindow'>
                             <div class='subwindow-container'>
                                 <div class='subwindow-container-fix screens'>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class='subwindow collapsed'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix'>
-                                    <div class='placeholder-RightActionBar'></div>
                                 </div>
                             </div>
                         </div>
@@ -1155,30 +1140,6 @@
                 </div>
             </t>
         </div>
-    </t>
-
-    <t t-name="ActionBarWidget">
-        <div class="pos-actionbar">
-            <ul class="pos-actionbar-button-list">
-            </ul>
-        </div>
-    </t>
-
-    <t t-name="ActionButtonWidget">
-        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '') + (widget.disabled ? 'disabled ' : '')">
-            <div class='label'>
-                <t t-esc="widget.label" />
-            </div>
-        </li>
-    </t>
-
-    <t t-name="ActionButtonWidgetWithIcon">
-        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '') + (widget.disabled ? 'disabled ' : '')">
-            <div class='icon'>
-                <img t-att-src="widget.icon" />
-                <div class='iconlabel'><t t-esc="widget.label" /></div>
-            </div>
-        </li>
     </t>
 
     <!-- Onscreen Keyboard : 

@@ -293,90 +293,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.ActionButtonWidget = instance.web.Widget.extend({
-        template:'ActionButtonWidget',
-        icon_template:'ActionButtonWidgetWithIcon',
-        init: function(parent, options){
-            this._super(parent, options);
-            this.label = options.label || 'button';
-            this.rightalign = options.rightalign || false;
-            this.click_action = options.click;
-            this.disabled = options.disabled || false;
-            if(options.icon){
-                this.icon = options.icon;
-                this.template = this.icon_template;
-            }
-        },
-        set_disabled: function(disabled){
-            if(this.disabled != disabled){
-                this.disabled = !!disabled;
-                this.renderElement();
-            }
-        },
-        renderElement: function(){
-            this._super();
-            if(this.click_action && !this.disabled){
-                this.$el.click(_.bind(this.click_action, this));
-            }
-        },
-    });
-
-    module.ActionBarWidget = instance.web.Widget.extend({
-        template:'ActionBarWidget',
-        init: function(parent, options){
-            this._super(parent,options);
-            this.button_list = [];
-            this.buttons = {};
-            this.visibility = {};
-        },
-        set_element_visible: function(element, visible, action){
-            if(visible != this.visibility[element]){
-                this.visibility[element] = !!visible;
-                if(visible){
-                    this.$('.'+element).removeClass('oe_hidden');
-                }else{
-                    this.$('.'+element).addClass('oe_hidden');
-                }
-            }
-            if(visible && action){
-                this.action[element] = action;
-                this.$('.'+element).off('click').click(action);
-            }
-        },
-        set_button_disabled: function(name, disabled){
-            var b = this.buttons[name];
-            if(b){
-                b.set_disabled(disabled);
-            }
-        },
-        destroy_buttons:function(){
-            for(var i = 0; i < this.button_list.length; i++){
-                this.button_list[i].destroy();
-            }
-            this.button_list = [];
-            this.buttons = {};
-            return this;
-        },
-        get_button_count: function(){
-            return this.button_list.length;
-        },
-        add_new_button: function(button_options){
-            var button = new module.ActionButtonWidget(this,button_options);
-            this.button_list.push(button);
-            if(button_options.name){
-                this.buttons[button_options.name] = button;
-            }
-            button.appendTo(this.$('.pos-actionbar-button-list'));
-            return button;
-        },
-        show:function(){
-            this.$el.removeClass('oe_hidden');
-        },
-        hide:function(){
-            this.$el.addClass('oe_hidden');
-        },
-    });
-
     module.ProductCategoriesWidget = module.PosBaseWidget.extend({
         template: 'ProductCategoriesWidget',
         init: function(parent, options){
@@ -891,7 +807,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
     // - a header, containing the list of orders
     // - a leftpane, containing the list of bought products (orderlines) 
     // - a rightpane, containing the screens (see pos_screens.js)
-    // - an actionbar on the bottom, containing various action buttons
     // - popups
     // - an onscreen keyboard
     // a screen_selector which controls the switching between screens and the showing/closing of popups
@@ -1124,9 +1039,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.username   = new module.UsernameWidget(this,{});
             this.username.replace(this.$('.placeholder-UsernameWidget'));
-
-            this.action_bar = new module.ActionBarWidget(this);
-            this.action_bar.replace(this.$(".placeholder-RightActionBar"));
 
             this.actionpad = new module.ActionpadWidget(this, {});
             this.actionpad.replace(this.$('.placeholder-ActionpadWidget'));

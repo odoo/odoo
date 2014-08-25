@@ -211,26 +211,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         barcode_error_action: function(code){
             this.pos_widget.screen_selector.show_popup('error-barcode',code.code);
         },
-        // shows an action bar on the screen. The actionbar is automatically shown when you add a button
-        // with add_action_button()
-        show_action_bar: function(){
-            this.pos_widget.action_bar.show();
-        },
-
-        // hides the action bar. The actionbar is automatically hidden when it is empty
-        hide_action_bar: function(){
-            this.pos_widget.action_bar.hide();
-        },
-
-        // adds a new button to the action bar. The button definition takes three parameters, all optional :
-        // - label: the text below the button
-        // - icon:  a small icon that will be shown
-        // - click: a callback that will be executed when the button is clicked.
-        // the method returns a reference to the button widget, and automatically show the actionbar.
-        add_action_button: function(button_def){
-            this.show_action_bar();
-            return this.pos_widget.action_bar.add_new_button(button_def);
-        },
 
         // this method shows the screen and sets up all the widget related to this screen. Extend this method
         // if you want to alter the behavior of the screen.
@@ -242,12 +222,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.$el.removeClass('oe_hidden');
             }
 
-            if(this.pos_widget.action_bar.get_button_count() > 0){
-                this.show_action_bar();
-            }else{
-                this.hide_action_bar();
-            }
-            
             var self = this;
 
             this.pos_widget.set_numpad_visible(this.show_numpad);
@@ -270,7 +244,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             if(this.pos.barcode_reader){
                 this.pos.barcode_reader.reset_action_callbacks();
             }
-            this.pos_widget.action_bar.destroy_buttons();
         },
 
         // this methods hides the screen. It's not a good place to put your cleanup stuff as it is called on the
