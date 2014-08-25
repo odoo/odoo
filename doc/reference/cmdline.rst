@@ -1,7 +1,7 @@
 .. _reference/cmdline:
 
 ===============================
-Command-line interface: oodo.py
+Command-line interface: odoo.py
 ===============================
 
 .. _reference/cmdline/server:

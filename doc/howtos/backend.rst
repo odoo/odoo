@@ -4,8 +4,8 @@
 Backend
 =======
 
-Build an Odoo module
-====================
+Start/Stop the Odoo server
+==========================
 
 Odoo uses a client/server architecture in which clients are web browsers
 accessing the odoo server via RPC.
@@ -13,6 +13,19 @@ accessing the odoo server via RPC.
 Business logic and extension is generally performed on the server side,
 although supporting client features (e.g. new data representation such as
 interactive maps) can be added to the client.
+
+In order to start the server, simply invoke the command :ref:`odoo.py
+<reference/cmdline>` in the shell from the Odoo main directory:
+
+.. code:: bash
+
+    ./odoo.py
+
+The server is stopped by hitting ``Ctrl-C`` twice from the terminal, or by
+killing the corresponding OS process.
+
+Build an Odoo module
+====================
 
 Both server and client extensions are packaged as *modules* which are
 optionally loaded in a *database*.
@@ -93,11 +106,12 @@ might contain::
     import mymodule
 
 Fortunately, there is a mechanism to help you set up an module. The command
-``odoo.py`` has a subcommand ``scaffold`` to create an empty module:
+``odoo.py`` has a subcommand :ref:`scaffold <reference/cmdline/scaffold>` to
+create an empty module:
 
 .. code:: bash
 
-    odoo.py scaffold <module name> <where to put it>
+    ./odoo.py scaffold <module name> <where to put it>
 
 The command creates a subdirectory for your module, and automatically creates a
 bunch of standard files for a module. Most of them simply contain commented code
