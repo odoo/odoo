@@ -864,6 +864,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.receipt_type = 'receipt';  // 'receipt' || 'invoice'
             this.temporary = attributes.temporary || false;
             this.sequence_number = this.pos.pos_session.sequence_number++;
+            this.to_invoice = false;
             return this;
         },
         is_empty: function(){
@@ -1067,6 +1068,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     this.screen_data[key] = arguments[0][key];
                 }
             }
+        },
+        set_to_invoice: function(to_invoice) {
+            this.to_invoice = to_invoice;
+        },
+        is_to_invoice: function(){
+            return this.to_invoice;
         },
         // remove all the paymentlines with zero money in it
         clean_empty_paymentlines: function() {

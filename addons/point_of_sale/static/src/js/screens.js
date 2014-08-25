@@ -1024,6 +1024,15 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
             return methods;
         },
+        click_invoice: function(){
+            var order = this.pos.get_order();
+            order.set_to_invoice(!order.is_to_invoice());
+            if (order.is_to_invoice()) {
+                this.$('.js_invoice').addClass('highlight');
+            } else {
+                this.$('.js_invoice').removeClass('highlight');
+            }
+        },
         renderElement: function() {
             var self = this;
             this._super();
@@ -1045,7 +1054,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             });
 
             this.$('.js_invoice').click(function(){
-                self.validate_order({invoice: true});
+                self.click_invoice();
             });
 
         },
@@ -1086,9 +1095,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         // Check if the order is paid, then sends it to the backend,
         // and complete the sale process
-        validate_order: function(options) {
+        validate_order: function() {
             var self = this;
-            options = options || {};
 
             var order = this.pos.get_order();
 
@@ -1100,14 +1108,20 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     this.pos.proxy.open_cashbox();
             }
 
-            if (options.invoice) {
+            if (order.is_to_invoice()) {
                 var invoiced = this.pos.push_and_invoice_order(order);
                 this.invoicing = true;
 
                 invoiced.fail(function(error){
                     self.invoicing = false;
                     if (error === 'error-no-client') {
-                        self.pos_widget.screen_selector.set_current_screen('clientlist');
+                        self.pos_widget.screen_selector.show_popup('confirm',{
+                            message: _t('Please select the Customer'),
+                            comment: _t('You need to select the customer before you can invoice an order.'),
+                            confirm: function(){
+                                self.pos_widget.screen_selector.set_current_screen('clientlist');
+                            },
+                        });
                     } else {
                         self.pos_widget.screen_selector.show_popup('error-invoice-transfer');
                     }
