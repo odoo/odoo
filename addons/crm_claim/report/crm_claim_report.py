@@ -39,7 +39,7 @@ class crm_claim_report(osv.osv):
     _columns = {
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'nbr_claims': fields.integer('# of Claims', readonly=True, oldname='nbr'),
+        'nbr': fields.integer('# of Cases', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'claim_date': fields.datetime('Claim Date', readonly=True),
@@ -52,11 +52,10 @@ class crm_claim_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
-        'date_closed': fields.datetime('Close Date', readonly=True, select=True),
+        'date_closed': fields.date('Close Date', readonly=True, select=True),
         'date_deadline': fields.date('Deadline', readonly=True, select=True),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
-        'email': fields.integer('# Emails', size=128, readonly=True),
-        'subject': fields.char('Claim Subject', readonly=True)
+        'email': fields.integer('# Emails', size=128, readonly=True)
     }
 
     def init(self, cr):
@@ -71,7 +70,7 @@ class crm_claim_report(osv.osv):
                 select
                     min(c.id) as id,
                     c.date as claim_date,
-                    c.date_closed as date_closed,
+                    date(c.date_closed) as date_closed,
                     c.date_deadline as date_deadline,
                     c.user_id,
                     c.stage_id,
@@ -79,8 +78,7 @@ class crm_claim_report(osv.osv):
                     c.partner_id,
                     c.company_id,
                     c.categ_id,
-                    c.name as subject,
-                    count(*) as nbr_claims,
+                    count(*) as nbr,
                     c.priority as priority,
                     c.type_action as type_action,
                     c.create_date as create_date,

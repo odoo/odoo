@@ -137,18 +137,19 @@ def propagate(from_method, to_method):
 
 
 def constrains(*args):
-    """ Return a decorator that specifies the field dependencies of a method
-        implementing a constraint checker. Each argument must be a field name::
+    """ Decorates a constraint checker. Each argument must be a field name
+    used in the check::
 
-            @api.one
-            @api.constrains('name', 'description')
-            def _check_description(self):
-                if self.name == self.description:
-                    raise ValueError("Fields name and description must be different")
+        @api.one
+        @api.constrains('name', 'description')
+        def _check_description(self):
+            if self.name == self.description:
+                raise ValidationError("Fields name and description must be different")
 
-        The method is invoked on the records where one of the given fields has
-        been modified. It is expected to raise an exception when the constraint
-        is not satisfied.
+    Invoked on the records on which one of the named fields has been modified.
+
+    Should raise :class:`~openerp.exceptions.ValidationError` if the
+    validation failed.
     """
     return lambda method: decorate(method, '_constrains', args)
 

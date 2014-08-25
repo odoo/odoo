@@ -1584,12 +1584,12 @@ class property(function):
     def __init__(self, **args):
         if 'view_load' in args:
             _logger.warning("view_load attribute is deprecated on ir.fields. Args: %r", args)
-        obj = 'relation' in args and args['relation'] or ''
+        args = dict(args)
+        args['obj'] = args.pop('relation', '') or args.get('obj', '')
         super(property, self).__init__(
             fnct=self._fnct_read,
             fnct_inv=self._fnct_write,
             fnct_search=self._fnct_search,
-            obj=obj,
             multi='properties',
             **args
         )

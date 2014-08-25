@@ -40,8 +40,8 @@ class analytic_entries_report(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'amount': fields.float('Amount', readonly=True),
-        'unit_amount': fields.integer('Unit Amount', readonly=True),
-        'nbr_entries': fields.integer('# Entries', readonly=True, oldname='nbr'),
+        'unit_amount': fields.float('Quantity', readonly=True),
+        'nbr': fields.integer('#Entries', readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'analytic_entries_report')
@@ -49,7 +49,7 @@ class analytic_entries_report(osv.osv):
             create or replace view analytic_entries_report as (
                  select
                      min(a.id) as id,
-                     count(distinct a.id) as nbr_entries,
+                     count(distinct a.id) as nbr,
                      a.date as date,
                      a.user_id as user_id,
                      a.name as name,

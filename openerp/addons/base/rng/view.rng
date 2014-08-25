@@ -258,6 +258,7 @@
                   <rng:value>bottom</rng:value>
                 </rng:choice>
               </rng:attribute>
+              <rng:optional><rng:attribute name="on_write"/></rng:optional>
             </rng:optional>
             <rng:optional>
               <rng:attribute name="toolbar">
@@ -267,7 +268,6 @@
                 </rng:choice>
               </rng:attribute>
             </rng:optional>
-            <rng:optional><rng:attribute name="on_write"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field"/>
@@ -660,7 +660,15 @@
             <rng:optional><rng:attribute name="quick_add" /></rng:optional>
             <rng:optional><rng:attribute name="display" /></rng:optional>            
             <rng:optional><rng:attribute name="type" /></rng:optional>
-            <rng:optional><rng:attribute name="mode" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="mode">
+                    <rng:choice>
+                        <rng:value>month</rng:value>
+                        <rng:value>week</rng:value>
+                        <rng:value>day</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
             <rng:oneOrMore>
                 <rng:ref name="field"/>
             </rng:oneOrMore>

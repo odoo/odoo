@@ -357,8 +357,7 @@ class res_partner(osv.Model, format_address):
 
     @api.multi
     def onchange_type(self, is_company):
-        value = {}
-        value['title'] = False
+        value = {'title': False}
         if is_company:
             value['use_parent_address'] = False
             domain = {'title': [('domain', '=', 'partner')]}

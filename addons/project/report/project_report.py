@@ -31,11 +31,11 @@ class report_project_task_user(osv.osv):
         'name': fields.char('Task Summary', readonly=True),
         'user_id': fields.many2one('res.users', 'Assigned To', readonly=True),
         'reviewer_id': fields.many2one('res.users', 'Reviewer', readonly=True),
-        'date_start': fields.datetime('Assignation Date', readonly=True),
+        'date_start': fields.date('Assignation Date', readonly=True),
         'no_of_days': fields.integer('# of Days', size=128, readonly=True),
-        'date_end': fields.datetime('Ending Date', readonly=True),
+        'date_end': fields.date('Ending Date', readonly=True),
         'date_deadline': fields.date('Deadline', readonly=True),
-        'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
+        'date_last_stage_update': fields.date('Last Stage Update', readonly=True),
         'project_id': fields.many2one('project.project', 'Project', readonly=True),
         'hours_planned': fields.float('Planned Hours', readonly=True),
         'hours_effective': fields.float('Effective Hours', readonly=True),
@@ -48,13 +48,12 @@ class report_project_task_user(osv.osv):
         'opening_days': fields.float('Days to Assign', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to Open the task"),
         'delay_endings_days': fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
+        'nbr': fields.integer('# of tasks', readonly=True),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')],
             string='Priority', size=1, readonly=True),
-        'state': fields.selection([('normal', 'In Progress'),('blocked', 'Blocked'),('done', 'Ready for next stage')],'Status', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Contact', readonly=True),
         'stage_id': fields.many2one('project.task.type', 'Stage'),
-        'nbr_tasks': fields.integer('# of Tasks', readonly=True, oldname='nbr'),
     }
     _order = 'name desc, project_id'
 
@@ -63,11 +62,11 @@ class report_project_task_user(osv.osv):
         cr.execute("""
             CREATE view report_project_task_user as
               SELECT
-                    (select 1 ) AS nbr_tasks,
+                    (select 1 ) AS nbr,
                     t.id as id,
-                    t.date_start as date_start,
-                    t.date_end as date_end,
-                    t.date_last_stage_update as date_last_stage_update,
+                    date(t.date_start) as date_start,
+                    date(t.date_end) as date_end,
+                    date(t.date_last_stage_update) as date_last_stage_update,
                     t.date_deadline as date_deadline,
                     abs((extract('epoch' from (t.write_date-t.date_start)))/(3600*24))  as no_of_days,
                     t.user_id,
@@ -80,7 +79,6 @@ class report_project_task_user(osv.osv):
                     t.company_id,
                     t.partner_id,
                     t.stage_id as stage_id,
-                    t.kanban_state as state,
                     remaining_hours as remaining_hours,
                     total_hours as total_hours,
                     t.delay_hours as hours_delay,

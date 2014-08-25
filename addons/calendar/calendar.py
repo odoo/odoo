@@ -1581,12 +1581,6 @@ class calendar_event(osv.Model):
             select = [ids]
         else:
             select = ids
-
-        # FIXME: find a better way to not push virtual ids in the cache
-        # (leading to their prefetching and ultimately a type error when
-        # postgres tries to convert '14-3489274297' to an integer)
-        self.invalidate_cache(cr, uid, context=context)
-
         select = map(lambda x: (x, calendar_id2real_id(x)), select)
         result = []
         real_data = super(calendar_event, self).read(cr, uid, [real_id for calendar_id, real_id in select], fields=fields2, context=context, load=load)
