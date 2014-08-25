@@ -56,14 +56,18 @@ openerp.share = function(session) {
             var self = this;
             this._super(this);
             has_share(function() {
-                self.add_items('other', [
-                    {   label: _t('Share'),
-                        callback: self.on_click_share,
-                        classname: 'oe_share' },
-                    {   label: _t('Embed'),
-                        callback: self.on_click_share_link,
-                        classname: 'oe_share' },
-                ]);
+                new session.web.Model('res.users').call('has_group', ['base.group_no_one']).done(function(group_status) {
+                    if (group_status == true) {
+                        self.add_items('other', [
+                            {   label: _t('Share'),
+                                callback: self.on_click_share,
+                                classname: 'oe_share' },
+                            {   label: _t('Embed'),
+                                callback: self.on_click_share_link,
+                                classname: 'oe_share' },
+                        ]);
+                    }
+                });
             });
         },
 

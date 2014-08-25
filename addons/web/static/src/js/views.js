@@ -1209,7 +1209,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
     add_items: function(section_code, items) {
         var self = this;
         if (items) {
-            this.items[section_code].push.apply(this.items[section_code],items);
+            this.items[section_code].unshift.apply(this.items[section_code],items);
             this.redraw();
         }
     },
