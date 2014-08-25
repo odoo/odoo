@@ -81,27 +81,29 @@ def _tz_get(self,cr,uid, context=None):
 class res_partner_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
-        """Return the categories' display name, including their direct
-           parent by default.
+        """ Return the categories' display name, including their direct
+            parent by default.
 
-        :param dict context: the ``partner_category_display`` key can be
-                             used to select the short version of the
-                             category name (without the direct parent),
-                             when set to ``'short'``. The default is
-                             the long version."""
+            If ``context['partner_category_display']`` is ``'short'``, the short
+            version of the category name (without the direct parent) is used.
+            The default is the long version.
+        """
+        if not isinstance(ids, list):
+            ids = [ids]
         if context is None:
             context = {}
+
         if context.get('partner_category_display') == 'short':
             return super(res_partner_category, self).name_get(cr, uid, ids, context=context)
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
+
         res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1] + ' / ' + name
-            res.append((record['id'], name))
+        for category in self.browse(cr, uid, ids, context=context):
+            names = []
+            current = category
+            while current:
+                names.append(current.name)
+                current = current.parent_id
+            res.append((category.id, ' / '.join(reversed(names))))
         return res
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
