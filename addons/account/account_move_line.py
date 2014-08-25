@@ -22,7 +22,6 @@
 import time
 from datetime import datetime
 
-
 from openerp import workflow
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -888,11 +887,13 @@ class account_move_line(osv.osv):
         for row in other_acc_rows:
             row['move_lines'] = self.get_move_lines_for_manual_reconciliation_by_account_and_parter(cr, uid, row['account_id'], context=context)
 
+        # Fetch other data
+        for row in part_acc_rows+other_acc_rows:
+            account = self.pool.get('account.account').browse(cr, uid, row['account_id'], context=context) # TODO : code dupliqué dans get_move_lines_for_manual_reconciliation_by_account_and_parter
+            row['display_currency_id'] = account.currency_id.id or account.company_currency_id.id
+
         return [part_acc_rows, other_acc_rows]
     
-
-    # TODO : use amount_currency_str ? check following methods
-
     def get_move_lines_for_manual_reconciliation_by_account_and_parter(self, cr, uid, account_id, partner_id=False, context=None):
         """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
         if context is None:
@@ -901,7 +902,9 @@ class account_move_line(osv.osv):
         if partner_id:
             domain.append(('partner_id','=',partner_id))
         aml_ids = self.search(cr, uid, domain, context=context)
-        return self.prepare_move_lines_for_reconciliation_widget(cr, uid, aml_ids, context) # TODO : currency conversion ?
+        account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
+        target_currency = account.currency_id or account.company_currency_id # TODO : m'kay ?
+        return self.prepare_move_lines_for_reconciliation_widget(cr, uid, aml_ids, target_currency=target_currency, context=context)
 
     def prepare_move_lines_for_reconciliation_widget(self, cr, uid, ids, target_currency=False, target_date=False, context=None):
         """ Returns move lines formatted for the manual/bank reconciliation widget
@@ -913,6 +916,7 @@ class account_move_line(osv.osv):
             return []
         if context is None:
             context = {}
+        ctx = context.copy()
         currency_obj = self.pool.get('res.currency')
         company_currency = self.browse(cr, uid, ids[0], context=context).account_id.company_id.currency_id
         rml_parser = report_sxw.rml_parse(cr, uid, 'statement_line_counterpart_widget', context=context)
@@ -922,9 +926,9 @@ class account_move_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
                 continue
-            amount_currency_str = ""
-            if line.currency_id and line.amount_currency:
-                amount_currency_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
+            if line.reconcile_partial_id:
+                reconcile_partial_ids.append(line.reconcile_partial_id.id)
+
             ret_line = {
                 'id': line.id,
                 'name': line.move_id.name,
@@ -936,35 +940,53 @@ class account_move_line(osv.osv):
                 'date': line.date,
                 'period_name': line.period_id.name,
                 'journal_name': line.journal_id.name,
-                'amount_currency_str': amount_currency_str,
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
             }
             # for debugging purposes
             ret_line['reconcile_partial_id'] = line.reconcile_partial_id.id
 
-            if target_currency and line.currency_id and target_currency.id != line.currency_id.id:
+            # Get right debit / credit:
+            if line.currency_id:
                 if line.amount_residual_currency < 0:
-                    ret_line['credit'] = 0
-                    ret_line['debit'] = -line.amount_residual_currency
+                    credit = 0
+                    debit = -line.amount_residual_currency
                 else:
-                    ret_line['credit'] = line.amount_residual_currency if line.credit != 0 else 0
-                    ret_line['debit'] = line.amount_residual_currency if line.debit != 0 else 0
-                ret_line['amount_currency_str'] = rml_parser.formatLang(line.amount_residual, currency_obj=company_currency)
+                    credit = line.amount_residual_currency if line.credit != 0 else 0
+                    debit = line.amount_residual_currency if line.debit != 0 else 0
             else:
                 if line.amount_residual < 0:
-                    ret_line['credit'] = 0
-                    ret_line['debit'] = -line.amount_residual
+                    credit = 0
+                    debit = -line.amount_residual
                 else:
-                    ret_line['credit'] = line.amount_residual if line.credit != 0 else 0
-                    ret_line['debit'] = line.amount_residual if line.debit != 0 else 0
-                ctx = context.copy()
-                if target_currency and target_date:
+                    credit = line.amount_residual if line.credit != 0 else 0
+                    debit = line.amount_residual if line.debit != 0 else 0
+
+            # Convert if necessary and format amount
+            if target_currency and ((line.currency_id and line.currency_id.id != target_currency.id) or (not line.currency_id and company_currency.id != target_currency.id)):
+                if target_date:
                     ctx.update({'date': target_date})
-                    ret_line['debit'] = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, ret_line['debit'], context=ctx)
-                    ret_line['credit'] = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, ret_line['credit'], context=ctx)
-            if line.reconcile_partial_id:
-                reconcile_partial_ids.append(line.reconcile_partial_id.id)
+                else:
+                    ctx.update({'date': line.date})
+                src_currency = line.currency_id or company_currency
+                # Make amount_currency_str, convert the amount, and make amount_str
+                amount_currency_str = debit or -credit
+                amount_currency_str = rml_parser.formatLang(amount_currency_str, currency_obj=src_currency)
+                debit = currency_obj.compute(cr, uid, src_currency.id, target_currency.id, debit, context=ctx)
+                credit = currency_obj.compute(cr, uid, src_currency.id, target_currency.id, credit, context=ctx)
+                amount_str = debit or -credit
+                amount_str = rml_parser.formatLang(amount_str, currency_obj=target_currency)
+            else:
+                currency = line.currency_id or company_currency
+                amount_str = debit or -credit
+                amount_str = rml_parser.formatLang(amount_str, currency_obj=currency)
+                amount_currency_str = ""
+
+            # And there you go, all good and ready
+            ret_line['credit'] = credit
+            ret_line['debit'] = debit
+            ret_line['amount_str'] = amount_str
+            ret_line['amount_currency_str'] = amount_currency_str
             lines.append(ret_line)
 
         return lines
