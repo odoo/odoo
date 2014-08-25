@@ -149,8 +149,13 @@ class website_sale(http.Controller):
             context['pricelist'] = int(self.get_pricelist())
         product_obj = pool.get('product.template')
 
+        url = "/shop"
         product_count = product_obj.search_count(cr, uid, domain, context=context)
-        pager = request.website.pager(url="/shop", total=product_count, page=page, step=PPG, scope=7, url_args=post)
+        if search:
+            post["search"] = search
+        if category:
+            url = "/shop/category/%s" % slug(category)
+        pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
         product_ids = product_obj.search(cr, uid, domain, limit=PPG+10, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
         products = product_obj.browse(cr, uid, product_ids, context=context)
 
