@@ -233,7 +233,24 @@ class website(osv.osv):
         return [(lg.code, lg.name) for lg in website.language_ids]
 
     def get_languages(self, cr, uid, ids, context=None):
-        return self._get_languages(cr, uid, ids[0])
+        return self._get_languages(cr, uid, ids[0], context=context)
+
+    def get_alternate_languages(self, cr, uid, ids, req=None, context=None):
+        langs = []
+        if req is None:
+            req = request.httprequest
+        default = self.get_current_website(cr, uid, context=context).default_lang_code
+        uri = req.path
+        if req.query_string:
+            uri += '?' + req.query_string
+        for code, name in self.get_languages(cr, uid, ids, context=context):
+            lg_path = ('/' + code) if code != default else ''
+            lang = {
+                'hreflang': code.replace('_', '-').lower(),
+                'href': req.url_root[0:-1] + lg_path + uri,
+            }
+            langs.append(lang)
+        return langs
 
     def get_current_website(self, cr, uid, context=None):
         # TODO: Select website, currently hard coded

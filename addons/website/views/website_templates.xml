@@ -82,11 +82,9 @@
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <title><t t-esc="title"/></title>
 
-            <t t-set="languages" t-value="website.get_languages() if website else None"/>
-            <t t-if="request and request.website_multilang">
-                <t t-foreach="languages" t-as="lg">
-                    <t t-set="force_lang" t-value="lg[0] if website and lg[0] != website.default_lang_code else None"/>
-                    <link rel="alternate" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=force_lang)" t-att-hreflang="lg[0].replace('_', '-').lower()" />
+            <t t-if="request and request.website_multilang and website">
+                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lang">
+                    <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
                 </t>
             </t>
 
@@ -317,6 +315,7 @@
                             their performance.
                         </p>
                     </div>
+                    <t t-set="languages" t-value="website.get_languages() if website else None"/>
                     <ul class="list-inline js_language_selector mt16" t-if="(request.website_multilang and len(languages) &gt; 1) or editable">
                         <li t-foreach="languages" t-as="lg">
                             <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
