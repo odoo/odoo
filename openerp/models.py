@@ -2675,7 +2675,7 @@ class BaseModel(object):
                                 dest_model = self.pool[f._obj]
                                 ref = dest_model._table
                                 # ir_actions is inherited so foreign key doesn't work on it
-                                if ref != 'ir_actions':
+                                if dest_model._auto and ref != 'ir_actions':
                                     self._m2o_add_foreign_key_checked(k, dest_model, f.ondelete)
                             if f.select:
                                 cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
