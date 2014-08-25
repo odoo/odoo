@@ -3,7 +3,7 @@
 var CursorMirror = (function(){
 
     function CursorMirror(){
-        this.fps = 24;
+        this.fps = 10;
         this.newCoords = {};
         this.counter = 0;
         this.interval = Math.round(1000/this.fps);
@@ -74,7 +74,7 @@ var CursorMirrorClient = (function(){
         };
         this.clicked = false;
         this.recordingInterval = null;
-        this.fps = 2;
+        this.fps = 10;
 
         // event handler (need to be saved to allow removal, in disconnect method)
         this.onMouseDownMoveHandler = this.onPress.bind(this);

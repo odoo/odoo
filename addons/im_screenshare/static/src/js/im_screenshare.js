@@ -91,7 +91,9 @@
                     clean_mutations.push(m);
                 }
                 if(m.f === 'forwardData'){
-                    clean_mutations.push(m);
+                    if(m.args[1].x.length){
+                       clean_mutations.push(m);
+                    }
                 }
                 if(m.f === 'initialize'){
                     clean_mutations.push(m);
