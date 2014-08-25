@@ -65,7 +65,7 @@ from .api import Environment
 from .exceptions import except_orm, AccessError, MissingError, ValidationError
 from .osv import fields
 from .osv.query import Query
-from .tools import lazy_property
+from .tools import lazy_property, ormcache
 from .tools.config import config
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from .tools.safe_eval import safe_eval as eval
@@ -836,8 +836,23 @@ class BaseModel(object):
         # prepare ormcache, which must be shared by all instances of the model
         cls._ormcache = {}
 
+    @api.model
+    @ormcache()
+    def _is_an_ordinary_table(self):
+        self.env.cr.execute("""\
+            SELECT  1
+            FROM    pg_class
+            WHERE   relname = %s
+            AND     relkind = %s""", [self._table, 'r'])
+        return bool(self.env.cr.fetchone())
+
     def __export_xml_id(self):
         """ Return a valid xml_id for the record `self`. """
+        if not self._is_an_ordinary_table():
+            raise Exception(
+                "You can not export the column ID of model %s, because the "
+                "table %s is not an ordinary table."
+                % (self._name, self._table))
         ir_model_data = self.sudo().env['ir.model.data']
         data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
         if data:
