@@ -820,7 +820,7 @@ class BaseModel(object):
         # check defaults
         for k in cls._defaults:
             assert k in cls._fields, \
-                "Model %s has a default for nonexiting field %s" % (cls._name, k)
+                "Model %s has a default for non-existing field %s" % (cls._name, k)
 
         # restart columns
         for column in cls._columns.itervalues():
