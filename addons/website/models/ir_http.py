@@ -84,12 +84,30 @@ class ir_http(orm.AbstractModel):
                 self._auth_method_public()
             request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
+            langs = [lg[0] for lg in request.website.get_languages()]
+            path = request.httprequest.path.split('/')
             if first_pass:
-                request.lang = request.website.default_lang_code
+                if request.website_multilang:
+                    # If the url doesn't contains the lang and that it's the first connection, we to retreive the user preference if it exists.
+                    if not path[1] in langs and not request.httprequest.cookies.get('session_id'):
+                        if request.lang not in langs:
+                            # Try to find a similar lang. Eg: fr_BE and fr_FR
+                            short = request.lang.split('_')[0]
+                            langs_withshort = [lg[0] for lg in request.website.get_languages() if lg[0].startswith(short)]
+                            if len(langs_withshort):
+                                request.lang = langs_withshort[0]
+                            else:
+                                request.lang = request.website.default_lang_code
+                        # We redirect with the right language in url
+                        if request.lang != request.website.default_lang_code:
+                            path.insert(1, request.lang)
+                            path = '/'.join(path) or '/'
+                            return request.redirect(path + '?' + request.httprequest.query_string)
+                    else:
+                        request.lang = request.website.default_lang_code
+
             request.context['lang'] = request.lang
             if not func:
-                path = request.httprequest.path.split('/')
-                langs = [lg[0] for lg in request.website.get_languages()]
                 if path[1] in langs:
                     request.lang = request.context['lang'] = path.pop(1)
                     path = '/'.join(path) or '/'
