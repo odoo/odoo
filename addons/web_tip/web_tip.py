@@ -48,6 +48,6 @@ class tip(models.Model):
     user_ids = fields.Many2many('res.users', string='Consumed by')
     is_consumed = fields.Boolean(string='Tip consumed', compute='_is_consumed')
 
-    @api.one
+    @api.multi
     def consume(self):
        self.write({'user_ids': [(4, self.env.uid)]})
