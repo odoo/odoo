@@ -84,12 +84,24 @@ class ir_http(orm.AbstractModel):
                 self._auth_method_public()
             request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
+            langs = [lg[0] for lg in request.website.get_languages()]
+            path = request.httprequest.path.split('/')
             if first_pass:
-                request.lang = request.website.default_lang_code
+                # If the url contains the lang, we don't want to retreive the user preference.
+                if not path[1] in langs:
+                    if request.lang not in langs:
+                        # Try to find a similar lang. Eg: FR_be and FR_fr
+                        short = request.lang.split('_')[0]
+                        langs_withshort = [lg[0] for lg in request.website.get_languages() if lg[0].startswith(short)]
+                        if len(langs_withshort):
+                            request.lang = langs_withshort[0]
+                        else:
+                            request.lang = request.website.default_lang_code
+                else:
+                    request.lang = path[1]
+
             request.context['lang'] = request.lang
             if not func:
-                path = request.httprequest.path.split('/')
-                langs = [lg[0] for lg in request.website.get_languages()]
                 if path[1] in langs:
                     request.lang = request.context['lang'] = path.pop(1)
                     path = '/'.join(path) or '/'
