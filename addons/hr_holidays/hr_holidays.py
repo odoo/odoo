@@ -305,10 +305,14 @@ class hr_holidays(osv.osv):
         if context is None:
             context = {}
         context = dict(context, mail_create_nolog=True)
+        if values.get('state') and values['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
+            raise osv.except_osv(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
         return super(hr_holidays, self).create(cr, uid, values, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         check_fnct = self.pool.get('hr.holidays.status').check_access_rights
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
+            raise osv.except_osv(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
         for  holiday in self.browse(cr, uid, ids, context=context):
             if holiday.state in ('validate','validate1') and not check_fnct(cr, uid, 'write', raise_exception=False):
                 raise osv.except_osv(_('Warning!'),_('You cannot modify a leave request that has been approved. Contact a human resource manager.'))
