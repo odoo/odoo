@@ -153,7 +153,7 @@
                 base: location.href.match(/^(.*\/)[^\/]*$/)[1],
                 timestamp: Date.now(),
             });
-            this.treeMirrorClient = new TreeMirrorClient(document.body, {
+            this.treeMirrorClient = new TreeMirrorClient(document, {
                 initialize: function(rootId, children) {
                     self.queue({
                         f: 'initialize',
@@ -218,6 +218,7 @@
     instance.im_screenshare.Player = instance.Class.extend({
         init: function(params){
             // common init
+            this.clearPage();
             this._init_mirroirs();
             if(params.uuid){
                 // screen sharing
@@ -238,17 +239,15 @@
         // screen recording
         _init_screen_record: function(){
             var self = this;
-            instance.session.session_bind().done(function() {
-                var screenRecordEvent = new instance.web.Model('im_screenshare.record.event');
-                screenRecordEvent.query(['mutations']).filter([['screen_record_id', '=', self.record_id]]).all().done(function(sre_list) {
-                    _.each(sre_list, function(sre) {
-                        var list = JSON.parse(sre.mutations);
-                        _.each(list, function(item) {
-                            self.sre_msglist.push(item);
-                        });
+            var screenRecordEvent = new instance.web.Model('im_screenshare.record.event');
+            screenRecordEvent.query(['mutations']).filter([['screen_record_id', '=', self.record_id]]).all().done(function(sre_list) {
+                _.each(sre_list, function(sre) {
+                    var list = JSON.parse(sre.mutations);
+                    _.each(list, function(item) {
+                        self.sre_msglist.push(item);
                     });
-                    self.load();
                 });
+                self.load();
             });
         },
         load: function(){
@@ -279,13 +278,16 @@
             }
         },
         // common functions
+        clearPage : function() {
+            while (document.firstChild) {
+                document.removeChild(document.firstChild);
+            }
+        },
         _init_mirroirs: function(){
             var self = this;
             this.base = "";
-            // empty the body to allow the new mutation to be executed correctly
-            $("body").empty();
             // init the mirroirs
-            this.treeMirror = new TreeMirror(document.body, {
+            this.treeMirror = new TreeMirror(document, {
                 createElement: function(tagName) {
                     if (tagName == 'SCRIPT') {
                         var node = document.createElement('NO-SCRIPT');
@@ -305,6 +307,7 @@
         handleMessage: function(msg) {
             if (msg.base) {
                 this.base = msg.base;
+                this.clearPage();
                 this._init_mirroirs();
             } else {
                 if (msg.f === 'forwardData') {

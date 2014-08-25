@@ -21,11 +21,6 @@
 
         <!-- Template for the external player page -->
         <template id="player_page" name="IM Screensharing Player Page">
-            &lt;!DOCTYPE html&gt;
-            <html style="height:100%;">
-                <head>
-                    <title>Odoo Screenshare Player</title>
-                    <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
 
                     <link href="/web/css/web.assets_common" rel="stylesheet"/>
                     <script type="text/javascript" src="/web/js/web.assets_common"></script>
@@ -42,10 +37,8 @@
                             window.player = new instance.im_screenshare.Player(params);
                         });
                     </script>
-                </head>
-                <body style="height: 100%; margin: 0;">
-                </body>
-            </html>
+
         </template>
+
     </data>
 </openerp>
