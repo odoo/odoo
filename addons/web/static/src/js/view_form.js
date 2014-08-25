@@ -3356,7 +3356,7 @@ instance.web.form.CompletionFieldMixin = {
                 });
             }
             // create...
-            if (!(self.options && self.options.no_create)){
+            if (!(self.options && (self.options.no_create || self.options.no_create_edit))){
                 values.push({
                     label: _t("Create and Edit..."),
                     action: function() {
