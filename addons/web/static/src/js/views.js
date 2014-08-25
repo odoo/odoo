@@ -344,6 +344,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
             });
         }
 
+        instance.web.bus.trigger('action', action);
+
         // Ensure context & domain are evaluated and can be manipulated/used
         var ncontext = new instance.web.CompoundContext(options.additional_context, action.context || {});
         action.context = instance.web.pyeval.eval('context', ncontext);
@@ -691,8 +693,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var container = this.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
-        this.views[view_type].deferred.resolve(view_type);
         return $.when(view_promise).done(function() {
+            self.views[view_type].deferred.resolve(view_type);
             if (self.searchview
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
@@ -725,6 +727,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
                 views.push(mode);
             }
+            instance.web.bus.trigger('view_switch_mode', self, mode);
         });
         var item = _.extend({
             widget: this,
@@ -1122,7 +1125,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             );
         } 
 
-        $.when(defs).done(function() {
+        $.when(this.views[this.active_view] ? this.views[this.active_view].deferred : $.when(), defs).done(function() {
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
@@ -1481,6 +1484,7 @@ instance.web.View = instance.web.Widget.extend({
     },
     do_show: function () {
         this.$el.show();
+        instance.web.bus.trigger('view_shown', this);
     },
     do_hide: function () {
         this.$el.hide();

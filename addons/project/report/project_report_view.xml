@@ -64,9 +64,7 @@
                         <filter string="Contact" context="{'group_by':'partner_id'}" />
                         <filter string="Assigned to" name="User" context="{'group_by':'user_id'}" />
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Assignation date (day)" context="{'group_by':'date_start:day'}" help="Creation Date"/>
-                        <filter string="Assignation date (month)" context="{'group_by':'date_start:month'}" help="Creation Date"/>
-                        <filter string="Assignation date (year)" context="{'group_by':'date_start:year'}" help="Creation Date"/>
+                        <filter string="Assignation date" context="{'group_by':'date_start:month'}" help="Creation Date"/>
                         <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}" help="Last Stage Update"/>
                     </group>
                 </search>

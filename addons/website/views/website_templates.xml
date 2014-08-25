@@ -6,11 +6,6 @@
 
 <!-- Layout and generic templates -->
 
-<template id="website.theme" name="Theme">
-    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
-    <link rel="stylesheet" href='/website/static/src/css/website.css' t-ignore="true"/>
-</template>
-
 <template id="website.assets_frontend" name="Website assets">
     <t t-call="website.theme"/>
 
@@ -20,7 +15,7 @@
 
     <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
     <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
-
+    
 </template>
 
 <template id="assets_backend" name="website assets for backend" inherit_id="web.assets_backend">
@@ -152,8 +147,8 @@
                     </div>
                     <div class="container mt16 mb8">
                         <div class="pull-right" t-ignore="true" t-if="not editable">
-                            Create a <a href="https://www.odoo.com/page/website-builder">free website</a> with
-                            <a class="label label-danger" href="https://www.odoo.com/">Odoo</a>
+                            Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
+                            <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
                         </div>
                         <div class="pull-left text-muted">
                             Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
@@ -213,8 +208,10 @@
     <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script> <!-- groups="base.group_website_designer" -->
     <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js" />
     <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
 
 </template>
 
@@ -239,8 +236,8 @@
 
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer_container']" position="replace">
-        <div class="oe_structure">
-            <section data-snippet-id='three-columns' class="mt16 mb16">
+        <div class="oe_structure" id="footer">
+            <section data-option='three-columns' class="mt16 mb16">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4">
@@ -269,7 +266,7 @@
 </template>
 
 <template id="footer_default" inherit_id="website.footer_custom" optional="enabled" name="Automatic Footer">
-    <xpath expr="//div[@class='oe_structure']" position="replace">
+    <xpath expr="//div[@id='footer']" position="replace">
         <div class="container hidden-print">
             <div class="row">
                 <div class="col-md-3">
@@ -766,7 +763,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <div id="wrap">
             <div class="oe_structure">
 
-                <section data-snippet-id="title">
+                <section>
                     <div class="container">
                         <div class="row">
                             <div class="col-md-12">
@@ -777,7 +774,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     </div>
                 </section>
 
-                <section data-snippet-id="text-image">
+                <section>
                     <div class="container">
                         <div class="row">
                             <div class="col-md-6 mt32">

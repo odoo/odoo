@@ -28,7 +28,7 @@
                         <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
                     </group>
                     <group string="Depreciation Method">
-                        <field name="method"/>
+                        <field name="method" widget="radio"/>
                         <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
                         <field name="prorata"/>
                         <field name="open_asset"/>
@@ -116,7 +116,7 @@
                                     <field name="partner_id"/>
                                 </group>
                                 <group>
-                                    <field name="method"/>
+                                    <field name="method" widget="radio"/>
                                     <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
                                     <label for="method_time"/>
                                     <div>

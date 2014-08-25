@@ -6,40 +6,38 @@
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
                 <form string="Model">
-                    <sheet>
-                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
-                        <div class="oe_title">
-                            <label for="modelname" class="oe_edit_only"/>
-                            <h1>
-                                <field name="modelname" />
-                            </h1>
-                            <label for="brand_id" class="oe_edit_only"/>
-                            <h2>
-                                <field name="brand_id" on_change="on_change_brand(brand_id)"/>
-                            </h2>
-                        </div>
-                        <notebook>
-                            <page string="Vendors">
-                                <field name="vendors" widget="many2many_kanban">
-                                    <kanban quick_create="false" create="true">
-                                        <field name="name"/>
-                                        <templates>
-                                            <t t-name="kanban-box">
-                                                <div style="position: relative">
-                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                    <div class="oe_module_vignette">
-                                                        <div class="oe_module_desc">
-                                                            <field name="name"/>
-                                                        </div>
+                    <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="modelname" class="oe_edit_only"/>
+                        <h1>
+                            <field name="modelname" />
+                        </h1>
+                        <label for="brand_id" class="oe_edit_only"/>
+                        <h2>
+                            <field name="brand_id" on_change="on_change_brand(brand_id)"/>
+                        </h2>
+                    </div>
+                    <notebook>
+                        <page string="Vendors">
+                            <field name="vendors" widget="many2many_kanban">
+                                <kanban quick_create="false" create="true">
+                                    <field name="name"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div style="position: relative">
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                <div class="oe_module_vignette">
+                                                    <div class="oe_module_desc">
+                                                        <field name="name"/>
                                                     </div>
                                                 </div>
-                                            </t>
-                                        </templates>
-                                    </kanban>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -98,17 +96,15 @@
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
                 <form string="Model Make">
-                    <sheet>
-                        <group>
-                            <div>
-                                <field name="image_medium" widget="image" class="oe_left oe_avatar"/>
-                                <label for="name" class="oe_edit_only"/>
-                                <h1>
-                                    <field name="name" class="oe_inline" />
-                                </h1>
-                            </div>
-                        </group>
-                    </sheet>
+                    <group>
+                        <div>
+                            <field name="image_medium" widget="image" class="oe_left oe_avatar"/>
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline" />
+                            </h1>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>
@@ -418,7 +414,7 @@
                 contracts, services, fixed and recurring costs, odometers and
                 fuel logs associated to each vehicle.
             </p><p>
-                OpenERP will warn you when services or contract have to be
+                Odoo will warn you when services or contract have to be
                 renewed.
               </p>
             </field>
@@ -558,7 +554,7 @@
                 Click to create a new contract. 
               </p><p>
                 Manage all your contracts (leasing, insurances, etc.) with
-                their related services, costs. OpenERP will automatically warn
+                their related services, costs. Odoo will automatically warn
                 you when some contracts have to be renewed.
               </p><p>
                 Each contract (e.g.: leasing) may include several services
@@ -847,7 +843,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new service entry. 
               </p><p>
-                OpenERP helps you keeping track of all the services done
+                Odoo helps you keeping track of all the services done
                 on your vehicle. Services can be of many type: occasional
                 repair, fixed maintenance, etc.
               </p>
@@ -919,13 +915,12 @@
                 <search string="Vehicles costs" >
                     <field name="vehicle_id" />
                     <field name="cost_subtype_id"/>
-                    <field name="year"/>
                     <field name="date"/>
                     <field name="parent_id"/>
                     <filter name="parent_false" domain="[('parent_id','=',False)]" string="Effective Costs"/>
                     <filter name="parent_true" domain="[('parent_id','!=',False)]" string="Indicative Costs"/>
                     <group expand="1" string="Group By">
-                        <filter name="groupby_year" context="{'group_by' : 'year'}" string="Year"/>
+                        <filter name="groupby_year" context="{'group_by' : 'date:year'}" string="Year"/>
                         <filter name="groupby_date" context="{'group_by' : 'date'}" string="Vehicle Costs Month" help="Vehicle Costs by Month"/>
                         <filter name="groupby_cost_type" context="{'group_by' : 'cost_type'}" string="Cost Type"/>
                         <filter name="groupby_cost_subtype_id" context="{'group_by' : 'cost_subtype_id'}" string="Cost Subtype"/>
@@ -980,7 +975,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new cost.
               </p><p>
-                OpenERP helps you managing the costs for your different
+                Odoo helps you managing the costs for your different
                 vehicles. Costs are created automatically from services,
                 contracts (fixed or recurring) and fuel logs.
               </p>

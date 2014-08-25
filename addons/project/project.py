@@ -166,14 +166,18 @@ class project(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         alias_ids = []
         mail_alias = self.pool.get('mail.alias')
+        analytic_account_to_delete = set()
         for proj in self.browse(cr, uid, ids, context=context):
             if proj.tasks:
                 raise osv.except_osv(_('Invalid Action!'),
                                      _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
             elif proj.alias_id:
                 alias_ids.append(proj.alias_id.id)
+            if proj.analytic_account_id and not proj.analytic_account_id.line_ids:
+                analytic_account_to_delete.add(proj.analytic_account_id.id)
         res = super(project, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
+        self.pool['account.analytic.account'].unlink(cr, uid, list(analytic_account_to_delete), context=context)
         return res
 
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
@@ -1097,7 +1101,14 @@ class task(osv.osv):
             'planned_hours': 0.0,
         }
         defaults.update(custom_values)
-        return super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        res = super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        email_list = tools.email_split(msg.get('to', '') + ',' + msg.get('cc', ''))
+        new_task = self.browse(cr, uid, res, context=context)
+        if new_task.project_id and new_task.project_id.alias_name:  # check left-part is not already an alias
+            email_list = filter(lambda x: x.split('@')[0] != new_task.project_id.alias_name, email_list)
+        partner_ids = filter(lambda x: x, self._find_partner_from_emails(cr, uid, None, email_list, context=context, check_followers=False))
+        self.message_subscribe(cr, uid, [res], partner_ids, context=context)
+        return res
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override to update the task according to the email. """
@@ -1221,12 +1232,12 @@ class account_analytic_account(osv.osv):
             self.project_create(cr, uid, account.id, vals_for_project, context=context)
         return super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
-        project_obj = self.pool.get('project.project')
-        analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
-        if analytic_ids:
-            raise osv.except_osv(_('Warning!'), _('Please delete the project linked with this account first.'))
-        return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
+    def unlink(self, cr, uid, ids, context=None):
+        proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
+        has_tasks = self.pool['project.task'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
+        if has_tasks:
+            raise osv.except_osv(_('Warning!'), _('Please remove existing tasks in the project linked to the accounts you want to delete.'))
+        return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if args is None:

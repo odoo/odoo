@@ -43,6 +43,7 @@
         display: inline-block
         white-space: nowrap
         background: black
+        margin-right: 60px
         > div
             background: rgb(0,0,0)
             label
@@ -87,7 +88,11 @@
             line-height: 18px
     & > :not(.oe_snippet_thumbnail)
         display: none !important
-
+    &.disable
+        .oe_snippet_thumbnail
+            background-color: rgba(255, 0, 0, 0.75)
+        .oe_snippet_thumbnail_img
+            opacity: 0.8
 #oe_snippets .oe_snippet_thumbnail
     @include background(#747474, radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4)))
 
@@ -280,6 +285,14 @@
         z-index: 1002
         > .btn-group
             left: -50%
+            white-space: nowrap
+            > a
+                cursor: pointer
+                display: inline-block
+                float: none
+                margin: 0 -3px
+            > div
+                float: none
         .btn, a
             cursor: pointer
         .dropdown
@@ -501,6 +514,38 @@
             height: 16px
             display: inline-block
 
+/* ---- COLOR-PICKER ----  {{{ */
 
+.colorpicker
+    margin: 0 auto
+    background: transparent
+    border: 0
+    td
+        padding: 0
+        background: transparent
+        > *
+            width: 16px
+            height: 16px
+            border-radius: 2px
+            margin: 3px
+            padding: 0
+            border-width: 1px
+            display: block
+    .only-text
+        display: none
+    .automatic-color
+        background: #fff
+        border-left: 7px solid #f33
+        border-top: 7px solid #0e0
+        border-right: 8px solid #33f
+        border-bottom: 8px solid #fe0
+        margin: 4px 3px 3px 3px
+        width: 0
+        height: 0
+.cke_panel_container table.colorpicker
+    tr:first-child td
+        padding-top: 6px
+    tr:last-child td
+        padding-bottom: 6px
 
-
+// }}}

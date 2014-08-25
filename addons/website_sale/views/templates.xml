@@ -156,65 +156,6 @@
                           t-attf-class="oe_product oe_grid oe-height-#{td_product['y']*2} #{ td_product['class'] }">
 
                           <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
-
-                            <div class="css_options" t-ignore="true" groups="base.group_website_publisher">
-                              <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
-                                <button class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></button>
-                                <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
-                                  <li class='dropdown-submenu'>
-                                    <a tabindex="-1" href="#">Size</a>
-                                    <ul class="dropdown-menu" name="size">
-                                      <li><a href="#">
-                                        <table>
-                                          <tr>
-                                            <td class="selected"></td>
-                                            <td t-att-class="product.website_size_x > 1 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_x > 2 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_x > 3 and 'selected'"></td>
-                                          </tr>
-                                          <tr>
-                                            <td t-att-class="product.website_size_y > 1 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 1 and product.website_size_x > 1 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 1 and product.website_size_x > 2 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 1 and product.website_size_x > 3 and 'selected'"></td>
-                                          </tr>
-                                          <tr>
-                                            <td t-att-class="product.website_size_y > 2 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 2 and product.website_size_x > 1 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 2 and product.website_size_x > 2 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 2 and product.website_size_x > 3 and 'selected'"></td>
-                                          </tr>
-                                          <tr>
-                                            <td t-att-class="product.website_size_y > 3 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 3 and product.website_size_x > 1 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 3 and product.website_size_x > 2 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 3 and product.website_size_x > 3 and 'selected'"></td>
-                                          </tr>
-                                        </table>
-                                      </a></li>
-                                    </ul>
-                                  </li>
-                                  <li class='dropdown-submenu'>
-                                    <a tabindex="-1" href="#">Styles</a>
-                                    <ul class="dropdown-menu" name="style">
-                                      <t t-foreach="styles" t-as="style">
-                                        <li t-att-class="style_in_product(style, product) and 'active' or ''"><a href="#" t-att-data-id="style.id" t-att-data-class="style.html_class"><t t-esc="style.name"/></a></li>
-                                      </t>
-                                    </ul>
-                                  </li>
-                                  <li class='dropdown-submenu'>
-                                      <a tabindex="-1" href="#">Promote</a>
-                                      <ul class="dropdown-menu" name="sequence">
-                                          <li><a href="#" class="js_go_to_top">Push to top</a></li>
-                                          <li><a href="#" class="js_go_up">Push up</a>
-                                          </li>
-                                          <li><a href="#" class="js_go_down">Push down</a></li>
-                                          <li><a href="#" class="js_go_to_bottom">Push to bottom</a></li>
-                                      </ul>
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
                             <t t-set="product_image_big" t-value="td_product['x']+td_product['y'] > 2"/>
                             <t t-call="website_sale.products_item"/>
                           </div>
@@ -288,7 +229,7 @@
                         <select class="form-control" name="attrib">
                           <option value=""/>
                           <t t-foreach="a.value_ids" t-as="v">
-                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-field="v.name" t-att-selected="'selected' if v.id in attrib_set else ''"/>
+                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="'selected' if v.id in attrib_set else ''"/>
                           </t>
                         </select>
                       </t>
@@ -916,14 +857,14 @@
 
                   <div class="clearfix"/>
 
-                  <div class="form-group col-lg-6" groups="sale.group_delivery_invoice_address">
+                  <div class="form-group col-lg-6">
                       <label>
                           <input type="checkbox" name="shipping_different" t-att-checked="checkout.get('shipping_different')"/>
                           <span>Ship to a different address</span>
                       </label>
                   </div>
               </div>
-              <div class="js_shipping row mb16" t-att-style="not checkout.get('shipping_different') and 'display:none' or ''" groups="sale.group_delivery_invoice_address">
+              <div class="js_shipping row mb16" t-att-style="not checkout.get('shipping_different') and 'display:none' or ''">
                   <h3 class="oe_shipping col-lg-12 mt16">Shipping Information</h3>
 
                   <div t-attf-class="form-group #{error.get('shipping_name') and 'has-error' or ''} col-lg-6">
@@ -1061,7 +1002,7 @@
                 <div>
                   <a href="/shop/checkout"><span class="fa fa-arrow-right"/> Change Address</a>
                 </div>
-                <t groups="sale.group_delivery_invoice_address">
+                <t>
                     <h4 class="mt32">Ship To:</h4>
                     <t t-if="website_sale_order.partner_shipping_id and website_sale_order.partner_shipping_id.id != website_sale_order.partner_invoice_id.id">
                       <div t-field="order.partner_shipping_id" t-field-options='{
@@ -1146,7 +1087,7 @@
                     "widget": "contact",
                     "fields": ["address", "name", "phone", "email"]
                     }'/>
-                <t groups="sale.group_delivery_invoice_address">
+                <t>
                     <h4 class="mt32">Ship To:</h4>
                     <t t-if="order.partner_shipping_id and order.partner_shipping_id.id != order.partner_invoice_id.id">
                       <div t-field="order.partner_shipping_id" t-field-options='{

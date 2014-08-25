@@ -50,13 +50,13 @@ class crm_case_section(osv.osv):
             help="Target of invoice revenue for the current month. This is the amount the sales \n"
                     "team estimates to be able to invoice this month."),
         'monthly_quoted': fields.function(_get_sale_orders_data,
-            type='any', readonly=True, multi='_get_sale_orders_data',
+            type='char', readonly=True, multi='_get_sale_orders_data',
             string='Rate of created quotation per duration'),
         'monthly_confirmed': fields.function(_get_sale_orders_data,
-            type='any', readonly=True, multi='_get_sale_orders_data',
+            type='char', readonly=True, multi='_get_sale_orders_data',
             string='Rate of validate sales orders per duration'),
         'monthly_invoiced': fields.function(_get_invoices_data,
-            type='any', readonly=True,
+            type='char', readonly=True,
             string='Rate of sent invoices per duration'),
     }
 

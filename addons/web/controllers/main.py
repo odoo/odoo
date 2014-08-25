@@ -70,7 +70,7 @@ def serialize_exception(f):
             se = _serialize_exception(e)
             error = {
                 'code': 200,
-                'message': "OpenERP Server Error",
+                'message': "Odoo Server Error",
                 'data': se
             }
             return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
@@ -589,6 +589,34 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/jslist', type='json', auth="none")
     def jslist(self, mods=None):
         return manifest_list('js', mods=mods)
+
+    @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
+    def load_locale(self, lang):
+        magic_file_finding = [lang.replace("_",'-').lower(), lang.split('_')[0]]
+        addons_path = http.addons_manifest['web']['addons_path']
+        #load datejs locale
+        datejs_locale = ""
+        try:
+            with open(os.path.join(addons_path, 'web', 'static', 'lib', 'datejs', 'globalization', lang.replace('_', '-') + '.js'), 'r') as f:
+                datejs_locale = f.read()
+        except IOError:
+            pass
+
+        #load momentjs locale
+        momentjs_locale_file = False
+        momentjs_locale = ""
+        for code in magic_file_finding:
+            try:
+                with open(os.path.join(addons_path, 'web', 'static', 'lib', 'moment', 'locale', code + '.js'), 'r') as f:
+                    momentjs_locale = f.read()
+                #we found a locale matching so we can exit
+                break
+            except IOError:
+                continue
+
+        #return the content of the locale
+        headers = [('Content-Type', 'application/javascript'), ('Cache-Control', 'max-age=%s' % (36000))]
+        return request.make_response(datejs_locale + "\n"+ momentjs_locale, headers)
 
     @http.route('/web/webclient/qweb', type='http', auth="none")
     def qweb(self, mods=None, db=None):
@@ -1330,7 +1358,7 @@ class Export(http.Controller):
             fields['.id'] = fields.pop('id', {'string': 'ID'})
 
         fields_sequence = sorted(fields.iteritems(),
-            key=lambda field: field[1].get('string', ''))
+            key=lambda field: openerp.tools.ustr(field[1].get('string', '')))
 
         records = []
         for field_name, field in fields_sequence:

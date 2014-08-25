@@ -22,17 +22,29 @@
         <record id="mt_expense_approved" model="mail.message.subtype">
             <field name="name">Approved</field>
             <field name="res_model">hr.expense.expense</field>
+            <field name="default" eval="False"/>
             <field name="description">Expense approved</field>
         </record>
         <record id="mt_expense_refused" model="mail.message.subtype">
             <field name="name">Refused</field>
             <field name="res_model">hr.expense.expense</field>
+            <field name="default" eval="False"/>
             <field name="description">Expense refused</field>
         </record>
         <record id="mt_expense_confirmed" model="mail.message.subtype">
             <field name="name">To Approve</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="description">Expense confirmed, waiting confirmation</field>
+            <field name="default" eval="True"/>
+        </record>
+        <!-- Department (Parent) related subtypes for messaging / Chatter -->
+        <record id="mt_department_expense_confirmed" model="mail.message.subtype">
+            <field name="name">Expenses To Approve</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_expense_confirmed')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="10"/>
         </record>
 
     </data>

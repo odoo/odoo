@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
+from openerp import api
 from openerp import tools, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
@@ -162,7 +163,7 @@ class calendar_attendee(osv.Model):
                 elif interval == 'minutes':
                     delta = timedelta(minutes=duration)
                 trigger.value = delta
-                valarm.add('DESCRIPTION').value = alarm.name or 'OpenERP'
+                valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
         for attendee in event_obj.attendee_ids:
             attendee_add = event.add('attendee')
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
@@ -745,6 +746,8 @@ class calendar_event(osv.Model):
 
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}
+        if not isinstance(fields, list):
+            fields = [fields]
         for meeting_id in ids:
             res[meeting_id] = {}
             attendee = self._find_my_attendee(cr, uid, [meeting_id], context)
@@ -868,7 +871,7 @@ class calendar_event(osv.Model):
         'stop_datetime': fields.datetime('End Datetime', states={'done': [('readonly', True)]}, track_visibility='onchange'),  # old date_deadline
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
-        'class': fields.selection([('public', 'Public'), ('private', 'Private'), ('confidential', 'Public for Employees')], 'Privacy', states={'done': [('readonly', True)]}),
+        'class': fields.selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', states={'done': [('readonly', True)]}),
         'location': fields.char('Location', help="Location of Event", track_visibility='onchange', states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}),
 
@@ -980,22 +983,22 @@ class calendar_event(osv.Model):
         value['allday'] = checkallday  # Force to be rewrited
 
         if allday:
-            if fromtype == 'start':
+            if fromtype == 'start' and start:
                 start = datetime.strptime(start, DEFAULT_SERVER_DATE_FORMAT)
                 value['start_datetime'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['start'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
 
-            if fromtype == 'stop':
+            if fromtype == 'stop' and end:
                 end = datetime.strptime(end, DEFAULT_SERVER_DATE_FORMAT)
                 value['stop_datetime'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
 
         else:
-            if fromtype == 'start':
+            if fromtype == 'start' and start:
                 start = datetime.strptime(start, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['start_date'] = datetime.strftime(start, DEFAULT_SERVER_DATE_FORMAT)
                 value['start'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
-            if fromtype == 'stop':
+            if fromtype == 'stop' and end:
                 end = datetime.strptime(end, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['stop_date'] = datetime.strftime(end, DEFAULT_SERVER_DATE_FORMAT)
                 value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
@@ -1321,6 +1324,7 @@ class calendar_event(osv.Model):
             ('user_id', '=', uid),
         ]
 
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         if isinstance(thread_id, str):
             thread_id = get_real_ids(thread_id)
@@ -1567,6 +1571,12 @@ class calendar_event(osv.Model):
             select = [ids]
         else:
             select = ids
+
+        # FIXME: find a better way to not push virtual ids in the cache
+        # (leading to their prefetching and ultimately a type error when
+        # postgres tries to convert '14-3489274297' to an integer)
+        self.invalidate_cache(cr, uid, context=context)
+
         select = map(lambda x: (x, calendar_id2real_id(x)), select)
         result = []
         real_data = super(calendar_event, self).read(cr, uid, [real_id for calendar_id, real_id in select], fields=fields2, context=context, load=load)

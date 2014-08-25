@@ -124,7 +124,7 @@
 -
   !workflow {model: purchase.order, ref: purchase_order_001, action: purchase_confirm}
 -
-  Reception is ready for process so now done the reception.
+  Receipt is ready for process so now we do it.
 -
   !python {model: stock.picking}: |
     picking_id = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001"), context=context).picking_ids[0]

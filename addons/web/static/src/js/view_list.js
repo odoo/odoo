@@ -1623,6 +1623,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     self.setup_resequence_rows(list, dataset);
                 }).always(function() {
                     if (post_render) { post_render(); }
+                    self.view.trigger('view_list_rendered');
                 });
             });
         return $el;

@@ -16,12 +16,12 @@
 -
   !record {model: crossovered.budget, id: crossovered_budget_budget0}:
     crossovered_budget_line:
-      - analytic_account_id: account.analytic_consultancy
+      - analytic_account_id: analytic.analytic_consultancy
         date_from: !eval "'%s-01-01' %(datetime.now().year+1)"
         date_to: !eval "'%s-12-31' %(datetime.now().year+1)"
         general_budget_id: account_budget.account_budget_post_purchase0
         planned_amount: 10000.0
-      - analytic_account_id: account.analytic_super_product_trainings
+      - analytic_account_id: analytic.analytic_super_product_trainings
         date_from: !eval "'%s-09-01' %(datetime.now().year+1)"
         date_to: !eval "'%s-09-30' %(datetime.now().year+1)"
         general_budget_id: account_budget.account_budget_post_sales0

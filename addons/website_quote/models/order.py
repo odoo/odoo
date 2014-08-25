@@ -111,15 +111,24 @@ class sale_order(osv.osv):
 
     _columns = {
         'access_token': fields.char('Security Token', required=True, copy=False),
-        'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
+        'template_id': fields.many2one('sale.quote.template', 'Quote Template', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'website_description': fields.html('Description'),
-        'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
-        'validity_date': fields.date('Validity Date'),
+        'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+        'validity_date': fields.date('Validity Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float",
             digits_compute=dp.get_precision('Account'))
     }
+
+    def _get_template_id(self, cr, uid, context=None):
+        try:
+            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_quote', 'website_quote_template_default')[1]
+        except ValueError:
+            template_id = False
+        return template_id
+
     _defaults = {
-        'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4())
+        'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4()),
+        'template_id' : _get_template_id,
     }
 
     def open_quotation(self, cr, uid, quote_id, context=None):
@@ -136,8 +145,9 @@ class sale_order(osv.osv):
 
         if context is None:
             context = {}
-        context = dict(context, lang=self.pool.get('res.partner').browse(cr, uid, partner, context).lang)
-        
+        if partner:
+            context['lang'] = self.pool['res.partner'].browse(cr, uid, partner, context).lang
+
         lines = [(5,)]
         quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:

@@ -44,6 +44,7 @@
         <record id="product_template_form_view" model="ir.ui.view">
             <field name="name">product.template.common.form</field>
             <field name="model">product.template</field>
+            <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <form string="Product">
                     <field name="is_product_variant" invisible="1"/>
@@ -110,7 +111,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}">
+                            <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
                                 <group name="sale">
                                     <group name="sale_condition" string="Sale Conditions" colspan="3">
                                         <label for="warranty"/>
@@ -235,7 +236,7 @@
                         <div class="oe_right">
                             <button class="oe_inline oe_stat_button" string="Variant Prices"  name="%(variants_template_action)d" type="action" icon="fa-strikethrough"/>
                             <button class="oe_inline oe_stat_button" name="%(product.product_variant_action)d" type="action" icon="fa-sitemap">
-                                <field string="Variants" name="product_variant_count" widget="statinfo" />
+                                <field string="List of Variants" name="product_variant_count" widget="statinfo" />
                             </button>
                         </div>
                         <field name="attribute_line_ids" widget="one2many_list">
@@ -318,7 +319,6 @@
                     <field name="state" invisible="1"/>
                     <field name="product_tmpl_id" invisible="1"/>
                 </tree>
-
             </field>
         </record>
 
@@ -466,20 +466,18 @@
             <field name="model">product.category</field>
             <field name="arch" type="xml">
                 <form string="Product Categories">
-                    <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <group name="parent" col="4">
-                                <field name="parent_id"/>
-                                <field name="type"/>
-                            </group>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="parent" col="4">
+                            <field name="parent_id"/>
+                            <field name="type"/>
                         </group>
-                    </sheet>
+                    </group>
                 </form>
             </field>
         </record>

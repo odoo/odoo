@@ -49,7 +49,7 @@
         <record id="view_account_analytic_line_search_account_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.search.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
                  <field name="account_id" position="replace">
                      <field name="account_id" string="Analytic account/project"/>
@@ -59,7 +59,7 @@
         <record id="view_account_analytic_line_form_inherit_account_id" model="ir.ui.view">
             <field name="name">account.analytic.line.form.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
                    <field name="account_id" string="Analytic Account/Project" on_change="on_change_account_id(account_id)"/>
@@ -69,7 +69,7 @@
        <record id="view_account_analytic_line_tree_inherit_account_id" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
                     <field name="account_id" string="Analytic account/project" on_change="on_change_account_id(account_id)"/>

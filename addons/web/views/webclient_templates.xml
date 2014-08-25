@@ -23,6 +23,7 @@
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
             <script type="text/javascript" src="/web/static/src/js/tour.js"></script>
+            <script type="text/javascript" src="/web/static/test/menu.js"></script>
 
             <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
         </template>
@@ -64,15 +65,17 @@
             <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
 
+            <!-- Datetime Picker -->
+            <link rel="stylesheet" href="/web/static/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
+            <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
+            <script type="text/javascript" src="/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+
             <!-- jQuery ui -->
             <link rel="stylesheet" href="/web/static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.9.0.custom.css"/>
 
             <t t-call="web.jqueryui_conflict">
                 <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
             </t>
-
-            <link rel="stylesheet" href="/web/static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css"/>
-            <script type="text/javascript" src="/web/static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js"></script>
 
             <link rel="stylesheet" href="/web/static/lib/jquery.ui.notify/css/ui.notify.css"/>
             <script type="text/javascript" src="/web/static/lib/jquery.ui.notify/js/jquery.notify.js"></script>
@@ -123,7 +126,7 @@
                 <head>
                     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
                     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title>OpenERP</title>
+                    <title>Odoo</title>
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
                     <link rel="stylesheet" href="/web/static/src/css/full.css" />
                     <t t-raw="head or ''"/>
@@ -260,7 +263,7 @@
                             <a class="oe_login_manage_db" t-attf-href="/web/database/manager{{ '?debug' if debug else '' }}">Manage Databases</a>
                             <span class="oe_footer_seperator"> | </span>
                         </t>
-                        <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
+                        <a href="https://www.odoo.com" target="_blank">Powered by <span>Odoo</span></a>
                     </div>
                 </div>
             </t>
@@ -323,7 +326,7 @@
                 <head>
                     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
                     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title>OpenERP Web Tests</title>
+                    <title>Odoo Web Tests</title>
 
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
                     <link rel="stylesheet" href="/web/static/lib/qunit/qunit.css"/>

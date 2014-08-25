@@ -23,8 +23,8 @@
 .navbar.navbar-inverse .cke_top {
   background: transparent;
   border: none;
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
   -ms-filter: "alpha(opacity=50)";
 }
@@ -57,11 +57,13 @@
   padding: 2px;
   margin: 0;
   z-index: 20000;
-  background: #414141, -moz-linear-gradient(#646060, #262626);
+  background: #414141, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #646060), color-stop(100%, #262626));
   background: #414141, -webkit-linear-gradient(#646060, #262626);
+  background: #414141, -moz-linear-gradient(#646060, #262626);
+  background: #414141, -o-linear-gradient(#646060, #262626);
   background: #414141, linear-gradient(#646060, #262626);
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 .oe_website_editorbar li {
@@ -240,9 +242,8 @@ ul.oe_menu_editor .disclose {
 
 /* ---- RTE ---- {{{ */
 .oe_editable .btn, .btn.oe_editable {
-  -moz-user-select: auto;
-  -ms-user-select: auto;
   -webkit-user-select: auto;
+  -moz-user-select: auto;
   user-select: auto;
   cursor: text !important;
 }
@@ -400,8 +401,10 @@ ul.oe_menu_editor .disclose {
   height: 660px;
   background-color: black;
   border: 2px solid #1c1f1f;
-  -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
   border-radius: 10px;
   margin: auto;
   top: 0;
@@ -424,13 +427,13 @@ ul.oe_menu_editor .disclose {
   color: #1c1f1f;
 }
 .oe_mobile_preview.modal .modal-content .modal-header .close {
-  color: lightgray;
-  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  color: lightgrey;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
 .oe_mobile_preview.modal .modal-content .modal-header .close:hover {
   color: #e00101;
-  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
 .oe_mobile_preview.modal .modal-content .modal-body {
@@ -461,8 +464,10 @@ ul.oe_menu_editor .disclose {
 }
 .oe_seo_configuration .oe_seo_keyword {
   padding: 0.2em 0.4em 0.2em 0.5em;
-  -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
+  -moz-border-radius: 0.4em;
+  -ms-border-radius: 0.4em;
+  -o-border-radius: 0.4em;
   border-radius: 0.4em;
 }
 .oe_seo_configuration li.oe_seo_preview_g {
@@ -570,4 +575,85 @@ ul.oe_menu_editor .disclose {
 .oe_include_bundles {
   font-weight: normal;
   padding: 0 8px;
+}
+
+/* ---- CUSTOMIZE THEME ---- {{{ */
+#theme_error {
+  background: #ffffcc;
+}
+
+#theme_customize_modal {
+  overflow: visible;
+  z-index: 1020;
+  background: transparent;
+  display: block;
+}
+#theme_customize_modal .modal-dialog {
+  top: 75px;
+  width: auto;
+  margin: 0;
+  position: absolute;
+  right: 10px;
+  font-family: "Lato-Regular";
+  font-weight: normal;
+  text-transform: capitalize;
+  letter-spacing: normal;
+}
+#theme_customize_modal .modal-h5 {
+  color: white;
+  font-family: "Lato-Regular";
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: normal;
+  font-size: 14px;
+  color: white;
+  padding: 4px 0 4px 4px;
+  background-color: #bdc3c7;
+}
+#theme_customize_modal table {
+  width: 100%;
+  margin-bottom: 8px;
+}
+#theme_customize_modal label {
+  display: block;
+  text-align: center;
+}
+#theme_customize_modal label > div, #theme_customize_modal label > img {
+  border: 1px solid white;
+  line-height: 30px;
+  font-size: 0.9em;
+  margin: 2px 4px;
+}
+#theme_customize_modal label.checked > div, #theme_customize_modal label.checked > img {
+  box-shadow: 2px 2px 3px #888888;
+  border: 1px solid #666666;
+}
+#theme_customize_modal label img {
+  width: 60px;
+  height: 35px;
+  margin: 2px;
+  border: 1px solid rgba(136, 136, 136, 0.5);
+}
+#theme_customize_modal label input {
+  display: none;
+}
+#theme_customize_modal .loading_backdrop {
+  display: none;
+}
+#theme_customize_modal.loading .loading_backdrop {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0.3;
+  position: absolute;
+  z-index: 1;
+}
+
+/* ---- force the browse to re-compute the stylesheets ---- */
+body.theme_customize_css_loading {
+  magin-top: 1px;
+}
+body.theme_customize_css_loading #wrapwrap {
+  magin-top: -1px;
 }

@@ -60,7 +60,7 @@ else:
         wkhtmltopdf_state = 'ok'
 
     if config['workers'] == 1:
-        _logger.info('You need to start OpenERP with at least two workers to print a pdf version of the reports.')
+        _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
         wkhtmltopdf_state = 'workers'
 
 

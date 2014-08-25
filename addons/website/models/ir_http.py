@@ -190,7 +190,14 @@ class ir_http(orm.AbstractModel):
                 exception=exception,
                 traceback=traceback.format_exc(exception),
             )
-            code = getattr(exception, 'code', code)
+
+            if isinstance(exception, werkzeug.exceptions.HTTPException):
+                if exception.code is None:
+                    # Hand-crafted HTTPException likely coming from abort(),
+                    # usually for a redirect response -> return it directly
+                    return exception
+                else:
+                    code = exception.code
 
             if isinstance(exception, openerp.exceptions.AccessError):
                 code = 403
@@ -200,17 +207,12 @@ class ir_http(orm.AbstractModel):
                 if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
                     code = 403
 
-            if isinstance(exception, werkzeug.exceptions.HTTPException) and code is None:
-                # Hand-crafted HTTPException likely coming from abort(),
-                # usually for a redirect response -> return it directly
-                return exception
-
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                 if 'qweb_exception' in values:
                     view = request.registry.get("ir.ui.view")
                     views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
-                    to_reset = [v for v in views if v.model_data_id.noupdate is True]
+                    to_reset = [v for v in views if v.model_data_id.noupdate is True and not v.page]
                     values['views'] = to_reset
             elif code == 403:
                 logger.warn("403 Forbidden:\n\n%s", values['traceback'])
@@ -241,8 +243,13 @@ class ModelConverter(ir.ir_http.ModelConverter):
     def to_python(self, value):
         m = re.match(self.regex, value)
         _uid = RequestUID(value=value, match=m, converter=self)
+        record_id = int(m.group(2))
+        if record_id < 0:
+            # limited support for negative IDs due to our slug pattern, assume abs() if not found
+            if not request.registry[self.model].exists(request.cr, _uid, [record_id]):
+                record_id = abs(record_id)
         return request.registry[self.model].browse(
-            request.cr, _uid, int(m.group(2)), context=request.context)
+            request.cr, _uid, record_id, context=request.context)
 
     def generate(self, cr, uid, query=None, args=None, context=None):
         obj = request.registry[self.model]

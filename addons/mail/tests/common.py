@@ -89,7 +89,7 @@ class TestMail(common.TransactionCase):
         }, {'no_reset_password': True})
 
         # Test users to use through the various tests
-        self.res_users.write(cr, uid, uid, {'name': 'Administrator'})
+        self.res_users.write(cr, uid, [uid], {'name': 'Administrator'})
         self.user_raoul_id = self.res_users.create(cr, uid, {
             'name': 'Raoul Grosbedon',
             'signature': 'SignRaoul',

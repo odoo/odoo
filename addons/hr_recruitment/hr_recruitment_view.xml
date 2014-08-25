@@ -5,6 +5,7 @@
     <menuitem name="Recruitment"
         id="menu_hr_recruitment_recruitment"
         parent="hr.menu_hr_configuration"
+        groups="base.group_hr_manager"
         sequence="40"/>
 
     <act_window
@@ -313,7 +314,7 @@
         <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'empty_list_help_model': 'hr.job'}</field>
         <field name="help" type="html">
               <p>
-                OpenERP helps you track applicants in the recruitment
+                Odoo helps you track applicants in the recruitment
                 process and follow up all operations: meetings, interviews, etc.
               </p><p>
                 Applicants and their attached CV are created automatically when an email is sent.
@@ -524,7 +525,6 @@
         <field name="model">hr.recruitment.stage</field>
         <field name="arch" type="xml">
             <form string="Stage">
-                <sheet>
                 <group string="Stage Definition">
                     <group>
                         <field name="name"/>
@@ -538,7 +538,6 @@
                 </group>
                 <separator string="Requirements"/>
                 <field name="requirements"/>
-                </sheet>
             </form>
         </field>
     </record>
@@ -584,12 +583,10 @@
         <field name="model">hr.recruitment.degree</field>
         <field name="arch" type="xml">
             <form string="Degree">
-                <sheet>
                 <group>
                     <field name="name"/>
                     <field name="sequence" groups="base.group_no_one"/>
                 </group>
-                </sheet>
             </form>
         </field>
     </record>
@@ -624,11 +621,9 @@
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
             <form string="Sources of Applicants">
-                <sheet>
                 <group>
                     <field name="name"/>
                 </group>
-                </sheet>
             </form>
         </field>
     </record>

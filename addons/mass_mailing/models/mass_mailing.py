@@ -52,13 +52,22 @@ class MassMailingContact(osv.Model):
         'list_id': _get_latest_list
     }
 
-    def name_create(self, cr, uid, name, context=None):
+    def get_name_email(self, name, context):
         name, email = self.pool['res.partner']._parse_partner_name(name, context=context)
         if name and not email:
             email = name
         if email and not name:
             name = email
+        return name, email
+
+    def name_create(self, cr, uid, name, context=None):
+        name, email = self.get_name_email(name, context=context)
         rec_id = self.create(cr, uid, {'name': name, 'email': email}, context=context)
+        return self.name_get(cr, uid, [rec_id], context)[0]
+
+    def add_to_list(self, cr, uid, name, list_id, context=None):
+        name, email = self.get_name_email(name, context=context)
+        rec_id = self.create(cr, uid, {'name': name, 'email': email, 'list_id': list_id}, context=context)
         return self.name_get(cr, uid, [rec_id], context)[0]
 
     def message_get_default_recipients(self, cr, uid, ids, context=None):
