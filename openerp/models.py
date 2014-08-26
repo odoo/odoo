@@ -5684,6 +5684,9 @@ class BaseModel(object):
 
                 # determine which fields have been modified
                 for name, oldval in values.iteritems():
+                    if name not in record._cache:
+                        # do not compare values of untouched fields
+                        continue
                     newval = record[name]
                     if newval != oldval or getattr(newval, '_dirty', False):
                         field = self._fields[name]
@@ -5691,6 +5694,9 @@ class BaseModel(object):
                             newval, record._origin, subfields.get(name),
                         )
                         todo.add(name)
+                        # do not fire this condition again
+                        # for exactly the same reason
+                        values[name] = newval
 
         # At the moment, the client does not support updates on a *2many field
         # while this one is modified by the user.
