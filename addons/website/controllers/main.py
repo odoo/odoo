@@ -56,8 +56,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {
             'path': page,
         }
-        # allow shortcut for /page/<website_xml_id>
-        if '.' not in page:
+        # /page/website.XXX --> /page/XXX
+        if page.startswith('website.'):
+            return request.redirect('/page/'+page[8:])
+        elif '.' not in page:
             page = 'website.%s' % page
 
         try:
