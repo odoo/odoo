@@ -23,7 +23,7 @@ openerp.account = function (instance) {
     
         init: function(parent, context) {
             this._super(parent);
-            this.max_reconciliations_displayed = 1;
+            this.max_reconciliations_displayed = 10;
             this.title = context.context.title || _t("Reconciliation"); // TODO : only bank statement ?
             this.formatCurrencies; // Method that formats the currency ; loaded from the server
     
