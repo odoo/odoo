@@ -6,6 +6,7 @@
             <field name="name">mail.compose.message.form</field>
             <field name="model">mail.compose.message</field>
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//footer" position="inside">
                     <group class="oe_right" col="1">

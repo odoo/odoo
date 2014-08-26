@@ -58,7 +58,7 @@ class mail_compose_message(osv.TransientModel):
 
     _columns = {
         # incredible hack of the day: size=-1 means we want an int db column instead of an str one
-        'template_id': fields.selection(_get_templates, 'Template', size=-1),
+        'template_id': fields.selection(_get_templates, 'Template', size=-1, groups="base.group_user"),
     }
 
     def send_mail(self, cr, uid, ids, context=None):
