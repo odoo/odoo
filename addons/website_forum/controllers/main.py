@@ -490,7 +490,10 @@ class WebsiteForum(http.Controller):
         posts_ids = Post.browse(cr, uid, posts.keys(), context=context)
         posts = dict(map(lambda x: (x.id, (x.parent_id or x, x.parent_id and x or False)), posts_ids))
 
-        post['users'] = 'True'
+        if user.id is uid: 
+            post['my_profile'] = 'True' 
+        else:
+            post['users'] = 'True'
 
         values.update({
             'uid': uid,
