@@ -496,10 +496,11 @@ class WebsiteForum(http.Controller):
         posts_ids = Post.browse(cr, uid, posts.keys(), context=context)
         posts = dict(map(lambda x: (x.id, (x.parent_id or x, x.parent_id and x or False)), posts_ids))
 
-        if user.id is uid: 
-            post['my_profile'] = 'True' 
+        # TDE CLEANME MASTER: couldn't it be rewritten using a 'menu' key instead of one key for each menu ?
+        if user.id == uid:
+            post['my_profile'] = True
         else:
-            post['users'] = 'True'
+            post['users'] = True
 
         values.update({
             'uid': uid,
