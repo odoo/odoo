@@ -408,28 +408,6 @@ class account_bank_statement(osv.osv):
     def number_of_lines_reconciled(self, cr, uid, id, context=None):
         bsl_obj = self.pool.get('account.bank.statement.line')
         return bsl_obj.search_count(cr, uid, [('statement_id', '=', id), ('journal_entry_id', '!=', False)], context=context)
-        
-    def get_format_currency_js_function(self, cr, uid, id, context=None):
-        """ Returns a string that can be used to instanciate a javascript function.
-            That function formats a number according to the statement line's currency or the statement currency"""
-        company_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
-        st = id and self.browse(cr, uid, id, context=context)
-        if not st:
-            return
-        statement_currency = st.journal_id.currency or company_currency
-        digits = 2 # TODO : from currency_obj
-        function = ""
-        done_currencies = []
-        for st_line in st.line_ids:
-            st_line_currency = st_line.currency_id or statement_currency
-            if st_line_currency.id not in done_currencies:
-                if st_line_currency.position == 'after':
-                    return_str = "return amount.toFixed(" + str(digits) + ") + ' " + st_line_currency.symbol + "';"
-                else:
-                    return_str = "return '" + st_line_currency.symbol + " ' + amount.toFixed(" + str(digits) + ");"
-                function += "if (currency_id === " + str(st_line_currency.id) + "){ " + return_str + " }"
-                done_currencies.append(st_line_currency.id)
-        return function
 
     def link_bank_to_partner(self, cr, uid, ids, context=None):
         for statement in self.browse(cr, uid, ids, context=context):
@@ -457,18 +435,18 @@ class account_bank_statement_line(osv.osv):
             account_move_obj.unlink(cr, uid, move_ids, context)
 
     def get_data_for_reconciliations(self, cr, uid, ids, context=None):
-        """ Used to instanciate a batch of reconciliations in a single request """
-        # Build a list of reconciliations data
+        """ Used to instanciate a batch of reconciliations in a single request ; builds a list of reconciliations data """
         ret = []
         statement_line_done = {}
         mv_line_ids_selected = []
+
+        # look for structured communication first
         for st_line in self.browse(cr, uid, ids, context=context):
-            # look for structured communication first
             exact_match_id = self.search_structured_com(cr, uid, st_line, context=context)
             if exact_match_id:
                 reconciliation_data = {
                     'st_line': self.get_statement_line_for_reconciliation(cr, uid, st_line.id, context),
-                    'reconciliation_proposition': self.make_counter_part_lines(cr, uid, st_line, [exact_match_id], context=context)
+                    'reconciliation_proposition': self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=mv_line_ids_selected, additional_domain=[('id','=',exact_match_id)], context=context)
                 }
                 for mv_line in reconciliation_data['reconciliation_proposition']:
                     mv_line_ids_selected.append(mv_line['id'])
@@ -486,27 +464,31 @@ class account_bank_statement_line(osv.osv):
                     mv_line_ids_selected.append(mv_line['id'])
                 ret.append(reconciliation_data)
 
-        # Check if, now that 'candidate' move lines were selected, there are moves left for statement lines
-        #for reconciliation_data in ret:
-        #    if not reconciliation_data['st_line']['has_no_partner']:
-        #        st_line = self.browse(cr, uid, reconciliation_data['st_line']['id'], context=context)
-        #        if not self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=mv_line_ids_selected, count=True, context=context):
-        #            reconciliation_data['st_line']['no_match'] = True
         return ret
 
     def get_statement_line_for_reconciliation(self, cr, uid, id, context=None):
         """ Returns the data required by the bank statement reconciliation use case """
+        if context is None:
+            context = {}
         line = self.browse(cr, uid, id, context=context)
+        currency_obj = self.pool.get('res.currency')
         statement_currency = line.journal_id.currency or line.journal_id.company_id.currency_id
-        amount = line.amount
         rml_parser = report_sxw.rml_parse(cr, uid, 'statement_line_widget', context=context)
-        amount_str = line.amount > 0 and line.amount or -line.amount
-        amount_str = rml_parser.formatLang(amount_str, currency_obj=statement_currency)
-        amount_currency_str = ""
+
         if line.amount_currency and line.currency_id:
-            amount_currency_str = amount_str
-            amount_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
-            amount = line.amount_currency
+            # If the statement line is not in the same currency as the statement, put amount in original currency in
+            # amount_currency_str and put converted amount in amount_str
+            ctx = context.copy()
+            ctx.update({'date': line.date})
+            amount = currency_obj.compute(cr, uid, line.currency_id.id, statement_currency.id, line.amount_currency, context=context)
+            amount_str = amount > 0 and amount or -amount
+            amount_str = rml_parser.formatLang(amount_str, currency_obj=statement_currency)
+            amount_currency_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
+        else:
+            amount = line.amount
+            amount_str = amount > 0 and amount or -amount
+            amount_str = rml_parser.formatLang(amount_str, currency_obj=statement_currency)
+            amount_currency_str = ""
 
         data = {
             'id': line.id,
@@ -517,6 +499,7 @@ class account_bank_statement_line(osv.osv):
             'amount': amount,
             'amount_str': amount_str,
             'currency_id': line.currency_id.id or statement_currency.id,
+            # TODO : find a way to get rid of no_match to improve performances (look into the widget code)
             'no_match': self.get_move_lines_counterparts(cr, uid, line, count=True, context=context) == 0,
             'partner_id': line.partner_id.id,
             'statement_id': line.statement_id.id,
@@ -525,11 +508,15 @@ class account_bank_statement_line(osv.osv):
             'partner_name': line.partner_id.name,
             'amount_currency_str': amount_currency_str,
             'has_no_partner': not line.partner_id.id,
+            # ID of the currency used by the widget to format numbers. You want it to be the same currency you use to convert amounts in case of multicurrency or you're gonna have a bad time
+            'display_currency_id': line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
         }
         if line.partner_id.id:
-            data['open_balance_account_id'] = line.partner_id.property_account_payable.id
             if amount > 0:
                 data['open_balance_account_id'] = line.partner_id.property_account_receivable.id
+            else:
+                data['open_balance_account_id'] = line.partner_id.property_account_payable.id
+
         return data
 
     def search_structured_com(self, cr, uid, st_line, context=None):
@@ -546,6 +533,7 @@ class account_bank_statement_line(osv.osv):
         st_line = self.browse(cr, uid, id, context=context)
         company_currency = st_line.journal_id.company_id.currency_id.id
         statement_currency = st_line.journal_id.currency.id or company_currency
+        # TODO : multidevise (et revoir la logique)
         # either use the unsigned debit/credit fields or the signed amount_currency field
         sign = 1
         if statement_currency == company_currency:
@@ -557,19 +545,29 @@ class account_bank_statement_line(osv.osv):
             if st_line.amount < 0:
                 sign = -1
 
+        # TODO : in order to search for partial reconciliations too, amount_residual should be stored in DB
+        # otherwise the current algorithm just select the first line involved in a partial reconciliation
+        # according to its debit/credit field, which is half the time wrong
+        # That way we might select all move lines that constitute a partial reconciliation and make the identifiable
+        # in a way or another (let's say they're blue and we show the reconciliation ref.). That way the user really knows
+        # what he's doing. We just need to check, in process_reconciliation, that if a partially reconciled line is
+        # used, all its siblings are.
+        additional_domain = [('reconcile_partial_id','=',False)]
+
         #we don't propose anything if there is no partner detected
         if not st_line.partner_id.id:
             return []
+
         # look for exact match
-        exact_match_id = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
+        exact_match_id = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=additional_domain + [(amount_field, '=', (sign * st_line.amount))])
         if exact_match_id:
-            return exact_match_id
+            return [exact_match_id[0]]
 
         # select oldest move lines
         if sign == -1:
-            mv_lines = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[(amount_field, '<', 0)])
+            mv_lines = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=additional_domain + [(amount_field, '<', 0)])
         else:
-            mv_lines = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[(amount_field, '>', 0)])
+            mv_lines = self.get_move_lines_counterparts(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=additional_domain + [(amount_field, '>', 0)])
         ret = []
         total = 0
         # get_move_lines_counterparts inverts debit and credit
@@ -592,11 +590,8 @@ class account_bank_statement_line(osv.osv):
 
             :param st_line: the browse record of the statement line
             :param integers list excluded_ids: ids of move lines that should not be fetched
-            :param string filter_str: string to filter lines
-            :param integer offset: offset of the request
-            :param integer limit: number of lines to fetch
             :param boolean count: just return the number of records
-            :param tuples list domain: additional domain restrictions
+            :param tuples list additional_domain: additional domain restrictions
         """
         mv_line_pool = self.pool.get('account.move.line')
 
@@ -607,24 +602,13 @@ class account_bank_statement_line(osv.osv):
                 ('account_id.type', '=', 'payable')]
         else:
             domain += [('account_id.reconcile', '=', True)]
-            #domain += [('account_id.reconcile', '=', True), ('account_id.type', '=', 'other')]
         if excluded_ids:
             domain.append(('id', 'not in', excluded_ids))
         line_ids = mv_line_pool.search(cr, uid, domain, order="date_maturity asc, id asc", context=context)
-        return self.make_counter_part_lines(cr, uid, st_line, line_ids, count=count, context=context)
 
-    def make_counter_part_lines(self, cr, uid, st_line, line_ids, count=False, context=None):
-        if context is None:
-            context = {}
-        mv_line_pool = self.pool.get('account.move.line')
-        currency_obj = self.pool.get('res.currency')
-        company_currency = st_line.journal_id.company_id.currency_id
-        statement_currency = st_line.journal_id.currency or company_currency
-        rml_parser = report_sxw.rml_parse(cr, uid, 'statement_line_counterpart_widget', context=context)
-        #partially reconciled lines can be displayed only once
-        reconcile_partial_ids = []
         if count:
             nb_lines = 0
+            reconcile_partial_ids = [] # for a partial reconciliation, take only one line
             for line in mv_line_pool.browse(cr, uid, line_ids, context=context):
                 if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
                     continue
@@ -633,55 +617,13 @@ class account_bank_statement_line(osv.osv):
                     reconcile_partial_ids.append(line.reconcile_partial_id.id)
             return nb_lines
         else:
-            ret = []
-            for line in mv_line_pool.browse(cr, uid, line_ids, context=context):
-                if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
-                    continue
-                amount_currency_str = ""
-                if line.currency_id and line.amount_currency:
-                    amount_currency_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
-                ret_line = {
-                    'id': line.id,
-                    'name': line.move_id.name,
-                    'ref': line.move_id.ref,
-                    'account_code': line.account_id.code,
-                    'account_name': line.account_id.name,
-                    'account_type': line.account_id.type,
-                    'date_maturity': line.date_maturity,
-                    'date': line.date,
-                    'period_name': line.period_id.name,
-                    'journal_name': line.journal_id.name,
-                    'amount_currency_str': amount_currency_str,
-                    'partner_id': line.partner_id.id,
-                    'partner_name': line.partner_id.name,
-                    'has_no_partner': not bool(st_line.partner_id.id),
-                }
-                st_line_currency = st_line.currency_id or statement_currency
-                if st_line.currency_id and line.currency_id and line.currency_id.id == st_line.currency_id.id:
-                    if line.amount_residual_currency < 0:
-                        ret_line['debit'] = 0
-                        ret_line['credit'] = -line.amount_residual_currency
-                    else:
-                        ret_line['debit'] = line.amount_residual_currency if line.credit != 0 else 0
-                        ret_line['credit'] = line.amount_residual_currency if line.debit != 0 else 0
-                    ret_line['amount_currency_str'] = rml_parser.formatLang(line.amount_residual, currency_obj=company_currency)
-                else:
-                    if line.amount_residual < 0:
-                        ret_line['debit'] = 0
-                        ret_line['credit'] = -line.amount_residual
-                    else:
-                        ret_line['debit'] = line.amount_residual if line.credit != 0 else 0
-                        ret_line['credit'] = line.amount_residual if line.debit != 0 else 0
-                    ctx = context.copy()
-                    ctx.update({'date': st_line.date})
-                    ret_line['debit'] = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, ret_line['debit'], context=ctx)
-                    ret_line['credit'] = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, ret_line['credit'], context=ctx)
-                ret_line['debit_str'] = rml_parser.formatLang(ret_line['debit'], currency_obj=st_line_currency)
-                ret_line['credit_str'] = rml_parser.formatLang(ret_line['credit'], currency_obj=st_line_currency)
-                ret.append(ret_line)
-                if line.reconcile_partial_id:
-                    reconcile_partial_ids.append(line.reconcile_partial_id.id)
-            return ret
+            target_currency = st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
+            mv_lines = mv_line_pool.prepare_move_lines_for_reconciliation_widget(cr, uid, line_ids, target_currency=target_currency, target_date=st_line.date, context=context)
+            has_no_partner = not bool(st_line.partner_id.id)
+            for line in mv_lines:
+                line['has_no_partner'] = has_no_partner
+                line['debit'],line['credit'] = line['credit'],line['debit']
+            return mv_lines
 
     def get_currency_rate_line(self, cr, uid, st_line, currency_diff, move_id, context=None):
         if currency_diff < 0:
@@ -706,6 +648,7 @@ class account_bank_statement_line(osv.osv):
             'account_id': account_id
             }
 
+    # TODO : allow to create lines with currency_id
     def process_reconciliation(self, cr, uid, id, mv_line_dicts, context=None):
         """ Creates a move line for each item of mv_line_dicts and for the statement line. Reconcile a new move line with its counterpart_move_line_id if specified. Finally, mark the statement line as reconciled by putting the newly created move id in the column journal_entry_id.
 
@@ -804,7 +747,6 @@ class account_bank_statement_line(osv.osv):
 
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
-            # TODO : too slow
             aml_obj.reconcile_partial(cr, uid, pair, context=context)
 
         # Mark the statement line as reconciled

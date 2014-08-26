@@ -3,9 +3,11 @@ $mainTableBordersPadding: 3px;
 $lightBorder: 1px solid #bbb;
 $accountingBorder: 1px solid #000;
 $initialLineBackground: #f0f0f0;
+// Warning, this value is also specified in the instance.web.account.abstractReconciliation widget
+$aestetic_animation_speed: 300ms;
 
 
-.openerp .oe_bank_statement_reconciliation {
+.openerp .oe_reconciliation {
     font-size: 12px;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -13,13 +15,28 @@ $initialLineBackground: #f0f0f0;
     -o-user-select: none;
     user-select: none;
     cursor: default;
+    height: 100%;
+
+    .oe_form_sheetbg {
+        border-bottom: 0;
+        padding: 0;
+        height: 100%;
+
+        .oe_form_sheet {
+            position: relative;
+            padding: 20px 15px 30px 15px;
+            border-top: 0;
+            border-bottom: 0;
+            height: 100%;
+        }
+    }
 
     h1 {
         width: 48%;
         padding: 0 0 0 $actionColWidth;
-        margin: 0 0 35px 0;
+        margin: 0 0 25px 0;
         float: left;
-        font-size: 2.3em;
+        font-size: 2em;
     }
 
     h2 {
@@ -28,7 +45,7 @@ $initialLineBackground: #f0f0f0;
 
     .progress {
         width: 49%;
-        margin: 6px $actionColWidth 0 0;
+        margin: 4px $actionColWidth 0 0;
         float: right;
         position: relative;
         display: inline-block;
@@ -48,9 +65,14 @@ $initialLineBackground: #f0f0f0;
         }
     }
 
-    .oe_form_sheet {
-        position: relative;
-        padding-bottom: 30px;
+    .interface_options {
+        margin-bottom: 25px;
+        padding-left: $actionColWidth;
+
+        .oe_radio_input {
+            border: none;
+            display: inline;
+        }
     }
 
     .protip {
@@ -126,7 +148,7 @@ $initialLineBackground: #f0f0f0;
     }
 
     // bankStatementReconciliationLine widget
-    .oe_bank_statement_reconciliation_line {
+    .oe_reconciliation_line {
         margin-bottom: 30px;
 
         table {
@@ -145,6 +167,11 @@ $initialLineBackground: #f0f0f0;
             -ms-transform: rotate(0deg);
             -o-transform: rotate(0deg);
             transform: rotate(0deg);
+            -webkit-transition-duration: $aestetic_animation_speed;
+            -moz-transition-duration: $aestetic_animation_speed;
+            -ms-transition-duration: $aestetic_animation_speed;
+            -o-transition-duration: $aestetic_animation_speed;
+            transition-duration: $aestetic_animation_speed;
         }
 
         .visible_toggle {
@@ -228,40 +255,40 @@ $initialLineBackground: #f0f0f0;
                 vertical-align: middle;
             }
 
-            td:nth-child(1), td:nth-child(7) {
+            td.cell_action, td.cell_info_popover {
                 width: $actionColWidth;
                 padding: 0;
             }
 
-            td:nth-child(1) {
+            td.cell_action {
                 text-align: left;
             }
 
-            td:nth-child(2) {
+            td.cell_account_code {
                 width: 80px;
                 padding-left: $mainTableBordersPadding;
             }
 
-            td:nth-child(3) {
+            td.cell_due_date {
                 width: 100px;
             }
 
-            td:nth-child(4) {
+            td.cell_label {
 
             }
 
-            td:nth-child(5) {
+            td.cell_debit {
                 text-align: right;
                 width: 15%;
             }
 
-            td:nth-child(6) {
+            td.cell_credit {
                 width: 15%;
                 text-align: right;
                 padding-right: $mainTableBordersPadding;
             }
 
-            td:nth-child(7) {
+            td.cell_info_popover {
                 text-align: right;
             }
 
@@ -301,8 +328,13 @@ $initialLineBackground: #f0f0f0;
                 -moz-transition-property: background-color;
                 -ms-transition-property: background-color;
                 transition-property: background-color;
+                -webkit-transition-duration: $aestetic_animation_speed;
+                -moz-transition-duration: $aestetic_animation_speed;
+                -ms-transition-duration: $aestetic_animation_speed;
+                -o-transition-duration: $aestetic_animation_speed;
+                transition-duration: $aestetic_animation_speed;
 
-                &:nth-child(1), &:nth-child(7) {
+                &.cell_action, &.cell_info_popover {
                     border-top: none;
                     background: white !important;
                     // Hack pour l'alignement au px près
@@ -318,7 +350,7 @@ $initialLineBackground: #f0f0f0;
                 height: 26px;
                 margin: 0 $actionColWidth 4px $actionColWidth;
 
-                .button_ok {
+                button {
                     float: right;
 
                     &:disabled {
@@ -334,7 +366,7 @@ $initialLineBackground: #f0f0f0;
             }
 
             // accounting "T"
-            td:nth-child(6) { border-left: $accountingBorder; }
+            td.cell_credit { border-left: $accountingBorder; }
         }
 
 
@@ -434,4 +466,87 @@ $initialLineBackground: #f0f0f0;
             }
         }
     }
+}
+
+.openerp .oe_manual_reconciliation {
+    .oe_manual_reconciliation_line {
+        .accounting_view {
+            thead {
+                background: none;
+                cursor: pointer;
+
+                td {
+                    vertical-align: bottom !important;
+                }
+                
+                td:nth-child(2) {
+                    padding-left: 0;
+                }
+
+                .cell_last_reconciliation_date {
+                    font-weight: normal;
+                }
+
+                .cell_title_account_code {
+                    text-align: center;
+                }
+            }
+            
+            .filler_line td {
+                height: 23px;
+                cursor: default !important;
+            }
+            
+            tbody tr:first-child td {
+                border-top: $lightBorder;
+                padding-top: 4px;
+
+                &.cell_action, &.cell_info_popover {
+                    border-top: none;
+                }
+            }
+        }
+        
+        td.cell_due_date {
+            padding-left: $mainTableBordersPadding !important;
+        }
+
+        .toggle_match {
+            display: none;
+        }
+        
+        /* Bouton entre les 2 tables */
+        .reconcile_button_container {
+            width: 30%;
+            float: right;
+            text-align: center;
+            margin: 5px $actionColWidth 5px 0;
+        }
+
+        > table > tbody > tr:nth-child(1) > td table {
+            margin-bottom: 0 !important;
+        }
+        /* / Bouton entre les 2 tables */
+    }
+}
+
+// To remove later
+
+.openerp .oe_account_reconciliation {
+    border-bottom: 1px solid #CACACA;
+    padding: 5px;
+}
+
+.openerp .oe_account_reconciliation button {
+    margin: 3px;
+}
+
+.openerp .oe_account_reconciliation>div {
+    display: table;
+    width: 100%;
+}
+
+.openerp .oe_account_reconciliation>div>div {
+    display: table-cell;
+    width: 50%;
 }

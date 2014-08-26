@@ -21,6 +21,7 @@
 
 import re
 import time
+import math
 
 from openerp import api, fields as fields2
 from openerp import tools
@@ -269,6 +270,38 @@ class res_currency(osv.osv):
             to_amount = from_amount * self._get_conversion_rate(self, to_currency)
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
+
+    def get_format_currencies_js_function(self, cr, uid, context=None):
+        """ Returns a string that can be used to instanciate a javascript function.
+            That function formats a number according to the currency whose id is passed, or the company currency """
+        company_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+        cr.execute("SELECT id, name, symbol, rounding, position FROM res_currency")
+        rows = cr.dictfetchall()
+        function = ""
+
+        for row in rows:
+            if row['id'] == company_currency_id:
+                company_currency = row
+            # Number of digits from decimal rounding
+            # Warning : will fail miserably if rounding method is not a number of digits (ex : 0.05)
+            digits = math.log10(1/row['rounding'])
+            symbol = row['symbol'] or row['name']
+
+            if row['position'] == 'after':
+                return_str = "return amount.toFixed(" + str(digits) + ") + '\\xA0" + symbol + "';"
+            else:
+                return_str = "return '" + symbol + "\\xA0' + amount.toFixed(" + str(digits) + ");"
+            function += "if (currency_id === " + str(row['id']) + ") { " + return_str + " }"
+
+        digits = math.log10(1/company_currency['rounding'])
+        symbol = company_currency['symbol'] or company_currency['name']
+        if company_currency['position'] == 'after':
+            return_str = "return amount.toFixed(" + str(digits) + ") + '\\xA0" + symbol + "';"
+        else:
+            return_str = "return '" + symbol + "\\xA0' + amount.toFixed(" + str(digits) + ");"
+        function += "else { " + return_str + " }"
+
+        return function
 
 class res_currency_rate(osv.osv):
     _name = "res.currency.rate"
