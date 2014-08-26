@@ -141,6 +141,22 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
+    @http.route('/website/info', type='http', auth="public", website=True)
+    def website_info(self):
+        try:
+            request.website.get_template('website.info').name
+        except Exception, e:
+            return request.registry['ir.http']._handle_exception(e, 404)
+        irm = request.env()['ir.module.module'].sudo()
+        apps = irm.search([('state','=','installed'),('application','=',True)])
+        modules = irm.search([('state','=','installed'),('application','=',False)])
+        values = {
+            'apps': apps,
+            'modules': modules,
+            'version': openerp.service.common.exp_version()
+        }
+        return request.render('website.info', values)
+
     #------------------------------------------------------
     # Edit
     #------------------------------------------------------

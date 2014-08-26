@@ -439,6 +439,63 @@
 
 <!-- Error and special pages -->
 
+<template id="info" name="Odoo Information" optional="enabled">
+    <t t-call="website.layout">
+      <div id="wrap">
+        <div class="oe_structure">
+
+            <section class="container">
+                <h1><t t-esc="res_company.name"/>
+                    <small>Odoo Version <t t-raw="version.get('server_version')"/></small>
+                </h1>
+
+                <div class="alert alert-warning alert-dismissable mt16" groups="base.group_website_publisher">
+                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                   <p>
+                     Note: To hide this page, uncheck it from the top Customize menu.
+                   </p>
+                </div>
+                <h2>Installed Applications</h2>
+                <dl class="dl-horizontal" t-foreach="apps" t-as="app">
+                    <dt>
+                        <a t-att-href="app.website" t-if="app.website">
+                            <t t-raw="app.shortdesc"/>
+                        </a>
+                        <span t-raw="app.shortdesc" t-if="not app.website"/>
+                    </dt>
+                    <dd>
+                        <span t-raw="app.summary"/>
+                    </dd><dd class="text-muted">
+                        Technical name: <span t-field="app.name"/>, updated: <span t-field="app.write_date"/>, author: <span t-field="app.author"/>
+                    </dd>
+                </dl>
+
+                <h2>Installed Modules</h2>
+                <dl class="dl-horizontal">
+                    <t t-foreach="modules" t-as="app">
+                        <dt>
+                            <span t-raw="app.shortdesc"/>
+                        </dt>
+                        <dd t-if="app.summary">
+                            <span t-raw="app.summary"/>
+                        </dd><dd>
+                            Technical name: <span t-field="app.name"/>,
+                            updated: <span t-field="app.write_date"/>
+                            <t t-if="app.author">
+                                , author: <span t-field="app.author"/>
+                            </t>
+                        </dd>
+                    </t>
+                </dl>
+
+
+            </section>
+
+        </div>
+      </div>
+    </t>
+</template>
+
 <template id="default_page">
     <t t-call="website.layout">
       <div id="wrap" class="oe_structure oe_empty"></div>

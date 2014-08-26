@@ -9,7 +9,7 @@
     'description': """This module allows you to search job applications by content
     of resumes and letters.""",
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/recruitment',
     'depends': [
         'hr_recruitment',
         'document'

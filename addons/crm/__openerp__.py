@@ -47,7 +47,7 @@ Dashboard for CRM will include:
 * Opportunities by Stage (graph)
 """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/crm',
     'depends': [
         'base_action_rule',
         'base_setup',
