@@ -1153,12 +1153,8 @@ class AssetsBundle(object):
 
     def set_cache(self, type, content):
         ira = self.registry['ir.attachment']
-        url_prefix = '/web/%s/%s/' % (type, self.xmlid)
-        # Invalidate previous caches
-        oids = ira.search(self.cr, self.uid, [('url', '=like', url_prefix + '%')], context=self.context)
-        if oids:
-            ira.unlink(self.cr, openerp.SUPERUSER_ID, oids, context=self.context)
-        url = url_prefix + self.version
+        ira.invalidate_bundle(self.cr, openerp.SUPERUSER_ID, type=type, xmlid=self.xmlid)
+        url = '/web/%s/%s/%s' % (type, self.xmlid, self.version)
         ira.create(self.cr, openerp.SUPERUSER_ID, dict(
                     datas=content.encode('utf8').encode('base64'),
                     type='binary',
