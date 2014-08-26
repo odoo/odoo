@@ -531,6 +531,7 @@ class account_bank_statement_line(osv.osv):
         st_line = self.browse(cr, uid, id, context=context)
         company_currency = st_line.journal_id.company_id.currency_id.id
         statement_currency = st_line.journal_id.currency.id or company_currency
+        # TODO : multidevise (et revoir la logique)
         # either use the unsigned debit/credit fields or the signed amount_currency field
         sign = 1
         if statement_currency == company_currency:
