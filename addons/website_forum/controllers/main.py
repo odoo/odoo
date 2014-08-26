@@ -314,10 +314,13 @@ class WebsiteForum(http.Controller):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
 
+        is_correct_answer = kwargs.get('is_correct_answer')
+        if type(is_correct_answer) is not bool: return None
+
         # set all answers to False, only one can be accepted
         request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids], {'is_correct': False}, context=context)
-        request.registry['forum.post'].write(cr, uid, [post.id], {'is_correct': not post.is_correct}, context=context)
-        return not post.is_correct
+        request.registry['forum.post'].write(cr, uid, [post.id], {'is_correct': not is_correct_answer}, context=context)
+        return not is_correct_answer
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/delete', type='http', auth="user", methods=['POST'], website=True)
     def post_delete(self, forum, post, **kwargs):

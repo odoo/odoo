@@ -56,7 +56,8 @@ $(document).ready(function () {
     $('.accept_answer').not('.karma_required').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        openerp.jsonRpc($link.data('href'), 'call', {}).then(function (data) {
+        var is_correct_answer = ($link.attr("class").search(/oe_answer_true/i) > 0) ? true : false;
+        openerp.jsonRpc($link.data('href'), 'call', {'is_correct_answer' : is_correct_answer}).then(function (data) {
             if (data['error']) {
                 if (data['error'] == 'anonymous_user') {
                     var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
@@ -70,6 +71,7 @@ $(document).ready(function () {
                 }
             } else {
                 if (data) {
+                    $(".accept_answer").addClass('oe_answer_false').removeClass('oe_answer_true');
                     $link.addClass("oe_answer_true").removeClass('oe_answer_false');
                 } else {
                     $link.removeClass("oe_answer_true").addClass('oe_answer_false');
