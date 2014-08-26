@@ -15,11 +15,12 @@ although supporting client features (e.g. new data representation such as
 interactive maps) can be added to the client.
 
 In order to start the server, simply invoke the command :ref:`odoo.py
-<reference/cmdline>` in the shell from the Odoo main directory:
+<reference/cmdline>` in the shell, adding the full path to the file if
+necessary:
 
 .. code:: bash
 
-    ./odoo.py
+    odoo.py
 
 The server is stopped by hitting ``Ctrl-C`` twice from the terminal, or by
 killing the corresponding OS process.
@@ -111,7 +112,7 @@ create an empty module:
 
 .. code:: bash
 
-    ./odoo.py scaffold <module name> <where to put it>
+    odoo.py scaffold <module name> <where to put it>
 
 The command creates a subdirectory for your module, and automatically creates a
 bunch of standard files for a module. Most of them simply contain commented code
@@ -124,8 +125,7 @@ or XML. The usage of most of those files will be explained along this tutorial.
 
     .. only:: solutions
 
-        #. Invoke the command ``./odoo.py scaffold openacademy addons`` in the
-           Odoo directory.
+        #. Invoke the command ``odoo.py scaffold openacademy addons``.
         #. Adapt the manifest file to your module.
         #. Don't bother about the other files.
 
