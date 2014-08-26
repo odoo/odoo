@@ -3,8 +3,8 @@
 
 Index: doc-backend/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/models.py	2014-08-24 12:17:49.873386903 +0200
-+++ doc-backend/openacademy/models.py	2014-08-24 12:18:24.601387707 +0200
+--- doc-backend.orig/openacademy/models.py	2014-08-25 16:18:57.920058347 +0200
++++ doc-backend/openacademy/models.py	2014-08-25 16:19:22.872057976 +0200
 @@ -1,5 +1,6 @@
  # -*- coding: utf-8 -*-
  
@@ -31,7 +31,7 @@ Index: doc-backend/openacademy/models.py
 +            self.end_date = self.start_date
 +            return
 +
-+        start = Datetime.from_string(self.start_date)
++        start = fields.Datetime.from_string(self.start_date)
 +        duration = timedelta(days=self.duration)
 +        self.end_date = start + duration
 +
@@ -40,8 +40,8 @@ Index: doc-backend/openacademy/models.py
 +        if not (self.start_date and self.end_date):
 +            return
 +
-+        start_date = Datetime.from_string(self.start_date)
-+        end_date = Datetime.from_string(self.end_date)
++        start_date = fields.Datetime.from_string(self.start_date)
++        end_date = fields.Datetime.from_string(self.end_date)
 +        self.duration = (end_date - start_date).days
 +
 +    @api.one
@@ -50,8 +50,8 @@ Index: doc-backend/openacademy/models.py
          if self.instructor_id and self.instructor_id in self.attendee_ids:
 Index: doc-backend/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-24 12:17:49.873386903 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:17:49.869386903 +0200
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-25 16:18:57.920058347 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-25 16:18:57.912058347 +0200
 @@ -120,11 +120,24 @@
              </field>
          </record>
