@@ -98,8 +98,22 @@ class pos_config(osv.osv):
             for record in self.browse(cr, uid, ids, context=context)
         )
 
+    def _check_company_location(self, cr, uid, ids, context=None):
+        for config in self.browse(cr, uid, ids, context=context):
+            if config.stock_location_id.company_id and config.stock_location_id.company_id.id != config.company_id.id:
+                return False
+        return True
+
+    def _check_company_journal(self, cr, uid, ids, context=None):
+        for config in self.browse(cr, uid, ids, context=context):
+            if config.journal_id and config.journal_id.company_id.id != config.company_id.id:
+                return False
+        return True
+
     _constraints = [
         (_check_cash_control, "You cannot have two cash controls in one Point Of Sale !", ['journal_ids']),
+        (_check_company_location, "The company of the stock location is different than the one of point of sale", ['company_id', 'stock_location_id']),
+        (_check_company_journal, "The company of the sale journal is different than the one of point of sale", ['company_id', 'journal_id']),
     ]
 
     def name_get(self, cr, uid, ids, context=None):
