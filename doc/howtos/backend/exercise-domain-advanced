@@ -1,10 +1,10 @@
 # HG changeset patch
 # Parent 69d1f2d359eb8ef304a9d99f17790c78b35eda1a
 
-Index: doc-backend/openacademy/models.py
+Index: addons/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/models.py	2014-08-24 12:08:53.465374488 +0200
-+++ doc-backend/openacademy/models.py	2014-08-24 12:08:53.461374488 +0200
+--- addons.orig/openacademy/models.py	2014-08-26 17:26:02.903783329 +0200
++++ addons/openacademy/models.py	2014-08-26 17:26:02.895783329 +0200
 @@ -23,7 +23,8 @@
      seats = fields.Integer(string="Number of seats")
  
@@ -15,11 +15,11 @@ Index: doc-backend/openacademy/models.py
      course_id = fields.Many2one('openacademy.course',
          ondelete='cascade', string="Course", required=True)
      attendee_ids = fields.Many2many('res.partner', string="Attendees")
-Index: doc-backend/openacademy/views/partner.xml
+Index: addons/openacademy/views/partner.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/partner.xml	2014-08-24 12:08:53.465374488 +0200
-+++ doc-backend/openacademy/views/partner.xml	2014-08-24 12:08:53.461374488 +0200
-@@ -24,5 +24,21 @@
+--- addons.orig/openacademy/views/partner.xml	2014-08-26 17:26:02.903783329 +0200
++++ addons/openacademy/views/partner.xml	2014-08-26 17:26:02.895783329 +0200
+@@ -28,5 +28,21 @@
          <menuitem id="contact_menu" name="Contacts"
                    parent="configuration_menu"
                    action="contact_list_action"/>

@@ -1,9 +1,9 @@
 # HG changeset patch
 # Parent 0000000000000000000000000000000000000000
-Index: doc-backend/openacademy/__openerp__.py
+Index: addons/openacademy/__openerp__.py
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ doc-backend/openacademy/__openerp__.py	2014-08-24 12:25:18.133397278 +0200
++++ addons/openacademy/__openerp__.py	2014-08-26 17:25:49.787783523 +0200
 @@ -0,0 +1,35 @@
 +# -*- coding: utf-8 -*-
 +{
@@ -40,18 +40,18 @@ Index: doc-backend/openacademy/__openerp__.py
 +        'demo.xml',
 +    ],
 +}
-Index: doc-backend/openacademy/__init__.py
+Index: addons/openacademy/__init__.py
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ doc-backend/openacademy/__init__.py	2014-08-24 12:25:18.133397278 +0200
++++ addons/openacademy/__init__.py	2014-08-26 17:25:49.791783523 +0200
 @@ -0,0 +1,3 @@
 +# -*- coding: utf-8 -*-
 +import controllers
 +import models
-Index: doc-backend/openacademy/controllers.py
+Index: addons/openacademy/controllers.py
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ doc-backend/openacademy/controllers.py	2014-08-24 12:25:18.133397278 +0200
++++ addons/openacademy/controllers.py	2014-08-26 17:25:49.791783523 +0200
 @@ -0,0 +1,20 @@
 +# -*- coding: utf-8 -*-
 +from openerp import http
@@ -73,10 +73,10 @@ Index: doc-backend/openacademy/controllers.py
 +#         return http.request.render('openacademy.object', {
 +#             'object': obj
 +#         })
-Index: doc-backend/openacademy/demo.xml
+Index: addons/openacademy/demo.xml
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ doc-backend/openacademy/demo.xml	2014-08-24 12:25:18.133397278 +0200
++++ addons/openacademy/demo.xml	2014-08-26 17:25:49.791783523 +0200
 @@ -0,0 +1,25 @@
 +<openerp>
 +    <data>
@@ -103,10 +103,10 @@ Index: doc-backend/openacademy/demo.xml
 +        <!--  -->
 +    </data>
 +</openerp>
-Index: doc-backend/openacademy/models.py
+Index: addons/openacademy/models.py
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ doc-backend/openacademy/models.py	2014-08-24 12:25:18.133397278 +0200
++++ addons/openacademy/models.py	2014-08-26 17:25:49.791783523 +0200
 @@ -0,0 +1,8 @@
 +# -*- coding: utf-8 -*-
 +
@@ -116,17 +116,17 @@ Index: doc-backend/openacademy/models.py
 +#     _name = 'openacademy.openacademy'
 +
 +#     name = fields.Char()
-Index: doc-backend/openacademy/security/ir.model.access.csv
+Index: addons/openacademy/security/ir.model.access.csv
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ doc-backend/openacademy/security/ir.model.access.csv	2014-08-24 12:25:30.941397574 +0200
++++ addons/openacademy/security/ir.model.access.csv	2014-08-26 17:25:49.791783523 +0200
 @@ -0,0 +1,2 @@
 +id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
 +access_openacademy_openacademy,openacademy.openacademy,model_openacademy_openacademy,,1,0,0,0
-Index: doc-backend/openacademy/templates.xml
+Index: addons/openacademy/templates.xml
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ doc-backend/openacademy/templates.xml	2014-08-24 12:25:18.137397278 +0200
++++ addons/openacademy/templates.xml	2014-08-26 17:25:49.791783523 +0200
 @@ -0,0 +1,22 @@
 +<openerp>
 +    <data>
