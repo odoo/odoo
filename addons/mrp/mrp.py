@@ -845,7 +845,7 @@ class mrp_production(osv.osv):
                 dicts[product_id] = {}
 
             # total qty of consumed product we need after this consumption
-            if product_qty + produced_qty <= production.product_qty: #TODO: Need to add rounding over here?
+            if product_qty + produced_qty <= production.product_qty: 
                 total_consume = ((product_qty + produced_qty) * scheduled.product_qty / production.product_qty)
             else:
                 total_consume = (production.product_qty * scheduled.product_qty / production.product_qty)
@@ -905,10 +905,6 @@ class mrp_production(osv.osv):
         main_production_move = False
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
-            #vals = {'state':'confirmed'}
-            #final_product_todo = [x.id for x in production.move_created_ids]
-            #stock_mov_obj.write(cr, uid, final_product_todo, vals)
-            #stock_mov_obj.action_confirm(cr, uid, final_product_todo, context)
             produced_products = {}
             for produced_product in production.move_created_ids2:
                 if produced_product.scrapped:
