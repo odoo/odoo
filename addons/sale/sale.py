@@ -819,6 +819,7 @@ class sale_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             if prod_obj.need_procurement(cr, uid, [line.product_id.id], context=context):
                 return True
+        return False
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')

@@ -1151,11 +1151,9 @@ class mrp_production(osv.osv):
             for line in production.product_lines:
                 if line.product_id.type != 'service':
                     stock_move_id = self._make_production_consume_line(cr, uid, line, context=context)
+                    stock_moves.append(stock_move_id)
                 else:
                     self._make_service_procurement(cr, uid, line, context=context)
-                    stock_move_id = False
-                if stock_move_id:
-                    stock_moves.append(stock_move_id)
             if stock_moves:
                 self.pool.get('stock.move').action_confirm(cr, uid, stock_moves, context=context)
             production.write({'state': 'confirmed'}, context=context)
