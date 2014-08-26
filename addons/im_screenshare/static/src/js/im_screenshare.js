@@ -287,7 +287,6 @@
         },
         _init_mirroirs: function(){
             var self = this;
-            this.base = "";
             // init the mirroirs
             this.treeMirror = new TreeMirror(document, {
                 createElement: function(tagName) {
