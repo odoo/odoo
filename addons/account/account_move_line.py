@@ -1209,9 +1209,6 @@ class account_move_line(osv.osv):
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False
             if partner_id and not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
                 partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
-            account_id = lines[0].account_id and lines[0].account_id.id or False
-            if account_id and not account_obj.has_something_to_reconcile(cr, uid, account_id, context=context):
-                account_obj.mark_as_reconciled(cr, uid, [account_id], context=context)
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context=None):

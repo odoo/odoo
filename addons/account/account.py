@@ -474,14 +474,6 @@ class account_account(osv.osv):
         'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
                                                 help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
-        'last_reconciliation_date': fields.datetime('Latest Full Reconciliation Date', copy=False,
-            help='Date on which the account entries were fully reconciled last time. '
-                 'It differs from the last date where a reconciliation has been made for this account, '
-                 'as here we depict the fact that nothing more was to be reconciled at this date. '
-                 'This can be achieved in 2 different ways: either the last unreconciled debit/credit '
-                 'entry of this account was reconciled, either the user pressed the button '
-                 '"Nothing more to reconcile" during the manual reconciliation process.'),
-
         'exchange_rate': fields.related('currency_id', 'rate', type='float', string='Exchange Rate', digits=(12,6)),
         'shortcut': fields.char('Shortcut', size=12),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
@@ -714,27 +706,6 @@ class account_account(osv.osv):
         self._check_moves(cr, uid, ids, "unlink", context=context)
         return super(account_account, self).unlink(cr, uid, ids, context=context)
 
-    def has_something_to_reconcile(self, cr, uid, account_id, context=None):
-        '''
-        at least a debit, a credit and a line older than the last reconciliation date of the account
-        '''
-        cr.execute('''
-            SELECT l.account_id, SUM(l.debit) AS debit, SUM(l.credit) AS credit
-            FROM account_move_line l
-            RIGHT JOIN account_account a ON (a.id = l.account_id)
-            WHERE a.reconcile IS TRUE
-            AND a.id = %s
-            AND l.reconcile_id IS NULL
-            AND (a.last_reconciliation_date IS NULL OR l.date > a.last_reconciliation_date)
-            AND l.state <> 'draft'
-            GROUP BY l.account_id''', (account_id,))
-        res = cr.dictfetchone()
-        if res:
-            return bool(res['debit'] and res['credit'])
-        return False
-
-    def mark_as_reconciled(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
 class account_journal(osv.osv):
     _name = "account.journal"
