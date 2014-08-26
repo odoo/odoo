@@ -681,18 +681,29 @@ td {
 
 .pos .categories {
     position: relative;
-    border-bottom: 1px solid #cecece;
 }
 .pos .categories h4 {
     display: inline-block;
     margin: 9px 5px;
 }
 
-.pos .category-list{
+.pos .category-list {
     text-align: left;
     padding: 10px;
     background: rgb(229, 229, 229);
+    border-bottom: 1px solid #cecece;
 }
+.pos .category-list.simple {
+    padding: 0px;
+    background: #cecece;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    border-bottom: none;
+}
+
+
 /*  d) the category button */
 
 .pos .category-button {
@@ -714,20 +725,18 @@ td {
     position: relative;
     display: inline-block;
     font-size: 14px;
-    margin-right:10px;
+    margin-right: 1px;
+    margin-bottom: 1px;
     padding: 5px 12px;
-    line-height: 24px;
-    border-radius: 3px;
-
+    line-height: 32px;
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
     cursor: pointer;
-    border: 1px solid #cacaca;
-
     background: #e2e2e2;
 }
 .pos .category-simple-button:active{
     color: white;
     background: #7f82ac;
-    border: 1px solid #7f82ac;
 
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
