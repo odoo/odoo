@@ -99,11 +99,11 @@ class stock_landed_cost(osv.osv):
     }
 
     def _create_accounting_entries(self, cr, uid, line, move_id, context=None):
-        product_obj = self.pool.get('product.product')
+        product_obj = self.pool.get('product.template')
         cost_product = line.cost_line_id and line.cost_line_id.product_id
         if not cost_product:
             return False
-        accounts = product_obj.get_product_accounts(cr, uid, line.product_id.id, context=context)
+        accounts = product_obj.get_product_accounts(cr, uid, line.product_id.product_tmpl_id.id, context=context)
         debit_account_id = accounts['property_stock_valuation_account_id']
         credit_account_id = cost_product.property_account_expense and cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
         if not credit_account_id:
