@@ -61,7 +61,7 @@ class stock_transfer_details(models.TransientModel):
                 'sourceloc_id': op.location_id.id,
                 'destinationloc_id': op.location_dest_id.id,
                 'result_package_id': op.result_package_id.id,
-                'date': op.date, 
+                'date': op.date,
                 'owner_id': op.owner_id.id,
             }
             if op.product_id:
@@ -142,8 +142,6 @@ class stock_transfer_details_items(models.TransientModel):
     date = fields.Datetime('Date')
     owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
 
-
-
     @api.multi
     def split_quantities(self):
         for det in self:
@@ -166,18 +164,11 @@ class stock_transfer_details_items(models.TransientModel):
         if self and self[0]:
             return self[0].transfer_id.wizard_view()
 
-    @api.multi
-    def product_id_change(self, product, uom=False):
-        result = {}
-        if product:
-            prod = self.env['product.product'].browse(product)
-            result['product_uom_id'] = prod.uom_id and prod.uom_id.id
-        return {'value': result, 'domain': {}, 'warning':{} }
+    @api.onchange('product_id')
+    def product_id_change(self):
+        self.product_uom_id = self.product_id.uom_id
 
-    @api.multi
-    def source_package_change(self, sourcepackage):
-        result = {}
-        if sourcepackage:
-            pack = self.env['stock.quant.package'].browse(sourcepackage)
-            result['sourceloc_id'] = pack.location_id and pack.location_id.id
-        return {'value': result, 'domain': {}, 'warning':{} }
+    @api.onchange('package_id')
+    def source_package_change(self):
+        if self.package_id:
+            self.sourceloc_id = self.package_id.location_id
