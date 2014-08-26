@@ -176,7 +176,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             domain: function(self){ return [['state','=','opened'],['user_id','=',self.session.uid]]; },
             loaded: function(self,pos_sessions){
                 self.pos_session = pos_sessions[0]; 
-                self.pos_session_id = parseInt(self.pos_session.name.split('/')[1]);
 
                 var orders = self.db.get_orders();
                 for (var i = 0; i < orders.length; i++) {
@@ -929,7 +928,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }
                 return s;
             }
-            return zero_pad(this.pos.pos_session_id,5) +'-'+
+            return zero_pad(this.pos.pos_session.id,5) +'-'+
                    zero_pad(this.pos.pos_session.login_number,3) +'-'+
                    zero_pad(this.sequence_number,4);
         },
