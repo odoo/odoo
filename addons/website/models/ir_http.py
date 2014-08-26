@@ -82,7 +82,7 @@ class ir_http(orm.AbstractModel):
                 self._authenticate(func.routing['auth'])
             else:
                 self._auth_method_public()
-            request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
+            request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
             if first_pass:
                 request.lang = request.website.default_lang_code

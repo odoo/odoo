@@ -58,7 +58,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         }
         # /page/website.XXX --> /page/XXX
         if page.startswith('website.'):
-            return request.redirect('/page/'+page[8:])
+            return request.redirect('/page/' + page[8:], code=301)
         elif '.' not in page:
             page = 'website.%s' % page
 
