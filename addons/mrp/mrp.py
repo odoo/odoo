@@ -509,7 +509,7 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids, context=context):
             res[production.id] = True
             states = [x.state != 'assigned' for x in production.move_lines if x]
-            if any(states) or len(states) == 0:
+            if any(states) or len(states) == 0: #When no moves, ready_production will be False, but test_ready will pass
                 res[production.id] = False
         return res
 
@@ -831,6 +831,8 @@ class mrp_production(osv.osv):
         dicts = {}
         # Find product qty to be consumed and consume it
         for scheduled in production.product_lines:
+            if scheduled.product_id.type == 'service':
+                continue
             product_id = scheduled.product_id.id
 
             consumed_qty = consumed_data.get(product_id, 0.0)
@@ -1018,11 +1020,12 @@ class mrp_production(osv.osv):
         return res
 
     def test_ready(self, cr, uid, ids):
-        res = False
+        res = True
         for production in self.browse(cr, uid, ids):
-            if production.ready_production:
-                res = True
+            if production.move_lines and not production.ready_production:
+                res = False
         return res
+
     
     
     def _make_production_produce_line(self, cr, uid, production, context=None):
@@ -1155,9 +1158,6 @@ class mrp_production(osv.osv):
                     stock_moves.append(stock_move_id)
             if stock_moves:
                 self.pool.get('stock.move').action_confirm(cr, uid, stock_moves, context=context)
-            else:
-                raise osv.except_osv(_('Error!'),
-                        _('It does not make sense to create a production order without any physical product to consume'))
             production.write({'state': 'confirmed'}, context=context)
         return 0
 
@@ -1165,9 +1165,12 @@ class mrp_production(osv.osv):
         """
         Checks the availability on the consume lines of the production order
         """
+        from openerp import workflow
         move_obj = self.pool.get("stock.move")
         for production in self.browse(cr, uid, ids, context=context):
             move_obj.action_assign(cr, uid, [x.id for x in production.move_lines], context=context)
+            if self.pool.get('mrp.production').test_ready(cr, uid, [production.id]):
+                workflow.trg_validate(uid, 'mrp.production', production.id, 'moves_ready', cr)
 
 
     def force_production(self, cr, uid, ids, *args):
@@ -1175,9 +1178,12 @@ class mrp_production(osv.osv):
         @param *args: Arguments
         @return: True
         """
+        from openerp import workflow
         move_obj = self.pool.get('stock.move')
         for order in self.browse(cr, uid, ids):
             move_obj.force_assign(cr, uid, [x.id for x in order.move_lines])
+            if self.pool.get('mrp.production').test_ready(cr, uid, [order.id]):
+                workflow.trg_validate(uid, 'mrp.production', order.id, 'moves_ready', cr)
         return True
 
 

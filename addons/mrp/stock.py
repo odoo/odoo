@@ -228,9 +228,12 @@ class StockMove(osv.osv):
             ids = [ids]
         res = super(StockMove, self).write(cr, uid, ids, vals, context=context)
         from openerp import workflow
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.raw_material_production_id and move.raw_material_production_id.state == 'confirmed':
-                workflow.trg_trigger(uid, 'stock.move', move.id, cr)
+        if vals.get('state') == 'assigned':
+            moves = self.browse(cr, uid, ids, context=context)
+            orders = list(set([x.raw_material_production_id.id for x in moves if x.raw_material_production_id and x.raw_material_production_id.state == 'confirmed']))
+            for order_id in orders:
+                if self.pool.get('mrp.production').test_ready(cr, uid, [order_id]):
+                    workflow.trg_validate(uid, 'mrp.production', order_id, 'moves_ready', cr)
         return res
 
 class stock_warehouse(osv.osv):
