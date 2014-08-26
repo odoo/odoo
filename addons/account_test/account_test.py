@@ -43,7 +43,7 @@ class accounting_assert_test(osv.osv):
     _order = "sequence"
 
     _columns = {
-        'name': fields.char('Test Name', size=256, required=True, select=True, translate=True),
+        'name': fields.char('Test Name', required=True, select=True, translate=True),
         'desc': fields.text('Test Description', select=True, translate=True),
         'code_exec': fields.text('Python code', required=True),
         'active': fields.boolean('Active'),

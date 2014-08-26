@@ -39,13 +39,12 @@ It is integrated with sales and accounting to allow you to automatically
 invoice and send propositions for membership renewal.
     """,
     'author': 'OpenERP SA',
-    'depends': ['base', 'product', 'account', 'process'],
+    'depends': ['base', 'product', 'account'],
     'data': [
         'security/ir.model.access.csv',
         'wizard/membership_invoice_view.xml',
         'membership_view.xml',
         'report/report_membership_view.xml',
-        'process/membership_process.xml',
     ],
     'demo': [
         'membership_demo.xml',

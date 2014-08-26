@@ -17,7 +17,7 @@ class WebsiteCustomer(http.Controller):
         '/customers/country/<country_name>-<int:country_id>',
         '/customers/country/<int:country_id>/page/<int:page>',
         '/customers/country/<country_name>-<int:country_id>/page/<int:page>',
-    ], type='http', auth="public", website=True, multilang=True)
+    ], type='http', auth="public", website=True)
     def customers(self, country_id=0, page=0, country_name='', **post):
         cr, uid, context = request.cr, request.uid, request.context
         country_obj = request.registry['res.country']
@@ -85,7 +85,7 @@ class WebsiteCustomer(http.Controller):
         return request.website.render("website_customer.index", values)
 
     # Do not use semantic controller due to SUPERUSER_ID
-    @http.route(['/customers/<partner_id>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/customers/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
         _, partner_id = unslug(partner_id)
         if partner_id:

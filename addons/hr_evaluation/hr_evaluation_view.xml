@@ -9,7 +9,7 @@
                 <search string="Appraisal Plan">
                    <field name="name" string="Appraisal Plans"/>
                    <field name="company_id" groups="base.group_multi_company"/>
-                   <group expand="0" string="Group By..." groups="base.group_multi_company">
+                   <group expand="0" string="Group By" groups="base.group_multi_company">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
                </search>
@@ -20,7 +20,7 @@
             <field name="name">hr_evaluation.plan.form</field>
             <field name="model">hr_evaluation.plan</field>
             <field name="arch" type="xml">
-                <form string="Appraisal Plan" version="7.0">
+                <form string="Appraisal Plan">
                     <sheet>
                         <group col="4">
                             <group>
@@ -80,7 +80,7 @@
             <field name="name">hr_evaluation.plan.phase.form</field>
             <field name="model">hr_evaluation.plan.phase</field>
             <field name="arch" type="xml">
-                <form string="Appraisal Plan Phases" version="7.0">
+                <form string="Appraisal Plan Phases">
                  <notebook>
                    <page string="General">
                     <group>
@@ -147,7 +147,12 @@
                 </group>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="%(act_hr_employee_2_hr__evaluation_interview)d" string="Appraisal Interviews" type="action"/>
+                <button name="%(act_hr_employee_2_hr__evaluation_interview)d"  
+                    class="oe_stat_button"
+                    icon="fa-sitemap"
+                    type="action">
+                    <field name="appraisal_count" widget="statinfo" string="Appraisals"/>
+                </button>
             </xpath>
             </field>
         </record>
@@ -156,7 +161,7 @@
             <field name="name">hr_evaluation.evaluation.form</field>
             <field name="model">hr_evaluation.evaluation</field>
             <field name="arch" type="xml">
-                <form string="Appraisal" version="7.0">
+                <form string="Appraisal">
                 <header>
                     <button name="button_plan_in_progress" string="Start Appraisal" states="draft" type="object" class="oe_highlight"/>
                     <button name="button_final_validation" string="Validate Appraisal" states="wait" type="object" class="oe_highlight"/>
@@ -246,7 +251,7 @@
                 Each employee may be assigned an Appraisal Plan. Such a plan
                 defines the frequency and the way you manage your periodic
                 personnel evaluation. You will be able to define steps and
-                attach interviews to each step. OpenERP manages all kinds of
+                attach interviews to each step. Odoo manages all kinds of
                 evaluations: bottom-up, top-down, self-evaluation and final
                 evaluation by the manager.
               </p>
@@ -260,7 +265,7 @@
             <field name="name">hr_evaluation.interview.form</field>
             <field name="model">hr.evaluation.interview</field>
             <field name="arch" type="xml">
-                <form string="Interview Appraisal" version="7.0">
+                <form string="Interview Appraisal">
                     <header>
                         <button string="Cancel Survey" name="survey_req_cancel" type="object"
                             states="draft,waiting_answer" class="oe_left"/>
@@ -328,7 +333,7 @@
                     <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
                     <field name="user_to_review_id"/>
                     <field name="user_id" string="Interviewer"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Interviewer" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'survey_id'}"/>
                         <filter string="Status" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -359,7 +364,7 @@
                 Click to create a new interview request related to a personal evaluation.
               </p><p>
                 Interview requests are usually generated automatically by
-                OpenERP according to an employee's appraisal plan. Each user
+                Odoo according to an employee's appraisal plan. Each user
                 receives automatic emails and requests to evaluate their
                 colleagues periodically.
               </p>

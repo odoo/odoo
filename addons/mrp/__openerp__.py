@@ -28,8 +28,8 @@
     'category': 'Manufacturing',
     'sequence': 18,
     'summary': 'Manufacturing Orders, Bill of Materials, Routing',
-    'images': ['images/bill_of_materials.jpeg', 'images/manufacturing_order.jpeg', 'images/planning_manufacturing_order.jpeg', 'images/manufacturing_analysis.jpeg', 'images/production_dashboard.jpeg','images/routings.jpeg','images/work_centers.jpeg'],
-    'depends': ['product','procurement', 'stock', 'resource', 'purchase','process', 'report'],
+    'images': ['images/bill_of_materials.jpeg', 'images/manufacturing_order.jpeg', 'images/planning_manufacturing_order.jpeg', 'images/manufacturing_analysis.jpeg', 'images/routings.jpeg','images/work_centers.jpeg'],
+    'depends': ['product', 'procurement', 'stock_account', 'resource', 'report'],
     'description': """
 Manage the Manufacturing process in OpenERP
 ===========================================
@@ -62,16 +62,12 @@ Dashboard / Reports for MRP will include:
         'wizard/change_production_qty_view.xml',
         'wizard/mrp_price_view.xml',
         'wizard/mrp_workcenter_load_view.xml',
+        'wizard/stock_move_view.xml',
         'mrp_view.xml',
         'mrp_report.xml',
         'company_view.xml',
-        'process/stockable_product_process.xml',
-        'process/service_product_process.xml',
-        'process/procurement_process.xml',
         'report/mrp_report_view.xml',
-        'board_manufacturing_view.xml',
         'res_config_view.xml',
-
         'views/report_mrporder.xml',
         'views/report_mrpbomstructure.xml',
     ],

@@ -66,12 +66,7 @@ class purchase_order_group(osv.osv_memory):
         id = mod_obj.read(cr, uid, result, ['res_id'])
 
         allorders = order_obj.do_merge(cr, uid, context.get('active_ids',[]), context)
-        for new_order in allorders:
-            proc_ids = proc_obj.search(cr, uid, [('purchase_id', 'in', allorders[new_order])], context=context)
-            for proc in proc_obj.browse(cr, uid, proc_ids, context=context):
-                if proc.purchase_id:
-                    proc_obj.write(cr, uid, [proc.id], {'purchase_id': new_order}, context)
-
+    
         return {
             'domain': "[('id','in', [" + ','.join(map(str, allorders.keys())) + "])]",
             'name': _('Purchase Orders'),

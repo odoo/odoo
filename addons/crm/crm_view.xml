@@ -23,13 +23,10 @@
         <menuitem id="menu_crm_config_phonecall" name="Phone Calls"
             parent="base.menu_base_config" sequence="45" groups="base.group_sale_salesman"/>
 
-        <menuitem id="base.next_id_64" name="Sales"
-            parent="base.menu_reporting" sequence="1"/>
-
-        <!-- crm.case.channel -->
-        <record id="crm_case_channel_view_tree" model="ir.ui.view">
-            <field name="name">crm.case.channel.tree</field>
-            <field name="model">crm.case.channel</field>
+        <!-- crm.tracking.medium -->
+        <record id="crm_tracking_medium_view_tree" model="ir.ui.view">
+            <field name="name">crm.tracking.medium.tree</field>
+            <field name="model">crm.tracking.medium</field>
             <field name="arch" type="xml">
                 <tree string="Channels">
                     <field name="name"/>
@@ -37,11 +34,11 @@
                 </tree>
             </field>
         </record>
-        <record id="crm_case_channel_view_form" model="ir.ui.view">
-            <field name="name">crm.case.channel.form</field>
-            <field name="model">crm.case.channel</field>
+        <record id="crm_tracking_medium_view_form" model="ir.ui.view">
+            <field name="name">crm.tracking.medium.form</field>
+            <field name="model">crm.tracking.medium</field>
             <field name="arch" type="xml">
-                <form string="Channel" version="7.0">
+                <form string="Channel">
                     <group>
                         <field name="name"/>
                         <field name="active"/>
@@ -49,26 +46,66 @@
                 </form>
             </field>
         </record>
-        <record id="crm_case_channel_action" model="ir.actions.act_window">
+        <record id="crm_tracking_medium_action" model="ir.actions.act_window">
             <field name="name">Channels</field>
-            <field name="res_model">crm.case.channel</field>
+            <field name="res_model">crm.tracking.medium</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new channel.
               </p><p>
-                Use channels to track the soure of your leads and opportunities. Channels
+                Use channels to track the type of source of your leads and opportunities. Channels
                 are mostly used in reporting to analyse sales performance
                 related to marketing efforts.
               </p><p>
                 Some examples of channels: company website, phone call
-                campaign, reseller, etc.
+                campaign, reseller, banner, etc.
               </p>
             </field>
         </record>
 
-        <menuitem action="crm_case_channel_action" id="menu_crm_case_channel" parent="base.menu_crm_config_lead" sequence="4" groups="base.group_no_one"/>
+        <!-- crm.tracking.source -->
+        <record id="crm_tracking_source_view_tree" model="ir.ui.view">
+            <field name="name">crm.tracking.source.tree</field>
+            <field name="model">crm.tracking.source</field>
+            <field name="arch" type="xml">
+                <tree string="Channels">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="crm_tracking_source_view_form" model="ir.ui.view">
+            <field name="name">crm.tracking.source.form</field>
+            <field name="model">crm.tracking.source</field>
+            <field name="arch" type="xml">
+                <form string="Channel">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="crm_tracking_source_action" model="ir.actions.act_window">
+            <field name="name">Source</field>
+            <field name="res_model">crm.tracking.source</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new source.
+              </p><p>
+                Use channels to track the source of your leads and opportunities. Channels
+                are mostly used in reporting to analyse sales performance
+                related to marketing efforts.
+              </p><p>
+                Some examples of channels: partner's website, google.com, 
+                email list name, etc.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="crm_tracking_source_action" id="menu_crm_tracking_source" parent="base.menu_crm_config_lead" sequence="4" groups="base.group_no_one"/>
 
         <!-- CRM Stage Tree View -->
 
@@ -92,7 +129,7 @@
             <field name="model">crm.case.stage</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <form string="Stage" version="7.0">
+                <form string="Stage">
                     <group>
                         <group>
                             <field name="name"/>
@@ -130,7 +167,7 @@
             <field name="name">crm.case.categ.form</field>
             <field name="model">crm.case.categ</field>
             <field name="arch" type="xml">
-                <form string="Case Category" version="7.0">
+                <form string="Case Category">
                     <group>
                         <field name="name"/>
                         <field name="section_id" groups="base.group_multi_salesteams"/>
@@ -155,9 +192,9 @@
 
         <!-- Resource Type of case Tree View -->
 
-        <record model="ir.ui.view" id="crm_case_resource_type_tree">
-            <field name="name">crm.case.resource.type.tree</field>
-            <field name="model">crm.case.resource.type</field>
+        <record model="ir.ui.view" id="crm_tracking_campaign_tree">
+            <field name="name">crm.tracking.campaign.tree</field>
+            <field name="model">crm.tracking.campaign</field>
             <field name="arch" type="xml">
                 <tree string="Campaign">
                     <field name="name"/>
@@ -168,11 +205,11 @@
 
         <!-- Resource Type of case Form View -->
 
-        <record model="ir.ui.view" id="crm_case_resource_type_form">
-            <field name="name">crm.case.resource.type.form</field>
-            <field name="model">crm.case.resource.type</field>
+        <record model="ir.ui.view" id="crm_tracking_campaign_form">
+            <field name="name">crm.tracking.campaign.form</field>
+            <field name="model">crm.tracking.campaign</field>
             <field name="arch" type="xml">
-                <form string="Campaign" version="7.0">
+                <form string="Campaign">
                     <group>
                         <field name="name"/>
                         <field name="section_id" groups="base.group_multi_salesteams"/>
@@ -183,15 +220,15 @@
 
         <!-- Resource Type of case Action -->
 
-        <record id="crm_case_resource_type_act" model="ir.actions.act_window">
+        <record id="crm_tracking_campaign_act" model="ir.actions.act_window">
             <field name="name">Campaigns</field>
-            <field name="res_model">crm.case.resource.type</field>
+            <field name="res_model">crm.tracking.campaign</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="crm_case_resource_type_tree"/>
+            <field name="view_id" ref="crm_tracking_campaign_tree"/>
         </record>
 
-        <menuitem action="crm_case_resource_type_act"
-            id="menu_crm_case_resource_type_act" sequence="4"
+        <menuitem action="crm_tracking_campaign_act"
+            id="menu_crm_tracking_campaign_act" sequence="4"
             groups="base.group_no_one"
             parent="base.menu_crm_config_lead"/>
 
@@ -218,7 +255,7 @@
             <field name="name">crm.segmentation.line.form</field>
             <field name="model">crm.segmentation.line</field>
             <field name="arch" type="xml">
-                <form string="Partner Segmentation Lines" version="7.0">
+                <form string="Partner Segmentation Lines">
                     <group col="4">
                         <field colspan="4" name="name"/>
                         <group col="2" colspan="4">
@@ -238,7 +275,7 @@
             <field name="name">crm.segmentation.form</field>
             <field name="model">crm.segmentation</field>
             <field name="arch" type="xml">
-                <form string="Partner Segmentation" version="7.0">
+                <form string="Partner Segmentation">
                     <header>
                         <button name="process_start"
                             states="not running"
@@ -335,7 +372,7 @@
             <field name="name">crm.payment.mode.form</field>
             <field name="model">crm.payment.mode</field>
             <field name="arch" type="xml">
-                <form string="Payment Mode" version="7.0">
+                <form string="Payment Mode">
                     <group>
                         <field name="name"/>
                         <field name="section_id" groups="base.group_multi_salesteams"/>

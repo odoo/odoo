@@ -57,7 +57,7 @@ class base_gengo_translations(osv.osv_memory):
     def init(self, cr):
         icp = self.pool['ir.config_parameter']
         if not icp.get_param(cr, SUPERUSER_ID, self.GENGO_KEY, default=None):
-            icp.set_param(cr, SUPERUSER_ID, self.GENGO_KEY, str(uuid.uuid4()))
+            icp.set_param(cr, SUPERUSER_ID, self.GENGO_KEY, str(uuid.uuid4()), groups=['base.group_website_designer', 'base.group_website_publisher'])
 
     def get_gengo_key(self, cr):
         icp = self.pool['ir.config_parameter']
@@ -119,7 +119,7 @@ class base_gengo_translations(osv.osv_memory):
         """
         This method will be called by cron services to get translations from
         Gengo. It will read translated terms and comments from Gengo and will
-        update respective ir.translation in openerp.
+        update respective ir.translation in Odoo.
         """
         translation_pool = self.pool.get('ir.translation')
         flag, gengo = self.gengo_authentication(cr, uid, context=context)
@@ -245,7 +245,7 @@ class base_gengo_translations(osv.osv_memory):
 
         A special key 'gengo_language' can be passed in the context in order to
         request only translations of that language only. Its value is the language
-        ID in openerp.
+        ID in Odoo.
         """
         if context is None:
             context = {}

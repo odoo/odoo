@@ -361,8 +361,8 @@ openerp.testing.section('list.edition.onwrite', {
             strictEqual(
                 $fix.find('tbody tr:eq(1)').css('color'), 'rgb(255, 0, 0)',
                 'shoud have color applied');
-            strictEqual(
-                $fix.find('tbody tr:eq(2)').css('color'), 'rgb(0, 0, 0)',
+            notStrictEqual(
+                $fix.find('tbody tr:eq(2)').css('color'), 'rgb(255, 0, 0)',
                 'should have default color applied');
         });
     });

@@ -65,7 +65,7 @@
                <tbody class="sale_tbody">
                     <tr t-foreach="o.order_line" t-as="l">
                         <td>
-                           <span  t-field="l.name"/>
+                           <span t-field="l.name"/>
                         </td>
                         <td>
                             <span t-esc="', '.join(map(lambda x: x.name, l.tax_id))"/>

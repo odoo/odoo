@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Point of Sale',
     'version': '1.0.1',
@@ -51,20 +50,17 @@ Main Features
     'images': ['images/pos_touch_screen.jpeg', 'images/pos_session.jpeg', 'images/pos_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
     'depends': ['sale_stock'],
     'data': [
+        'data/report_paperformat.xml',
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
-        'wizard/pos_details.xml',
+        'wizard/pos_box.xml',
         'wizard/pos_confirm.xml',
+        'wizard/pos_details.xml',
         'wizard/pos_discount.xml',
         'wizard/pos_open_statement.xml',
-        'wizard/pos_payment_report_user_view.xml',
-        'wizard/pos_sales_user.xml',
-        'wizard/pos_receipt_view.xml',
-        'wizard/pos_payment_report_user.xml',
-        'wizard/pos_payment_report.xml',
         'wizard/pos_payment.xml',
-        'wizard/pos_box.xml',
         'wizard/pos_session_opening.xml',
+        'views/templates.xml',
         'point_of_sale_report.xml',
         'point_of_sale_view.xml',
         'point_of_sale_data.xml',
@@ -75,31 +71,28 @@ Main Features
         'account_statement_report.xml',
         'res_users_view.xml',
         'res_partner_view.xml',
+        'views/report_statement.xml',
+        'views/report_usersproduct.xml',
+        'views/report_receipt.xml',
+        'views/report_saleslines.xml',
+        'views/report_detailsofsales.xml',
+        'views/report_payment.xml',
+        'views/report_sessionsummary.xml',
+        'views/point_of_sale.xml',
     ],
     'demo': [
         'point_of_sale_demo.xml',
         'account_statement_demo.xml',
-        'test/00_register_open.yml'
     ],
     'test': [
+        'test/00_register_open.yml',
         'test/01_order_to_payment.yml',
         'test/02_order_to_invoice.yml',
-        'test/point_of_sale_report.yml'
+        'test/point_of_sale_report.yml',
+        'test/account_statement_reports.yml',
     ],
     'installable': True,
     'application': True,
-    'js': [
-        'static/lib/fastclick.js',
-        'static/src/js/db.js',
-        'static/src/js/models.js',
-        'static/src/js/widget_base.js',
-        'static/src/js/widget_keyboard.js',
-        'static/src/js/widgets.js',
-        'static/src/js/devices.js',
-        'static/src/js/screens.js',
-        'static/src/js/tests.js',
-        'static/src/js/main.js',
-    ],
     'qweb': ['static/src/xml/pos.xml'],
     'auto_install': False,
 }

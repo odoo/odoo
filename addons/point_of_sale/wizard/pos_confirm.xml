@@ -6,7 +6,7 @@
             <field name="name">Post Sale Journal Entries</field>
             <field name="model">pos.confirm</field>
             <field name="arch" type="xml">
-                <form string="Post All Orders" version="7.0">
+                <form string="Post All Orders">
                     <separator string="Generate Journal Entries"/>
                     <label string="Generate all sale journal entries for non invoiced orders linked to a closed cash register or statement."/>
                     <footer>
@@ -17,16 +17,5 @@
                 </form>
             </field>
         </record>
-        <!--
-        <record id="action_pos_confirm" model="ir.actions.act_window">
-            <field name="name">Post Sale Entries</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.confirm</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-        -->
-
     </data>
 </openerp>

@@ -29,8 +29,7 @@ class AbstractReport(osv.AbstractModel):
     _wrapped_report_class = None
 
     def render_html(self, cr, uid, ids, data=None, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         # If the key 'landscape' is present in data['form'], passing it into the context
         if data and data.get('form', {}).get('landscape'):
@@ -58,7 +57,7 @@ class AbstractReport(osv.AbstractModel):
         docargs = wrapped_report.localcontext
         docargs['docs'] = docargs.get('objects')
 
-        # Used in template translating (see render_doc method from report model)
+        # Used in template translation (see translate_doc method from report model)
         docargs['doc_ids'] = context['active_ids']
         docargs['doc_model'] = model
 

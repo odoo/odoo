@@ -23,7 +23,7 @@
             <field name="name">account.voucher.line.form</field>
             <field name="model">account.voucher.line</field>
             <field name="arch" type="xml">
-                <form string="Voucher Lines" version="7.0">
+                <form string="Voucher Lines">
                     <group col="4">
                         <field name="name"/>
                         <field name="account_id"/>
@@ -40,7 +40,7 @@
             <field name="name">account.voucher.form</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
-                <form string="Accounting Voucher" version="7.0">
+                <form string="Accounting Voucher">
                   <header>
                       <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
                       <button name="cancel_voucher" string="Cancel Voucher" type="object" states="posted" confirm="Are you sure you want to unreconcile this record?"/>
@@ -132,7 +132,7 @@
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" /> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <field name="period_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
@@ -193,59 +193,7 @@
             <field name="context">{'state':'posted'}</field>
             <field name="search_view_id" ref="view_voucher_filter"/>
         </record>
-
-        <record id="view_bank_statement_form_invoice" model="ir.ui.view">
-            <field name="name">account.bank.statement.invoice.form.inherit</field>
-            <field name="model">account.bank.statement</field>
-            <field name="inherit_id" ref="account.view_bank_statement_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='import_buttons']" position="inside">
-                    <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoices" type="action"
-                            attrs="{'invisible':[('state','=','confirm')]}"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_bank_statement_form_voucher" model="ir.ui.view">
-            <field name="name">account.bank.statement.voucher.tree.inherit</field>
-            <field name="model">account.bank.statement</field>
-            <field name="inherit_id" ref="account.view_bank_statement_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
-                    <field name="voucher_id" string="" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False, 'account_id': account_id}"/>
-                </xpath>
-                <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='sequence']" position="before">
-                    <field name="voucher_id" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False, 'account_id': account_id}"/>
-                </xpath>
-                <field name="amount" position="attributes">
-                    <attribute name="on_change">onchange_amount(amount)</attribute>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_cash_statement_tree_voucher" model="ir.ui.view">
-            <field name="name">account.cash.statement.voucher.tree.inherit</field>
-            <field name="model">account.bank.statement</field>
-            <field name="inherit_id" ref="account.view_bank_statement_form2"/>
-            <field name="arch" type="xml">
-                <xpath expr="//page/field[@name='line_ids']/tree/field[@name='amount']" position="after">
-                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'account_id': account_id}"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_cash_statement_form_voucher" model="ir.ui.view">
-            <field name="name">account.cash.statement.voucher.form.inherit</field>
-            <field name="model">account.bank.statement</field>
-            <field name="inherit_id" ref="account.view_bank_statement_form2"/>
-            <field name="arch" type="xml">
-                <xpath expr="//page/field[@name='line_ids']/form/group/field[@name='amount']" position="after">
-                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'account_id': account_id}"/>
-                </xpath>
-            </field>
-        </record>
-
+        
         <!-- res.config form view -->
         <record model="ir.ui.view" id="view_account_settings_currency_xchange_form">
             <field name="name">account.config.settings.inherit</field>

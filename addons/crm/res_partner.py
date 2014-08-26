@@ -25,7 +25,7 @@ class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
     _inherit = 'res.partner'
 
-    def _opportunity_meeting_count(self, cr, uid, ids, field_name, arg, context=None):
+    def _opportunity_meeting_phonecall_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,{'opportunity_count': 0, 'meeting_count': 0}), ids))
         # the user may not have access rights for opportunities or meetings
         try:
@@ -36,27 +36,22 @@ class res_partner(osv.osv):
                 }
         except:
             pass
+        for partner in self.browse(cr, uid, ids, context):
+            res[partner.id]['phonecall_count'] = len(partner.phonecall_ids)
         return res
 
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
             'Leads and Opportunities', domain=[('probability', 'not in', ['0', '100'])]),
-        'meeting_ids': fields.many2many('calendar.event', 'calendar_event_partner_rel','partner_id', 'meeting_id',
+        'meeting_ids': fields.many2many('calendar.event', 'calendar_event_res_partner_rel','res_partner_id', 'calendar_event_id',
             'Meetings'),
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
-        'opportunity_count': fields.function(_opportunity_meeting_count, string="Opportunity", type='integer', multi='opp_meet'),
-        'meeting_count': fields.function(_opportunity_meeting_count, string="# Meetings", type='integer', multi='opp_meet'),
+        'opportunity_count': fields.function(_opportunity_meeting_phonecall_count, string="Opportunity", type='integer', multi='opp_meet'),
+        'meeting_count': fields.function(_opportunity_meeting_phonecall_count, string="# Meetings", type='integer', multi='opp_meet'),
+        'phonecall_count': fields.function(_opportunity_meeting_phonecall_count, string="Phonecalls", type="integer", multi='opp_meet'),
     }
-
-    def copy(self, cr, uid, record_id, default=None, context=None):
-        if default is None:
-            default = {}
-
-        default.update({'opportunity_ids': [], 'meeting_ids' : [], 'phonecall_ids' : []})
-
-        return super(res_partner, self).copy(cr, uid, record_id, default, context)
 
     def redirect_partner_form(self, cr, uid, partner_id, context=None):
         search_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'view_res_partner_filter')
@@ -91,6 +86,18 @@ class res_partner(osv.osv):
             }, context=context)
             opportunity_ids[partner_id] = opportunity_id
         return opportunity_ids
+
+    def schedule_meeting(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        partner_ids = list(ids)
+        partner_ids.append(self.pool.get('res.users').browse(cr, uid, uid).partner_id.id)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
+        res['context'] = {
+            'default_partner_id': ids and ids[0] or False,
+            'default_partner_ids': partner_ids,
+        }
+        return res
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

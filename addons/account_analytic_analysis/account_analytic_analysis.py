@@ -24,7 +24,6 @@ import logging
 import time
 
 from openerp.osv import osv, fields
-from openerp.osv.orm import intersect, except_orm
 import openerp.tools
 from openerp.tools.translate import _
 
@@ -518,7 +517,7 @@ class account_analytic_account(osv.osv):
         'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
         'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
-        'recurring_invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id', 'Invoice Lines'),
+        'recurring_invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id', 'Invoice Lines', copy=True),
         'recurring_invoices' : fields.boolean('Generate recurring invoices automatically'),
         'recurring_rule_type': fields.selection([
             ('daily', 'Day(s)'),
@@ -595,8 +594,7 @@ class account_analytic_account(osv.osv):
         return value
 
     def cron_account_analytic_account(self, cr, uid, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         remind = {}
 
         def fill_remind(key, domain, write_pending=False):
@@ -612,7 +610,7 @@ class account_analytic_account(osv.osv):
             accounts = self.browse(cr, uid, accounts_ids, context=context)
             for account in accounts:
                 if write_pending:
-                    account.write({'state' : 'pending'}, context=context)
+                    account.write({'state' : 'pending'})
                 remind_user = remind.setdefault(account.manager_id.id, {})
                 remind_type = remind_user.setdefault(key, {})
                 remind_partner = remind_type.setdefault(account.partner_id, []).append(account)
@@ -761,10 +759,10 @@ class account_analytic_account(osv.osv):
                             new_date = next_date+relativedelta(days=+interval)
                         elif contract.recurring_rule_type == 'weekly':
                             new_date = next_date+relativedelta(weeks=+interval)
-                        elif contract.recurring_rule_type == 'yearly':
-                            new_date = next_date+relativedelta(years=+interval)
-                        else:
+                        elif contract.recurring_rule_type == 'monthly':
                             new_date = next_date+relativedelta(months=+interval)
+                        else:
+                            new_date = next_date+relativedelta(years=+interval)
                         self.write(cr, uid, [contract.id], {'recurring_next_date': new_date.strftime('%Y-%m-%d')}, context=context)
                         if automatic:
                             cr.commit()
@@ -808,6 +806,12 @@ class account_analytic_account_summary_user(osv.osv):
         'user': fields.many2one('res.users', 'User'),
     }
 
+    _depends = {
+        'res.users': ['id'],
+        'account.analytic.line': ['account_id', 'journal_id', 'unit_amount', 'user_id'],
+        'account.analytic.journal': ['type'],
+    }
+
     def init(self, cr):
         openerp.tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_user')
         cr.execute('''CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (
@@ -839,6 +843,11 @@ class account_analytic_account_summary_month(osv.osv):
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'unit_amount': fields.float('Total Time'),
         'month': fields.char('Month', size=32, readonly=True),
+    }
+
+    _depends = {
+        'account.analytic.line': ['account_id', 'date', 'journal_id', 'unit_amount'],
+        'account.analytic.journal': ['type'],
     }
 
     def init(self, cr):

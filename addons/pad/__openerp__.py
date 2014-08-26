@@ -12,16 +12,17 @@ pads (by default, http://ietherpad.com/).
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'depends': ['base'],
-    'data': ['res_company.xml'],
+    'depends': ['web'],
+    'data': [
+        'res_company.xml',
+        'views/pad.xml',
+    ],
     'demo': ['pad_demo.xml'],
     'installable': True,
     'auto_install': False,
     'web': True,
-    'js': ['static/src/js/pad.js'],
     'qweb' : ['static/src/xml/*.xml'],
     'images': ['static/src/img/pad_link_companies.jpeg'],
-    'css': ['static/src/css/etherpad.css',],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -27,10 +27,9 @@
                                 </td>
                                 <td><span t-field="o.code"/></td>
                             </tr>
-                            <tr t-foreach="get_children(o.bom_lines)" t-as="l">
+                            <tr t-foreach="get_children(o.bom_line_ids)" t-as="l">
                                 <td>
                                     <span style="color: white;" t-esc="'... '*(l['level'])"/>
-                                    - <span t-esc="l['name']"/>
                                 </td>
                                  <td>
                                         [ <span t-esc="l['pcode']"/> ]

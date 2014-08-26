@@ -20,7 +20,9 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class account_statement(report_sxw.rml_parse):
 
@@ -46,6 +48,11 @@ class account_statement(report_sxw.rml_parse):
             total += line.amount
         return total
 
-report_sxw.report_sxw('report.account.statement', 'account.bank.statement', 'addons/statement/report/account_statement.rml', parser=account_statement,header='internal')
+
+class report_account_statement(osv.AbstractModel):
+    _name = 'report.point_of_sale.report_statement'
+    _inherit = 'report.abstract_report'
+    _template = 'point_of_sale.report_statement'
+    _wrapped_report_class = account_statement
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

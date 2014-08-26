@@ -22,7 +22,9 @@
 #
 ##############################################################################
 
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class fiche_paye_parser(report_sxw.rml_parse):
 
@@ -46,7 +48,6 @@ class fiche_paye_parser(report_sxw.rml_parse):
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 
-
     def get_total_by_rule_category(self, obj, code):
         payslip_line = self.pool.get('hr.payslip.line')
         rule_cate_obj = self.pool.get('hr.salary.rule.category')
@@ -61,9 +62,7 @@ class fiche_paye_parser(report_sxw.rml_parse):
 
         return category_total
 
-
     def get_employer_line(self, obj, parent_line):
-        
         payslip_line = self.pool.get('hr.payslip.line')
 
         line_ids = payslip_line.search(self.cr, self.uid, [('slip_id', '=', obj.id), ('salary_rule_id.parent_rule_id.id', '=', parent_line.salary_rule_id.id )])
@@ -72,6 +71,10 @@ class fiche_paye_parser(report_sxw.rml_parse):
         return res
 
 
-report_sxw.report_sxw('report.fiche.paye', 'hr.payslip', 'l10n_fr_hr_payroll/report/fiche_paye.rml', parser=fiche_paye_parser)
+class wrapped_report_fiche_paye(osv.AbstractModel):
+    _name = 'report.l10n_fr_hr_payroll.report_l10nfrfichepaye'
+    _inherit = 'report.abstract_report'
+    _template = 'l10n_fr_hr_payroll.report_l10nfrfichepaye'
+    _wrapped_report_class = fiche_paye_parser
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -18,9 +18,12 @@
                     .attr("disabled", data.is_subscriber && data.email.length ? "disabled" : false);
                 self.$target.attr("data-subscribe", data.is_subscriber ? 'on' : 'off');
                 self.$target.find('a.js_subscribe_btn')
-                    .val(data.email ? data.email : "")
                     .attr("disabled", data.is_subscriber && data.email.length ? "disabled" : false);
                 self.$target.removeClass("hidden");
+                if (data.is_subscriber) {
+                    self.$target.find('.js_subscribe_btn').addClass('hidden');
+                    self.$target.find('.js_subscribed_btn').removeClass('hidden');
+                }
             });
 
             // not if editable mode to allow designer to edit alert field

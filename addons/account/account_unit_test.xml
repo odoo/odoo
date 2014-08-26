@@ -6,10 +6,10 @@
             <field name="currency_id" ref="base.EUR"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="journal_id" ref="account.sales_journal"/>
+            <field name="journal_id" ref="account.expenses_journal"/>
             <field name="state">draft</field>
             <field name="type">in_invoice</field>
-            <field name="account_id" ref="account.a_recv"/>
+            <field name="account_id" ref="account.a_pay"/>
             <field name="name">Test invoice 1</field>
         </record>
         <record id="test_tax_line" model="account.invoice.tax">

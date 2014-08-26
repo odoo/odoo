@@ -25,6 +25,20 @@
     +box-shadow(none)
     -ms-filter: "alpha(opacity=50)"
 
+#cke_1_top
+    padding: 0
+
+#cke_wrapwrap
+    -moz-box-shadow: none
+    -webkit-box-shadow: none
+    box-shadow: none
+    .cke_button
+        padding-top: 5px
+        padding-bottom: 5px
+    .cke_combo_button
+        padding-top: 1px
+        padding-bottom: 1px
+
 // }}}
  
 /* ---- OpenERP Style ---- {{{ */
@@ -93,6 +107,21 @@
     background-image: none !important
     height: 16px !important
 
+#website-top-edit
+    width: 100%
+    > ul > li
+        margin: 0
+
+#website-top-navbar
+    min-height: 34px
+    height: 34px
+    form
+        margin: 0
+        button, a
+            padding: 4px 8px 4px 8px
+            margin-top: 2px
+            font-size: 13px
+
 // }}}
 
 /* ---- EDITOR BAR ---- {{{ */
@@ -104,6 +133,19 @@ table.editorbar-panel
         border: 1px solid #aaa
     td.selected
         background-color: #b1c9d9
+
+.link-style
+    .dropdown > .btn
+        min-width: 160px
+    .link-style
+        display: none
+    li
+        text-align: center
+        label
+            width: 100px
+            margin: 0 5px
+    .col-sm-2 > *
+        line-height: 2em
 
 // }}}
 
@@ -408,20 +450,22 @@ $highlighted_text_color: #ffffff
 /* ---- ACE EDITOR ---- {{{ */
 
 $editorbar_height: 30px
+$infobar_height: 20px
 // TODO Fix => might break with themes
 
 .oe_ace_view_editor
     position: fixed
     // top property is set programmatically
     right: 0
-    z-index: 1000
+    z-index: 1001
     height: 100%
+    background: #2F3129
+    color: white
     .oe_ace_view_editor_title
         width: 100%
         padding-top: 0
         padding-left: 0
         height: $editorbar_height
-        background: #2F3129
         .oe_view_list
             width: 50%
             height: $editorbar_height
@@ -432,28 +476,19 @@ $editorbar_height: 30px
             @include editor-font
     .ace_editor
         position: absolute
-        top: $editorbar_height
+        top: $editorbar_height + $infobar_height
         right: 0
         // bottom property is set programmatically
         left: 0
         .ace_gutter
             cursor: ew-resize
+    #ace-view-id
+        padding: 0 1em
     &.oe_ace_open
         +opacity(0.97)
     &.oe_ace_closed
         z-index: -1000
         +opacity(0)
-
-// }}}
-
-/* ---- EDITOR TOUR ---- {{{ */
-
-div.tour-backdrop
-    z-index: 2009
-.popover.tour
-    z-index: 2010
-.popover.fixed
-    position: fixed
 
 // }}}
 

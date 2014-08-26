@@ -11,15 +11,6 @@
             </field>
             <field name="field_parent">child_id</field>
         </record>
-        <record id="action_menu_admin" model="ir.actions.act_window">
-            <field name="name">Menu</field>
-            <field name="usage">menu</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_id" ref="view_menu"/>
-            <field name="res_model">ir.ui.menu</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('parent_id', '=', False)]</field>
-        </record>
 
         <record id="lang_en" model="res.lang">
             <field name="code">en_US</field>
@@ -75,9 +66,8 @@
             <field name="partner_id" ref="base.partner_root"/>
             <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[(4, ref('main_company'))]"/>
-            <field name="menu_id" ref="action_menu_admin"/>
-            <field name="signature">--
-Administrator</field>
+            <field name="signature"><![CDATA[<span>--<br/>
+Administrator</span>]]></field>
         </record>
 
         <record id="main_partner" model="res.partner">

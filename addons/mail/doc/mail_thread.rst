@@ -1,10 +1,11 @@
 .. _mail_thread:
 
+===========================
 mail.thread and OpenChatter
 ===========================
 
 API
-+++
+===
 
 Writing messages and notifications
 ----------------------------------

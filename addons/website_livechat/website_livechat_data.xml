@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <openerp>
+     <data noupdate="1">
+
+         <record id="channel_website" model="im_livechat.channel">
+             <field name="name">YourWebsiteWithOdoo.com</field>
+             <field name="default_message">Hello, how may I help you?</field>
+         </record>
+
+         <record id="website.default_website" model="website">
+             <field name="channel_id" ref="website_livechat.channel_website"></field>
+         </record>
+
+     </data>
+ </openerp>

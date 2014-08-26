@@ -1,18 +1,26 @@
 -
-  In order to test the scheduler to generate RFQ.
+  In order to test the scheduler to generate RFQ, I create a new product
+-
+  !record {model: product.product, id: scheduler_product}:
+    name: scheduler prod
+    type: product
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_2
+        min_qty: 5.0
+-
+  Add Buy route
+- 
+  !python {model: product.product}: |
+    self.write(cr, uid, [ref("scheduler_product")], {"route_ids": [(4, ref("purchase.route_warehouse0_buy"))]})
 -
   I create a procurement order.
 -
   !record {model: procurement.order, id: procurement_order_testcase0}:
     location_id: stock.stock_location_stock
     name: Test scheduler for RFQ
-    procure_method: make_to_order
-    product_id: product.product_product_45
+    product_id: scheduler_product
     product_qty: 15.0
--
-  I confirm on procurement order.
--
-  !workflow {model: procurement.order, action: button_confirm, ref: procurement_order_testcase0}
 -
   I run the scheduler.
 -
@@ -23,14 +31,12 @@
 -
   !python {model: procurement.order}: |
     procurement = self.browse(cr, uid, ref('procurement_order_testcase0'))
-    assert procurement.purchase_id, 'RFQ should be generated!'
+    assert procurement.purchase_line_id, 'RFQ should be generated!'
 -
   I delete the line from the purchase order and check that the move and the procurement are cancelled
 -
   !python {model: procurement.order}: |
     procurement = self.browse(cr, uid, ref('procurement_order_testcase0'))
-    move = procurement.purchase_id.order_line[0].move_dest_id
-    procurement.purchase_id.order_line[0].unlink()
-    assert move.state == 'cancel', 'Move should be cancelled'
+    procurement.purchase_line_id.unlink()
     procurement.refresh()
     assert procurement.state == 'cancel', 'Procurement should be cancelled'

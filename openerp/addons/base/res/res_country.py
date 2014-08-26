@@ -43,7 +43,7 @@ class Country(osv.osv):
     _name = 'res.country'
     _description = 'Country'
     _columns = {
-        'name': fields.char('Country Name', size=64,
+        'name': fields.char('Country Name',
             help='The full name of the country.', required=True, translate=True),
         'code': fields.char('Country Code', size=2,
             help='The ISO country code in two chars.\n'
@@ -84,13 +84,21 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
                 context=context)
 
 
+class CountryGroup(osv.osv):
+    _description="Country Group"
+    _name = 'res.country.group'
+    _columns = {
+        'name': fields.char('Name', required=True),
+        'country_ids': fields.many2many('res.country', string='Countries'),
+    }
+
 class CountryState(osv.osv):
     _description="Country state"
     _name = 'res.country.state'
     _columns = {
         'country_id': fields.many2one('res.country', 'Country',
             required=True),
-        'name': fields.char('State Name', size=64, required=True, 
+        'name': fields.char('State Name', required=True, 
                             help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton'),
         'code': fields.char('State Code', size=3,
             help='The state code in max. three chars.', required=True),

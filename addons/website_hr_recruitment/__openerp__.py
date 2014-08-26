@@ -20,8 +20,5 @@ OpenERP Contact Form
     'demo': [
         'data/hr_job_demo.xml',
     ],
-    'css': [
-        'static/src/css/*.css'
-    ],
     'installable': True,
 }

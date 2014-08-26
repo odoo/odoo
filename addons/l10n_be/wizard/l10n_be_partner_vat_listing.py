@@ -33,8 +33,8 @@ from openerp.report import report_sxw
 class vat_listing_clients(osv.osv_memory):
     _name = 'vat.listing.clients'
     _columns = {
-        'name': fields.char('Client Name', size=32),
-        'vat': fields.char('VAT', size=64),
+        'name': fields.char('Client Name'),
+        'vat': fields.char('VAT'),
         'turnover': fields.float('Base Amount'),
         'vat_amount': fields.float('VAT Amount'),
     }
@@ -121,7 +121,7 @@ class partner_vat_list(osv.osv_memory):
     _name = "partner.vat.list"
     _columns = {
         'partner_ids': fields.many2many('vat.listing.clients', 'vat_partner_rel', 'vat_id', 'partner_id', 'Clients', help='You can remove clients/partners which you do not want to show in xml file'),
-        'name': fields.char('File Name', size=32),
+        'name': fields.char('File Name'),
         'file_save' : fields.binary('Save File', readonly=True),
         'comments': fields.text('Comments'),
     }
@@ -205,7 +205,6 @@ class partner_vat_list(osv.osv_memory):
                 country = ads.country_id.code
 
         data = self.read(cr, uid, ids)[0]
-        sender_date = time.strftime('%Y-%m-%d')
         comp_name = obj_cmpny.name
 
         if not email:
@@ -305,19 +304,16 @@ class partner_vat_list(osv.osv_memory):
     def print_vatlist(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        obj_vat_lclient = self.pool.get('vat.listing.clients')
         datas = {'ids': []}
         datas['model'] = 'res.company'
         datas['year'] = context['year']
         datas['limit_amount'] = context['limit_amount']
         datas['client_datas'] = self._get_datas(cr, uid, ids, context=context)
         if not datas['client_datas']:
-            raise osv.except_osv(_('Error!'),_('No record to print.'))
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'partner.vat.listing.print',
-            'datas': datas,
-        }
+            raise osv.except_osv(_('Error!'), _('No record to print.'))
+        return self.pool['report'].get_action(
+            cr, uid, [], 'l10n_be.report_l10nvatpartnerlisting', data=datas, context=context
+        )
 
 
 class partner_vat_listing_print(report_sxw.rml_parse):
@@ -338,6 +334,11 @@ class partner_vat_listing_print(report_sxw.rml_parse):
         })
         super(partner_vat_listing_print, self).set_context(objects, data, ids)
 
-report_sxw.report_sxw('report.partner.vat.listing.print', 'res.partner', 'addons/l10n_be/wizard/l10n_be_partner_vat_listing.rml', parser=partner_vat_listing_print,header=False)
+
+class wrapped_vat_listing_print(osv.AbstractModel):
+    _name = 'report.l10n_be.report_l10nvatpartnerlisting'
+    _inherit = 'report.abstract_report'
+    _template = 'l10n_be.report_l10nvatpartnerlisting'
+    _wrapped_report_class = partner_vat_listing_print
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

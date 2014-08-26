@@ -5,10 +5,6 @@ PosBox Documentation
 Posbox Setup Guide
 ==================
 
-.. image:: _images/posbox_setup.png
-    :width: 100%
-    :align: center
-
 Prerequisites
 -------------
 
@@ -34,7 +30,7 @@ Step By Step Setup Guide
     :width: 100%
     :align: center
 
-Power the PosBox.
+Power the PosBox
 ~~~~~~~~~~~~~~~~
 
 Plug the PosBox to the 2A Power Adapter, a bright red status led should
@@ -116,10 +112,6 @@ refer to your Router documentation.
 PosBoxless Setup Guide
 ======================
 
-.. image:: _images/posboxless_setup.png
-    :width: 100%
-    :align: center
-
 If you are running your Point of Sale on a debian-based linux
 distribution, you do not need the PosBox as you can run its software
 locally. However the installation process is not foolproof. You'll need
@@ -141,13 +133,24 @@ Step By Step Setup Guide
 Extra dependencies
 ~~~~~~~~~~~~~~~~~~
 
-The driver modules requires the installation of new python modules:
+Because Odoo is running on Python 2, you need to check which version of pip you need to use.
 
-::
+    $ sudo pip --version
+    
+If it returns something like :
+   pip 1.5.6 from /usr/local/lib/python3.3/dist-packages/pip-1.5.6-py3.3.egg (python 3.3)
+You need to try pip2 instead
+
+If it returns something like :
+   pip 1.4.1 from /usr/lib/python2.7/dist-packages (python 2.7)
+You can use pip
+
+The driver modules requires the installation of new python modules::
 
     $ sudo pip install pyserial
     $ sudo pip install --pre pyusb
-
+    $ sudo pip install qrcode
+    
 Database Setup
 ~~~~~~~~~~~~~~
 
@@ -159,24 +162,18 @@ Access Rights
 
 The drivers need raw access to the printer and barcode scanner devices.
 Doing so requires a bit system administration. First we are going to
-create a group that has haccess to usb devices:
-
-::
+create a group that has haccess to usb devices::
 
     $ sudo groupadd usbusers
 
-Then we add the user who will run the OpenERP server to ``usbusers``
-
-::
+Then we add the user who will run the OpenERP server to ``usbusers``::
 
     $ sudo useradd -G usbusers USERNAME
 
 Then we need to create a udev rule that will automatically allow members
 of ``usbusers`` to access raw usb devices. To do so create a file called
 ``99-usbusers.rule`` in the ``/etc/udev/rules.d/`` directory with the
-following content:
-
-::
+following content::
 
     SUBSYSTEM=="usb", GROUP="usbusers", MODE="0660"
     SUBSYSTEMS=="usb", GROUP="usbusers", MODE="0660"
@@ -187,9 +184,7 @@ Start the local OpenERP Installl
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We must launch the OpenERP server on the port ``8069`` with the correct
-database settings:
-
-::
+database settings::
 
     $ ./server/openerp-server --addons-path=addons,web/addons --db-filter='^posbox$' \
             --xmlrpc-port=8069 -d posbox
@@ -198,7 +193,7 @@ Check that everything works
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Plug all your hardware to your machine's USB ports, and go to
-``http://localhost/hw_proxy/status`` refresh the page a few times and
+``http://localhost:8069/hw_proxy/status`` refresh the page a few times and
 see if all your devices are indicated as *Connected*. Possible source of
 errors are: The paths on the distribution differ from the paths expected
 by the drivers, another process has grabbed exclusive access to the
@@ -321,7 +316,7 @@ following steps:
    separated by a colon.
 -  Edit ``~/openerp/addons/hw_escpos/escpos/supported_devices.py`` and
    add an entry for your printer.
--  Restar The PosBox.
+-  Restart the PosBox.
 -  If everything works properly you can send your printer's name and
    vendor ID to ``support@openerp.com`` and we'll add it to the list of
    supported devices.

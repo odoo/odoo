@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import base64
 
-from openerp.tools.translate import _
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp import SUPERUSER_ID
-
+import werkzeug
 import werkzeug.urls
 
+from openerp import http, SUPERUSER_ID
+from openerp.http import request
+from openerp.tools.translate import _
 
 class contactus(http.Controller):
 
@@ -17,7 +16,7 @@ class contactus(http.Controller):
         )
         return url
 
-    @http.route(['/page/website.contactus', '/page/contactus'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/page/website.contactus', '/page/contactus'], type='http', auth="public", website=True)
     def contact(self, **kwargs):
         values = {}
         for field in ['description', 'partner_name', 'phone', 'contact_name', 'email_from', 'name']:
@@ -74,7 +73,7 @@ class contactus(http.Controller):
             return request.website.render(kwargs.get("view_from", "website.contactus"), values)
 
         try:
-            values['channel_id'] = request.registry['ir.model.data'].get_object_reference(request.cr, SUPERUSER_ID, 'crm', 'crm_case_channel_website')[1]
+            values['medium_id'] = request.registry['ir.model.data'].get_object_reference(request.cr, SUPERUSER_ID, 'crm', 'crm_tracking_medium_website')[1]
             values['section_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
         except ValueError:
             pass
@@ -92,7 +91,7 @@ class contactus(http.Controller):
             post_description.append("%s: %s" % ("REFERER", environ.get("HTTP_REFERER")))
             values['description'] += dict_to_str(_("Environ Fields: "), post_description)
 
-        lead_id = self.create_lead(request, values, kwargs)
+        lead_id = self.create_lead(request, dict(values, user_id=False), kwargs)
         if lead_id:
             for field_value in post_file:
                 attachment_value = {

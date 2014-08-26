@@ -167,7 +167,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @returns {String} CSS style declaration
      */
     style_for: function (record) {
-        var style= '';
+        var len, style= '';
 
         var context = _.extend({}, record.attributes, {
             uid: this.session.uid,
@@ -354,6 +354,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.$el.hide();
         }
         //Sort
+        var default_order = this.fields_view.arch.attrs.default_order,
+            unsorted = !this.dataset._sort.length;
+        if (unsorted && default_order) {
+            this.dataset.set_sort(default_order.split(','));
+        }
+
         if(this.dataset._sort.length){
             if(this.dataset._sort[0].indexOf('-') == -1){
                 this.$el.find('th[data-id=' + this.dataset._sort[0] + ']').addClass("sortdown");

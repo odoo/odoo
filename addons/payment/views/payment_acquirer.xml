@@ -11,7 +11,7 @@
             <field name="name">payment.acquirer.form</field>
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
-                <form string="Payment Acquirer" version="7.0">
+                <form string="Payment Acquirer">
                     <sheet>
                         <group name="acquirer_base">
                             <group>
@@ -82,7 +82,7 @@
                 <search>
                     <field name="name"/>
                     <field name="provider"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Provider" name="provider" domain="[]" context="{'group_by': 'provider'}"/>
                     </group>
                 </search>
@@ -106,7 +106,7 @@
             <field name="name">payment.transaction.form</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
-                <form string="Payment Transactions" version="7.0">
+                <form string="Payment Transactions">
                     <sheet>
                         <group col="6">
                             <group>

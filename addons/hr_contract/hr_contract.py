@@ -20,6 +20,7 @@
 ##############################################################################
 import time
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 
 class hr_employee(osv.osv):
@@ -38,15 +39,23 @@ class hr_employee(osv.osv):
                 res[emp.id] = False
         return res
 
+    def _contracts_count(self, cr, uid, ids, field_name, arg, context=None):
+        Contract = self.pool['hr.contract']
+        return {
+            employee_id: Contract.search_count(cr, SUPERUSER_ID, [('employee_id', '=', employee_id)], context=context)
+            for employee_id in ids
+        }
+
     _columns = {
         'manager': fields.boolean('Is a Manager'),
         'medic_exam': fields.date('Medical Examination Date'),
-        'place_of_birth': fields.char('Place of Birth', size=30),
+        'place_of_birth': fields.char('Place of Birth'),
         'children': fields.integer('Number of Children'),
-        'vehicle': fields.char('Company Vehicle', size=64),
+        'vehicle': fields.char('Company Vehicle'),
         'vehicle_distance': fields.integer('Home-Work Dist.', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
-        'contract_id':fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
+        'contract_id': fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
+        'contracts_count': fields.function(_contracts_count, type='integer', string='Contracts'),
     }
 
 
@@ -54,14 +63,14 @@ class hr_contract_type(osv.osv):
     _name = 'hr.contract.type'
     _description = 'Contract Type'
     _columns = {
-        'name': fields.char('Contract Type', size=32, required=True),
+        'name': fields.char('Contract Type', required=True),
     }
 
 class hr_contract(osv.osv):
     _name = 'hr.contract'
     _description = 'Contract'
     _columns = {
-        'name': fields.char('Contract Reference', size=64, required=True),
+        'name': fields.char('Contract Reference', required=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'department_id': fields.related('employee_id','department_id', type='many2one', relation='hr.department', string="Department", readonly=True),
         'type_id': fields.many2one('hr.contract.type', "Contract Type", required=True),
@@ -74,8 +83,8 @@ class hr_contract(osv.osv):
         'wage': fields.float('Wage', digits=(16,2), required=True, help="Basic Salary of the employee"),
         'advantages': fields.text('Advantages'),
         'notes': fields.text('Notes'),
-        'permit_no': fields.char('Work Permit No', size=256, required=False, readonly=False),
-        'visa_no': fields.char('Visa No', size=64, required=False, readonly=False),
+        'permit_no': fields.char('Work Permit No', required=False, readonly=False),
+        'visa_no': fields.char('Visa No', required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
     }
 

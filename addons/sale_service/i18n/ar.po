@@ -1,0 +1,219 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* project_mrp
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2009-02-03 06:25+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-04-22 07:01+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_procuretasktask0
+msgid "For each product, on type service and on order"
+msgstr "لكل منتج, على نوع الخدمة وعلى النظام"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_createtask0
+msgid "Product type is service, then its creates the task."
+msgstr "علامة المنتج هي خدمة, وهي تنشأ المهمة."
+
+#. module: project_mrp
+#: code:addons/project_mrp/project_procurement.py:92
+#, python-format
+msgid "Task created"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_saleordertask0
+msgid "In case you sell services on sales order"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_mrptask0
+msgid "A task is created to provide the service."
+msgstr "تم انشاء المهمة لتؤدي الخدمة."
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_product_product
+msgid "Product"
+msgstr "المنتج"
+
+#. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sales Order Task"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_procuretask0
+msgid "if product type is 'service' then it creates the task."
+msgstr "اذا كانت علامة المنتج هي ‘خدمة‘ ثم تنشأ المهمنة."
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_ordertask0
+msgid "Order Task"
+msgstr "اطلب مهمة"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_procuretask0
+msgid "Procurement Task"
+msgstr "مهمة المشتريات"
+
+#. module: project_mrp
+#: field:procurement.order,sale_line_id:0
+msgid "Sales order line"
+msgstr ""
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_project_task
+#: model:process.node,name:project_mrp.process_node_mrptask0
+#: model:process.node,name:project_mrp.process_node_procuretasktask0
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "مهمة"
+
+#. module: project_mrp
+#: view:product.product:0
+msgid ""
+"will be \n"
+"                        created to follow up the job to do. This task will "
+"appear\n"
+"                        in the project related to the contract of the sales "
+"order."
+msgstr ""
+
+#. module: project_mrp
+#: view:product.product:0
+msgid "When you sell this service to a customer,"
+msgstr ""
+
+#. module: project_mrp
+#: field:product.product,project_id:0
+msgid "Project"
+msgstr "مشروع"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_procurement_order
+#: field:project.task,procurement_id:0
+msgid "Procurement"
+msgstr "المشتريات"
+
+#. module: project_mrp
+#: view:product.product:0
+msgid "False"
+msgstr ""
+
+#. module: project_mrp
+#: code:addons/project_mrp/project_procurement.py:86
+#, python-format
+msgid "Task created."
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_ordertask0
+msgid "If procurement method is Make to order and supply method is produce"
+msgstr "اذا كانت طريقة الشراء لعمل امر واسلوب العرض هو للانتاج"
+
+#. module: project_mrp
+#: field:project.task,sale_line_id:0
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_createtask0
+msgid "Create Task"
+msgstr "انشيء مهمة"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_sale_order
+msgid "Sales Order"
+msgstr "أمر المبيعات"
+
+#. module: project_mrp
+#: view:project.task:0
+msgid "Order Line"
+msgstr ""
+
+#. module: project_mrp
+#: view:product.product:0
+msgid "a task"
+msgstr ""
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr "خطأ! يجب ان يكون تاريخ انتهاء المهمة اكبر من تاريخ البداية"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "خطأ: كود إين غير صالح"
+
+#~ msgid "Procurement and Project Management integration"
+#~ msgstr "تكامل ادارة المشروع والمشتريات"
+
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "خطأ ! لا يمكنك انشاء مهام رجعية."
+
+#~ msgid "In case you sell services on sale order"
+#~ msgstr "في حالة قيامك ببيع الخدمات على حسب ترتيب البيع"
+
+#~ msgid "Sale Order Task"
+#~ msgstr "مهمة امر البيع"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module creates a link between procurement orders\n"
+#~ "containing \"service\" lines and project management tasks.\n"
+#~ "\n"
+#~ "When installed, this module will automatically create a new task\n"
+#~ "for each procurement order line, when the corresponding product\n"
+#~ "meets the following characteristics:\n"
+#~ "  * Type = Service\n"
+#~ "  * Procurement method (Order fulfillment) = MTO (make to order)\n"
+#~ "  * Supply/Procurement method = Produce\n"
+#~ "\n"
+#~ "The new task is created outside of any existing project, but\n"
+#~ "can be added to a project manually.\n"
+#~ "\n"
+#~ "When the project task is completed or cancelled, the workflow of the "
+#~ "corresponding\n"
+#~ "procurement line is updated accordingly.\n"
+#~ "\n"
+#~ "This module is useful to be able to invoice services based on tasks\n"
+#~ "automatically created via sale orders.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "تنشأ هذه الوحدة ارتباط بين أوامر الشراء\n"
+#~ "تحتوي على \"خدمة\" خطوط ومهام إدارة المشاريع.\n"
+#~ "\n"
+#~ "عندما ركبت، وهذه الوحدة تلقائيا إنشاء مهمة جديدة\n"
+#~ "لكل المشتريات خط النظام، وعندما يكون المنتج المطابق\n"
+#~ "تجتمع الخصائص التالية:\n"
+#~ "* نوع الخدمة =\n"
+#~ "* طريقة الشراء (تلبية الطلبات) = MTO (جعل للنظام)\n"
+#~ "* التموين / المشتريات = طريقة إنتاج\n"
+#~ "\n"
+#~ "يتم إنشاء مهمة جديدة خارج أي مشروع قائم، ولكن\n"
+#~ "ويمكن أن يضاف إلى مشروع يدويا.\n"
+#~ "\n"
+#~ "عندما يتم الانتهاء من مهمة مشروع أو إلغاء، سير العمل في المناظرة\n"
+#~ "ويتم تحديث خط الشراء وفقا لذلك.\n"
+#~ "\n"
+#~ "هذا النموذج هو مفيد لتكون قادرة على فاتورة الخدمات على أساس المهام\n"
+#~ "إنشاؤه تلقائيا عن طريق أوامر بيع.\n"
+#~ "\n"
+
+#~ msgid "Sale Order Line"
+#~ msgstr "سطر أمر الشراء"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"
+
+#~ msgid "Sale order line"
+#~ msgstr "سطر أمر الشراء"

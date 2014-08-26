@@ -30,8 +30,8 @@ def referencable_models(self, cr, uid, context=None):
 class res_request_link(osv.osv):
     _name = 'res.request.link'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'object': fields.char('Object', size=64, required=True),
+        'name': fields.char('Name', required=True, translate=True),
+        'object': fields.char('Object', required=True),
         'priority': fields.integer('Priority'),
     }
     _defaults = {

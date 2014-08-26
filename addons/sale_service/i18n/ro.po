@@ -1,0 +1,231 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* project_mrp
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2009-02-03 06:25+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-04-22 07:02+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_procuretasktask0
+msgid "For each product, on type service and on order"
+msgstr "Pentru fiecare produs, in functie de tipul de serviciu si de comanda"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_createtask0
+msgid "Product type is service, then its creates the task."
+msgstr "Tipul de produs este serviciu, apoi este creata sarcina."
+
+#. module: project_mrp
+#: code:addons/project_mrp/project_procurement.py:92
+#, python-format
+msgid "Task created"
+msgstr "Sarcina creata"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_saleordertask0
+msgid "In case you sell services on sales order"
+msgstr "In cazul in care vindeti servicii pe comanda de vanzare"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_mrptask0
+msgid "A task is created to provide the service."
+msgstr "O sarcina este creata pentru a furniza serviciul."
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_product_product
+msgid "Product"
+msgstr "Produs"
+
+#. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sales Order Task"
+msgstr "Sarcina Comenzii de Vanzare"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_procuretask0
+msgid "if product type is 'service' then it creates the task."
+msgstr "daca tipul de produs este 'serviciu', apoi creeaza sarcina."
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_ordertask0
+msgid "Order Task"
+msgstr "Comanda sarcina"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_procuretask0
+msgid "Procurement Task"
+msgstr "Activitatea de Aprovizionare"
+
+#. module: project_mrp
+#: field:procurement.order,sale_line_id:0
+msgid "Sales order line"
+msgstr "Linia comenzii de vanzare"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_project_task
+#: model:process.node,name:project_mrp.process_node_mrptask0
+#: model:process.node,name:project_mrp.process_node_procuretasktask0
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "Sarcina"
+
+#. module: project_mrp
+#: view:product.product:0
+msgid ""
+"will be \n"
+"                        created to follow up the job to do. This task will "
+"appear\n"
+"                        in the project related to the contract of the sales "
+"order."
+msgstr ""
+"va fi \n"
+"                        creat pentru a urmari sarcina care trebuie "
+"efectuata. Aceasta sarcina va aparea\n"
+"                        in proiectul asociat contractului comenzii de "
+"vanzare."
+
+#. module: project_mrp
+#: view:product.product:0
+msgid "When you sell this service to a customer,"
+msgstr "Atunci cand vindeti acest serviciu unui client,"
+
+#. module: project_mrp
+#: field:product.product,project_id:0
+msgid "Project"
+msgstr "Proiect"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_procurement_order
+#: field:project.task,procurement_id:0
+msgid "Procurement"
+msgstr "Aprovizionare"
+
+#. module: project_mrp
+#: view:product.product:0
+msgid "False"
+msgstr "Fals"
+
+#. module: project_mrp
+#: code:addons/project_mrp/project_procurement.py:86
+#, python-format
+msgid "Task created."
+msgstr "Sarcina creata."
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_ordertask0
+msgid "If procurement method is Make to order and supply method is produce"
+msgstr ""
+"Daca metoda de achizitionare este 'Facut la comanda\", iar metoda de "
+"furnizare este productie"
+
+#. module: project_mrp
+#: field:project.task,sale_line_id:0
+msgid "Sales Order Line"
+msgstr "Linia Comenzii de Vanzare"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_createtask0
+msgid "Create Task"
+msgstr "Creeaza Sarcina"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_sale_order
+msgid "Sales Order"
+msgstr "Comanda de vanzare"
+
+#. module: project_mrp
+#: view:project.task:0
+msgid "Order Line"
+msgstr "Linia Comenzii"
+
+#. module: project_mrp
+#: view:product.product:0
+msgid "a task"
+msgstr "o sarcina"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Eroare: cod ean invalid"
+
+#~ msgid "Procurement and Project Management integration"
+#~ msgstr "integrarea Managementului Aprovizionării si al Proiectului"
+
+#~ msgid "In case you sell services on sale order"
+#~ msgstr "In cazul in care vindeti servicii la comanda de vanzare"
+
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "Eroare ! Nu puteti crea sarcini recursive."
+
+#~ msgid ""
+#~ "\n"
+#~ "This module creates a link between procurement orders\n"
+#~ "containing \"service\" lines and project management tasks.\n"
+#~ "\n"
+#~ "When installed, this module will automatically create a new task\n"
+#~ "for each procurement order line, when the corresponding product\n"
+#~ "meets the following characteristics:\n"
+#~ "  * Type = Service\n"
+#~ "  * Procurement method (Order fulfillment) = MTO (make to order)\n"
+#~ "  * Supply/Procurement method = Produce\n"
+#~ "\n"
+#~ "The new task is created outside of any existing project, but\n"
+#~ "can be added to a project manually.\n"
+#~ "\n"
+#~ "When the project task is completed or cancelled, the workflow of the "
+#~ "corresponding\n"
+#~ "procurement line is updated accordingly.\n"
+#~ "\n"
+#~ "This module is useful to be able to invoice services based on tasks\n"
+#~ "automatically created via sale orders.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Acest modul creează o legătură intre comenzile de aprovizionare\n"
+#~ "care contin linii \"service\" si sarcinile gestionării proiectului.\n"
+#~ "\n"
+#~ "Atunci cand este instalat, aces modul va crea automat o sarcină nouă\n"
+#~ "pentru fiecare linie a comenzii de aprovizionare, atunci cand produsul "
+#~ "omolog\n"
+#~ "intruneste următoarele caracteristici:\n"
+#~ "  * Tip = Service\n"
+#~ "  * Metoda de aprovizionare (Indeplinirea comenzii) = FLC (făcut la "
+#~ "comandă)\n"
+#~ "  * Metoda de Aprovizionare/Achizitionare = Productie\n"
+#~ "\n"
+#~ "Sarcina nouă este creată in afara oricărui proiect existent, dar\n"
+#~ "poate fi adăugată unui proiect manual.\n"
+#~ "\n"
+#~ "Atunci cand sarcina de proiect este incheiată sau anulată, fluxul de lucru "
+#~ "al liniei\n"
+#~ "de aprovizionare corespunzătoare este acutalizată in conformitate.\n"
+#~ "\n"
+#~ "Acest modul este folositor pentru facturarea serviciilor pe baza sarcinilor\n"
+#~ "create automat prin comenzile de vanzare.\n"
+#~ "\n"
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr ""
+#~ "Eroare ! Data de sfarsit a sarcinii trebuie sa fie mai mare decat data de "
+#~ "inceput"
+
+#~ msgid "Sale order line"
+#~ msgstr "Linie comanda de vanzare"
+
+#~ msgid "Sale Order Task"
+#~ msgstr "Sarcina Comenzii de Vanzare"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "Referinta comenzii trebuie sa fie unica per Companie!"
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Linia Comenzii de Vanzare"

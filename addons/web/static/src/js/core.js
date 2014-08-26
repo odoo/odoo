@@ -232,7 +232,7 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
         var self = this;
         return this.session_reload().then(function(result) {
             var modules = instance._modules.join(',');
-            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).then(self.load_qweb.bind(self));
+            var deferred = self.load_qweb(modules);
             if(self.session_is_valid()) {
                 return deferred.then(function() { return self.load_modules(); });
             }
@@ -318,7 +318,7 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
                 loaded = $.when(
                     loaded,
                     self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.load_css.bind(self)),
-                    self.rpc('/web/webclient/qweblist', {mods: to_load}).then(self.load_qweb.bind(self)),
+                    self.load_qweb(to_load),
                     self.rpc('/web/webclient/jslist', {mods: to_load}).done(function(files) {
                         file_list = file_list.concat(files);
                     })
@@ -345,44 +345,27 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
     load_css: function (files) {
         var self = this;
         _.each(files, function (file) {
-            $('head').append($('<link>', {
-                'href': self.url(file, null),
-                'rel': 'stylesheet',
-                'type': 'text/css'
-            }));
+            openerp.loadCSS(self.url(file, null));
         });
     },
     load_js: function(files) {
         var self = this;
         var d = $.Deferred();
-        if(files.length !== 0) {
+        if (files.length !== 0) {
             var file = files.shift();
-            var tag = document.createElement('script');
-            tag.type = 'text/javascript';
-            tag.src = self.url(file, null);
-            tag.onload = tag.onreadystatechange = function() {
-                if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
-                    return;
-                tag.onload_done = true;
-                self.load_js(files).done(function () {
-                    d.resolve();
-                });
-            };
-            var head = document.head || document.getElementsByTagName('head')[0];
-            head.appendChild(tag);
+            var url = self.url(file, null);
+            openerp.loadJS(url).done(d.resolve);
         } else {
             d.resolve();
         }
         return d;
     },
-    load_qweb: function(files) {
+    load_qweb: function(mods) {
         var self = this;
-        _.each(files, function(file) {
-            self.qweb_mutex.exec(function() {
-                return self.rpc('/web/proxy/load', {path: file}).then(function(xml) {
-                    if (!xml) { return; }
-                    instance.web.qweb.add_template(_.str.trim(xml));
-                });
+        self.qweb_mutex.exec(function() {
+            return self.rpc('/web/proxy/load', {path: '/web/webclient/qweb?mods=' + mods}).then(function(xml) {
+                if (!xml) { return; }
+                instance.web.qweb.add_template(_.str.trim(xml));
             });
         });
         return self.qweb_mutex.def;
@@ -460,14 +443,11 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
             .appendTo(document.body)
             .load(function () {
                 try {
-                   if (options.error) {
-                         if (!this.contentDocument.body.childNodes[1]) {
-                            options.error(this.contentDocument.body.childNodes);
-                        }
-                        else {
-                            options.error(JSON.parse(this.contentDocument.body.childNodes[1].textContent));
-                        }
-                   }
+                    if (options.error) {
+                        var body = this.contentDocument.body;
+                        var node = body.childNodes[1] || body.childNodes[0];
+                        options.error(JSON.parse(node.textContent));
+                    }
                 } finally {
                     complete();
                 }
@@ -786,6 +766,26 @@ instance.web.unblockUI = function() {
         el.destroy();
     });
     return $.unblockUI.apply($, arguments);
+};
+
+
+/* Bootstrap defaults overwrite */
+$.fn.tooltip.Constructor.DEFAULTS.placement = 'auto top';
+$.fn.tooltip.Constructor.DEFAULTS.html = true;
+$.fn.tooltip.Constructor.DEFAULTS.trigger = 'hover focus click';
+$.fn.tooltip.Constructor.DEFAULTS.container = 'body';
+//overwrite bootstrap tooltip method to prevent showing 2 tooltip at the same time
+var bootstrap_show_function = $.fn.tooltip.Constructor.prototype.show;
+$.fn.tooltip.Constructor.prototype.show = function () {
+    $('.tooltip').remove();
+    //the following fix the bug when using placement
+    //auto and the parent element does not exist anymore resulting in
+    //an error. This should be remove once we updade bootstrap to a version that fix the bug
+    //edit: bug has been fixed here : https://github.com/twbs/bootstrap/pull/13752
+    var e = $.Event('show.bs.' + this.type);
+    var inDom = $.contains(document.documentElement, this.$element[0]);
+    if (e.isDefaultPrevented() || !inDom) return;
+    return bootstrap_show_function.call(this);
 };
 
 /**

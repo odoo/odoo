@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -29,116 +30,170 @@ class stock_move(osv.osv):
             readonly=True),
     }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
+        from openerp import workflow
+        if vals.get('state') in ['done', 'cancel']:
+            for move in self.browse(cr, uid, ids, context=context):
+                if move.purchase_line_id and move.purchase_line_id.order_id:
+                    order_id = move.purchase_line_id.order_id.id
+                    if self.pool.get('purchase.order').test_moves_done(cr, uid, [order_id], context=context):
+                        workflow.trg_validate(uid, 'purchase.order', order_id, 'picking_done', cr)
+                    if self.pool.get('purchase.order').test_moves_except(cr, uid, [order_id], context=context):
+                        workflow.trg_validate(uid, 'purchase.order', order_id, 'picking_cancel', cr)
+        return res
 
-#
-# Inherit of picking to add the link to the PO
-#
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        context = context or {}
+        if not default.get('split_from'):
+            #we don't want to propagate the link to the purchase order line except in case of move split
+            default['purchase_line_id'] = False
+        return super(stock_move, self).copy(cr, uid, id, default, context)
+
+
+    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
+        invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
+        if move.purchase_line_id:
+            purchase_line = move.purchase_line_id
+            self.pool.get('purchase.order.line').write(cr, uid, [purchase_line.id], {
+                'invoice_lines': [(4, invoice_line_id)]
+            }, context=context)
+            self.pool.get('purchase.order').write(cr, uid, [purchase_line.order_id.id], {
+                'invoice_ids': [(4, invoice_line_vals['invoice_id'])],
+            })
+        return invoice_line_id
+
+    def _get_master_data(self, cr, uid, move, company, context=None):
+        if move.purchase_line_id:
+            purchase_order = move.purchase_line_id.order_id
+            return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.pricelist_id.currency_id.id
+        return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
+
+    def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
+        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+        if move.purchase_line_id:
+            purchase_line = move.purchase_line_id
+            res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
+            res['price_unit'] = purchase_line.price_unit
+        return res
+
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
+
+    def _get_to_invoice(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for picking in self.browse(cr, uid, ids, context=context):
+            res[picking.id] = False
+            for move in picking.move_lines:
+                if move.purchase_line_id and move.purchase_line_id.order_id.invoice_method == 'picking':
+                    if not move.move_orig_ids:
+                        res[picking.id] = True
+        return res
+
+    def _get_picking_to_recompute(self, cr, uid, ids, context=None):
+        picking_ids = set()
+        for move in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
+            if move.picking_id and move.purchase_line_id:
+                picking_ids.add(move.picking_id.id)
+        return list(picking_ids)
+
     _columns = {
-        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
-            ondelete='set null', select=True),
+        'reception_to_invoice': fields.function(_get_to_invoice, type='boolean', string='Invoiceable on incoming shipment?',
+               help='Does the picking contains some moves related to a purchase order invoiceable on the receipt?',
+               store={
+                   'stock.move': (_get_picking_to_recompute, ['purchase_line_id', 'picking_id'], 10),
+               }),
     }
 
+
+class stock_warehouse(osv.osv):
+    _inherit = 'stock.warehouse'
+    _columns = {
+        'buy_to_resupply': fields.boolean('Purchase to resupply this warehouse', 
+                                          help="When products are bought, they can be delivered to this warehouse"),
+        'buy_pull_id': fields.many2one('procurement.rule', 'BUY rule'),
+    }
     _defaults = {
-        'purchase_id': False,
+        'buy_to_resupply': True,
     }
 
-    def _get_partner_to_invoice(self, cr, uid, picking, context=None):
-        """ Inherit the original function of the 'stock' module
-            We select the partner of the sale order as the partner of the customer invoice
-        """
-        if picking.purchase_id:
-            return picking.purchase_id.partner_id
-        return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)
+    def _get_buy_pull_rule(self, cr, uid, warehouse, context=None):
+        route_obj = self.pool.get('stock.location.route')
+        data_obj = self.pool.get('ir.model.data')
+        try:
+            buy_route_id = data_obj.get_object_reference(cr, uid, 'stock', 'route_warehouse0_buy')[1]
+        except:
+            buy_route_id = route_obj.search(cr, uid, [('name', 'like', _('Buy'))], context=context)
+            buy_route_id = buy_route_id and buy_route_id[0] or False
+        if not buy_route_id:
+            raise osv.except_osv(_('Error!'), _('Can\'t find any generic Buy route.'))
 
-    def _prepare_invoice(self, cr, uid, picking, partner, inv_type, journal_id, context=None):
-        """ Inherit the original function of the 'stock' module in order to override some
-            values if the picking has been generated by a purchase order
-        """
-        invoice_vals = super(stock_picking, self)._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
-        if picking.purchase_id:
-            invoice_vals['fiscal_position'] = picking.purchase_id.fiscal_position.id
-            invoice_vals['payment_term'] = picking.purchase_id.payment_term_id.id
-            # Fill the date_due on the invoice, for usability purposes.
-            # Note that when an invoice with a payment term is validated, the
-            # date_due is always recomputed from the invoice date and the payment
-            # term.
-            if picking.purchase_id.payment_term_id and context.get('date_inv'):
-                invoice_vals['date_due'] = self.pool.get('account.invoice').onchange_payment_term_date_invoice(cr, uid, [], picking.purchase_id.payment_term_id.id, context.get('date_inv'))['value'].get('date_due')
-        return invoice_vals
+        return {
+            'name': self._format_routename(cr, uid, warehouse, _(' Buy'), context=context),
+            'location_id': warehouse.in_type_id.default_location_dest_id.id,
+            'route_id': buy_route_id,
+            'action': 'buy',
+            'picking_type_id': warehouse.in_type_id.id,
+            'propagate': False, 
+            'warehouse_id': warehouse.id,
+        }
 
-    def get_currency_id(self, cursor, user, picking):
-        if picking.purchase_id:
-            return picking.purchase_id.currency_id.id
-        else:
-            return super(stock_picking, self).get_currency_id(cursor, user, picking)
+    def create_routes(self, cr, uid, ids, warehouse, context=None):
+        pull_obj = self.pool.get('procurement.rule')
+        res = super(stock_warehouse, self).create_routes(cr, uid, ids, warehouse, context=context)
+        if warehouse.buy_to_resupply:
+            buy_pull_vals = self._get_buy_pull_rule(cr, uid, warehouse, context=context)
+            buy_pull_id = pull_obj.create(cr, uid, buy_pull_vals, context=context)
+            res['buy_pull_id'] = buy_pull_id
+        return res
 
-    def _get_comment_invoice(self, cursor, user, picking):
-        if picking.purchase_id and picking.purchase_id.notes:
-            if picking.note:
-                return picking.note + '\n' + picking.purchase_id.notes
+    def write(self, cr, uid, ids, vals, context=None):
+        pull_obj = self.pool.get('procurement.rule')
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        if 'buy_to_resupply' in vals:
+            if vals.get("buy_to_resupply"):
+                for warehouse in self.browse(cr, uid, ids, context=context):
+                    if not warehouse.buy_pull_id:
+                        buy_pull_vals = self._get_buy_pull_rule(cr, uid, warehouse, context=context)
+                        buy_pull_id = pull_obj.create(cr, uid, buy_pull_vals, context=context)
+                        vals['buy_pull_id'] = buy_pull_id
             else:
-                return picking.purchase_id.notes
-        return super(stock_picking, self)._get_comment_invoice(cursor, user, picking)
+                for warehouse in self.browse(cr, uid, ids, context=context):
+                    if warehouse.buy_pull_id:
+                        buy_pull_id = pull_obj.unlink(cr, uid, warehouse.buy_pull_id.id, context=context)
+        return super(stock_warehouse, self).write(cr, uid, ids, vals, context=None)
 
-    def _get_price_unit_invoice(self, cursor, user, move_line, type):
-        if move_line.purchase_line_id:
-            if move_line.purchase_line_id.order_id.invoice_method == 'picking':
-                return move_line.price_unit
-            else:
-                return move_line.purchase_line_id.price_unit
-        return super(stock_picking, self)._get_price_unit_invoice(cursor, user, move_line, type)
+    def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
+        all_routes = super(stock_warehouse, self).get_all_routes_for_wh(cr, uid, warehouse, context=context)
+        if warehouse.buy_to_resupply and warehouse.buy_pull_id and warehouse.buy_pull_id.route_id:
+            all_routes += [warehouse.buy_pull_id.route_id.id]
+        return all_routes
 
-    def _get_discount_invoice(self, cursor, user, move_line):
-        if move_line.purchase_line_id:
-            return 0.0
-        return super(stock_picking, self)._get_discount_invoice(cursor, user, move_line)
+    def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
+        res = super(stock_warehouse, self)._get_all_products_to_resupply(cr, uid, warehouse, context=context)
+        if warehouse.buy_pull_id and warehouse.buy_pull_id.route_id:
+            for product_id in res:
+                for route in self.pool.get('product.product').browse(cr, uid, product_id, context=context).route_ids:
+                    if route.id == warehouse.buy_pull_id.route_id.id:
+                        res.remove(product_id)
+                        break
+        return res
 
-    def _get_taxes_invoice(self, cursor, user, move_line, type):
-        if move_line.purchase_line_id:
-            return [x.id for x in move_line.purchase_line_id.taxes_id]
-        return super(stock_picking, self)._get_taxes_invoice(cursor, user, move_line, type)
+    def _handle_renaming(self, cr, uid, warehouse, name, code, context=None):
+        res = super(stock_warehouse, self)._handle_renaming(cr, uid, warehouse, name, code, context=context)
+        pull_obj = self.pool.get('procurement.rule')
+        #change the buy pull rule name
+        if warehouse.buy_pull_id:
+            pull_obj.write(cr, uid, warehouse.buy_pull_id.id, {'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
+        return res
 
-    def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
-        if picking.purchase_id and move_line.purchase_line_id:
-            return move_line.purchase_line_id.account_analytic_id.id
-        return super(stock_picking, self)._get_account_analytic_invoice(cursor, user, picking, move_line)
-
-    def _invoice_line_hook(self, cursor, user, move_line, invoice_line_id):
-        if move_line.purchase_line_id:
-            invoice_line_obj = self.pool.get('account.invoice.line')
-            purchase_line_obj = self.pool.get('purchase.order.line') 
-            purchase_line_obj.write(cursor, user, [move_line.purchase_line_id.id], {
-                'invoice_lines': [(4, invoice_line_id)],
-            })
-        return super(stock_picking, self)._invoice_line_hook(cursor, user, move_line, invoice_line_id)
-
-    def _invoice_hook(self, cursor, user, picking, invoice_id):
-        purchase_obj = self.pool.get('purchase.order')
-        if picking.purchase_id:
-            purchase_obj.write(cursor, user, [picking.purchase_id.id], {'invoice_ids': [(4, invoice_id)]})
-        return super(stock_picking, self)._invoice_hook(cursor, user, picking, invoice_id)
-
-class stock_partial_picking(osv.osv_memory):
-    _inherit = 'stock.partial.picking'
-
-    # Overridden to inject the purchase price as true 'cost price' when processing
-    # incoming pickings.
-    def _product_cost_for_average_update(self, cr, uid, move):
-        if move.picking_id.purchase_id and move.purchase_line_id:
-            return {'cost': move.purchase_line_id.price_unit,
-                    'currency': move.picking_id.purchase_id.currency_id.id}
-        return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
-
-# Redefinition of the new field in order to update the model stock.picking.in in the orm
-# FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
-#        the bug is fixed
-class stock_picking_in(osv.osv):
-    _inherit = 'stock.picking.in'
-    _columns = {
-        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
-            ondelete='set null', select=True),
-        'warehouse_id': fields.related('purchase_id', 'warehouse_id', type='many2one', relation='stock.warehouse', string='Destination Warehouse', readonly=True),
-    }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    def change_route(self, cr, uid, ids, warehouse, new_reception_step=False, new_delivery_step=False, context=None):
+        res = super(stock_warehouse, self).change_route(cr, uid, ids, warehouse, new_reception_step=new_reception_step, new_delivery_step=new_delivery_step, context=context)
+        if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
+            self.pool.get('procurement.rule').write(cr, uid, warehouse.buy_pull_id.id, {'location_id': warehouse.in_type_id.default_location_dest_id.id}, context=context)
+        return res

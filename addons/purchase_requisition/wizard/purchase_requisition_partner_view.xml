@@ -2,15 +2,15 @@
       <data>
 
         <record id="view_purchase_requisition_partner" model="ir.ui.view">
-            <field name="name">Purchase Requisition</field>
+            <field name="name">Choose Supplier</field>
             <field name="model">purchase.requisition.partner</field>
             <field name="arch" type="xml">
-                <form string="Purchase Requisition" version="7.0">
+                <form string="Choose Supplier">
                     <group>
                         <field name="partner_id" context="{'default_supplier': 1, 'default_customer': 0}"/>
                     </group>
                     <footer>
-                        <button name="create_order" string="Create Quotation" type="object" class="oe_highlight"/>
+                        <button name="create_order" string="Create Request for Quotation" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
@@ -19,7 +19,7 @@
         </record>
 
         <record id="action_purchase_requisition_partner" model="ir.actions.act_window">
-               <field name="name">Purchase Requisition</field>
+               <field name="name">Choose Supplier</field>
                <field name="type">ir.actions.act_window</field>
                <field name="res_model">purchase.requisition.partner</field>
                <field name="view_type">form</field>
@@ -27,5 +27,6 @@
                <field name="context">{'record_id' : active_id}</field>
                <field name="target">new</field>
         </record>
+        
 </data>
 </openerp>

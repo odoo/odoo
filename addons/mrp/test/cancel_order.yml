@@ -8,12 +8,6 @@
 -
   !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_test1}
 -
-  In order to cancel the production order, I first cancel its picking.
--
-  !function {model: stock.picking, name: action_cancel}:
-    - model: mrp.production
-      eval: "[obj(ref('mrp_production_test1')).picking_id.id]"
--
   Now I cancel the production order.
 -
   !python {model: mrp.production}: |

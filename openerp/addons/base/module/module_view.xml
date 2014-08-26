@@ -6,7 +6,7 @@
             <field name="name">ir.module.category.form</field>
             <field name="model">ir.module.category</field>
             <field name="arch" type="xml">
-                <form string="Module Category" version="7.0">
+                <form string="Module Category">
                     <group col="4">
                         <field name="name"/>
                         <field name="parent_id"/>
@@ -43,7 +43,7 @@
                     <filter name="installed" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
                     <filter string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
                     <field name="category_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Author" domain="[]" context="{'group_by':'author'}"/>
                         <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
                     </group>
@@ -70,7 +70,7 @@
             <field name="name">ir.module.module.form</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <form create="0" edit="0" string="Module" version="7.0">
+                <form create="0" edit="0" string="Module">
                     <link rel="stylesheet" href="/base/static/src/css/description.css"></link>
                     <sheet>
                     <field name="icon_image" widget="image" class="oe_avatar oe_left"/>
@@ -110,9 +110,11 @@
                                 <field name="application"/>
                                 <field name="state"/>
                             </group>
-                            <label for="views_by_module" string="Created Views"/>
+                            <group string="Created Views" attrs="{'invisible':[('state','!=','installed')]}"/>
+                            <p class="oe_grey" attrs="{'invisible': ['|',('views_by_module','not in',[None,False]),('state','!=','installed')]}"> -This module does not create views.</p>
                             <field name="views_by_module"/>
-                            <label for="dependencies_id"/>
+                            <group string="Dependencies"/>
+                            <p class="oe_grey" attrs="{'invisible': [('dependencies_id','not in',[None,False])]}"> -This module does not depends on any other module.</p>
                             <field name="dependencies_id">
                                 <tree string="Dependencies">
                                     <field name="name"/>
@@ -121,9 +123,11 @@
                             </field>
                         </page>
                         <page string="Installed Features" attrs="{'invisible':[('state','!=','installed')]}">
-                            <label for="menus_by_module" string="Created Menus"/>
+                            <group string="Created Menus"/>
+                            <p class="oe_grey" attrs="{'invisible': [('menus_by_module','not in',[None,False])]}"> -This module does not create menu.</p>
                             <field name="menus_by_module"/>
-                            <label for="reports_by_module" string="Defined Reports"/>
+                            <group string="Defined Reports"/>
+                            <p class="oe_grey" attrs="{'invisible': [('reports_by_module','not in',[None,False])]}"> -This module does not create report.</p>
                             <field name="reports_by_module"/>
                         </page>
                     </notebook>

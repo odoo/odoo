@@ -2,7 +2,7 @@
 
 import urlparse
 
-from openerp.addons.web.http import request
+from openerp.http import request
 from openerp.osv import fields, osv
 
 
@@ -35,7 +35,7 @@ class actions_server(osv.Model):
             _get_website_url, type='char', string='Website URL',
             help='The full URL to access the server action through the website.'),
         'website_published': fields.boolean(
-            'Available on the Website',
+            'Available on the Website', copy=False,
             help='A code server action can be executed from the website, using a dedicated'
                  'controller. The address is <base>/website/action/<website_path>.'
                  'Set this field as True to allow users to run this action. If it'
@@ -44,7 +44,7 @@ class actions_server(osv.Model):
 
     def on_change_website_path(self, cr, uid, ids, website_path, xml_id, context=None):
         values = {
-            'website_url': self._compute_website_url(cr, uid, ids[0], website_path, xml_id, context=context)
+            'website_url': self._compute_website_url(cr, uid, ids and ids[0] or None, website_path, xml_id, context=context)
         }
         return {'value': values}
 

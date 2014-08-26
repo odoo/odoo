@@ -1,0 +1,19 @@
+<openerp>
+    <data noupdate="1">
+         <record id="product.product_product_9" model="product.product">
+            <field name="description">This product is configured with example of push/pull flows</field>
+        </record>
+
+
+        <record id="stock_warehouse_orderpoint_shop1_cpu1" model="stock.warehouse.orderpoint">
+            <field name="product_max_qty">20.0</field>
+            <field name="product_min_qty">10.0</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="company_id" ref="stock.res_company_1"/>
+            <field name="warehouse_id" ref="stock.stock_warehouse_shop0"/>
+            <field name="location_id" ref="stock.stock_location_shop0"/>
+            <field name="product_id" ref="product.product_product_9"/>
+        </record>
+
+    </data>
+</openerp>

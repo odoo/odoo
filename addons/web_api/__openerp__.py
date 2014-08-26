@@ -10,8 +10,4 @@ Openerp Web API.
     'depends': ['web'],
     'installable': True,
     'auto_install': False,
-    'js' : [
-    ],
-    'css' : [
-    ],
 }

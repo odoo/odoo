@@ -40,16 +40,16 @@ Financial and accounting module that covers:
 
 Creates a dashboard for accountants that includes:
 --------------------------------------------------
-    * List of Customer Invoice to Approve
+    * List of Customer Invoices to Approve
     * Company Analysis
     * Graph of Treasury
 
-The processes like maintaining of general ledger is done through the defined financial Journals (entry move line orgrouping is maintained through journal) 
+Processes like maintaining general ledgers are done through the defined Financial Journals (entry move line or grouping is maintained through a journal) 
 for a particular financial year and for preparation of vouchers there is a module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'depends' : ['base_setup', 'product', 'analytic', 'process', 'board', 'edi', 'report'],
+    'depends' : ['base_setup', 'product', 'analytic', 'board', 'edi', 'report'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -65,6 +65,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'wizard/account_period_close_view.xml',
         'wizard/account_reconcile_view.xml',
         'wizard/account_unreconcile_view.xml',
+        'wizard/account_statement_from_invoice_view.xml',
         'account_view.xml',
         'account_report.xml',
         'account_financial_report_data.xml',
@@ -114,17 +115,12 @@ for a particular financial year and for preparation of vouchers there is a modul
         'partner_view.xml',
         'product_view.xml',
         'account_assert_test.xml',
-        'process/statement_process.xml',
-        'process/customer_invoice_process.xml',
-        'process/supplier_invoice_process.xml',
         'ir_sequence_view.xml',
         'company_view.xml',
-        'board_account_view.xml',
         'edi/invoice_action_data.xml',
         'account_bank_view.xml',
         'res_config_view.xml',
         'account_pre_install.yml',
-
         'views/report_vat.xml',
         'views/report_invoice.xml',
         'views/report_trialbalance.xml',
@@ -144,19 +140,12 @@ for a particular financial year and for preparation of vouchers there is a modul
         'project/views/report_analyticcostledgerquantity.xml',
         'project/views/report_analyticcostledger.xml',
         'project/views/report_invertedanalyticbalance.xml',
-    ],
-    'js': [
-        'static/src/js/account_move_reconciliation.js',
-        'static/src/js/account_move_line_quickadd.js',
+        'views/account.xml',
     ],
     'qweb' : [
         "static/src/xml/account_move_reconciliation.xml",
         "static/src/xml/account_move_line_quickadd.xml",
-    ],
-    'css':[
-        'static/src/css/account_move_reconciliation.css',
-        'static/src/css/account_move_line_quickadd.css',
-        'static/src/css/account_bank_and_cash.css',
+        "static/src/xml/account_bank_statement_reconciliation.xml",
     ],
     'demo': [
         'demo/account_demo.xml',
@@ -164,6 +153,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'demo/account_invoice_demo.xml',
+        'demo/account_bank_statement.xml',
         'account_unit_test.xml',
     ],
     'test': [

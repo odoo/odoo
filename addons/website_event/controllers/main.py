@@ -19,31 +19,21 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.tools.translate import _
-from openerp.addons.website.controllers.main import Website as controllers
-controllers = controllers()
-
-import logging
-_logger = logging.getLogger(__name__)
-
-from datetime import datetime, timedelta
 import time
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from openerp import tools
+
 import werkzeug.urls
 from werkzeug.exceptions import NotFound
 
-try:
-    import GeoIP
-except ImportError:
-    GeoIP = None
-    _logger.warn("Please install GeoIP python module to use events localisation.")
+from openerp import http
+from openerp import tools
+from openerp.http import request
+from openerp.tools.translate import _
+from openerp.addons.website.models.website import slug
 
 class website_event(http.Controller):
-    @http.route(['/event', '/event/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event', '/event/page/<int:page>'], type='http', auth="public", website=True)
     def events(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']
@@ -173,7 +163,7 @@ class website_event(http.Controller):
 
         return request.website.render("website_event.index", values)
 
-    @http.route(['/event/<model("event.event"):event>/page/<path:page>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event/<model("event.event"):event>/page/<path:page>'], type='http', auth="public", website=True)
     def event_page(self, event, page, **post):
         values = {
             'event': event,
@@ -191,7 +181,7 @@ class website_event(http.Controller):
 
         return request.website.render(page, values)
 
-    @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True)
     def event(self, event, **post):
         if event.menu_id and event.menu_id.child_id:
             target_url = event.menu_id.child_id[0].url
@@ -201,7 +191,7 @@ class website_event(http.Controller):
             target_url += '?enable_editor=1'
         return request.redirect(target_url);
 
-    @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True)
     def event_register(self, event, **post):
         values = {
             'event': event,
@@ -210,7 +200,7 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event.event_description_full", values)
 
-    @http.route('/event/add_event', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/event/add_event', type='http', auth="user", methods=['POST'], website=True)
     def add_event(self, event_name="New Event", **kwargs):
         return self._add_event(event_name, request.context, **kwargs)
 
@@ -225,12 +215,9 @@ class website_event(http.Controller):
             'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
         }
         event_id = Event.create(request.cr, request.uid, vals, context=context)
-        return request.redirect("/event/%s?enable_editor=1" % event_id)
+        event = Event.browse(request.cr, request.uid, event_id, context=context)
+        return request.redirect("/event/%s/register?enable_editor=1" % slug(event))
 
-    def get_visitors_country(self):
-        GI = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', 0)
-        return {'country_code': GI.country_code_by_addr(request.httprequest.remote_addr), 'country_name': GI.country_name_by_addr(request.httprequest.remote_addr)}
-    
     def get_formated_date(self, event):
         start_date = datetime.strptime(event.date_begin, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
         end_date = datetime.strptime(event.date_end, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
@@ -238,21 +225,19 @@ class website_event(http.Controller):
     
     @http.route('/event/get_country_event_list', type='http', auth='public', website=True)
     def get_country_events(self ,**post):
-        if not GeoIP:
-            return ""
+        cr, uid, context, event_ids = request.cr, request.uid, request.context,[]
         country_obj = request.registry['res.country']
         event_obj = request.registry['event.event']
-        cr, uid, context,event_ids = request.cr, request.uid, request.context,[]
-        country_code = self.get_visitors_country()['country_code']
+        country_code = request.session['geoip'].get('country_code')
         result = {'events':[],'country':False}
         if country_code:
-            country_ids = country_obj.search(request.cr, request.uid, [('code', '=', country_code)], context=request.context)
-            event_ids = event_obj.search(request.cr, request.uid, ['|', ('address_id', '=', None),('country_id.code', '=', country_code),('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00')),('state', '=', 'confirm')], order="date_begin", context=request.context)
+            country_ids = country_obj.search(cr, uid, [('code', '=', country_code)], context=context)
+            event_ids = event_obj.search(cr, uid, ['|', ('address_id', '=', None),('country_id.code', '=', country_code),('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00')),('state', '=', 'confirm')], order="date_begin", context=context)
         if not event_ids:
-            event_ids = event_obj.search(request.cr, request.uid, [('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00')),('state', '=', 'confirm')], order="date_begin", context=request.context)
-        for event in event_obj.browse(request.cr, request.uid, event_ids, context=request.context)[:6]:
+            event_ids = event_obj.search(cr, uid, [('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00')),('state', '=', 'confirm')], order="date_begin", context=context)
+        for event in event_obj.browse(cr, uid, event_ids, context=context)[:6]:
             if country_code and event.country_id.code == country_code:
-                result['country'] = country_obj.browse(request.cr, request.uid, country_ids[0], context=request.context)
+                result['country'] = country_obj.browse(cr, uid, country_ids[0], context=context)
             result['events'].append({
                  "date": self.get_formated_date(event),
                  "event": event,

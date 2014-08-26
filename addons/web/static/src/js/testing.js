@@ -48,15 +48,6 @@ openerp.testing = {};
 
     testing.dependencies = window['oe_all_dependencies'] || [];
     testing.current_module = null;
-    testing.templates = { };
-    testing.add_template = function (name) {
-        var xhr = QWeb2.Engine.prototype.get_xhr();
-        xhr.open('GET', name, false);
-        xhr.send(null);
-        (testing.templates[testing.current_module] =
-            testing.templates[testing.current_module] || [])
-                .push(xhr.responseXML);
-    };
     /**
      * Function which does not do anything
      */
@@ -206,7 +197,7 @@ openerp.testing = {};
             teardown: testing.noop
         });
 
-        QUnit.module(testing.current_module + '.' + name, {_oe: options});
+        QUnit.module(name, {_oe: options});
         body(testing['case']);
     };
     testing['case'] = function (name, options, callback) {
@@ -242,18 +233,6 @@ openerp.testing = {};
             instance.session.uid = 42;
             if (_.isNumber(opts.asserts)) {
                 expect(opts.asserts);
-            }
-
-            if (opts.templates) {
-                for(var i=0; i<module_deps.length; ++i) {
-                    var dep = module_deps[i];
-                    var templates = testing.templates[dep];
-                    if (_.isEmpty(templates)) { continue; }
-
-                    for (var j=0; j < templates.length; ++j) {
-                        instance.web.qweb.add_template(templates[j]);
-                    }
-                }
             }
 
             var $fixture = $('#qunit-fixture');

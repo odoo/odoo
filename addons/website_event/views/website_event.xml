@@ -2,16 +2,22 @@
 <openerp>
 <data>
 
-<template id="editor_head" inherit_id="website.editor_head" name="Event Editor" groups="event.group_event_manager">
-    <xpath expr="//script[@id='website_tour_js']" position="after">
+<template id="event_script" inherit_id="website.assets_frontend" name="Country Events Snippet Script">
+    <xpath expr="/t" position="inside">
+        <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
+    </xpath>
+</template>
+
+<template id="assets_editor" inherit_id="website.assets_editor" name="Event Editor" groups="event.group_event_manager">
+    <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js"></script>
         <script type="text/javascript" src="/website_event/static/src/js/website.tour.event.js"></script>
     </xpath>
 </template>
 
 <!-- Layout add nav and footer -->
-<template id="header_footer_custom" inherit_id="website.layout" name="Footer Events Link">
-    <xpath expr="//footer//ul[@name='products']" position="inside">
+<template id="header_footer_custom" inherit_id="website.footer_default" name="Footer Events Link">
+    <xpath expr="//ul[@id='products']" position="inside">
         <li><a href="/event">Events</a></li>
     </xpath>
 </template>
@@ -82,7 +88,7 @@
     </t>
 </template>
 
-<template id="event_right_photos" inherit_option_id="website_event.index" name="Photos">
+<template id="event_right_photos" inherit_id="website_event.index" optional="disabled" name="Photos">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
             <div class="col-md-12 mb16">
@@ -101,7 +107,7 @@
     </xpath>
 </template>
 
-<template id="event_right_quotes" inherit_option_id="website_event.index" name="Quotes">
+<template id="event_right_quotes" inherit_id="website_event.index" optional="disabled" name="Quotes">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
             <div class="col-md-12 mb16">
@@ -118,7 +124,7 @@
     </xpath>
 </template>
 
-<template id="event_right_country_event" inherit_option_id="website_event.index" name="Country Events">
+<template id="event_right_country_event" inherit_id="website_event.index" optional="disabled" name="Country Events">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
             <div class="col-md-12 mb16 mt16 country_events">
@@ -135,7 +141,7 @@
     </xpath>
 </template>
 
-<template id="event_left_column" inherit_option_id="website_event.index" inherit_id="website_event.index" name="Filters">
+<template id="event_left_column" optional="enabled" inherit_id="website_event.index" name="Filters">
     <xpath expr="//div[@id='middle_column']" position="attributes">
         <attribute name="class">col-md-6</attribute>
     </xpath>
@@ -154,13 +160,14 @@
     </xpath>
 </template>
 
-<template id="event_category" inherit_option_id="website_event.event_left_column" name="Filter by Category">
+<template id="event_category" inherit_id="website_event.event_left_column" optional="disabled" name="Filter by Category">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
-            <t t-foreach="types">
-                <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
-                    <a t-attf-href="/event?{{ keep_query('country', 'date', type=type[0]) }}"><t t-esc="type[1]"/>
-                        <span class="badge pull-right"><t t-esc="type_count"/></span>
+            <t t-foreach="types" t-as="type">
+                <li t-if="type['type']"
+                    t-att-class="searches.get('type') == str(type['type'] and type['type'][0]) and 'active' or ''">
+                    <a t-attf-href="/event?{{ keep_query('country', 'date', type=type['type'][0]) }}"><t t-esc="type['type'][1]"/>
+                        <span class="badge pull-right"><t t-esc="type['type_count']"/></span>
                     </a>
                 </li>
             </t>
@@ -168,19 +175,19 @@
     </xpath>
 </template>
 
-<template id="event_location" inherit_option_id="website_event.event_left_column" name="Filter by Country">
+<template id="event_location" inherit_id="website_event.event_left_column" optional="disabled" name="Filter by Country">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
-            <t t-foreach="countries">
-                <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
-                    <a t-attf-href="/event/?{{ keep_query('type', 'date', country=country_id[0]) }}"><t t-esc="country_id[1]"/>
-                        <span class="badge pull-right"><t t-esc="country_id_count"/></span>
+            <t t-foreach="countries" t-as="country">
+                <li t-if="country['country_id']" t-att-class="searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active' or ''">
+                    <a t-attf-href="/event?{{ keep_query('type', 'date', country=country['country_id'][0]) }}"><t t-esc="country['country_id'][1]"/>
+                        <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
                     </a>
                 </li>
-                <li t-if="not country_id" t-att-class="searches.get('country') == 'online' and 'active' or ''">
-                    <a t-attf-href="/event/?{{ keep_query('type', 'date', country='online') }}">
+                <li t-if="not country['country_id']" t-att-class="searches.get('country') == 'online' and 'active' or ''">
+                    <a t-attf-href="/event?{{ keep_query('type', 'date', country='online') }}">
                         <span>Online Events</span>
-                        <span class="badge pull-right"><t t-esc="country_id_count"/></span>
+                        <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
                     </a>
                 </li>
             </t>
@@ -347,7 +354,7 @@
                     <div t-if="event.twitter_hashtag" class="mt16">
                         <p><strong>Participate on Twitter</strong></p>
                         <p class="text-muted">
-                            Find out what people see and say about this event, 
+                            Find out what people see and say about this event,
                             and join the conversation.
                         </p>
                         <p><strong>Use this tag:
@@ -358,12 +365,6 @@
             </div>
         </div>
     </t>
-</template>
-
-<template id="event_script" name="Country Events Snippet Script" inherit_id="website.layout">
-    <xpath expr="//head" position="inside">
-        <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
-    </xpath>
 </template>
 
 <template id="country_events" name="Country Events" inherit_id="website.snippets">
@@ -379,7 +380,7 @@
                 <div class="country_events_list">
                     <div class="text-muted text-left">
                         <div>
-                            <img style="max-height:10em;" class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
+                            <img class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
                         </div>
                         <div>Events in visitor's country</div>
                     </div>
@@ -403,11 +404,11 @@
             <div class="country_events_list">
                 <div>
                     <t t-if="country">
-                        <img style="max-height:10em;" class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
-                        <h4><b>Events in <span t-esc="country.name"></span></b></h4>
+                        <img class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
+                        <h4><b>Events: <span t-esc="country.name"></span></b></h4>
                     </t>
                     <t t-if="not country">
-                        <img style="max-height:10em;" class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
+                        <img class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
                         <h4><b>Upcoming Events</b></h4>
                     </t>
                     <div t-foreach="events[:5]" t-as="event_dict" class="oe_website_overflow_ellipsis mb8">
@@ -434,6 +435,28 @@
             </div>
         </t>
     </t>
+</template>
+
+<template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
+  <xpath expr="//footer" position="inside">
+      <div class="container mt16 mb8">
+          <div class="pull-right" t-ignore="true" t-if="not editable">
+            Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>.
+            Try the <a href="http://www.odoo.com/page/website-builder">open source website builder</a>.
+          </div>
+          <div class="pull-left text-muted">
+              Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+          </div>
+      </div>
+  </xpath>
+</template>
+
+
+<!-- User Navbar -->
+<template id="content_new_event" inherit_id="website.user_navbar" groups="event.group_event_manager">
+    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
+         <li><a href="#" data-action="new_event">New Event</a></li>
+    </xpath>
 </template>
 </data>
 </openerp>

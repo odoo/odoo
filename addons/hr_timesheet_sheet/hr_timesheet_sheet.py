@@ -68,7 +68,7 @@ class hr_timesheet_sheet(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if 'employee_id' in vals:
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).user_id:
-                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign it to a user.'))
+                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link him/her to a user.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).product_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link the employee to a product, like \'Consultant\'.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).journal_id:
@@ -82,7 +82,7 @@ class hr_timesheet_sheet(osv.osv):
         if 'employee_id' in vals:
             new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).user_id.id or False
             if not new_user_id:
-                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign it to a user.'))
+                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link him/her to a user.'))
             if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id, context=context):
                 raise osv.except_osv(_('Error!'), _('You cannot have 2 timesheets that overlap!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).product_id:
@@ -123,7 +123,7 @@ class hr_timesheet_sheet(osv.osv):
             self.check_employee_attendance_state(cr, uid, sheet.id, context=context)
             di = sheet.user_id.company_id.timesheet_max_difference
             if (abs(sheet.total_difference) < di) or not di:
-                self.signal_confirm(cr, uid, [sheet.id])
+                sheet.signal_workflow('confirm')
             else:
                 raise osv.except_osv(_('Warning!'), _('Please verify that the total difference of the sheet is lower than %.2f.') %(di,))
         return True
@@ -134,9 +134,20 @@ class hr_timesheet_sheet(osv.osv):
         for sheet in self.browse(cr, uid, ids, context=context):
             if sheet.employee_id.id not in employee_ids: employee_ids.append(sheet.employee_id.id)
         return hr_employee.attendance_action_change(cr, uid, employee_ids, context=context)
+    
+    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
+        Timesheet = self.pool['hr.analytic.timesheet']
+        Attendance = self.pool['hr.attendance']
+        return {
+            sheet_id: {
+                'timesheet_activity_count': Timesheet.search_count(cr,uid, [('sheet_id','=', sheet_id)], context=context),
+                'attendance_count': Attendance.search_count(cr,uid, [('sheet_id', '=', sheet_id)], context=context)
+            }
+            for sheet_id in ids
+        }
 
     _columns = {
-        'name': fields.char('Note', size=64, select=1,
+        'name': fields.char('Note', select=1,
                             states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'user_id': fields.related('employee_id', 'user_id', type="many2one", relation="res.users", store=True, string="User", required=False, readonly=True),#fields.many2one('res.users', 'User', required=True, select=1, states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
@@ -165,6 +176,8 @@ class hr_timesheet_sheet(osv.osv):
         'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'department_id':fields.many2one('hr.department','Department'),
+        'timesheet_activity_count': fields.function(_count_all, type='integer', string='Timesheet Activities', multi=True),
+        'attendance_count': fields.function(_count_all, type='integer', string="Attendances", multi=True),
     }
 
     def _default_date_from(self, cr, uid, context=None):
@@ -519,6 +532,11 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
         'total_attendance': fields.float('Attendance', readonly=True),
         'total_difference': fields.float('Difference', readonly=True),
     }
+    _depends = {
+        'account.analytic.line': ['date', 'unit_amount'],
+        'hr.analytic.timesheet': ['line_id', 'sheet_id'],
+        'hr.attendance': ['action', 'name', 'sheet_id'],
+    }
 
     def init(self, cr):
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_day as
@@ -589,6 +607,12 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
         'invoice_rate': fields.many2one('hr_timesheet_invoice.factor', 'Invoice rate', readonly=True),
         }
 
+    _depends = {
+        'account.analytic.line': ['account_id', 'date', 'to_invoice', 'unit_amount', 'user_id'],
+        'hr.analytic.timesheet': ['line_id'],
+        'hr_timesheet_sheet.sheet': ['date_from', 'date_to', 'user_id'],
+    }
+
     def init(self, cr):
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_account as (
             select
@@ -626,5 +650,22 @@ class res_company(osv.osv):
         'timesheet_max_difference': lambda *args: 0.0
     }
 
+class hr_employee(osv.osv):
+    '''
+    Employee
+    '''
 
+    _inherit = 'hr.employee'
+    _description = 'Employee'
+
+    def _timesheet_count(self, cr, uid, ids, field_name, arg, context=None):
+        Sheet = self.pool['hr_timesheet_sheet.sheet']
+        return {
+            employee_id: Sheet.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context)
+            for employee_id in ids
+        }
+
+    _columns = {
+        'timesheet_count': fields.function(_timesheet_count, type='integer', string='Timesheets'),
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

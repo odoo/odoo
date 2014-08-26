@@ -1,0 +1,93 @@
+{% extends "basic/layout.html" %}
+
+{% set script_files = script_files + [
+  '_static/bootstrap/js/scrollspy.js',
+  '_static/bootstrap/js/affix.js',
+  '_static/bootstrap/js/tooltip.js',
+  '_static/bootstrap/js/collapse.js',
+  '_static/bootstrap/js/dropdown.js',
+  '_static/ZeroClipboard.min.js',
+  '_static/app.js'
+] %}
+
+{%- block doctype -%}
+<!doctype html>
+{%- endblock -%}
+
+{%- block content -%}
+  <div class="document-super">
+    {{ super() }}
+  </div>
+{%- endblock -%}
+
+{# sidebar to the left, except sidebar1 is *outside* div.document where
+   sidebar2 is inside, so inject sidebar into document block #}
+{%- block document -%}
+  <div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+      {# bootstrapify nav #}
+      {{ toc|replace("<ul>", '<ul class="nav">') }}
+    </div>
+  </div>
+  {{ super() }}
+{%- endblock -%}
+{%- block sidebar1 -%}{%- endblock -%}
+{%- block sidebar2 -%}{%- endblock -%}
+
+{%- block relbar1 -%}
+<header class="navbar navbar-default navbar-static-top docs-nav" id="top" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="http://odoo.com" class="o_logo navbar-brand">
+        <span class="o_logo_main">odoo</span><span class="o_logo_app">doc</span>
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse navbar-main" role="navigation">
+      {{ toctree(titles_only=True, maxdepth=2, includehidden=True, collapse=False) }}
+    </nav>
+  </div>
+</header>
+{%- endblock -%}
+{%- block relbar2 -%}{%- endblock -%}
+
+{%- block footer %}
+    <div class="footer">
+      <div class="container">
+        <ul class="docs-footer-links muted">
+          {%- if show_copyright %}
+            <li>
+              {%- if hasdoc('copyright') %}
+                {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> {{ copyright }}.{% endtrans %}
+              {%- else %}
+                {% trans copyright=copyright|e %}&copy; Copyright {{ copyright }}.{% endtrans %}
+              {%- endif %}
+            </li>
+          {%- endif %}
+          {%- if show_copyright and (last_updated or show_sphinx) -%}
+            <li>·</li>
+          {%- endif -%}
+          {%- if last_updated %}
+            <li>{% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}</li>
+          {%- endif %}
+          {%- if last_updated and show_sphinx -%}
+            <li>·</li>
+          {%- endif -%}
+          {%- if show_sphinx %}
+            <li>{% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx-doc.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}</li>
+          {%- endif %}
+        </ul>
+      <p>
+        odoo docs theme based on <a href="http://getbootstrap.com">Bootstrap
+        3.2 documentation</a> adapted to
+        <a href="http://sphinx-doc.org/">Sphinx</a> output with branding and
+        color changes.
+      </p>
+      </div>
+    </div>
+{%- endblock %}

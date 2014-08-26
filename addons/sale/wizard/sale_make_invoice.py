@@ -60,7 +60,7 @@ class sale_make_invoice(osv.osv_memory):
             for i in o.invoice_ids:
                 newinv.append(i.id)
         # Dummy call to workflow, will not create another invoice but bind the new invoice to the subflow
-        order_obj.signal_manual_invoice(cr, uid, [o.id for o in orders if o.order_policy == 'manual'])
+        order_obj.signal_workflow(cr, uid, [o.id for o in orders if o.order_policy == 'manual'], 'manual_invoice')
         result = mod_obj.get_object_reference(cr, uid, 'account', 'action_invoice_tree1')
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]

@@ -1,0 +1,14 @@
+-
+  !record {model: stock.location, id: stock_location_14}:
+    name: Shelf 2
+    posx: 0
+
+-
+  !record {model: stock.location, id: stock_location_components}:
+    name: Shelf 1
+    posx: 0
+
+-
+  !python {model: ir.model.data}: |
+    main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context)
+    self.pool.get('stock.location').write(cr, uid, [ref('stock_location_14'), ref('stock_location_components')], {'location_id':main_warehouse.lot_stock_id.id}, context=context)

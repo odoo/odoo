@@ -190,7 +190,7 @@ class CompanyLDAP(osv.osv):
             if res[1]:
                 user_id = res[0]
         elif conf['create_user']:
-            _logger.debug("Creating new OpenERP user \"%s\" from LDAP" % login)
+            _logger.debug("Creating new Odoo user \"%s\" from LDAP" % login)
             user_obj = self.pool['res.users']
             values = self.map_ldap_attributes(cr, uid, conf, login, ldap_entry)
             if conf['user']:
@@ -205,16 +205,16 @@ class CompanyLDAP(osv.osv):
         'sequence': fields.integer('Sequence'),
         'company': fields.many2one('res.company', 'Company', required=True,
             ondelete='cascade'),
-        'ldap_server': fields.char('LDAP Server address', size=64, required=True),
+        'ldap_server': fields.char('LDAP Server address', required=True),
         'ldap_server_port': fields.integer('LDAP Server port', required=True),
-        'ldap_binddn': fields.char('LDAP binddn', size=64,
+        'ldap_binddn': fields.char('LDAP binddn', 
             help=("The user account on the LDAP server that is used to query "
                   "the directory. Leave empty to connect anonymously.")),
-        'ldap_password': fields.char('LDAP password', size=64,
+        'ldap_password': fields.char('LDAP password',
             help=("The password of the user account on the LDAP server that is "
                   "used to query the directory.")),
-        'ldap_filter': fields.char('LDAP filter', size=256, required=True),
-        'ldap_base': fields.char('LDAP base', size=64, required=True),
+        'ldap_filter': fields.char('LDAP filter', required=True),
+        'ldap_base': fields.char('LDAP base', required=True),
         'user': fields.many2one('res.users', 'Template User',
             help="User to copy when creating new users"),
         'create_user': fields.boolean('Create user',
@@ -237,14 +237,14 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'ldaps': fields.one2many(
-            'res.company.ldap', 'company', 'LDAP Parameters'),
+            'res.company.ldap', 'company', 'LDAP Parameters', copy=True),
     }
 
 
 class users(osv.osv):
     _inherit = "res.users"
-    def login(self, db, login, password):
-        user_id = super(users, self).login(db, login, password)
+    def _login(self, db, login, password):
+        user_id = super(users, self)._login(db, login, password)
         if user_id:
             return user_id
         registry = RegistryManager.get(db)

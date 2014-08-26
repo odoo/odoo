@@ -1,6 +1,20 @@
 <openerp>
     <data>
 
+        <!-- Graph report -->
+        <record id="view_evaluation_report_graph" model="ir.ui.view">
+                <field name="name">hr.holidays.graph</field>
+                <field name="model">hr.holidays</field>
+                <field name="arch" type="xml">
+                <graph string="Appraisal Analysis" type="pivot" stacked="True">
+                    <field name="employee_id" type="row"/>
+                    <field name="holiday_status_id" type="row"/>
+                    <field name="date_from" type="col"/>
+                    <field name="number_of_days" type="measure"/>
+                 </graph>
+             </field>
+        </record>
+
         <record id="view_hr_holidays_filter" model="ir.ui.view">
             <field name="name">hr.holidays.filter</field>
             <field name="model">hr.holidays</field>
@@ -8,27 +22,26 @@
                 <search string="Search Leave">
                     <field name="name"/>
                     <separator/>
-                    <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
-                    <filter icon="terp-camera_test" domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
-                    <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
+                    <filter domain="[('state','=','draft')]" string="To Confirm"/>
+                    <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
+                    <filter domain="[('state','=','validate')]" string="Validated" name="validated"/>
                     <separator/>
-                    <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
+                    <filter name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
                     <separator/>
-                    <filter string="My Requests" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leave Requests"/>
+                    <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leave Requests"/>
                     <separator/>
-                    <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
+                    <filter string="My Department Leaves" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter name="group_name" string="Description" domain="[]" context="{'group_by':'name'}"/>
-                        <filter name="group_date_from" string="Start Month" icon="terp-personal" domain="[]" context="{'group_by':'date_from'}"/>
-                        <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter name="group_category" string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
-                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>
-                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id','set_visible':True}"/>
-                        <filter name="group_type" string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'holiday_status_id'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
+                        <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                        <filter name="group_category" string="Category" context="{'group_by':'category_id'}"/>
+                        <filter string="Manager" context="{'group_by':'manager_id'}"/>
+                        <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
+                        <separator/>
+                        <filter name="group_date_from" string="Start Month" context="{'group_by':'date_from:month'}"/>
                     </group>
                 </search>
             </field>
@@ -40,9 +53,9 @@
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <calendar string="Leave Request" color="employee_id" 
-                          date_start="date_from" date_stop="date_to"  
-                          quick_add="False" avatar_model="hr.employee"> 
+                <calendar string="Leave Request" color="employee_id"
+                          date_start="date_from" date_stop="date_to"
+                          quick_add="False" avatar_model="hr.employee">
                     <field name="employee_id"/>
                     <field name="holiday_status_id"/>
                 </calendar>
@@ -54,7 +67,7 @@
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <form string="Leave Request" version="7.0">
+                <form string="Leave Request">
                 <field name="can_reset" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <header>
@@ -125,7 +138,7 @@
             <field name="name">Leaves Management</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <form string="Leaves Management" version="7.0">
+                <form string="Leaves Management">
                     <header>
                         <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                         <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
@@ -341,7 +354,7 @@
             <field name="name">hr.holidays.status.form</field>
             <field name="model">hr.holidays.status</field>
             <field name="arch" type="xml">
-                <form string="Leave Type" version="7.0">
+                <form string="Leave Type">
                 <sheet string="Leave Type">
                     <group col="4">
                         <field name="name"/>
@@ -462,7 +475,7 @@
            <field name="view_id" ref="hr_holidays_leaves_assign_tree_view"/>
            <field name="help" type="html">
              <p>
-               You can assign remaining Legal Leaves for each employee, OpenERP
+               You can assign remaining Legal Leaves for each employee, Odoo
                will automatically create and validate allocation requests.
              </p>
            </field>
@@ -483,7 +496,13 @@
                     </group>
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action" groups="base.group_hr_user"/>
+                    <button name="%(act_hr_employee_holiday_request)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        groups="base.group_hr_user">
+                        <field name="leaves_count" widget="statinfo" string="Leaves"/>
+                    </button>
                 </xpath>
             </field>
         </record>

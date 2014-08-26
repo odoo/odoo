@@ -208,7 +208,7 @@ class account_invoice(osv.osv, EDIMixin):
         edi_document.pop('partner_ref', None)
 
         # journal_id: should be selected based on type: simply put the 'type' in the context when calling create(), will be selected correctly
-        context.update(type=invoice_type)
+        context = dict(context, type=invoice_type)
 
         # for invoice lines, the account_id value should be taken from the product's default, i.e. from the default category, as it will not be provided.
         for edi_invoice_line in edi_document['invoice_line']:

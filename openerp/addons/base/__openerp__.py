@@ -39,7 +39,6 @@ The kernel of OpenERP, needed for all installation.
         'res/res_country_data.xml',
         'security/base_security.xml',
         'base_menu.xml',
-        'res/res_security.xml',
         'res/res_config.xml',
         'res/res.country.state.csv',
         'ir/ir_actions.xml',
@@ -63,7 +62,6 @@ The kernel of OpenERP, needed for all installation.
         'module/module_view.xml',
         'module/module_data.xml',
         'module/module_report.xml',
-        'module/wizard/base_module_import_view.xml',
         'module/wizard/base_module_update_view.xml',
         'module/wizard/base_language_install_view.xml',
         'module/wizard/base_import_language_view.xml',
@@ -83,7 +81,7 @@ The kernel of OpenERP, needed for all installation.
         'res/res_users_view.xml',
         'res/res_partner_data.xml',
         'res/ir_property_view.xml',
-        'security/base_security.xml',
+        'res/res_security.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [
@@ -93,15 +91,11 @@ The kernel of OpenERP, needed for all installation.
         'res/res_partner_image_demo.xml',
     ],
     'test': [
-        'test/base_test.yml',
-        'test/test_osv_expression.yml',
-        'test/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
+        'tests/base_test.yml',
+        'tests/test_osv_expression.yml',
+        'tests/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
     ],
     'installable': True,
     'auto_install': True,
-    'css': ['static/src/css/modules.css'],
-    'js': [
-        'static/src/js/apps.js',
-    ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

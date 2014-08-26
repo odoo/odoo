@@ -24,12 +24,12 @@ from openerp.osv import fields, osv
 class ir_default(osv.osv):
     _name = 'ir.default'
     _columns = {
-        'field_tbl': fields.char('Object',size=64),
-        'field_name': fields.char('Object Field',size=64),
-        'value': fields.char('Default Value',size=64),
+        'field_tbl': fields.char('Object'),
+        'field_name': fields.char('Object Field'),
+        'value': fields.char('Default Value'),
         'uid': fields.many2one('res.users', 'Users'),
-        'page': fields.char('View',size=64),
-        'ref_table': fields.char('Table Ref.',size=64),
+        'page': fields.char('View'),
+        'ref_table': fields.char('Table Ref.'),
         'ref_id': fields.integer('ID Ref.',size=64),
         'company_id': fields.many2one('res.company','Company')
     }
@@ -43,7 +43,5 @@ class ir_default(osv.osv):
     _defaults = {
         'company_id': _get_company_id,
     }
-ir_default()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

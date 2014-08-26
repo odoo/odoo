@@ -28,17 +28,12 @@ class hr_evaluation_report(osv.Model):
     _description = "Evaluations Statistics"
     _auto = False
     _columns = {
-        'create_date': fields.date('Create Date', readonly=True),
+        'create_date': fields.datetime('Create Date', readonly=True),
         'delay_date': fields.float('Delay to Start', digits=(16, 2), readonly=True),
         'overpass_delay': fields.float('Overpassed Deadline', digits=(16, 2), readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
-        'request_id': fields.many2one('survey.user_input', 'Request_id', readonly=True),
-        'closed': fields.date("closed", readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
-            ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
-            ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'request_id': fields.many2one('survey.user_input', 'Request ID', readonly=True),
+        'closed': fields.date("Close Date", readonly=True),  # TDE FIXME master: rename into date_close
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee", readonly=True),
         'rating': fields.selection([
@@ -48,7 +43,7 @@ class hr_evaluation_report(osv.Model):
             ('3', 'Exceeds expectations'),
             ('4', 'Significantly exceeds expectations'),
         ], "Overall Rating", readonly=True),
-        'nbr': fields.integer('# of Requests', readonly=True),
+        'nbr': fields.integer('# of Requests', readonly=True),  # TDE FIXME master: rename into nbr_requests
         'state': fields.selection([
             ('draft', 'Draft'),
             ('wait', 'Plan In Progress'),
@@ -59,22 +54,27 @@ class hr_evaluation_report(osv.Model):
     }
     _order = 'create_date desc'
 
+    _depends = {
+        'hr.evaluation.interview': ['evaluation_id', 'id', 'request_id'],
+        'hr_evaluation.evaluation': [
+            'create_date', 'date', 'date_close', 'employee_id', 'plan_id',
+            'rating', 'state',
+        ],
+    }
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'hr_evaluation_report')
         cr.execute("""
             create or replace view hr_evaluation_report as (
                  select
                      min(l.id) as id,
-                     date_trunc('day',s.create_date) as create_date,
-                     to_char(s.create_date, 'YYYY-MM-DD') as day,
+                     s.create_date as create_date,
                      s.employee_id,
                      l.request_id,
                      s.plan_id,
                      s.rating,
                      s.date as deadline,
                      s.date_close as closed,
-                     to_char(s.create_date, 'YYYY') as year,
-                     to_char(s.create_date, 'MM') as month,
                      count(l.*) as nbr,
                      s.state,
                      avg(extract('epoch' from age(s.create_date,CURRENT_DATE)))/(3600*24) as  delay_date,
@@ -85,10 +85,6 @@ class hr_evaluation_report(osv.Model):
                      hr_evaluation_evaluation s on (s.id=l.evaluation_id)
                  GROUP BY
                      s.create_date,
-                     date_trunc('day',s.create_date),
-                     to_char(s.create_date, 'YYYY-MM-DD'),
-                     to_char(s.create_date, 'YYYY'),
-                     to_char(s.create_date, 'MM'),
                      s.state,
                      s.employee_id,
                      s.date,
@@ -101,4 +97,3 @@ class hr_evaluation_report(osv.Model):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

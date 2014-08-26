@@ -64,11 +64,11 @@
                 </div>
                 <hr/>
                 <!-- body fields -->
-                <div t-if="body_field == 'body_html'">
-                    <div t-field="record.body_html" id="email_body_html"/>
+                <div t-if="body_field == 'body_html'" class="col-sm-offset-2">
+                    <div t-field="record.body_html" id="email_body_html" class="o_mail_body"/>
                 </div>
-                <div t-if="body_field == 'body'">
-                    <div t-field="record.body" id="email_body"/>
+                <div t-if="body_field == 'body'" class="col-sm-offset-2">
+                    <div t-field="record.body" id="email_body" class="o_mail_body"/>
                 </div>
             </div>
         </div>

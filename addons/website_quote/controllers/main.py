@@ -65,7 +65,7 @@ class sale_quote(http.Controller):
         if token != order.access_token:
             return request.website.render('website.404')
         attachments=sign and [('signature.png', sign.decode('base64'))] or []
-        order_obj.signal_order_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
+        order_obj.signal_workflow(request.cr, SUPERUSER_ID, [order_id], 'order_confirm', context=request.context)
         message = _('Order signed by %s') % (signer,)
         self.__message_post(message, order_id, type='comment', subtype='mt_comment', attachments=attachments)
         return True
@@ -129,7 +129,7 @@ class sale_quote(http.Controller):
         order_line_obj.write(request.cr, SUPERUSER_ID, [line_id], {'product_uom_qty': (quantity)}, context=request.context)
         return [str(quantity), str(order.amount_total)]
 
-    @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True, multilang=True)
+    @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
     def template_view(self, quote, **post):
         values = { 'template': quote }
         return request.website.render('website_quote.so_template', values)

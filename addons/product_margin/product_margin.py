@@ -51,36 +51,45 @@ class product_product(osv.osv):
                 states = ('open', 'paid')
             elif invoice_state == 'draft_open_paid':
                 states = ('draft', 'open', 'paid')
+            if "force_company" in context:
+                company_id = context['force_company']
+            else:
+                company_id = self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id.id
 
+            #Cost price is calculated afterwards as it is a property
             sqlstr="""select
-                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity,0)) as avg_unit_price,
-                    sum(l.quantity) as num_qty,
+                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity * pu.factor / pu2.factor,0)) as avg_unit_price,
+                    sum(l.quantity * pu.factor / pu2.factor) as num_qty,
                     sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
-                    sum(l.quantity * pt.list_price) as sale_expected,
-                    sum(l.quantity * pt.standard_price) as normal_cost
+                    sum(l.quantity * pu.factor * pt.list_price / pu2.factor) as sale_expected
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
                 left join product_product product on (product.id=l.product_id)
-                left join product_template pt on (pt.id=product.product_tmpl_id)
-                where l.product_id = %s and i.state in %s and i.type IN %s and (i.date_invoice IS NULL or (i.date_invoice>=%s and i.date_invoice<=%s))
+                left join product_template pt on (pt.id = l.product_id)
+                    left join product_uom pu on (pt.uom_id = pu.id)
+                    left join product_uom pu2 on (l.uos_id = pu2.id)
+                where l.product_id = %s and i.state in %s and i.type IN %s and (i.date_invoice IS NULL or (i.date_invoice>=%s and i.date_invoice<=%s and i.company_id=%s))
                 """
             invoice_types = ('out_invoice', 'in_refund')
-            cr.execute(sqlstr, (val.id, states, invoice_types, date_from, date_to))
+            cr.execute(sqlstr, (val.id, states, invoice_types, date_from, date_to, company_id))
             result = cr.fetchall()[0]
             res[val.id]['sale_avg_price'] = result[0] and result[0] or 0.0
             res[val.id]['sale_num_invoiced'] = result[1] and result[1] or 0.0
             res[val.id]['turnover'] = result[2] and result[2] or 0.0
             res[val.id]['sale_expected'] = result[3] and result[3] or 0.0
             res[val.id]['sales_gap'] = res[val.id]['sale_expected']-res[val.id]['turnover']
-
+            prod_obj = self.pool.get("product.product")
+            ctx = context.copy()
+            ctx['force_company'] = company_id
+            prod = prod_obj.browse(cr, uid, val.id, context=ctx)
             invoice_types = ('in_invoice', 'out_refund')
-            cr.execute(sqlstr, (val.id, states, invoice_types, date_from, date_to))
+            cr.execute(sqlstr, (val.id, states, invoice_types, date_from, date_to, company_id))
             result = cr.fetchall()[0]
             res[val.id]['purchase_avg_price'] = result[0] and result[0] or 0.0
             res[val.id]['purchase_num_invoiced'] = result[1] and result[1] or 0.0
             res[val.id]['total_cost'] = result[2] and result[2] or 0.0
-            res[val.id]['normal_cost'] = result[4] and result[4] or 0.0
-            res[val.id]['purchase_gap'] = res[val.id]['normal_cost']-res[val.id]['total_cost']
+            res[val.id]['normal_cost'] = prod.standard_price * res[val.id]['purchase_num_invoiced']
+            res[val.id]['purchase_gap'] = res[val.id]['normal_cost'] - res[val.id]['total_cost']
 
             if 'total_margin' in field_names:
                 res[val.id]['total_margin'] = res[val.id]['turnover'] - res[val.id]['total_cost']

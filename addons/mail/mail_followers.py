@@ -37,7 +37,7 @@ class mail_followers(osv.Model):
     _log_access = False
     _description = 'Document Followers'
     _columns = {
-        'res_model': fields.char('Related Document Model', size=128,
+        'res_model': fields.char('Related Document Model',
                         required=True, select=1,
                         help='Model of the followed resource'),
         'res_id': fields.integer('Related Document ID', select=1,
@@ -47,6 +47,25 @@ class mail_followers(osv.Model):
         'subtype_ids': fields.many2many('mail.message.subtype', string='Subtype',
             help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall."),
     }
+
+    #
+    # Modifying followers change access rights to individual documents. As the
+    # cache may contain accessible/inaccessible data, one has to refresh it.
+    #
+    def create(self, cr, uid, vals, context=None):
+        res = super(mail_followers, self).create(cr, uid, vals, context=context)
+        self.invalidate_cache(cr, uid, context=context)
+        return res
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(mail_followers, self).write(cr, uid, ids, vals, context=context)
+        self.invalidate_cache(cr, uid, context=context)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(mail_followers, self).unlink(cr, uid, ids, context=context)
+        self.invalidate_cache(cr, uid, context=context)
+        return res
 
     _sql_constraints = [('mail_followers_res_partner_res_model_id_uniq','unique(res_model,res_id,partner_id)','Error, a partner cannot follow twice the same object.')]
 
@@ -61,7 +80,7 @@ class mail_notification(osv.Model):
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
-        'read': fields.boolean('Read', select=1),
+        'is_read': fields.boolean('Read', select=1, oldname='read'),
         'starred': fields.boolean('Starred', select=1,
             help='Starred message that goes into the todo mailbox'),
         'message_id': fields.many2one('mail.message', string='Message',
@@ -69,14 +88,14 @@ class mail_notification(osv.Model):
     }
 
     _defaults = {
-        'read': False,
+        'is_read': False,
         'starred': False,
     }
 
     def init(self, cr):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_notification_partner_id_read_starred_message_id',))
         if not cr.fetchone():
-            cr.execute('CREATE INDEX mail_notification_partner_id_read_starred_message_id ON mail_notification (partner_id, read, starred, message_id)')
+            cr.execute('CREATE INDEX mail_notification_partner_id_read_starred_message_id ON mail_notification (partner_id, is_read, starred, message_id)')
 
     def get_partners_to_email(self, cr, uid, ids, message, context=None):
         """ Return the list of partners to notify, based on their preferences.
@@ -87,7 +106,7 @@ class mail_notification(osv.Model):
         """
         notify_pids = []
         for notification in self.browse(cr, uid, ids, context=context):
-            if notification.read:
+            if notification.is_read:
                 continue
             partner = notification.partner_id
             # Do not send to partners without email address defined
@@ -97,18 +116,12 @@ class mail_notification(osv.Model):
             if message.author_id and message.author_id.email == partner.email:
                 continue
             # Partner does not want to receive any emails or is opt-out
-            if partner.notification_email_send == 'none':
-                continue
-            # Partner wants to receive only emails and comments
-            if partner.notification_email_send == 'comment' and message.type not in ('email', 'comment'):
-                continue
-            # Partner wants to receive only emails
-            if partner.notification_email_send == 'email' and message.type != 'email':
+            if partner.notify_email == 'none':
                 continue
             notify_pids.append(partner.id)
         return notify_pids
 
-    def get_signature_footer(self, cr, uid, user_id, res_model=None, res_id=None, context=None):
+    def get_signature_footer(self, cr, uid, user_id, res_model=None, res_id=None, context=None, user_signature=True):
         """ Format a standard footer for notification emails (such as pushed messages
             notification or invite emails).
             Format:
@@ -116,8 +129,7 @@ class mail_notification(osv.Model):
                     Administrator
                 </p>
                 <div>
-                    <small>Sent by <a ...>Your Company</a> using <a ...>OpenERP</a>.</small> OR
-                    <small>Sent by Administrator using <a ...>OpenERP</a>.</small>
+                    <small>Sent from <a ...>Your Company</a> using <a ...>OpenERP</a>.</small>
                 </div>
         """
         footer = ""
@@ -126,11 +138,12 @@ class mail_notification(osv.Model):
 
         # add user signature
         user = self.pool.get("res.users").browse(cr, SUPERUSER_ID, [user_id], context=context)[0]
-        if user.signature:
-            signature = plaintext2html(user.signature)
-        else:
-            signature = "--<br />%s" % user.name
-        footer = tools.append_content_to_html(footer, signature, plaintext=False, container_tag='p')
+        if user_signature:
+            if user.signature:
+                signature = user.signature
+            else:
+                signature = "--<br />%s" % user.name
+            footer = tools.append_content_to_html(footer, signature, plaintext=False)
 
         # add company signature
         if user.company_id.website:
@@ -140,6 +153,7 @@ class mail_notification(osv.Model):
         else:
             company = user.company_id.name
         sent_by = _('Sent by %(company)s using %(odoo)s.')
+
         signature_company = '<small>%s</small>' % (sent_by % {
             'company': company,
             'odoo': "<a style='color:inherit' href='https://www.odoo.com/'>Odoo</a>"
@@ -157,12 +171,12 @@ class mail_notification(osv.Model):
             existing_pids.add(notification.partner_id.id)
 
         # update existing notifications
-        self.write(cr, uid, ids, {'read': False}, context=context)
+        self.write(cr, uid, ids, {'is_read': False}, context=context)
 
         # create new notifications
         new_pids = set(partner_ids) - existing_pids
         for new_pid in new_pids:
-            new_notif_ids.append(self.create(cr, uid, {'message_id': message_id, 'partner_id': new_pid, 'read': False}, context=context))
+            new_notif_ids.append(self.create(cr, uid, {'message_id': message_id, 'partner_id': new_pid, 'is_read': False}, context=context))
         return new_notif_ids
 
     def _notify_email(self, cr, uid, ids, message_id, force_send=False, user_signature=True, context=None):
@@ -176,13 +190,18 @@ class mail_notification(osv.Model):
         # compute email body (signature, company data)
         body_html = message.body
         # add user signature except for mail groups, where users are usually adding their own signatures already
-        if user_signature and message.model != 'mail.group':
-            user_id = message.author_id and message.author_id.user_ids and message.author_id.user_ids[0] and message.author_id.user_ids[0].id or None
-            signature_company = self.get_signature_footer(cr, uid, user_id, res_model=message.model, res_id=message.res_id, context=context)
+        user_id = message.author_id and message.author_id.user_ids and message.author_id.user_ids[0] and message.author_id.user_ids[0].id or None
+        signature_company = self.get_signature_footer(cr, uid, user_id, res_model=message.model, res_id=message.res_id, context=context, user_signature=(user_signature and message.model != 'mail.group'))
+        if signature_company:
             body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
 
         # compute email references
         references = message.parent_id.message_id if message.parent_id else False
+
+        # custom values
+        custom_values = dict()
+        if message.model and message.res_id and self.pool.get(message.model) and hasattr(self.pool[message.model], 'message_get_email_values'):
+            custom_values = self.pool[message.model].message_get_email_values(cr, uid, message.res_id, message, context=context)
 
         # create email values
         max_recipients = 50
@@ -196,6 +215,7 @@ class mail_notification(osv.Model):
                 'recipient_ids': [(4, id) for id in chunk],
                 'references': references,
             }
+            mail_values.update(custom_values)
             email_ids.append(self.pool.get('mail.mail').create(cr, uid, mail_values, context=context))
         if force_send and len(chunks) < 2:  # for more than 50 followers, use the queue system
             self.pool.get('mail.mail').send(cr, uid, email_ids, context=context)

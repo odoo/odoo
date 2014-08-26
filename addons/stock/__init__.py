@@ -22,8 +22,10 @@
 from stock import *
 import partner
 import product
+import procurement
 import report
 import wizard
 import res_config
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import controllers
+

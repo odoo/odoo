@@ -35,8 +35,9 @@ Following dates can be tracked:
     - removal date
     - alert date
 
-Used, for example, in food industries.""",
-    'data' : ['product_expiry_view.xml'],
+Also implements the removal strategy First Expiry First Out (FEFO) widely used, for example, in food industries.
+""",
+    'data' : ['product_expiry_view.xml', 'product_expiry_data.xml'],
     'auto_install': False,
     'installable': True,
     'images': ['images/production_lots_dates.jpeg','images/products_dates.jpeg'],

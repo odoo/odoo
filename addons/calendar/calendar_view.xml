@@ -9,7 +9,7 @@
         <field name="name">Meeting Types Tree</field>
         <field name="model">calendar.event.type</field>
         <field name="arch" type="xml">
-            <tree string="Meeting Types">
+            <tree string="Meeting Types" editable="bottom">
                 <field name="name"/>
             </tree>
         </field>
@@ -29,7 +29,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Meetings" version="7.0">
+            <form string="Meetings">
                 <sheet>
                     <field name="state" invisible="1"/>
                     <field name="is_attendee" invisible="1"/>
@@ -58,24 +58,24 @@
                             </group>
                             <group>
                                 <group>
-                                    <field name="date" string="Starting at" on_change="onchange_dates(date, duration, False, allday)"/>
-                                    <label for="duration"/>
+                                    <field name="start" attrs="{'invisible': True}"/>
+                                    <field name="stop" attrs="{'invisible': True}"/>
+
+                                    <field name="start_date" string="Starting at" on_change="onchange_dates('start', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
+                                    <field name="stop_date" string="Ending at" on_change="onchange_dates('stop', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
+
+                                    <field name="start_datetime" string="Starting at" on_change="onchange_dates('start', start_datetime, stop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <field name="stop_datetime" string="Ending at" on_change="onchange_dates('stop', start_datetime, stop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <label for="allday"/>
                                     <div>
-                                        <field name="duration" widget="float_time"
-                                            on_change="onchange_dates(date, duration, False, allday)"
-                                            class="oe_inline" attrs="{'invisible': [('allday','=',True)]}"/>
-                                        <label string="hours" attrs="{'invisible': [('allday','=',True)]}"/>
-                                        (<field name="allday"  class="oe_inline"/>
-                                        <label for="allday" string="All Day?"/>)
+                                        <field name="allday"  class="oe_inline" on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)"/>
                                     </div>
-                                    <field name="date_deadline" groups="base.group_no_one"
-                                        attrs="{'invisible': ['|', ('allday','=',True), ('duration','&lt;', 24)]}"
-                                        />
+                                    <field name="duration" widget="float_time" class="oe_inline" attrs="{ 'invisible': True }"/>
                                 </group>
                                 <group>
-                                    <field name="categ_ids" widget="many2many_tags"/>
+                                    <field name="categ_ids" widget="many2many_tags" />
                                     <field name="alarm_ids" widget="many2many_tags" />
-                                    <field name="location"/>
+                                    <field name="location" />
                                 </group>
 
                             </group>
@@ -98,17 +98,17 @@
                                         <div>
                                             <field name="end_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
                                             <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                            <field name="end_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
+                                            <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
                                         </div>
                                         <label string="Select Weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
                                         <group col="2" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}" >
-                                            <field name="mo" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
-                                            <field name="tu" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
-                                            <field name="we" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
-                                            <field name="th" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
-                                            <field name="fr" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
-                                            <field name="sa" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
-                                            <field name="su" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
+                                            <field name="mo" />
+                                            <field name="tu" />
+                                            <field name="we" />
+                                            <field name="th" />
+                                            <field name="fr" />
+                                            <field name="sa" />
+                                            <field name="su" />
                                         </group>
     
                                         <label string="Day of Month"
@@ -170,7 +170,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <form string="Meetings" version="7.0">
+            <form string="Meetings">
                 <field name="state" invisible="1"/>
                 <field name="is_attendee" invisible="1"/>
                 <field name="attendee_status" invisible="1"/>
@@ -178,7 +178,9 @@
                 <field name="name"/>
                 <group>
                     <group>
-                        <field name="date" string="Start" />
+                        <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)]}"/>
+                        <field name="start_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)]}"/>
+        
                         <field name="duration" string="Duration" widget="float_time" attrs="{'invisible': [('allday','=',True)]}"/>
                         <field name="allday" class="oe_inline" attrs="{'invisible': [('allday','=',False)]}"/>
                         <field name="partner_ids" widget="many2manyattendee" string="Attendees"/>
@@ -201,7 +203,8 @@
         <field name="arch" type="xml">
             <tree string="Meetings" fonts="bold:message_unread==True">
                 <field name="name" string="Subject"/>
-                <field name="date" string="Event Date"/>
+                <field name="allday" invisible="True"/>
+                <field name="display_start" string="Date" />
                 <field name="user_id"/>
                 <field name="location"/>
                 <field name="show_as"/>
@@ -219,7 +222,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Meetings" date_start="date" date_stop="date_deadline" date_delay="duration" all_day="allday" 
+            <calendar string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday" 
                          display="[name]" color="color_partner_id" attendee="partner_ids" avatar_model="res.partner"
                          use_contacts="True" event_open_popup="%(calendar.view_calendar_event_form_popup)s">
             
@@ -257,11 +260,10 @@
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
-                <group expand="0" string="Group By...">
+                <group expand="0" string="Group By">
                     <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'show_as'}"/>
-                    <filter string="Privacy" icon="terp-locked" domain="[]" context="{'group_by':'class'}"/>
-                    <filter string="Event Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Start Date of Event by Month"/>
+                    <filter string="Privacy" icon="terp-locked" domain="[]" context="{'group_by':'class'}"/>                    
                 </group>
             </search>
         </field>

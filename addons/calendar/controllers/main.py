@@ -1,7 +1,7 @@
 import simplejson
 import openerp
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+import openerp.http as http
+from openerp.http import request
 import openerp.addons.web.controllers.main as webmain
 import json
 
@@ -33,21 +33,23 @@ class meeting_invitation(http.Controller):
         registry = openerp.modules.registry.RegistryManager.get(db)
         meeting_pool = registry.get('calendar.event')
         attendee_pool = registry.get('calendar.attendee')
+        partner_pool = registry.get('res.partner')
         with registry.cursor() as cr:
-            attendee_data = meeting_pool.get_attendee(cr, openerp.SUPERUSER_ID, id)
             attendee = attendee_pool.search_read(cr, openerp.SUPERUSER_ID, [('access_token', '=', token)], [])
+
+            if attendee and attendee[0] and attendee[0].get('partner_id'):
+                partner_id = int(attendee[0].get('partner_id')[0])
+                tz = partner_pool.read(cr, openerp.SUPERUSER_ID, partner_id, ['tz'])['tz']
+            else:
+                tz = False
+
+            attendee_data = meeting_pool.get_attendee(cr, openerp.SUPERUSER_ID, id, dict(tz=tz))
 
         if attendee:
             attendee_data['current_attendee'] = attendee[0]
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in webmain.manifest_list('js', db=db))
-        css = "\n       ".join('<link rel="stylesheet" href="%s">' % i for i in webmain.manifest_list('css', db=db))
 
-        return webmain.html_template % {
-            'js': js,
-            'css': css,
-            'modules': simplejson.dumps(webmain.module_boot(db)),
-            'init': "s.calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)),
-        }
+        values = dict(init="s.calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)))
+        return request.render('web.webclient_bootstrap', values)
 
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
     @http.route('/calendar/notify', type='json', auth="none")
@@ -65,5 +67,5 @@ class meeting_invitation(http.Controller):
         uid = request.session.uid
         context = request.session.context
         with registry.cursor() as cr:
-            res = registry.get("res.partner").calendar_last_notif_ack(cr, uid, context=context)
+            res = registry.get("res.partner")._set_calendar_last_notif_ack(cr, uid, context=context)
             return res

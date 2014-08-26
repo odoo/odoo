@@ -29,6 +29,35 @@
         </record>
 
         <!--
+             Precisions
+        -->
+
+        <record forcecreate="True" id="decimal_price" model="decimal.precision">
+            <field name="name">Product Price</field>
+            <field name="digits">2</field>
+        </record>
+        <record forcecreate="True" id="decimal_discount" model="decimal.precision">
+            <field name="name">Discount</field>
+            <field name="digits">2</field>
+        </record>
+        <record forcecreate="True" id="decimal_account" model="decimal.precision">
+            <field name="name">Account</field>
+            <field name="digits">2</field>
+        </record>
+        <record forcecreate="True" id="decimal_stock_weight" model="decimal.precision">
+            <field name="name">Stock Weight</field>
+            <field name="digits">2</field>
+        </record>
+        <record forcecreate="True" id="decimal_product_uom" model="decimal.precision">
+            <field name="name">Product Unit of Measure</field>
+            <field name="digits" eval="3"/>
+        </record>
+        <record forcecreate="True" id="decimal_product_uos" model="decimal.precision">
+            <field name="name">Product UoS</field>
+            <field name="digits" eval="3"/>
+        </record>
+
+        <!--
             Resource: product.uom
         -->
         <record id="product_uom_unit" model="product.uom">
@@ -47,6 +76,7 @@
             <field name="category_id" ref="product_uom_categ_kgm"/>
             <field name="name">kg</field>
             <field name="factor" eval="1"/>
+            <field name="rounding" eval="0.001"/>
         </record>
         <record id="product_uom_gram" model="product.uom">
             <field name="category_id" ref="product_uom_categ_kgm"/>
@@ -211,30 +241,6 @@ parameter) will see those record just disappear.
             <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
         </record>
 
-        <record forcecreate="True" id="decimal_price" model="decimal.precision">
-            <field name="name">Product Price</field>
-            <field name="digits">2</field>
-        </record>
-        <record forcecreate="True" id="decimal_discount" model="decimal.precision">
-            <field name="name">Discount</field>
-            <field name="digits">2</field>
-        </record>
-        <record forcecreate="True" id="decimal_account" model="decimal.precision">
-            <field name="name">Account</field>
-            <field name="digits">2</field>
-        </record>
-        <record forcecreate="True" id="decimal_stock_weight" model="decimal.precision">
-            <field name="name">Stock Weight</field>
-            <field name="digits">2</field>
-        </record>
-        <record forcecreate="True" id="decimal_product_uom" model="decimal.precision">
-            <field name="name">Product Unit of Measure</field>
-            <field name="digits" eval="3"/>
-        </record>
-        <record forcecreate="True" id="decimal_product_uos" model="decimal.precision">
-            <field name="name">Product UoS</field>
-            <field name="digits" eval="3"/>
-        </record>
 
         <!--
         Product
@@ -248,11 +254,6 @@ parameter) will see those record just disappear.
             <field name="categ_id" ref="product.product_category_all"/>
             <field name="type">service</field>
             <field name="sale_ok" eval="False"/>
-        </record>
-
-        <!-- Product Public Categories -->
-        <record id="categ_others" model="product.public.category">
-            <field name="name">Others</field>
         </record>
     </data>
 </openerp>

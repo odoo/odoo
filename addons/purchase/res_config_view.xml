@@ -17,7 +17,7 @@
             <field name="name">purchase settings</field>
             <field name="model">purchase.config.settings</field>
             <field name="arch" type="xml">
-                <form string="Configure Purchases" class="oe_form_configuration" version="7.0">
+                <form string="Configure Purchases" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         or
@@ -66,6 +66,10 @@
                                 <field name="module_purchase_requisition" class="oe_inline"/>
                                 <label for="module_purchase_requisition"/>
                             </div>
+                            <div attrs="{'invisible': [('module_purchase_requisition', '=', False)]}">
+                                <field name="group_advance_purchase_requisition" class="oe_inline"/>
+                                <label for="group_advance_purchase_requisition"/>
+                            </div>
                             <div>
                                 <field name="module_purchase_analytic_plans" on_change="onchange_purchase_analytic_plans(module_purchase_analytic_plans, context)" class="oe_inline"/>
                                 <label for="module_purchase_analytic_plans"/>
@@ -73,6 +77,16 @@
                             <div>
                                 <field name="group_analytic_account_for_purchases" class="oe_inline"/>
                                 <label for="group_analytic_account_for_purchases"/>
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="Location &amp; Warehouse"/>
+                    <group>
+                        <label for="id" string="Routes"/>
+                        <div>
+                            <div>
+                                <field name="module_stock_dropshipping" class="oe_inline"/>
+                                <label for="module_stock_dropshipping"/>
                             </div>
                         </div>
                     </group>

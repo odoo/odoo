@@ -26,7 +26,7 @@
             <field name="name">mrp.property.group.form</field>
             <field name="model">mrp.property.group</field>
             <field name="arch" type="xml">
-                <form string="Properties categories" version="7.0">
+                <form string="Properties categories">
                     <label for="name"/>
                     <field name="name"/>
                     <label for="description"/>
@@ -45,13 +45,13 @@
                 Click to create a group of properties.
               </p><p>
                 Define specific property groups that can be assigned to your
-                bill of materials and sales orders. Properties allows OpenERP
+                bill of materials and sales orders. Properties allows Odoo
                 to automatically select the right bill of materials according
                 to properties selected in the sales order by salesperson.
               </p><p>
                 For instance, in the property group "Warranty", you an have
                 two properties: 1 year warranty, 3 years warranty. Depending
-                on the propoerties selected in the sales order, OpenERP will
+                on the propoerties selected in the sales order, Odoo will
                 schedule a production using the matching bill of materials.
               </p>
             </field>
@@ -78,7 +78,7 @@
             <field name="name">mrp.property.form</field>
             <field name="model">mrp.property</field>
             <field name="arch" type="xml">
-                <form string="Properties" version="7.0">
+                <form string="Properties">
                     <group col="4">
                         <field colspan="4" name="name"/>
                         <field name="group_id"/>
@@ -98,7 +98,7 @@
                     <field name="name" string="Name"/>
                     <field name="composition"/>
                     <field name="group_id" />
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Property Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                </search>
@@ -117,12 +117,12 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new property.
               </p><p>
-                The Properties in OpenERP are used to select the right bill of
+                The Properties in Odoo are used to select the right bill of
                 materials for manufacturing a product when you have different
                 ways of building the same product.  You can assign several
                 properties to each bill of materials.  When a salesperson
                 creates a sales order, they can relate it to several properties
-                and OpenERP will automatically select the BoM to use according
+                and Odoo will automatically select the BoM to use according
                 the needs.
               </p>
             </field>
@@ -165,7 +165,7 @@
             <field name="name">mrp.workcenter.form</field>
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
-                <form string="Work Center" version="7.0">
+                <form string="Work Center">
                     <group col="4">
                         <group>
                             <field name="name"/>
@@ -189,7 +189,7 @@
                                     <field name="time_stop" widget="float_time"/>
                                 </group>
                                 <group string="Costing Information">
-                                    <field name="product_id" on_change="on_change_product_cost(product_id)" context="{'default_supply_method':'produce'}"/>
+                                    <field name="product_id" on_change="on_change_product_cost(product_id)"/>
                                     <field name="costs_hour"/>
                                     <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="costs_cycle"/>
@@ -247,7 +247,7 @@
             <field name="name">mrp.routing.workcenter.form</field>
             <field name="model">mrp.routing.workcenter</field>
             <field name="arch" type="xml">
-                <form string="Routing Work Centers" version="7.0">
+                <form string="Routing Work Centers">
                     <group col="4">
                         <field colspan="4" name="name"/>
                         <field name="sequence"/>
@@ -266,7 +266,7 @@
             <field name="name">mrp.routing.form</field>
             <field name="model">mrp.routing</field>
             <field name="arch" type="xml">
-                <form string="Routing" version="7.0">
+                <form string="Routing">
                     <group col="4">
                         <group>
                             <field name="name"/>
@@ -344,25 +344,20 @@
             <field name="name">mrp.bom.form</field>
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
-                <form string="Bill of Material" version="7.0">
+                <form string="Bill of Material">
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id, name, product_qty, context)" context="{'default_supply_method':'produce'}" class="oe_inline"/>
+                            <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
+                            <field name="product_id"/>
+                            <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_tmpl_id, product_uom)" groups="product.group_uom"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
-                                <field name="product_qty" class="oe_inline" on_change="onchange_product_id(product_id, name, product_qty, context)"/>
-                                <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
-                            </div>
-                            <label for="product_uos_qty" groups="product.group_uos"/>
-                            <div groups="product.group_uos" >
-                                <field name="product_uos_qty"
-                                    class="oe_inline"/>
-                                <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
-                                <field name="product_uos" class="oe_inline"/>
+                                <field name="product_qty" class="oe_inline" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
+                                <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_tmpl_id, product_uom)" groups="product.group_uom"/>
                             </div>
                             <label for="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
                             <div groups="mrp.group_mrp_routings">
-                            	<field name="routing_id" class="oe_inline"/>
+                                <field name="routing_id" class="oe_inline"/>
                             </div>
                         </group>
                         <group>
@@ -378,14 +373,19 @@
                     </group>
                     <notebook>
                         <page string="Components">
-                            <field name="bom_lines" widget="one2many_list">
+                            <field name="bom_line_ids" widget="one2many_list">
                                 <tree string="Components" editable="bottom">
-                                    <field name="product_id" context="{'default_supply_method':'produce'}" on_change="onchange_product_id(product_id, name)"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id" on_change="onchange_product_id(product_id, product_qty)"/>
+                                    <field name="type"/>
                                     <field name="product_qty"/>
+                                    <field name="product_rounding"/>
+                                    <field name="product_efficiency"/>
                                     <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
-                                    <field name="name" invisible="1"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
+                                    <field name="routing_id"/>
+                                    <field name="attribute_value_ids" widget="many2many_tags"/>
                                 </tree>
                             </field>
                         </page>
@@ -393,7 +393,6 @@
                             <group>
                                 <group>
                                     <field name="position"/>
-                                    <field name="bom_id"/>
                                     <field name="sequence"/>
                                     <field name="active"/>
                                 </group>
@@ -422,11 +421,12 @@
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
                     <field name="name" string="Bill Of Material" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    <field name="bom_lines" string="Components"/>
-                    <field name="product_id"/>
+                    <field name="bom_line_ids" string="Components"/>
+                    <field name="product_tmpl_id" string="Product"/>
+                    <field name="product_id" string="Variant"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
                         <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
@@ -439,13 +439,13 @@
        <record id="mrp_bom_tree_view" model="ir.ui.view">
             <field name="name">mrp.bom.tree</field>
             <field name="model">mrp.bom</field>
-            <field name="field_parent">child_complete_ids</field>
+            <!--field name="field_parent">child_complete_ids</field-->
             <field name="arch" type="xml">
                 <tree string="Bill of Materials">
                     <field name="sequence" invisible="1"/>
                     <field name="name" invisible="1"/>
+                    <field name="product_tmpl_id"/>
                     <field name="product_id"/>
-                    <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="code"/>
                     <field name="type"/>
@@ -455,32 +455,12 @@
                 </tree>
             </field>
         </record>
-       <record id="mrp_bom_component_tree_view" model="ir.ui.view">
-            <field name="name">mrp.bom.component.tree</field>
-            <field name="model">mrp.bom</field>
-            <field name="field_parent">child_complete_ids</field>
-            <field name="arch" type="xml">
-                <tree string="BoM Structure">
-                    <field name="sequence" invisible="1"/>
-                    <field name="name" groups="base.group_no_one"/>
-                    <field name="code"/>
-                    <field name="product_id"/>
-                    <field name="bom_id" groups="product.group_mrp_properties"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom" groups="product.group_uom"/>
-                    <field name="type"/>
-                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="date_start" groups="product.group_mrp_properties"/>
-                    <field name="date_stop" groups="product.group_mrp_properties"/>
-                </tree>
-            </field>
-        </record>
+
         <record id="mrp_bom_form_action" model="ir.actions.act_window">
             <field name="name">Bill of Materials</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
-            <field name="domain">[('bom_id','=',False)]</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -490,18 +470,61 @@
                 materials used to make a finished product; through a manufacturing
                 order or a pack of products.
               </p><p>
-                OpenERP uses these BoMs to automatically propose manufacturing
+                Odoo uses these BoMs to automatically propose manufacturing
                 orders according to procurement needs.
               </p>
             </field>
         </record>
+
+       <record id="mrp_bom_component_tree_view" model="ir.ui.view">
+            <field name="name">mrp.bom.component.tree</field>
+            <field name="model">mrp.bom.line</field>
+            <field name="arch" type="xml">
+                <tree string="Components" editable="top">
+                    <field name="sequence" widget="handle"/>
+                    <field name="bom_id"/>
+                    <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                    <field name="type"/>
+                    <field name="product_qty"/>
+                    <field name="product_rounding"/>
+                    <field name="product_efficiency"/>
+                    <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <field name="routing_id"/>
+                    <field name="attribute_value_ids" widget="many2many_tags"/>
+                    <field name="property_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_mrp_bom_line_filter" model="ir.ui.view">
+            <field name="name">mrp.bom.line.select</field>
+            <field name="model">mrp.bom.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Bill Of Material Components">
+                    <field name="bom_id"/>
+                    <field name="product_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Bill Of Material" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'bom_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}"/>
+                        <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
+                        <filter string=" Valid From Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">
             <field name="name">Bill of Material Components</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.bom</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="mrp_bom_component_tree_view"/>
-            <field name="domain">[]</field>
+            <field name="res_model">mrp.bom.line</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a component to a bill of material.
@@ -512,25 +535,42 @@
               </p>
             </field>
         </record>
-        <record id="product_search_form_view_procurment" model="ir.ui.view">
-             <field name="name">product.search.bom</field>
-             <field name="model">product.product</field>
-             <field name="inherit_id" ref="product.product_search_form_view"/>
+
+        <record id="product_template_search_view_procurment" model="ir.ui.view">
+             <field name="name">product.template.search.bom</field>
+             <field name="model">product.template</field>
+             <field name="inherit_id" ref="product.product_template_search_view"/>
              <field name="arch" type="xml">
                  <xpath expr="//filter[@string='Consumable']" position="after">
                      <separator/>
-                    <filter string="Components" name="components" icon="terp-accessories-archiver" domain="[('bom_ids','not in',[]),('bom_ids.bom_id','!=',False)]" invisible="not context.get('search_default_filter_supply_method_produce', False)"/>
+                    <filter string="Components" name="components" icon="terp-accessories-archiver" domain="[('bom_ids','not in',[])]"/>
                  </xpath>
              </field>
         </record>
 
-        <record id="product_supply_method_produce" model="ir.actions.act_window">
+        <record id="view_mrp_product_template_form_inherited" model="ir.ui.view">
+            <field name="name">product.form.mrp.inherited</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//group[@name='lot']" position="inside">
+                    <field name="track_production" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                </xpath>
+                <group name="sale_condition" position="inside">
+                    <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
+                    <div attrs="{'invisible':[('type','=','service')]}">
+                        <field name="produce_delay" class="oe_inline"/> days
+                    </div>
+                </group>
+            </field>
+        </record>
+        
+        <record id="product_template_action" model="ir.actions.act_window">
             <field name="name">Products</field>
-            <field name="res_model">product.product</field>
+            <field name="res_model">product.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{'search_default_filter_supply_method_produce' : 1}</field>
-            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="context">{}</field>
         </record>
         <!-- BOM menus -->
 
@@ -541,7 +581,7 @@
             sequence="10"/>
        <menuitem name="Products" 
             id="menu_mrp_product_form" 
-            action="product_supply_method_produce"
+            action="product_template_action"
             parent="menu_mrp_bom"/>
         <menuitem
             action="mrp_bom_form_action2"
@@ -628,17 +668,16 @@
             <field name="name">mrp.production.form</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <form string="Manufacturing Orders" version="7.0">
+                <form string="Manufacturing Orders">
                 <header>
                     <button name="button_confirm" states="draft" string="Confirm Production" class="oe_highlight"/>
                     <button name="%(act_mrp_product_produce)d" states="ready,in_production" string="Produce" type="action" class="oe_highlight"/>
-                    <button name="force_production" states="confirmed" string="Force Reservation" type="object" class="oe_highlight"/>
-                    <button name="force_production" states="picking_except" string="Force Reservation" type="object"/>
+                    <button name="action_assign" states="confirmed,picking_except" string="Check Availability" type="object" class="oe_highlight"/>
+                    <button name="force_production" states="confirmed" string="Force Reservation" type="object"/>
                     <button name="button_produce" states="ready" string="Mark as Started"/>
-                    <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
-                    <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel Production"/>
+                    <button name="button_cancel" states="draft,ready,in_production" string="Cancel Production"/>
                     <button name="action_cancel" type="object" states="confirmed" string="Cancel Production"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"picking_except":"red","confirmed":"blue"}'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"confirmed":"blue"}'/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -646,7 +685,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.bom_id','=',False)]" class="oe_inline" context='{"default_supply_method":"produce", "default_type": "product"}'/>
+                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom')]" class="oe_inline" context='{"default_type": "product"}'/>
                             <label for="product_qty"/>
                             <div>
                                 <field name="product_qty" class="oe_inline" on_change="product_id_change(product_id, product_qty)"/>
@@ -679,22 +718,16 @@
                             <group>
                                 <group string="Products to Consume">
                                     <field name="move_lines" nolabel="1" options="{'reload_on_button': true}">
-                                        <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
+                                        <tree colors="blue:state == 'draft';black:state in ('ready','assigned','in_production');gray:state in ('cancel','done');red:state in ('confirmed','waiting')" string="Products to Consume">
                                             <field name="product_id"/>
-                                            <field name="product_qty"  string="Quantity"/>
+                                            <field name="product_uom_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                            <field name="prodlot_id" groups="stock.group_production_lot" context="{'product_id': product_id}"/>
                                             <field name="state" invisible="1"/>
-                                            <button name="%(stock.move_consume)d"
+                                            <button name="%(mrp.move_consume)d"
                                                 string="Consume Products" type="action"
                                                 icon="gtk-go-forward" context="{'consume': True}"
-                                                states="draft,waiting,confirmed,assigned"/>
-                                            <button
-                                                   name="%(stock.track_line)d"
-                                                   string="Split in Serial Numbers"
-                                                   type="action" icon="gtk-justify-fill"
-                                                   states="draft,waiting,confirmed,assigned" 
-                                                   groups="stock.group_production_lot"/>
+                                                states="assigned"
+                                                 />
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
                                                 icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
@@ -704,11 +737,11 @@
                                 </group>
                                 <group string="Consumed Products">
                                     <field name="move_lines2" nolabel="1" options="{'reload_on_button': true}">
-                                       <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
+                                       <tree colors="red:scrapped==True;blue:state == 'draft';black:state in ('confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                            <field name="product_id" readonly="1"/>
-                                           <field name="product_qty" readonly="1"/>
+                                           <field name="restrict_lot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
+                                           <field name="product_uom_qty" readonly="1"/>
                                            <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
-                                           <field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
                                            <field name="state" invisible="1"/>
                                            <field name="scrapped" invisible="1"/>
                                        </tree>
@@ -722,28 +755,23 @@
                                     <field name="move_created_ids" nolabel="1" options="{'reload_on_button': true}">
                                         <tree string="Products to Finish">
                                             <field name="product_id"/>
-                                            <field name="product_qty"/>
+                                            <field name="product_uom_qty"/>
                                             <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="state" invisible="1"/>
-                                            <button name="%(stock.action_partial_move_server)d"
-                                                string="Partial"
-                                                type="action" states="confirmed,assigned"
-                                                icon="gtk-justify-fill"/>
+                                            <!--TODO: should have a partial picking here-->
                                         </tree>
                                     </field>
                                 </group>
                                 <group string="Produced Products">
                                     <field name="move_created_ids2" nolabel="1" options="{'reload_on_button': true}">
-                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
+                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
                                             <field name="product_id" readonly="1"/>
-                                            <field name="product_qty" readonly="1"/>
+                                            <field name="product_uom_qty" readonly="1"/>
+                                            <field name="restrict_lot_id" groups="stock.group_production_lot"/>
                                             <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_locations"/>
-                                            <field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
                                             <field name="scrapped" invisible="1"/>
                                             <field name="state" invisible="1"/>
-                                            <button name="%(stock.track_line)d"
-                                                 string="Split in Serial Numbers" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action" icon="terp-gtk-jump-to-ltr"
                                                 states="done,cancel"/>
@@ -757,7 +785,7 @@
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"/>
                             <field name="workcenter_lines">
-                                <form string="Production Work Centers" version="7.0">
+                                <form string="Production Work Centers">
                                     <group col="4">
                                         <field colspan="4" name="name"/>
                                         <field name="workcenter_id"/>
@@ -789,8 +817,7 @@
                                     <field name="date_finished" invisible="1"/>
                                 </group>
                                 <group>
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                    <field name="picking_id"/>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection" />                                     
                                     <field name="move_prod_id" groups="stock.group_locations"/>
                                 </group>
                             </group>
@@ -845,7 +872,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a manufacturing order. 
               </p><p>
-                A manufacuring order, based on a bill of materials, will
+                A manufacturing order, based on a bill of materials, will
                 consume raw materials and produce finished products.
               </p><p>
                 Manufacturing orders are usually proposed automatically based
@@ -868,7 +895,7 @@
               <p class="oe_view_nocontent_create">
                 Click to start a new manufacturing order. 
               </p><p>
-                A manufacuring order, based on a bill of materials, will
+                A manufacturing order, based on a bill of materials, will
                 consume raw materials and produce finished products.
               </p><p>
                 Manufacturing orders are usually proposed automatically based
@@ -915,7 +942,7 @@
             <field name="name">mrp.production.product.line.form</field>
             <field name="model">mrp.production.product.line</field>
             <field name="arch" type="xml">
-                <form string="Scheduled Products" version="7.0">
+                <form string="Scheduled Products">
                     <group col="4">
                         <field name="name"/>
                         <field name="product_id"/>
@@ -951,33 +978,16 @@
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name='move_id']" position="before">
-                    <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
+                <xpath expr="//field[@name='origin']" position="before">
+                    <field name="bom_id" domain="[('product_id','=',product_id)]"/>
                     <field name="production_id" attrs="{'invisible': [('production_id','=',False)]}"/>
                 </xpath>
-                <xpath expr="//field[@name='close_move']" position="after">
+                <xpath expr="//field[@name='origin']" position="after">
                     <group colspan="4"  groups="product.group_mrp_properties">
                         <field colspan="4" name="property_ids" widget="many2many_tags"/>
                     </group>
                 </xpath>
                </data>
-            </field>
-        </record>
-        <record id="product_product_normal_form_supply_view" model="ir.ui.view">
-            <field name="name">product.normal.form.mrp.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='supply_method']" position="attributes">
-                    <attribute name="invisible">False</attribute>
-                </xpath>
-                <group name="procurement_help" position="inside">
-                    <p attrs="{'invisible': ['|','|',('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','produce')]}">
-                        When you sell this product, OpenERP will trigger <b>a manufacturing
-                        order</b> using the bill of materials assigned to this product.
-                        The delivery order will be ready once the production is done.
-                    </p>
-                </group>
             </field>
         </record>
 
@@ -1015,34 +1025,69 @@
                 id="menu_mrp_production_order_action" name="Order Planning"
                 parent="menu_mrp_planning" sequence="1"/>
 
-        <record id="act_product_mrp_bom_open" model="ir.actions.act_window">
-            <field name="name">BoM Structure</field>
-            <field name="context">{'default_product_id': active_id}</field>
-            <field name="domain">[('product_id', 'in', active_ids),('bom_id','=',False)]</field>
+        <record model="ir.actions.act_window" id="template_open_bom">
+            <field name="context">{'default_product_tmpl_id': active_id, 'search_default_product_tmpl_id': active_id}</field>
+            <field name="name">Bill of Materials</field>
             <field name="res_model">mrp.bom</field>
+            <field name="view_type">form</field>
         </record>
         <record model="ir.actions.act_window" id="product_open_bom">
             <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
             <field name="name">Bill of Materials</field>
-            <field name="domain">[('bom_id','=',False)]</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
         </record>
+
         <record id="act_product_mrp_production" model="ir.actions.act_window">
             <field name="context">{'search_default_product_id': [active_id]}</field>
             <field name="name">Manufacturing Orders</field>
             <field name="res_model">mrp.production</field>
             <field name="view_id" ref="mrp_production_tree_view"/>
         </record>
-        <record model="ir.ui.view" id="product_form_view_bom_button">
+
+        <record model="ir.ui.view" id="product_template_form_view_bom_button">
+            <field name="name">product.template.procurement</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <div name="buttons" position="inside">
+                    <button class="oe_inline oe_stat_button" name="%(template_open_bom)d" type="action"
+                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
+                        <field string="Bill of Materials" name="bom_count" widget="statinfo" />
+                    </button>
+                    <button class="oe_inline oe_stat_button" name="action_view_mos" type="object" 
+                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
+                        <field string="Manufacturing" name="mo_count" widget="statinfo" />
+                    </button>
+                </div>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_product_form_view_bom_button">
             <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
-                    <button string="Bill of Materials" name="%(product_open_bom)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
-                    <button string="BoM Structure" name="%(act_product_mrp_bom_open)d" type="action" groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}"/>
-                    <button string="Manufacturing Orders" name="%(act_product_mrp_production)d" type="action" groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}"/>
+                <div name="buttons" position="inside">
+                    <button class="oe_inline oe_stat_button" name="action_view_bom" type="object" 
+                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
+                        <field string="Bill of Materials" name="bom_count" widget="statinfo" />
+                    </button>
+                    <button class="oe_inline oe_stat_button" name="%(act_product_mrp_production)d" type="action" 
+                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
+                        <field string="Manufacturing" name="mo_count" widget="statinfo" />
+                    </button>
+                </div>
+            </field>
+        </record>
+
+        <record id="view_warehouse_inherited" model="ir.ui.view">
+            <field name="name">Stock Warehouse Inherited</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='default_resupply_wh_id']" position="before">
+                    <field name="manufacture_to_resupply" />
                 </xpath>
             </field>
         </record>

@@ -36,7 +36,7 @@ class purchase_requisition_partner(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         tender = self.pool.get('purchase.requisition').browse(cr, uid, record_id, context=context)
         if not tender.line_ids:
-            raise osv.except_osv(_('Error!'), _('No Product in Tender.'))
+            raise osv.except_osv(_('Error!'), _('Define product(s) you want to include in the call for bids.'))
         return res
 
     def create_order(self, cr, uid, ids, context=None):
@@ -44,7 +44,6 @@ class purchase_requisition_partner(osv.osv_memory):
         data =  self.browse(cr, uid, ids, context=context)[0]
         self.pool.get('purchase.requisition').make_purchase_order(cr, uid, active_ids, data.partner_id.id, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

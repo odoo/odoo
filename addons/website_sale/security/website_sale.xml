@@ -23,5 +23,10 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <!-- toggle multi salesteam mode -->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(3, ref('base.group_mono_salesteams')), (4, ref('base.group_multi_salesteams'))]"/>
+    </record>
+
 </data>
 </openerp>

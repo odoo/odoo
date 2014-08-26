@@ -16,7 +16,6 @@ _logger = logging.getLogger(__name__)
 
 from openerp import http
 from openerp.http import request
-from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
 
 
 # drivers modules must add to drivers an object with a get_status() method 
@@ -24,9 +23,6 @@ from openerp.addons.web.controllers.main import manifest_list, module_boot, html
 drivers = {}
 
 class Proxy(http.Controller):
-    def __init__(self):
-        self.scale = 'closed'
-        self.scale_weight = 0.0
 
     def get_status(self):
         statuses = {}
@@ -48,7 +44,7 @@ class Proxy(http.Controller):
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>OpenERP's PosBox</title>
+        <title>Odoo's PosBox</title>
         <style>
         body {
             width: 480px;
@@ -153,40 +149,6 @@ class Proxy(http.Controller):
         The user stops the help request
         """
         print "help_canceled"
-
-    @http.route('/hw_proxy/weighting_start', type='json', auth='none', cors='*')
-    def weighting_start(self):
-        if self.scale == 'closed':
-            print "Opening (Fake) Connection to Scale..."
-            self.scale = 'open'
-            self.scale_weight = 0.0
-            time.sleep(0.1)
-            print "... Scale Open."
-        else:
-            print "WARNING: Scale already Connected !!!"
-
-    @http.route('/hw_proxy/weighting_read_kg', type='json', auth='none', cors='*')
-    def weighting_read_kg(self):
-        if self.scale == 'open':
-            print "Reading Scale..."
-            time.sleep(0.025)
-            self.scale_weight += 0.01
-            print "... Done."
-            return self.scale_weight
-        else:
-            print "WARNING: Reading closed scale !!!"
-            return 0.0
-
-    @http.route('/hw_proxy/weighting_end', type='json', auth='none', cors='*')
-    def weighting_end(self):
-        if self.scale == 'open':
-            print "Closing Connection to Scale ..."
-            self.scale = 'closed'
-            self.scale_weight = 0.0
-            time.sleep(0.1)
-            print "... Scale Closed."
-        else:
-            print "WARNING: Scale already Closed !!!"
 
     @http.route('/hw_proxy/payment_request', type='json', auth='none', cors='*')
     def payment_request(self, price):

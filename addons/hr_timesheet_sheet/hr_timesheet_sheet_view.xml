@@ -6,7 +6,7 @@
             <field name="name">hr.timesheet.account.form</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
             <field name="arch" type="xml">
-                <form string="Timesheet by Accounts" version="7.0">
+                <form string="Timesheet by Accounts">
                     <group col="4">
                         <field name="sheet_id"/>
                         <field name="name" groups="analytic.group_analytic_accounting"/>
@@ -61,7 +61,7 @@
             <field name="name">hr.timesheet.sheet.form</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field name="arch" type="xml">
-                <form string="Timesheet" version="7.0">
+                <form string="Timesheet">
                 <header>
                     <button name="button_confirm" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
                     <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
@@ -73,10 +73,15 @@
                     <div class="oe_right oe_button_box" name="buttons">
                         <button type="action"
                             name="%(act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet)d"
-                            string="Timesheet Activities" />
+                            class="oe_stat_button"
+                            icon="fa-clock-o">
+                            <field name="timesheet_activity_count" widget="statinfo" string="Timesheet" help="Timesheet Activities"/>
+                        </button>
                         <button type="action" groups="base.group_hr_attendance"
-                            name="%(act_hr_timesheet_sheet_sheet_2_hr_attendance)d"
-                            string="Attendances" />
+                            class="oe_stat_button" icon="fa-users"
+                            name="%(act_hr_timesheet_sheet_sheet_2_hr_attendance)d">
+                            <field name="attendance_count" widget="statinfo" string="Attendances"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <label for="employee_id" class="oe_edit_only"/>
@@ -117,7 +122,7 @@
                                     <field invisible="1" name="general_account_id"/>
                                     <field invisible="1" name="user_id" required="1"/>
                                 </tree>
-                                <form string="Timesheet Activities" version="7.0">
+                                <form string="Timesheet Activities">
                                     <field name="date"/>
                                     <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id, user_id)"/>
                                     <field name="name"/>
@@ -179,7 +184,7 @@
                     <filter name="to_approve" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Employees" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     </group>
@@ -365,7 +370,13 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_employee_extd_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="%(act_hr_employee_2_hr_timesheet)d" string="Timesheets" type="action" groups="base.group_hr_manager"/>
+                    <button name="%(act_hr_employee_2_hr_timesheet)d" 
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-clock-o" 
+                        groups="base.group_hr_manager">
+                        <field name="timesheet_count" widget="statinfo" string="Timesheets"/>
+                    </button>
                 </xpath>
             </field>
         </record>

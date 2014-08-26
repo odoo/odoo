@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-
 from openerp.osv import osv, fields
+
 
 class pos_details(osv.osv_memory):
     _name = 'pos.details'
@@ -54,12 +54,6 @@ class pos_details(osv.osv_memory):
         datas['form'] = res
         if res.get('id',False):
             datas['ids']=[res['id']]
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'pos.details',
-            'datas': datas,
-        }
-
+        return self.pool['report'].get_action(cr, uid, [], 'point_of_sale.report_detailsofsales', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

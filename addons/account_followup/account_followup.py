@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import api
 from openerp.osv import fields, osv
 from lxml import etree
 from openerp.tools.translate import _
@@ -28,9 +29,9 @@ class followup(osv.osv):
     _description = 'Account Follow-up'
     _rec_name = 'name'
     _columns = {
-        'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-up'),
+        'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-up', copy=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'name': fields.related('company_id', 'name', string = "Name"),
+        'name': fields.related('company_id', 'name', string = "Name", readonly=True, type="char"),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
@@ -49,7 +50,7 @@ class followup_line(osv.osv):
     _name = 'account_followup.followup.line'
     _description = 'Follow-up Criteria'
     _columns = {
-        'name': fields.char('Follow-Up Action', size=64, required=True),
+        'name': fields.char('Follow-Up Action', required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of follow-up lines."),
         'delay': fields.integer('Due Days', help="The number of days after the due date of the invoice to wait before sending the reminder.  Could be negative if you want to send a polite alert beforehand.", required=True),
         'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),
@@ -154,6 +155,7 @@ class res_partner(osv.osv):
                                'latest_followup_level_id_without_lit': latest_level_without_lit}
         return res
 
+    @api.cr_uid_ids_context
     def do_partner_manual_action(self, cr, uid, partner_ids, context=None): 
         #partner_ids -> res.partner
         for partner in self.browse(cr, uid, partner_ids, context=context):
@@ -190,6 +192,7 @@ class res_partner(osv.osv):
         }
         return self.pool['report'].get_action(cr, uid, [], 'account_followup.report_followup', data=datas, context=context)
 
+    @api.cr_uid_ids_context
     def do_partner_mail(self, cr, uid, partner_ids, context=None):
         if context is None:
             context = {}
@@ -434,15 +437,17 @@ class res_partner(osv.osv):
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
                                                  help="Optionally you can assign a user to this field, which will make him responsible for the action.", 
-                                                 track_visibility="onchange"), 
-        'payment_note':fields.text('Customer Payment Promise', help="Payment Note", track_visibility="onchange"),
-        'payment_next_action':fields.text('Next Action', 
+                                                 track_visibility="onchange", copy=False), 
+        'payment_note':fields.text('Customer Payment Promise', help="Payment Note", track_visibility="onchange", copy=False),
+        'payment_next_action':fields.text('Next Action', copy=False,
                                     help="This is the next action to be taken.  It will automatically be set when the partner gets a follow-up level that requires a manual action. ", 
                                     track_visibility="onchange"), 
-        'payment_next_action_date':fields.date('Next Action Date',
-                                    help="This is when the manual follow-up is needed. " \
-                                    "The date will be set to the current date when the partner gets a follow-up level that requires a manual action. "\
-                                    "Can be practical to set manually e.g. to see if he keeps his promises."),
+        'payment_next_action_date': fields.date('Next Action Date', copy=False,
+                                    help="This is when the manual follow-up is needed. "
+                                         "The date will be set to the current date when the partner "
+                                         "gets a follow-up level that requires a manual action. "
+                                         "Can be practical to set manually e.g. to see if he keeps "
+                                         "his promises."),
         'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
                             ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
         'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 
@@ -478,5 +483,21 @@ class res_partner(osv.osv):
                                                     multi="followup",
                                                     fnct_search=_payment_earliest_date_search),
         }
+
+
+class account_config_settings(osv.TransientModel):
+    _name = 'account.config.settings'
+    _inherit = 'account.config.settings'
+    
+    def open_followup_level_form(self, cr, uid, ids, context=None):
+        res_ids = self.pool.get('account_followup.followup').search(cr, uid, [], context=context)
+        
+        return {
+                 'type': 'ir.actions.act_window',
+                 'name': 'Payment Follow-ups',
+                 'res_model': 'account_followup.followup',
+                 'res_id': res_ids and res_ids[0] or False,
+                 'view_mode': 'form,tree',
+         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

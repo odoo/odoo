@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_config_settings_inherit" model="ir.ui.view">
+            <field name="name">account settings</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="arch" type="xml">
+               <xpath expr="//label[@for='module_account_followup']" position="after">
+                    <button type="object" name="open_followup_level_form" string="Configure your follow-up levels" class="oe_link"/>
+                </xpath>         
+            </field>
+        </record>
+    </data>
+</openerp>

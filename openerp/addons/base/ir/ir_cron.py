@@ -27,7 +27,7 @@ from dateutil.relativedelta import relativedelta
 import pytz
 
 import openerp
-from openerp import netsvc, SUPERUSER_ID
+from openerp import SUPERUSER_ID, netsvc, api
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
@@ -62,7 +62,7 @@ class ir_cron(osv.osv):
     _name = "ir.cron"
     _order = 'name'
     _columns = {
-        'name': fields.char('Name', size=60, required=True),
+        'name': fields.char('Name', required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'active': fields.boolean('Active'),
         'interval_number': fields.integer('Interval Number',help="Repeat every x."),
@@ -71,8 +71,8 @@ class ir_cron(osv.osv):
         'numbercall': fields.integer('Number of Calls', help='How many times the method is called,\na negative number indicates no limit.'),
         'doall' : fields.boolean('Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts."),
         'nextcall' : fields.datetime('Next Execution Date', required=True, help="Next planned execution date for this job."),
-        'model': fields.char('Object', size=64, help="Model name on which the method to be called is located, e.g. 'res.partner'."),
-        'function': fields.char('Method', size=64, help="Name of the method to be called when this job is processed."),
+        'model': fields.char('Object', help="Model name on which the method to be called is located, e.g. 'res.partner'."),
+        'function': fields.char('Method', help="Name of the method to be called when this job is processed."),
         'args': fields.text('Arguments', help="Arguments to be passed to the method, e.g. (uid,)."),
         'priority': fields.integer('Priority', help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
     }
@@ -159,24 +159,26 @@ class ir_cron(osv.osv):
             must not be committed/rolled back!
         """
         try:
-            now = fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.now())
-            nextcall = fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
-            numbercall = job['numbercall']
+            with api.Environment.manage():
+                now = fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.now())
+                nextcall = fields.datetime.context_timestamp(job_cr, job['user_id'], datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT))
+                numbercall = job['numbercall']
 
-            ok = False
-            while nextcall < now and numbercall:
-                if numbercall > 0:
-                    numbercall -= 1
-                if not ok or job['doall']:
-                    self._callback(job_cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
-                if numbercall:
-                    nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
-                ok = True
-            addsql = ''
-            if not numbercall:
-                addsql = ', active=False'
-            cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
-                       (nextcall.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
+                ok = False
+                while nextcall < now and numbercall:
+                    if numbercall > 0:
+                        numbercall -= 1
+                    if not ok or job['doall']:
+                        self._callback(job_cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
+                    if numbercall:
+                        nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
+                    ok = True
+                addsql = ''
+                if not numbercall:
+                    addsql = ', active=False'
+                cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
+                           (nextcall.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
+                self.invalidate_cache(job_cr, SUPERUSER_ID)
 
         finally:
             job_cr.commit()

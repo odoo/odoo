@@ -59,9 +59,11 @@ class account_automatic_reconcile(osv.osv_memory):
     #TODO: cleanup and comment this code... For now, it is awfulllll
     # (way too complex, and really slow)...
     def do_reconcile(self, cr, uid, credits, debits, max_amount, power, writeoff_acc_id, period_id, journal_id, context=None):
-    # for one value of a credit, check all debits, and combination of them
-    # depending on the power. It starts with a power of one and goes up
-    # to the max power allowed
+        """
+        for one value of a credit, check all debits, and combination of them
+        depending on the power. It starts with a power of one and goes up
+        to the max power allowed.
+        """
         move_line_obj = self.pool.get('account.move.line')
         if context is None:
             context = {}
@@ -87,11 +89,14 @@ class account_automatic_reconcile(osv.osv_memory):
                     return res
             return False
 
-        # for a list of credit and debit and a given power, check if there
-        # are matching tuples of credit and debits, check all debits, and combination of them
-        # depending on the power. It starts with a power of one and goes up
-        # to the max power allowed
+        
         def check4(list1, list2, power):
+            """
+            for a list of credit and debit and a given power, check if there
+            are matching tuples of credit and debits, check all debits, and combination of them
+            depending on the power. It starts with a power of one and goes up
+            to the max power allowed.
+            """
             def check3(value, list1, list2, list1power, power):
                 for i in range(len(list1)):
                     move = list1[i]
@@ -120,6 +125,7 @@ class account_automatic_reconcile(osv.osv_memory):
                 res = check4(list1, list2, p)
                 if res:
                     return res
+            return False
 
         ok = True
         reconciled = 0
@@ -233,7 +239,7 @@ class account_automatic_reconcile(osv.osv_memory):
                 (account_id.id,))
             additional_unrec = cr.fetchone()[0]
             unreconciled = unreconciled + additional_unrec
-        context.update({'reconciled': reconciled, 'unreconciled': unreconciled})
+        context = dict(context, reconciled=reconciled, unreconciled=unreconciled)
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','account_automatic_reconcile_view1')])
         resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         return {

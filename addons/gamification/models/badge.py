@@ -155,7 +155,7 @@ class gamification_badge(osv.Model):
             string='Authorized Users',
             help="Only these people can give this badge"),
         'rule_auth_badge_ids': fields.many2many('gamification.badge',
-            'rel_badge_badge', 'badge1_id', 'badge2_id',
+            'gamification_badge_rule_badge_rel', 'badge1_id', 'badge2_id',
             string='Required Badges',
             help="Only the people having these badges can give this badge"),
 

@@ -37,7 +37,7 @@ It allows the manager to quickly check the issues, assign them and decide on the
     'website': 'http://www.openerp.com',
     'images': ['images/issue_analysis.jpeg','images/project_issue.jpeg'],
     'depends': [
-        'crm',
+        'sales_team',
         'project',
     ],
     'data': [
@@ -46,7 +46,6 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'report/project_issue_report_view.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
-        'board_project_issue_view.xml',
         'res_config_view.xml',
         'project_issue_data.xml'
      ],

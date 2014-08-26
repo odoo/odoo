@@ -20,17 +20,18 @@
 ##############################################################################
 
 from datetime import datetime
+
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 
 AVAILABLE_PRIORITIES = [
-    ('', ''),
-    ('5', 'Not Good'),
-    ('4', 'On Average'),
+    ('0', 'Bad'),
+    ('1', 'Below Average'),
+    ('2', 'Average'),
     ('3', 'Good'),
-    ('2', 'Very Good'),
-    ('1', 'Excellent')
+    ('4', 'Excellent')
 ]
 
 class hr_recruitment_source(osv.osv):
@@ -38,7 +39,7 @@ class hr_recruitment_source(osv.osv):
     _name = "hr.recruitment.source"
     _description = "Source of Applicants"
     _columns = {
-        'name': fields.char('Source Name', size=64, required=True, translate=True),
+        'name': fields.char('Source Name', required=True, translate=True),
     }
 
 class hr_recruitment_stage(osv.osv):
@@ -47,7 +48,7 @@ class hr_recruitment_stage(osv.osv):
     _description = "Stage of Recruitment"
     _order = 'sequence'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
         'requirements': fields.text('Requirements'),
@@ -65,7 +66,7 @@ class hr_recruitment_degree(osv.osv):
     _name = "hr.recruitment.degree"
     _description = "Degree of Recruitment"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of degrees."),
     }
     _defaults = {
@@ -78,7 +79,7 @@ class hr_recruitment_degree(osv.osv):
 class hr_applicant(osv.Model):
     _name = "hr.applicant"
     _description = "Applicant"
-    _order = "id desc"
+    _order = "priority desc, id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _track = {
@@ -189,7 +190,7 @@ class hr_applicant(osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Subject / Application Name', size=128, required=True),
+        'name': fields.char('Subject / Application Name', required=True),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
@@ -212,19 +213,19 @@ class hr_applicant(osv.Model):
         'title_action': fields.char('Next Action', size=64),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Appreciation'),
         'job_id': fields.many2one('hr.job', 'Applied Job'),
-        'salary_proposed_extra': fields.char('Proposed Salary Extra', size=100, help="Salary Proposed by the Organisation, extra advantages"),
-        'salary_expected_extra': fields.char('Expected Salary Extra', size=100, help="Salary Expected by Applicant, extra advantages"),
+        'salary_proposed_extra': fields.char('Proposed Salary Extra', help="Salary Proposed by the Organisation, extra advantages"),
+        'salary_expected_extra': fields.char('Expected Salary Extra', help="Salary Expected by Applicant, extra advantages"),
         'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
         'salary_expected': fields.float('Expected Salary', help="Salary Expected by Applicant"),
         'availability': fields.integer('Availability', help="The number of days in which the applicant will be available to start working"),
-        'partner_name': fields.char("Applicant's Name", size=64),
+        'partner_name': fields.char("Applicant's Name"),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey.survey', string='Survey'),
         'response_id': fields.many2one('survey.user_input', "Response", ondelete='set null', oldname="response"),
-        'reference': fields.char('Referred By', size=128),
+        'reference': fields.char('Referred By'),
         'source_id': fields.many2one('hr.recruitment.source', 'Source'),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='day_open', type="float", store=True),
@@ -243,6 +244,7 @@ class hr_applicant(osv.Model):
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s._get_default_company_id(cr, uid, s._get_default_department_id(cr, uid, c), c),
         'color': 0,
+        'priority': '0',
         'date_last_stage_update': fields.datetime.now,
     }
 
@@ -252,6 +254,7 @@ class hr_applicant(osv.Model):
 
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         department_id = False
+        user_id = False
         if job_id:
             job_record = self.pool.get('hr.job').browse(cr, uid, job_id, context=context)
             department_id = job_record and job_record.department_id and job_record.department_id.id or False
@@ -323,7 +326,7 @@ class hr_applicant(osv.Model):
         return res
 
     def action_start_survey(self, cr, uid, ids, context=None):
-        context = context if context else {}
+        context = dict(context or {})
         applicant = self.browse(cr, uid, ids, context=context)[0]
         survey_obj = self.pool.get('survey.survey')
         response_obj = self.pool.get('survey.user_input')
@@ -340,7 +343,7 @@ class hr_applicant(osv.Model):
 
     def action_print_survey(self, cr, uid, ids, context=None):
         """ If response is available then print this response otherwise print survey form (print template of the survey) """
-        context = context if context else {}
+        context = dict(context or {})
         applicant = self.browse(cr, uid, ids, context=context)[0]
         survey_obj = self.pool.get('survey.survey')
         response_obj = self.pool.get('survey.user_input')
@@ -357,6 +360,13 @@ class hr_applicant(osv.Model):
         action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
         action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', ids)])
         return action
+
+    def message_get_reply_to(self, cr, uid, ids, context=None):
+        """ Override to get the reply_to of the parent project. """
+        applicants = self.browse(cr, SUPERUSER_ID, ids, context=context)
+        job_ids = set([applicant.job_id.id for applicant in applicants if applicant.job_id])
+        aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(job_ids), context=context)
+        return dict((applicant.id, aliases.get(applicant.job_id and applicant.job_id.id or 0, False)) for applicant in applicants)
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(hr_applicant, self).message_get_suggested_recipients(cr, uid, ids, context=context)
@@ -389,8 +399,7 @@ class hr_applicant(osv.Model):
         return super(hr_applicant, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         context['mail_create_nolog'] = True
         if vals.get('department_id') and not context.get('default_department_id'):
             context['default_department_id'] = vals.get('department_id')
@@ -445,7 +454,6 @@ class hr_applicant(osv.Model):
                         'model': self._name,
                         'composition_mode': 'mass_mail',
                         'template_id': stage.template_id.id,
-                        'same_thread': True,
                         'post': True,
                         'notify': True,
                     }, context=compose_ctx)
@@ -492,28 +500,14 @@ class hr_applicant(osv.Model):
                 raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
-        dict_act_window = act_window.read(cr, uid, action_id, [])
+        dict_act_window = act_window.read(cr, uid, [action_id], [])[0]
         if emp_id:
             dict_act_window['res_id'] = emp_id
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
 
-    def set_priority(self, cr, uid, ids, priority, *args):
-        """Set applicant priority
-        """
-        return self.write(cr, uid, ids, {'priority': priority})
-
-    def set_high_priority(self, cr, uid, ids, *args):
-        """Set applicant priority to high
-        """
-        return self.set_priority(cr, uid, ids, '1')
-
-    def set_normal_priority(self, cr, uid, ids, *args):
-        """Set applicant priority to normal
-        """
-        return self.set_priority(cr, uid, ids, '3')
-
     def get_empty_list_help(self, cr, uid, help, context=None):
+        context = dict(context or {})
         context['empty_list_help_model'] = 'hr.job'
         context['empty_list_help_id'] = context.get('default_job_id', None)
         context['empty_list_help_document_name'] = _("job applicants")
@@ -538,6 +532,16 @@ class hr_job(osv.osv):
                 ], context=context)
         return res
 
+    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
+        Applicant = self.pool['hr.applicant']
+        return {
+            job_id: {
+                'application_count': Applicant.search_count(cr,uid, [('job_id', '=', job_id)], context=context),
+                'documents_count': len(self._get_attached_docs(cr, uid, [job_id], field_name, arg, context=context)[job_id])
+            }
+            for job_id in ids
+        }
+
     _columns = {
         'survey_id': fields.many2one('survey.survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
@@ -545,8 +549,10 @@ class hr_job(osv.osv):
                                          "create new applicants for this job position."),
         'address_id': fields.many2one('res.partner', 'Job Location', help="Address where employees are working"),
         'application_ids': fields.one2many('hr.applicant', 'job_id', 'Applications'),
+        'application_count': fields.function(_count_all, type='integer', string='Applications', multi=True),
         'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
         'document_ids': fields.function(_get_attached_docs, type='one2many', relation='ir.attachment', string='Applications'),
+        'documents_count': fields.function(_count_all, type='integer', string='Documents', multi=True),
         'user_id': fields.many2one('res.users', 'Recruitment Responsible', track_visibility='onchange'),
         'color': fields.integer('Color Index'),
     }
@@ -602,7 +608,7 @@ class applicant_category(osv.osv):
     _name = "hr.applicant_category"
     _description = "Category of applicant"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

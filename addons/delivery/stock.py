@@ -30,7 +30,6 @@ class stock_picking(osv.osv):
 
     def _cal_weight(self, cr, uid, ids, name, args, context=None):
         res = {}
-        uom_obj = self.pool.get('product.uom')
         for picking in self.browse(cr, uid, ids, context=context):
             total_weight = total_weight_net = 0.00
 
@@ -51,6 +50,7 @@ class stock_picking(osv.osv):
             result[line.picking_id.id] = True
         return result.keys()
 
+
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume'),
@@ -64,10 +64,10 @@ class stock_picking(osv.osv):
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
                  'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
                  }),
-        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
+        'carrier_tracking_ref': fields.char('Carrier Tracking Ref'),
         'number_of_packages': fields.integer('Number of Packages'),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
-        }
+    }
 
     def _prepare_shipping_invoice_line(self, cr, uid, picking, invoice, context=None):
         """Prepare the invoice line to add to the shipping costs to the shipping's
@@ -118,26 +118,21 @@ class stock_picking(osv.osv):
             'invoice_line_tax_id': [(6, 0, taxes_ids)],
         }
 
-    def action_invoice_create(self, cr, uid, ids, journal_id=False,
-            group=False, type='out_invoice', context=None):
-        invoice_obj = self.pool.get('account.invoice')
-        picking_obj = self.pool.get('stock.picking')
+    def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
         invoice_line_obj = self.pool.get('account.invoice.line')
-        result = super(stock_picking, self).action_invoice_create(cr, uid,
-                ids, journal_id=journal_id, group=group, type=type,
-                context=context)
-        for picking in picking_obj.browse(cr, uid, result.keys(), context=context):
-            invoice = invoice_obj.browse(cr, uid, result[picking.id], context=context)
-            invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
-            if invoice_line:
-                invoice_line_obj.create(cr, uid, invoice_line)
-                invoice_obj.button_compute(cr, uid, [invoice.id], context=context)
-        return result
-    def _get_default_uom(self,cr,uid,c):
-        uom_categ, uom_categ_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_uom_categ_kgm')
-        return self.pool.get('product.uom').search(cr, uid, [('category_id', '=', uom_categ_id),('factor','=',1)])[0]
+        invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
+        invoice = self.browse(cr, uid, invoice_id, context=context)
+        invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
+        if invoice_line:
+            invoice_line_obj.create(cr, uid, invoice_line)
+        return invoice_id
+
+    def _get_default_uom(self, cr, uid, context=None):
+        uom_categ_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'product.product_uom_categ_kgm')
+        return self.pool.get('product.uom').search(cr, uid, [('category_id', '=', uom_categ_id), ('factor', '=', 1)])[0]
+
     _defaults = {
-        'weight_uom_id': lambda self,cr,uid,c: self._get_default_uom(cr,uid,c)
+        'weight_uom_id': lambda self, cr, uid, c: self._get_default_uom(cr, uid, c),
     }
 
 
@@ -166,17 +161,6 @@ class stock_move(osv.osv):
                             }
         return res
 
-    def _prepare_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
-        values = super(stock_move, self)._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context)
-        if picking.carrier_id:
-            values['carrier_id'] = picking.carrier_id.id
-        values['volume'] = picking.volume
-        values['weight'] = picking.weight
-        values['weight_net'] = picking.weight_net
-        values['carrier_tracking_ref'] = picking.carrier_tracking_ref
-        values['number_of_packages'] = picking.number_of_packages
-        return values
-
     _columns = {
         'weight': fields.function(_cal_move_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
                   store={
@@ -188,73 +172,14 @@ class stock_move(osv.osv):
                  }),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
         }
-    def _get_default_uom(self,cr,uid,c):
-        uom_categ, uom_categ_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_uom_categ_kgm')
+
+    def _get_default_uom(self, cr, uid, context=None):
+        uom_categ_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'product.product_uom_categ_kgm')
         return self.pool.get('product.uom').search(cr, uid, [('category_id', '=', uom_categ_id),('factor','=',1)])[0]
+
     _defaults = {
-        'weight_uom_id': lambda self,cr,uid,c: self._get_default_uom(cr,uid,c)
+        'weight_uom_id': lambda self, cr, uid, c: self._get_default_uom(cr, uid, c),
     }
 
-# Redefinition of the new fields in order to update the model stock.picking.out in the orm
-# FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
-#        the bug is fixed
-
-# TODO in trunk: Remove the duplication below using a mixin class!
-
-class stock_picking_out(osv.osv):
-    _inherit = 'stock.picking.out'
-
-    def _cal_weight(self, cr, uid, ids, name, args, context=None):
-        return self.pool.get('stock.picking')._cal_weight(cr, uid, ids, name, args, context=context)
-
-
-    def _get_picking_line(self, cr, uid, ids, context=None):
-        return self.pool.get('stock.picking')._get_picking_line(cr, uid, ids, context=context)
-
-    _columns = {
-        'carrier_id':fields.many2one("delivery.carrier","Carrier"),
-        'volume': fields.float('Volume'),
-        'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
-                  store={
-                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
-                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
-                 }),
-        'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
-                  store={
-                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
-                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
-                 }),
-        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
-        'number_of_packages': fields.integer('Number of Packages'),
-        'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
-        }
-
-class stock_picking_in(osv.osv):
-    _inherit = 'stock.picking.in'
-
-    def _cal_weight(self, cr, uid, ids, name, args, context=None):
-        return self.pool.get('stock.picking')._cal_weight(cr, uid, ids, name, args, context=context)
-
-    def _get_picking_line(self, cr, uid, ids, context=None):
-        return self.pool.get('stock.picking')._get_picking_line(cr, uid, ids, context=context)
-
-    _columns = {
-        'carrier_id':fields.many2one("delivery.carrier","Carrier"),
-        'volume': fields.float('Volume'),
-        'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
-                store={
-                'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
-                'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
-                }),
-        'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
-                store={
-                'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
-                'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
-                }),
-        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
-        'number_of_packages': fields.integer('Number of Packages'),
-        'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
-        }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

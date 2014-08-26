@@ -26,16 +26,17 @@
     'category': 'Tools',
     'description': """
 The module adds the possibility to display data from OpenERP in Google Spreadsheets in real time.
-========================================
+=================================================================================================
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['board', 'google_drive'],
-    'js': [
-        'static/src/js/search.js',
+    'data' : [
+        'google_spreadsheet_view.xml',
+        'google_spreadsheet_data.xml',
+        'views/google_spreadsheet.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'data': ['google_spreadsheet_view.xml', 'google_spreadsheet_data.xml'],
     'demo': [],
     'installable': True,
     'auto_install': False,

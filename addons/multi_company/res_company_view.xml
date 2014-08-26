@@ -56,21 +56,16 @@
         </record>
 
         <record id="action_inventory_form" model="ir.actions.act_window">
-            <field name="name">Default Company per Object</field>
+            <field name="name">Company Defaults</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">multi_company.default</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_inventory_search"/>
         </record>
 
-        <menuitem id="menu_custom_multicompany"
-            name="Multi-Companies"
-            parent="base.menu_custom"
-            sequence="50"/>
-
         <menuitem id="base.menu_action_inventory_form" 
             action="action_inventory_form"
-            parent="menu_custom_multicompany"/>
+            parent="base.menu_ir_property"/>
     </data>
 </openerp>
 

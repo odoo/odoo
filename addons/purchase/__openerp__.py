@@ -25,7 +25,7 @@
     'version': '1.1',
     'category': 'Purchase Management',
     'sequence': 19,
-    'summary': 'Purchase Orders, Receptions, Supplier Invoices',
+    'summary': 'Purchase Orders, Receipts, Supplier Invoices',
     'description': """
 Manage goods requirement by Purchase Orders easily
 ==================================================
@@ -38,15 +38,15 @@ OpenERP’s replenishment management rules enable the system to generate draft p
 Dashboard / Reports for Purchase Management will include:
 ---------------------------------------------------------
 * Request for Quotations
-* Purchase Orders Waiting Approval 
+* Purchase Orders Waiting Approval
 * Monthly Purchases by Category
-* Receptions Analysis
+* Receipt Analysis
 * Purchase Analysis
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images' : ['images/purchase_order.jpeg', 'images/purchase_analysis.jpeg', 'images/request_for_quotation.jpeg'],
-    'depends': ['stock', 'process', 'procurement', 'report'],
+    'images': ['images/purchase_order.jpeg', 'images/purchase_analysis.jpeg', 'images/request_for_quotation.jpeg'],
+    'depends': ['stock_account', 'report'],
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
@@ -54,15 +54,14 @@ Dashboard / Reports for Purchase Management will include:
         'purchase_sequence.xml',
         'company_view.xml',
         'purchase_data.xml',
+        'purchase_data.yml',
         'wizard/purchase_order_group_view.xml',
         'wizard/purchase_line_invoice_view.xml',
         'purchase_report.xml',
         'purchase_view.xml',
         'stock_view.xml',
         'partner_view.xml',
-        'process/purchase_process.xml',
         'report/purchase_report_view.xml',
-        'board_purchase_view.xml',
         'edi/purchase_order_action_data.xml',
         'res_config_view.xml',
 
@@ -71,19 +70,24 @@ Dashboard / Reports for Purchase Management will include:
     ],
     'test': [
         'test/ui/purchase_users.yml',
+        'test/process/run_scheduler.yml',
+        'test/fifo_price.yml',
+        'test/fifo_returns.yml',
+        #'test/costmethodchange.yml',
         'test/process/cancel_order.yml',
         'test/process/rfq2order2done.yml',
         'test/process/generate_invoice_from_reception.yml',
-        'test/process/run_scheduler.yml',
         'test/process/merge_order.yml',
         'test/process/edi_purchase_order.yml',
         'test/process/invoice_on_poline.yml',
         'test/ui/duplicate_order.yml',
         'test/ui/delete_order.yml',
+        'test/average_price.yml',
     ],
     'demo': [
         'purchase_order_demo.yml',
         'purchase_demo.xml',
+        'purchase_stock_demo.yml',
     ],
     'installable': True,
     'auto_install': False,

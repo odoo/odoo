@@ -27,6 +27,7 @@ Miscellaneous tools used by OpenERP.
 
 from functools import wraps
 import cProfile
+from contextlib import contextmanager
 import subprocess
 import logging
 import os
@@ -277,6 +278,36 @@ def reverse_enumerate(l):
     """
     return izip(xrange(len(l)-1, -1, -1), reversed(l))
 
+def topological_sort(elems):
+    """ Return a list of elements sorted so that their dependencies are listed
+    before them in the result.
+
+    :param elems: specifies the elements to sort with their dependencies; it is
+        a dictionary like `{element: dependencies}` where `dependencies` is a
+        collection of elements that must appear before `element`. The elements
+        of `dependencies` are not required to appear in `elems`; they will
+        simply not appear in the result.
+
+    :returns: a list with the keys of `elems` sorted according to their
+        specification.
+    """
+    # the algorithm is inspired by [Tarjan 1976],
+    # http://en.wikipedia.org/wiki/Topological_sorting#Algorithms
+    result = []
+    visited = set()
+
+    def visit(n):
+        if n not in visited:
+            visited.add(n)
+            if n in elems:
+                # first visit all dependencies of n, then append n to result
+                map(visit, elems[n])
+                result.append(n)
+
+    map(visit, elems)
+
+    return result
+
 
 class UpdateableStr(local):
     """ Class that stores an updateable string (used in wizards)
@@ -461,6 +492,7 @@ ALL_LANGUAGES = {
         'fa_IR': u'Persian / فارس',
         'fi_FI': u'Finnish / Suomi',
         'fr_BE': u'French (BE) / Français (BE)',
+        'fr_CA': u'French (CA) / Français (CA)',
         'fr_CH': u'French (CH) / Français (CH)',
         'fr_FR': u'French / Français',
         'gl_ES': u'Galician / Galego',
@@ -1209,6 +1241,30 @@ def dumpstacks(sig=None, frame=None):
                 code.append(line)
 
     _logger.info("\n".join(code))
+
+class frozendict(dict):
+    """ An implementation of an immutable dictionary. """
+    def __delitem__(self, key):
+        raise NotImplementedError("'__delitem__' not supported on frozendict")
+    def __setitem__(self, key, val):
+        raise NotImplementedError("'__setitem__' not supported on frozendict")
+    def clear(self):
+        raise NotImplementedError("'clear' not supported on frozendict")
+    def pop(self, key, default=None):
+        raise NotImplementedError("'pop' not supported on frozendict")
+    def popitem(self):
+        raise NotImplementedError("'popitem' not supported on frozendict")
+    def setdefault(self, key, default=None):
+        raise NotImplementedError("'setdefault' not supported on frozendict")
+    def update(self, *args, **kwargs):
+        raise NotImplementedError("'update' not supported on frozendict")
+
+@contextmanager
+def ignore(*exc):
+    try:
+        yield
+    except exc:
+        pass
 
 # Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
 if parse_version(getattr(werkzeug, '__version__', '0.0')) < parse_version('0.9.0'):

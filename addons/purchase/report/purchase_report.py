@@ -31,7 +31,7 @@ class purchase_report(osv.osv):
     _description = "Purchases Orders"
     _auto = False
     _columns = {
-        'date': fields.date('Order Date', readonly=True, help="Date on which this document has been created"),
+        'date': fields.datetime('Order Date', readonly=True, help="Date on which this document has been created"),  # TDE FIXME master: rename into date_order
         'state': fields.selection([('draft', 'Request for Quotation'),
                                      ('confirmed', 'Waiting Supplier Ack'),
                                       ('approved', 'Approved'),
@@ -40,7 +40,7 @@ class purchase_report(osv.osv):
                                       ('done', 'Done'),
                                       ('cancel', 'Cancelled')],'Order Status', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
+        'picking_type_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
         'location_id': fields.many2one('stock.location', 'Destination', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Supplier', readonly=True),
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', readonly=True),
@@ -52,12 +52,12 @@ class purchase_report(osv.osv):
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
         'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),
         'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True),
-        'quantity': fields.float('Quantity', readonly=True),
+        'quantity': fields.integer('Unit Quantity', readonly=True),  # TDE FIXME master: rename into unit_quantity
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
-        'nbr': fields.integer('# of Lines', readonly=True),
+        'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
         'category_id': fields.many2one('product.category', 'Category', readonly=True)
 
     }
@@ -75,7 +75,7 @@ class purchase_report(osv.osv):
                     s.dest_address_id,
                     s.pricelist_id,
                     s.validator,
-                    s.warehouse_id as warehouse_id,
+                    s.picking_type_id as picking_type_id,
                     s.partner_id as partner_id,
                     s.create_uid as user_id,
                     s.company_id as company_id,
@@ -88,13 +88,14 @@ class purchase_report(osv.osv):
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
                     sum(l.price_unit*l.product_qty)::decimal(16,2) as price_total,
-                    avg(100.0 * (l.price_unit*l.product_qty) / NULLIF(t.standard_price*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
-                    sum(t.standard_price*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
+                    avg(100.0 * (l.price_unit*l.product_qty) / NULLIF(ip.value_float*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
+                    sum(ip.value_float*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
                     (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average
                 from purchase_order_line l
                     join purchase_order s on (l.order_id=s.id)
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
+                            LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',t.id) AND ip.company_id=s.company_id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
                 group by
@@ -115,7 +116,7 @@ class purchase_report(osv.osv):
                     t.categ_id,
                     s.date_order,
                     s.state,
-                    s.warehouse_id,
+                    s.picking_type_id,
                     u.uom_type,
                     u.category_id,
                     t.uom_id,

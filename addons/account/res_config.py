@@ -42,7 +42,7 @@ class account_config_settings(osv.osv_memory):
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
             string='Default company currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
-            string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the OpenERP portal."),
+            string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the Odoo portal."),
         'company_footer': fields.related('company_id', 'rml_footer', type='text', readonly=True,
             string='Bank accounts footer preview', help="Bank accounts as printed in the footer of each printed document"),
 
@@ -259,6 +259,12 @@ class account_config_settings(osv.osv_memory):
     def onchange_tax_rate(self, cr, uid, ids, rate, context=None):
         return {'value': {'purchase_tax_rate': rate or False}}
 
+    def onchange_multi_currency(self, cr, uid, ids, group_multi_currency, context=None):
+        res = {}
+        if not group_multi_currency:
+            res['value'] = {'income_currency_exchange_account_id': False, 'expense_currency_exchange_account_id': False}
+        return res
+    
     def onchange_start_date(self, cr, uid, id, start_date):
         if start_date:
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")

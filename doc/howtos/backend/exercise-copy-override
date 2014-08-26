@@ -1,0 +1,28 @@
+# HG changeset patch
+# Parent 7d14b75cdfd4c7a272a13572947de5d47f3e851f
+
+Index: doc-backend/openacademy/models.py
+===================================================================
+--- doc-backend.orig/openacademy/models.py	2014-08-24 12:17:34.389386545 +0200
++++ doc-backend/openacademy/models.py	2014-08-24 12:17:34.381386544 +0200
+@@ -14,6 +14,20 @@
+         'openacademy.session', 'course_id', string="Session")
+ 
+ 
++    @api.one
++    def copy(self, default=None):
++        default = dict(default or {})
++
++        copied_count = self.search_count(
++            [('name', '=like', "Copy of {}%".format(self.name))])
++        if not copied_count:
++            new_name = "Copy of {}".format(self.name)
++        else:
++            new_name = "Copy of {} ({})".format(self.name, copied_count)
++
++        default['name'] = new_name
++        return super(Course, self).copy(default)
++
+     _sql_constraints = [
+         ('name_description_check',
+          'CHECK(name != description)',

@@ -25,7 +25,7 @@
                     This supplier has no purchase order. Click to create a new RfQ.
                 </p><p>
                     The request for quotation is the first step of the purchases flow. Once
-                    converted into a purchase order, you will be able to control the reception
+                    converted into a purchase order, you will be able to control the receipt
                     of the products and the supplier invoice.
                 </p>
             </field>
@@ -36,10 +36,12 @@
             <field name="name">res.partner.kanban.purchaseorder.inherit</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
                 <field name="mobile" position="after">
                     <field name="purchase_order_count"/>
                 </field>
+                
                 <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
                     <a name="%(purchase.act_res_partner_2_purchase_order)d" type="action" t-if="record.purchase_order_count.value>0">
                         <t t-esc="record.purchase_order_count.value"/> Purchases
@@ -60,9 +62,9 @@
                     Click here to record a supplier invoice.
                 </p><p>
                     Supplier invoices can be pre-generated based on purchase
-                    orders or receptions. This allows you to control invoices
+                    orders or receipts. This allows you to control invoices
                     you receive from your supplier according to the draft
-                    document in OpenERP.
+                    document in Odoo.
                 </p>
             </field>
         </record>
@@ -74,13 +76,16 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button name="%(purchase.act_res_partner_2_purchase_order)d" type="action"
-                        string="Purchase Orders"
+                    <button class="oe_inline oe_stat_button" name="%(purchase.act_res_partner_2_purchase_order)d" type="action"
                         attrs="{'invisible': [('supplier', '=', False)]}"
-                        groups="purchase.group_purchase_user"/>
-                    <button name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
-                        attrs="{'invisible': [('supplier', '=', False)]}"
-                        string="Supplier Invoices"/>
+                        groups="purchase.group_purchase_user" icon="fa-shopping-cart">
+                        <field string="Purchases" name="purchase_order_count" widget="statinfo"/>
+                    </button>
+                    <button class="oe_inline oe_stat_button" name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
+                        attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o" help="Supplier Invoices"
+                        groups="account.group_account_user">
+                        <field string="Supplier Inv." name="supplier_invoice_count" widget="statinfo"/>
+                    </button>
                 </xpath>
             </field>
         </record>

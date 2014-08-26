@@ -7,7 +7,7 @@
             <field name="model">project.issue</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_portal_project_issue">
+                <kanban class="oe_portal_project_issue">
                     <field name="priority"/>
                     <field name="user_email"/>
                     <field name="user_id"/>
@@ -38,21 +38,7 @@
                                         <field name="categ_ids"/>
                                         <div class="oe_right">
                                             Creation: <field name="create_date"/>
-                                            <span class="oe_kanban_highlight">
-                                                <t t-set="priority" t-value="record.priority.raw_value || 5"/>
-                                                <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
-                                                   <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
-                                                </a>
-                                                <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
-                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                                </a>
-                                                <a type="object" name="set_priority" args="['2']" title="High Priority">
-                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                                </a>
-                                                <a type="object" name="set_priority" args="['1']" title="Highest Priority">
-                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                                </a>
-                                            </span>
+                                            <field name="priority" widget="priority"/>
                                             <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
                                                 <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
                                             </t>

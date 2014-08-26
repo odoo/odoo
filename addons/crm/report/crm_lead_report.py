@@ -19,38 +19,25 @@
 #
 ##############################################################################
 
+from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
-from openerp.addons.crm import crm
 
-MONTHS = [
-    ('01', 'January'),
-    ('02', 'February'),
-    ('03', 'March'),
-    ('04', 'April'),
-    ('05', 'May'),
-    ('06', 'June'),
-    ('07', 'July'),
-    ('08', 'August'),
-    ('09', 'September'),
-    ('10', 'October'),
-    ('11', 'November'),
-    ('12', 'December')
-]
-
-class crm_lead_report(osv.osv):
+class crm_lead_report(osv.Model):
     """ CRM Lead Analysis """
     _name = "crm.lead.report"
     _auto = False
     _description = "CRM Lead Analysis"
     _rec_name = 'date_deadline'
+    _inherit = ["crm.tracking.mixin"]
 
     _columns = {
-        'date_deadline': fields.date('Exp. Closing', size=10, readonly=True, help="Expected Closing"),
+        'date_deadline': fields.date('Exp. Closing', readonly=True, help="Expected Closing"),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'opening_date': fields.date('Assignation Date', readonly=True),
-        'date_closed': fields.date('Close Date', readonly=True),
+        'opening_date': fields.datetime('Assignation Date', readonly=True),
+        'date_closed': fields.datetime('Close Date', readonly=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
+        'nbr_cases': fields.integer("# of Cases", readonly=True),
 
         # durations
         'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
@@ -58,14 +45,12 @@ class crm_lead_report(osv.osv):
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
 
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
-        'channel_id':fields.many2one('crm.case.channel', 'Channel', readonly=True),
-        'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
+        'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
-        'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
-        'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
+        'planned_revenue': fields.float('Total Revenue',digits=(16,2),readonly=True),  # TDE FIXME master: rename into total_revenue
+        'probable_revenue': fields.float('Expected Revenue', digits=(16,2),readonly=True),  # TDE FIXME master: rename into expected_revenue
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
@@ -88,11 +73,12 @@ class crm_lead_report(osv.osv):
                 SELECT
                     id,
                     c.date_deadline,
+                    count(id) as nbr_cases,
 
-                    to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
-                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
+                    c.date_open as opening_date,
+                    c.date_closed as date_closed,
 
-                    date_trunc('day',c.date_last_stage_update) as date_last_stage_update,
+                    c.date_last_stage_update as date_last_stage_update,
 
                     c.user_id,
                     c.probability,
@@ -101,19 +87,21 @@ class crm_lead_report(osv.osv):
                     c.company_id,
                     c.priority,
                     c.section_id,
-                    c.channel_id,
-                    c.type_id,
+                    c.campaign_id,
+                    c.source_id,
+                    c.medium_id,
                     c.partner_id,
                     c.country_id,
-                    c.planned_revenue,
+                    c.planned_revenue as planned_revenue,
                     c.planned_revenue*(c.probability/100) as probable_revenue,
-                    date_trunc('day',c.create_date) as create_date,
+                    c.create_date as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 FROM
                     crm_lead c
                 WHERE c.active = 'true'
+                GROUP BY c.id
             )""")
 
 

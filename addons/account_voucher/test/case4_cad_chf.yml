@@ -88,12 +88,13 @@
   I check that first invoice move is correct for debtor account (debit - credit == 149.39)
 -
   !python {model: account.invoice}: |
+    from openerp.tools import float_compare
     invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_cad"))
     assert invoice_id.move_id, "Move not created for open invoice"
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (move_line.debit - move_line.credit == 149.39), "Invoice move is incorrect for debtors account"
+    assert float_compare(move_line.debit - move_line.credit, 149.39, 2) == 0, "Invoice move is incorrect for debtors account"
 -
   I set the context that will be used for the encoding of all the vouchers of this file
 -
@@ -142,9 +143,9 @@
   I confirm the voucher
 -
   !python {model: account.voucher}: |
-    from openerp import netsvc
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 4'), ('partner_id', '=', ref('base.res_partner_19'))])
-    self.signal_proforma_voucher(cr, uid, voucher)
+    self.signal_workflow(cr, uid, voucher, 'proforma_voucher')
+
 -
   I check that the move of my voucher is valid
 -
@@ -166,15 +167,17 @@
   I check that my writeoff is correct. 11.05 credit and -13.26 amount_currency
 -
   !python {model: account.voucher}: |
+    from openerp.tools import float_compare
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 4'), ('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
+    assert move_lines, "Voucher move has no lines"
     for move_line in move_line_obj.browse(cr, uid, move_lines):
-        if move_line.amount_currency == 200:
-            assert move_line.debit == 160.00, "Bank account has wrong entry."
-        elif move_line.amount_currency == -298.78:
-            assert move_line.credit == 149.39, "Debtor account has wrong entry."
+        if float_compare(move_line.amount_currency, 200, 2) == 0:
+            assert float_compare(move_line.debit, 160.00, 2) == 0, "Bank account has wrong entry."
+        elif float_compare(move_line.amount_currency, -298.78, 2) == 0:
+            assert float_compare(move_line.credit, 149.39, 2) == 0, "Debtor account has wrong entry."
         elif move_line.debit == 0.00 and move_line.credit == 0.00:
             assert move_line.amount_currency == 98.78, "Incorrect Currency Difference, got %s as amount_currency (expected 98.78)." % (move_line.amount_currency)
             assert move_line.currency_id.id == ref('base.CAD'), "Incorrect Currency Difference, got %s (expected 'CAD')" % (move_line.currency_id.name)

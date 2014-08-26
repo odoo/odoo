@@ -32,11 +32,11 @@ class report_lunch_order(osv.osv):
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+            ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'user_id': fields.many2one('res.users', 'User Name'),
         'price_total':fields.float('Total Price', readonly=True),
-        'note' : fields.text('Note',size=256,readonly=True),
+        'note' : fields.text('Note', readonly=True),
     }
     _order = 'date desc'
     def init(self, cr):

@@ -1,19 +1,20 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="event_sale_product_form">
-             <field name="model">product.product</field>
-             <field name="inherit_id" ref="product.product_normal_form_view" />
+
+        <record model="ir.ui.view" id="event_sale_product_template_form">
+             <field name="model">product.template</field>
+             <field name="inherit_id" ref="product.product_template_form_view" />
              <field name="arch" type="xml">
-                <div name="options" position="after">
-                    <field name="event_ok" on_change="onchange_event_ok(type, event_ok, context)"
-                           attrs="{'readonly': [('is_only_child', '=', False)]}"/>
-                    <label for="event_ok"/>
+                <div name="options" position="inside">
+                    <div>
+                        <field name="event_ok" on_change="onchange_event_ok(type, event_ok, context)"/>
+                        <label for="event_ok"/>
+                    </div>
                 </div>
-                <div name='ean' position="after">
-                    <field name="event_type_id" attrs="{'invisible': [('event_ok', '=', False)],
-                                                        'readonly': [('is_only_child', '=', False)]}"/>
-                </div>
+                <field name='type' position="after">
+                    <field name="event_type_id" attrs="{'invisible': [('event_ok', '=', False)]}"/>
+                </field>
              </field>
         </record>
 
@@ -48,20 +49,6 @@
                     <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
                 </field>
             </field>
-        </record>
-
-        <record model="ir.ui.view" id="event_sale_product_template_form">
-             <field name="model">product.template</field>
-             <field name="inherit_id" ref="product.product_template_form_view" />
-             <field name="arch" type="xml">
-                <div name="options" position="inside">
-                    <field name="event_ok" on_change="onchange_event_ok(type, event_ok, context)"/>
-                    <label for="event_ok"/>
-                </div>
-                <field name='company_id' position="after">
-                    <field name="event_type_id" attrs="{'invisible': [('event_ok', '=', False)]}"/>
-                </field>
-             </field>
         </record>
 
         <record model="ir.ui.view" id="event_order_line">

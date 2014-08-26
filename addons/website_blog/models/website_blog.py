@@ -61,7 +61,7 @@ class BlogPost(osv.Model):
         'content': fields.html('Content', translate=True, sanitize=False),
         # website control
         'website_published': fields.boolean(
-            'Publish', help="Publish on the website"
+            'Publish', help="Publish on the website", copy=False,
         ),
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
@@ -74,7 +74,6 @@ class BlogPost(osv.Model):
         'history_ids': fields.one2many(
             'blog.post.history', 'post_id',
             'History', help='Last post modifications',
-            deprecated='This field will be removed for OpenERP v9.'
         ),
         # creation / update stuff
         'create_date': fields.datetime(
@@ -185,17 +184,6 @@ class BlogPost(osv.Model):
         self.create_history(cr, uid, ids, vals, context)
         return result
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({
-            'website_message_ids': [],
-            'website_published': False,
-            'website_published_datetime': False,
-        })
-        return super(BlogPost, self).copy(cr, uid, id, default=default, context=context)
-
-
 class BlogPostHistory(osv.Model):
     _name = "blog.post.history"
     _description = "Blog Post History"
@@ -204,7 +192,7 @@ class BlogPostHistory(osv.Model):
 
     _columns = {
         'post_id': fields.many2one('blog.post', 'Blog Post'),
-        'summary': fields.char('Summary', size=256, select=True),
+        'summary': fields.char('Summary', select=True),
         'content': fields.text("Content"),
         'create_date': fields.datetime("Date"),
         'create_uid': fields.many2one('res.users', "Modified By"),

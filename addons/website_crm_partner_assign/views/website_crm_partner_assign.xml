@@ -3,13 +3,13 @@
 <data>
 
 <!-- Layout add nav and footer -->
-<template id="footer_custom" inherit_id="website.layout" name="Footer Partners Link">
-    <xpath expr="//footer//div[@name='info']/ul" position="inside">
+<template id="footer_custom" inherit_id="website.footer_default" name="Footer Partners Link">
+    <xpath expr="//div[@id='info']/ul" position="inside">
         <li><a href="/partners">Resellers</a></li>
     </xpath>
 </template>
 
-<!-- Page --> 
+<!-- Page -->
 <template id="layout" name="Partners Layout">
     <t t-call="website.layout">
         <t t-set="additional_title">Resellers</t>
@@ -44,7 +44,7 @@
                         <li t-att-class="grade['active'] and 'active' or ''">
                             <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') }">
                                 <span class="badge pull-right" t-esc="grade['grade_id_count'] or ''"/>
-                                <t t-esc="grade['grade_id'][1]"/> 
+                                <t t-esc="grade['grade_id'][1]"/>
                             </a>
                         </li>
                     </t>
@@ -54,16 +54,16 @@
                     <li class="nav-header"><h3>Filter by Country</h3></li>
                     <t t-foreach="countries" t-as="country">
                         <li t-if="country['country_id']" t-att-class="country['active'] and 'active' or ''">
-                            <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and 'country_all=True' or '')}">
+                            <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}">
                                 <span class="badge pull-right" t-esc="country['country_id_count'] or ''"/>
-                                <t t-esc="country['country_id'][1]"/> 
+                                <t t-esc="country['country_id'][1]"/>
                             </a>
                         </li>
                     </t>
                 </ul>
 
             </div>
-            
+
             <div class="col-md-8 col-md-offset-1" id="ref_content">
                 <div class='navbar'>
                     <div>
@@ -113,12 +113,26 @@
     </t>
 </template>
 
-<template id="ref_country" inherit_id="website_crm_partner_assign.index" inherit_option_id="website_crm_partner_assign.index" name="Left World Map">
+<template id="ref_country" inherit_id="website_crm_partner_assign.index" optional="enabled" name="Left World Map">
     <xpath expr="//ul[@id='reseller_countries']" position="after">
-        <h3>World Map</h3>
+        <!-- modal for large map -->
+        <div class="modal fade partner_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">World Map</h4>
+                </div>
+                <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
+                style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
+            </div>
+          </div>
+        </div>
+        <!-- modal end -->
+        <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" /></button></h3>
         <ul class="nav">
             <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
-                style="width:260px; height:260px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
+                style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
         </ul>
     </xpath>
 </template>

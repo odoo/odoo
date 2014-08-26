@@ -68,7 +68,7 @@
     voucher_id = self.browse(cr, uid, id)
     assert (voucher_id.writeoff_amount == 0.0), "Writeoff amount is not 0.0"
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
-    self.signal_proforma_voucher(cr, uid, [voucher_id.id])
+    voucher_id.signal_workflow('proforma_voucher')
 
 -
   Finally i will Confirm the state of the invoice is paid

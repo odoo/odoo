@@ -6,13 +6,13 @@
             <field name="name">crm.lead2opportunity.partner.form</field>
             <field name="model">crm.lead2opportunity.partner</field>
             <field name="arch" type="xml">
-                <form string="Convert to Opportunity" version="7.0">
+                <form string="Convert to Opportunity">
                     <group name="name">
                         <field name="name" class="oe_inline"/>
                     </group>
                     <group string="Assign opportunities to">
                         <field name="user_id" class="oe_inline" on_change="on_change_user(user_id, section_id, context)"/>
-                        <field name="section_id" class="oe_inline"/>
+                        <field name="section_id" class="oe_inline" groups="base.group_multi_salesteams"/>
                     </group>
                     <group string="Opportunities">
                         <field name="opportunity_ids" attrs="{'invisible': [('name', '!=', 'merge')]}" nolabel="1">
@@ -49,7 +49,7 @@
             <field name="name">crm.lead2opportunity.partner.mass.form</field>
             <field name="model">crm.lead2opportunity.partner.mass</field>
             <field name="arch" type="xml">
-                <form string="Convert to Opportunity" version="7.0">
+                <form string="Convert to Opportunity">
                     <separator string="Conversion Options"/>
                     <group>
                         <field name="action" class="oe_inline" on_change="on_change_action(action)"/>

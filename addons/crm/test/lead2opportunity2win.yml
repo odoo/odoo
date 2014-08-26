@@ -31,23 +31,17 @@
 -
   Now I begin communication and schedule a phone call with the customer.
 -
-  !python {model: crm.opportunity2phonecall}: |
+  !python {model: crm.phonecall2phonecall}: |
     import time
-    context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_3')]})
+    context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_3')],'active_id': ref('crm_case_3')})
     call_id = self.create(cr, uid, {'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'name': "Bonjour M. Jean, Comment allez-vous? J'ai bien reçu votre demande, pourrions-nous en parler quelques minutes?"}, context=context)
     self.action_schedule(cr, uid, [call_id], context=context)
 -
-  I check that phonecall is scheduled for that opportunity.
--
-  !python {model: crm.phonecall}: |
-    ids = self.search(cr, uid, [('opportunity_id', '=', ref('crm_case_3'))])
-    assert len(ids), 'Phonecall is not scheduled'
--
   Now I schedule meeting with customer.
 -
   !python {model: crm.lead}: |
-    self.action_makeMeeting(cr, uid, [ref('crm_case_3')])
+    self.action_schedule_meeting(cr, uid, [ref('crm_case_3')])
 -
   After communicated  with customer, I put some notes with contract details.
 -
@@ -71,7 +65,7 @@
 -
   !python {model: crm.lead2opportunity.partner.mass}: |
     context.update({'active_model': 'crm.lead', 'active_ids': [ref("crm_case_13"), ref("crm_case_2")], 'active_id': ref("crm_case_13")})
-    id = self.create(cr, uid, {'user_ids': [(6, 0, [ref('base.user_root')])], 'section_id': ref('crm.section_sales_department')}, context=context)
+    id = self.create(cr, uid, {'user_ids': [(6, 0, [ref('base.user_root')])], 'section_id': ref('sales_team.section_sales_department')}, context=context)
     self.mass_convert(cr, uid, [id], context=context)
 -
   Now I check first lead converted on opportunity.

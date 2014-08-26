@@ -20,6 +20,8 @@
 ##############################################################################
 
 from openerp.addons.web.http import Controller, route, request
+from openerp.addons.web.controllers.main import _serialize_exception
+from openerp.osv import osv
 
 import simplejson
 from werkzeug import exceptions, url_decode
@@ -37,7 +39,7 @@ class ReportController(Controller):
     @route([
         '/report/<path:converter>/<reportname>',
         '/report/<path:converter>/<reportname>/<docids>',
-    ], type='http', auth='user', website=True, multilang=True)
+    ], type='http', auth='user', website=True)
     def report_routes(self, reportname, docids=None, converter=None, **data):
         report_obj = request.registry['report']
         cr, uid, context = request.cr, request.uid, request.context
@@ -48,7 +50,12 @@ class ReportController(Controller):
         if data.get('options'):
             options_data = simplejson.loads(data['options'])
         if data.get('context'):
-            context.update(simplejson.loads(data['context']))
+            # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
+            # the user explicitely wants to change the lang, this mechanism overwrites it. 
+            data_context = simplejson.loads(data['context'])
+            if data_context.get('lang'):
+                del data_context['lang']
+            context.update(data_context)
 
         if converter == 'html':
             html = report_obj.get_html(cr, uid, docids, reportname, data=options_data, context=context)
@@ -97,32 +104,40 @@ class ReportController(Controller):
         """
         requestcontent = simplejson.loads(data)
         url, type = requestcontent[0], requestcontent[1]
+        try:
+            if type == 'qweb-pdf':
+                reportname = url.split('/report/pdf/')[1].split('?')[0]
 
-        if type == 'qweb-pdf':
-            reportname = url.split('/report/pdf/')[1].split('?')[0]
+                docids = None
+                if '/' in reportname:
+                    reportname, docids = reportname.split('/')
 
-            docids = None
-            if '/' in reportname:
-                reportname, docids = reportname.split('/')
+                if docids:
+                    # Generic report:
+                    response = self.report_routes(reportname, docids=docids, converter='pdf')
+                else:
+                    # Particular report:
+                    data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
+                    response = self.report_routes(reportname, converter='pdf', **dict(data))
 
-            if docids:
-                # Generic report:
-                response = self.report_routes(reportname, docids=docids, converter='pdf')
+                response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
+                response.set_cookie('fileToken', token)
+                return response
+            elif type =='controller':
+                reqheaders = Headers(request.httprequest.headers)
+                response = Client(request.httprequest.app, BaseResponse).get(url, headers=reqheaders, follow_redirects=True)
+                response.set_cookie('fileToken', token)
+                return response
             else:
-                # Particular report:
-                data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
-                response = self.report_routes(reportname, converter='pdf', **dict(data))
-
-            response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
-            response.set_cookie('fileToken', token)
-            return response
-        elif type =='controller':
-            reqheaders = Headers(request.httprequest.headers)
-            response = Client(request.httprequest.app, BaseResponse).get(url, headers=reqheaders, follow_redirects=True)
-            response.set_cookie('fileToken', token)
-            return response
-        else:
-            return
+                return
+        except osv.except_osv, e:
+            se = _serialize_exception(e)
+            error = {
+                'code': 200,
+                'message': "Odoo Server Error",
+                'data': se
+            }
+            return request.make_response(simplejson.dumps(error))
 
     @route(['/report/check_wkhtmltopdf'], type='json', auth="user")
     def check_wkhtmltopdf(self):

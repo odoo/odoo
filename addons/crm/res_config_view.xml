@@ -9,9 +9,18 @@
             <field name="arch" type="xml">
                 <data>
 	            <div name="config_sale" position="before">
-	                <separator string="After-Sale Services"/>
+	                <separator string="Sale Services"/>
+	                <group>
+                        <label for="id" string="Pre-Sale Services"/>
+                        <div>
+                            <div>
+                                <field name="group_scheduled_calls" class="oe_inline"/>
+                                <label for="group_scheduled_calls"/>
+                            </div>
+                        </div>
+                    </group>
                     <group>
-                        <label for="id" string="Features"/>
+                        <label for="id" string="After-Sale Services"/>
                         <div>
                             <div>
                                 <field name="module_crm_claim" class="oe_inline"/>
@@ -23,19 +32,8 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="Sales Teams"/>
-                    <group>
-                        <label for="id" string="Manage Sales Teams"/>
-                        <div>
-                            <div>
-                                <field name="group_multi_salesteams" class="oe_inline"/>
-                                <label for="group_multi_salesteams"/>
-                            </div>
-                            
-                        </div>
-                    </group>
 	            </div>
-                <xpath expr="//group[@name='On Mail Client']" position="before">
+                <xpath expr="//p[@name='config_email_integration']" position="after">
                     <group name="default_alias">
                         <label for="id" string="Leads Email Alias"/>
                         <div attrs="{'invisible': [('alias_domain', '=', False)]}">

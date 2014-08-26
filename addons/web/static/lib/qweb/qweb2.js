@@ -37,6 +37,7 @@ var QWeb2 = {
         'lt': '<',
         'lte': '<='
     },
+    VOID_ELEMENTS: 'area,base,br,col,embed,hr,img,input,keygen,link,menuitem,meta,param,source,track,wbr'.split(','),
     tools: {
         exception: function(message, context) {
             context = context || {};
@@ -218,6 +219,7 @@ QWeb2.Engine = (function() {
         this.jQuery = window.jQuery;
         this.reserved_words = QWeb2.RESERVED_WORDS.slice(0);
         this.actions_precedence = QWeb2.ACTIONS_PRECEDENCE.slice(0);
+        this.void_elements = QWeb2.VOID_ELEMENTS.slice(0);
         this.word_replacement = QWeb2.tools.extend({}, QWeb2.WORD_REPLACEMENT);
         this.preprocess_node = null;
         for (var i = 0; i < arguments.length; i++) {
@@ -480,6 +482,7 @@ QWeb2.Element = (function() {
         this._bottom = [];
         this._indent = 1;
         this.process_children = true;
+        this.is_void_element = ~QWeb2.tools.arrayIndexOf(this.engine.void_elements, this.tag);
         var childs = this.node.childNodes;
         if (childs) {
             for (var i = 0, ilen = childs.length; i < ilen; i++) {
@@ -677,11 +680,13 @@ QWeb2.Element = (function() {
                         this.top("r.push(context.engine.tools.gen_attribute(['" + m[1] + "', (" + (this.string_interpolation(v)) + ")]));");
                     }
                 }
-                if (this.children.length || this.actions.opentag === 'true') {
+                if (this.actions.opentag === 'true' || (!this.children.length && this.is_void_element)) {
+                    // We do not enforce empty content on void elements
+                    // because QWeb rendering is not necessarily html.
+                    this.top_string("/>");
+                } else {
                     this.top_string(">");
                     this.bottom_string("</" + this.tag + ">");
-                } else {
-                    this.top_string("/>");
                 }
             }
         },

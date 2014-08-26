@@ -35,7 +35,7 @@ class project_task_type(osv.osv):
     _description = 'Task Stage'
     _order = 'sequence'
     _columns = {
-        'name': fields.char('Stage Name', required=True, size=64, translate=True),
+        'name': fields.char('Stage Name', required=True, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
         'case_default': fields.boolean('Default for New Projects',
@@ -186,20 +186,11 @@ class project(osv.osv):
             task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context, count=True)
             res[id] = (project_attachments or 0) + (task_attachments or 0)
         return res
-
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
-        """ :deprecated: this method will be removed with OpenERP v8. Use task_ids
-                         fields instead. """
-        if context is None:
-            context = {}
-        res = dict.fromkeys(ids, 0)
-        ctx = context.copy()
-        ctx['active_test'] = False
-        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)], context=ctx)
-        for task in self.pool.get('project.task').browse(cr, uid, task_ids, context):
-            res[task.project_id.id] += 1
+        res={}
+        for tasks in self.browse(cr, uid, ids, context):
+            res[tasks.id] = len(tasks.task_ids)
         return res
-
     def _get_alias_models(self, cr, uid, context=None):
         """ Overriden in project_issue to offer more options """
         return [('project.task', "Tasks")]
@@ -223,7 +214,7 @@ class project(osv.osv):
             'res_model': 'ir.attachment',
             'type': 'ir.actions.act_window',
             'view_id': False,
-            'view_mode': 'kanban,form',
+            'view_mode': 'kanban,tree,form',
             'view_type': 'form',
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
@@ -236,10 +227,11 @@ class project(osv.osv):
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
-        'priority': fields.integer('Sequence (deprecated)',
-            deprecated='Will be removed with OpenERP v8; use sequence field instead',
-            help="Gives the sequence order when displaying the list of projects"),
+        'analytic_account_id': fields.many2one(
+            'account.analytic.account', 'Contract/Analytic',
+            help="Link this project to an analytic account if you need financial management on projects. "
+                 "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
+            ondelete="cascade", required=True, auto_join=True),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
@@ -265,8 +257,7 @@ class project(osv.osv):
             }),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'task_count': fields.function(_task_count, type='integer', string="Open Tasks",
-                                      deprecated="This field will be removed in OpenERP v8. Use task_ids one2many field instead."),
+        'task_count': fields.function(_task_count, type='integer', string="Tasks",),
         'task_ids': fields.one2many('project.task', 'project_id',
                                     domain=[('stage_id.fold', '=', False)]),
         'color': fields.integer('Color Index'),
@@ -286,7 +277,13 @@ class project(osv.osv):
                     "- Employees Only: employees see all tasks or issues\n"
                     "- Followers Only: employees see only the followed tasks or issues; if portal\n"
                     "   is activated, portal users see the followed tasks or issues."),
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
+        'state': fields.selection([('template', 'Template'),
+                                   ('draft','New'),
+                                   ('open','In Progress'),
+                                   ('cancelled', 'Cancelled'),
+                                   ('pending','Pending'),
+                                   ('close','Closed')],
+                                  'Status', required=True, copy=False),
         'doc_count': fields.function(
             _get_attached_docs, string="Number of documents attached", type='integer'
         )
@@ -345,36 +342,28 @@ class project(osv.osv):
         task_obj = self.pool.get('project.task')
         proj = self.browse(cr, uid, old_project_id, context=context)
         for task in proj.tasks:
-            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
+            # preserve task name and stage, normally altered during copy
+            defaults = {'stage_id': task.stage_id.id,
+                        'name': task.name}
+            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, defaults, context=context)
         self.write(cr, uid, [new_project_id], {'tasks':[(6,0, map_task_id.values())]})
         task_obj.duplicate_task(cr, uid, map_task_id, context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
         if default is None:
             default = {}
-
+        context = dict(context or {})
         context['active_test'] = False
-        default['state'] = 'open'
-        default['line_ids'] = []
-        default['tasks'] = []
-
-        # Don't prepare (expensive) data to copy children (analytic accounts),
-        # they are discarded in analytic.copy(), and handled in duplicate_template() 
-        default['child_ids'] = []
-
         proj = self.browse(cr, uid, id, context=context)
-        if not default.get('name', False):
+        if not default.get('name'):
             default.update(name=_("%s (copy)") % (proj.name))
         res = super(project, self).copy(cr, uid, id, default, context)
         self.map_tasks(cr, uid, id, res, context=context)
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         data_obj = self.pool.get('ir.model.data')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
@@ -575,6 +564,7 @@ class task(osv.osv):
         },
         'kanban_state': {
             'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
+            'project.mt_task_ready': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'done',
         },
     }
 
@@ -708,28 +698,10 @@ class task(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default = default or {}
-        default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
-        if not default.get('remaining_hours', False):
-            default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
-        default['active'] = True
-        if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name or ''
-            if not context.get('copy',False):
-                new_name = _("%s (copy)") % (default.get('name', ''))
-                default.update({'name':new_name})
+        if not default.get('name'):
+            current = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % current.name
         return super(task, self).copy_data(cr, uid, id, default, context)
-    
-    def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-        if default is None:
-            default = {}
-        if not context.get('copy', False):
-            stage = self._get_default_stage_id(cr, uid, context=context)
-            if stage:
-                default['stage_id'] = stage
-        return super(task, self).copy(cr, uid, id, default, context)
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -750,24 +722,24 @@ class task(osv.osv):
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', track_visibility='onchange', size=128, required=True, select=True),
         'description': fields.text('Description'),
-        'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
-                        domain="[('project_ids', '=', project_id)]"),
+                        domain="[('project_ids', '=', project_id)]", copy=False),
         'categ_ids': fields.many2many('project.category', string='Tags'),
-        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
+        'kanban_state': fields.selection([('normal', 'In Progress'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
                                               " * Blocked indicates something is preventing the progress of this task\n"
                                               " * Ready for next stage indicates the task is ready to be pulled to the next stage",
-                                         readonly=True, required=False),
+                                         required=False, copy=False),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'write_date': fields.datetime('Last Modification Date', readonly=True, select=True), #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
-        'date_start': fields.datetime('Starting Date',select=True),
-        'date_end': fields.datetime('Ending Date',select=True),
-        'date_deadline': fields.date('Deadline',select=True),
-        'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
+        'date_start': fields.datetime('Starting Date', select=True, copy=False),
+        'date_end': fields.datetime('Ending Date', select=True, copy=False),
+        'date_deadline': fields.date('Deadline', select=True, copy=False),
+        'date_last_stage_update': fields.datetime('Last Stage Update', select=True, copy=False),
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select=True, track_visibility='onchange', change_default=True),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
@@ -794,6 +766,7 @@ class task(osv.osv):
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
+        'reviewer_id': fields.many2one('res.users', 'Reviewer', select=True, track_visibility='onchange'),
         'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
         'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
@@ -809,25 +782,16 @@ class task(osv.osv):
         'project_id': _get_default_project_id,
         'date_last_stage_update': fields.datetime.now,
         'kanban_state': 'normal',
-        'priority': '2',
+        'priority': '0',
         'progress': 0,
         'sequence': 10,
         'active': True,
+        'reviewer_id': lambda obj, cr, uid, ctx=None: uid,
         'user_id': lambda obj, cr, uid, ctx=None: uid,
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=ctx),
         'partner_id': lambda self, cr, uid, ctx=None: self._get_default_partner(cr, uid, context=ctx),
     }
-    _order = "priority, sequence, date_start, name, id"
-
-    def set_high_priority(self, cr, uid, ids, *args):
-        """Set task priority to high
-        """
-        return self.write(cr, uid, ids, {'priority' : '0'})
-
-    def set_normal_priority(self, cr, uid, ids, *args):
-        """Set task priority to normal
-        """
-        return self.write(cr, uid, ids, {'priority' : '2'})
+    _order = "priority desc, sequence, date_start, name, id"
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
@@ -908,6 +872,7 @@ class task(osv.osv):
         return res
 
     def get_empty_list_help(self, cr, uid, help, context=None):
+        context = dict(context or {})
         context['empty_list_help_id'] = context.get('default_project_id')
         context['empty_list_help_model'] = 'project.project'
         context['empty_list_help_document_name'] = _("tasks")
@@ -1013,16 +978,6 @@ class task(osv.osv):
     def set_remaining_time_10(self, cr, uid, ids, context=None):
         return self.set_remaining_time(cr, uid, ids, 10.0, context)
 
-    def set_kanban_state_blocked(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
-
-    def set_kanban_state_normal(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
-
-    def set_kanban_state_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
-        return False
-
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             self.pool.get('project.task.history').create(cr, uid, {
@@ -1041,8 +996,7 @@ class task(osv.osv):
     # ------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         # for default stage
         if vals.get('project_id') and not context.get('default_project_id'):
@@ -1074,7 +1028,7 @@ class task(osv.osv):
             new_stage = vals.get('stage_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
             for t in self.browse(cr, uid, ids, context=context):
-                write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
+                write_vals = vals_reset_kstate if t.stage_id.id != new_stage else vals
                 super(task, self).write(cr, uid, [t.id], write_vals, context=context)
             result = True
         else:
@@ -1122,10 +1076,17 @@ class task(osv.osv):
     # Mail gateway
     # ---------------------------------------------------
 
+    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=None, context=None):
+        if auto_follow_fields is None:
+            auto_follow_fields = ['user_id', 'reviewer_id']
+        return super(task, self)._message_get_auto_subscribe_fields(cr, uid, updated_fields, auto_follow_fields, context=context)
+
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
-        return [task.project_id.message_get_reply_to()[0] if task.project_id else False
-                    for task in self.browse(cr, uid, ids, context=context)]
+        tasks = self.browse(cr, SUPERUSER_ID, ids, context=context)
+        project_ids = set([task.project_id.id for task in tasks if task.project_id])
+        aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(project_ids), context=context)
+        return dict((task.id, aliases.get(task.project_id and task.project_id.id or 0, False)) for task in tasks)
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """
@@ -1162,7 +1123,7 @@ class project_work(osv.osv):
     _name = "project.task.work"
     _description = "Project Task Work"
     _columns = {
-        'name': fields.char('Work summary', size=128),
+        'name': fields.char('Work summary'),
         'date': fields.datetime('Date', select="1"),
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select="1"),
         'hours': fields.float('Time Spent'),
@@ -1176,25 +1137,30 @@ class project_work(osv.osv):
     }
 
     _order = "date desc"
-    def create(self, cr, uid, vals, *args, **kwargs):
+    def create(self, cr, uid, vals, context=None):
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
         if 'task_id' in vals:
             cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours',0.0), vals['task_id']))
-        return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
+            self.pool.get('project.task').invalidate_cache(cr, uid, ['remaining_hours'], [vals['task_id']], context=context)
+        return super(project_work,self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
         if 'hours' in vals:
+            task_obj = self.pool.get('project.task')
             for work in self.browse(cr, uid, ids, context=context):
                 cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours',0.0), work.hours, work.task_id.id))
+                task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
+    def unlink(self, cr, uid, ids, context=None):
+        task_obj = self.pool.get('project.task')
         for work in self.browse(cr, uid, ids):
             cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
-        return super(project_work,self).unlink(cr, uid, ids,*args, **kwargs)
+            task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
+        return super(project_work,self).unlink(cr, uid, ids, context=context)
 
 
 class account_analytic_account(osv.osv):
@@ -1347,6 +1313,7 @@ class project_task_history_cumulative(osv.osv):
 
     _columns = {
         'end_date': fields.date('End Date'),
+        'nbr_tasks': fields.integer('# of Tasks', readonly=True),
         'project_id': fields.many2one('project.project', 'Project'),
     }
 
@@ -1363,11 +1330,16 @@ class project_task_history_cumulative(osv.osv):
                     h.id AS history_id,
                     h.date+generate_series(0, CAST((coalesce(h.end_date, DATE 'tomorrow')::date - h.date) AS integer)-1) AS date,
                     h.task_id, h.type_id, h.user_id, h.kanban_state,
+                    count(h.task_id) as nbr_tasks,
                     greatest(h.remaining_hours, 1) AS remaining_hours, greatest(h.planned_hours, 1) AS planned_hours,
                     t.project_id
                 FROM
                     project_task_history AS h
                     JOIN project_task AS t ON (h.task_id = t.id)
+                GROUP BY
+                  h.id,
+                  h.task_id,
+                  t.project_id
 
             ) AS history
         )
@@ -1378,6 +1350,6 @@ class project_category(osv.osv):
     _name = "project.category"
     _description = "Category of project's task, issue, ..."
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

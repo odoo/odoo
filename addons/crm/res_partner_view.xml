@@ -90,17 +90,25 @@
                         <field name="section_id" completion="1" groups="base.group_multi_salesteams"/>
                     </field>
                     <xpath expr="//div[@name='buttons']" position="inside">
-                        <button class="oe_inline" type="action" string="Opportunities"
+                        <button class="oe_inline oe_stat_button" type="action"
                             attrs="{'invisible': [('customer', '=', False)]}"
                             name="%(crm.crm_case_category_act_oppor11)d"
-                            context="{'search_default_partner_id': active_id}"/>
-                        <button class="oe_inline" type="action"
-                            string="Meetings"
-                            name="%(calendar.action_calendar_event)d"
-                            context="{'search_default_partner_ids': active_id}"/>
-                        <button class="oe_inline" type="action" string="Calls" 
+                            icon="fa-star"
+                            context="{'search_default_partner_id': active_id}">
+                            <field string="Opportunities" name="opportunity_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_inline oe_stat_button" type="object"
+                            name="schedule_meeting"
+                            icon="fa-calendar"
+                            context="{'partner_id': active_id}">
+                            <field string="Meetings" name="meeting_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_inline oe_stat_button" type="action"
                             name="%(crm.crm_case_categ_phone_incoming0)d" 
-                            context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
+                            icon="fa-phone"
+                            context="{'search_default_partner_id': active_id, 'default_duration': 1.0}">
+                            <field string="Calls" name="phonecall_count" widget="statinfo"/>
+                        </button>
                     </xpath>
                 </data>
             </field>

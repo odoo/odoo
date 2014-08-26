@@ -24,21 +24,7 @@
             Sequences for pickings
         -->
 
-        <record id="seq_picking_in" model="ir.sequence">
-            <field name="name">Picking IN</field>
-            <field name="code">stock.picking.in</field>
-            <field name="prefix">IN/</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
-        
-        <record id="seq_picking_out" model="ir.sequence">
-            <field name="name">Picking OUT</field>
-            <field name="code">stock.picking.out</field>
-            <field name="prefix">OUT/</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
+
         
         <record id="seq_picking_internal" model="ir.sequence">
             <field name="name">Picking INT</field>
@@ -65,6 +51,7 @@
             <field name="company_id" eval="False"/>
         </record>
 
+	<!-- stock/lot.tracking sequence and sequence type should be removed, mmh? -->
         <record id="sequence_type_tracking" model="ir.sequence.type">
             <field name="name">Packs</field>
             <field name="code">stock.lot.tracking</field>
@@ -77,6 +64,20 @@
             <field name="padding">7</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequences for stock.quant.package -->
+        <record id="seq_type_quant_package" model="ir.sequence.type">
+            <field name="name">Packages</field>
+            <field name="code">stock.quant.package</field>
+        </record>
+
+        <record id="seq_quant_package" model="ir.sequence">
+            <field name="name">Packages</field>
+            <field name="code">stock.quant.package</field>
+            <field name="prefix">PACK</field>
+            <field name="padding">7</field>
             <field name="company_id" eval="False"/>
         </record>
     </data>

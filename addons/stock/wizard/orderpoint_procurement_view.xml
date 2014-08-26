@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--  Compute Stock Minimum Rules Only -->
+
+        <record id="view_procurement_compute_wizard" model="ir.ui.view">
+            <field name="name">Compute Stock Minimum Rules Only</field>
+            <field name="model">procurement.orderpoint.compute</field>
+            <field name="arch" type="xml">
+                <form string="Parameters">
+                    <group>
+                        <label string="Wizard checks all the stock minimum rules and generate procurement order."/>
+                    </group>
+                    <footer>
+                        <button name="procure_calculation" string="Compute Stock" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window name="Compute Stock Minimum Rules Only"
+            res_model="procurement.orderpoint.compute"
+            src_model="procurement.order"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="action_procurement_compute"/>
+            
+
+    </data>
+</openerp>

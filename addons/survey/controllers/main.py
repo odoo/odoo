@@ -22,6 +22,7 @@
 import json
 import logging
 import werkzeug
+import werkzeug.utils
 from datetime import datetime
 from math import ceil
 
@@ -45,7 +46,7 @@ class WebsiteSurvey(http.Controller):
             return werkzeug.utils.redirect("/survey/")
 
         # In case of auth required, block public user
-        if survey.auth_required and uid == request.registry['website'].get_public_user(cr, uid, context):
+        if survey.auth_required and uid == request.website.user_id.id:
             return request.website.render("survey.auth_required", {'survey': survey})
 
         # In case of non open surveys
@@ -76,7 +77,7 @@ class WebsiteSurvey(http.Controller):
     # Survey start
     @http.route(['/survey/start/<model("survey.survey"):survey>',
                  '/survey/start/<model("survey.survey"):survey>/<string:token>'],
-                type='http', auth='public', multilang=True, website=True)
+                type='http', auth='public', website=True)
     def start_survey(self, survey, token=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
@@ -123,7 +124,7 @@ class WebsiteSurvey(http.Controller):
     # Survey displaying
     @http.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>',
                  '/survey/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'],
-                type='http', auth='public', multilang=True, website=True)
+                type='http', auth='public', website=True)
     def fill_survey(self, survey, token, prev=None, **post):
         '''Display and validates a survey'''
         cr, uid, context = request.cr, request.uid, request.context
@@ -173,7 +174,7 @@ class WebsiteSurvey(http.Controller):
     # AJAX prefilling of a survey
     @http.route(['/survey/prefill/<model("survey.survey"):survey>/<string:token>',
                  '/survey/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'],
-                type='http', auth='public', multilang=True, website=True)
+                type='http', auth='public', website=True)
     def prefill(self, survey, token, page=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         user_input_line_obj = request.registry['survey.user_input_line']
@@ -216,7 +217,7 @@ class WebsiteSurvey(http.Controller):
 
     # AJAX scores loading for quiz correction mode
     @http.route(['/survey/scores/<model("survey.survey"):survey>/<string:token>'],
-                type='http', auth='public', multilang=True, website=True)
+                type='http', auth='public', website=True)
     def get_scores(self, survey, token, page=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         user_input_line_obj = request.registry['survey.user_input_line']
@@ -234,7 +235,7 @@ class WebsiteSurvey(http.Controller):
 
     # AJAX submission of a page
     @http.route(['/survey/submit/<model("survey.survey"):survey>'],
-                type='http', methods=['POST'], auth='public', multilang=True, website=True)
+                type='http', methods=['POST'], auth='public', website=True)
     def submit(self, survey, **post):
         _logger.debug('Incoming data: %s', post)
         page_id = int(post['page_id'])
@@ -284,7 +285,7 @@ class WebsiteSurvey(http.Controller):
     # Printing routes
     @http.route(['/survey/print/<model("survey.survey"):survey>',
                  '/survey/print/<model("survey.survey"):survey>/<string:token>'],
-                type='http', auth='public', multilang=True, website=True)
+                type='http', auth='public', website=True)
     def print_survey(self, survey, token=None, **post):
         '''Display an survey in printable view; if <token> is set, it will
         grab the answers of the user_input_id that has <token>.'''
@@ -295,7 +296,7 @@ class WebsiteSurvey(http.Controller):
                                        'quizz_correction': True if survey.quizz_mode and token else False})
 
     @http.route(['/survey/results/<model("survey.survey"):survey>'],
-                type='http', auth='user', multilang=True, website=True)
+                type='http', auth='user', website=True)
     def survey_reporting(self, survey, token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
         result_template ='survey.result'
@@ -359,8 +360,9 @@ class WebsiteSurvey(http.Controller):
         #     filter_finish: boolean => only finished surveys or not
         #
 
-    def prepare_result_dict(self,survey, current_filters=[]):
+    def prepare_result_dict(self,survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
+        current_filters = current_filters if current_filters else []
         survey_obj = request.registry['survey.survey']
         result = {'page_ids': []}
         for page in survey.page_ids:
@@ -388,8 +390,10 @@ class WebsiteSurvey(http.Controller):
         total = ceil(total_record / float(limit))
         return range(1, int(total + 1))
 
-    def get_graph_data(self, question, current_filters=[]):
+    def get_graph_data(self, question, current_filters=None):
         '''Returns formatted data required by graph library on basis of filter'''
+        # TODO refactor this terrible method and merge it with prepare_result_dict
+        current_filters = current_filters if current_filters else []
         survey_obj = request.registry['survey.survey']
         result = []
         if question.type == 'multiple_choice':
@@ -402,9 +406,8 @@ class WebsiteSurvey(http.Controller):
             data = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)
             for answer in data['answers']:
                 values = []
-                for res in data['result']:
-                    if res[1] == answer:
-                        values.append({'text': data['rows'][res[0]], 'count': data['result'][res]})
+                for row in data['rows']:
+                    values.append({'text': data['rows'].get(row), 'count': data['result'].get((row, answer))})
                 result.append({'key': data['answers'].get(answer), 'values': values})
         return json.dumps(result)
 

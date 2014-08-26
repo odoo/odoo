@@ -31,7 +31,7 @@
                 <input t-if="tx_values.get('cancel_return')" type="hidden" name="cancel_return"
                     t-att-value="tx_values.get('cancel_return')"/>
                 <!-- submit -->
-                <button type="image" name="submit" width="100px"
+                <button type="submit" width="100px"
                     t-att-class="submit_class">
                     <img t-if="not submit_txt" src="/payment_paypal/static/src/img/paypal_icon.png"/>
                     <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>

@@ -27,7 +27,7 @@ class report_timesheet_line(osv.osv):
     _description = "Timesheet Line"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', required=False, readonly=True),
         'user_id': fields.many2one('res.users', 'User', readonly=True),
         'date': fields.date('Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
@@ -38,7 +38,7 @@ class report_timesheet_line(osv.osv):
         'general_account_id': fields.many2one('account.account', 'General Account', readonly=True),
         'invoice_id': fields.many2one('account.invoice', 'Invoiced', readonly=True),
         'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
     }
     _order = 'name desc,user_id desc'
     def init(self, cr):
@@ -80,12 +80,12 @@ class report_timesheet_user(osv.osv):
     _description = "Timesheet per day"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'quantity': fields.float('Time', readonly=True),
         'cost': fields.float('Cost', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
     }
     _order = 'name desc,user_id desc'
     def init(self, cr):
@@ -112,12 +112,12 @@ class report_timesheet_account(osv.osv):
     _description = "Timesheet per account"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'quantity': fields.float('Time', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
 
     }
     _order = 'name desc,account_id desc,user_id desc'
@@ -145,12 +145,12 @@ class report_timesheet_account_date(osv.osv):
     _description = "Daily timesheet per account"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'quantity': fields.float('Time', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
     }
     _order = 'name desc,account_id desc,user_id desc'
 

@@ -132,12 +132,11 @@
 -
   !workflow {model: purchase.order, ref: purchase_order_001_fifo, action: purchase_confirm}
 -
-  Reception is ready for process so now done the reception.
+  Receipt is ready for process so now we do it.
 -
-  !python {model: stock.partial.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001_fifo")).picking_ids
-    partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_partial(cr, uid, [partial_id])
+  !python {model: stock.picking}: |
+    picking_id = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001_fifo"), context=context).picking_ids[0]
+    picking_id.do_transfer()
 -
   I check the Stock Interim account (Received) is credit successfully.
 -
@@ -155,7 +154,7 @@
     invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_001_fifo")).invoice_ids]
     line_ids = self.pool.get('account.invoice.line').search(cr, uid, [('invoice_id', 'in', invoice_ids)])
     self.pool.get('account.invoice.line').write(cr, uid, line_ids, {'price_unit': 10})
-    self.pool.get('account.invoice').signal_invoice_open(cr, uid, invoice_ids)
+    self.pool.get('account.invoice').signal_workflow(cr, uid, invoice_ids, 'invoice_open')
 -
   I check the Stock Interim account (Received) is debited sucessfully when Invoice validated.
 -
@@ -195,37 +194,34 @@
 -
   !record {model: stock.picking, id: stock_picking_out001_fifo}:
     partner_id: base.res_partner_13
-    invoice_state: 2binvoiced
     move_lines:
       - company_id: base.main_company
         location_id: stock.stock_location_stock
         product_id: product_fifo_anglo_saxon
-        product_qty: 1.0
+        product_uom_qty: 1.0
         location_dest_id: stock.stock_location_customers
+        invoice_state: 2binvoiced
     move_type: direct
-    type: out
+    picking_type_id: stock.picking_type_out
 -
   I need to check the availability of the product, So I make my picking order for processing later.
 -
   !python {model: stock.picking}: |
-    self.draft_force_assign(cr, uid, [ref("stock_picking_out001_fifo")], {"lang": "en_US", "search_default_available":
-      1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
-      "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
-      })
+    self.action_confirm(cr, uid, [ref('stock_picking_out001_fifo')], context=context)
 -
   I check the product availability, Product is available in the stock and ready to be sent.
 -
   !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("stock_picking_out001_fifo")], {"lang": "en_US", "search_default_available":
-      1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
-      "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
-      })
+    picking = self.browse(cr, uid, ref("stock_picking_out001_fifo"))
+    assert picking.state == "confirmed", "Picking should be confirmed."
+    for move_line in picking.move_lines:
+      assert move_line.state == "confirmed", "Move should be confirmed."
 -
   I process the delivery.
 -
-  !python {model: stock.partial.picking}: |
-    partial_id = self.create(cr, uid, {}, context={'active_model':'stock.picking','active_ids':[ref('stock_picking_out001_fifo')]})
-    self.do_partial(cr, uid, [partial_id])
+  !python {model: stock.picking}: |
+    picking = self.pool.get('stock.picking').browse(cr, uid, ref("stock_picking_out001_fifo"), context=context)
+    picking.do_transfer()
 - 
   I check Stock Interim account (Delivery) is debited successfully.
 -
@@ -261,7 +257,7 @@
     account_invoice_line = self.pool.get('account.invoice.line').search(cr, uid, [('invoice_id', 'in', account_invoice)])
     self.pool.get('account.invoice.line').write(cr, uid, account_invoice_line, {'invoice_line_tax_id': [(6, 0, [])]})
     self.pool.get('account.invoice').button_reset_taxes(cr, uid, account_invoice)
-    self.pool.get('account.invoice').signal_invoice_open(cr, uid, account_invoice)
+    self.pool.get('account.invoice').signal_workflow(cr, uid, account_invoice, 'invoice_open')
 -
   I check Income Account is Credited sucessfully when Invoice validated.
 -

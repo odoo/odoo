@@ -21,26 +21,10 @@
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.osv import osv
-
-
-class Website(osv.Model):
-    _inherit = "website"
-
-    def preprocess_request(self, cr, uid, ids, request, context=None):
-        project_obj = request.registry['project.project']
-        project_ids = project_obj.search(cr, uid, [('privacy_visibility', "=", "public")], context=request.context)
-
-        request.context.update({
-            'website_project_ids': project_obj.browse(cr, uid, project_ids, context=request.context)
-        })
-
-        return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
-
 
 class website_project(http.Controller):
 
-    @http.route(['/project/<model("project.project"):project>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/project/<model("project.project"):project>'], type='http', auth="public", website=True)
     def project(self, project=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         render_values = {

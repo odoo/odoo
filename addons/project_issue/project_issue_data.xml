@@ -48,6 +48,12 @@ Access all issues from the top Project menu, and access the issues of a specific
             <field name="default" eval="False"/>
             <field name="description">Issue blocked</field>
         </record>
+        <record id="mt_issue_ready" model="mail.message.subtype">
+            <field name="name">Issue Ready for Next Stage</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+            <field name="description">Issue Ready for Next Stage</field>
+        </record>
         <record id="mt_issue_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">project.issue</field>

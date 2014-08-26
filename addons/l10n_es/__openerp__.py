@@ -8,7 +8,6 @@
 #                            Dpto. Consultoría <consultoria@opentia.es>
 #    Copyright (c) 2013 Serv. Tecnol. Avanzados (http://www.serviciosbaeza.com)
 #                       Pedro Manuel Baeza <pedro.baeza@serviciosbaeza.com>
-#    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -27,37 +26,39 @@
 
 {
     "name" : "Spanish Charts of Accounts (PGCE 2008)",
-    "version" : "3.0",
+    "version" : "4.0",
     "author" : "Spanish Localization Team",
     'website' : 'https://launchpad.net/openerp-spain',
     "category" : "Localization/Account Charts",
     "description": """
-Spanish Charts of Accounts (PGCE 2008).
-=======================================
+Spanish charts of accounts (PGCE 2008).
+========================================
 
     * Defines the following chart of account templates:
-        * Spanish General Chart of Accounts 2008
-        * Spanish General Chart of Accounts 2008 for small and medium companies
-        * Spanish General Chart of Accounts 2008 for associations
+        * Spanish general chart of accounts 2008
+        * Spanish general chart of accounts 2008 for small and medium companies
+        * Spanish general chart of accounts 2008 for associations
     * Defines templates for sale and purchase VAT
     * Defines tax code templates
+    * Defines fiscal positions for spanish fiscal legislation
 """,
     "license" : "AGPL-3",
     "depends" : ["account", "base_vat", "base_iban"],
     "data" : [
-        "account_chart.xml",
-        "taxes_data.xml",
-        "fiscal_templates.xml",
-        "account_chart_pymes.xml",
-        "taxes_data_pymes.xml",
-        "fiscal_templates_pymes.xml",
-        "account_chart_assoc.xml",
-        "taxes_data_assoc.xml",
-        "fiscal_templates_assoc.xml",
+        "account_type.xml",
+        "account_chart_template.xml",
+        "account_account_common.xml",
+        "account_account_full.xml",
+        "account_account_pymes.xml",
+        "account_account_assoc.xml",
+        "tax_codes_common.xml",
+        "taxes_common.xml",
+        "fiscal_templates_common.xml",
+        "account_chart_template_post.xml",
         "l10n_es_wizard.xml",
     ],
     "demo" : [],
     'auto_install': False,
     "installable": True,
-    'images': ['images/config_chart_l10n_es.jpeg','images/l10n_es_chart.jpeg'],
+    'images': ['images/config_chart_l10n_es.png', 'images/l10n_es_chart.png'],
 }

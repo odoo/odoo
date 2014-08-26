@@ -32,14 +32,13 @@ class WebsiteMail(http.Controller):
 
         partner_obj = request.registry['res.partner']
         user_obj = request.registry['res.users']
-        website = request.registry['website']
 
         _id = int(id)
         _message_is_follower = message_is_follower == 'on'
         _object = request.registry[object]
 
         # search partner_id
-        public_id = website.get_public_user(cr, uid, context)
+        public_id = request.website.user_id.id
         if uid != public_id:
             partner_ids = [user_obj.browse(cr, uid, uid, context).partner_id.id]
         else:
@@ -69,10 +68,9 @@ class WebsiteMail(http.Controller):
         partner_obj = request.registry.get('res.partner')
         users_obj = request.registry.get('res.users')
         obj = request.registry.get(model)
-        website = request.registry['website']
 
         partner_id = None
-        public_id = website.get_public_user(cr, uid, context)
+        public_id = request.website.user_id.id
         if uid != public_id:
             partner_id = users_obj.browse(cr, SUPERUSER_ID, uid, context).partner_id
         elif request.session.get('partner_id'):

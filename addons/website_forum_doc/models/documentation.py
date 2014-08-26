@@ -24,13 +24,13 @@ class Documentation(osv.Model):
             res.append((record['id'], name))
         return res
 
+    # TODO master remove me
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
     _columns = {
         'sequence': fields.integer('Sequence'),
-        'display_name': fields.function(_name_get_fnc, type="char", string='Full Name'),
         'name': fields.char('Name', required=True, translate=True),
         'introduction': fields.html('Introduction', translate=True),
         'parent_id': fields.many2one('forum.documentation.toc', 'Parent Table Of Content', ondelete='cascade'),
@@ -73,3 +73,10 @@ class Post(osv.Model):
         'documentation_stage_id': _read_group_stage_ids,
     }
 
+    def _get_documentation_stage(self, cr, uid, context=None):
+        ids = self.pool.get('forum.documentation.stage').search(cr, uid, [], context=None)
+        return ids and ids[0] or False
+
+    _defaults = {
+        'documentation_stage_id': _get_documentation_stage,
+    }

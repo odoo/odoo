@@ -49,7 +49,7 @@ class sale_order_line(osv.osv):
             field_name = 'list_price'
 
             product = product_obj.browse(cr, uid, product_id, context)
-            product_read = product_obj.read(cr, uid, product_id, [field_name], context=context)
+            product_read = product_obj.read(cr, uid, [product_id], [field_name], context=context)[0]
 
             factor = 1.0
             if uom and uom != product.uom_id.id:

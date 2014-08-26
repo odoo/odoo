@@ -4,6 +4,8 @@
     var website = {};
     openerp.website = website;
 
+    website.translatable = !!$('html').data('translatable');
+
     /* ----------------------------------------------------
        Helpers
        ---------------------------------------------------- */ 
@@ -243,12 +245,11 @@
             return def;
         });
     };
+
     website.add_template_file('/website/static/src/xml/website.xml');
 
     website.dom_ready = $.Deferred();
     $(document).ready(function () {
-        website.is_editable = website.is_editable || $('html').data('editable');
-        website.is_editable_button= website.is_editable_button || $('html').data('editable');
         website.dom_ready.resolve();
         // fix for ie
         if($.fn.placeholder) $('input, textarea').placeholder();
@@ -264,7 +265,11 @@
             all_ready = website.dom_ready.then(function () {
                 return templates_def;
             }).then(function () {
-                if (website.is_editable) {
+                // display button if they are at least one editable zone in the page (check the branding)
+                var editable = $('html').data('website-id') && !!$('[data-oe-model]').size();
+                $("#oe_editzone").toggle(editable);
+
+                if ($('html').data('website-id')) {
                     website.id = $('html').data('website-id');
                     website.session = new openerp.Session();
                     var modules = ['website'];
@@ -303,6 +308,14 @@
                 window.document.body.scrollTop = +location.hash.match(/scrollTop=([0-9]+)/)[1];
             }
         },0);
+
+        /* ----- WEBSITE TOP BAR ---- */
+        var $collapse = $('#oe_applications ul.dropdown-menu').clone()
+                .attr("id", "oe_applications_collapse")
+                .attr("class", "nav navbar-nav navbar-left navbar-collapse collapse");
+        $('#oe_applications').before($collapse);
+        $collapse.wrap('<div class="visible-xs"/>');
+        $('[data-target="#oe_applications"]').attr("data-target", "#oe_applications_collapse");
     });
 
     return website;

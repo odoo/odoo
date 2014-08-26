@@ -1,0 +1,23 @@
+# HG changeset patch
+# Parent 5508a5440faa7b607d057c4e4ae70af6b6f7cac9
+
+Index: doc-backend/openacademy/views/openacademy.xml
+===================================================================
+--- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-24 12:03:02.649366368 +0200
++++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:03:02.645366368 +0200
+@@ -9,7 +9,14 @@
+                     <sheet>
+                         <group>
+                             <field name="name"/>
+-                            <field name="description"/>
++                            <notebook colspan="4">
++                                <page string="Description">
++                                    <field name="description"/>
++                                </page>
++                                <page string="About">
++                                    This is an example of notebooks
++                                </page>
++                            </notebook>
+                         </group>
+                     </sheet>
+                 </form>

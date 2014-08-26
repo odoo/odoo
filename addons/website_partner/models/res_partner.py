@@ -12,7 +12,7 @@ class WebsiteResPartner(osv.Model):
 
     _columns = {
         'website_published': fields.boolean(
-            'Publish', help="Publish on the website"),
+            'Publish', help="Publish on the website", copy=False),
         'website_description': fields.html(
             'Website Partner Full Description'
         ),

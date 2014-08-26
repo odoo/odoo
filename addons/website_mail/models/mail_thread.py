@@ -22,7 +22,7 @@
 from openerp.osv import osv, fields
 
 # TODO for trunk, remove me
-class MailThread(osv.Model):
+class MailThread(osv.AbstractModel):
     _inherit = 'mail.thread'
 
     _columns = {
@@ -36,6 +36,3 @@ class MailThread(osv.Model):
         ),
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        default['website_message_ids'] = []
-        return super(MailThread, self).copy(cr, uid, id, default=default, context=context)

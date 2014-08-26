@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-17 05:42+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-05-17 06:29+0000\n"
+"X-Generator: Launchpad (build 17007)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -1189,7 +1189,7 @@ msgstr "Oman"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp
 msgid "MRP"
-msgstr "Bedarfsplanung"
+msgstr "Material- und Ressourcenplanung"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -8669,7 +8669,7 @@ msgstr ""
 #. module: base
 #: field:ir.ui.menu,needaction_enabled:0
 msgid "Target model uses the need action mechanism"
-msgstr ""
+msgstr "Ziel-Modell nutzt den need_action Mechanismus"
 
 #. module: base
 #: help:ir.model.fields,relation:0
@@ -10044,6 +10044,53 @@ msgid ""
 "of creation of distribution models.\n"
 "        "
 msgstr ""
+"\n"
+"Dieses Modul ermöglicht die Verwendung mehrerer Umlagepläne gemäß der "
+"Kostenstelle.\n"
+"============================================================================="
+"============\n"
+"\n"
+"Hier werden mehrere Buchungen angelegt, wenn die Rechnung oder\n"
+"die Buchungen genehmigt werden.\n"
+"\n"
+"Zum Beispiel können Sie die folgene Kostenstellenstruktur definieren:\n"
+"--------------------------------------------------------------------------\n"
+"* **Projekte**\n"
+"* Projekt 1\n"
+"+ TeilProj 1.1\n"
+"\n"
+"+ TeilProj 1.2\n"
+"\n"
+"* Projekt 2\n"
+"\n"
+"* **Verkäufer**\n"
+"* Erik\n"
+"\n"
+"* Fabien\n"
+"\n"
+"Wir haben hier zwei Pläne: Projekte und Verkäufer. Eine Rechnungsposition "
+"muss Kosten auf beide Pläne umlegen können: TeilProj 1.1 und Fabien. Die "
+"Beträge können auch aufgeteilt werden.\n"
+"\n"
+"Das folgende Beispiel zeigt den Fall einer Rechnung, die beide Teilprojekte "
+"betrifft und einem Verkäufer zugeordent ist:\n"
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+"~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+"**Plan1:**\n"
+"\n"
+"* TeilProjekt 1.1 : 50%\n"
+"\n"
+"* TeilProjekt 1.2 : 50%\n"
+"\n"
+"**Plan2:**\n"
+"Erik: 100%\n"
+"\n"
+"Wenn diese Rechnungsposition bestätigt wird, wird sie drei "
+"Kostenstellenbuchungen für eine Finanzbuchung erzeugen.\n"
+"\n"
+"Der Umlageplan prüft die minimale bzw. maximale Umlage zum Zeitpunkt der "
+"Anlage des Umlageschlüssels.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sequence
@@ -10992,6 +11039,9 @@ msgid ""
 "related to a model that uses the need_action mechanism, this field is set to "
 "true. Otherwise, it is false."
 msgstr ""
+"Wenn der Menüeintrag eine act_window -Aktion ist und diese Aktion mit dem "
+"need_action -Mechanismus agiert, ist dieses Feld auf Wahr gesetzt. "
+"Anderenfalls ist es Falsch."
 
 #. module: base
 #: code:addons/orm.py:3961
@@ -11534,7 +11584,7 @@ msgstr "Benutzer-Interface"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_byproduct
 msgid "MRP Byproducts"
-msgstr "MRP nach Produkten"
+msgstr "MRP Kuppelprodukte"
 
 #. module: base
 #: field:res.request,ref_partner_id:0
@@ -17357,7 +17407,7 @@ msgstr "Helpdesk"
 #. module: base
 #: field:ir.rule,perm_write:0
 msgid "Apply for Write"
-msgstr ""
+msgstr "Zum Schreiben anwenden"
 
 #. module: base
 #: field:ir.ui.menu,parent_left:0
@@ -18812,7 +18862,7 @@ msgstr "Funktion"
 #. module: base
 #: field:ir.ui.menu,parent_right:0
 msgid "Parent Right"
-msgstr ""
+msgstr "Oberkonto Rechts"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_customer_relationship_management
@@ -18887,7 +18937,7 @@ msgstr "Bedarfsmeldungen"
 #. module: base
 #: selection:ir.actions.act_window,target:0
 msgid "Inline Edit"
-msgstr ""
+msgstr "Eingebettet Bearbeiten"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -18940,7 +18990,7 @@ msgstr "Kontext"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
 msgid "Sales and MRP Management"
-msgstr "Verkaufs- und Fertigungsplanung"
+msgstr "Verkauf und Fertigungsplanung"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_form

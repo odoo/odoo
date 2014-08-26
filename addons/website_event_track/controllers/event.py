@@ -31,7 +31,7 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 
 class website_event(http.Controller):
-    @http.route(['''/event/<model("event.event"):event>/track/<model("event.track", "[('event_id','=',event[0])]"):track>'''], type='http', auth="public", website=True, multilang=True)
+    @http.route(['''/event/<model("event.event"):event>/track/<model("event.track", "[('event_id','=',event[0])]"):track>'''], type='http', auth="public", website=True)
     def event_track_view(self, event, track, **post):
         track_obj = request.registry.get('event.track')
         track = track_obj.browse(request.cr, openerp.SUPERUSER_ID, track.id, context=request.context)
@@ -48,7 +48,7 @@ class website_event(http.Controller):
         forcetr = True
         for track in event_track_ids:
             start_date = (datetime.datetime.strptime(track.date, '%Y-%m-%d %H:%M:%S')).replace(tzinfo=pytz.utc).astimezone(local_tz)
-            end_date = start_date + datetime.timedelta(hours = (track.duration or 30))
+            end_date = start_date + datetime.timedelta(hours = (track.duration or 0.5))
             location = track.location_id or False
             locations.setdefault(location, [])
 
@@ -75,7 +75,7 @@ class website_event(http.Controller):
 
 
     # TODO: not implemented
-    @http.route(['''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/agenda'''], type='http', auth="public", website=True, multilang=True)
+    @http.route(['''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
     def event_agenda(self, event, tag=None, **post):
         days_tracks = collections.defaultdict(lambda: [])
         for track in sorted(event.track_ids, key=lambda x: (x.date, bool(x.location_id))):
@@ -109,7 +109,7 @@ class website_event(http.Controller):
     @http.route([
         '''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/track''',
         '''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/track/tag/<model("event.track.tag"):tag>'''
-        ], type='http', auth="public", website=True, multilang=True)
+        ], type='http', auth="public", website=True)
     def event_tracks(self, event, tag=None, **post):
         searches = {}
         if tag:
@@ -134,12 +134,12 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event_track.tracks", values)
 
-    @http.route(['''/event/<model("event.event", "[('show_track_proposal','=',1)]"):event>/track_proposal'''], type='http', auth="public", website=True, multilang=True)
+    @http.route(['''/event/<model("event.event", "[('show_track_proposal','=',1)]"):event>/track_proposal'''], type='http', auth="public", website=True)
     def event_track_proposal(self, event, **post):
         values = { 'event': event }
         return request.website.render("website_event_track.event_track_proposal", values)
 
-    @http.route(['/event/<model("event.event"):event>/track_proposal/post'], type='http', auth="public", methods=['POST'], website=True, multilang=True)
+    @http.route(['/event/<model("event.event"):event>/track_proposal/post'], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):
         cr, uid, context = request.cr, request.uid, request.context
 

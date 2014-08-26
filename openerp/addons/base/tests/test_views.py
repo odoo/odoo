@@ -1,12 +1,16 @@
 # -*- encoding: utf-8 -*-
 from functools import partial
+import itertools
 
 import unittest2
 
 from lxml import etree as ET
 from lxml.builder import E
 
+from psycopg2 import IntegrityError
+
 from openerp.tests import common
+import openerp.tools
 
 Field = E.field
 
@@ -14,9 +18,22 @@ class ViewCase(common.TransactionCase):
     def setUp(self):
         super(ViewCase, self).setUp()
         self.addTypeEqualityFunc(ET._Element, self.assertTreesEqual)
+        self.Views = self.registry('ir.ui.view')
+
+    def browse(self, id, context=None):
+        return self.Views.browse(self.cr, self.uid, id, context=context)
+    def create(self, value, context=None):
+        return self.Views.create(self.cr, self.uid, value, context=context)
+
+    def read_combined(self, id):
+        return self.Views.read_combined(
+            self.cr, self.uid,
+            id, ['arch'],
+            context={'check_view_ids': self.Views.search(self.cr, self.uid, [])}
+        )
 
     def assertTreesEqual(self, n1, n2, msg=None):
-        self.assertEqual(n1.tag, n2.tag)
+        self.assertEqual(n1.tag, n2.tag, msg)
         self.assertEqual((n1.text or '').strip(), (n2.text or '').strip(), msg)
         self.assertEqual((n1.tail or '').strip(), (n2.tail or '').strip(), msg)
 
@@ -24,8 +41,8 @@ class ViewCase(common.TransactionCase):
         # equality (!?!?!?!)
         self.assertEqual(dict(n1.attrib), dict(n2.attrib), msg)
 
-        for c1, c2 in zip(n1, n2):
-            self.assertTreesEqual(c1, c2, msg)
+        for c1, c2 in itertools.izip_longest(n1, n2):
+            self.assertEqual(c1, c2, msg)
 
 
 class TestNodeLocator(common.TransactionCase):
@@ -340,6 +357,7 @@ class TestApplyInheritanceSpecs(ViewCase):
                     name="target"),
                 string="Title"))
 
+    @openerp.tools.mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_invalid_position(self):
         spec = Field(
                 Field(name="whoops"),
@@ -350,6 +368,7 @@ class TestApplyInheritanceSpecs(ViewCase):
                                               self.base_arch,
                                               spec, None)
 
+    @openerp.tools.mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_incorrect_version(self):
         # Version ignored on //field elements, so use something else
         arch = E.form(E.element(foo="42"))
@@ -362,6 +381,7 @@ class TestApplyInheritanceSpecs(ViewCase):
                                               arch,
                                               spec, None)
 
+    @openerp.tools.mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_target_not_found(self):
         spec = Field(name="targut")
 
@@ -372,13 +392,6 @@ class TestApplyInheritanceSpecs(ViewCase):
 
 class TestApplyInheritedArchs(ViewCase):
     """ Applies a sequence of modificator archs to a base view
-    """
-
-class TestViewCombined(ViewCase):
-    """
-    Test fallback operations of View.read_combined:
-    * defaults mapping
-    * ?
     """
 
 class TestNoModel(ViewCase):
@@ -531,9 +544,9 @@ class TestTemplating(ViewCase):
                         'data-oe-id': str(id2),
                         'data-oe-field': 'arch',
                         'data-oe-xpath': '/xpath/item/content[1]',
+                        'data-oe-source-id': str(id)
                     }), {
                         'order': '2',
-                        'data-oe-source-id': str(id)
                     }),
                 E.item({
                     'order': '1',
@@ -599,7 +612,7 @@ class TestTemplating(ViewCase):
                     {'t-ignore': 'true', 'order': '1'},
                     E.t({'t-esc': 'foo'}),
                     E.item(
-                        {'order': '2', 'data-oe-source-id': str(id)},
+                        {'order': '2'},
                         E.content(
                             {'t-att-href': 'foo'},
                             "bar")
@@ -628,6 +641,8 @@ class test_views(ViewCase):
     def _insert_view(self, **kw):
         """Insert view into database via a query to passtrough validation"""
         kw.pop('id', None)
+        kw.setdefault('mode', 'extension' if kw.get('inherit_id') else 'primary')
+        kw.setdefault('application', 'always')
 
         keys = sorted(kw.keys())
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)
@@ -804,3 +819,370 @@ class test_views(ViewCase):
                     E.button(name="action_next", type="object", string="New button")),
                 string="Replacement title", version="7.0"
             ))
+
+class ViewModeField(ViewCase):
+    """
+    This should probably, eventually, be folded back into other test case
+    classes, integrating the test (or not) of the mode field to regular cases
+    """
+
+    def testModeImplicitValue(self):
+        """ mode is auto-generated from inherit_id:
+        * inherit_id -> mode=extension
+        * not inherit_id -> mode=primary
+        """
+        view = self.browse(self.create({
+            'inherit_id': None,
+            'arch': '<qweb/>'
+        }))
+        self.assertEqual(view.mode, 'primary')
+
+        view2 = self.browse(self.create({
+            'inherit_id': view.id,
+            'arch': '<qweb/>'
+        }))
+        self.assertEqual(view2.mode, 'extension')
+
+    @openerp.tools.mute_logger('openerp.sql_db')
+    def testModeExplicit(self):
+        view = self.browse(self.create({
+            'inherit_id': None,
+            'arch': '<qweb/>'
+        }))
+        view2 = self.browse(self.create({
+            'inherit_id': view.id,
+            'mode': 'primary',
+            'arch': '<qweb/>'
+        }))
+        self.assertEqual(view.mode, 'primary')
+
+        with self.assertRaises(IntegrityError):
+            self.create({
+                'inherit_id': None,
+                'mode': 'extension',
+                'arch': '<qweb/>'
+            })
+
+    @openerp.tools.mute_logger('openerp.sql_db')
+    def testPurePrimaryToExtension(self):
+        """
+        A primary view with inherit_id=None can't be converted to extension
+        """
+        view_pure_primary = self.browse(self.create({
+            'inherit_id': None,
+            'arch': '<qweb/>'
+        }))
+        with self.assertRaises(IntegrityError):
+            view_pure_primary.write({'mode': 'extension'})
+
+    def testInheritPrimaryToExtension(self):
+        """
+        A primary view with an inherit_id can be converted to extension
+        """
+        base = self.create({'inherit_id': None, 'arch': '<qweb/>'})
+        view = self.browse(self.create({
+            'inherit_id': base,
+            'mode': 'primary',
+            'arch': '<qweb/>'
+        }))
+
+        view.write({'mode': 'extension'})
+
+    def testDefaultExtensionToPrimary(self):
+        """
+        An extension view can be converted to primary
+        """
+        base = self.create({'inherit_id': None, 'arch': '<qweb/>'})
+        view = self.browse(self.create({
+            'inherit_id': base,
+            'arch': '<qweb/>'
+        }))
+
+        view.write({'mode': 'primary'})
+
+class TestDefaultView(ViewCase):
+    def testDefaultViewBase(self):
+        self.create({
+            'inherit_id': False,
+            'priority': 10,
+            'mode': 'primary',
+            'arch': '<qweb/>',
+        })
+        v2 = self.create({
+            'inherit_id': False,
+            'priority': 1,
+            'mode': 'primary',
+            'arch': '<qweb/>',
+        })
+
+        default = self.Views.default_view(self.cr, self.uid, False, 'qweb')
+        self.assertEqual(
+            default, v2,
+            "default_view should get the view with the lowest priority for "
+            "a (model, view_type) pair"
+        )
+
+    def testDefaultViewPrimary(self):
+        v1 = self.create({
+            'inherit_id': False,
+            'priority': 10,
+            'mode': 'primary',
+            'arch': '<qweb/>',
+        })
+        self.create({
+            'inherit_id': False,
+            'priority': 5,
+            'mode': 'primary',
+            'arch': '<qweb/>',
+        })
+        v3 = self.create({
+            'inherit_id': v1,
+            'priority': 1,
+            'mode': 'primary',
+            'arch': '<qweb/>',
+        })
+
+        default = self.Views.default_view(self.cr, self.uid, False, 'qweb')
+        self.assertEqual(
+            default, v3,
+            "default_view should get the view with the lowest priority for "
+            "a (model, view_type) pair in all the primary tables"
+        )
+
+class TestViewCombined(ViewCase):
+    """
+    * When asked for a view, instead of looking for the closest parent with
+      inherit_id=False look for mode=primary
+    * If root.inherit_id, resolve the arch for root.inherit_id (?using which
+      model?), then apply root's inheritance specs to it
+    * Apply inheriting views on top
+    """
+
+    def setUp(self):
+        super(TestViewCombined, self).setUp()
+
+        self.a1 = self.create({
+            'model': 'a',
+            'arch': '<qweb><a1/></qweb>'
+        })
+        self.a2 = self.create({
+            'model': 'a',
+            'inherit_id': self.a1,
+            'priority': 5,
+            'arch': '<xpath expr="//a1" position="after"><a2/></xpath>'
+        })
+        self.a3 = self.create({
+            'model': 'a',
+            'inherit_id': self.a1,
+            'arch': '<xpath expr="//a1" position="after"><a3/></xpath>'
+        })
+        # mode=primary should be an inheritance boundary in both direction,
+        # even within a model it should not extend the parent
+        self.a4 = self.create({
+            'model': 'a',
+            'inherit_id': self.a1,
+            'mode': 'primary',
+            'arch': '<xpath expr="//a1" position="after"><a4/></xpath>',
+        })
+
+        self.b1 = self.create({
+            'model': 'b',
+            'inherit_id': self.a3,
+            'mode': 'primary',
+            'arch': '<xpath expr="//a1" position="after"><b1/></xpath>'
+        })
+        self.b2 = self.create({
+            'model': 'b',
+            'inherit_id': self.b1,
+            'arch': '<xpath expr="//a1" position="after"><b2/></xpath>'
+        })
+
+        self.c1 = self.create({
+            'model': 'c',
+            'inherit_id': self.a1,
+            'mode': 'primary',
+            'arch': '<xpath expr="//a1" position="after"><c1/></xpath>'
+        })
+        self.c2 = self.create({
+            'model': 'c',
+            'inherit_id': self.c1,
+            'priority': 5,
+            'arch': '<xpath expr="//a1" position="after"><c2/></xpath>'
+        })
+        self.c3 = self.create({
+            'model': 'c',
+            'inherit_id': self.c2,
+            'priority': 10,
+            'arch': '<xpath expr="//a1" position="after"><c3/></xpath>'
+        })
+
+        self.d1 = self.create({
+            'model': 'd',
+            'inherit_id': self.b1,
+            'mode': 'primary',
+            'arch': '<xpath expr="//a1" position="after"><d1/></xpath>'
+        })
+
+    def test_basic_read(self):
+        arch = self.read_combined(self.a1)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.a1(),
+                E.a3(),
+                E.a2(),
+            ), arch)
+
+    def test_read_from_child(self):
+        arch = self.read_combined(self.a3)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.a1(),
+                E.a3(),
+                E.a2(),
+            ), arch)
+
+    def test_read_from_child_primary(self):
+        arch = self.read_combined(self.a4)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.a1(),
+                E.a4(),
+                E.a3(),
+                E.a2(),
+            ), arch)
+
+    def test_cross_model_simple(self):
+        arch = self.read_combined(self.c2)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.a1(),
+                E.c3(),
+                E.c2(),
+                E.c1(),
+                E.a3(),
+                E.a2(),
+            ), arch)
+
+    def test_cross_model_double(self):
+        arch = self.read_combined(self.d1)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.a1(),
+                E.d1(),
+                E.b2(),
+                E.b1(),
+                E.a3(),
+                E.a2(),
+            ), arch)
+
+class TestOptionalViews(ViewCase):
+    """
+    Tests ability to enable/disable inherited views, formerly known as
+    inherit_option_id
+    """
+
+    def setUp(self):
+        super(TestOptionalViews, self).setUp()
+        self.v0 = self.create({
+            'model': 'a',
+            'arch': '<qweb><base/></qweb>',
+        })
+        self.v1 = self.create({
+            'model': 'a',
+            'inherit_id': self.v0,
+            'application': 'always',
+            'priority': 10,
+            'arch': '<xpath expr="//base" position="after"><v1/></xpath>',
+        })
+        self.v2 = self.create({
+            'model': 'a',
+            'inherit_id': self.v0,
+            'application': 'enabled',
+            'priority': 9,
+            'arch': '<xpath expr="//base" position="after"><v2/></xpath>',
+        })
+        self.v3 = self.create({
+            'model': 'a',
+            'inherit_id': self.v0,
+            'application': 'disabled',
+            'priority': 8,
+            'arch': '<xpath expr="//base" position="after"><v3/></xpath>'
+        })
+
+    def test_applied(self):
+        """ mandatory and enabled views should be applied
+        """
+        arch = self.read_combined(self.v0)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.base(),
+                E.v1(),
+                E.v2(),
+            )
+        )
+
+    def test_applied_state_toggle(self):
+        """ Change application states of v2 and v3, check that the results
+        are as expected
+        """
+        self.browse(self.v2).write({'application': 'disabled'})
+        arch = self.read_combined(self.v0)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.base(),
+                E.v1(),
+            )
+        )
+
+        self.browse(self.v3).write({'application': 'enabled'})
+        arch = self.read_combined(self.v0)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.base(),
+                E.v1(),
+                E.v3(),
+            )
+        )
+
+        self.browse(self.v2).write({'application': 'enabled'})
+        arch = self.read_combined(self.v0)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.base(),
+                E.v1(),
+                E.v2(),
+                E.v3(),
+            )
+        )
+
+class TestXPathExtentions(common.BaseCase):
+    def test_hasclass(self):
+        tree = E.node(
+            E.node({'class': 'foo bar baz'}),
+            E.node({'class': 'foo bar'}),
+            {'class': "foo"})
+
+        self.assertEqual(
+            len(tree.xpath('//node[hasclass("foo")]')),
+            3)
+        self.assertEqual(
+            len(tree.xpath('//node[hasclass("bar")]')),
+            2)
+        self.assertEqual(
+            len(tree.xpath('//node[hasclass("baz")]')),
+            1)
+        self.assertEqual(
+            len(tree.xpath('//node[hasclass("foo")][not(hasclass("bar"))]')),
+            1)
+        self.assertEqual(
+            len(tree.xpath('//node[hasclass("foo", "baz")]')),
+            1)

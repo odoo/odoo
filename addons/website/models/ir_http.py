@@ -2,16 +2,20 @@
 import datetime
 import hashlib
 import logging
+import os
 import re
 import traceback
+
 import werkzeug
 import werkzeug.routing
+import werkzeug.utils
 
 import openerp
 from openerp.addons.base import ir
 from openerp.addons.base.ir import ir_qweb
-from openerp.addons.website.models.website import slug, _UNSLUG_RE
+from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
+from openerp.tools import config
 from openerp.osv import orm
 
 logger = logging.getLogger(__name__)
@@ -24,6 +28,7 @@ class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
 
     rerouting_limit = 10
+    geo_ip_resolver = None
 
     def _get_converters(self):
         return dict(
@@ -31,6 +36,13 @@ class ir_http(orm.AbstractModel):
             model=ModelConverter,
             page=PageConverter,
         )
+
+    def _auth_method_public(self):
+        # TODO: select user_id from matching website
+        if not request.session.uid:
+            request.uid = self.pool['ir.model.data'].xmlid_to_res_id(request.cr, openerp.SUPERUSER_ID, 'base.public_user')
+        else:
+            request.uid = request.session.uid
 
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
@@ -44,22 +56,65 @@ class ir_http(orm.AbstractModel):
             # in all cases, website processes them
             request.website_enabled = True
 
+        request.website_multilang = request.website_enabled and func and func.routing.get('multilang', True)
+
+        if 'geoip' not in request.session:
+            record = {}
+            if self.geo_ip_resolver is None:
+                try:
+                    import GeoIP
+                    # updated database can be downloaded on MaxMind website
+                    # http://dev.maxmind.com/geoip/legacy/install/city/
+                    geofile = config.get('geoip_database', '/usr/share/GeoIP/GeoLiteCity.dat')
+                    if os.path.exists(geofile):
+                        self.geo_ip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
+                    else:
+                        self.geo_ip_resolver = False
+                        logger.warning('GeoIP database file %r does not exists', geofile)
+                except ImportError:
+                    self.geo_ip_resolver = False
+            if self.geo_ip_resolver and request.httprequest.remote_addr:
+                record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
+            request.session['geoip'] = record
+            
         if request.website_enabled:
             if func:
                 self._authenticate(func.routing['auth'])
             else:
                 self._auth_method_public()
+            request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
+            langs = [lg[0] for lg in request.website.get_languages()]
+            path = request.httprequest.path.split('/')
             if first_pass:
-                request.lang = request.website.default_lang_code
+                if request.website_multilang:
+                    # If the url doesn't contains the lang and that it's the first connection, we to retreive the user preference if it exists.
+                    if not path[1] in langs and not request.httprequest.cookies.get('session_id'):
+                        if request.lang not in langs:
+                            # Try to find a similar lang. Eg: fr_BE and fr_FR
+                            short = request.lang.split('_')[0]
+                            langs_withshort = [lg[0] for lg in request.website.get_languages() if lg[0].startswith(short)]
+                            if len(langs_withshort):
+                                request.lang = langs_withshort[0]
+                            else:
+                                request.lang = request.website.default_lang_code
+                        # We redirect with the right language in url
+                        if request.lang != request.website.default_lang_code:
+                            path.insert(1, request.lang)
+                            path = '/'.join(path) or '/'
+                            return request.redirect(path + '?' + request.httprequest.query_string)
+                    else:
+                        request.lang = request.website.default_lang_code
+
             request.context['lang'] = request.lang
-            request.website.preprocess_request(request)
             if not func:
-                path = request.httprequest.path.split('/')
-                langs = [lg[0] for lg in request.website.get_languages()]
                 if path[1] in langs:
                     request.lang = request.context['lang'] = path.pop(1)
                     path = '/'.join(path) or '/'
+                    if request.lang == request.website.default_lang_code:
+                        # If language is in the url and it is the default language, redirect
+                        # to url without language so google doesn't see duplicate content
+                        return request.redirect(path + '?' + request.httprequest.query_string)
                     return self.reroute(path)
         return super(ir_http, self)._dispatch()
 
@@ -79,25 +134,27 @@ class ir_http(orm.AbstractModel):
         return self._dispatch()
 
     def _postprocess_args(self, arguments, rule):
-        if not getattr(request, 'website_enabled', False):
-            return super(ir_http, self)._postprocess_args(arguments, rule)
+        super(ir_http, self)._postprocess_args(arguments, rule)
 
-        for arg, val in arguments.items():
+        for key, val in arguments.items():
             # Replace uid placeholder by the current request.uid
-            if isinstance(val, orm.browse_record) and isinstance(val._uid, RequestUID):
-                val._uid = request.uid
+            if isinstance(val, orm.BaseModel) and isinstance(val._uid, RequestUID):
+                arguments[key] = val.sudo(request.uid)
+
         try:
             _, path = rule.build(arguments)
             assert path is not None
         except Exception, e:
             return self._handle_exception(e, code=404)
 
-        if request.httprequest.method in ('GET', 'HEAD'):
+        if getattr(request, 'website_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
             generated_path = werkzeug.url_unquote_plus(path)
             current_path = werkzeug.url_unquote_plus(request.httprequest.path)
             if generated_path != current_path:
                 if request.lang != request.website.default_lang_code:
                     path = '/' + request.lang + path
+                if request.httprequest.query_string:
+                    path += '?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(path)
 
     def _serve_attachment(self):
@@ -235,6 +292,6 @@ class PageConverter(werkzeug.routing.PathConverter):
             record = {'loc': xid}
             if view['priority'] <> 16:
                 record['__priority'] = min(round(view['priority'] / 32.0,1), 1)
-            if view.get('write_date'):
+            if view['write_date']:
                 record['__lastmod'] = view['write_date'][:10]
             yield record

@@ -363,7 +363,10 @@ openerp.base_import = function (instance) {
             var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
                 return $(el).select2('val') || false;
             }).get();
-            kwargs.context = this.parent_context;
+            kwargs.context = _.extend(
+                {}, this.parent_context,
+                {tracking_disable: !this.$('#oe_import_tracking').prop('checked')}
+            );
             return this.Import.call('do', [this.id, fields, this.import_options()], kwargs)
                 .then(undefined, function (error, event) {
                     // In case of unexpected exception, convert

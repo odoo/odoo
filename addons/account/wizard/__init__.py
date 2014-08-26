@@ -63,8 +63,6 @@ import account_report_account_balance
 
 import account_change_currency
 
-import pos_box;
-
+import pos_box
+import account_statement_from_invoice
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-

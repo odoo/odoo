@@ -28,18 +28,19 @@ from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.addons.base.res.res_partner import format_address
 from openerp.osv import fields, osv, orm
-from openerp.tools import html2plaintext
 from openerp.tools.translate import _
+from openerp.tools import email_re
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
-    'channel_id',
+    'campaign_id',
     'company_id',
     'country_id',
     'section_id',
     'state_id',
     'stage_id',
-    'type_id',
+    'medium_id',
+    'source_id',
     'user_id',
     'title',
     'city',
@@ -67,8 +68,8 @@ class crm_lead(format_address, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"
-    _order = "priority,date_action,id desc"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = "priority desc,date_action,id desc"
+    _inherit = ['mail.thread', 'ir.needaction_mixin', 'crm.tracking.mixin']
 
     _track = {
         'stage_id': {
@@ -82,6 +83,7 @@ class crm_lead(format_address, osv.osv):
     _mail_mass_mailing = _('Leads / Opportunities')
 
     def get_empty_list_help(self, cr, uid, help, context=None):
+        context = dict(context or {})
         if context.get('default_type') == 'lead':
             context['empty_list_help_model'] = 'crm.case.section'
             context['empty_list_help_id'] = context.get('default_section_id')
@@ -90,7 +92,10 @@ class crm_lead(format_address, osv.osv):
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
-        return self._resolve_section_id_from_context(cr, uid, context=context) or False
+        section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
+        if not section_id:
+            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
+        return section_id
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
@@ -187,13 +192,18 @@ class crm_lead(format_address, osv.osv):
                     duration = abs(int(ans.days))
                 res[lead.id][field] = duration
         return res
-
+    def _meeting_count(self, cr, uid, ids, field_name, arg, context=None):
+        Event = self.pool['calendar.event']
+        return {
+            opp_id: Event.search_count(cr,uid, [('opportunity_id', '=', opp_id)], context=context)
+            for opp_id in ids
+        }
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', track_visibility='onchange',
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Subject', size=64, required=True, select=1),
+        'name': fields.char('Subject', required=True, select=1),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -206,9 +216,6 @@ class crm_lead(format_address, osv.osv):
         'write_date': fields.datetime('Update Date', readonly=True),
         'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Tags', \
             domain="['|', ('section_id', '=', section_id), ('section_id', '=', False), ('object_id.model', '=', 'crm.lead')]", help="Classify and analyze your lead/opportunity categories like: Training, Service"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
-        'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
         'opt_out': fields.boolean('Opt-Out', oldname='optout',
@@ -216,16 +223,18 @@ class crm_lead(format_address, osv.osv):
                     "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."),
         'type': fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', select=True, help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
-        'date_closed': fields.datetime('Closed', readonly=True),
+        'date_closed': fields.datetime('Closed', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange', select=True,
                         domain="['&', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
-        'referred': fields.char('Referred By', size=64),
+        'referred': fields.char('Referred By'),
         'date_open': fields.datetime('Assigned', readonly=True),
-        'day_open': fields.function(_compute_day, string='Days to Open', \
-                                multi='day_open', type="float", store=True),
-        'day_close': fields.function(_compute_day, string='Days to Close', \
-                                multi='day_open', type="float", store=True),
+        'day_open': fields.function(_compute_day, string='Days to Assign',
+                                    multi='day_open', type="float",
+                                    store={'crm.lead': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
+        'day_close': fields.function(_compute_day, string='Days to Close',
+                                     multi='day_open', type="float",
+                                     store={'crm.lead': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
 
         # Messaging and marketing
@@ -238,7 +247,7 @@ class crm_lead(format_address, osv.osv):
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         'date_action': fields.date('Next Action Date', select=True),
-        'title_action': fields.char('Next Action', size=64),
+        'title_action': fields.char('Next Action'),
         'color': fields.integer('Color Index'),
         'partner_address_name': fields.related('partner_id', 'name', type='char', string='Partner Contact Name', readonly=True),
         'partner_address_email': fields.related('partner_id', 'email', type='char', string='Partner Contact Email', readonly=True),
@@ -247,21 +256,22 @@ class crm_lead(format_address, osv.osv):
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
 
         # Fields for address, due to separation from crm and res.partner
-        'street': fields.char('Street', size=128),
-        'street2': fields.char('Street2', size=128),
+        'street': fields.char('Street'),
+        'street2': fields.char('Street2'),
         'zip': fields.char('Zip', change_default=True, size=24),
-        'city': fields.char('City', size=128),
+        'city': fields.char('City'),
         'state_id': fields.many2one("res.country.state", 'State'),
         'country_id': fields.many2one('res.country', 'Country'),
-        'phone': fields.char('Phone', size=64),
-        'fax': fields.char('Fax', size=64),
-        'mobile': fields.char('Mobile', size=64),
-        'function': fields.char('Function', size=128),
+        'phone': fields.char('Phone'),
+        'fax': fields.char('Fax'),
+        'mobile': fields.char('Mobile'),
+        'function': fields.char('Function'),
         'title': fields.many2one('res.partner.title', 'Title'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'payment_mode': fields.many2one('crm.payment.mode', 'Payment Mode', \
                             domain="[('section_id','=',section_id)]"),
         'planned_cost': fields.float('Planned Costs'),
+        'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
     }
 
     _defaults = {
@@ -296,7 +306,8 @@ class crm_lead(format_address, osv.osv):
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             values = {
-                'partner_name': partner.name,
+                'partner_name': partner.parent_id.name if partner.parent_id else partner.name,
+                'contact_name': partner.name if partner.parent_id else False,
                 'street': partner.street,
                 'street2': partner.street2,
                 'city': partner.city,
@@ -367,7 +378,6 @@ class crm_lead(format_address, osv.osv):
 
     def case_mark_lost(self, cr, uid, ids, context=None):
         """ Mark the case as lost: state=cancel and probability=0
-            :deprecated: this method will be removed in OpenERP v8.
         """
         stages_leads = {}
         for lead in self.browse(cr, uid, ids, context=context):
@@ -388,7 +398,6 @@ class crm_lead(format_address, osv.osv):
 
     def case_mark_won(self, cr, uid, ids, context=None):
         """ Mark the case as won: state=done and probability=100
-            :deprecated: this method will be removed in OpenERP v8.
         """
         stages_leads = {}
         for lead in self.browse(cr, uid, ids, context=context):
@@ -420,21 +429,6 @@ class crm_lead(format_address, osv.osv):
                 raise osv.except_osv(_('Error!'), _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
             self.write(cr, uid, [case.id], data, context=context)
         return True
-
-    def set_priority(self, cr, uid, ids, priority, context=None):
-        """ Set lead priority
-        """
-        return self.write(cr, uid, ids, {'priority': priority}, context=context)
-
-    def set_high_priority(self, cr, uid, ids, context=None):
-        """ Set lead priority to high
-        """
-        return self.set_priority(cr, uid, ids, '1', context=context)
-
-    def set_normal_priority(self, cr, uid, ids, context=None):
-        """ Set lead priority to normal
-        """
-        return self.set_priority(cr, uid, ids, '3', context=context)
 
     def _merge_get_result_type(self, cr, uid, opps, context=None):
         """
@@ -870,31 +864,33 @@ class crm_lead(format_address, osv.osv):
             'type': 'ir.actions.act_window',
         }
 
-    def action_makeMeeting(self, cr, uid, ids, context=None):
+    def action_schedule_meeting(self, cr, uid, ids, context=None):
         """
         Open meeting's calendar view to schedule meeting on current opportunity.
         :return dict: dictionary value for created Meeting view
         """
-        opportunity = self.browse(cr, uid, ids[0], context)
+        lead = self.browse(cr, uid, ids[0], context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
+        partner_ids = [self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id]
+        if lead.partner_id:
+            partner_ids.append(lead.partner_id.id)
         res['context'] = {
-            'default_opportunity_id': opportunity.id,
-            'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
-            'default_partner_ids' : opportunity.partner_id and [opportunity.partner_id.id] or False,
-            'default_user_id': uid,
-            'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
-            'default_email_from': opportunity.email_from,
-            'default_name': opportunity.name,
+            'default_opportunity_id': lead.type == 'opportunity' and lead.id or False,
+            'default_partner_id': lead.partner_id and lead.partner_id.id or False,
+            'default_partner_ids': partner_ids,
+            'default_section_id': lead.section_id and lead.section_id.id or False,
+            'default_name': lead.name,
         }
         return res
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         if vals.get('type') and not context.get('default_type'):
             context['default_type'] = vals.get('type')
         if vals.get('section_id') and not context.get('default_section_id'):
             context['default_section_id'] = vals.get('section_id')
+        if vals.get('user_id'):
+            vals['date_open'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
@@ -904,7 +900,9 @@ class crm_lead(format_address, osv.osv):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
-        # stage change with new stage: update probability
+        if vals.get('user_id'):
+            vals['date_open'] = fields.datetime.now()
+        # stage change with new stage: update probability and date_closed
         if vals.get('stage_id') and not vals.get('probability'):
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)
@@ -923,11 +921,10 @@ class crm_lead(format_address, osv.osv):
             default['date_open'] = fields.datetime.now()
         else:
             default['date_open'] = False
-        default['date_closed'] = False
-        default['stage_id'] = self._get_default_stage_id(cr, uid, local_context)
-        return super(crm_lead, self).copy(cr, uid, id, default, context=context)
+        return super(crm_lead, self).copy(cr, uid, id, default, context=local_context)
 
     def get_empty_list_help(self, cr, uid, help, context=None):
+        context = dict(context or {})
         context['empty_list_help_model'] = 'crm.case.section'
         context['empty_list_help_id'] = context.get('default_section_id', None)
         context['empty_list_help_document_name'] = _("opportunity")
@@ -941,8 +938,10 @@ class crm_lead(format_address, osv.osv):
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
-        return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
-                    for lead in self.browse(cr, SUPERUSER_ID, ids, context=context)]
+        leads = self.browse(cr, SUPERUSER_ID, ids, context=context)
+        section_ids = set([lead.section_id.id for lead in leads if lead.section_id])
+        aliases = self.pool['crm.case.section'].message_get_reply_to(cr, uid, list(section_ids), context=context)
+        return dict((lead.id, aliases.get(lead.section_id and lead.section_id.id or 0, False)) for lead in leads)
 
     def get_formview_id(self, cr, uid, id, context=None):
         obj = self.browse(cr, uid, id, context=context)
@@ -1039,5 +1038,17 @@ class crm_lead(format_address, osv.osv):
             country_id=self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
             return {'value':{'country_id':country_id}}
         return {}
+
+    def message_partner_info_from_emails(self, cr, uid, id, emails, link_mail=False, context=None):
+        res = super(crm_lead, self).message_partner_info_from_emails(cr, uid, id, emails, link_mail=link_mail, context=context)
+        lead = self.browse(cr, uid, id, context=context)
+        for partner_info in res:
+            if not partner_info.get('partner_id') and (lead.partner_name or lead.contact_name):
+                emails = email_re.findall(partner_info['full_name'] or '')
+                email = emails and emails[0] or ''
+                if email and lead.email_from and email.lower() == lead.email_from.lower():
+                    partner_info['full_name'] = '%s <%s>' % (lead.partner_name or lead.contact_name, email)
+                    break
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

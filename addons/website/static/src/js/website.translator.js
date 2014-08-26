@@ -1,27 +1,35 @@
 (function () {
     'use strict';
 
+    if (!openerp.website.translatable) {
+        // Temporary hack until the editor bar is moved to the web client
+        return;
+    }
+
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.translator.xml');
     var nodialog = 'website_translator_nodialog';
 
     website.EditorBar.include({
         do_not_translate : ['-','*','!'],
-        events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action=edit_master]': 'edit_master',
-        }),
         start: function () {
             var self = this;
             this.initial_content = {};
             return this._super.apply(this, arguments).then(function () {
-                self.$("button[data-action=edit]").removeClass("hidden");
-                self.$('button[data-action=edit]')
-                    .text("Translate");
-                if (website.is_editable_button) {
-                    self.$('button[data-action=edit]')
-                        .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
+                var $edit_button = $("button[data-action=edit]");
+                $edit_button.removeClass("hidden");
+                $edit_button.text("Translate");
+
+                if(website.no_editor) {
+                    $edit_button.removeProp('disabled');
+                } else {
+                    $edit_button.parent().after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
+                    $('a[data-action=edit_master]').on('click', self, function(ev) {
+                        self.edit_master(ev);
+                    });
                 }
-                self.$('.js_hide_on_translate').hide();
+
+                $('.js_hide_on_translate').hide();
             });
         },
         edit: function () {

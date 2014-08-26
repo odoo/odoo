@@ -29,6 +29,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.report import report_sxw
 
+
 class partner_vat_intra(osv.osv_memory):
     """
     Partner Vat Intra
@@ -45,8 +46,8 @@ class partner_vat_intra(osv.osv_memory):
         return self.pool.get('res.country').search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])
 
     _columns = {
-        'name': fields.char('File Name', size=32),
-        'period_code': fields.char('Period Code',size = 6,required = True, help = '''This is where you have to set the period code for the intracom declaration using the format: ppyyyy
+        'name': fields.char('File Name'),
+        'period_code': fields.char('Period Code', size=6, required=True, help='''This is where you have to set the period code for the intracom declaration using the format: ppyyyy
       PP can stand for a month: from '01' to '12'.
       PP can stand for a trimester: '31','32','33','34'
           The first figure means that it is a trimester,
@@ -58,9 +59,9 @@ class partner_vat_intra(osv.osv_memory):
         'period_ids': fields.many2many('account.period', 'account_period_rel', 'acc_id', 'period_id', 'Period (s)', help = 'Select here the period(s) you want to include in your intracom declaration'),
         'tax_code_id': fields.many2one('account.tax.code', 'Company', domain=[('parent_id', '=', False)], help="Keep empty to use the user's company", required=True),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
-        'mand_id' : fields.char('Reference', size=14, help="Reference given by the Representative of the sending company."),
-        'msg': fields.text('File created', size=14, readonly=True),
-        'no_vat': fields.text('Partner With No VAT', size=14, readonly=True, help="The Partner whose VAT number is not defined  and they are not included in XML File."),
+        'mand_id' : fields.char('Reference', help="Reference given by the Representative of the sending company."),
+        'msg': fields.text('File created', readonly=True),
+        'no_vat': fields.text('Partner With No VAT', readonly=True, help="The Partner whose VAT number is not defined and they are not included in XML File."),
         'file_save' : fields.binary('Save File', readonly=True),
         'country_ids': fields.many2many('res.country', 'vat_country_rel', 'vat_id', 'country_id', 'European Countries'),
         'comments': fields.text('Comments'),
@@ -252,6 +253,7 @@ class partner_vat_intra(osv.osv_memory):
         data_decl = '\n\t<ns2:IntraListing SequenceNumber="1" ClientsNbr="%(clientnbr)s" DeclarantReference="%(dnum)s" AmountSum="%(amountsum).2f">' % (xml_data)
 
         data_file += data_head + data_decl + data_comp_period + data_clientinfo + '\n\t\t<ns2:Comment>%(comments)s</ns2:Comment>\n\t</ns2:IntraListing>\n</ns2:IntraConsignment>' % (xml_data)
+        context = dict(context or {})
         context['file_save'] = data_file
 
         model_data_ids = mod_obj.search(cursor, user,[('model','=','ir.ui.view'),('name','=','view_vat_intra_save')], context=context)
@@ -276,11 +278,9 @@ class partner_vat_intra(osv.osv_memory):
              'model': 'partner.vat.intra',
              'form': xml_data
         }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'partner.vat.intra.print',
-            'datas': datas,
-        }
+        return self.pool['report'].get_action(
+            cr, uid, [], 'l10n_be.report_l10nvatintraprint', data=datas, context=context
+        )
 
 
 class vat_intra_print(report_sxw.rml_parse):
@@ -290,6 +290,11 @@ class vat_intra_print(report_sxw.rml_parse):
             'time': time,
         })
 
-report_sxw.report_sxw('report.partner.vat.intra.print', 'partner.vat.intra', 'addons/l10n_be/wizard/l10n_be_vat_intra_print.rml', parser=vat_intra_print, header="internal")
+
+class wrapped_vat_intra_print(osv.AbstractModel):
+    _name = 'report.l10n_be.report_l10nvatintraprint'
+    _inherit = 'report.abstract_report'
+    _template = 'l10n_be.report_l10nvatintraprint'
+    _wrapped_report_class = vat_intra_print
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

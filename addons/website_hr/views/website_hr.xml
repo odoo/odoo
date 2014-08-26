@@ -3,7 +3,7 @@
 <data>
 <!-- Page --> 
 
-<template id="aboutus" inherit_id="website.aboutus" inherit_option_id="website.aboutus" name="Our Team">
+<template id="aboutus" inherit_id="website.aboutus" optional="enabled" name="Our Team">
     <xpath expr="//div[@class='oe_structure']" position="after">
         <section class="container">
             <div class="col-sm-12 text-center" t-if="len(employee_ids)">

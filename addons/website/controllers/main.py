@@ -30,37 +30,43 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # View
     #------------------------------------------------------
-    @http.route('/', type='http', auth="public", website=True, multilang=True)
+    @http.route('/', type='http', auth="public", website=True)
     def index(self, **kw):
+        page = 'homepage'
         try:
             main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
-            first_menu = main_menu.child_id and main_menu.child_id[0]
-            # Dont 302 loop on /
-            if first_menu and not ((first_menu.url == '/') or first_menu.url.startswith('/#') or first_menu.url.startswith('/?')):
-                return request.redirect(first_menu.url)
-        except:
+        except Exception:
             pass
-        return self.page("website.homepage")
+        else:
+            first_menu = main_menu.child_id and main_menu.child_id[0]
+            if first_menu:
+                if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url=='/')):
+                    return request.redirect(first_menu.url)
+                if first_menu.url.startswith('/page/'):
+                    return request.registry['ir.http'].reroute(first_menu.url)
+        return self.page(page)
 
-    @http.route(website=True, auth="public", multilang=True)
+    @http.route(website=True, auth="public")
     def web_login(self, *args, **kw):
         # TODO: can't we just put auth=public, ... in web client ?
         return super(Website, self).web_login(*args, **kw)
 
-    @http.route('/page/<path:page>', type='http', auth="public", website=True, multilang=True)
+    @http.route('/page/<page:page>', type='http', auth="public", website=True)
     def page(self, page, **opt):
         values = {
             'path': page,
         }
-        # allow shortcut for /page/<website_xml_id>
-        if '.' not in page:
+        # /page/website.XXX --> /page/XXX
+        if page.startswith('website.'):
+            return request.redirect('/page/' + page[8:], code=301)
+        elif '.' not in page:
             page = 'website.%s' % page
 
         try:
             request.website.get_template(page)
         except ValueError, e:
             # page not found
-            if request.context['editable']:
+            if request.website.is_publisher():
                 page = 'website.page_404'
             else:
                 return request.registry['ir.http']._handle_exception(e, 404)
@@ -158,22 +164,25 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route('/website/theme_change', type='http', auth="user", website=True)
     def theme_change(self, theme_id=False, **kwargs):
         imd = request.registry['ir.model.data']
-        view = request.registry['ir.ui.view']
+        Views = request.registry['ir.ui.view']
 
-        view_model, view_option_id = imd.get_object_reference(
+        _, theme_template_id = imd.get_object_reference(
             request.cr, request.uid, 'website', 'theme')
-        views = view.search(
-            request.cr, request.uid, [('inherit_id', '=', view_option_id)],
-            context=request.context)
-        view.write(request.cr, request.uid, views, {'inherit_id': False},
-                   context=request.context)
+        views = Views.search(request.cr, request.uid, [
+            ('inherit_id', '=', theme_template_id),
+            ('application', '=', 'enabled'),
+        ], context=request.context)
+        Views.write(request.cr, request.uid, views, {
+            'application': 'disabled',
+        }, context=request.context)
 
         if theme_id:
             module, xml_id = theme_id.split('.')
-            view_model, view_id = imd.get_object_reference(
+            _, view_id = imd.get_object_reference(
                 request.cr, request.uid, module, xml_id)
-            view.write(request.cr, request.uid, [view_id],
-                       {'inherit_id': view_option_id}, context=request.context)
+            Views.write(request.cr, request.uid, [view_id], {
+                'application': 'enabled'
+            }, context=request.context)
 
         return request.render('website.themes', {'theme_changed': True})
 
@@ -202,61 +211,52 @@ class Website(openerp.addons.web.controllers.main.Home):
                 module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
         return request.redirect(redirect)
 
-    @http.route('/website/customize_template_toggle', type='json', auth='user', website=True)
-    def customize_template_set(self, view_id):
-        view_obj = request.registry.get("ir.ui.view")
-        view = view_obj.browse(request.cr, request.uid, int(view_id),
-                               context=request.context)
-        if view.inherit_id:
-            value = False
-        else:
-            value = view.inherit_option_id and view.inherit_option_id.id or False
-        view_obj.write(request.cr, request.uid, [view_id], {
-            'inherit_id': value
-        }, context=request.context)
-        return True
-
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, xml_id, optional=True):
+    def customize_template_get(self, xml_id, full=False):
+        """ Lists the templates customizing ``xml_id``. By default, only
+        returns optional templates (which can be toggled on and off), if
+        ``full=True`` returns all templates customizing ``xml_id``
+        """
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(
             request.cr, request.uid, 'website', 'theme')
 
-        user = request.registry['res.users'].browse(request.cr, request.uid, request.uid, request.context)
-        group_ids = [g.id for g in user.groups_id]
+        user = request.registry['res.users']\
+            .browse(request.cr, request.uid, request.uid, request.context)
+        user_groups = set(user.groups_id)
 
-        view = request.registry.get("ir.ui.view")
-        views = view._views_get(request.cr, request.uid, xml_id, context=request.context)
-        done = {}
+        views = request.registry["ir.ui.view"]\
+            ._views_get(request.cr, request.uid, xml_id, context=request.context)
+        done = set()
         result = []
         for v in views:
-            if v.groups_id and [g for g in v.groups_id if g.id not in group_ids]:
+            if not user_groups.issuperset(v.groups_id):
                 continue
-            if v.inherit_option_id and v.inherit_option_id.id != view_theme_id or not optional:
-                if v.inherit_option_id.id not in done:
+            if full or (v.application != 'always' and v.inherit_id.id != view_theme_id):
+                if v.inherit_id not in done:
                     result.append({
-                        'name': v.inherit_option_id.name,
+                        'name': v.inherit_id.name,
                         'id': v.id,
                         'xml_id': v.xml_id,
                         'inherit_id': v.inherit_id.id,
                         'header': True,
                         'active': False
                     })
-                    done[v.inherit_option_id.id] = True
+                    done.add(v.inherit_id)
                 result.append({
                     'name': v.name,
                     'id': v.id,
                     'xml_id': v.xml_id,
                     'inherit_id': v.inherit_id.id,
                     'header': False,
-                    'active': (v.inherit_id.id == v.inherit_option_id.id) or (not optional and v.inherit_id.id)
+                    'active': v.application in ('always', 'enabled'),
                 })
         return result
 
     @http.route('/website/get_view_translations', type='json', auth='public', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
-        views = self.customize_template_get(xml_id, optional=False)
+        views = self.customize_template_get(xml_id, full=True)
         views_ids = [view.get('id') for view in views if view.get('active')]
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
         irt = request.registry.get('ir.translation')
@@ -384,12 +384,9 @@ class Website(openerp.addons.web.controllers.main.Home):
         '/website/image',
         '/website/image/<model>/<id>/<field>'
         ], auth="public", website=True)
-    def website_image(self, model, id, field, max_width=maxint, max_height=maxint):
+    def website_image(self, model, id, field, max_width=None, max_height=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
-
-        Resizing is bypassed if the object provides a $field_big, which will
-        be interpreted as a pre-resized version of the base field.
 
         If the record is not found or does not have the requested field,
         returns a placeholder image via :meth:`~.placeholder`.
@@ -402,10 +399,15 @@ class Website(openerp.addons.web.controllers.main.Home):
         The requested field is assumed to be base64-encoded image data in
         all cases.
         """
-        response = werkzeug.wrappers.Response()
-        return request.registry['website']._image(
-                    request.cr, request.uid, model, id, field, response, max_width, max_height)
-
+        try:
+            response = werkzeug.wrappers.Response()
+            return request.registry['website']._image(
+                request.cr, request.uid, model, id, field, response, max_width, max_height)
+        except Exception:
+            logger.exception("Cannot render image field %r of record %s[%s] at size(%s,%s)",
+                             field, model, id, max_width, max_height)
+            response = werkzeug.wrappers.Response()
+            return self.placeholder(response)
 
     #------------------------------------------------------
     # Server actions

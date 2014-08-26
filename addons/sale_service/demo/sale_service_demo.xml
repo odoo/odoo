@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!--Resource: sale.order.line for services type product-->
+
+        <record id="line_services" model="sale.order.line">
+            <field name="order_id" ref="sale.sale_order_3"/>
+            <field name="name">Advance</field>
+            <field name="product_id" ref="sale.advance_product_0"/>
+            <field name="product_uom" ref="product.product_uom_day"/>
+            <field name="price_unit">150.0</field>
+            <field name="product_uom_qty">5.0</field>
+        </record>
+
+        <record id="project.project_tt_deployment" model="project.task.type">
+                <field name="closed" eval="True"/>
+        </record>
+    </data>
+</openerp>

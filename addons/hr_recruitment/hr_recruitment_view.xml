@@ -68,22 +68,39 @@
         <field name="name">Jobs - Recruitment Form</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-          <form string="Jobs - Recruitment Form" version="7.0">
+          <form string="Jobs - Recruitment Form">
             <header>
                 <field name="stage_id" widget="statusbar" clickable="True"/>
             </header>
             <sheet>
                 <div class="oe_right oe_button_box">
-                    <button name="action_makeMeeting" type="object"
-                        string="Schedule Meeting" help="Schedule interview with this applicant"/>
-                    <button name="action_start_survey" type="object"
-                        string="Start Interview" help="Answer related job question"
+                    <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
+                         help="Schedule interview with this applicant">
+                         <div>Schedule<br/>Meeting</div>
+                    </button>
+                    <button name="action_start_survey" 
+                        class="oe_stat_button"
+                        icon="fa-user" 
+                        type="object"
+                        help="Answer related job question"
                         context="{'survey_id': survey}"
-                        attrs="{'invisible':[('survey','=',False)]}"/>
-                    <button name="action_print_survey" type="object"
-                        string="Print Interview" help="Print interview report"
-                        attrs="{'invisible':[('survey','=',False)]}"/>
-                    <button name="action_get_attachment_tree_view" string="Documents" type="object"/>
+                        attrs="{'invisible':[('survey','=',False)]}">
+                        <div>Start<br/>Interview</div>
+                    </button>
+                    <button name="action_print_survey" 
+                        class="oe_stat_button"
+                        icon="fa-print"
+                        type="object"
+                        help="Print interview report"
+                        attrs="{'invisible':[('survey','=',False)]}">
+                        <div>Print<br/>Interview</div>
+                    </button>
+                    <button name="action_get_attachment_tree_view" 
+                        class="oe_stat_button"
+                        icon="fa-book"
+                        type="object">
+                        <field name="attachment_number" widget="statinfo" string="Documents"/>
+                    </button>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -113,7 +130,7 @@
                             <field name="date_action"/>
                             <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
                         </div>
-                        <field name="priority"/>
+                        <field name="priority" widget="priority"/>
                         <field name="source_id"/>
                         <field name="reference"/>
                     </group>
@@ -176,14 +193,13 @@
         <field name="arch" type="xml">
             <search string="Search Applicants">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-                <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="My" domain="[('user_id', '=', uid)]"/>
-                <separator/>
-                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>
                 <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
-
+                <separator/>
+                <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
@@ -191,17 +207,11 @@
                 <separator/>
                 <field name="categ_ids"/>
                 <separator/>
-                <group expand="0" string="Group By...">
+                <group expand="0" string="Group By">
                     <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
-                    <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
                     <filter string="Degree" domain="[]" context="{'group_by':'type_id'}"/>
-                    <filter string="Availability" domain="[]" context="{'group_by':'availability'}"/>
-                    <filter string="Appreciation" domain="[]" context="{'group_by':'priority'}"/>
-                    <filter string="Last Stage" help="Match this group by with a specific stage filter in order to analyse the recruitment process" context="{'group_by':'last_stage_id'}"/>
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
-                    <filter string="Creation Month" domain="[]" context="{'group_by':'create_date'}"/>
                     <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}"/>
                 </group>
            </search>
@@ -276,22 +286,11 @@
                                         <field name="title_action"/>
                                 </div>
                                 <div style="width:240px"><field name="categ_ids"/></div>
-                                <div class="oe_kanban_right">
-                                    <t t-set="priority" t-value="record.priority.raw_value || 5"/>
-                                    <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
-                                        <img src="/web/static/src/img/icons/star-off.png" width="16" height="16" title="Good"/>
-                                    </a>
-                                    <a type="object" name="set_priority" args="['5']" t-if="priority lte 3">
-                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16" title="Good"/>
-                                    </a>
-                                    <a type="object" name="set_priority" args="['2']">
-                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16" title="Very Good"/>
-                                    </a>
-                                    <a type="object" name="set_priority" args="['1']">
-                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16" title="Excellent"/>
-                                    </a>
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
-
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <div class="pull-left" groups="base.group_user">
+                                        <field name="priority" widget="priority"/>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
                                     <t t-raw="record.message_summary.raw_value"/>
@@ -314,7 +313,7 @@
         <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'empty_list_help_model': 'hr.job'}</field>
         <field name="help" type="html">
               <p>
-                OpenERP helps you track applicants in the recruitment
+                Odoo helps you track applicants in the recruitment
                 process and follow up all operations: meetings, interviews, etc.
               </p><p>
                 Applicants and their attached CV are created automatically when an email is sent.
@@ -367,10 +366,23 @@
             <xpath expr="//field[@name='department_id']" position="after">
                 <field name="user_id" class="oe_inline"/>
             </xpath>
-            <div name="buttons" position="inside">
-                <button string="Applications" name="%(action_hr_job_applications)d" context="{'default_user_id': user_id}" type="action"/>
-                <button string="Documents" name="action_get_attachment_tree_view" type="object"/>
-            </div>
+            <xpath expr="//div[@name='buttons']" position="inside">
+                <div class="oe_button_box" >
+                    <button class="oe_stat_button" 
+                        icon="fa-file-o"
+                        name="%(action_hr_job_applications)d" 
+                        context="{'default_user_id': user_id}" 
+                        type="action">
+                        <field name="application_count" widget="statinfo" string="Applications"/>
+                    </button>
+                    <button class="oe_stat_button"
+                        icon="fa-book"
+                        name="action_get_attachment_tree_view" 
+                        type="object">
+                        <field name="documents_count" widget="statinfo" string="Documents"/>
+                    </button>
+                </div>
+            </xpath>
         </field>
     </record>
 
@@ -378,8 +390,10 @@
             <field name="name">hr.job.kanban</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_background_grey">
+                <kanban class="oe_background_grey">
                     <field name="name"/>
+                    <field name="alias_name"/>
+                    <field name="alias_domain"/>
                     <field name="department_id"/>
                     <field name="no_of_recruitment"/>
                     <field name="color"/>
@@ -405,7 +419,7 @@
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
-                                <div class = "oe_kanban_content">
+                                <div class="oe_kanban_content">
                                     <t t-if="record.user_id.raw_value">
                                         <img t-att-src="kanban_image('res.users', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar"/>
                                     </t>
@@ -413,25 +427,24 @@
                                         <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
                                     </t>
                                     <div class="oe_job_detail">
-                                        <div class="oe_job oe_name oe_kanban_ellipsis">
+                                        <div class="text-center oe_job oe_name oe_kanban_ellipsis">
                                             <field name="name"/>
                                         </div>
-                                        <div class="oe_job oe_department oe_kanban_ellipsis">
-                                            <field name="department_id"/>
+                                        <div class="text-center oe_job oe_department oe_kanban_ellipsis">
+                                            <strong><field name="department_id"/>
                                             <span t-if="record.manager_id.value" class="oe_manager_name">
                                                 (<t t-esc="record.manager_id.value"/>)
-                                            </span>
+                                            </span></strong>
                                         </div>
-                                        <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value and record.state.raw_value == 'recruit'">
-                                            <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                        <div class="text-center oe_job_alias oe_kanban_ellipsis" t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'">
+                                            <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
                                         </div>
 
                                     </div>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
                                             <a name="%(action_hr_job_applications)d" type="action">
-                                                <span t-if="record.application_ids.raw_value.length gt 1"><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
-                                                <span t-if="record.application_ids.raw_value.length lt 2"><t t-esc="record.application_ids.raw_value.length"/> Application</span>
+                                                <span><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
                                             </a>
                                             <br/>
                                             <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
@@ -441,7 +454,7 @@
                                         </div>
                                         <div class="oe_job_justgage">
                                             <field state="recruit" name="no_of_hired_employee" widget="gauge"
-                                                style="width:160px; height: 120px;"
+                                                style="margin-top:7px; width:160px; height: 120px;"
                                                 options="{
                                                     'max_field': 'no_of_recruitment',
                                                     'label': 'Hired Employees',
@@ -510,7 +523,7 @@
         <field name="name">hr.recruitment.stage.form</field>
         <field name="model">hr.recruitment.stage</field>
         <field name="arch" type="xml">
-            <form string="Stage" version="7.0">
+            <form string="Stage">
                 <sheet>
                 <group string="Stage Definition">
                     <group>
@@ -570,7 +583,7 @@
         <field name="name">hr.recruitment.degree.form</field>
         <field name="model">hr.recruitment.degree</field>
         <field name="arch" type="xml">
-            <form string="Degree" version="7.0">
+            <form string="Degree">
                 <sheet>
                 <group>
                     <field name="name"/>
@@ -610,7 +623,7 @@
         <field name="name">hr.recruitment.source.form</field>
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
-            <form string="Sources of Applicants" version="7.0">
+            <form string="Sources of Applicants">
                 <sheet>
                 <group>
                     <field name="name"/>

@@ -124,12 +124,12 @@ class gamification_challenge(osv.Model):
                 ('draft', 'Draft'),
                 ('inprogress', 'In Progress'),
                 ('done', 'Done'),
-            ],
+            ], copy=False,
             string='State', required=True, track_visibility='onchange'),
         'manager_id': fields.many2one('res.users',
             string='Responsible', help="The user responsible for the challenge."),
 
-        'user_ids': fields.many2many('res.users', 'user_ids',
+        'user_ids': fields.many2many('res.users', 'gamification_challenge_users_rel',
             string='Users',
             help="List of users participating to the challenge"),
         'user_domain': fields.char('User domain', help="Alternative to a list of users"),
@@ -149,13 +149,13 @@ class gamification_challenge(osv.Model):
         'end_date': fields.date('End Date',
             help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."),
 
-        'invited_user_ids': fields.many2many('res.users', 'invited_user_ids',
+        'invited_user_ids': fields.many2many('res.users', 'gamification_invited_user_ids_rel',
             string="Suggest to users"),
 
         'line_ids': fields.one2many('gamification.challenge.line', 'challenge_id',
             string='Lines',
             help="List of goals that will be set",
-            required=True),
+            required=True, copy=True),
 
         'reward_id': fields.many2one('gamification.badge', string="For Every Succeding User"),
         'reward_first_id': fields.many2one('gamification.badge', string="For 1st user"),
@@ -283,7 +283,7 @@ class gamification_challenge(osv.Model):
 
         # in cron mode, will do intermediate commits
         # TODO in trunk: replace by parameter
-        context.update({'commit_gamification': True})
+        context = dict(context, commit_gamification=True)
         return self._update_all(cr, uid, ids, context=context)
 
     def _update_all(self, cr, uid, ids, context=None):
@@ -379,10 +379,6 @@ class gamification_challenge(osv.Model):
 
 
     ##### Automatic actions #####
-
-    def generate_goals_from_challenge(self, cr, uid, ids, context=None):
-        _logger.warning("Deprecated, use private method _generate_goals_from_challenge(...) instead.")
-        return self._generate_goals_from_challenge(cr, uid, ids, context=context)
 
     def _generate_goals_from_challenge(self, cr, uid, ids, context=None):
         """Generate the goals for each line and user.
@@ -856,7 +852,7 @@ class gamification_challenge_line(osv.Model):
         return ret
 
     _columns = {
-        'name': fields.related('definition_id', 'name', string="Name"),
+        'name': fields.related('definition_id', 'name', string="Name", type="char"),
         'challenge_id': fields.many2one('gamification.challenge',
             string='Challenge',
             required=True,

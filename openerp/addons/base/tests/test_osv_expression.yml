@@ -1,0 +1,563 @@
+-
+    Testing for hierarchical search in M2M
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('category_id', 'child_of',ref('res_partner_category_0'))])
+        assert len(ids) >= 1, ids
+-
+    "1.0 Setup test partner categories: parent root"
+-
+    !record {model: res.partner.category, id: categ_root}:
+        name: Root category
+-
+    "1.1 Setup test partner categories: parent category"
+-
+    !record {model: res.partner.category, id: categ_0}:
+        name: Parent category
+        parent_id: categ_root
+-
+    "1.2 Setup test partner categories: child 1"
+-
+    !record {model: res.partner.category, id: categ_1}:
+        name: Child 1
+        parent_id: categ_0
+-
+    Test hierarchical search in M2M with child ID (list of ids)
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_root')])])
+        assert len(ids) == 3, ids
+-
+    Test hierarchical search in M2M with child ID (single id)
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'child_of',ref('categ_root'))])
+        assert len(ids) == 3, ids
+-
+    Test hierarchical search in M2M with child IDs
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_1'), ref('categ_0')])])
+        assert len(ids) == 2, ids
+-
+    Test hierarchical search in M2M with child IDs
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_0')])])
+        assert len(ids) == 2, ids
+-
+    Test hierarchical search in M2M with child IDs
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_1')])])
+        assert len(ids) == 1, ids
+-
+    Testing that some domain expressions work
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('parent_id','=','Agrolait')])
+        assert len(ids) >= 1, ids
+-
+    Trying the "in" operator, for scalar value
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('parent_id','in','Agrolait')])
+        assert len(ids) >= 1, ids
+-
+    Trying the "in" operator for list value
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('parent_id','in',['Agrolait','ASUStek'])])
+        assert len(ids) >= 1, ids
+-
+    Check we can use "in" operator for plain fields.
+-
+    !python {model: ir.ui.menu }: |
+        ids = self.search(cr, uid, [('sequence','in',[1, 2, 10, 20])])
+        assert len(ids) >= 1, ids
+-
+    Test one2many operator with empty search list
+-
+    !assert {model: res.partner, search: "[('child_ids', 'in', [])]", count: 0, string: "Ids should be empty"}
+-
+    Test one2many operator with False
+-
+    !assert {model: res.partner, search: "[('child_ids', '=', False)]"}:
+        - list(child_ids) == []
+-
+    Test many2many operator with empty search list
+-
+    !assert {model: res.partner, search: "[('category_id', 'in', [])]", count: 0, string: "Ids should be empty"}
+-
+    Test many2many operator with False
+-
+    !assert {model: res.partner, search: "[('category_id', '=', False)]"}:
+        - list(category_id) == []
+-
+    Filtering on invalid value across x2many relationship should return an empty set
+-
+    !assert {model: res.partner, search: "[('child_ids.city','=','foo')]", count: 0, string: "Searching for address.city = foo should give empty results"}
+-
+    Check if many2one works with empty search list
+-
+    !assert {model: res.partner, search: "[('company_id','in', [])]", count: 0, string: "Searching for company_id in [] should be empty!" }
+-
+    For the sake of the following tests, I will create a second company
+-
+    !record {model: res.company, id: ymltest_company2}:
+        name: Acme 2
+-
+    And create a few partners with that company or no company
+-
+    !python {model: res.partner }: |
+        for r in range(4):
+            self.create(cr, uid, { 'name': 'P of Acme %d' % r,
+                    'company_id': ref('ymltest_company2') })
+        for r in range(4):
+            self.create(cr, uid, { 'name': 'P of All %d' % r,
+                    'company_id': False })
+-
+    Check if many2one works with negative empty list
+-
+    !python {model: res.partner }: |
+        all_ids = self.search(cr, uid, [])
+        all_ids.sort()
+        res_ids = self.search(cr, uid,['|',('company_id','not in', []), ('company_id','=',False)])
+        res_ids.sort()
+        assert all_ids == res_ids, "not in [] fails"
+-
+    Check that many2one will pick the correct records with a list
+-
+    !python {model: res.partner }: |
+        res_ids = self.search(cr, uid, [('company_id', 'in', [False,])])
+        assert len(res_ids) >= 4, "We created 4 partners w/company, why find %d? %r" % \
+                    (len(res_ids), res_ids)
+-
+    Check that many2one will exclude the correct records with a list
+-
+    !python {model: res.partner }: |
+        # assuming that the default company is #1
+        res_ids = self.search(cr, uid, [('company_id', 'not in', [1])])
+        assert len(res_ids) >= 4, "We should have found 4 records at least, only have %d! %r" % \
+            (len(res_ids), res_ids)
+-
+    Check that we exclude the correct records, + False
+-
+    !python {model: res.partner }: |
+        # assuming that the default company is #1
+        res_ids = self.search(cr, uid, ['|', ('company_id', 'not in', [1]), ('company_id', '=', False)])
+        assert len(res_ids) >= 8, "We should have found 8 records at least, only have %d! %r" % \
+            (len(res_ids), res_ids)
+-
+    Check that multi-level expressions also work
+-
+    !python {model: res.partner }: |
+        res_ids = self.search(cr, uid, [('company_id.partner_id', 'in', [])])
+        assert res_ids == [], "Searching an empty set should return empty result, not %r" % res_ids
+-
+    Check that multi-level expressions with negative op work
+-
+    !python {model: res.partner }: |
+        all_ids = self.search(cr, uid, [('company_id', '!=', False)])
+        all_ids.sort()
+        res_ids = self.search(cr, uid, [('company_id.partner_id', 'not in', [])])
+        res_ids.sort()
+        assert res_ids == all_ids, "Searching against empty set failed, returns %r" % res_ids
+-
+    Test the '(not) like/in' behavior. res.partner and its parent_id column are used because
+    parent_id is a many2one, allowing to test the Null value, and there are actually some
+    null and non-null values in the demo data.
+-
+    !python {model: res.partner }: |
+        partner_ids = self.search(cr, uid, [])
+        partner_ids.sort()
+        max_partner_id = max(partner_ids)
+
+        # Grab test sample data without using a normal
+        # search domain, because we want to test these later,
+        # so we can't rely on them!
+        partners = self.browse(cr, uid, partner_ids)
+        with_parent = []
+        without_parent = []
+        with_website = []
+        for x in partners:
+            if x.parent_id:
+                with_parent.append(x.id)
+            else:
+                without_parent.append(x.id)
+            if x.website:
+                with_website.append(x.id)
+        with_parent.sort()
+        without_parent.sort()
+        with_website.sort()
+
+        # We treat null values differently than in SQL. For instance in SQL:
+        #   SELECT id FROM res_partner WHERE parent_id NOT IN (0)
+        # will return only the records with non-null parent_id.
+        #   SELECT id FROM res_partner WHERE parent_id IN (0)
+        # will return expectedly nothing (our ids always begin at 1).
+        # This means the union of those two results will give only some
+        # records, but not all present in database.
+        #
+        # When using domains and the ORM's search method, we think it is
+        # more intuitive that the union returns all the records, and that
+        # a domain like ('parent_id', 'not in', [0]) will return all
+        # the records. For instance, if you perform a search for the companies
+        # that don't have OpenERP has a parent company, you expect to find,
+        # among others, the companies that don't have parent company.
+        #
+       
+        # existing values be treated similarly if we simply check that some
+        # existing value belongs to them.
+
+        res_0 = self.search(cr, uid, [('parent_id', 'not like', 'probably_unexisting_name')]) # get all rows, included null parent_id
+        res_0.sort()
+        res_1 = self.search(cr, uid, [('parent_id', 'not in', [max_partner_id + 1])]) # get all rows, included null parent_id
+        res_1.sort()
+        res_2 = self.search(cr, uid, [('parent_id', '!=', False)]) # get rows with not null parent_id, deprecated syntax
+        res_2.sort()
+        res_3 = self.search(cr, uid, [('parent_id', 'not in', [])]) # get all rows, included null parent_id
+        res_3.sort()
+        res_4 = self.search(cr, uid, [('parent_id', 'not in', [False])]) # get rows with not null parent_id
+        res_4.sort()
+        res_4b = self.search(cr, uid, [('parent_id', 'not ilike', '')]) # get only rows without parent
+        res_4b.sort()
+        assert res_0 == partner_ids, 'res0: expected %r, got %r' % (partner_ids, res_0)
+        assert res_1 == partner_ids, 'res1: expected %r, got %r' % (partner_ids, res_1)
+        assert res_2 == with_parent, 'res2: expected %r, got %r' % (with_parent, res_2)
+        assert res_3 == partner_ids, 'res3: expected %r, got %r' % (partner_ids, res_3)
+        assert res_4 == with_parent, 'res4: expected %r, got %r' % (with_parent, res_4)
+        assert res_4b == without_parent, 'res4b: expected %r, got %r' % (without_parent, res_4b)
+        # The results of these queries, when combined with queries 0..4 must
+        # give the whole set of ids.
+        res_5 = self.search(cr, uid, [('parent_id', 'like', 'probably_unexisting_name')])
+        res_5.sort()
+        res_6 = self.search(cr, uid, [('parent_id', 'in', [max_partner_id + 1])])
+        res_6.sort()
+        res_7 = self.search(cr, uid, [('parent_id', '=', False)])
+        res_7.sort()
+        res_8 = self.search(cr, uid, [('parent_id', 'in', [])])
+        res_8.sort()
+        res_9 = self.search(cr, uid, [('parent_id', 'in', [False])])
+        res_9.sort()
+        res_9b = self.search(cr, uid, [('parent_id', 'ilike', '')]) # get those with a parent
+        res_9b.sort()
+
+        assert res_5 == [], 'res5: expected %r, got %r' % ([], res_5)
+        assert res_6 == [], 'res6: expected %r, got %r' % ([], res_6)
+        assert res_7 == without_parent, 'res7: expected %r, got %r' % (without_parent, res_7)
+        assert res_8 == [], 'res8: expected %r, got %r' % ([], res_8)
+        assert res_9 == without_parent, 'res9: expected %r, got %r' % (without_parent, res_9)
+        assert res_9b == with_parent, 'res9b: expected %r, got %r' % (with_parent, res_9b)
+        # These queries must return exactly the results than the queries 0..4,
+        # i.e. not ... in ... must be the same as ... not in ... .
+        res_10 = self.search(cr, uid, ['!', ('parent_id', 'like', 'probably_unexisting_name')])
+        res_10.sort()
+        res_11 = self.search(cr, uid, ['!', ('parent_id', 'in', [max_partner_id + 1])])
+        res_11.sort()
+        res_12 = self.search(cr, uid, ['!', ('parent_id', '=', False)])
+        res_12.sort()
+        res_13 = self.search(cr, uid, ['!', ('parent_id', 'in', [])])
+        res_13.sort()
+        res_14 = self.search(cr, uid, ['!', ('parent_id', 'in', [False])])
+        res_14.sort()
+        assert res_0 == res_10
+        assert res_1 == res_11
+        assert res_2 == res_12
+        assert res_3 == res_13
+        assert res_4 == res_14
+
+        # Testing many2one field is not enough, a regular char field is tested
+        # with in [] and must not return any result.
+        res_15 = self.search(cr, uid, [('website', 'in', [])])
+        assert res_15 == []
+        # not in [] must return everything.
+        res_16 = self.search(cr, uid, [('website', 'not in', [])])
+        res_16.sort()
+        assert res_16 == partner_ids
+
+        res_17 = self.search(cr, uid, [('website', '!=', False)])
+        res_17.sort()
+        assert res_17 == with_website
+
+-
+    Check behavior for required many2one fields
+-
+    !python {model: res.company }: |
+        company_ids = sorted(self.search(cr, uid, []))
+        # currency_id is required
+        res_101 = sorted(self.search(cr, uid, [('currency_id', 'not ilike', '')])) # get no companies
+        res_102 = sorted(self.search(cr, uid, [('currency_id', 'ilike', '')])) # get all companies
+        assert res_101 == [], 'res_101: expected %r, got %r' % ([], res_101)
+        assert res_102 == company_ids, 'res_102: expected %r, got %r' % (company_ids, res_102)
+-
+    Verify domain evaluation for `one2many != False`
+-
+    !python {model: res.partner.category }: |
+        all_ids = self.search(cr, uid, [])
+        parent_categs = set([c.parent_id.id for c in self.browse(cr, uid, all_ids) if c.parent_id])
+        result = set(self.search(cr, uid, [('child_ids', '!=', False)]))
+        assert result and result == parent_categs, "Got %r, expected %r" % (result, parent_categs) 
+-
+    Verify domain evaluation for `one2many == False`
+-
+    !python {model: res.partner.category }: |
+        all_ids = self.search(cr, uid, [])
+        parent_categs = set([c.parent_id.id for c in self.browse(cr, uid, all_ids) if c.parent_id])
+        leaf_categs = set(all_ids) - parent_categs
+        result = set(self.search(cr, uid, [('child_ids', '=', False)]))
+        assert result and result == leaf_categs, "Got %r, expected %r" % (result, leaf_categs)
+-
+    Equivalent queries.
+-
+    !python {model: res.currency }: |
+        max_currency_id = max(self.search(cr, uid, []))
+        res_0 = self.search(cr, uid, [])
+        res_1 = self.search(cr, uid, [('name', 'not like', 'probably_unexisting_name')])
+        res_2 = self.search(cr, uid, [('id', 'not in', [max_currency_id + 1003])])
+        res_3 = self.search(cr, uid, [('id', 'not in', [])])
+        res_4 = self.search(cr, uid, [('id', '!=', False)])
+        res_0.sort()
+        res_1.sort()
+        res_2.sort()
+        res_3.sort()
+        res_4.sort()
+        assert res_0 == res_1
+        assert res_0 == res_2
+        assert res_0 == res_3
+        assert res_0 == res_4
+-
+    Equivalent queries, integer and string.
+-
+    !python {model: res.partner }: |
+        all_ids = self.search(cr, uid, [])
+        if len(all_ids) > 1:
+            one = all_ids[0]
+            record = self.browse(cr, uid, one)
+            others = all_ids[1:]
+            res_1 = self.search(cr, uid, [('id', '=', one)])
+            # self.search(cr, uid, [('id', '!=', others)]) # not permitted
+            res_2 = self.search(cr, uid, [('id', 'not in', others)])
+            res_3 = self.search(cr, uid, ['!', ('id', '!=', one)])
+            res_4 = self.search(cr, uid, ['!', ('id', 'in', others)])
+            # res_5 = self.search(cr, uid, [('id', 'in', one)]) # TODO make it permitted, just like for child_of
+            res_6 = self.search(cr, uid, [('id', 'in', [one])])
+            res_7 = self.search(cr, uid, [('name', '=', record.name)])
+            res_8 = self.search(cr, uid, [('name', 'in', [record.name])])
+            # res_9 = self.search(cr, uid, [('name', 'in', record.name)]) # TODO
+            assert [one] == res_1
+            assert [one] == res_2
+            assert [one] == res_3
+            assert [one] == res_4
+            #assert [one] == res_5
+            assert [one] == res_6
+            assert [one] == res_7
+-
+    Need a company with a parent_id.
+-
+    !record {model: res.company, id: ymltest_company3}:
+        name: Acme 3
+-
+    Need a company with a parent_id.
+-
+    !record {model: res.company, id: ymltest_company4}:
+        name: Acme 4
+        parent_id: ymltest_company3
+-
+    Equivalent queries, one2many.
+-
+    !python {model: res.company }: |
+        # Search the company via its one2many (the one2many must point back at the company).
+        company = self.browse(cr, uid, ref('ymltest_company3'))
+        max_currency_id = max(self.pool.get('res.currency').search(cr, uid, []))
+        currency_ids1 = self.pool.get('res.currency').search(cr, uid, [('name', 'not like', 'probably_unexisting_name')])
+        currency_ids2 = self.pool.get('res.currency').search(cr, uid, [('id', 'not in', [max_currency_id + 1003])])
+        currency_ids3 = self.pool.get('res.currency').search(cr, uid, [('id', 'not in', [])])
+        assert currency_ids1 == currency_ids2 == currency_ids3, 'All 3 results should have be the same: all currencies'
+        default_company = self.browse(cr, uid, 1)
+
+        # Due to currency data definition change (in relation with bug 1111298), this test now needs
+        # a manual setup where all currencies are assigned to the default company.
+        self.pool['res.currency'].write(cr, uid, currency_ids1, {'company_id': default_company.id})
+
+        # one2many towards same model
+        res_1 = self.search(cr, uid, [('child_ids', 'in', [x.id for x in company.child_ids])]) # any company having a child of company3 as child
+        res_2 = self.search(cr, uid, [('child_ids', 'in', [company.child_ids[0].id])]) # any company having the first child of company3 as child
+        # one2many towards another model
+        res_3 = self.search(cr, uid, [('currency_ids', 'in', [x.id for x in default_company.currency_ids])]) # companies having a currency of main company
+        res_4 = self.search(cr, uid, [('currency_ids', 'in', [default_company.currency_ids[0].id])]) # companies having first currency of main company
+        res_5 = self.search(cr, uid, [('currency_ids', 'in', default_company.currency_ids[0].id)]) # companies having first currency of main company
+        # res_6 = self.search(cr, uid, [('currency_ids', 'in', [default_company.currency_ids[0].name])]) # TODO
+        res_7 = self.search(cr, uid, [('currency_ids', '=', default_company.currency_ids[0].name)])
+        res_8 = self.search(cr, uid, [('currency_ids', 'like', default_company.currency_ids[0].name)])
+        res_9 = self.search(cr, uid, [('currency_ids', 'like', 'probably_unexisting_name')])
+        # self.search(cr, uid, [('currency_ids', 'unexisting_op', 'probably_unexisting_name')]) # TODO expected exception
+        assert res_1 == [ref('ymltest_company3')]
+        assert res_2 == [ref('ymltest_company3')]
+        assert res_3 == [1]
+        assert res_4 == [1]
+        assert res_5 == [1]
+        assert res_7 == [1]
+        assert res_8 == [1]
+        assert res_9 == []
+
+        # get the companies referenced by some currency (this is normally the main company) using a weird negative domain
+        res_10 = self.search(cr, uid, [('currency_ids', 'not like', 'probably_unexisting_name')])
+        res_11 = self.search(cr, uid, [('currency_ids', 'not in', [max_currency_id + 1])])
+        res_12 = self.search(cr, uid, [('currency_ids', '!=', False)])
+        res_13 = self.search(cr, uid, [('currency_ids', 'not in', [])])
+        res_10.sort()
+        res_11.sort()
+        res_12.sort()
+        res_13.sort()
+        assert res_10 == res_11
+        assert res_10 == res_12
+        assert res_10 == res_13
+        
+        # try testing real subsets with IN/NOT IN
+        res_partner = self.pool.get('res.partner')
+        res_users = self.pool.get('res.users')
+        p1, _ = res_partner.name_create(cr, uid, "Dédé Boitaclou")
+        p2, _ = res_partner.name_create(cr, uid, "Raoulette Pizza O'poil")
+        u1a = res_users.create(cr, uid, {'login': 'dbo', 'partner_id': p1})
+        u1b = res_users.create(cr, uid, {'login': 'dbo2', 'partner_id': p1})
+        u2 = res_users.create(cr, uid, {'login': 'rpo', 'partner_id': p2})
+        assert [p1] == res_partner.search(cr, uid, [('user_ids', 'in', u1a)]), "o2m IN accept single int on right side"
+        assert [p1,p2] == res_partner.search(cr, uid, [('user_ids', 'in', [u1a,u2])]), "o2m IN matches any on the right side"
+        all_partners = res_partner.search(cr, uid, [])
+        assert (set(all_partners) - set([p1])) == set(res_partner.search(cr, uid, [('user_ids', 'not in', u1a)])), "o2m NOT IN matches none on the right side"
+        assert (set(all_partners) - set([p1,p2])) == set(res_partner.search(cr, uid, [('user_ids', 'not in', [u1b, u2])])), "o2m NOT IN matches none on the right side"
+
+        # child_of x returns x and its children (direct or not).
+        company = self.browse(cr, uid, ref('ymltest_company3'))
+        expected = [ref('ymltest_company3'), ref('ymltest_company4')]
+        expected.sort()
+        res_1 = self.search(cr, uid, [('id', 'child_of', [ref('ymltest_company3')])])
+        res_1.sort()
+        res_2 = self.search(cr, uid, [('id', 'child_of', ref('ymltest_company3'))])
+        res_2.sort()
+        res_3 = self.search(cr, uid, [('id', 'child_of', [company.name])])
+        res_3.sort()
+        res_4 = self.search(cr, uid, [('id', 'child_of', company.name)])
+        res_4.sort()
+        assert res_1 == expected
+        assert res_2 == expected
+        assert res_3 == expected
+        assert res_4 == expected
+-
+    Unaccent. Create a company with an accent in its name.
+-
+    !record {model: res.company, id: ymltest_unaccent_company}:
+        name: Hélène
+-
+    Test the unaccent-enabled 'ilike'.
+-
+    !python {model: res.company}: |
+        if self.pool.has_unaccent:
+            ids = self.search(cr, uid, [('name','ilike','Helene')], {})
+            assert ids == [ref('ymltest_unaccent_company')]
+            ids = self.search(cr, uid, [('name','ilike','hélène')], {})
+            assert ids == [ref('ymltest_unaccent_company')]
+            ids = self.search(cr, uid, [('name','not ilike','Helene')], {})
+            assert ref('ymltest_unaccent_company') not in ids
+            ids = self.search(cr, uid, [('name','not ilike','hélène')], {})
+            assert ref('ymltest_unaccent_company') not in ids
+-
+    Check that =like/=ilike expressions (no wildcard variants of like/ilike) are working on an untranslated field.
+-
+    !python {model: res.partner }: |
+        all_ids = self.search(cr, uid, [('name', '=like', 'A_e_or')])
+        assert len(all_ids) == 1, "Must match one partner (Axelor), got %r"%all_ids
+        all_ids = self.search(cr, uid, [('name', '=ilike', 'v%')])
+        assert len(all_ids) >= 1, "Must match one partner (Vicking Direct), got %r"%all_ids
+-
+    Check that =like/=ilike expressions (no wildcard variants of like/ilike) are working on translated field.
+-
+    !python {model: res.country }: |
+        all_ids = self.search(cr, uid, [('name', '=like', 'Ind__')])
+        assert len(all_ids) == 1, "Must match India only, got %r"%all_ids
+        all_ids = self.search(cr, uid, [('name', '=ilike', 'z%')])
+        assert len(all_ids) == 3, "Must match only countries with names starting with Z (currently 3), got %r"%all_ids
+-
+    Use the create_date column on res.country (which doesn't declare it in _columns).
+-
+    !python {model: res.country }: |
+        ids = self.search(cr, uid, [('create_date', '<', '2001-01-01 12:00:00')])
+
+
+-
+    Verify that invalid expressions are refused, even for magic fields
+-
+    !python {model: res.country }: |
+        try:
+            self.search(cr, uid, [('does_not_exist', '=', 'foo')])
+            raise AssertionError('Invalid fields should not be accepted')
+        except ValueError:
+            pass
+
+        try:
+            self.search(cr, uid, [('create_date', '>>', 'foo')])
+            raise AssertionError('Invalid operators should not be accepted')
+        except ValueError:
+            pass
+
+        import psycopg2
+        try:
+            cr._default_log_exceptions = False
+            cr.execute('SAVEPOINT expression_failure_test')
+            self.search(cr, uid, [('create_date', '=', "1970-01-01'); --")])
+            # if the above search gives no error, the operand was not escaped!
+            cr.execute('RELEASE SAVEPOINT expression_failure_test')
+            raise AssertionError('Operands should always be SQL escaped')
+        except psycopg2.DataError:
+            # Should give: 'DataError: invalid input syntax for type timestamp' or similar
+            cr.execute('ROLLBACK TO SAVEPOINT expression_failure_test')
+-
+    Testing for Many2Many field with category supplier and active=False
+-
+    !python {model: res.partner }: |
+        vals = {'category_id': [(6, 0, [ref("base.res_partner_category_1")])],
+                'name': 'OpenERP Test',
+                'active': False,
+                'child_ids': [(0, 0, {'name': 'address of OpenERP Test', 'country_id': ref("base.be")})]
+                }
+        self.create(cr, uid, vals, context=context)
+        res_ids = self.search(cr, uid, [('category_id', 'ilike', 'supplier'), ('active', '=', False)])
+        assert len(res_ids) != 0, "Record not Found with category supplier and active False."
+-
+    Testing for One2Many field with country Belgium and active=False
+-
+    !python {model: res.partner }: |
+        res_ids = self.search(cr, uid, [('child_ids.country_id','=','Belgium'),('active','=',False)])
+        assert len(res_ids) != 0, "Record not Found with country Belgium and active False."
+-
+    Check that we can exclude translated fields (bug lp:1071710)
+-
+    !python {model: res.country}: |
+        # first install french language
+        Modules = self.pool.get('ir.module.module')
+        base = Modules.browse(cr, uid, Modules.search(cr, uid, [('name', '=', 'base')])[0])
+        
+        # hack: mark module as installed to allow install of the translation
+        base_state = base.state
+        base.write({'state': 'installed'})
+        base.update_translations('fr_FR')
+        base.write({'state': base_state})
+
+        # tests
+        be_id = self.search(cr, uid, [('name', '=', 'Belgium')])[0]
+
+        ctx = {'lang': 'fr_FR'}
+        not_be = self.search(cr, uid, [('name', '!=', 'Belgique')], context=ctx)
+
+        assert be_id not in not_be, "Search match failed"
+
+        # indirect search via m2o
+        Partners = self.pool.get('res.partner')
+        agrolait = Partners.search(cr, uid, [('name', '=', 'Agrolait')])[0]
+
+        not_be = Partners.search(cr, uid, [('country_id', '!=', 'Belgium')])
+        assert agrolait not in not_be, "Search match failed (m2o)"
+
+        not_be = Partners.search(cr, uid, [('country_id', '!=', 'Belgique')], context=ctx)
+        assert agrolait not in not_be, "Search match failed (m2o)"

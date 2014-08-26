@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+        <template id="assets_backend" name="base_import assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/base_import/static/src/css/import.css"/>
+                <script type="text/javascript" src="/base_import/static/lib/javascript-state-machine/state-machine.js"></script>
+                <script type="text/javascript" src="/base_import/static/src/js/import.js"></script>
+            </xpath>
+        </template>
+    </data>
+</openerp>

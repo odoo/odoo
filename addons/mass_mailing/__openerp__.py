@@ -44,6 +44,7 @@ professional emails and reuse templates in a few clicks.
         'data/mass_mailing_data.xml',
         'wizard/mail_compose_message_view.xml',
         'wizard/test_mailing.xml',
+        'views/mass_mailing_report.xml',
         'views/mass_mailing.xml',
         'views/res_config.xml',
         'views/res_partner.xml',
@@ -51,15 +52,9 @@ professional emails and reuse templates in a few clicks.
         'views/website_mass_mailing.xml',
         'views/snippets.xml',
         'security/ir.model.access.csv',
-    ],
-    'js': [
-        'static/src/js/mass_mailing.js',
+        'views/mass_mailing.xml',
     ],
     'qweb': [],
-    'css': [
-        'static/src/css/mass_mailing.css',
-        'static/src/css/email_template.css'
-    ],
     'demo': [
         'data/mass_mailing_demo.xml',
     ],

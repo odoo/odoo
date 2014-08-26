@@ -6,11 +6,18 @@
             <field name="name">account.fiscal.position.form</field>
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
-                <form string="Fiscal Position" version="7.0">
+                <form string="Fiscal Position">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    </group>
+                    <group>
+                        <field name="auto_apply"/>
+                        <field name="sequence"/>
+                        <field name="vat_required" attrs="{'readonly': [('auto_apply', '=', False)]}"/>
+                        <field name="country_id" attrs="{'readonly': ['|', ('country_group_id','!=',False), ('auto_apply', '=', False)]}" />
+                        <field name="country_group_id" attrs="{'readonly': ['|', ('country_id','!=',False), ('auto_apply', '=', False)]}"/>
                     </group>
                     <separator string="Taxes Mapping"/>
                     <field name="tax_ids" widget="one2many_list">
@@ -44,6 +51,7 @@
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
                 <tree string="Fiscal Position">
+                    <field name="sequence"/>
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
@@ -64,13 +72,22 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button type="action" string="Invoices" 
-                        name="%(account.action_invoice_tree1)d" 
+                    <button type="action" 
+                        class="oe_stat_button"
+                        id="invoice_button"
+                        icon="fa-pencil-square-o"
+                        name="%(account.action_invoice_tree)d" 
                         attrs="{'invisible': [('customer', '=', False)]}" 
-                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice"/>
-                    <button type="action" string="Journal Items" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user"/>
-                    <button type="action" string="Contracts" name="%(account.action_open_partner_analytic_accounts)d"
-                            groups="analytic.group_analytic_accounting"/>
+                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice">
+                        <div><strong><field name="total_invoiced" widget="monetary"/></strong><br/>Invoiced</div>
+                    </button>
+                    <button type="action" class="oe_stat_button" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user" icon="fa-list">
+                        <field string="Journal Items" name="journal_item_count" widget="statinfo"/>                        
+                    </button>
+                    <button class="oe_inline oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d" 
+                        icon="fa-book" groups="analytic.group_analytic_accounting">
+                        <field string="Contracts" name="contracts_count" widget="statinfo"/>
+                    </button>
                 </xpath>
             </field>
         </record>
@@ -97,8 +114,8 @@
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page name="sales_purchases" position="after" version="7.0">
-                <page string="Accounting" col="4" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                <page name="sales_purchases" position="after">
+                <page string="Accounting" col="4" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice">
                     <group>
                         <group>
                             <field name="property_account_position" widget="selection"/>
@@ -128,7 +145,7 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Accounting" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}">
+                <page string="Accounting" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}" groups="account.group_account_invoice">
                     <div>
                         <p>Accounting-related settings are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
                     </div>

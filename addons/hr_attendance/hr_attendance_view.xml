@@ -6,7 +6,7 @@
             <field name="name">hr.attendance.form</field>
             <field name="model">hr.attendance</field>
             <field name="arch" type="xml">
-                <form string="Employee attendances" version="7.0">
+                <form string="Employee attendances">
                     <sheet>
                     <group>
                         <field name="employee_id"/>
@@ -40,7 +40,6 @@
                     <field name="employee_id"/>
                     <field name="name"/>
                     <field name="action"/>
-                    <field name="day" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -52,15 +51,29 @@
                 <search string="Hr Attendance Search">
                     <field name="name" string="Attendance"/>
                     <field name="action"/>
-                    <filter icon="terp-go-today" string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
+                    <filter string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
+                    <filter string="Current Month" domain="[('name','&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
                     <separator/>
-                    <filter icon="terp-stock_align_left_24" string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
+                    <filter string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
                     <field name="employee_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter name="employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}"/>
+                    <group expand="0" string="Group By">
+                        <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                        <separator/>
+                        <filter name="name" string="Month" context="{'group_by':'name'}"/>
                     </group>
                 </search>
+            </field>
+        </record>
+
+        <record id="view_hr_attendance_graph" model="ir.ui.view">
+            <field name="name">hr.attendance.graph</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <graph string="Attendance" type="pivot">
+                    <field name="employee_id" type="row"/>
+                    <field name="name" type="col"/>
+                    <field name="worked_hours" type="measure"/>
+                </graph>
             </field>
         </record>
 
@@ -71,7 +84,15 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{"search_default_today":1}</field>
             <field name="search_view_id" ref="view_hr_attendance_filter" />
-            <field name="help">The Time Tracking functionality aims to manage employee attendances from Sign in/Sign out actions. You can also link this feature to an attendance device using OpenERP's web service features.</field>
+            <field name="help">The Time Tracking functionality aims to manage employee attendances from Sign in/Sign out actions. You can also link this feature to an attendance device using Odoo's web service features.</field>
+        </record>
+
+        <record id="action_hr_attendance_graph" model="ir.actions.act_window">
+            <field name="name">Attendance Analysis</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_hr_attendance_graph"/>
         </record>
 
         <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="5" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
@@ -80,11 +101,18 @@
 
         <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" sequence="20" groups="base.group_hr_attendance"/>
 
+        <menuitem
+            action="action_hr_attendance_graph"
+            id="menu_hr_attendance_graph"
+            parent="hr.menu_hr_reporting"
+            sequence="3"
+        />
+
         <record id="edit_attendance_reason" model="ir.ui.view">
             <field name="name">hr.action.reason.form</field>
             <field name="model">hr.action.reason</field>
             <field name="arch" type="xml">
-                <form string="Define attendance reason" version="7.0">
+                <form string="Define attendance reason">
                     <group col="4">
                         <field name="name"/>
                         <field name="action_type"/>
@@ -125,7 +153,7 @@
                 <field name="active" position="before">
                     <label for="state" groups="base.group_hr_attendance"/>
                     <div groups="base.group_hr_attendance">
-                        <field name="state" class="oe_inline"/> - 
+                        <field name="state" class="oe_inline"/> -
                         <button class="oe_link" name="attendance_action_change" states="present" string="Sign Out" type="object" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
                         <button class="oe_link" name="attendance_action_change" states="absent" string="Sign In" type="object" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
                     </div>
@@ -135,5 +163,3 @@
 
     </data>
 </openerp>
-
-

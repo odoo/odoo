@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+        <template id="assets_backend" name="mail assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/mail/static/src/css/mail.css"/>
+                <link rel="stylesheet" href="/mail/static/src/css/mail_group.css"/>
+                <link rel="stylesheet" href="/mail/static/src/css/announcement.css"/>
+                <script type="text/javascript" src="/mail/static/src/js/mail.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/mail_followers.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/many2many_tags_email.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/announcement.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/suggestions.js"></script>
+            </xpath>
+        </template>
+    </data>
+</openerp>

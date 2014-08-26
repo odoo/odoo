@@ -133,16 +133,19 @@ class base_report_rml_save(osv.osv_memory):
         """
         
         res = super(base_report_rml_save, self).default_get(cr, uid, fields, context=context)
-        report_id = self.pool['base.report.sxw'].search(cr,uid,[])
-        data = self.pool['base.report.file.sxw'].read(cr, uid, report_id, context=context)[0]
+        report_ids = self.pool['base.report.sxw'].search(cr,uid,[], context=context)
+
+        data = self.pool['base.report.file.sxw'].read(cr, uid, report_ids, context=context)[0]
+        
         report = self.pool['ir.actions.report.xml'].browse(cr, uid, data['report_id'], context=context)
         
         if 'file_rml' in fields:
             res['file_rml'] =  base64.encodestring(report.report_rml_content)
         return res
+
     _columns = {
-         'file_rml':fields.binary('Save As'),
-         }
+        'file_rml':fields.binary('Save As'),
+    }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

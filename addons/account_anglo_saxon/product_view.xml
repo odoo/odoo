@@ -1,29 +1,18 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record id="product_normal_form_view" model="ir.ui.view">
-            <field name="name">product.normal.form.inherit.stock</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="account.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <field name="property_account_expense" position="after">
-                    <label string="" colspan="2"/>
-                    <field name="property_account_creditor_price_difference" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />
-                    <newline/>
-                </field>
-            </field>
-        </record>
-
         <record id="product_template_form_view" model="ir.ui.view">
-            <field name="name">product.template.product.form.inherit</field>
+            <field name="name">product.normal.form.inherit.stock</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
                 <field name="property_account_expense" position="after">
+                    <label string="" colspan="2"/>
+                    <field name="purchase_ok" invisible="1"/>
                     <field name="property_account_creditor_price_difference" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />
                     <newline/>
                 </field>
-             </field>
+            </field>
         </record>
 
         <record id="view_category_property_form" model="ir.ui.view">

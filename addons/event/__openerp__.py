@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -47,9 +46,9 @@ Key Features
         'event_view.xml',
         'event_data.xml',
         'report/report_event_registration_view.xml',
-        'board_association_view.xml',
         'res_partner_view.xml',
         'email_template.xml',
+        'views/event.xml',
     ],
     'demo': [
         'event_demo.xml',
@@ -58,7 +57,6 @@ Key Features
         'test/ui/event_users.yml',
         'test/process/event_draft2done.yml'
     ],
-    'css': ['static/src/css/event.css'],
     'installable': True,
     'auto_install': False,
     'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg','images/events_kanban.jpeg'],

@@ -31,6 +31,7 @@ class crm_phonecall(osv.osv):
     _description = "Phonecall"
     _order = "id desc"
     _inherit = ['mail.thread']
+    
     _columns = {
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -53,15 +54,15 @@ class crm_phonecall(osv.osv):
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'date_open': fields.datetime('Opened', readonly=True),
         # phonecall fields
-        'name': fields.char('Call Summary', size=64, required=True),
+        'name': fields.char('Call Summary', required=True),
         'active': fields.boolean('Active', required=False),
         'duration': fields.float('Duration', help='Duration in minutes and seconds.'),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                         domain="['|',('section_id','=',section_id),('section_id','=',False),\
                         ('object_id.model', '=', 'crm.phonecall')]"),
-        'partner_phone': fields.char('Phone', size=32),
-        'partner_mobile': fields.char('Mobile', size=32),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'partner_phone': fields.char('Phone'),
+        'partner_mobile': fields.char('Mobile'),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
         'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'),
@@ -74,7 +75,7 @@ class crm_phonecall(osv.osv):
 
     _defaults = {
         'date': fields.datetime.now,
-        'priority': crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': '1',
         'state':  _get_default_state,
         'user_id': lambda self, cr, uid, ctx: uid,
         'active': 1

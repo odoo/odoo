@@ -10,15 +10,17 @@ from . import common
 
 from ..controllers import main
 
+
 class Placeholder(object):
     def __init__(self, **kwargs):
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
+
 class LoadTest(common.MockRequestCase):
     def setUp(self):
         super(LoadTest, self).setUp()
-        self.menu = main.Menu()
+        self.home = main.Home()
 
         # Have self.request.session.model() return a different mock object for
         # each model (but always the same mock for a given model name)
@@ -28,23 +30,21 @@ class LoadTest(common.MockRequestCase):
 
         self.MockMenus = model('ir.ui.menu')
         # Mock the absence of custom menu
-        model('res.users').read.return_value = [{
-            'menu_id': False
-        }]
+        model('res.users').read.return_value = []
 
     def tearDown(self):
         del self.MockMenus
-        del self.menu
+        del self.home
         super(LoadTest, self).tearDown()
 
     def test_empty(self):
         self.MockMenus.search.return_value = []
         self.MockMenus.read.return_value = []
 
-        root = self.menu.load()
+        root = self.home.load_menus()
 
         self.MockMenus.search.assert_called_with(
-            [('parent_id','=', False)], 0, False, False,
+            [('parent_id', '=', False)], 0, False, False,
             req.context)
 
         self.assertEqual(root['all_menu_ids'], [])
@@ -61,10 +61,10 @@ class LoadTest(common.MockRequestCase):
             {'id': 2, 'sequence': 3, 'parent_id': False},
         ]
 
-        root = self.menu.load()
+        root = self.home.load_menus()
 
         self.MockMenus.search.assert_called_with(
-            [('id','child_of', [1, 2, 3])], 0, False, False,
+            [('id', 'child_of', [1, 2, 3])], 0, False, False,
             req.context)
 
         self.MockMenus.read.assert_called_with(
@@ -100,10 +100,10 @@ class LoadTest(common.MockRequestCase):
                 {'id': 4, 'sequence': 2, 'parent_id': [2, '']},
             ])
 
-        root = self.menu.load()
+        root = self.home.load_menus()
 
         self.MockMenus.search.assert_called_with(
-            [('id','child_of', [1])], 0, False, False,
+            [('id', 'child_of', [1])], 0, False, False,
             req.context)
 
         self.assertEqual(root['all_menu_ids'], [1, 2, 3, 4])
@@ -133,9 +133,8 @@ class LoadTest(common.MockRequestCase):
             }]
         )
 
+
 class ActionMungerTest(unittest2.TestCase):
-    def setUp(self):
-        self.menu = main.Menu()
     def test_actual_treeview(self):
         action = {
             "views": [[False, "tree"], [False, "form"],
@@ -168,7 +167,6 @@ class ActionMungerTest(unittest2.TestCase):
         })
 
     def test_redundant_views(self):
-
         action = {
             "views": [[False, "tree"], [False, "form"],
                       [False, "calendar"], [42, "tree"]],

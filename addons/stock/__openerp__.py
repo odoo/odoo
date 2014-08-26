@@ -24,24 +24,22 @@
     'version': '1.1',
     'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Storage',
-    'description' : """
+    'description': """
 Manage multi-warehouses, multi- and structured stock locations
 ==============================================================
 
-The warehouse and inventory management is based on a hierarchical location structure, from warehouses to storage bins. 
-The double entry inventory system allows you to manage customers, suppliers as well as manufacturing inventories. 
+The warehouse and inventory management is based on a hierarchical location structure, from warehouses to storage bins.
+The double entry inventory system allows you to manage customers, suppliers as well as manufacturing inventories.
 
 OpenERP has the capacity to manage lots and serial numbers ensuring compliance with the traceability requirements imposed by the majority of industries.
 
 Key Features
 ------------
 * Moves history and planning,
-* Stock valuation (standard or average price, ...)
-* Robustness faced with Inventory differences
-* Automatic reordering rules
+* Minimum stock rules
 * Support for barcodes
 * Rapid detection of mistakes through double entry system
-* Traceability (Upstream / Downstream, Serial numbers, ...)
+* Traceability (Serial Numbers, Packages, ...)
 
 Dashboard / Reports for Warehouse Management will include:
 ----------------------------------------------------------
@@ -53,53 +51,61 @@ Dashboard / Reports for Warehouse Management will include:
 * Moves Analysis
     """,
     'website': 'http://www.openerp.com',
-    'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg','images/location.jpeg','images/moves_analysis.jpeg','images/physical_inventories.jpeg','images/warehouse_dashboard.jpeg'],
-    'depends': ['product', 'account'],
+    'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg','images/location.jpeg','images/moves_analysis.jpeg','images/physical_inventories.jpeg'],
+    'depends': ['product', 'procurement', 'board', 'web_kanban_gauge', 'web_kanban_sparkline'],
     'category': 'Warehouse Management',
     'sequence': 16,
     'demo': [
+        'stock_demo_pre.yml',
         'stock_demo.xml',
+        'procurement_demo.xml',
+        'stock_orderpoint.xml',
+        'stock_orderpoint.yml',
+        'stock_demo.yml',
+        'stock_location_demo_cpu1.xml',
+        'stock_location_demo_cpu3.yml',
     ],
     'data': [
         'security/stock_security.xml',
         'security/ir.model.access.csv',
         'stock_data.xml',
+        'stock_data.yml',
         'wizard/stock_move_view.xml',
         'wizard/stock_change_product_qty_view.xml',
-        'wizard/stock_partial_picking_view.xml',
-        'wizard/stock_partial_move_view.xml',
-        'wizard/stock_fill_inventory_view.xml',
-        'wizard/stock_invoice_onshipping_view.xml',
-        'wizard/stock_inventory_merge_view.xml',
-        'wizard/stock_location_product_view.xml',
-        'wizard/stock_splitinto_view.xml',
-        'wizard/stock_inventory_line_split_view.xml',
-        'wizard/stock_change_standard_price_view.xml',
         'wizard/stock_return_picking_view.xml',
-        'stock_workflow.xml',
+        'wizard/make_procurement_view.xml',
+        'wizard/orderpoint_procurement_view.xml',
+        'wizard/stock_transfer_details.xml',
         'stock_incoterms.xml',
         'stock_report.xml',
         'stock_view.xml',
         'stock_sequence.xml',
-        'product_data.xml',
         'product_view.xml',
         'partner_view.xml',
-        'report/report_stock_move_view.xml',
         'report/report_stock_view.xml',
-        'board_warehouse_view.xml',
         'res_config_view.xml',
+        'views/report_package_barcode.xml',
+        'views/report_lot_barcode.xml',
+        'views/report_location_barcode.xml',
+        'views/report_stockpicking.xml',
+        'views/report_stockinventory.xml',
+        'views/stock.xml',
     ],
     'test': [
+        'test/inventory.yml',
+        'test/move.yml',
+        'test/procrule.yml',
         'test/stock_users.yml',
         'stock_demo.yml',
-        'test/opening_stock.yml',
         'test/shipment.yml',
-        'test/stock_report.yml',
+        'test/packing.yml',
+        'test/packingneg.yml',
+        'test/wiseoperator.yml',
     ],
     'installable': True,
     'application': True,
     'auto_install': False,
-    'css': [ 'static/src/css/stock.css' ],
+    'qweb': ['static/src/xml/picking.xml'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

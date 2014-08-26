@@ -26,7 +26,7 @@
     'author' : 'OpenERP SA',
     'website' : 'http://www.openerp.com',
     'category' : 'Hidden/Dependency',
-    'depends' : ['base','process', 'product', 'stock'],
+    'depends' : ['base', 'product'],
     'description': """
 This is the module for computing Procurements.
 ==============================================
@@ -47,20 +47,13 @@ depending on the product's configuration.
         'security/ir.model.access.csv',
         'security/procurement_security.xml',
         'procurement_data.xml',
-        'wizard/make_procurement_view.xml',
-        'wizard/mrp_procurement_view.xml',
-        'wizard/orderpoint_procurement_view.xml',
         'wizard/schedulers_all_view.xml',
         'procurement_view.xml',
-        'procurement_workflow.xml',
-        'process/procurement_process.xml',
         'company_view.xml',
-        'board_mrp_procurement_view.xml',
     ],
-    'demo': ['stock_orderpoint.xml','procurement_demo.xml'],
+    'demo': [],
     'test': ['test/procurement.yml'],
     'installable': True,
     'auto_install': True,
     'images': ['images/compute_schedulers.jpeg','images/config_companies_sched.jpeg', 'images/minimum_stock_rules.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

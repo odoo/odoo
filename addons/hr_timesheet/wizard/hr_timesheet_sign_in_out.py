@@ -28,11 +28,11 @@ class hr_so_project(osv.osv_memory):
     _description = 'Sign Out By Project'
     _columns = {
         'account_id': fields.many2one('account.analytic.account', 'Project / Analytic Account', domain=[('type','=','normal')]),
-        'info': fields.char('Work Description', size=256, required=True),
+        'info': fields.char('Work Description', required=True),
         'date_start': fields.datetime('Starting Date', readonly=True),
         'date': fields.datetime('Closing Date'),
         'analytic_amount': fields.float('Minimum Analytic Amount'),
-        'name': fields.char('Employee\'s Name', size=32, required=True, readonly=True),
+        'name': fields.char('Employee\'s Name', required=True, readonly=True),
         'state': fields.related('emp_id', 'state', string='Current Status', type='selection', selection=[('present', 'Present'), ('absent', 'Absent')], required=True, readonly=True),
         'server_date': fields.datetime('Current Date', required=True, readonly=True),
         'emp_id': fields.many2one('hr.employee', 'Employee ID')
@@ -109,7 +109,7 @@ class hr_si_project(osv.osv_memory):
     _name = 'hr.sign.in.project'
     _description = 'Sign In By Project'
     _columns = {
-        'name': fields.char('Employee\'s Name', size=32,  readonly=True),
+        'name': fields.char('Employee\'s Name', readonly=True),
         'state': fields.related('emp_id', 'state', string='Current Status', type='selection', selection=[('present', 'Present'), ('absent', 'Absent')], required=True, readonly=True),
         'date': fields.datetime('Starting Date'),
         'server_date': fields.datetime('Current Date',  readonly=True),

@@ -56,7 +56,7 @@ class account_invoice_report(osv.osv):
     _columns = {
         'date': fields.date('Date', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'product_qty':fields.float('Qty', readonly=True),
+        'product_qty':fields.float('Product Quantity', readonly=True),
         'uom_name': fields.char('Reference Unit of Measure', size=128, readonly=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], readonly=True),
@@ -73,7 +73,7 @@ class account_invoice_report(osv.osv):
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'user_currency_price_average': fields.function(_compute_amounts_in_user_currency, string="Average Price", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'currency_rate': fields.float('Currency Rate', readonly=True),
-        'nbr':fields.integer('# of Lines', readonly=True),
+        'nbr': fields.integer('# of Invoices', readonly=True),  # TDE FIXME master: rename into nbr_lines
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
@@ -97,6 +97,24 @@ class account_invoice_report(osv.osv):
         'country_id': fields.many2one('res.country', 'Country of the Partner Company'),
     }
     _order = 'date desc'
+
+    _depends = {
+        'account.invoice': [
+            'account_id', 'amount_total', 'commercial_partner_id', 'company_id',
+            'currency_id', 'date_due', 'date_invoice', 'fiscal_position',
+            'journal_id', 'partner_bank_id', 'partner_id', 'payment_term',
+            'period_id', 'residual', 'state', 'type', 'user_id',
+        ],
+        'account.invoice.line': [
+            'account_id', 'invoice_id', 'price_subtotal', 'product_id',
+            'quantity', 'uos_id',
+        ],
+        'product.product': ['product_tmpl_id'],
+        'product.template': ['categ_id'],
+        'product.uom': ['category_id', 'factor', 'name', 'uom_type'],
+        'res.currency.rate': ['currency_id', 'name'],
+        'res.partner': ['country_id'],
+    }
 
     def _select(self):
         select_str = """
@@ -208,7 +226,7 @@ class account_invoice_report(osv.osv):
                                     OR (sub.date IS NULL AND cr2.name <= NOW()))
                           ORDER BY name DESC LIMIT 1)
         )""" % (
-                    self._table, 
+                    self._table,
                     self._select(), self._sub_select(), self._from(), self._group_by()))
 
 

@@ -4,6 +4,9 @@ from openerp.osv import orm, fields
 class test_converter(orm.Model):
     _name = 'website.converter.test'
 
+    # disable translation export for those brilliant field labels and values
+    _translate = False
+
     _columns = {
         'char': fields.char(),
         'integer': fields.integer(),

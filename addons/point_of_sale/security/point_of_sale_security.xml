@@ -23,7 +23,7 @@
         <field name="name">Point Of Sale Config</field>
         <field name="model_id" ref="model_pos_config" />
         <field name="global" eval="True" />
-        <field name="domain_force">[('warehouse_id.company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
     </record>
 </data>
 </openerp>

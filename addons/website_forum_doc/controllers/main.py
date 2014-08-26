@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 from openerp.addons.website.models.website import slug
 
 
 class WebsiteDoc(http.Controller):
-    @http.route(['/forum/how-to', '/forum/how-to/<model("forum.documentation.toc"):toc>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/how-to', '/forum/how-to/<model("forum.documentation.toc"):toc>'], type='http', auth="public", website=True)
     def toc(self, toc=None, **kwargs):
         cr, uid, context, toc_id = request.cr, request.uid, request.context, False
         if toc:
@@ -26,7 +26,7 @@ class WebsiteDoc(http.Controller):
         }
         return request.website.render("website_forum_doc.documentation", value)
 
-    @http.route(['''/forum/how-to/<model("forum.documentation.toc"):toc>/<model("forum.post", "[('documentation_toc_id','=',toc[0])]"):post>'''], type='http', auth="public", website=True, multilang=True)
+    @http.route(['''/forum/how-to/<model("forum.documentation.toc"):toc>/<model("forum.post", "[('documentation_toc_id','=',toc[0])]"):post>'''], type='http', auth="public", website=True)
     def post(self, toc, post, **kwargs):
         # TODO: implement a redirect instead of crash
         assert post.documentation_toc_id.id == toc.id, "Wrong post!"
@@ -38,7 +38,7 @@ class WebsiteDoc(http.Controller):
         }
         return request.website.render("website_forum_doc.documentation_post", value)
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):post>/promote', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):post>/promote', type='http', auth="user", website=True)
     def post_toc(self, forum, post, **kwargs):
         cr, uid, context, toc_id = request.cr, request.uid, request.context, False
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
@@ -53,7 +53,7 @@ class WebsiteDoc(http.Controller):
         }
         return request.website.render("website_forum_doc.promote_question", value)
 
-    @http.route('/forum/<model("forum.forum"):forum>/promote_ok', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/promote_ok', type='http', auth="user", website=True)
     def post_toc_ok(self, forum, post_id, toc_id, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)

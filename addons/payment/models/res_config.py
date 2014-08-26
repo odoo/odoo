@@ -16,4 +16,7 @@ class AccountPaymentConfig(osv.TransientModel):
         'module_payment_adyen': fields.boolean(
             'Manage Payments Using Adyen',
             help='-It installs the module payment_adyen.'),
+        'module_payment_buckaroo': fields.boolean(
+            'Manage Payments Using Buckaroo',
+            help='-It installs the module payment_buckaroo.'),
     }

@@ -130,6 +130,7 @@
 
 */
 
+    var dummy = function () {};
 
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.snippets.xml');
@@ -161,7 +162,6 @@
             return this._super.apply(this, arguments);
         },
         save: function () {
-            website.snippet.clean_for_save = true;
             this.snippets.clean_for_save();
             this._super();
         },
@@ -321,13 +321,14 @@
             var self = this;
             var snipped_event_flag;
             $("#wrapwrap").on('click', function (event) {
-                if (snipped_event_flag || !event.srcElement) {
+                var srcElement = event.srcElement || (event.originalEvent && (event.originalEvent.originalTarget || event.originalEvent.target));
+                if (snipped_event_flag || !srcElement) {
                     return;
                 }
                 snipped_event_flag = true;
 
                 setTimeout(function () {snipped_event_flag = false;}, 0);
-                var $target = $(event.srcElement);
+                var $target = $(srcElement);
 
                 if ($target.parents(".oe_overlay").length) {
                     return;
@@ -362,15 +363,19 @@
         },
         clean_for_save: function () {
             var self = this;
-            this.dom_filter(website.snippet.globalSelector).each(function () {
-                var $snippet = $(this);
-                self.make_active($snippet);
-                self.make_active(false);
-                var editor = $snippet.data("snippet-editor");
-                if (editor) {
-                    editor.clean_for_save();
+            var options = website.snippet.options;
+            var template = website.snippet.templateOptions;
+            for (var k in options) {
+                if (template[k] && options[k].prototype.clean_for_save !== dummy) {
+                    var $snippet = this.dom_filter(template[k].selector);
+                    $snippet.each(function () {
+                        new options[k](self, null, $(this), k).clean_for_save();
+                    });
                 }
-            });
+            }
+            $("*[contentEditable], *[attributeEditable]")
+                .removeAttr('contentEditable')
+                .removeAttr('attributeEditable');
         },
         make_active: function ($snippet) {
             if ($snippet && this.$active_snipped_id && this.$active_snipped_id.get(0) === $snippet.get(0)) {
@@ -736,7 +741,7 @@
             var styles = this.$target.data("snippet-option-ids") || {};
             styles[snippet_id] = this;
             this.$target.data("snippet-option-ids", styles);
-            this.$overlay = this.$target.data('overlay');
+            this.$overlay = this.$target.data('overlay') || $('<div>');
             this['snippet-option-id'] = snippet_id;
             var $option = website.snippet.templateOptions[snippet_id].$el;
             this.$el = $option.find(">li").clone();
@@ -854,8 +859,7 @@
             }
         },
 
-        clean_for_save: function () {
-        }
+        clean_for_save: dummy
     });
 
     website.snippet.options.background = website.snippet.Option.extend({
@@ -952,8 +956,7 @@
             this.id = this.unique_id();
             this.$target.attr("id", this.id);
             this.$target.find("[data-slide]").attr("data-cke-saved-href", "#" + this.id);
-            this.$target.find("[data-slide-to]").attr("data-target", "#" + this.id);
-
+            this.$target.find("[data-target]").attr("data-target", "#" + this.id);
             this.rebind_event();
         },
         on_clone: function ($clone) {
@@ -974,11 +977,9 @@
         clean_for_save: function () {
             this._super();
             this.$target.find(".item").removeClass("next prev left right active");
+            this.$target.find(".item:first").addClass("active");
             this.$indicators.find('li').removeClass('active');
             this.$indicators.find('li:first').addClass('active');
-            if(!this.$target.find(".item.active").length) {
-                this.$target.find(".item:first").addClass("active");
-            }
         },
         start : function () {
             var self = this;
@@ -1530,9 +1531,6 @@
             });
         },
         onFocus : function () {
-            // don't open media editor before clean for save
-            if (website.snippet.clean_for_save) return;
-
             var self = this;
             if (this.$target.parent().data("oe-field") === "image") {
                 this.$overlay.addClass("hidden");
@@ -1540,6 +1538,9 @@
                 new website.editor.MediaDialog(self, self.element).appendTo(document.body);
                 self.BuildingBlock.make_active(false);
             }
+            setTimeout(function () {
+                self.$target.find(".css_editable_mode_display").removeAttr("_moz_abspos");
+            },0);
         },
     });
 
@@ -1566,7 +1567,9 @@
         */
         _readXMLData: function() {
             var self = this;
-            this.$el = this.BuildingBlock.$snippets.filter(function () { return $(this).data("snippet-id") == self.snippet_id; }).clone();
+            if(this && this.BuildingBlock && this.BuildingBlock.$snippets) {
+                this.$el = this.BuildingBlock.$snippets.filter(function () { return $(this).data("snippet-id") == self.snippet_id; }).clone();
+            }
             var $options = this.$overlay.find(".oe_overlay_options");
             if ($options.find(".oe_options ul li").length) {
                 $options.find(".oe_options").removeClass("hidden");
@@ -1771,19 +1774,6 @@
                 this.styles[i].onBlur();
             }
             this.$overlay.removeClass('oe_active');
-        },
-
-        /* clean_for_save
-        *  function called just before save vue
-        */
-        clean_for_save: function () {
-            for (var i in this.styles){
-                this.styles[i].clean_for_save();
-            }
-            this.$target.removeAttr('contentEditable')
-                .find('*').removeAttr('contentEditable');
-            this.$target.removeAttr('attributeEditable')
-                .find('*').removeAttr('attributeEditable');
         },
     });
 

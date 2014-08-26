@@ -12,7 +12,7 @@
             <field name="name">pos.order</field>
             <field name="model">pos.order</field>
             <field name="arch" type="xml">
-                <form string="Point of Sale Orders" version="7.0">
+                <form string="Point of Sale Orders">
                     <header>
                         <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
                         <button name="action_invoice" string="Invoice" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
@@ -39,7 +39,7 @@
                                     <field name="price_subtotal"/>
                                     <field name="price_subtotal_incl"/>
                                 </tree>
-                                <form string="Order lines" version="7.0">
+                                <form string="Order lines">
                                     <group col="4">
                                         <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
                                         <field name="qty" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
@@ -69,19 +69,12 @@
                                     <field name="statement_id"/>
                                     <field name="amount"/>
                                 </tree>
-                                <form string="Statement lines" version="7.0">
-                                    <group col="4">
-                                        <field name="account_id"/>
-                                        <field name="amount"/>
-                                        <field name="statement_id" domain="[('company_id','=',parent.company_id),('state','=','open')]"/>
-                                    </group>
-                                </form>
                             </field>
                         </page>
                         <page string="Extra Info">
                             <group string="General Information">
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
+                                <field name="location_id" widget="selection" groups="stock.group_locations"/>
                                 <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'point_of_sale.group_pos_user']}"/>
                                 <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
                                 <field name="picking_id" readonly="1"/>
@@ -154,7 +147,7 @@
                     <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
                     <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -168,16 +161,14 @@
         <menuitem parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="2" groups="group_pos_manager,group_pos_user"/>
         <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
-        <record id="product_normal_action" model="ir.actions.act_window">
+        <record id="product_template_action" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
+            <field name="res_model">product.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
             <field name="context" eval="{}"/>
             <field name="domain" eval="[('available_in_pos','&lt;&gt;',False)]"/>
-            <field name="view_id" ref="product.product_product_tree_view"/>
-            <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a new product.
@@ -193,7 +184,7 @@
             </field>
         </record>
         <menuitem
-            action="product_normal_action"
+            action="product_template_action"
             id="menu_pos_products"
             parent="menu_point_of_sale_product" sequence="2"/>
 
@@ -217,7 +208,7 @@
             <field name="name">Sale line</field>
             <field name="model">pos.order.line</field>
             <field name="arch" type="xml">
-                <form string="POS Order line" version="7.0">
+                <form string="POS Order line">
                     <group col="4">
                         <field name="product_id" />
                         <field name="qty" />
@@ -265,7 +256,7 @@
             <field name="name">report.trans.pos.user.form</field>
             <field name="model">report.transaction.pos</field>
             <field name="arch" type="xml">
-                <form string="POS " version="7.0">
+                <form string="POS ">
                     <group col="4">
                         <field name="user_id"/>
                         <field name="journal_id"/>
@@ -354,7 +345,7 @@
             <field name="name">report.sales.by.user.pos.form</field>
             <field name="model">report.sales.by.user.pos</field>
             <field name="arch" type="xml">
-                <form string="POS " version="7.0">
+                <form string="POS ">
                     <group col="4">
                         <field name="date_order" widget="date"/>
                         <field name="qty"/>
@@ -418,7 +409,7 @@
             <field name="name">report.sales.by.user.pos.month.form</field>
             <field name="model">report.sales.by.user.pos.month</field>
             <field name="arch" type="xml">
-                <form string="POS " version="7.0">
+                <form string="POS ">
                     <group col="4">
                         <field name="date_order" widget="date"/>
                         <field name="qty"/>
@@ -476,145 +467,77 @@
             <field name="domain">[('date_order','like',time.strftime('%Y-%m'))]</field>
         </record>
 
-        <!-- Sales by margin -->
 
-        <record model="ir.ui.view" id="view_report_sales_by_margin_pos_form">
-            <field name="name">report.sales.by.margin.pos.form</field>
-            <field name="model">report.sales.by.margin.pos</field>
+
+        <!-- Product Public Categories -->
+        <record id="product_pos_category_form_view" model="ir.ui.view">
+            <field name="name">pos.category.form</field>
+            <field name="model">pos.category</field>
             <field name="arch" type="xml">
-                <form string="POS " version="7.0">
-                    <group col="4">
-                        <field name="user_id"/>
-                        <field name="product_name"/>
-                        <field name="date_order" widget="date"/>
-                        <field name="qty"/>
-                        <field name="net_margin_per_qty"/>
-                        <field name="total"/>
-                    </group>
+                <form string="Pos Categories">
+                    <sheet>
+                        <field name="image_medium" widget='image' class="oe_avatar oe_right"/>
+                        <div class="oe_left">
+                            <group>
+                                <field name="name"/>
+                                <field name="parent_id"/>
+                                <field name="sequence"/>
+                            </group>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>
-
-
-        <record model="ir.ui.view" id="view_report_sales_by_margin_pos_tree">
-            <field name="name">report.sales.by.margin.pos.tree</field>
-            <field name="model">report.sales.by.margin.pos</field>
+        <record id="product_pos_category_tree_view" model="ir.ui.view">
+            <field name="name">pos.category.tree</field>
+            <field name="model">pos.category</field>
+            <field name="field_parent" eval="False"/>
             <field name="arch" type="xml">
-                <tree string="POS">
-                    <field name="user_id"/>
-                    <field name="product_name"/>
-                    <field name="date_order" widget="date"/>
-                    <field name="qty"/>
-                    <field name="net_margin_per_qty"/>
-                    <field name="total"/>
+                <tree string="Product Product Categories">
+                    <field name="sequence" invisible="1"/>
+                    <field name="complete_name"/>
                 </tree>
             </field>
         </record>
-
-        <record model="ir.ui.view" id="view_report_sales_by_margin_pos_calendar">
-            <field name="name">report.sales.by.margin.pos.calendar</field>
-            <field name="model">report.sales.by.margin.pos</field>
-            <field eval="2" name="priority"/>
-            <field name="arch" type="xml">
-                <calendar color="user_id" date_start="date_order" string="Sales by User Margin">
-                    <field name="product_name"/>
-                    <field name="total" />
-                </calendar>
-            </field>
-         </record>
-
-        <record model="ir.ui.view" id="view_report_sales_by_margin_pos_graph">
-            <field name="name">report.sales.by.margin.pos.graph</field>
-            <field name="model">report.sales.by.margin.pos</field>
-            <field eval="2" name="priority"/>
-            <field name="arch" type="xml">
-                <graph  type="bar" string="Sales by User Margin" orientation="horizontal">
-                    <field name="product_name" />
-                    <field name="total" operator="+"/>
-                </graph>
-            </field>
-         </record>
-
-        <record model="ir.actions.act_window" id="action_report_sales_by_margin_pos_today">
-            <field name="name">Sales by User Daily margin</field>
-            <field name="res_model">report.sales.by.margin.pos</field>
+        <record id="product_pos_category_action" model="ir.actions.act_window">
+            <field name="name">Pos Product Categories</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.category</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,calendar,form,graph</field>
-            <field name="domain">[('date_order','=',time.strftime('%Y-%m-%d'))]</field>
-         </record>
-
-         <record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_form">
-            <field name="name">report.sales.by.margin.pos.month.form</field>
-            <field name="model">report.sales.by.margin.pos.month</field>
-            <field name="arch" type="xml">
-                <form string="POS " version="7.0">
-                    <group col="4">
-                        <field name="user_id"/>
-                        <field name="product_name"/>
-                        <field name="date_order" widget="date"/>
-                        <field name="qty"/>
-                        <field name="net_margin_per_qty"/>
-                        <field name="total"/>
-                    </group>
-                </form>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new category.
+              </p><p>
+                Categories are used to browse your products through the
+                touchscreen interface.
+              </p><p>
+                If you put a photo on the category, the layout of the
+                touchscreen interface will automatically. We suggest not to put
+                a photo on categories for small (1024x768) screens.
+              </p>
             </field>
         </record>
+        <menuitem action="product_pos_category_action" id="menu_product_pos_category" parent="menu_point_of_sale_product" sequence="0" />
+        <!-- END -->
 
-
-        <record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_tree">
-            <field name="name">report.sales.by.margin.pos.month.tree</field>
-            <field name="model">report.sales.by.margin.pos.month</field>
-            <field name="arch" type="xml">
-                <tree string="POS">
-                    <field name="user_id"/>
-                    <field name="product_name"/>
-                    <field name="date_order" widget="date"/>
-                    <field name="qty"/>
-                    <field name="net_margin_per_qty"/>
-                    <field name="total"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_calendar">
-            <field name="name">report.sales.by.margin.pos.month.calendar</field>
-            <field name="model">report.sales.by.margin.pos.month</field>
-            <field eval="2" name="priority"/>
-            <field name="arch" type="xml">
-                <calendar color="user_id" date_start="date_order" string="Sales by User Margin">
-                    <field name="product_name"/>
-                    <field name="total" />
-                </calendar>
-            </field>
-         </record>
-
-        <record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_graph">
-            <field name="name">report.sales.by.margin.pos.month.graph</field>
-            <field name="model">report.sales.by.margin.pos.month</field>
-            <field eval="2" name="priority"/>
-            <field name="arch" type="xml">
-                <graph  type="bar" string="Sales by User Margin" orientation="horizontal">
-                    <field name="product_name" />
-                    <field name="total" operator="+"/>
-                </graph>
-            </field>
-         </record>
-
-         <record model="ir.actions.act_window" id="action_report_sales_by_margin_pos_month">
-            <field name="name">Sales by User Monthly margin</field>
-            <field name="res_model">report.sales.by.margin.pos.month</field>
+        <record id="action_edit_ean" model="ir.actions.act_window">
+            <field name="name">Edit Ean</field>
+            <field name="res_model">pos.ean_wizard</field>
+            <field name="target">new</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,calendar,form,graph</field>
-            <field name="domain">[('date_order','like',time.strftime('%Y-%m'))]</field>
+            <field name="view_mode">form</field>
         </record>
 
-        <record id="product_normal_form_view" model="ir.ui.view">
-            <field name="name">product.normal.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <group name="sale" position="inside">
+                <group name="website_and_pos" position="inside">
                     <group name="pos" string="Point of Sale">
+                        <field name="pos_categ_id"/>
                         <field name="available_in_pos"/>
                         <field name="to_weight" />
                         <field name="income_pdt"/>
@@ -622,13 +545,10 @@
                     </group>
                 </group>
                 <field name="ean13" position="after">
-                    <button name="edit_ean" type="object" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
+                    <button colspan="2" name="%(action_edit_ean)d" type="action" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
                 </field>
             </field>
         </record>
-
-        <!-- Categories tree view -->
-        <menuitem action="product.product_public_category_action" id="menu_product_public_category" parent="menu_point_of_sale_product" sequence="0" />
         <!-- END -->
 
         <menuitem name="Configuration" parent="menu_point_root"
@@ -706,7 +626,7 @@
             <field name="name">pos.config.form.view</field>
             <field name="model">pos.config</field>
             <field name="arch" type="xml">
-                <form string="Point of Sale Configuration" version="7.0">
+                <form string="Point of Sale Configuration">
                     <header>
                         <button string="Set to Active" name="set_active" type="object" states="inactive,deprecated"/>
                         <button string="Set to Inactive" name="set_inactive" type="object" states="active" />
@@ -722,7 +642,9 @@
                             <field name="name"/>
                         </h1>
                         <group col="4">
-                            <field name="warehouse_id" widget="selection" groups="stock.group_locations" />
+                            <field name="picking_type_id" widget="selection" groups="stock.group_locations" 
+                                on_change="onchange_picking_type_id(picking_type_id)"/>
+                            <field name="stock_location_id" groups="stock.group_locations"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="journal_id" widget="selection"/>
@@ -740,12 +662,10 @@
                         </field>
                         <group string="Features" >
                             <group>
-                                <field name="iface_cashdrawer" />
+                                <field name="iface_vkeyboard" />
                                 <field name="iface_invoicing" />
-                                <field name="iface_electronic_scale" />
                             </group>
                             <group>
-                                <field name="iface_vkeyboard" />
                                 <field name="iface_big_scrollbars" />
                             </group>
                         </group>
@@ -753,10 +673,40 @@
                             <field name="proxy_ip" />
                             <field name="iface_print_via_proxy" />
                             <field name="iface_scan_via_proxy" />
+                            <field name="iface_electronic_scale" />
+                            <field name="iface_cashdrawer" />
                         </group>
                         <group string="Receipt" >
                             <field name="receipt_header" placeholder="A custom receipt header message"/>
                             <field name="receipt_footer" placeholder="A custom receipt header footage"/>
+                        </group>
+                        <group string="Barcode Types" col="1">
+                            <p>
+                                Barcode Patterns allow to match barcodes to actions or to embed information such as price and quantity in the barcode.
+                                Barcode Patterns only work with EAN13 barcodes.
+                            </p>
+                            <p> 
+                                Each type of barcode accepts a list of patterns seprated by commas. A scanned 
+                                barcode will be attributed to a type if it matches one of its patterns. 
+                                The patterns take the form of EAN13 barcodes. Numbers in the pattern must match
+                                the number in the scanned barcode. A 'x' or a '*' in a pattern will match
+                                any one number. If the patterns are shorter than EAN13 barcodes, they are assumed
+                                to be prefixes and match at the beginning. Weight, Price and Discount patterns also
+                                tell how the weight, price or discount is encoded in the barcode. 'N' indicate the
+                                positions where the integer part is en encoded, and 'D' where the decimals are encoded.
+                                If multiple pattern match one barcode, the longest pattern with the less 'x' or '*' is
+                                considered the matching one. If a barcode matches no pattern it will not be found in
+                                the POS.
+                            </p>
+                            <group col="4">
+
+                                <field name="barcode_product" />
+                                <field name="barcode_cashier" />
+                                <field name="barcode_customer" />
+                                <field name="barcode_weight" />
+                                <field name="barcode_discount" />
+                                <field name="barcode_price" />
+                            </group>
                         </group>
                     </sheet>
 
@@ -770,7 +720,7 @@
             <field name="arch" type="xml">
                 <tree string="Point of Sale Configuration" colors="grey:state == 'inactive'">
                     <field name="name" />
-                    <field name="warehouse_id" groups="stock.group_locations"/>
+                    <field name="stock_location_id" groups="stock.group_locations"/>
                     <field name="state" />
                 </tree>
             </field>
@@ -784,11 +734,12 @@
                     <field name="name" />
                     <filter string="Active" domain="[('state', '=', 'active')]" />
                     <filter string="Inactive" domain="[('state', '=', 'inactive')]" />
-                    <field name="warehouse_id" groups="stock.group_locations" />
+                    <field name="stock_location_id" groups="stock.group_locations" />
                 </search>
             </field>
         </record>
 
+        <!-- Sessions -->
 
         <act_window
             id="act_pos_config_sessions"
@@ -825,7 +776,7 @@
             <field name="name">pos.session.form.view</field>
             <field name="model">pos.session</field>
             <field name="arch" type="xml">
-                <form string="Point of Sale Session" version="7.0">
+                <form string="Point of Sale Session">
                     <header>
                         <button name="open_cb" type="object" string="Validate &amp; Open Session" states="opening_control" class="oe_highlight"/>
                         <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
@@ -844,8 +795,14 @@
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button name="%(action_pos_box_in)d" string="Put Money In" type="action" states="opened,closing_control"/>
-                            <button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened,closing_control"/>
+                            <button class="oe_stat_button" name="%(action_pos_box_in)d"
+                                type="action" states="opened,closing_control" icon="fa-level-down">
+                                <div>Put<br/>Money In</div>
+                            </button>
+                            <button class="oe_stat_button" name="%(action_pos_box_out)d"
+                                type="action" states="opened,closing_control" icon="fa-level-up">
+                                <div>Take<br/>Money Out</div>
+                            </button>
                         </div>
                         <h1 class="oe_title">
                             Session:
@@ -955,7 +912,7 @@
                     <filter string="Today" domain="[('start_at', '>=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" />
                     <field name="config_id" />
                     <field name="user_id" />
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
                         <filter string="Point of Sales" domain="[]" context="{'group_by': 'user_id'}" />
                     </group>
@@ -1006,7 +963,7 @@
                     <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
                     <field name="user_id"/>
                     <field name="session_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Session" icon="terp-personal" domain="[]" context="{'group_by':'session_id'}"/>
@@ -1025,7 +982,7 @@
             <field name="name">pos.ean_wizard</field>
             <field name="model">pos.ean_wizard</field>
             <field name="arch" type="xml">
-                <form string="Ean13 Generator" version="7.0">  
+                <form string="Ean13 Generator">  
                     <p class="oe_grey">
                         Enter a reference, it will be converted
                         automatically to a valid EAN number.

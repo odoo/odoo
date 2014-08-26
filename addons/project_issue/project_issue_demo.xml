@@ -35,10 +35,10 @@
         <!-- Issues -->
         <record id="crm_case_buginaccountsmodule0" model="project.issue">
             <field eval="time.strftime('%Y-%m-08 10:15:00')" name="date"/>
-            <field name="priority">5</field>
+            <field name="priority">0</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field name="project_id" ref="project.project_project_1"/>
             <field eval="15.0" name="duration"/>
@@ -51,10 +51,10 @@
 
         <record id="crm_case_programnotgivingproperoutput0" model="project.issue">
             <field eval="time.strftime('%Y-%m-15 12:50:00')" name="date"/>
-            <field name="priority">3</field>
+            <field name="priority">1</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="3.5" name="duration"/>
             <field name="name">Program not giving proper output</field>
@@ -64,9 +64,9 @@
 
         <record id="crm_case_outputincorrect0" model="project.issue">
             <field eval="time.strftime('%Y-%m-18 14:30:00')" name="date"/>
-            <field name="priority">4</field>
+            <field name="priority">0</field>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="2.3" name="duration"/>
             <field name="project_id" ref="project.project_project_5"/>
@@ -79,10 +79,10 @@
 
         <record id="crm_case_problemloadingpage0" model="project.issue">
             <field eval="time.strftime('%Y-%m-20  15:25:05')" name="date"/>
-            <field name="priority">3</field>
+            <field name="priority">1</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_14"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="4.0" name="duration"/>
             <field name="project_id" ref="project.project_project_4"/>
@@ -92,10 +92,10 @@
 
         <record id="crm_case_pagenotfound0" model="project.issue">
             <field eval="time.strftime('%Y-%m-22  18:15:00')" name="date"/>
-            <field name="priority">3</field>
+            <field name="priority">1</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_13"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="1.0" name="duration"/>
             <field name="project_id" ref="project.project_project_4"/>
@@ -105,10 +105,10 @@
 
         <record id="crm_case_programmingerror0" model="project.issue">
             <field eval="time.strftime('%Y-%m-24  09:45:00')" name="date"/>
-            <field name="priority">3</field>
+            <field name="priority">1</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_5"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="4.0" name="duration"/>
             <field name="project_id" ref="project.project_project_4"/>
@@ -124,7 +124,7 @@
             <field name="priority">2</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_6"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="2.0" name="duration"/>
             <field name="project_id" ref="project.project_project_2"/>
@@ -137,7 +137,7 @@
             <field name="priority">2</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_6"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="7.3" name="duration"/>
             <field name="project_id" ref="project.project_project_2"/>
@@ -162,7 +162,7 @@
             <field name="priority">2</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="13.0" name="duration"/>
             <field name="project_id" ref="project.project_project_2"/>
@@ -172,10 +172,10 @@
 
         <record id="crm_case_newfeaturestobeadded0" model="project.issue">
             <field eval="time.strftime('%Y-%m-01 12:15:10')" name="date"/>
-            <field name="priority">4</field>
+            <field name="priority">0</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_8"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="3.2" name="duration"/>
             <field name="project_id" ref="project.project_project_3"/>
@@ -188,7 +188,7 @@
             <field name="priority">1</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_id" ref="base.res_partner_9"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="3.0" name="duration"/>
             <field name="project_id" ref="project.project_project_3"/>
@@ -199,10 +199,10 @@
 
         <record id="crm_case_includeattendancesheetinproject0" model="project.issue">
             <field eval="time.strftime('%Y-%m-10 17:05:30')" name="date"/>
-            <field name="priority">3</field>
+            <field name="priority">1</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_10"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="2.0" name="duration"/>
             <field name="project_id" ref="project.project_project_2"/>
@@ -213,10 +213,10 @@
 
         <record id="crm_case_createnewobject0" model="project.issue">
             <field eval="time.strftime('%Y-%m-15 10:35:15')" name="date"/>
-            <field name="priority">3</field>
+            <field name="priority">1</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_6"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="2.45" name="duration"/>
             <field name="project_id" ref="project.project_project_4"/>
@@ -226,10 +226,10 @@
 
         <record id="crm_case_improvereportsinhrms0" model="project.issue">
             <field eval="time.strftime('%Y-%m-19 12:15:00')" name="date"/>
-            <field name="priority">4</field>
+            <field name="priority">0</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_11"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="15.0" name="duration"/>
             <field name="project_id" ref="project.project_project_4"/>
@@ -242,7 +242,7 @@
             <field name="priority">2</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_id" ref="base.res_partner_11"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field eval="1" name="active"/>
             <field eval="06.15" name="duration"/>
             <field name="project_id" ref="project.project_project_4"/>

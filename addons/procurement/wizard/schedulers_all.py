@@ -21,23 +21,17 @@
 
 import logging
 import threading
-from openerp import pooler, SUPERUSER_ID, tools
+from openerp import SUPERUSER_ID
+from openerp import tools
 
-from openerp.osv import fields, osv
+from openerp.osv import osv
+from openerp.api import Environment
 
 _logger = logging.getLogger(__name__)
 
 class procurement_compute_all(osv.osv_memory):
     _name = 'procurement.order.compute.all'
     _description = 'Compute all schedulers'
-
-    _columns = {
-        'automatic': fields.boolean('Automatic orderpoint',help='Triggers an automatic procurement for all products that have a virtual stock under 0. You should probably not use this option, we suggest using a MTO configuration on products.'),
-    }
-
-    _defaults = {
-         'automatic': lambda *a: False,
-    }
 
     def _procure_calculation_all(self, cr, uid, ids, context=None):
         """
@@ -47,25 +41,28 @@ class procurement_compute_all(osv.osv_memory):
         @param ids: List of IDs selected
         @param context: A standard dictionary
         """
-        proc_obj = self.pool.get('procurement.order')
-        #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
-        new_cr = self.pool.cursor()
-        scheduler_cron_id = self.pool['ir.model.data'].get_object_reference(new_cr, SUPERUSER_ID, 'procurement', 'ir_cron_scheduler_action')[1]
-        # Avoid to run the scheduler multiple times in the same time
-        try:
-            with tools.mute_logger('openerp.sql_db'):
-                new_cr.execute("SELECT id FROM ir_cron WHERE id = %s FOR UPDATE NOWAIT", (scheduler_cron_id,))
-        except Exception:
-            _logger.info('Attempt to run procurement scheduler aborted, as already running')
-            new_cr.rollback()
+        with Environment.manage():
+            proc_obj = self.pool.get('procurement.order')
+            #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
+
+            new_cr = self.pool.cursor()
+            scheduler_cron_id = self.pool['ir.model.data'].get_object_reference(new_cr, SUPERUSER_ID, 'procurement', 'ir_cron_scheduler_action')[1]
+            # Avoid to run the scheduler multiple times in the same time
+            try:
+                with tools.mute_logger('openerp.sql_db'):
+                    new_cr.execute("SELECT id FROM ir_cron WHERE id = %s FOR UPDATE NOWAIT", (scheduler_cron_id,))
+            except Exception:
+                _logger.info('Attempt to run procurement scheduler aborted, as already running')
+                new_cr.rollback()
+                new_cr.close()
+                return {}
+            user = self.pool.get('res.users').browse(new_cr, uid, uid, context=context)
+            comps = [x.id for x in user.company_ids]
+            for comp in comps:
+                proc_obj.run_scheduler(new_cr, uid, use_new_cursor=new_cr.dbname, company_id = comp, context=context)
+            #close the new cursor
             new_cr.close()
             return {}
-        for proc in self.browse(new_cr, uid, ids, context=context):
-            proc_obj.run_scheduler(new_cr, uid, automatic=proc.automatic, use_new_cursor=new_cr.dbname,\
-                    context=context)
-        #close the new cursor
-        new_cr.close()
-        return {}
 
     def procure_calculation(self, cr, uid, ids, context=None):
         """

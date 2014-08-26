@@ -41,5 +41,11 @@
         </xpath>
     </template>
 
+    <template id="assets" inherit_id="web.assets_backend" name="base module import test">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/test_module/static/src/js/test.js"></script>
+        </xpath>
+    </template>
+
 </data>
 </openerp>

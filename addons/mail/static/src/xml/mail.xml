@@ -188,23 +188,19 @@
                         </span>
                     </t>
                 </td>
-                <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
-            </tr>
-            <tr class="oe_header_row" t-if="widget.action.params.view_inbox and widget.action.params.show_compose_message" >
-                <td colspan="2">
-                    <button type="button" class="oe_write_full oe_highlight">
-                        Compose a new message
-                    </button>
-                    <span class='oe_alternative'>
-                        or
-                        <a href='#'  class='oe_write_onwall oe_bold' help='Your followers can read this message'>Write to my followers</a>
-                    </span>
-                </td>
+                <td><div class="oe_view_manager_view_search"/></td>
             </tr>
           </tbody>
         </table>
-        <div class="oe_mail-placeholder"></div>
-        <aside class="oe_mail_wall_aside"></aside>
+        <div class="oe_view_manager_wrapper">
+            <div>
+                <div class="oe_view_manager_body">
+                    <div class="oe_searchview_drawer_container"/>
+                    <div class="oe_mail-placeholder"></div>
+                    <aside class="oe_mail_wall_aside"></aside>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!--
@@ -337,16 +333,6 @@
                 <a t-if="widget.nb_messages === 1" class="oe_msg_fetch_more">show one more message</a>
                 <a t-if="widget.nb_messages &gt; 1" class="oe_msg_fetch_more">show <t t-esc="widget.nb_messages" /> more messages</a>
             </div>
-        </div>
-    </t>
-
-    <!--
-        mail.compose_message.button_top_bar
-        render of the button on the user bar for open wizard compose message
-        -->
-    <t t-name="mail.ComposeMessageTopButton">
-        <div title='Compose new Message' class="oe_topbar_item oe_topbar_compose_full_email">
-            <button class="oe_e">%</button>
         </div>
     </t>
 

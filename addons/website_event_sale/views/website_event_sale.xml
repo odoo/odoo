@@ -2,12 +2,11 @@
 <openerp>
 <data>
 
-<template id="debugger" inherit_id="website.debugger" name="Event Debugger">
-    <xpath expr='//t[@t-set="debugger_hook"]' position="after">
-        <script type="text/javascript" src="/website_event_sale/static/src/js/website.tour.event_sale.js"></script>
-    </xpath>
+<template id="assets_editor" inherit_id="website.assets_frontend" name="Event Sale">
+  <xpath expr="." position="inside">
+    <script type="text/javascript" src="/website_event_sale/static/src/js/website.tour.event_sale.js"></script>
+  </xpath>
 </template>
-
 
 <template id="index" inherit_id="website_event.index" name="Event's Ticket">
     <xpath expr="//li[@t-foreach='event_ids']/div/h4" position="before">
@@ -20,15 +19,15 @@
     </xpath>
 </template>
 
-<template id="mycart" inherit_id="website_sale.mycart" name="My Cart Event's Price">
+<template id="cart" inherit_id="website_sale.cart" name="My Cart Event's Price">
     <xpath expr="//td[@name='price']/t" position="attributes">
         <attribute name="t-if">abs(line.product_id.lst_price - line.price_unit) &gt; 0.2 and not line.product_id.event_ok</attribute>
     </xpath>
 </template>
 
-<template id="event_description_full" inherit_id="website_event.event_description_full" inherit_option_id="website_event.event_description_full" name="Event's Ticket form">
+<template id="event_description_full" inherit_id="website_event.event_description_full" optional="enabled" name="Event's Ticket form">
     <xpath expr="//div[@t-field='event.description']" position="before">
-        <form t-attf-action="/event/add_cart?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
+        <form t-attf-action="/event/cart/update?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
             <table itemprop="offers" class="table table-striped">
                 <thead>
                     <tr>

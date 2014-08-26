@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_package_barcode">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <table class="table table-condensed" style="border-bottom: 0px solid white !important;">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th class="text-right">Quantity</th>
+                                        <th>Lot</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.quant_ids" t-as="l">
+                                        <td>
+                                           <span  t-field="l.product_id.name"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="l.qty"/>
+                                            <span groups="product.group_uom" t-field="l.product_id.uom_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-if="l.lot_id"><span t-field="l.lot_id.name"/></t>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-xs-4">
+                            <img class="image" t-att-src="'data:image/png;base64,%s' % res_company.logo" style="border:auto;"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 mt32 text-center">
+                            <table class="table table-condensed" style="border-bottom: 3px solid black !important;"><thead><th> </th></thead></table>
+                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
+                            <p t-field="o.name"></p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="report_package_barcode_small">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-xs-12 mt32 text-center">
+                            <table class="table table-condensed" style="border-bottom: 3px solid black !important;"><thead><th> </th></thead></table>
+                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
+                            <p t-field="o.name"></p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

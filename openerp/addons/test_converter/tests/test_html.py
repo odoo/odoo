@@ -1,17 +1,15 @@
 # -*- encoding: utf-8 -*-
 import json
 import os
-import xml.dom.minidom
 import datetime
+
+from lxml import etree
 
 from openerp.tests import common
 from openerp.tools import html_escape as e
 from openerp.addons.base.ir import ir_qweb
 
 directory = os.path.dirname(__file__)
-
-impl = xml.dom.minidom.getDOMImplementation()
-doc = impl.createDocument(None, None, None)
 
 class TestExport(common.TransactionCase):
     _model = None
@@ -114,7 +112,7 @@ class TestCurrencyExport(TestExport):
         context = dict(inherit_branding=True)
         converted = converter.to_html(
             self.cr, self.uid, 'value', obj, options,
-            doc.createElement('span'),
+            etree.Element('span'),
             {'field': 'obj.value', 'field-options': json.dumps(options)},
             '', ir_qweb.QWebContext(self.cr, self.uid, {'obj': obj, 'c2': dest, }),
             context=context,

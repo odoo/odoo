@@ -70,7 +70,7 @@
         <field name="name">account.analytic.plan.instance.form</field>
         <field name="model">account.analytic.plan.instance</field>
         <field name="arch" type="xml">
-            <form string="Analytic Distribution" version="7.0">
+            <form string="Analytic Distribution">
                 <group col="4">
                     <field name="name"/>
                     <field name="code"/>
@@ -82,7 +82,7 @@
                         <field name="rate"/>
                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     </tree>
-                    <form string="Analytic Distribution" version="7.0">
+                    <form string="Analytic Distribution">
                         <field name="rate"/>
                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     </form>
@@ -124,7 +124,7 @@
         <field name="name">account.analytic.plan.instance.line.form</field>
         <field name="model">account.analytic.plan.instance.line</field>
         <field name="arch" type="xml">
-            <form string="Analytic Distribution Line" version="7.0">
+            <form string="Analytic Distribution Line">
                 <group col="4">
                     <field name="plan_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
@@ -160,7 +160,7 @@
         <field name="name">account.analytic.plan.form</field>
         <field name="model">account.analytic.plan</field>
         <field name="arch" type="xml">
-            <form string="Analytic Plan" version="7.0">
+            <form string="Analytic Plan">
                 <group col="4">
                     <field name="name"/>
                     <field name="default_instance_id"/>
@@ -204,7 +204,7 @@
         <field name="name">account.analytic.plan.line.form</field>
         <field name="model">account.analytic.plan.line</field>
         <field name="arch" type="xml">
-            <form string="Analytic Plan Line" version="7.0">
+            <form string="Analytic Plan Line">
                 <group col="4">
                     <field name="name"/>
                     <field name="sequence"/>
@@ -233,57 +233,25 @@
 
     <!-- add property field on default analytic account-->
 
-        <record model="ir.ui.view" id="view_default_inherit_form">
-            <field name="name">account.analytic.default.form.plans</field>
-            <field name="model">account.analytic.default</field>
-            <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_form"/>
-            <field name="arch" type="xml">
-                <field name="analytic_id" required="1" position="replace">
-                    <field name="analytics_id" required="1"/>
-                </field>
+    <record model="ir.ui.view" id="view_default_inherit_form">
+        <field name="name">account.analytic.default.form.plans</field>
+        <field name="model">account.analytic.default</field>
+        <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_form"/>
+        <field name="arch" type="xml">
+            <field name="analytic_id" required="1" position="replace">
+                <field name="analytics_id" required="1"/>
             </field>
-        </record>
-        <record model="ir.ui.view" id="view_default_inherit_tree">
-            <field name="name">account.analytic.default.tree.plans</field>
-            <field name="model">account.analytic.default</field>
-            <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_tree"/>
-            <field name="arch" type="xml">
-                <xpath  expr="//field[@name='analytic_id']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <xpath  expr="//field[@name='analytic_id']" position="after">
-                    <field name="analytics_id" required="1"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_bank_statement_inherit_form" model="ir.ui.view">
-            <field name="name">account.bank.statement.form.inherit</field>
-            <field name="model">account.bank.statement</field>
-            <field name="inherit_id" ref="account.view_bank_statement_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/sheet/notebook/page/field[@name='line_ids']/tree/field[@name='analytic_account_id']" position="replace">
-                    <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
-                </xpath>
-                <xpath expr="/form/sheet/notebook/page/field[@name='line_ids']/form/group/field[@name='analytic_account_id']" position="replace">
-                    <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
-                </xpath>
-            </field>
-        </record>
-        
-        <record id="view_bank_statement_inherit_form2" model="ir.ui.view">
-            <field name="name">account.bank.statement.form.inherit</field>
-            <field name="model">account.bank.statement</field>
-            <field name="inherit_id" ref="account.view_bank_statement_form2"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/sheet/notebook/page/field[@name='line_ids']/tree/field[@name='analytic_account_id']" position="replace">
-                    <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
-                </xpath>
-                <xpath expr="/form/sheet/notebook/page/field[@name='line_ids']/form/group/field[@name='analytic_account_id']" position="replace">
-                    <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
-                </xpath>
-            </field>
-        </record>
-
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_default_inherit_tree">
+        <field name="name">account.analytic.default.tree.plans</field>
+        <field name="model">account.analytic.default</field>
+        <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_tree"/>
+        <field name="arch" type="xml">
+            <xpath  expr="//field[@name='analytic_id']" position="replace">
+                <field name="analytics_id" required="1"/>
+            </xpath>
+        </field>
+    </record>
 </data>
 </openerp>

@@ -35,8 +35,8 @@ class base_report_designer_installer(osv.osv_memory):
         return data
 
     _columns = {
-        'name':fields.char('File name', size=34),
-        'plugin_file':fields.char('OpenObject Report Designer Plug-in', size=256, readonly=True, help="OpenObject Report Designer plug-in file. Save as this file and install this plug-in in OpenOffice."),
+        'name':fields.char('File name'),
+        'plugin_file':fields.char('OpenObject Report Designer Plug-in', readonly=True, help="OpenObject Report Designer plug-in file. Save as this file and install this plug-in in OpenOffice."),
         'description':fields.text('Description', readonly=True)
     }
 

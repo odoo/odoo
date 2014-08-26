@@ -8,11 +8,8 @@ OpenERP Web kanban view.
 """,
     'version': '2.0',
     'depends': ['web'],
-    'js': [
-        'static/src/js/kanban.js'
-    ],
-    'css': [
-        'static/src/css/kanban.css'
+    'data' : [
+        'views/web_kanban.xml',
     ],
     'qweb' : [
         'static/src/xml/*.xml',

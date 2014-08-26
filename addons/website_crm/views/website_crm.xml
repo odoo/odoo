@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-<template id="contactus_form" name="Contact Form" inherit_id="website.contactus" inherit_option_id="website.contactus">
+<template id="contactus_form" name="Contact Form" inherit_id="website.contactus" optional="enabled">
     <xpath expr="//div[@name='mail_button']" position="replace">
         <form action="/crm/contactus" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
             <t t-foreach="kwargs" t-as="kwarg">
@@ -47,7 +47,7 @@
     </xpath>
 </template>
 
-<template id="contactus_form_company_name" name="Company Name" inherit_id="website_crm.contactus_form" inherit_option_id="website_crm.contactus_form">
+<template id="contactus_form_company_name" name="Company Name" inherit_id="website_crm.contactus_form" optional="enabled">
     <xpath expr="//div[@name='email_from_container']" position="after">
         <div t-attf-class="form-group #{error and 'partner_name' in error and 'has-error' or ''}">
             <label class="col-md-3 col-sm-4 control-label" for="partner_name">Your Company</label>

@@ -2,10 +2,17 @@
 <openerp>
     <data>
 
+        <!-- Front-end assets: custom css -->
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
+            <xpath expr="." position="inside">
+                <link rel='stylesheet' href='/website_forum_doc/static/src/css/website_forum_doc.css'/>
+            </xpath>
+        </template>
+
         <!-- Layout add nav and footer -->
-        <template id="header_footer_custom" inherit_id="website.layout"
+        <template id="header_footer_custom" inherit_id="website.footer_default"
             name="Footer Documentation Link">
-            <xpath expr="//footer//ul[@name='products']" position="inside">
+            <xpath expr="//ul[@id='products']" position="inside">
                 <li><a href="/forum/how-to">Documentation</a></li>
             </xpath>
         </template>
@@ -114,7 +121,7 @@
                     <div class="row">
                         <div class="col-sm-9">
                             <h1 class="page-header" t-field="post.name"/>
-                            <blockquote t-if="bool(post.content)">
+                            <blockquote class="oe_toc_content" t-if="bool(post.content)">
                                 <t t-raw="post.content"/>
                             </blockquote>
 
@@ -126,7 +133,7 @@
                                 <ul>
                                     <t t-foreach="toc.post_ids" t-as="topic">
                                         <li t-if="post.id != topic.id">
-                                            <a t-attf-href="/forum/how-to/#{slug(toc)}/#{slug(topic)}" t-field="post.name"/>
+                                            <a t-attf-href="/forum/how-to/#{slug(toc)}/#{slug(topic)}" t-field="topic.name"/>
                                         </li>
                                     </t>
                                 </ul>
@@ -243,14 +250,14 @@
                             <h4>Good answer structure</h4>
                             <ol>
                                 <li>Describe the business solution</li>
-                                <li>Explain how to implement it in OpenERP</li>
+                                <li>Explain how to implement it in Odoo</li>
                                 <li>Benefits of having done this setup</li>
                             </ol>
                         </div>
                         <div class="col-sm-6">
                             <h4>Bad answer structure</h4>
                             <ol>
-                                <li>Explain how to configure in OpenERP</li>
+                                <li>Explain how to configure in Odoo</li>
                                 <li>No business benefit</li>
                             </ol>
                         </div>

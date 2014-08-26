@@ -41,16 +41,10 @@ modules.
     'data': [
         'wizard/crm_make_sale_view.xml',
         'sale_crm_view.xml',
-        'sale_crm_data.xml',
-        'process/sale_crm_process.xml',
         'security/sale_crm_security.xml',
         'security/ir.model.access.csv',
-        'report/sale_report_view.xml',
     ],
-    'js': [
-        'static/src/js/sale_crm.js',
-    ],
-    'demo': ['sale_crm_demo.xml'],
+    'demo': [],
     'test': ['test/sale_crm.yml'],
     'installable': True,
     'auto_install': True,

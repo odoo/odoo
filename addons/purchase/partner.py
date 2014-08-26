@@ -25,23 +25,16 @@ class res_partner(osv.osv):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
-    def _purchase_order_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        # this user may not have access to user rights
-        try:
-            for partner in self.browse(cr, uid, ids, context=context):
-                res[partner.id] = len(partner.purchase_order_ids)
-        except:
-            pass
-        return res
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-
-        default.update({'purchase_order_ids': []})
-
-        return super(res_partner, self).copy(cr, uid, id, default=default, context=context)
+    def _purchase_invoice_count(self, cr, uid, ids, field_name, arg, context=None):
+        PurchaseOrder = self.pool['purchase.order']
+        Invoice = self.pool['account.invoice']
+        return {
+            partner_id: {
+                'purchase_order_count': PurchaseOrder.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context),
+                'supplier_invoice_count': Invoice.search_count(cr,uid, [('partner_id', '=', partner_id), ('type','=','in_invoice')], context=context)
+            }
+            for partner_id in ids
+        }
 
     def _commercial_fields(self, cr, uid, context=None):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['property_product_pricelist_purchase']
@@ -53,11 +46,9 @@ class res_partner(osv.osv):
           domain=[('type','=','purchase')],
           string="Purchase Pricelist", 
           help="This pricelist will be used, instead of the default one, for purchases from the current partner"),
-        'purchase_order_count': fields.function(_purchase_order_count, string='# of Purchase Order', type='integer'),
-        'purchase_order_ids': fields.one2many('purchase.order','partner_id','Purchase Order')
+        'purchase_order_count': fields.function(_purchase_invoice_count, string='# of Purchase Order', type='integer', multi="count"),
+        'supplier_invoice_count': fields.function(_purchase_invoice_count, string='# Supplier Invoices', type='integer', multi="count"),
     }
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

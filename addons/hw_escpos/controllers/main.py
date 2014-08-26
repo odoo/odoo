@@ -35,7 +35,6 @@ from PIL import Image
 
 from openerp import http
 from openerp.http import request
-from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -261,8 +260,6 @@ class EscposDriver(Thread):
             eprint.text(receipt['company']['name'] + '\n')
 
         eprint.set(align='center',type='b')
-        if check(receipt['shop']['name']):
-            eprint.text(receipt['shop']['name'] + '\n')
         if check(receipt['company']['contact_address']):
             eprint.text(receipt['company']['contact_address'] + '\n')
         if check(receipt['company']['phone']):

@@ -52,7 +52,6 @@ Ask questions, get answers, no distractions
     'demo': [
         'data/forum_demo.xml',
     ],
-    'css': ['static/src/css/website_forum.css'],
     'installable': True,
     'application': True,
 }

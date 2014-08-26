@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-12 16:27+0000\n"
-"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
+"PO-Revision-Date: 2014-05-06 17:17+0000\n"
+"Last-Translator: Daniel Reis <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-12 07:51+0000\n"
-"X-Generator: Launchpad (build 16976)\n"
+"X-Launchpad-Export-Date: 2014-05-07 06:26+0000\n"
+"X-Generator: Launchpad (build 16996)\n"
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_account_analytic_line
@@ -24,7 +24,7 @@ msgstr "Linha analítica"
 #. module: analytic_user_function
 #: view:account.analytic.account:0
 msgid "Invoice Price Rate per User"
-msgstr ""
+msgstr "Tarifa faturável por cada Utilizador"
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,product_id:0
@@ -44,7 +44,7 @@ msgstr "Preço"
 #. module: analytic_user_function
 #: help:analytic.user.funct.grid,price:0
 msgid "Price per hour for this user."
-msgstr "Preço à hora para este utilizador."
+msgstr "Preço hora para este utilizador."
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,account_id:0
@@ -67,7 +67,7 @@ msgstr "Dados de faturação"
 #. module: analytic_user_function
 #: field:account.analytic.account,user_product_ids:0
 msgid "Users/Products Rel."
-msgstr "Utilizadores/Relação de Artigos"
+msgstr "Realação Utilizadores/Produtos"
 
 #. module: analytic_user_function
 #: view:account.analytic.account:0
@@ -78,6 +78,11 @@ msgid ""
 "                            of the default values when invoicing the "
 "customer."
 msgstr ""
+"Definir um serviço específico (ex: Consultor Sénior)\n"
+"                            e preço respetivo para alguns utilizadore, para "
+"que seja usado em vez\n"
+"                            dos valores predefinidos, no momento de faturar "
+"o cliente."
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,uom_id:0
@@ -89,8 +94,7 @@ msgstr "Unidade de medida"
 #: code:addons/analytic_user_function/analytic_user_function.py:136
 #, python-format
 msgid "There is no expense account define for this product: \"%s\" (id:%d)"
-msgstr ""
-"Não há qualquer conta de despesas definida para o artigo: \"%s\" (id:%d)"
+msgstr "Não há conta de despesas definida para o artigo: \"%s\" (id:%d)"
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
@@ -106,6 +110,12 @@ msgid ""
 "                            specific user. This allows to set invoicing\n"
 "                            conditions for a group of contracts."
 msgstr ""
+"O OpenERP irá procurar recursivamente nas contas ascendentes\n"
+"                            para verificar se existem condições específicas "
+"para\n"
+"                            certos utilizadores. Isso permite definir "
+"condições\n"
+"                            de faturação para grupos de contratos."
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,user_id:0

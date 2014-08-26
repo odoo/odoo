@@ -16,9 +16,9 @@
                                 <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
                             </div>
 
-                            <div t-if="o.warehouse_id">
-                                <span t-field="o.warehouse_id.name"/>
-                                <div t-field="o.warehouse_id.partner_id" 
+                            <div t-if="o.picking_type_id and o.picking_type_id.warehouse_id">
+                                <span t-field="o.picking_type_id.warehouse_id.name"/>
+                                <div t-field="o.picking_type_id.warehouse_id.partner_id" 
                                     t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
                                 <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
                             </div>

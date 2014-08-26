@@ -48,12 +48,11 @@ synchronization with other companies.
         'res_users_view.xml',
         'wizard/share_wizard_view.xml',
         'share_data.xml',
+        'views/share.xml',
     ],
     'installable': True,
     'auto_install': True,
     'web': True,
-    'js': ['static/src/js/share.js'],
-    'css': ['static/src/css/share.css'],
     'qweb' : ['static/src/xml/*.xml'],
     'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
 }

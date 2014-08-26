@@ -35,6 +35,7 @@ import werkzeug.wrappers
 import werkzeug.wsgi
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
 
@@ -142,8 +143,8 @@ class WebRequest(object):
     initialization and setup of the request object (the dispatching itself has
     to be handled by the subclasses)
 
-    :param request: a wrapped werkzeug Request object
-    :type request: :class:`werkzeug.wrappers.BaseRequest`
+    :param httprequest: a wrapped werkzeug Request object
+    :type httprequest: :class:`werkzeug.wrappers.BaseRequest`
 
     .. attribute:: httprequest
 
@@ -154,7 +155,7 @@ class WebRequest(object):
 
         .. deprecated:: 8.0
 
-        Use ``self.session`` instead.
+            Use :attr:`session` instead.
 
     .. attribute:: params
 
@@ -164,7 +165,7 @@ class WebRequest(object):
 
     .. attribute:: session_id
 
-        opaque identifier for the :class:`session.OpenERPSession` instance of
+        opaque identifier for the :class:`OpenERPSession` instance of
         the current request
 
     .. attribute:: session
@@ -174,17 +175,24 @@ class WebRequest(object):
 
     .. attribute:: context
 
-        :class:`~collections.Mapping` of context values for the current request
+        :class:`~collections.Mapping` of context values for the current
+        request
 
     .. attribute:: db
 
-        ``str``, the name of the database linked to the current request. Can be ``None``
-        if the current request uses the ``none`` authentication.
+        ``str``, the name of the database linked to the current request. Can
+        be ``None`` if the current request uses the ``none`` authentication
+        in ``web`` module's controllers.
 
     .. attribute:: uid
 
-        ``int``, the id of the user related to the current request. Can be ``None``
-        if the current request uses the ``none`` authenticatoin.
+        ``int``, the id of the user related to the current request. Can be
+        ``None`` if the current request uses the ``none`` authentication.
+
+    .. attribute:: env
+
+        an :class:`openerp.api.Environment` bound to the current
+        request's ``cr``, ``uid`` and ``context``
     """
     def __init__(self, httprequest):
         self.httprequest = httprequest
@@ -214,29 +222,37 @@ class WebRequest(object):
     @property
     def registry(self):
         """
-        The registry to the database linked to this request. Can be ``None`` if the current request uses the
-        ``none'' authentication.
+        The registry to the database linked to this request. Can be ``None``
+        if the current request uses the ``none`` authentication.
         """
         return openerp.modules.registry.RegistryManager.get(self.db) if self.db else None
 
     @property
     def db(self):
         """
-        The registry to the database linked to this request. Can be ``None`` if the current request uses the
-        ``none'' authentication.
+        The database linked to this request. Can be ``None``
+        if the current request uses the ``none`` authentication.
         """
         return self.session.db if not self.disable_db else None
 
     @property
     def cr(self):
         """
-        The cursor initialized for the current method call. If the current request uses the ``none`` authentication
-        trying to access this property will raise an exception.
+        The cursor initialized for the current method call. If the current
+        request uses the ``none`` authentication trying to access this
+        property will raise an exception.
         """
         # some magic to lazy create the cr
         if not self._cr:
             self._cr = self.registry.cursor()
         return self._cr
+
+    @lazy_property
+    def env(self):
+        """
+        The Environment bound to current request.
+        """
+        return openerp.api.Environment(self.cr, self.uid, self.context)
 
     def __enter__(self):
         _request_stack.push(self)
@@ -306,22 +322,28 @@ class WebRequest(object):
 
 def route(route=None, **kw):
     """
-    Decorator marking the decorated method as being a handler for requests. The method must be part of a subclass
-    of ``Controller``.
+    Decorator marking the decorated method as being a handler for
+    requests. The method must be part of a subclass of ``Controller``.
 
-    :param route: string or array. The route part that will determine which http requests will match the decorated
-    method. Can be a single string or an array of strings. See werkzeug's routing documentation for the format of
-    route expression ( http://werkzeug.pocoo.org/docs/routing/ ).
+    :param route: string or array. The route part that will determine which
+                  http requests will match the decorated method. Can be a
+                  single string or an array of strings. See werkzeug's routing
+                  documentation for the format of route expression (
+                  http://werkzeug.pocoo.org/docs/routing/ ).
     :param type: The type of request, can be ``'http'`` or ``'json'``.
     :param auth: The type of authentication method, can on of the following:
 
-        * ``user``: The user must be authenticated and the current request will perform using the rights of the
-        user.
-        * ``admin``: The user may not be authenticated and the current request will perform using the admin user.
-        * ``none``: The method is always active, even if there is no database. Mainly used by the framework and
-        authentication modules. There request code will not have any facilities to access the database nor have any
-        configuration indicating the current database nor the current user.
-    :param methods: A sequence of http methods this route applies to. If not specified, all methods are allowed.
+                 * ``user``: The user must be authenticated and the current request
+                   will perform using the rights of the user.
+                 * ``admin``: The user may not be authenticated and the current request
+                   will perform using the admin user.
+                 * ``none``: The method is always active, even if there is no
+                   database. Mainly used by the framework and authentication
+                   modules. There request code will not have any facilities to access
+                   the database nor have any configuration indicating the current
+                   database nor the current user.
+    :param methods: A sequence of http methods this route applies to. If not
+                    specified, all methods are allowed.
     :param cors: The Access-Control-Allow-Origin cors directive value.
     """
     routing = kw.copy()
@@ -425,7 +447,7 @@ class JsonRequest(WebRequest):
         response = {
             'jsonrpc': '2.0',
             'id': self.jsonrequest.get('id')
-        }
+            }
         if error is not None:
             response['error'] = error
         if result is not None:
@@ -508,8 +530,7 @@ def to_jsonable(o):
 def jsonrequest(f):
     """ 
         .. deprecated:: 8.0
-
-        Use the ``route()`` decorator instead.
+            Use the :func:`~openerp.http.route` decorator instead.
     """
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
@@ -571,7 +592,7 @@ class HttpRequest(WebRequest):
                 response.set_cookie(k, v)
         return response
 
-    def render(self, template, qcontext=None, **kw):
+    def render(self, template, qcontext=None, lazy=True, **kw):
         """ Lazy render of QWeb template.
 
         The actual rendering of the given template will occur at then end of
@@ -580,8 +601,12 @@ class HttpRequest(WebRequest):
 
         :param basestring template: template to render
         :param dict qcontext: Rendering context to use
+        :param dict lazy: Lazy rendering is processed later in wsgi response layer (default True)
         """
-        return Response(template=template, qcontext=qcontext, **kw)
+        response = Response(template=template, qcontext=qcontext, **kw)
+        if not lazy:
+            return response.render()
+        return response
 
     def not_found(self, description=None):
         """ Helper for 404 response, return its result from the method
@@ -592,7 +617,7 @@ def httprequest(f):
     """ 
         .. deprecated:: 8.0
 
-        Use the ``route()`` decorator instead.
+        Use the :func:`~openerp.http.route` decorator instead.
     """
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
@@ -613,6 +638,16 @@ class ControllerType(type):
         # flag old-style methods with req as first argument
         for k, v in attrs.items():
             if inspect.isfunction(v) and hasattr(v, 'original_func'):
+                # Set routing type on original functions
+                routing_type = v.routing.get('type')
+                parent = [claz for claz in bases if isinstance(claz, ControllerType) and hasattr(claz, k)]
+                parent_routing_type = getattr(parent[0], k).original_func.routing_type if parent else routing_type or 'http'
+                if routing_type is not None and routing_type is not parent_routing_type:
+                    routing_type = parent_routing_type
+                    _logger.warn("Subclass re-defines <function %s.%s.%s> with different type than original."
+                                    " Will use original type: %r" % (cls.__module__, cls.__name__, k, parent_routing_type))
+                v.original_func.routing_type = routing_type or parent_routing_type
+
                 spec = inspect.getargspec(v.original_func)
                 first_arg = spec.args[1] if len(spec.args) >= 2 else None
                 if first_arg in ["req", "request"]:
@@ -651,44 +686,49 @@ class EndPoint(object):
 
 def routing_map(modules, nodb_only, converters=None):
     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
+
+    def get_subclasses(klass):
+        def valid(c):
+            return c.__module__.startswith('openerp.addons.') and c.__module__.split(".")[2] in modules
+        subclasses = klass.__subclasses__()
+        result = []
+        for subclass in subclasses:
+            if valid(subclass):
+                result.extend(get_subclasses(subclass))
+        if not result and valid(klass):
+            result = [klass]
+        return result
+
+    uniq = lambda it: collections.OrderedDict((id(x), x) for x in it).values()
+
     for module in modules:
         if module not in controllers_per_module:
             continue
 
         for _, cls in controllers_per_module[module]:
-            subclasses = cls.__subclasses__()
-            subclasses = [c for c in subclasses if c.__module__.startswith('openerp.addons.') and c.__module__.split(".")[2] in modules]
+            subclasses = uniq(c for c in get_subclasses(cls) if c is not cls)
             if subclasses:
                 name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
                 cls = type(name, tuple(reversed(subclasses)), {})
 
             o = cls()
-            members = inspect.getmembers(o)
-            for mk, mv in members:
-                if inspect.ismethod(mv) and hasattr(mv, 'routing'):
+            members = inspect.getmembers(o, inspect.ismethod)
+            for _, mv in members:
+                if hasattr(mv, 'routing'):
                     routing = dict(type='http', auth='user', methods=None, routes=None)
                     methods_done = list()
-                    routing_type = None
+                    # update routing attributes from subclasses(auth, methods...)
                     for claz in reversed(mv.im_class.mro()):
                         fn = getattr(claz, mv.func_name, None)
                         if fn and hasattr(fn, 'routing') and fn not in methods_done:
-                            fn_type = fn.routing.get('type')
-                            if not routing_type:
-                                routing_type = fn_type
-                            else:
-                                if fn_type and routing_type != fn_type:
-                                    _logger.warn("Subclass re-defines <function %s.%s> with different type than original."
-                                                    " Will use original type: %r", fn.__module__, fn.__name__, routing_type)
-                                fn.routing['type'] = routing_type
-                            fn.original_func.routing_type = routing_type
                             methods_done.append(fn)
                             routing.update(fn.routing)
-                    if not nodb_only or nodb_only == (routing['auth'] == "none"):
+                    if not nodb_only or routing['auth'] == "none":
                         assert routing['routes'], "Method %r has not route defined" % mv
                         endpoint = EndPoint(mv, routing)
                         for url in routing['routes']:
                             if routing.get("combine", False):
-                                # deprecated
+                                # deprecated v7 declaration
                                 url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
                                 if url.endswith("/") and len(url) > 1:
                                     url = url[: -1]
@@ -708,7 +748,7 @@ class SessionExpiredException(Exception):
 class Service(object):
     """
         .. deprecated:: 8.0
-        Use ``dispatch_rpc()`` instead.
+            Use :func:`dispatch_rpc` instead.
     """
     def __init__(self, session, service_name):
         self.session = session
@@ -723,7 +763,7 @@ class Service(object):
 class Model(object):
     """
         .. deprecated:: 8.0
-        Use the resistry and cursor in ``openerp.http.request`` instead.
+            Use the registry and cursor in :data:`request` instead.
     """
     def __init__(self, session, model):
         self.session = session
@@ -776,10 +816,12 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
     def authenticate(self, db, login=None, password=None, uid=None):
         """
-        Authenticate the current user with the given db, login and password. If successful, store
-        the authentication parameters in the current session and request.
+        Authenticate the current user with the given db, login and
+        password. If successful, store the authentication parameters in the
+        current session and request.
 
-        :param uid: If not None, that user id will be used instead the login to authenticate the user.
+        :param uid: If not None, that user id will be used instead the login
+                    to authenticate the user.
         """
 
         if uid is None:
@@ -804,9 +846,9 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
     def check_security(self):
         """
-        Chech the current authentication parameters to know if those are still valid. This method
-        should be called at each request. If the authentication fails, a ``SessionExpiredException``
-        is raised.
+        Check the current authentication parameters to know if those are still
+        valid. This method should be called at each request. If the
+        authentication fails, a :exc:`SessionExpiredException` is raised.
         """
         if not self.db or not self.uid:
             raise SessionExpiredException("Session expired")
@@ -827,9 +869,8 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
     def get_context(self):
         """
-        Re-initializes the current user's session context (based on
-        his preferences) by calling res.users.get_context() with the old
-        context.
+        Re-initializes the current user's session context (based on his
+        preferences) by calling res.users.get_context() with the old context.
 
         :returns: the new context
         """
@@ -862,8 +903,8 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     # Deprecated to be removed in 9
 
     """
-        Damn properties for retro-compatibility. All of that is deprecated, all
-        of that.
+        Damn properties for retro-compatibility. All of that is deprecated,
+        all of that.
     """
     @property
     def _db(self):
@@ -893,21 +934,21 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def send(self, service_name, method, *args):
         """
         .. deprecated:: 8.0
-        Use ``dispatch_rpc()`` instead.
+            Use :func:`dispatch_rpc` instead.
         """
         return dispatch_rpc(service_name, method, args)
 
     def proxy(self, service):
         """
         .. deprecated:: 8.0
-        Use ``dispatch_rpc()`` instead.
+            Use :func:`dispatch_rpc` instead.
         """
         return Service(self, service)
 
     def assert_valid(self, force=False):
         """
         .. deprecated:: 8.0
-        Use ``check_security()`` instead.
+            Use :meth:`check_security` instead.
 
         Ensures this session is valid (logged into the openerp server)
         """
@@ -921,7 +962,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def ensure_valid(self):
         """
         .. deprecated:: 8.0
-        Use ``check_security()`` instead.
+            Use :meth:`check_security` instead.
         """
         if self.uid:
             try:
@@ -932,7 +973,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def execute(self, model, func, *l, **d):
         """
         .. deprecated:: 8.0
-        Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+            Use the registry and cursor in :data:`request` instead.
         """
         model = self.model(model)
         r = getattr(model, func)(*l, **d)
@@ -941,7 +982,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def exec_workflow(self, model, id, signal):
         """
         .. deprecated:: 8.0
-        Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+            Use the registry and cursor in :data:`request` instead.
         """
         self.assert_valid()
         r = self.proxy('object').exec_workflow(self.db, self.uid, self.password, model, signal, id)
@@ -950,7 +991,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def model(self, model):
         """
         .. deprecated:: 8.0
-        Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+            Use the registry and cursor in :data:`request` instead.
 
         Get an RPC proxy for the object ``model``, bound to this session.
 
@@ -1017,6 +1058,15 @@ mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 
+class Retry(RuntimeError):
+    """ Exception raised during QWeb rendering to signal that the rendering
+    should be retried with the provided ``render_updates`` dict merged into
+    the previous rendering context
+    """
+    def __init__(self, name, render_updates=None):
+        super(Retry, self).__init__(name)
+        self.updates = render_updates or {}
+
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
 
@@ -1057,7 +1107,13 @@ class Response(werkzeug.wrappers.Response):
     def render(self):
         view_obj = request.registry["ir.ui.view"]
         uid = self.uid or request.uid or openerp.SUPERUSER_ID
-        return view_obj.render(request.cr, uid, self.template, self.qcontext, context=request.context)
+        while True:
+            try:
+                return view_obj.render(
+                    request.cr, uid, self.template, self.qcontext,
+                    context=request.context)
+            except Retry, e:
+                self.qcontext.update(e.updates)
 
     def flatten(self):
         self.response.append(self.render())
@@ -1089,11 +1145,14 @@ class Root(object):
     """Root WSGI application for the OpenERP Web Client.
     """
     def __init__(self):
+        self._loaded = False
+
+    @lazy_property
+    def session_store(self):
         # Setup http sessions
         path = openerp.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
-        self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
-        self._loaded = False
+        return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
 
     @lazy_property
     def nodb_routing_map(self):
@@ -1133,8 +1192,8 @@ class Root(object):
 
         if statics:
             _logger.info("HTTP Configuring static files")
-            app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics)
-            self.dispatch = DisableCacheMiddleware(app)
+        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics)
+        self.dispatch = DisableCacheMiddleware(app)
 
     def setup_session(self, httprequest):
         # recover or create session
@@ -1270,7 +1329,9 @@ def db_list(force=False, httprequest=None):
 def db_filter(dbs, httprequest=None):
     httprequest = httprequest or request.httprequest
     h = httprequest.environ.get('HTTP_HOST', '').split(':')[0]
-    d = h.split('.')[0]
+    d, _, r = h.partition('.')
+    if d == "www" and r:
+        d = r.partition('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
@@ -1295,9 +1356,8 @@ def db_monodb(httprequest=None):
     if db_session in dbs:
         return db_session
 
-    # if dbfilters was specified when launching the server and there is
-    # only one possible db, we take that one
-    if openerp.tools.config['dbfilter'] != ".*" and len(dbs) == 1:
+    # if there is only one possible db, we take that one
+    if len(dbs) == 1:
         return dbs[0]
     return None
 

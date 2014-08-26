@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="mrp_bom_form_view_product_extended" model="ir.ui.view">
+            <field name="name">mrp.bom.form.product_extended</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+            <field name="arch" type="xml">
+                <field name="product_id" position="after">
+                    <field name="standard_price"/>
+                    <newline/>
+                </field>
+            </field>
+        </record>
+
+        <record id="mrp_bom_tree_view_product_extended" model="ir.ui.view">
+            <field name="name">mrp.bom.tree.product_extended</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="product_uom" position="after">
+                    <field name="standard_price"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -51,14 +51,13 @@ Dashboard for CRM will include:
     'depends': [
         'base_action_rule',
         'base_setup',
-        'process',
+        'sales_team',
         'mail',
         'email_template',
         'calendar',
         'resource',
         'board',
         'fetchmail',
-        'web_kanban_sparkline',
     ],
     'data': [
         'crm_data.xml',
@@ -72,32 +71,28 @@ Dashboard for CRM will include:
 
         'wizard/crm_phonecall_to_phonecall_view.xml',
 
-        'wizard/crm_opportunity_to_phonecall_view.xml',
-
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
+
+        'crm_phonecall_view.xml',
+        'crm_phonecall_menu.xml',
 
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
         'calendar_event_menu.xml',
 
-        'crm_phonecall_view.xml',
-        'crm_phonecall_menu.xml',
-
         'report/crm_lead_report_view.xml',
+        'report/crm_opportunity_report_view.xml',
         'report/crm_phonecall_report_view.xml',
 
-        'process/crm_configuration_process.xml',
-
         'res_partner_view.xml',
-        'board_crm_view.xml',
 
         'res_config_view.xml',
         'base_partner_merge_view.xml',
 
-        'crm_case_section_view.xml',
+        'sales_team_view.xml',
     ],
     'demo': [
         'crm_demo.xml',
@@ -119,17 +114,10 @@ Dashboard for CRM will include:
         'test/crm_lead_unlink.yml',
         'test/crm_lead_find_stage.yml',
     ],
-    'css': [
-        'static/src/css/crm.css'
-    ],
-    'js': [
-        'static/src/js/crm_case_section.js',
-    ],
     'installable': True,
     'application': True,
     'auto_install': False,
     'images': [
-        'images/crm_dashboard.png',
         'images/customers.png',
         'images/leads.png',
         'images/opportunities_kanban.png',

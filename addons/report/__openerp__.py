@@ -7,15 +7,13 @@
 Report
         """,
     'author': 'OpenERP SA',
-    'depends': ['base'],
+    'depends': ['base', 'web'],
     'data': [
         'views/layouts.xml',
         'views/views.xml',
         'data/report_paperformat.xml',
         'security/ir.model.access.csv',
-    ],
-    'js': [
-        'static/src/js/qwebactionmanager.js',
+        'views/report.xml',
     ],
     'installable': True,
     'auto_install': True,

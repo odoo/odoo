@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-import time
 from openerp import tools
 
 class report_transaction_pos(osv.osv):
@@ -139,95 +138,5 @@ class report_sales_by_user_pos_month(osv.osv):
                 )
         """)
 
-class report_sales_by_margin_pos(osv.osv):
-    _name = "report.sales.by.margin.pos"
-    _description = "Sales by margin"
-    _auto = False
-    _columns = {
-        'product_name':fields.char('Product Name', size=64, readonly=True),
-        'date_order': fields.date('Order Date',required=True, select=True),
-        'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),
-        'qty': fields.float('Qty', readonly=True, select=True),
-        'net_margin_per_qty':fields.float('Net margin per Qty', readonly=True, select=True),
-        'total':fields.float('Margin', readonly=True, select=True),
-
-    }
-
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_sales_by_margin_pos')
-        cr.execute("""
-            create or replace view report_sales_by_margin_pos as (
-                select
-                    min(pol.id) as id,
-                    po.user_id as user_id,
-                    pt.name as product_name,
-                    to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::text as date_order,
-                    sum(pol.qty) as qty,
-                    pt.list_price-pt.standard_price as net_margin_per_qty,
-                    (pt.list_price-pt.standard_price) *sum(pol.qty) as total
-                from
-                    product_template as pt,
-                    product_product as pp,
-                    pos_order_line as pol,
-                    pos_order as po
-                where
-                    pol.product_id = pp.product_tmpl_id and
-                    pp.product_tmpl_id = pt.id and
-                    po.id = pol.order_id
-
-                group by
-                    pt.name,
-                    pt.list_price,
-                    pt.standard_price,
-                    po.user_id,
-                    to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::text
-
-                )
-        """)
-
-class report_sales_by_margin_pos_month(osv.osv):
-    _name = "report.sales.by.margin.pos.month"
-    _description = "Sales by margin monthly"
-    _auto = False
-    _columns = {
-        'product_name':fields.char('Product Name', size=64, readonly=True),
-        'date_order': fields.date('Order Date',required=True, select=True),
-        'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),
-        'qty': fields.float('Qty', readonly=True, select=True),
-        'net_margin_per_qty':fields.float('Net margin per Qty', readonly=True, select=True),
-        'total':fields.float('Margin', readonly=True, select=True),
-    }
-
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_sales_by_margin_pos_month')
-        cr.execute("""
-            create or replace view report_sales_by_margin_pos_month as (
-                select
-                    min(pol.id) as id,
-                    po.user_id as user_id,
-                    pt.name as product_name,
-                    to_char(date_trunc('month',po.date_order),'YYYY-MM-DD')::text as date_order,
-                    sum(pol.qty) as qty,
-                    pt.list_price-pt.standard_price as net_margin_per_qty,
-                    (pt.list_price-pt.standard_price) *sum(pol.qty) as total
-                from
-                    product_template as pt,
-                    product_product as pp,
-                    pos_order_line as pol,
-                    pos_order as po
-                where
-                    pol.product_id = pp.product_tmpl_id and
-                    pp.product_tmpl_id = pt.id and
-                    po.id = pol.order_id
-
-                group by
-                    pt.name,
-                    pt.list_price,
-                    pt.standard_price,
-                    po.user_id,
-                    to_char(date_trunc('month',po.date_order),'YYYY-MM-DD')::text
-
-                )
-        """)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

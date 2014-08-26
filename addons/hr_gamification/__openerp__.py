@@ -35,7 +35,7 @@ Badge received are displayed on the user profile.
         'security/gamification_security.xml',
         'wizard/grant_badge.xml',
         'views/gamification.xml',
+        'views/hr_gamification.xml',
     ],
-    'js': ['static/src/js/gamification.js'],
     'auto_install': True,
 }

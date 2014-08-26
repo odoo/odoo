@@ -38,26 +38,6 @@
         <workflow action="order_confirm" model="sale.order" ref="sale.sale_order_1"/>
         <workflow action="order_confirm" model="sale.order" ref="sale.sale_order_5"/>
         
-        <record id="sale.sale_order_line_4" model="sale.order.line">
-            <field name="type">make_to_order</field>
-        </record>
-        
-        <record id="sale.sale_order_line_5" model="sale.order.line">
-             <field name="type">make_to_order</field>
-        </record>
-        
-        <record id="sale.sale_order_line_6" model="sale.order.line">
-            <field name="type">make_to_order</field>
-        </record>
-        
-        <record id="sale.sale_order_line_8" model="sale.order.line">
-             <field name="type">make_to_order</field>
-        </record>
-
-        <record id="sale.advance_product_0" model="product.product">
-            <field name="supply_method">produce</field>
-        </record>
-
         <!-- Run all schedulers -->
         <function model="procurement.order" name="run_scheduler"/>
         

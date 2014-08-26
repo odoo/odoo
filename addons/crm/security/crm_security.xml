@@ -24,21 +24,13 @@
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
-    <record id="base.group_mono_salesteams" model="res.groups">
-        <field name="name">Do Not Use Sales Teams</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-    <record id="base.group_user" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('base.group_mono_salesteams'))]"/>
-    </record>
-
-    <record id="base.group_multi_salesteams" model="res.groups">
-        <field name="name">Manage Sales Teams</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-    
     <record id="group_fund_raising" model="res.groups">
         <field name="name">Manage Fund Raising</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_scheduled_calls" model="res.groups">
+        <field name="name">Show Scheduled Calls Menu</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 

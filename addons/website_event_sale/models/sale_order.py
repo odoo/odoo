@@ -1,22 +1,46 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import osv
 from openerp import SUPERUSER_ID
-from openerp.addons.web.http import request
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
+# defined for access rules
+class sale_order(osv.Model):
+    _inherit = "sale.order"
 
-class sale_order_line(osv.osv):
-    _inherit = "sale.order.line"
+    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None, **kwargs):
+        line_ids = super(sale_order, self)._cart_find_product_line(cr, uid, ids, product_id, line_id, context=context)
+        if line_id:
+            return line_ids
+        for so in self.browse(cr, uid, ids, context=context):
+            domain = [('id', 'in', line_ids)]
+            if context.get("event_ticket_id"):
+                domain += [('event_ticket_id', '=', context.get("event_ticket_id"))]
+            return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
 
-    def _recalculate_product_values(self, cr, uid, ids, product_id=0, fiscal_position=False, context=None):
-        if not ids:
-            return super(sale_order_line, self)._recalculate_product_values(cr, uid, ids, product_id, fiscal_position=fiscal_position, context=context)
+    def _website_product_id_change(self, cr, uid, ids, order_id, product_id, line_id=None, context=None):
+        values = super(sale_order,self)._website_product_id_change(cr, uid, ids, order_id, product_id, line_id=line_id, context=None)
 
-        order_line = self.browse(cr, SUPERUSER_ID, ids[0], context=context)
-        assert order_line.order_id.website_session_id == request.session['website_session_id']
+        event_ticket_id = None
+        if context.get("event_ticket_id"):
+            event_ticket_id = context.get("event_ticket_id")
+        elif line_id:
+            line = self.pool.get('sale.order.line').browse(cr, SUPERUSER_ID, line_id, context=context)
+            if line.event_ticket_id:
+                event_ticket_id = line.event_ticket_id.id
+        else:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            if product.event_ticket_ids:
+                event_ticket_id = product.event_ticket_ids[0].id
 
-        product = product_id and self.pool.get('product.product').browse(cr, uid, product_id, context=context) or order_line.product_id
-        res = super(sale_order_line, self)._recalculate_product_values(cr, uid, ids, product.id, fiscal_position=fiscal_position, context=context)
-        if product.event_type_id and order_line.event_ticket_id and order_line.event_ticket_id.price != product.lst_price:
-            res.update({'price_unit': order_line.event_ticket_id.price})
+        if event_ticket_id:
+            ticket = self.pool.get('event.event.ticket').browse(cr, uid, event_ticket_id, context=context)
+            if product_id != ticket.product_id.id:
+                raise osv.except_osv(_('Error!'),_("The ticket doesn't match with this product."))
 
-        return res
+            values['product_id'] = ticket.product_id.id
+            values['event_id'] = ticket.event_id.id
+            values['event_ticket_id'] = ticket.id
+            values['price_unit'] = ticket.price
+            values['name'] = "%s: %s" % (ticket.event_id.name, ticket.name)
+
+        return values

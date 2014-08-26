@@ -29,6 +29,24 @@
   -ms-filter: "alpha(opacity=50)";
 }
 
+#cke_1_top {
+  padding: 0;
+}
+
+#cke_wrapwrap {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+#cke_wrapwrap .cke_button {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#cke_wrapwrap .cke_combo_button {
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
 /* ---- OpenERP Style ---- {{{ */
 .oe_website_editorbar {
   position: fixed;
@@ -115,6 +133,26 @@
   height: 16px !important;
 }
 
+#website-top-edit {
+  width: 100%;
+}
+#website-top-edit > ul > li {
+  margin: 0;
+}
+
+#website-top-navbar {
+  min-height: 34px;
+  height: 34px;
+}
+#website-top-navbar form {
+  margin: 0;
+}
+#website-top-navbar form button, #website-top-navbar form a {
+  padding: 4px 8px 4px 8px;
+  margin-top: 2px;
+  font-size: 13px;
+}
+
 /* ---- EDITOR BAR ---- {{{ */
 table.editorbar-panel {
   cursor: pointer;
@@ -125,6 +163,23 @@ table.editorbar-panel td {
 }
 table.editorbar-panel td.selected {
   background-color: #b1c9d9;
+}
+
+.link-style .dropdown > .btn {
+  min-width: 160px;
+}
+.link-style .link-style {
+  display: none;
+}
+.link-style li {
+  text-align: center;
+}
+.link-style li label {
+  width: 100px;
+  margin: 0 5px;
+}
+.link-style .col-sm-2 > * {
+  line-height: 2em;
 }
 
 /* ---- TRANSLATIONS ---- {{{ */
@@ -470,15 +525,16 @@ ul.oe_menu_editor .disclose {
 .oe_ace_view_editor {
   position: fixed;
   right: 0;
-  z-index: 1000;
+  z-index: 1001;
   height: 100%;
+  background: #2f3129;
+  color: white;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title {
   width: 100%;
   padding-top: 0;
   padding-left: 0;
   height: 30px;
-  background: #2f3129;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title .oe_view_list {
   width: 50%;
@@ -496,12 +552,15 @@ ul.oe_menu_editor .disclose {
 }
 .oe_ace_view_editor .ace_editor {
   position: absolute;
-  top: 30px;
+  top: 50px;
   right: 0;
   left: 0;
 }
 .oe_ace_view_editor .ace_editor .ace_gutter {
   cursor: ew-resize;
+}
+.oe_ace_view_editor #ace-view-id {
+  padding: 0 1em;
 }
 .oe_ace_view_editor.oe_ace_open {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=97);
@@ -511,17 +570,4 @@ ul.oe_menu_editor .disclose {
   z-index: -1000;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
-}
-
-/* ---- EDITOR TOUR ---- {{{ */
-div.tour-backdrop {
-  z-index: 2009;
-}
-
-.popover.tour {
-  z-index: 2010;
-}
-
-.popover.fixed {
-  position: fixed;
 }

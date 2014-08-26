@@ -32,11 +32,7 @@
         'views/website_partner_view.xml',
         'data/website_data.xml',
     ],
-    'demo': ['website_partner_demo.xml'],
-    'css': [
-    ],
-    'js': [
-    ],
+    'demo': ['data/demo.xml'],
     'qweb': [
     ],
     'installable': True,

@@ -25,7 +25,7 @@ class sale_journal_invoice_type(osv.osv):
     _name = 'sale_journal.invoice.type'
     _description = 'Invoice Types'
     _columns = {
-        'name': fields.char('Invoice Type', size=64, required=True),
+        'name': fields.char('Invoice Type', required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the invoice type without removing it."),
         'note': fields.text('Note'),
         'invoicing_method': fields.selection([('simple', 'Non grouped'), ('grouped', 'Grouped')], 'Invoicing method', required=True),
@@ -56,18 +56,6 @@ class res_partner(osv.osv):
 
 class picking(osv.osv):
     _inherit = "stock.picking"
-    _columns = {
-        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
-    }
-
-class stock_picking_in(osv.osv):
-    _inherit = "stock.picking.in"
-    _columns = {
-        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
-    }
-
-class stock_picking_out(osv.osv):
-    _inherit = "stock.picking.out"
     _columns = {
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
     }

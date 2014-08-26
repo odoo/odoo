@@ -18,7 +18,7 @@
             <button type="button" class="oe_kanban_button_new oe_highlight">
                 <t t-esc="widget.options.create_text || _t('Create')"/>
             </button>
-            <span class="oe_alternative" style="display: none">
+            <span t-if="widget.is_action_enabled('group_create')" class="oe_alternative" style="display: none">
                 <span class="oe_fade">or</span>
                 <div class="oe_bounce_container">
                     <a href="#" class="oe_bold oe_kanban_add_column">Add a new column</a>
@@ -30,6 +30,7 @@
 <t t-name="KanbanView.group_header">
     <td class="oe_kanban_group_header">
         <t t-if="widget.view.group_by">
+            <t t-set="parent" t-value="(widget.getParent())"/>
             <div class="oe_kanban_header oe_semantic_html_override">
                 <t t-if="widget.view._is_quick_create_enabled()">
                     <div class="oe_kanban_add oe_e" title="Quick create">]</div>
@@ -44,8 +45,8 @@
                     <ul class="oe_dropdown_menu oe_kanban_group_dropdown">
                         <li><a data-action="toggle_fold" href="#">Fold</a></li>
                         <t t-if="widget.view.grouped_by_m2o and widget.value">
-                            <li><a data-action="edit" href="#">Edit</a></li>
-                            <li><a data-action="delete" href="#">Delete</a></li>
+                            <li t-if="parent &amp;&amp; parent.is_action_enabled('group_edit')"><a data-action="edit" href="#">Edit</a></li>
+                            <li t-if="parent &amp;&amp; parent.is_action_enabled('group_delete')"><a data-action="delete" href="#">Delete</a></li>
                         </t>
                     </ul>
                 </div>
@@ -56,7 +57,7 @@
                         </div>
                         <div class="oe_kanban_group_title_text" t-att-title="widget.title"><t t-esc="widget.title"/></div>
                     </div>
-                    <ul class="oe_kanban_aggregates">
+                    <ul t-if="widget.group.get('length') &gt; 0" class="oe_kanban_aggregates">
                         <li t-foreach="widget.aggregates" t-as="aggregate">
                             <span><t t-esc="aggregate"/>:</span> <t t-esc="aggregate_value"/>
                         </li>

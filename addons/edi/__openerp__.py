@@ -35,10 +35,11 @@ documentation at http://doc.openerp.com.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'email_template'],
+    'data' : [
+        'views/edi.xml',
+    ],
     'icon': '/edi/static/src/img/knowledge.png',
     'test': ['test/edi_partner_test.yml'],
-    'js': ['static/src/js/edi.js'],
-    'css': ['static/src/css/edi.css'],
     'qweb': ['static/src/xml/*.xml'],
     'auto_install': False,
 }

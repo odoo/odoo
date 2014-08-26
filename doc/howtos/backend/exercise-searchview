@@ -1,0 +1,51 @@
+# HG changeset patch
+# Parent 93a45ab8dd0a76c131cb5eeca6e44b71dca9f100
+
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -1,16 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <openerp>
+     <data>
+-        <record model="ir.ui.view" id="course_search_view">
+-            <field name="name">course.search</field>
+-            <field name="model">openacademy.course</field>
+-            <field name="arch" type="xml">
+-                <search>
+-                    <field name="name"/>
+-                    <field name="description"/>
+-                </search>
+-            </field>
+-        </record>
+         <record model="ir.ui.view" id="course_form_view">
+             <field name="name">course.form</field>
+             <field name="model">openacademy.course</field>
+@@ -49,6 +39,19 @@
+                 </tree>
+             </field>
+         </record>
++        <record model="ir.ui.view" id="course_search_view">
++            <field name="name">course.search</field>
++            <field name="model">openacademy.course</field>
++            <field name="arch" type="xml">
++                <search string="Session Search">
++                    <filter string="My Courses" icon="terp-partner"
++                            name="my_courses" domain="[('responsible_id', '=', uid)]"
++                            help="My own sessions"/>
++                    <field name="name"/>
++                    <field name="description"/>
++                </search>
++            </field>
++        </record>
+ 
+         <!-- window action -->
+         <!--
+@@ -60,6 +63,7 @@
+             <field name="res_model">openacademy.course</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
++            <field name="search_view_id" ref="course_search_view"/>
+             <field name="help" type="html">
+                 <p class="oe_view_nocontent_create">Create the first course
+                 </p>

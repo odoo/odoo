@@ -1,0 +1,224 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* project_mrp
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2010-08-03 09:31+0000\n"
+"Last-Translator: Raimon Esteve (www.zikzakmedia.com) "
+"<resteve@zikzakmedia.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-04-22 07:01+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_procuretasktask0
+msgid "For each product, on type service and on order"
+msgstr "Per cada producte, sobre tipus servei i sobre ordre"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_createtask0
+msgid "Product type is service, then its creates the task."
+msgstr "Tipus de producte és servei, després es crea la tasca."
+
+#. module: project_mrp
+#: code:addons/project_mrp/project_procurement.py:92
+#, python-format
+msgid "Task created"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_saleordertask0
+msgid "In case you sell services on sales order"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_mrptask0
+msgid "A task is created to provide the service."
+msgstr "Es crea una tasca per proveir el servei."
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_product_product
+msgid "Product"
+msgstr "Producte"
+
+#. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sales Order Task"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_procuretask0
+msgid "if product type is 'service' then it creates the task."
+msgstr "si tipus de producte és 'servei' aleshores es crea la tasca."
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_ordertask0
+msgid "Order Task"
+msgstr "Tasca ordre"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_procuretask0
+msgid "Procurement Task"
+msgstr "Tasca proveïment"
+
+#. module: project_mrp
+#: field:procurement.order,sale_line_id:0
+msgid "Sales order line"
+msgstr ""
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_project_task
+#: model:process.node,name:project_mrp.process_node_mrptask0
+#: model:process.node,name:project_mrp.process_node_procuretasktask0
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "Tasca"
+
+#. module: project_mrp
+#: view:product.product:0
+msgid ""
+"will be \n"
+"                        created to follow up the job to do. This task will "
+"appear\n"
+"                        in the project related to the contract of the sales "
+"order."
+msgstr ""
+
+#. module: project_mrp
+#: view:product.product:0
+msgid "When you sell this service to a customer,"
+msgstr ""
+
+#. module: project_mrp
+#: field:product.product,project_id:0
+msgid "Project"
+msgstr "Projecte"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_procurement_order
+#: field:project.task,procurement_id:0
+msgid "Procurement"
+msgstr "Proveïment"
+
+#. module: project_mrp
+#: view:product.product:0
+msgid "False"
+msgstr ""
+
+#. module: project_mrp
+#: code:addons/project_mrp/project_procurement.py:86
+#, python-format
+msgid "Task created."
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_ordertask0
+msgid "If procurement method is Make to order and supply method is produce"
+msgstr ""
+"Si mètode proveïment és obtenir sota comanda i mètode subministro és produir"
+
+#. module: project_mrp
+#: field:project.task,sale_line_id:0
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_createtask0
+msgid "Create Task"
+msgstr "Crea tasca"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: project_mrp
+#: view:project.task:0
+msgid "Order Line"
+msgstr ""
+
+#. module: project_mrp
+#: view:product.product:0
+msgid "a task"
+msgstr ""
+
+#~ msgid "If procure method is Make to order and supply method is produce"
+#~ msgstr ""
+#~ "si mètode de proveïment és Fabricar sota comanda i mètode de subministrament "
+#~ "és Produir"
+
+#~ msgid "Procure Task"
+#~ msgstr "Tasca proveïment"
+
+#~ msgid "Sale Order Task"
+#~ msgstr "Tasca comanda de venda"
+
+#~ msgid "In case you sell services on sale order"
+#~ msgstr "En cas que veneu serveis sobre comanda de venda"
+
+#~ msgid "Project Management - MRP and Sale Integration"
+#~ msgstr "Gestió de projectes - Integració amb MRP i vendes"
+
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "Error! No es poden crear tasques recursivas."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Error: Codi EAN no vàlid"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module creates a link between procurement orders\n"
+#~ "containing \"service\" lines and project management tasks.\n"
+#~ "\n"
+#~ "When installed, this module will automatically create a new task\n"
+#~ "for each procurement order line, when the corresponding product\n"
+#~ "meets the following characteristics:\n"
+#~ "  * Type = Service\n"
+#~ "  * Procurement method (Order fulfillment) = MTO (make to order)\n"
+#~ "  * Supply/Procurement method = Produce\n"
+#~ "\n"
+#~ "The new task is created outside of any existing project, but\n"
+#~ "can be added to a project manually.\n"
+#~ "\n"
+#~ "When the project task is completed or cancelled, the workflow of the "
+#~ "corresponding\n"
+#~ "procurement line is updated accordingly.\n"
+#~ "\n"
+#~ "This module is useful to be able to invoice services based on tasks\n"
+#~ "automatically created via sale orders.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Aquest mòdul crea un enllaç entre ordres de proveïment\n"
+#~ "contenint línies de \"servei\" i tasques de gestió de projectes.\n"
+#~ "\n"
+#~ "Quan s'instal·la, aquest mòdul crearà una nova tasca per cada línia\n"
+#~ "d'ordre de proveïment, quan el producte corresponent\n"
+#~ "compleixi les següents característiques:\n"
+#~ "  * Tipus = Servei\n"
+#~ "  * Mètode proveïment (cobrir la comanda) = OSC (obtenir sota comanda)\n"
+#~ "  * Mètode subministrament/proveïment = Produir\n"
+#~ "\n"
+#~ "La nova tasca es crea fora dels projectes existents, però\n"
+#~ "pot ser afegida a un projecte manualment.\n"
+#~ "\n"
+#~ "Quan la tasca de projecte es completa o cancel·la, conseqüentment\n"
+#~ "s'actualitza el flux de treball de la corresponent línia de proveïment.\n"
+#~ "\n"
+#~ "Aquest mòdul és útil per poder facturar serveis basats en tasques creades\n"
+#~ "automàticament a través de comandes de venda.\n"
+#~ "\n"
+
+#~ msgid "Procurement and Project Management integration"
+#~ msgstr "Integració de proveïments i gestió de projectes"
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr ""
+#~ "Error ! La data final de la tasca ha de ser major que la data d'inici"

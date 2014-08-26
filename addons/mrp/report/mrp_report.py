@@ -28,7 +28,7 @@ class report_workcenter_load(osv.osv):
     _auto = False
     _log_access = False
     _columns = {
-        'name': fields.char('Week', size=64, required=True),
+        'name': fields.char('Week', required=True),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'cycle': fields.float('Number of Cycles'),
         'hour': fields.float('Number of Hours'),
@@ -61,8 +61,9 @@ class report_mrp_inout(osv.osv):
     _log_access = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.char('Week', size=64, required=True),
+        'date': fields.char('Week', required=True),
         'value': fields.float('Stock value', required=True, digits=(16,2)),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
     def init(self, cr):
@@ -72,14 +73,15 @@ class report_mrp_inout(osv.osv):
                     min(sm.id) as id,
                     to_char(sm.date,'YYYY:IW') as date,
                     sum(case when (sl.usage='internal') then
-                        pt.standard_price * sm.product_qty
+                        sm.price_unit * sm.product_qty
                     else
                         0.0
                     end - case when (sl2.usage='internal') then
-                        pt.standard_price * sm.product_qty
+                        sm.price_unit * sm.product_qty
                     else
                         0.0
-                    end) as value
+                    end) as value, 
+                    sm.company_id
                 from
                     stock_move sm
                 left join product_product pp
@@ -91,9 +93,9 @@ class report_mrp_inout(osv.osv):
                 left join stock_location sl2
                     on ( sl2.id = sm.location_dest_id)
                 where
-                    sm.state in ('waiting','confirmed','assigned')
+                    sm.state = 'done'
                 group by
-                    to_char(sm.date,'YYYY:IW')
+                    to_char(sm.date,'YYYY:IW'), sm.company_id
             )""")
 
 

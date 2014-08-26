@@ -20,7 +20,5 @@
 ##############################################################################
 
 import hr_attendance_error
-import hr_attendance_byweek
-import hr_attendance_bymonth
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

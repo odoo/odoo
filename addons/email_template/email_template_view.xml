@@ -5,24 +5,29 @@
             <field name="name">email.template.form</field>
             <field name="model">email.template</field>
             <field name="arch" type="xml">
-                <form string="Templates" version="7.0">
+                <form string="Templates">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/><h1><field name="name" required="1"/></h1>
                             <group>
-                                <field name="model_id" required="1" on_change="onchange_model_id(model_id)"/>
+                                <field name="model_id" required="1" on_change="onchange_model_id(model_id)" options="{'no_create': True}"/>
                                 <field name="model" invisible="1"/>
                             </group>
                         </div>
                         <div class="oe_right oe_button_box" name="buttons">
                             <field name="ref_ir_act_window" invisible="1"/>
-                            <button name="create_action" string="Add context action" type="object"
-                                    attrs="{'invisible':[('ref_ir_act_window','!=',False)]}"
-                                    help="Display an option on related documents to open a composition wizard with this template"/>
-                            <button name="unlink_action" string="Remove context action" type="object" 
+                            <button class="oe_inline oe_stat_button" name="create_action" type="object"
+                                    attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-plus"
+                                    help="Display an option on related documents to open a composition wizard with this template">
+                                <div>Add<br/>Context Action</div>
+                            </button>
+                            <button name="unlink_action" type="object" 
+                                    class="oe_stat_button" icon="fa-minus"
                                     attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
-                                    help="Remove the contextual action to use this template on related documents"/>
-                            <button name="%(wizard_email_template_preview)d" string="Preview"
+                                    help="Remove the contextual action to use this template on related documents" widget="statinfo">
+                                <div>Remove<br/>Context Action</div>
+                            </button>
+                            <button class="oe_inline oe_stat_button" name="%(wizard_email_template_preview)d" icon="fa-search-plus" string="Preview"
                                     type="action" target="new"
                                     context="{'template_id':active_id}"/>
                         </div>
