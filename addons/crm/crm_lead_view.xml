@@ -567,6 +567,9 @@
                         <filter string="Country" context="{'group_by':'country_id'}" />
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Campaign" domain="[]" context="{'group_by':'campaign_id'}"/>
+                        <filter string="Channel" domain="[]" context="{'group_by':'medium_id'}"/>
+                        <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>
                         <filter string="Expected Closing" context="{'group_by':'date_deadline'}"/>
