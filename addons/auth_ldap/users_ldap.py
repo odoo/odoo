@@ -238,7 +238,7 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'ldaps': fields.one2many(
-            'res.company.ldap', 'company', 'LDAP Parameters'),
+            'res.company.ldap', 'company', 'LDAP Parameters', groups="base.group_system"),
     }
 res_company()
 
