@@ -1,3 +1,4 @@
+@charset "utf-8";
 /* ---- Default Styles ---- */
 .oe_product {
   border: 1px solid rgba(100, 100, 100, 0.2);
@@ -341,21 +342,10 @@ label.css_attribute_color.css_not_available {
 }
 
 /* ---- Publish managment and options ---- */
-#products_grid .css_options {
-  display: none;
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  z-index: 10;
-}
-#products_grid .css_options .dropdown {
-  position: relative;
-  left: -50%;
-}
-#products_grid .css_options .dropdown [name="size"] table {
+.oe_overlay_options .dropdown ul[name="size"] table {
   margin-left: 20px;
 }
-#products_grid .css_options .dropdown [name="size"] td {
+.oe_overlay_options .dropdown ul[name="size"] td {
   margin: 0;
   padding: 0;
   width: 20px;
@@ -363,18 +353,14 @@ label.css_attribute_color.css_not_available {
   border: 1px #dddddd solid;
   cursor: pointer;
 }
-#products_grid .css_options .dropdown [name="size"] td.selected {
+.oe_overlay_options .dropdown ul[name="size"] td.selected {
   background-color: #b1d4f1;
 }
-#products_grid .css_options .dropdown [name="size"] table.oe_hover td.selected {
+.oe_overlay_options .dropdown ul[name="size"] table.oe_hover td.selected {
   background-color: transparent;
 }
-#products_grid .css_options .dropdown [name="size"] table.oe_hover td.select {
+.oe_overlay_options .dropdown ul[name="size"] table.oe_hover td.select {
   background-color: #b1d4f1;
-}
-
-.cke_editable #products_grid .oe_product_cart:hover > .css_options {
-  display: block;
 }
 
 /* Wizard */

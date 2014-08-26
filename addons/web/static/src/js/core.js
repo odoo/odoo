@@ -311,9 +311,8 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
             self.module_list = all_modules;
 
             var loaded = self.load_translations();
-            var datejs_locale = "/web/static/lib/datejs/globalization/" + self.user_context.lang.replace("_", "-") + ".js";
-
-            var file_list = [ datejs_locale ];
+            var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
+            var file_list = [ locale ];
             if(to_load.length) {
                 loaded = $.when(
                     loaded,
