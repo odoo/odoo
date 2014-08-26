@@ -585,7 +585,7 @@ class mrp_production(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'product_qty': lambda *a: 1.0,
         'user_id': lambda self, cr, uid, c: uid,
-        'name': lambda x, y, z, c: x.pool.get('ir.sequence').next_by_code(y, z, 'mrp.production') or '/',
+        'name': lambda obj, cr, uid, context: '/',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
         'location_src_id': _src_id_default,
         'location_dest_id': _dest_id_default
@@ -611,8 +611,16 @@ class mrp_production(osv.osv):
         if context is None:
             context = {}
         product_obj = self.pool.get('product.product')
+        seq_obj = self.pool.get('ir.sequence')
         if 'product_id' in values and not 'product_uom' in values:
             values['product_uom'] = product_obj.browse(cr, uid, values.get('product_id'), context=context).uom_id.id
+        if values.get('name', '/') == '/':
+            values['name'] = seq_obj.next_by_code(cr, uid, 'mrp.production') or '/'
+        elif values.get('name'):
+            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+            prefix_name = seq_obj.search_read(cr, uid, [('company_id', '=', company_id), ('code', '=', 'mrp.production')], ['prefix'], context=context)
+            if prefix_name:
+                values['name'] = prefix_name[0]['prefix'] + values['name']
         return super(mrp_production, self).create(cr, uid, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
