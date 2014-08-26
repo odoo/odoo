@@ -22,6 +22,7 @@
 import logging
 from urllib import quote as quote
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import float_repr
@@ -75,7 +76,7 @@ class acquirer(osv.Model):
             link = '#action=account.action_account_config'
             payment_header = _('You can finish the configuration in the <a href="%s">Bank&Cash settings</a>') % link
             amount = _('No online payment acquirers configured')
-            group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
+            group_ids = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).groups_id
             if any(group.is_portal for group in group_ids):
                 return ''
         else:
