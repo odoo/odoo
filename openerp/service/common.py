@@ -7,6 +7,8 @@ import openerp.tools
 
 import security
 
+from openerp.tools.translate import _
+
 _logger = logging.getLogger(__name__)
 
 RPC_VERSION_1 = {
