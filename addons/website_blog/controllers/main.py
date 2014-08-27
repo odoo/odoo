@@ -37,7 +37,7 @@ class WebsiteBlog(http.Controller):
         groups = blog_post_obj.read_group(request.cr, request.uid, [], ['name', 'create_date'],
             groupby="create_date", orderby="create_date asc", context=request.context)
         for group in groups:
-            group['date'] = "%s_%s" % (group['__domain'][0][2], group['__domain'][1][2])
+            group['date'] = "%s_%s" % (group['__domain'][0][2][:10], group['__domain'][1][2][:10])
         return groups
 
     @http.route([
