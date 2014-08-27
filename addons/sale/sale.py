@@ -862,6 +862,8 @@ class sale_order_line(osv.osv):
                 flag=False,  # Force name update
                 context=context
             )['value']
+            if defaults.get('tax_id'):
+                defaults['tax_id'] = [[6, 0, defaults['tax_id']]]
             values = dict(defaults, **values)
         return super(sale_order_line, self).create(cr, uid, values, context=context)
 
