@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<openerp>
+  <data>
+        <!-- Tree View -->
+        <record id="view_forum_seo_list" model="ir.ui.view">
+            <field name="name">forum.seo.list</field>
+            <field name="model">forum.seo</field>
+            <field name="arch" type="xml">
+                <tree string="Forum SEO">
+                    <field name="keyword"/>
+                    <field name="replacement_word"/>
+                    <field name="url" widget="url"/>
+                </tree>  
+            </field>
+        </record>
+        
+        <!-- Form View -->
+        <record id="view_forum_seo_form" model="ir.ui.view">
+            <field name="name">forum.seo.form</field>
+            <field name="model">forum.seo</field>
+            <field name="arch" type="xml">
+                <form string="Forum SEO">
+                    <sheet>
+                        <group>
+                            <label for="keyword"/>
+                            <h2><field name="keyword"/></h2>
+                            <label for="replacement_word"/>
+                            <h3><field name="replacement_word"/></h3>
+                            <label for="url"/>                            
+                            <h3><field name="url" widget="url"/></h3>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_forum_seo_search" model="ir.ui.view">
+            <field name="name">forum.seo.search</field>
+            <field name="model">forum.seo</field>
+            <field name="arch" type="xml">
+                <search string="Search in SEO Keyword">
+                    <field name="keyword" string="Content" filter_domain="['|', ('keyword', 'ilike', self), ('replacement_word', 'ilike', self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="forum_seo_action" model="ir.actions.act_window">
+            <field name="name">Forum SEO</field>
+            <field name="res_model">forum.seo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_forum_seo_list"/>
+            <field name="search_view_id" ref="view_forum_seo_search"/>
+        </record>
+
+        <menuitem id="menu_forum" parent="website_forum.menu_website_forum" name="Forum SEO" action="forum_seo_action" sequence="10"/>
+  </data>
+ </openerp>
