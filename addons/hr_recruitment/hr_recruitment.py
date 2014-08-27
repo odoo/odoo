@@ -96,9 +96,11 @@ class hr_recruitment_stage(osv.osv):
     _description = "Stage of Recruitment"
     _order = 'sequence'
     _columns = {
-        'name': fields.char('Name', required=True, translate=True),
+        'name': fields.char('Stage Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
-        'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
+        'case_default': fields.boolean('Default for New Recruitment',
+                        help="If you check this field, this stage will be proposed by default on each new Recruitment. It will not assign this stage to existing Recruitments."),
+        'job_ids': fields.many2many('hr.job', 'job_stage_rel', 'stage_id', 'job_id', 'Job Stages'),
         'requirements': fields.text('Requirements'),
         'template_id': fields.many2one('mail.template', 'Use template', help="If set, a message is posted on the applicant using the template when the applicant is set to the stage."),
         'legend_priority': fields.text(
@@ -110,6 +112,7 @@ class hr_recruitment_stage(osv.osv):
     }
     _defaults = {
         'sequence': 1,
+        'job_ids': lambda self, cr, uid, context=None: [context.get('default_job_id')] if context.get('default_job_id') else None,
     }
 
 class hr_recruitment_degree(osv.osv):
@@ -140,9 +143,24 @@ class hr_applicant(osv.Model):
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        department_id = self._get_default_department_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
+        job_id = self._resolve_job_id_from_context(cr, uid, context=context) or False
+        return self.stage_find(cr, uid, [], job_id, [('fold', '=', False)], context=context)
 
+    def _resolve_job_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of job based on the value of 'default_job_id'
+            context key, or None if it cannot be resolved to a single
+            job.
+        """
+        if context is None:
+            context = {}
+        if isinstance(context.get('default_job_id'),(int, long)):
+            return context.get('default_job_id')
+        if isinstance(context.get('default_job_id'), basestring):
+            job_name = context['default_job_id']
+            job_ids = self.pool.get('hr.job').name_search(cr, uid, name=job_name, context=context)
+            if len(job_ids) == 1:
+                return int(job_ids[0][0])
+        return None
     def _resolve_department_id_from_context(self, cr, uid, context=None):
         """ Returns ID of department based on the value of 'default_department_id'
             context key, or None if it cannot be resolved to a single
@@ -179,11 +197,13 @@ class hr_applicant(osv.Model):
         # - ('id', 'in', 'ids'): add columns that should be present
         # - OR ('department_id', '=', False), ('fold', '=', False): add default columns that are not folded
         # - OR ('department_id', 'in', department_id), ('fold', '=', False) if department_id: add department columns that are not folded
-        department_id = self._resolve_department_id_from_context(cr, uid, context=context)
+        job_id = self._resolve_job_id_from_context(cr, uid, context=context)
         search_domain = []
-        if department_id:
-            search_domain += ['|', ('department_id', '=', department_id)]
-        search_domain += ['|', ('id', 'in', ids), ('department_id', '=', False)]
+        if job_id:
+            search_domain += ['|', ('job_ids', '=', job_id)]
+        else:
+            search_domain += ['|', ('case_default', '=', True)]
+        search_domain += [('id', 'in', ids)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
@@ -234,7 +254,7 @@ class hr_applicant(osv.Model):
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility='onchange',
-                        domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
+                        domain="[('job_ids', '=', job_id)]", copy=False),
         'last_stage_id': fields.many2one('hr.recruitment.stage', 'Last Stage',
                                          help='Stage of the applicant before being in the current stage. Used for lost cases analysis.'),
         'categ_ids': fields.many2many('hr.applicant.category', string='Tags'),
@@ -296,23 +316,18 @@ class hr_applicant(osv.Model):
         action['res_id'] = applicant and applicant.emp_id.id or False
         return action
 
-    def onchange_job(self, cr, uid, ids, job_id=False, context=None):
+    def onchange_job(self, cr, uid, ids, job_id=False, stage_id=False, context=None):
         department_id = False
         user_id = False
+        stage_id = False
         if job_id:
             job_record = self.pool.get('hr.job').browse(cr, uid, job_id, context=context)
             department_id = job_record and job_record.department_id and job_record.department_id.id or False
             user_id = job_record and job_record.user_id and job_record.user_id.id or False
-        return {'value': {'department_id': department_id, 'user_id': user_id}}
-
-    def onchange_department_id(self, cr, uid, ids, department_id=False, stage_id=False, context=None):
-        values = {}
-        if not stage_id:
-            values['stage_id'] = self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
-        if department_id:
-            department = self.pool['hr.department'].browse(cr, uid, department_id, context=context)
-            values['company_id'] = department.company_id.id
-        return {'value': values}
+        if stage_id:
+            return {'value': {'department_id': department_id, 'user_id': user_id, 'stage_id':stage_id}}
+        stage_id = self.stage_find(cr, uid, [], job_id, [('fold', '=', False)], context=context)
+        return {'value': {'department_id': department_id, 'user_id': user_id, 'stage_id':stage_id}}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         data = {'partner_phone': False,
@@ -333,30 +348,25 @@ class hr_applicant(osv.Model):
             return {'value': {'date_closed': fields.datetime.now()}}
         return {'value': {'date_closed': False}}
 
-    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+    def stage_find(self, cr, uid, applicants, job_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
-            - department_id: if set, stages must belong to this section or
+            - job_id: if set, stages must belong to this section or
               be a default case
         """
-        if isinstance(cases, (int, long)):
-            cases = self.browse(cr, uid, cases, context=context)
-        # collect all section_ids
-        department_ids = []
-        if section_id:
-            department_ids.append(section_id)
-        for case in cases:
-            if case.department_id:
-                department_ids.append(case.department_id.id)
-        # OR all section_ids and OR with case_default
+        if isinstance(applicants, (int, long)):
+            applicants = self.browse(cr, uid, applicants, context=context)
+        job_ids = set([applicant.job_id.id for applicant in applicants if applicant.job_id])
+        if job_id:
+            job_ids.add(job_id)
+        # OR all job_id and OR with applicant_default
         search_domain = []
-        if department_ids:
-            search_domain += ['|', ('department_id', 'in', department_ids)]
-        search_domain.append(('department_id', '=', False))
+        if job_ids:
+            search_domain = [('job_ids', 'in', list(job_ids))]
         # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found
-        stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, search_domain, order=order, context=context)
+        stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, search_domain, order=order, limit=1, context=context)
         if stage_ids:
             return stage_ids[0]
         return False
@@ -469,9 +479,6 @@ class hr_applicant(osv.Model):
         context['mail_create_nolog'] = True
         if vals.get('department_id') and not context.get('default_department_id'):
             context['default_department_id'] = vals.get('department_id')
-        if vals.get('job_id') or context.get('default_job_id'):
-            job_id = vals.get('job_id') or context.get('default_job_id')
-            vals.update(self.onchange_job(cr, uid, [], job_id, context=context)['value'])
         if vals.get('user_id'):
             vals['date_open'] = fields.datetime.now()
         if 'stage_id' in vals:
@@ -637,6 +644,7 @@ class hr_job(osv.osv):
         }
 
     _columns = {
+        'stage_ids': fields.many2many('hr.recruitment.stage', 'job_stage_rel', 'job_id', 'stage_id', 'Job Stages'),
         'survey_id': fields.many2one('survey.survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Email alias for this job position. New emails will automatically "
@@ -655,8 +663,13 @@ class hr_job(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id.partner_id.id
 
+    def _get_type_common(self, cr, uid, context):
+        ids = self.pool['hr.recruitment.stage'].search(cr, uid, [('case_default','=',1)], context=context)
+        return ids
+
     _defaults = {
-        'address_id': _address_get
+        'address_id': _address_get,
+        'stage_ids': _get_type_common,
     }
 
     def _auto_init(self, cr, context=None):
