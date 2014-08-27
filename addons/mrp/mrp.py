@@ -671,6 +671,12 @@ class mrp_production(osv.osv):
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
             if production.picking_id and production.picking_id.state == 'done':
                 ctx = {'active_id':production.picking_id.id}
+                for move in production.move_lines2:
+                    move_obj.copy(cr, uid, move.id, {
+                                'name':_('%s-return') % (move.name),
+                                'location_id': move.location_dest_id.id, 
+                                'location_dest_id': move.location_id.id,
+                                'state':'done'})
                 return_move_id = return_move_obj.create(cr, uid, {}, ctx)
                 return_move_obj.create_returns(cr, uid, [return_move_id], ctx)
         self.write(cr, uid, ids, {'state': 'cancel'})
