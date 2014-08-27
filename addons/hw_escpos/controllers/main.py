@@ -45,6 +45,7 @@ class EscposDriver(Thread):
         Thread.__init__(self)
         self.queue = Queue()
         self.lock  = Lock()
+        self.lock2 = Lock()
         self.status = {'status':'connecting', 'messages':[]}
 
     def supported_devices(self):
@@ -157,6 +158,7 @@ class EscposDriver(Thread):
             try:
                 timestamp, task, data = self.queue.get(True)
 
+                self.lock2.acquire()
                 printer = self.get_escpos_printer()
 
                 if printer == None:
@@ -183,6 +185,10 @@ class EscposDriver(Thread):
                 self.set_status('error', str(e))
                 errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
                 _logger.error(errmsg);
+            finally:
+                if printer != None:
+                    del printer
+                self.lock2.release()
 
     def push_task(self,task, data = None):
         self.lockedstart()
