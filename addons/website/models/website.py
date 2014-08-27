@@ -168,9 +168,11 @@ class website(osv.osv):
                 'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
             })
     }
-
+    #sig-ajout
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'user_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
+
     }
 
     # cf. Wizard hack in website_views.xml
@@ -231,9 +233,21 @@ class website(osv.osv):
     def get_languages(self, cr, uid, ids, context=None):
         return self._get_languages(cr, uid, ids[0])
 
+    #sig-ajout
     def get_current_website(self, cr, uid, context=None):
-        # TODO: Select website, currently hard coded
-        return self.pool['website'].browse(cr, uid, 1, context=context)
+        ids=self.search(cr, uid, [], context=context)
+        url = request.httprequest.url
+        
+        websites = self.browse(cr, uid, ids, context=context)
+        website = websites[0]
+        for web in websites:
+            if web.name in url:
+                website = web
+                break
+
+        request.context['website_id'] = website.id
+
+        return website
 
     def is_publisher(self, cr, uid, ids, context=None):
         Access = self.pool['ir.model.access']
@@ -244,15 +258,21 @@ class website(osv.osv):
         Access = self.pool['ir.model.access']
         return Access.check(cr, uid, 'ir.ui.menu', 'read', False, context=context)
 
+    #sig-ajout
     def get_template(self, cr, uid, ids, template, context=None):
         if isinstance(template, (int, long)):
             view_id = template
+            module = 'website'
         else:
             if '.' not in template:
                 template = 'website.%s' % template
             module, xmlid = template.split('.', 1)
             model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
-        return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
+        key=module+'.'+view_id
+        website_id=context.get('website_id')
+        resuslt_id=self.pool["ir.ui.view"].search(cr, uid, [('website_id', '=', website_id),('key', '=', key)], context=context)
+
+        return self.pool["ir.ui.view"].browse(cr, uid, result_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
         # TODO: remove this. (just kept for backward api compatibility for saas-3)
