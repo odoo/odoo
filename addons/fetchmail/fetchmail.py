@@ -21,18 +21,12 @@
 
 import logging
 import time
+import pooler
+
 from imaplib import IMAP4
 from imaplib import IMAP4_SSL
 from poplib import POP3
 from poplib import POP3_SSL
-try:
-    import cStringIO as StringIO
-except ImportError:
-    import StringIO
-
-import zipfile
-import base64
-from openerp import addons
 
 from openerp.osv import fields, osv
 from openerp import tools, api
@@ -190,6 +184,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
             count, failed = 0, 0
             imap_server = False
             pop_server = False
+            service_cr = pooler.get_db(cr.dbname).cursor()
             if server.type == 'imap':
                 try:
                     imap_server = server.connect()
@@ -200,7 +195,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                         result, data = imap_server.fetch(num, '(RFC822)')
                         imap_server.store(num, '-FLAGS', '\\Seen')
                         try:
-                            res_id = mail_thread.message_process(cr, uid, server.object_id.model,
+                            res_id = mail_thread.message_process(service_cr, uid, server.object_id.model,
                                                                  data[0][1],
                                                                  save_original=server.original,
                                                                  strip_attachments=(not server.attach),
@@ -209,9 +204,9 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                             _logger.exception('Failed to process mail from %s server %s.', server.type, server.name)
                             failed += 1
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': context.get("thread_model", server.object_id.model)})
+                            action_pool.run(service_cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': context.get("thread_model", server.object_id.model)})
                         imap_server.store(num, '+FLAGS', '\\Seen')
-                        cr.commit()
+                        service_cr.commit()
                         count += 1
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.type, server.name, (count - failed), failed)
                 except Exception:
@@ -220,6 +215,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                     if imap_server:
                         imap_server.close()
                         imap_server.logout()
+                    service_cr.close()
             elif server.type == 'pop':
                 try:
                     pop_server = server.connect()
@@ -230,7 +226,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                         msg = '\n'.join(msges)
                         res_id = None
                         try:
-                            res_id = mail_thread.message_process(cr, uid, server.object_id.model,
+                            res_id = mail_thread.message_process(service_cr, uid, server.object_id.model,
                                                                  msg,
                                                                  save_original=server.original,
                                                                  strip_attachments=(not server.attach),
@@ -239,15 +235,16 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                             _logger.exception('Failed to process mail from %s server %s.', server.type, server.name)
                             failed += 1
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': context.get("thread_model", server.object_id.model)})
+                            action_pool.run(service_cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': context.get("thread_model", server.object_id.model)})
                         pop_server.dele(num)
-                        cr.commit()
+                        service_cr.commit()
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", numMsgs, server.type, server.name, (numMsgs - failed), failed)
                 except Exception:
                     _logger.exception("General failure when trying to fetch mail from %s server %s.", server.type, server.name)
                 finally:
                     if pop_server:
                         pop_server.quit()
+                    service_cr.close()
             server.write({'date': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)})
         return True
 
