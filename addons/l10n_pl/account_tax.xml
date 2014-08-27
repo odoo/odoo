@@ -21,6 +21,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vs_kraj_22" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT-22%</field>
@@ -37,6 +38,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vs_kraj_8" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT-8%</field>
@@ -53,6 +55,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vs_kraj_7" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT-7%</field>
@@ -69,6 +72,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vs_kraj_5" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT-5%</field>
@@ -85,6 +89,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vs_kraj_3" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT-3%</field>
@@ -114,6 +119,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vs_kraj_zw" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT-ZW</field>
@@ -161,7 +167,6 @@
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
 
-
 # VAT domestic purchase
 
         <record id="vz_kraj_23" model="account.tax.template">
@@ -170,7 +175,7 @@
                 <field name="description">Z23</field>
                 <field name="amount">0.230000</field>
                 <field name="type">percent</field>
-        <field name="sequence" eval="0"/>
+                <field name="sequence" eval="0"/>
                 <field name="type_tax_use">purchase</field>
                 <field name="account_collected_id" ref="chart22020400"/>
                 <field name="account_paid_id" ref="chart22020400"/>
@@ -181,6 +186,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vz_kraj_22" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT naliczony-22%</field>
@@ -197,6 +203,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vz_kraj_8" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT naliczony-8%</field>
@@ -213,6 +220,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vz_kraj_7" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT naliczony-7%</field>
@@ -229,6 +237,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vz_kraj_5" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT naliczony-5%</field>
@@ -245,6 +254,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vz_kraj_3" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT naliczony-3%</field>
@@ -276,6 +286,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vz_kraj_zw" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT naliczony-ZW</field>
@@ -307,6 +318,7 @@
                 <field name="ref_base_sign" eval="-1"/>
                 <field name="ref_tax_sign" eval="-1"/>
         </record>
+
         <record id="vz_kraj_usl_22" model="account.tax.template">
                 <field name="chart_template_id" ref="pl_chart_template"/>
                 <field name="name">VAT usł nalicz-22%</field>
@@ -390,7 +402,6 @@
                 <field name="type">percent</field>
                 <field eval="True" name="child_depend"/>
                 <field name="type_tax_use">purchase</field>
-                
         </record>
 
                 <record id="vz_stal_podatek_naliczony" model="account.tax.template">
@@ -458,7 +469,6 @@
                 <field name="type">percent</field>
                 <field eval="True" name="child_depend"/>
                 <field name="type_tax_use">purchase</field>
-                
         </record>
 
                 <record id="vz_unia_podatek_naliczony" model="account.tax.template">
@@ -481,6 +491,7 @@
                         <field name="ref_tax_sign" eval="-1"/>
                         <field name="type_tax_use">purchase</field>
                 </record>
+
                 <record id="vz_unia_podatek_nalezny" model="account.tax.template">
                         <field name="chart_template_id" ref="pl_chart_template"/>
                         <field name="name">Nab tow unia - podatek należny</field>
@@ -612,6 +623,7 @@
                         <field name="ref_tax_sign" eval="-1"/>
                         <field name="type_tax_use">purchase</field>
                 </record>
+
                 <record id="vz_imp_tow_podatek_nalezny" model="account.tax.template">
                         <field name="chart_template_id" ref="pl_chart_template"/>
                         <field name="name">Imp Tow - podatek należny</field>
@@ -654,7 +666,6 @@
                 <field name="type">percent</field>
                 <field eval="True" name="child_depend"/>
                 <field name="type_tax_use">purchase</field>
-                
         </record>
 
                 <record id="vz_impu_podatek_naliczony" model="account.tax.template">
@@ -677,6 +688,7 @@
                         <field name="ref_tax_sign" eval="-1"/>
                         <field name="type_tax_use">purchase</field>
                 </record>
+
                 <record id="vz_impu_podatek_nalezny" model="account.tax.template">
                         <field name="chart_template_id" ref="pl_chart_template"/>
                         <field name="name">Imp Usł - podatek należny</field>
@@ -697,7 +709,6 @@
                         <field name="ref_tax_sign" eval="1"/>
                         <field name="type_tax_use">purchase</field>
                 </record>
-
 
 </data>
 </openerp>
