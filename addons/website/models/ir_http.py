@@ -114,7 +114,7 @@ class ir_http(orm.AbstractModel):
                     if request.lang == request.website.default_lang_code:
                         # If language is in the url and it is the default language, redirect
                         # to url without language so google doesn't see duplicate content
-                        return request.redirect(path + '?' + request.httprequest.query_string)
+                        return request.redirect(path + '?' + request.httprequest.query_string, code=301)
                     return self.reroute(path)
         return super(ir_http, self)._dispatch()
 
@@ -155,7 +155,7 @@ class ir_http(orm.AbstractModel):
                     path = '/' + request.lang + path
                 if request.httprequest.query_string:
                     path += '?' + request.httprequest.query_string
-                return werkzeug.utils.redirect(path)
+                return werkzeug.utils.redirect(path, code=301)
 
     def _serve_attachment(self):
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
