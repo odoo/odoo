@@ -165,7 +165,8 @@ class CompanyLDAP(osv.osv):
 
         values = { 'name': ldap_entry[1]['cn'][0],
                    'login': login,
-                   'company_id': conf['company']
+                   'company_id': conf['company'],
+                   'company_ids': [(6, 0, [conf['company'], ])]
                    }
         return values
     
