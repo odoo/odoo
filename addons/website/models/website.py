@@ -270,7 +270,7 @@ class website(osv.osv):
             model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
         key=module+'.'+str(view_id)
         website_id=context.get('website_id')
-        result_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', key)], order='website_id', limit=1, context=context)
+        result_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', key),'|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)
 
         return self.pool["ir.ui.view"].browse(cr, uid, result_id, context=context)
 
