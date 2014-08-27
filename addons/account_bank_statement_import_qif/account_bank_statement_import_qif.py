@@ -1,24 +1,25 @@
 # -*- coding: utf-8 -*-
 
 import dateutil.parser
-import base64
 from tempfile import TemporaryFile
 
 from openerp.tools.translate import _
 from openerp.osv import osv
 
-from openerp.addons.account_bank_statement_import import account_bank_statement_import as ibs
-
-ibs.add_file_type(('qif', 'QIF'))
-
 class account_bank_statement_import(osv.TransientModel):
     _inherit = "account.bank.statement.import"
 
-    def process_qif(self, cr, uid, data_file, journal_id=False, context=None):
+    def _check_qif(self, cr, uid, data_file, context=None):
+        return data_file.strip().startswith('!Type:')
+
+    def _process_file(self, cr, uid, data_file=None, journal_id=False, context=None):
         """ Import a file in the .QIF format"""
+        if not self._check_qif(cr, uid, data_file, context=context):
+            return super(account_bank_statement_import, self)._process_file(cr, uid, data_file, journal_id, context=context)
+
         try:
             fileobj = TemporaryFile('wb+')
-            fileobj.write(base64.b64decode(data_file))
+            fileobj.write(data_file)
             fileobj.seek(0)
             file_data = ""
             for line in fileobj.readlines():
@@ -31,7 +32,7 @@ class account_bank_statement_import(osv.TransientModel):
             header = data_list[0].strip()
             header = header.split(":")[1]
         except:
-            raise osv.except_osv(_('Import Error!'), _('Please check QIF file format is proper or not.'))
+            raise osv.except_osv(_('Import Error!'), _('Could not decipher the QIF file.'))
         line_ids = []
         vals_line = {}
         total = 0

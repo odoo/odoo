@@ -124,6 +124,8 @@ openerp.account = function (instance) {
             "click .pager_control_right:not(.disabled)": "pagerControlRightHandler",
             "keyup .filter": "filterHandler",
             "click .line_info_button": function(e){e.stopPropagation()},
+            // Prevent non natively focusable elements from gaining focus on click
+            "mousedown *[tabindex='0']": function(e){e.preventDefault()},
         },
 
         init: function(parent, context) {
@@ -415,7 +417,8 @@ openerp.account = function (instance) {
             this.children_widget = instance.web.account.bankStatementReconciliationLine;
             this.template_prefix = "bank_statement_";
 
-            this.statement_id = context.context.statement_id;
+            this.statement_ids = context.context.statement_ids;
+            if (! this.statement_ids instanceof Array) this.statement_ids = [this.statement_ids];
             this.lines = []; // list of reconciliations identifiers to instantiate children widgets
             this.last_displayed_reconciliation_index = undefined; // Flow control
             this.reconciled_lines = 0; // idem
@@ -512,22 +515,26 @@ openerp.account = function (instance) {
                 var lines_filter = [['journal_entry_id', '=', false], ['account_id', '=', false]];
                 var deferred_promises = [];
         
-                if (self.statement_id) {
-                    lines_filter.push(['statement_id', '=', self.statement_id]);
+                if (self.statement_ids) {
+                    lines_filter.push(['statement_id', 'in', self.statement_ids]);
+
                     deferred_promises.push(self.model_bank_statement
-                        .query(["name"])
-                        .filter([['id', '=', self.statement_id]])
-                        .first()
-                        .then(function(title){
-                            self.title = title.name;
-                        })
-                    );
-                    deferred_promises.push(self.model_bank_statement
-                        .call("number_of_lines_reconciled", [self.statement_id])
+                        .call("number_of_lines_reconciled", [self.statement_ids])
                         .then(function(num) {
                             self.already_reconciled_lines = num;
                         })
                     );
+
+                    if (self.statement_ids.length === 1) {
+                        deferred_promises.push(self.model_bank_statement
+                            .query(["name"])
+                            .filter([['id', '=', self.statement_ids[0]]])
+                            .first()
+                            .then(function(title){
+                                self.title = title.name;
+                            })
+                        );
+                    }
                 }
 
                 deferred_promises.push(new instance.web.Model("account.statement.operation.template")
@@ -550,7 +557,7 @@ openerp.account = function (instance) {
                 deferred_promises.push(self.model_bank_statement_line
                     .query(['id'])
                     .filter(lines_filter)
-                    .order_by('id')
+                    .order_by('statement_id, id')
                     .all().then(function (data) {
                         self.lines = _(data).map(function(o){ return o.id });
                     })
@@ -777,7 +784,8 @@ openerp.account = function (instance) {
     
         displayDoneMessage: function() {
             var self = this;
-    
+            
+            var is_single_statement = self.statement_ids !== undefined && self.statement_ids.length === 1;
             var sec_taken = Math.round((Date.now()-self.time_widget_loaded)/1000);
             var sec_per_item = Math.round(sec_taken/self.reconciled_lines);
             var achievements = [];
@@ -813,8 +821,7 @@ openerp.account = function (instance) {
                 transactions_done: self.reconciled_lines,
                 done_with_ctrl_enter: self.lines_reconciled_with_ctrl_enter,
                 achievements: achievements,
-                single_statement: self.single_statement,
-                multiple_statements: self.multiple_statements,
+                has_statement_id: is_single_statement,
             }));
     
             // Animate it
@@ -832,19 +839,19 @@ openerp.account = function (instance) {
                 });
             }
 
-            if (self.$(".button_close_statement").length !== 0) {
+            if (is_single_statement && self.$(".button_close_statement").length !== 0) {
                 self.$(".button_close_statement").hide();
                 self.model_bank_statement
                     .query(["balance_end_real", "balance_end"])
-                    .filter([['id', 'in', self.statement_ids]])
-                    .all()
+                    .filter([['id', '=', self.statement_ids[0]]])
+                    .first()
                     .then(function(data){
                         if (_.all(data, function(o) { return o.balance_end_real === o.balance_end })) {
                             self.$(".button_close_statement").show();
                             self.$(".button_close_statement").click(function() {
                                 self.$(".button_close_statement").attr("disabled", "disabled");
                                 self.model_bank_statement
-                                    .call("button_confirm_bank", [self.statement_ids])
+                                    .call("button_confirm_bank", [[self.statement_ids[0]]])
                                     .then(function () {
                                         self.goBackToStatementsTreeView();
                                     }, function() {

@@ -11,14 +11,13 @@
                     <group>
                         <group>
                             <field name="data_file"/>
-                            <field name="file_type"/>
                             <field name="journal_id" domain="[('type', '=', 'bank')]" context="{'default_type':'bank'}"/>
                         </group>
                         <group>
-                            <b colspan="2"> How to import your bank statement in OpenERP.</b>
-                            <label string= "1. Go to your bank account website." colspan="2"/>
-                            <label string= "2. Download your bank statements in the right format. (.OFX, .QIF or CODA are accepted)" colspan="2"/>
-                            <label string= "3. Upload right here the bank statements file into OpenERP. Click Import." colspan="2"/>
+                            <b colspan="2"> How to import your bank statement :</b>
+                            <label string= "1. Download your bank statements from your bank website." colspan="2"/>
+                            <label string= "2. Make sure the file is in the OFX, QIF or CODA format." colspan="2"/>
+                            <label string= "3. Select the file, the journal and click 'Import'." colspan="2"/>
                         </group>
                     </group>
                     <footer>
