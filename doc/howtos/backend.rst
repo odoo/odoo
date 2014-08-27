@@ -496,11 +496,12 @@ client data; it is also related to its sale order line records.
 
     Create a model for *sessions*. A session has a name, a start date, a
     duration and a number of seats. Add an action and a menu item to display
-    them.
+    them. Make the new model visible via a menu item.
 
     .. only:: solutions
 
-        Create the class *Session* in ``openacademy/models.py``.
+        #. Create the class *Session* in ``openacademy/models.py``.
+        #. Add access to the session object in ``openacademy/view/openacademy.xml``.
 
         .. patch::
 
@@ -530,7 +531,7 @@ Relational field types are:
     accessing it results in a (possibly empty) set of records::
 
         for other in foo.other_ids:
-            print foo.name
+            print other.name
 
     .. danger::
 
@@ -544,7 +545,7 @@ Relational field types are:
     records, accessing it also results in a possibly empty set of records::
 
         for other in foo.other_ids:
-            print foo.name
+            print other.name
 
 .. exercise:: Many2one relations
 
@@ -557,12 +558,12 @@ Relational field types are:
       built-in model ``res.partner``.
     - A session is related to a *course*; the value of that field is a record
       of the model ``openacademy.course`` and is required.
+    - Adapt the views.
 
     .. only:: solutions
 
         #. Add the relevant ``Many2one`` fields to the models, and
-        #. add access to the session object in
-           ``openacademy/view/openacademy.xml``.
+        #. add them in the views.
 
         .. patch::
 
@@ -573,7 +574,8 @@ Relational field types are:
 
     .. only:: solutions
 
-        Modify the ``Course`` class as follows:
+        #. Modify the ``Course`` class, and
+        #. add the field in the course form view.
 
         .. patch::
 
@@ -582,32 +584,12 @@ Relational field types are:
     Using the relational field many2many, modify the *Session* model to relate
     every session to a set of *attendees*. Attendees will be represented by
     partner records, so we will relate to the built-in model ``res.partner``.
+    Adapt the views accordingly.
 
     .. only:: solutions
 
-        Modify the ``Session`` class as follows:
-
-        .. patch::
-
-.. exercise:: Views modification
-
-    For the *Course* model,
-
-    * the name and instructor for the course should be displayed in the tree
-      view
-    * the form view should display the course name and responsible at
-      the top, followed by the course description in a tab and the course
-      sessions in a second tab
-
-    For the *Session* model,
-
-    * the name of the session and the session course should be displayed in
-      the tree view
-    * the form view should display all the session's fields
-
-    Try to lay out the form views so that they're clear and readable.
-
-    .. only:: solutions
+        #. Modify the ``Session`` class, and
+        #. add the field in the form view.
 
         .. patch::
 

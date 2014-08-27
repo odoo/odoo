@@ -3,8 +3,8 @@
 
 Index: addons/openacademy/models.py
 ===================================================================
---- addons.orig/openacademy/models.py	2014-08-26 17:25:58.455783395 +0200
-+++ addons/openacademy/models.py	2014-08-26 17:25:58.447783395 +0200
+--- addons.orig/openacademy/models.py	2014-08-27 10:37:24.591932036 +0200
++++ addons/openacademy/models.py	2014-08-27 10:37:24.583932036 +0200
 @@ -10,6 +10,8 @@
  
      responsible_id = fields.Many2one('res.users',
@@ -14,3 +14,23 @@ Index: addons/openacademy/models.py
  
  
  class Session(models.Model):
+Index: addons/openacademy/views/openacademy.xml
+===================================================================
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-27 10:37:24.591932036 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-27 10:37:24.583932036 +0200
+@@ -15,8 +15,13 @@
+                             <page string="Description">
+                                 <field name="description"/>
+                             </page>
+-                            <page string="About">
+-                                This is an example of notebooks
++                            <page string="Sessions">
++                                <field name="session_ids">
++                                    <tree string="Registered sessions">
++                                        <field name="name"/>
++                                        <field name="instructor_id"/>
++                                    </tree>
++                                </field>
+                             </page>
+                         </notebook>
+                     </sheet>
