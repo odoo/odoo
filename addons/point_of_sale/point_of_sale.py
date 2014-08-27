@@ -72,6 +72,7 @@ class pos_config(osv.osv):
         'iface_scan_via_proxy' : fields.boolean('Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner"),
         'iface_invoicing': fields.boolean('Invoicing',help='Enables invoice generation from the Point of Sale'),
         'iface_big_scrollbars': fields.boolean('Large Scrollbars',help='For imprecise industrial touchscreens'),
+        'iface_fullscreen':     fields.boolean('Fullscreen', help='Display the Point of Sale in full screen mode'),
         'receipt_header': fields.text('Receipt Header',help="A short text that will be inserted as a header in the printed receipt"),
         'receipt_footer': fields.text('Receipt Footer',help="A short text that will be inserted as a footer in the printed receipt"),
         'proxy_ip':       fields.char('IP Address', help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty', size=45),
@@ -394,7 +395,7 @@ class pos_session(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             for statement in obj.statement_ids:
                 statement.unlink(context=context)
-        return True
+        return super(pos_session, self).unlink(cr, uid, ids, context=context)
 
 
     def open_cb(self, cr, uid, ids, context=None):
@@ -553,6 +554,7 @@ class pos_order(osv.osv):
         orders_to_save = [o for o in orders if o['data']['name'] not in existing_references]
 
         order_ids = []
+
         for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']

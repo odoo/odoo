@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
             <data>
             <xpath expr="//field[@name='target_move']" position="after">
-                <field name="sort_selection"/>
+                <field name="sort_selection" widget="radio"/>
                 <field name="amount_currency"/>
                 <newline/>
                 <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" colspan="4" invisible="1"/>

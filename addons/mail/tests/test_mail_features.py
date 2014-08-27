@@ -860,7 +860,7 @@ class test_mail(TestMail):
         # Test: first produced message: no subtype, name change tracked
         last_msg = self.group_pigs.message_ids[-1]
         self.assertFalse(last_msg.subtype_id, 'tracked: message should not have been linked to a subtype')
-        self.assertIn(u'SelectedGroupOnly\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
+        self.assertIn(u"Selectedgroupofusers\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
         self.assertIn('Pigs', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
 
         # Test: change name as supername, public as private -> 2 subtypes
@@ -876,7 +876,7 @@ class test_mail(TestMail):
         last_msg = self.group_pigs.message_ids[-3]
         self.assertEqual(last_msg.subtype_id.id, mt_name_supername_id, 'tracked: message should be linked to mt_name_supername subtype')
         self.assertIn('Supername name', last_msg.body, 'tracked: message body does not hold the subtype description')
-        self.assertIn(u'Public\u2192Private', _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
+        self.assertIn(u"Everyone\u2192Invitedpeopleonly", _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
         self.assertIn(u'Pigs\u2192supername', _strip_string_spaces(last_msg.body), 'tracked feature: message body does not hold always tracked field')
 
         # Test: change public as public, group_public_id -> 2 subtypes, name always tracked
@@ -887,13 +887,13 @@ class test_mail(TestMail):
         last_msg = self.group_pigs.message_ids[-4]
         self.assertEqual(last_msg.subtype_id.id, mt_group_public_set_id, 'tracked: message should be linked to mt_group_public_set_id')
         self.assertIn('Group set', last_msg.body, 'tracked: message body does not hold the subtype description')
-        self.assertIn(u'Private\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
+        self.assertIn(u"Invitedpeopleonly\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
         self.assertIn(u'HumanResources/Employee\u2192Administration/Settings', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
         # Test: second produced message: mt_group_public_id, with name always tracked, public tracked on change
         last_msg = self.group_pigs.message_ids[-5]
         self.assertEqual(last_msg.subtype_id.id, mt_group_public_id, 'tracked: message should be linked to mt_group_public_id')
         self.assertIn('Group changed', last_msg.body, 'tracked: message body does not hold the subtype description')
-        self.assertIn(u'Private\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
+        self.assertIn(u"Invitedpeopleonly\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
         self.assertIn(u'HumanResources/Employee\u2192Administration/Settings', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
 
         # Test: change group_public_id to False -> 1 subtype, name always tracked
