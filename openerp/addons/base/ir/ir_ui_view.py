@@ -179,6 +179,7 @@ class view(osv.osv):
     _columns = {
         'name': fields.char('View Name', required=True),
         'model': fields.char('Object', select=True),
+        'key': fields.char("Website meta title"),
         'priority': fields.integer('Sequence', required=True),
         'type': fields.selection([
             ('tree','Tree'),
