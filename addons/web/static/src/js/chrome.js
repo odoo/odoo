@@ -995,6 +995,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         self.do_load_needaction(menu_ids).then(function () {
             self.trigger("need_action_reloaded");
         });
+        this.$el.parents().find(".oe_secondary_menus_container").scrollTop(0,0);
 
         this.on_menu_click(ev);
     },
