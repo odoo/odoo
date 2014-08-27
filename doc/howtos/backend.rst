@@ -839,6 +839,19 @@ float, string), or a function taking a recordset and returning a value::
     name = fields.Char(default="Unknown")
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user)
 
+.. note::
+
+    The object ``self.env`` gives access to request parameters and other useful
+    things:
+
+    - ``self.env.cr`` or ``self._cr`` is the database *cursor* object; it is
+      used for querying the database
+    - ``self.env.uid`` or ``self._uid`` is the current user's database id
+    - ``self.env.user`` is the current user's record
+    - ``self.env.context`` or ``self._context`` is the context dictionary
+    - ``self.env.ref(xml_id)`` returns the record corresponding to an XML id
+    - ``self.env[model_name]`` returns an instance of the given model
+
 .. exercise:: Active objects – Default values
 
     * Define the start_date default value as today (see
@@ -1289,7 +1302,7 @@ policy.
 Group-based access control mechanisms
 -------------------------------------
 
-Groups are created as normal records on the model “res.groups”, and granted
+Groups are created as normal records on the model ``res.groups``, and granted
 menu access via menu definitions. However even without a menu, objects may
 still be accessible indirectly, so actual object-level permissions (read,
 write, create, unlink) must be defined for groups. They are usually inserted
@@ -1299,7 +1312,7 @@ specific fields on a view or object using the field's groups attribute.
 Access rights
 -------------
 
-Access rights are defined as records of the model “ir.model.access”. Each
+Access rights are defined as records of the model ``ir.model.access``. Each
 access right is associated to a model, a group (or no group for global
 access), and a set of permissions: read, write, create, unlink. Such access
 rights are usually created by a CSV file named after its model:
@@ -1349,14 +1362,14 @@ Record rules
 ------------
 
 A record rule restricts the access rights to a subset of records of the given
-model. A rule is a record of the model “ir.rule”, and is associated to a
+model. A rule is a record of the model ``ir.rule``, and is associated to a
 model, a number of groups (many2many field), permissions to which the
 restriction applies, and a domain. The domain specifies to which records the
 access rights are limited.
 
 Here is an example of a rule that prevents the deletion of leads that are not
-in state “cancel”. Notice that the value of the field “groups” must follow
-the same convention as the method “write” of the ORM.
+in state ``cancel``. Notice that the value of the field ``groups`` must follow
+the same convention as the method ``write`` of the ORM.
 
 .. code-block:: xml
 
@@ -1381,6 +1394,94 @@ the same convention as the method “write” of the ORM.
     .. only:: solutions
 
         Create a new rule in ``openacademy/security/security.xml``:
+
+        .. patch::
+
+Wizards
+=======
+
+Wizards describe interactive sessions with the user (or dialog boxes) through
+dynamic forms. A wizard is simply a model that extends the class
+:class:`~openerp.models.TransientModel` instead of
+:class:`~openerp.models.Model`. The class
+:class:`~openerp.models.TransientModel` extends :class:`~openerp.models.Model`
+and reuse all its existing mechanisms, with the following particularities:
+
+- Wizard records are not meant to be persistent; they are automatically deleted
+  from the database after a certain time. This is why they are called
+  *transient*.
+- Wizard models do not require explicit access rights: users have all
+  permissions on wizard records.
+- Wizard records may refer to regular records or wizard records through many2one
+  fields, but regular records *cannot* refer to wizard records through a
+  many2one field.
+
+We want to create a wizard that allow users to create attendees for a particular
+session, or for a list of sessions at once.
+
+.. exercise:: Define the wizard
+
+    Create a wizard model with a many2one relationship with the *Session*
+    model and a many2many relationship with the *Partner* model.
+
+    .. only:: solutions
+
+        Add a new file ``openacademy/wizard.py``:
+
+        .. patch::
+
+Launching wizards
+-----------------
+
+Wizards are launched by ``ir.actions.act_window`` records, with the field
+``target`` set to the value ``new``. The latter opens the wizard view into a
+popup window. The action may be triggered by a menu item.
+
+There is another way to launch the wizard: using an ``ir.actions.act_window``
+record like above, but with an extra field ``src_model`` that specifies in the
+context of which model the action is available. The wizard will appear in the
+contextual actions of the model, above the main view. Because of some internal
+hooks in the ORM, such an action is declared in XML with the tag ``act_window``.
+
+.. code:: xml
+
+    <act_window id="launch_the_wizard"
+                name="Launch the Wizard"
+                src_model="context_model_name"
+                res_model="wizard_model_name"
+                view_mode="form"
+                target="new"
+                key2="client_action_multi"/>
+
+Wizards use regular views and their buttons may use the attribute
+``special="cancel"`` to close the wizard window without saving.
+
+.. exercise:: Launch the wizard
+
+    #. Define a form view for the wizard.
+    #. Add the action to launch it in the context of the *Session* model.
+    #. Define a default value for the session field in the wizard; use the
+       context parameter ``self._context`` to retrieve the current session.
+
+    .. only:: solutions
+
+        .. patch::
+
+.. exercise:: Register attendees
+
+    Add buttons to the wizard, and implement the corresponding method for adding
+    the attendees to the given session.
+
+    .. only:: solutions
+
+        .. patch::
+
+.. exercise:: Register attendees to multiple sessions
+
+    Modify the wizard model so that attendees can be registered to multiple
+    sessions.
+
+    .. only:: solutions
 
         .. patch::
 
