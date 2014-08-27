@@ -1975,7 +1975,8 @@ openerp.account = function (instance) {
         },
     });
     
-    // To remove later
+    // Manual reconciliation
+    
     instance.web.views.add('tree_account_reconciliation', 'instance.web.account.ReconciliationListView');
     instance.web.account.ReconciliationListView = instance.web.ListView.extend({
         init: function() {

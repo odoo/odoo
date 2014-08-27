@@ -478,8 +478,7 @@ class account_bank_statement_line(osv.osv):
         if line.amount_currency and line.currency_id:
             # If the statement line is not in the same currency as the statement, put amount in original currency in
             # amount_currency_str and put converted amount in amount_str
-            ctx = context.copy()
-            ctx.update({'date': line.date})
+            ctx = dict(context, date=line.date)
             amount = currency_obj.compute(cr, uid, line.currency_id.id, statement_currency.id, line.amount_currency, context=context)
             amount_str = amount > 0 and amount or -amount
             amount_str = rml_parser.formatLang(amount_str, currency_obj=statement_currency)
@@ -499,7 +498,6 @@ class account_bank_statement_line(osv.osv):
             'amount': amount,
             'amount_str': amount_str,
             'currency_id': line.currency_id.id or statement_currency.id,
-            # TODO : find a way to get rid of no_match to improve performances (look into the widget code)
             'no_match': self.get_move_lines_counterparts(cr, uid, line, count=True, context=context) == 0,
             'partner_id': line.partner_id.id,
             'statement_id': line.statement_id.id,
@@ -533,7 +531,6 @@ class account_bank_statement_line(osv.osv):
         st_line = self.browse(cr, uid, id, context=context)
         company_currency = st_line.journal_id.company_id.currency_id.id
         statement_currency = st_line.journal_id.currency.id or company_currency
-        # TODO : multidevise (et revoir la logique)
         # either use the unsigned debit/credit fields or the signed amount_currency field
         sign = 1
         if statement_currency == company_currency:
@@ -648,7 +645,6 @@ class account_bank_statement_line(osv.osv):
             'account_id': account_id
             }
 
-    # TODO : allow to create lines with currency_id
     def process_reconciliation(self, cr, uid, id, mv_line_dicts, context=None):
         """ Creates a move line for each item of mv_line_dicts and for the statement line. Reconcile a new move line with its counterpart_move_line_id if specified. Finally, mark the statement line as reconciled by putting the newly created move id in the column journal_entry_id.
 
