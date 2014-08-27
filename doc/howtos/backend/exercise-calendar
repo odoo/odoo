@@ -1,10 +1,10 @@
 # HG changeset patch
 # Parent 85a8d7317b9e13480f39ad739955442d15144451
 
-Index: doc-backend/openacademy/models.py
+Index: addons/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/models.py	2014-08-24 12:17:49.873386903 +0200
-+++ doc-backend/openacademy/models.py	2014-08-24 12:18:24.601387707 +0200
+--- addons.orig/openacademy/models.py	2014-08-26 17:26:10.179783221 +0200
++++ addons/openacademy/models.py	2014-08-26 17:26:10.171783221 +0200
 @@ -1,5 +1,6 @@
  # -*- coding: utf-8 -*-
  
@@ -31,7 +31,7 @@ Index: doc-backend/openacademy/models.py
 +            self.end_date = self.start_date
 +            return
 +
-+        start = Datetime.from_string(self.start_date)
++        start = fields.Datetime.from_string(self.start_date)
 +        duration = timedelta(days=self.duration)
 +        self.end_date = start + duration
 +
@@ -40,19 +40,19 @@ Index: doc-backend/openacademy/models.py
 +        if not (self.start_date and self.end_date):
 +            return
 +
-+        start_date = Datetime.from_string(self.start_date)
-+        end_date = Datetime.from_string(self.end_date)
++        start_date = fields.Datetime.from_string(self.start_date)
++        end_date = fields.Datetime.from_string(self.end_date)
 +        self.duration = (end_date - start_date).days
 +
 +    @api.one
      @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
          if self.instructor_id and self.instructor_id in self.attendee_ids:
-Index: doc-backend/openacademy/views/openacademy.xml
+Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-24 12:17:49.873386903 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:17:49.869386903 +0200
-@@ -120,11 +120,24 @@
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-26 17:26:10.179783221 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-26 17:26:10.171783221 +0200
+@@ -125,11 +125,24 @@
              </field>
          </record>
  

@@ -1,10 +1,10 @@
 # HG changeset patch
 # Parent dba00a105dd2a82490394b8dec5fea5f1d8847e1
 
-Index: doc-backend/openacademy/models.py
+Index: addons/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/models.py	2014-08-24 12:18:54.645388402 +0200
-+++ doc-backend/openacademy/models.py	2014-08-24 12:18:54.641388402 +0200
+--- addons.orig/openacademy/models.py	2014-08-26 17:26:12.059783193 +0200
++++ addons/openacademy/models.py	2014-08-26 17:26:12.051783193 +0200
 @@ -59,6 +59,9 @@
      end_date = fields.Date(string="End Date", store=True,
          compute='_get_end_date', inverse='_set_end_date')
@@ -31,11 +31,11 @@ Index: doc-backend/openacademy/models.py
      @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
          if self.instructor_id and self.instructor_id in self.attendee_ids:
-Index: doc-backend/openacademy/views/openacademy.xml
+Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-24 12:18:54.645388402 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:18:54.641388402 +0200
-@@ -137,11 +137,24 @@
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-26 17:26:12.059783193 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-26 17:26:12.055783193 +0200
+@@ -142,11 +142,24 @@
              </field>
          </record>
  

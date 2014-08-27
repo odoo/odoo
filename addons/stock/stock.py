@@ -2414,7 +2414,7 @@ class stock_move(osv.osv):
             'product_uos_qty': move.product_uos_qty - uos_qty,
         }, context=ctx)
 
-        if move.move_dest_id and move.propagate:
+        if move.move_dest_id and move.propagate and move.move_dest_id.state not in ('done', 'cancel'):
             new_move_prop = self.split(cr, uid, move.move_dest_id, qty, context=context)
             self.write(cr, uid, [new_move], {'move_dest_id': new_move_prop}, context=context)
         #returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and

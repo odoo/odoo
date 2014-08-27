@@ -519,9 +519,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }
 
             var list_container = el_node.querySelector('.category-list');
-            for(var i = 0, len = this.subcategories.length; i < len; i++){
-                list_container.appendChild(this.render_category(this.subcategories[i],hasimages));
-            };
+            if (list_container) { 
+                if (!hasimages) {
+                    list_container.classList.add('simple');
+                } else {
+                    list_container.classList.remove('simple');
+                }
+                for(var i = 0, len = this.subcategories.length; i < len; i++){
+                    list_container.appendChild(this.render_category(this.subcategories[i],hasimages));
+                };
+            }
 
             var buttons = el_node.querySelectorAll('.js-category-switch');
             for(var i = 0; i < buttons.length; i++){
