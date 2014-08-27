@@ -1659,7 +1659,7 @@
                 <xpath expr="//group[@name='propagation_group']" position="before">
                     <group attrs="{'invisible': [('action', '!=', 'move')]}" string="Moving Options">
                         <field name="procure_method" groups="stock.group_adv_location"/>
-                        <field name="location_src_id" attrs="{'required': [('action', '=', 'move')]}"/>
+                        <field name="location_src_id" attrs="{'required': [('action', '=', 'move')]}"  domain="[('usage','!=','view')]" />
                         <field name="partner_address_id" groups="stock.group_adv_location" context="{'show_address': 1}" options="{'always_reload': 1}"/>
                         <label for="delay" string="Delay"  groups="stock.group_adv_location"/>
                         <div groups="stock.group_adv_location">
