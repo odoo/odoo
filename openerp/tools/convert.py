@@ -804,6 +804,7 @@ form: module.record_id""" % (xml_id,)
 
         record = etree.Element('record', attrib=record_attrs)
         record.append(Field(name, name='name'))
+        record.append(Field(full_tpl_id, name='key'))
         record.append(Field("qweb", name='type'))
         record.append(Field(el.get('priority', "16"), name='priority'))
         if 'inherit_id' in el.attrib:
@@ -812,6 +813,8 @@ form: module.record_id""" % (xml_id,)
             record.append(Field(name='active', eval=el.get('active')))
         if el.get('customize_show') in ("True", "False"):
             record.append(Field(name='customize_show', eval=el.get('customize_show')))
+        if 'website_id' in el.attrib:
+            record.append(Field(name='website_id', ref=el.get('website_id')))
         groups = el.attrib.pop('groups', None)
         if groups:
             grp_lst = map(lambda x: "ref('%s')" % x, groups.split(','))

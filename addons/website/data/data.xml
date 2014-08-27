@@ -11,6 +11,7 @@
 
         <record id="main_menu" model="website.menu">
             <field name="name">Top Menu</field>
+            <field name="website_id" ref="default_website"/>
         </record>
 
         <record id="menu_homepage" model="website.menu">
@@ -18,6 +19,7 @@
             <field name="url">/page/homepage</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
+            <field name="website_id" ref="default_website"/>
         </record>
 
         <record id="menu_contactus" model="website.menu">
@@ -25,6 +27,7 @@
             <field name="url">/page/website.contactus</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">60</field>
+            <field name="website_id" ref="default_website"/>
         </record>
 
         <record id="base.group_website_publisher" model="res.groups">

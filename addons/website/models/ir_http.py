@@ -88,6 +88,7 @@ class ir_http(orm.AbstractModel):
 
             request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
+            request.context['website_id'] = request.website.id
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
             if first_pass:

@@ -16,12 +16,18 @@ class view(osv.osv):
         'website_meta_description': fields.text("Website meta description", size=160, translate=True),
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
         'customize_show': fields.boolean("Show As Optional Inherit"),
+        'website_id': fields.many2one('website',ondelete='cascade', string="Website"),
     }
+
+    _sql_constraints = [
+        ('key_website_id_uniq', 'unique(key, website_id)',
+            'Key must be unique per website.'),
+    ]
+
     _defaults = {
         'page': False,
         'customize_show': False,
     }
-
 
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):

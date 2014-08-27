@@ -29,6 +29,7 @@ from openerp.tools import html_escape as escape
 from openerp.tools import ustr as ustr
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request
+from werkzeug.exceptions import NotFound
 
 logger = logging.getLogger(__name__)
 
@@ -137,15 +138,13 @@ def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
 
 class website(osv.osv):
-    def _get_menu_website(self, cr, uid, ids, context=None):
-        # IF a menu is changed, update all websites
-        return self.search(cr, uid, [], context=context)
-
     def _get_menu(self, cr, uid, ids, name, arg, context=None):
-        root_domain = [('parent_id', '=', False)]
-        menus = self.pool.get('website.menu').search(cr, uid, root_domain, order='id', context=context)
-        menu = menus and menus[0] or False
-        return dict( map(lambda x: (x, menu), ids) )
+        res = {}
+        menu_obj = self.pool.get('website.menu')
+        for id in ids:
+            menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False), ('website_id', '=', id)], order='id', context=context)
+            res[id] = menu_ids and menu_ids[0] or False
+        return res
 
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
@@ -164,14 +163,12 @@ class website(osv.osv):
         'google_analytics_key': fields.char('Google Analytics Key'),
         'user_id': fields.many2one('res.users', string='Public User'),
         'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
-        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
-            store= {
-                'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
-            })
+        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu')
     }
-
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'user_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
+
     }
 
     # cf. Wizard hack in website_views.xml
@@ -198,7 +195,9 @@ class website(osv.osv):
         except ValueError:
             # new page
             _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
-            page_id = view.copy(cr, uid, template_id, context=context)
+            website_id = context.get('website_id')
+            key = template_module+'.'+page_name
+            page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': key}, context=context)
             page = view.browse(cr, uid, page_id, context=context)
             page.write({
                 'arch': page.arch.replace(template, page_xmlid),
@@ -210,7 +209,7 @@ class website(osv.osv):
                 'module': template_module,
                 'model': 'ir.ui.view',
                 'res_id': page_id,
-                'noupdate': True
+                'noupdate': True,
             }, context=context)
         return page_xmlid
 
@@ -260,8 +259,10 @@ class website(osv.osv):
         return langs
 
     def get_current_website(self, cr, uid, context=None):
-        # TODO: Select website, currently hard coded
-        return self.pool['website'].browse(cr, uid, 1, context=context)
+        domain_name=request.httprequest.host.split(":")[0].lower()
+        ids=self.search(cr, uid, [('name', '=', domain_name)], context=context)
+        website = self.browse(cr, uid, ids and ids[0] or 1, context=context)
+        return website
 
     def is_publisher(self, cr, uid, ids, context=None):
         Access = self.pool['ir.model.access']
@@ -275,11 +276,16 @@ class website(osv.osv):
     def get_template(self, cr, uid, ids, template, context=None):
         if isinstance(template, (int, long)):
             view_id = template
+
         else:
             if '.' not in template:
                 template = 'website.%s' % template
             module, xmlid = template.split('.', 1)
-            model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
+            key = template
+            website_id=request.context.get('website_id')
+            view_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', key),'|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)
+            if not view_id:
+                raise NotFound
         return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
