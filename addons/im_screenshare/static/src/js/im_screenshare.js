@@ -1,6 +1,7 @@
 (function(){
     var instance = openerp;
     instance.im_screenshare = {};
+    var _t = openerp._t;
 
     // Default class : it records the summary mutation (start, stop, and send must be override to use the mutations)
     // A mutation is a key-array :
@@ -87,16 +88,13 @@
             var self = this;
             var clean_mutations = [];
             _.each(mutations, function(m){
-                if(m.base){
+                if(m.f === 'initialize' || m.f === 'message' || m.base){
                     clean_mutations.push(m);
                 }
                 if(m.f === 'forwardData'){
                     if(m.args[1].x.length){
                        clean_mutations.push(m);
                     }
-                }
-                if(m.f === 'initialize'){
-                    clean_mutations.push(m);
                 }
                 if(m.f === 'applyChanged'){
                     // remove mutation id=1 and attribute is empty key-array
@@ -182,13 +180,14 @@
             });
         },
         stop_record: function(){
+            // send notification to the player message zone
+            this.send_record([{f: "message", message : _t("The sharing/recording is not now finished."), timestamp: Date.now()}])
             // erase cookie
             openerp.session.set_cookie("odoo-screenshare-" + this.mode, "", -1);
             // re-init data
             this.treeMirrorClient.disconnect();
             this.treeMirrorClient = null;
             this.cursorMirrorClient.disconnect();
-            delete this.cursorMirrorClient;
             this.cursorMirrorClient = null;
 
             this.loading_node_id = false;
@@ -314,7 +313,16 @@
                 if (msg.f === 'forwardData') {
                     this.cursorMirror[msg.f].apply(this.cursorMirror, msg.args);
                 } else {
-                    this.treeMirror[msg.f].apply(this.treeMirror, msg.args);
+                    if(msg.f === 'message'){ // message to be display in the message zone
+                        $('.oe_screenshare_message_zone').text(msg.message);
+                    }else{
+                        // DOM mutation (initialize, or applyChanged)
+                        this.treeMirror[msg.f].apply(this.treeMirror, msg.args);
+                        if(msg.f === 'initialize'){
+                            var mzone = $("<div>", {class: "oe_screenshare_message_zone"}).text(_t("This the screensharing player."));
+                            $("body").prepend(mzone);
+                        }
+                    }
                 }
             }
         }
