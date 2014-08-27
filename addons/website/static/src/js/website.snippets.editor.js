@@ -728,16 +728,24 @@
         },
 
         reset: function (event) {
-            var self = this, $el, method;
+            var self = this;
+            var lis = self.$el.add(self.$el.find('li')).filter('.active').get();
+            lis.reverse();
+            _.each(lis, function (li) {
+                var $li = $(li);
+                for (var k in self.reset_methods) {
+                    var method = self.reset_methods[k];
+                    if ($li.is('[data-'+method+']') || $li.closest('[data-'+method+']').size()) {
+                        delete self.reset_methods[k];
+                    }
+                }
+                self.select("reset", $li);
+            });
+
             for (var k in self.reset_methods) {
-                method = self.reset_methods[k];
-                var $li = self.$el.find('[data-'+method+']').add(self.$el).filter('.active, :has(.active)');
-                if ($li.size()) {
-                    $li.each(function () {
-                        self.select("reset", $(this));
-                    });
-                } else {
-                    self[method]("reset", null, null);
+                var method = self.reset_methods[k];
+                if (method) {
+                    self[method]("reset", null);
                 }
             }
             self.reset_methods = [];
@@ -783,9 +791,10 @@
             _.each($methods, function (el) {
                 var $el = $(el);
                 var methods = method(el);
+
                 for (var k in methods) {
                     if (self[k]) {
-                        if (self.reset_methods.indexOf(k) === -1) {
+                        if (type !== "reset" && self.reset_methods.indexOf(k) === -1) {
                             self.reset_methods.push(k);
                         }
                         self[k](type, methods[k], $el);
@@ -839,8 +848,10 @@
         background: function(type, value, $li) {
             if (value && value.length) {
                 this.$target.css("background-image", 'url(' + value + ')');
+                this.$target.addClass("oe_img_bg");
             } else {
-                this.$target.css("background-image", "").removeClass("oe_img_bg");
+                this.$target.css("background-image", "");
+                this.$target.removeClass("oe_img_bg").removeClass("oe_custom_bg");
             }
         },
         choose_image: function(type, value, $li) {
@@ -859,15 +870,14 @@
             $image.on('saved', self, function (o) {
                 var value = $image.attr("src");
                 self.$target.css("background-image", 'url(' + value + ')');
-                self.$el.find('li[data-select_class="oe_custom_bg"]').data("src", value);
+                self.$el.find('li[data-choose_image]').data("background", value).attr("data-background", value);
                 self.$target.trigger("snippet-option-change", [self]);
                 $image.remove();
-                self.$target.addClass('oe_custom_bg').removeClass('oe_img_bg');
+                self.$target.addClass('oe_custom_bg oe_img_bg');
                 self.set_active();
             });
             editor.on('cancel', self, function () {
-                self.$target.removeClass("oe_img_bg")
-                    .trigger("snippet-option-change", [self]);
+                self.$target.trigger("snippet-option-change", [self]);
                 $image.remove();
             });
         },
@@ -876,21 +886,19 @@
             var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
             this._super();
 
-            this.$el.find('li[data-background]')
-                .filter(':not([data-background=""])')
+            this.$el.find('li[data-background]:not([data-background=""])')
                 .removeClass("active")
                 .each(function () {
-                    var background = $(this).data("background");
+                    var background = $(this).data("background") || $(this).attr("data-background");
                     if ((src.length && background.length && src.indexOf(background) !== -1) || (!src.length && !background.length)) {
                         $(this).addClass("active");
                     }
                 });
-            if(!this.$el.find('li.active').size()) {
-                this.$el.find('li[data-select_class=""][data-background=""], '+
-                    'li[data-select_class=""] li[data-background=""], '+
-                    'li[data-background=""] li[data-select_class=""]').addClass("active");
-                this.$el.filter('li[data-select_class=""]').find('li[data-background=""]').addClass("active");
-                this.$el.filter('li[data-background=""]').find('li[data-select_class=""]').addClass("active");
+
+            if (!this.$el.find('li[data-background].active').size()) {
+                this.$el.find('li[data-background=""]:not([data-choose_image])').addClass("active");
+            } else {
+                this.$el.find('li[data-background=""]:not([data-choose_image])').removeClass("active");
             }
         }
     });
