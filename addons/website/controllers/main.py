@@ -148,6 +148,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'name': path,
                     'url': "/page/" + xml_id,
                     'parent_id': id,
+                    'website_id': request.context.get('website_id')
                 }, context=request.context)
         # Reverse action in order to allow shortcut for /page/<website_xml_id>
         url = "/page/" + re.sub(r"^website\.", '', xml_id)
