@@ -1268,7 +1268,7 @@ openerp.account = function (instance) {
     
         initializeCreateForm: function() {
             var self = this;
-    
+
             _.each(self.create_form, function(field) {
                 field.set("value", false);
             });
@@ -1488,8 +1488,8 @@ openerp.account = function (instance) {
                 var amount = self.amount_field.get("value");
                 var tax = self.map_tax_id_amount[self.tax_id_field.get("value")];
                 if (amount && tax) {
-                    deferred_tax = $.when(self.model_tax
-                        .call("compute_for_bank_reconciliation", [self.tax_id_field.get("value"), amount]))
+                    deferred_tax = self.model_tax
+                        .call("compute_for_bank_reconciliation", [self.tax_id_field.get("value"), amount])
                         .then(function(data){
                             line_created_being_edited[0].amount_with_tax = line_created_being_edited[0].amount;
                             line_created_being_edited[0].amount = (data.total.toFixed(3) === amount.toFixed(3) ? amount : data.total);
@@ -1519,7 +1519,7 @@ openerp.account = function (instance) {
                 }
             } else { deferred_tax.resolve(); }
     
-            $.when(deferred_tax).then(function(){
+            return deferred_tax.then(function(){
                 // Format amounts
                 var rounding = 1/self.map_currency_id_rounding[self.st_line.currency_id];
                 $.each(line_created_being_edited, function(index, val) {
