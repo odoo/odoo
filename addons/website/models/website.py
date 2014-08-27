@@ -161,6 +161,8 @@ class website(osv.osv):
         'social_linkedin': fields.char('LinkedIn Account'),
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
+        'social_dribbble': fields.char('Dribbble Account'),
+        'social_xing': fields.char('Xing Account'),
         'google_analytics_key': fields.char('Google Analytics Key'),
         'user_id': fields.many2one('res.users', string='Public User'),
         'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),

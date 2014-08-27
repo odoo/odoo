@@ -19,6 +19,8 @@ class website_config_settings(osv.osv_memory):
         'social_linkedin': fields.related('website_id', 'social_linkedin', type="char", string='LinkedIn Account'),
         'social_youtube': fields.related('website_id', 'social_youtube', type="char", string='Youtube Account'),
         'social_googleplus': fields.related('website_id', 'social_googleplus', type="char", string='Google+ Account'),
+        'social_xing': fields.related('website_id', 'social_xing', type="char", string='Xing Account'),
+        'social_dribbble': fields.related('website_id', 'social_dribbble', type="char", string='Dribbble Account'),
     }
 
     def on_change_website_id(self, cr, uid, ids, website_id, context=None):
