@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import base64
 import os
 
 from openerp.osv import osv
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
-
-from openerp.addons.account_bank_statement_import import account_bank_statement_import as ibs
-ibs.add_file_type(('ofx', 'OFX'))
 
 try:
     from ofxparse import OfxParser as ofxparser
@@ -22,19 +18,27 @@ except ImportError:
 class account_bank_statement_import(osv.TransientModel):
     _inherit = 'account.bank.statement.import'
 
-    def process_ofx(self, cr, uid, data_file, journal_id=False, context=None):
-        """ Import a file in the .OFX format"""
+    def _check_ofx(self, cr, uid, file, context=None):
         if ofxparser is None:
-            raise osv.except_osv(_("Error"), _("OFX parser unavailable because the `ofxparse` Python library cannot be found."
-                    "It can be downloaded and installed from `https://pypi.python.org/pypi/ofxparse`."))
+            return False
+        try:
+            ofxparser.parse(file)
+        except:
+            return False
+        return True
+
+    def _process_file(self, cr, uid, data_file=None, journal_id=False, context=None):
+        """ Import a file in the .OFX format"""
         try:
             tempfile = open("temp.ofx", "w+")
-            tempfile.write(base64.decodestring(data_file))
+            tempfile.write(data_file)
             tempfile.read()
             pathname = os.path.dirname('temp.ofx')
             path = os.path.join(os.path.abspath(pathname), 'temp.ofx')
         except:
             raise osv.except_osv(_('Import Error!'), _('File handling error.'))
+        if not self._check_ofx(cr, uid, file(path), context=context):
+            return super(account_bank_statement_import, self)._process_file(cr, uid, data_file, journal_id, context=context)
         try:
             ofx = ofxparser.parse(file(path))
         except:

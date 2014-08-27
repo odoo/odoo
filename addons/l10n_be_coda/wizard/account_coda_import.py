@@ -19,8 +19,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import base64
 import time
+import re
 
 from openerp.osv import osv
 from openerp.tools.translate import _
@@ -30,17 +30,19 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-from openerp.addons.account_bank_statement_import import account_bank_statement_import as coda_ibs
-
-coda_ibs.add_file_type(('coda', 'CODA'))
-
 class account_bank_statement_import(osv.TransientModel):
     _inherit = "account.bank.statement.import"
 
-    def process_coda(self, cr, uid, codafile=None, journal_id=False, context=None):
+    def _check_coda(self, cr, uid, data_file, context=None):
+        return re.match('0{5}\d{9}05[ D] {7}', data_file) != None
+
+    def _process_file(self, cr, uid, data_file=None, journal_id=False, context=None):
+        if not self._check_coda(cr, uid, data_file, context=context):
+            return super(account_bank_statement_import, self)._process_file(cr, uid, data_file, journal_id, context=context)
+
         if context is None:
             context = {}
-        recordlist = unicode(base64.decodestring(codafile), 'windows-1252', 'strict').split('\n')
+        recordlist = unicode(data_file, 'windows-1252', 'strict').split('\n')
         statements = []
         globalisation_comm = {}
         for line in recordlist:
