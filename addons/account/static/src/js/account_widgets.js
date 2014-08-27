@@ -1143,21 +1143,26 @@ openerp.account = function (instance) {
             var self = this;
             self.initializeCreateForm();
             var preset = self.presets[e.currentTarget.dataset.presetid];
+            // Hack : set_value of a field calls a handler that returns a deferred because it could make a RPC call
+            // to compute the tax before it updates the line being edited. Unfortunately this deferred is lost.
+            // Hence this ugly hack to avoid concurrency problem that arose when setting amount (in initializeCreateForm), then tax, then another amount
+            if (preset.tax && self.tax_field) self.tax_field.set_value(false);
+            if (preset.amount && self.amount_field) self.amount_field.set_value(false);
+
             for (var key in preset) {
                 if (! preset.hasOwnProperty(key) || key === "amount") continue;
                 if (self.hasOwnProperty(key+"_field"))
                     self[key+"_field"].set_value(preset[key]);
             }
-            var sign = self.amount_field.get_value() < 0 ? -1 : 1;
             if (preset.amount && self.amount_field) {
                 if (preset.amount_type === "fixed")
-                    self.amount_field.set_value(sign * preset.amount);
+                    self.amount_field.set_value(preset.amount);
                 else if (preset.amount_type === "percentage_of_total")
-                    self.amount_field.set_value(sign * self.st_line.amount * preset.amount / 100);
+                    self.amount_field.set_value(self.st_line.amount * preset.amount / 100);
                 else if (preset.amount_type === "percentage_of_balance") {
                     self.amount_field.set_value(0);
                     self.updateBalance();
-                    self.amount_field.set_value(sign * Math.abs(self.get("balance")) * preset.amount / 100);
+                    self.amount_field.set_value(-1 * self.get("balance") * preset.amount / 100);
                 }
             }
         },
