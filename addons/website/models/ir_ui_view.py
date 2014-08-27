@@ -22,6 +22,12 @@ class view(osv.osv):
         'key': fields.char("Website meta title", size=70),
         'website_id': fields.many2one('website',ondelete='cascade', string="Website"),
     }
+
+    _sql_constraints = [
+        ('key_website_id_uniq', 'unique(key, website_id)',
+            'Key must be unique per website.'),
+    ]
+
     _defaults = {
         'page': False,
     }
