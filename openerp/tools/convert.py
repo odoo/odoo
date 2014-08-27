@@ -869,6 +869,7 @@ form: module.record_id""" % (xml_id,)
 
     def _tag_template(self, cr, el, data_node=None):
         # This helper transforms a <template> element into a <record> and forwards it
+        #from pudb import set_trace; set_trace()
         tpl_id = el.get('id', el.get('t-name', '')).encode('ascii')
         full_tpl_id = tpl_id
         if '.' not in full_tpl_id:

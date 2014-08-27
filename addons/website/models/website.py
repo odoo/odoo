@@ -29,6 +29,7 @@ from openerp.tools import html_escape as escape
 from openerp.tools import ustr as ustr
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request
+from openerp.addons.base.ir.ir_qweb import QWebTemplateNotFound
 
 logger = logging.getLogger(__name__)
 
@@ -184,6 +185,7 @@ class website(osv.osv):
         return super(website, self).write(cr, uid, ids, vals, context)
 
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
+        #from pudb import set_trace; set_trace()
         context = context or {}
         imd = self.pool.get('ir.model.data')
         view = self.pool.get('ir.ui.view')
@@ -201,10 +203,12 @@ class website(osv.osv):
             _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
             page_id = view.copy(cr, uid, template_id, context=context)
             page = view.browse(cr, uid, page_id, context=context)
+            #sig-ajout
             page.write({
                 'website_id': context.get('website_id'),
                 'arch': page.arch.replace(template, page_xmlid),
                 'name': page_name,
+                'key': 'website'+'.'+page_name,
                 'page': ispage,
             })
             imd.create(cr, uid, {
@@ -261,19 +265,22 @@ class website(osv.osv):
 
     #sig-ajout
     def get_template(self, cr, uid, ids, template, context=None):
+        #from pudb import set_trace; set_trace()
         if isinstance(template, (int, long)):
             view_id = template
-            module = 'website'
+
         else:
             if '.' not in template:
                 template = 'website.%s' % template
             module, xmlid = template.split('.', 1)
             model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
-        key=module+'.'+str(view_id)
-        website_id=context.get('website_id')
-        result_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', key),'|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)
+            key=module+'.'+xmlid
+            website_id=self.get_current_website(cr, uid, context=context).id
+            view_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', key),'|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)
+            if view_id==[]:
+                raise QWebTemplateNotFound("Template %r not found" % xmlid, template=template)
 
-        return self.pool["ir.ui.view"].browse(cr, uid, result_id, context=context)
+        return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
         # TODO: remove this. (just kept for backward api compatibility for saas-3)

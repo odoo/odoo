@@ -95,5 +95,19 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_view_form_extend"> 
+            <field name="model">ir.ui.view</field>
+
+            <field name="inherit_id" ref="base.view_view_form"/>
+            <field name="arch" type="xml">
+
+                <field name="name" position="after">
+                    <field name="website_id"/>
+                    <field name="key"/>
+                </field>
+
+            </field>
+        </record>
+
     </data>
 </openerp>
