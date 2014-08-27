@@ -202,6 +202,7 @@ class website(osv.osv):
             page_id = view.copy(cr, uid, template_id, context=context)
             page = view.browse(cr, uid, page_id, context=context)
             page.write({
+                'website_id': context.get('website_id'),
                 'arch': page.arch.replace(template, page_xmlid),
                 'name': page_name,
                 'page': ispage,
@@ -211,7 +212,7 @@ class website(osv.osv):
                 'module': template_module,
                 'model': 'ir.ui.view',
                 'res_id': page_id,
-                'noupdate': True
+                'noupdate': True,
             }, context=context)
         return page_xmlid
 
