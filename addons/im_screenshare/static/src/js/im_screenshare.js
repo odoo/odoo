@@ -335,19 +335,20 @@
             this._super(parent, 'record');
         },
         start: function() {
-            this.$el.html(this.generate_button());
+            this.$el.html(this.generate_button(this.is_recording()));
             this.$el.on('click','button',_.bind(this.click,this));
         },
-        generate_button: function() {
-            return (this.is_recording() ? '<button>Stop</button>' : '<button>Record</button>');
+        generate_button: function(is_recording) {
+            return (is_recording ? '<button>Stop</button>' : '<button>Record</button>');
         },
         click: function(){
-            if(this.is_recording()){
+            var is_recording = this.is_recording();
+            this.$el.html(this.generate_button(!is_recording));
+            if(is_recording){
                 this.stop_record();
             }else{
                 this.start_record();
             }
-            this.$el.html(this.generate_button());
         }
     });
 
