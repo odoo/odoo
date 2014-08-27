@@ -73,8 +73,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         load_saved_screen:  function(){
             this.close_popup();
             var selectedOrder = this.pos.get('selectedOrder');
-            // this.set_current_screen(selectedOrder.get_screen_data('screen') || this.default_screen,null,'refresh');
-            this.set_current_screen(this.default_screen,null,'refresh');
+            // FIXME : this changing screen behaviour is sometimes confusing ... 
+            this.set_current_screen(selectedOrder.get_screen_data('screen') || this.default_screen,null,'refresh');
+            //this.set_current_screen(this.default_screen,null,'refresh');
             
         },
         set_user_mode: function(user_mode){
@@ -348,9 +349,16 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super();
 
-            if( text && (text.message || text.comment) ){
-                this.$('.message').text(text.message);
-                this.$('.comment').text(text.comment);
+            $('body').append('<audio src="/point_of_sale/static/src/sounds/error.wav" autoplay="true"></audio>');
+
+            if( text ) {
+                if ( text.message || text.comment ) {
+                    this.$('.message').text(text.message);
+                    this.$('.comment').text(text.comment);
+                } else {
+                    this.$('.message').text(_t('Error'));
+                    this.$('.comment').html(text);
+                }
             }
 
             this.pos.barcode_reader.save_callbacks();
@@ -365,6 +373,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
+    module.ErrorTracebackPopupWidget = module.ErrorPopupWidget.extend({
+        template:'ErrorTracebackPopupWidget',
+    });
 
     module.ErrorSessionPopupWidget = module.ErrorPopupWidget.extend({
         template:'ErrorSessionPopupWidget',
@@ -375,6 +386,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show: function(barcode){
             this._super();
             this.$('.barcode').text(barcode);
+
         },
     });
 
@@ -410,6 +422,18 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
     module.ErrorInvoiceTransferPopupWidget = module.ErrorPopupWidget.extend({
         template: 'ErrorInvoiceTransferPopupWidget',
+    });
+
+    module.UnsentOrdersPopupWidget = module.PopUpWidget.extend({
+        template: 'UnsentOrdersPopupWidget',
+        show: function(options){
+            var self = this;
+            this._super(options);
+            this.renderElement();
+            this.$('.button.confirm').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+            });
+        },
     });
 
     module.ScaleScreenWidget = module.ScreenWidget.extend({
@@ -468,7 +492,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         get_product_name: function(){
             var product = this.get_product();
-            return (product ? product.name : undefined) || 'Unnamed Product';
+            return (product ? product.display_name : undefined) || 'Unnamed Product';
         },
         get_product_price: function(){
             var product = this.get_product();
@@ -557,6 +581,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ClientListScreenWidget = module.ScreenWidget.extend({
         template: 'ClientListScreenWidget',
 
+        init: function(parent, options){
+            this._super(parent, options);
+        },
+
         show_leftpane: false,
 
         auto_back: true,
@@ -579,15 +607,19 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 self.pos_widget.screen_selector.back();
             });
 
-            var partners = this.pos.db.get_partners_sorted();
+            var partners = this.pos.db.get_partners_sorted(1000);
             this.render_list(partners);
+            
+            this.pos.load_new_partners().then(function(){ 
+                // will only get called if new partners were reloaded.
+                self.render_list(self.pos.db.get_partners_sorted(1000));
+            });
 
             if( this.old_client ){
                 this.display_client_details('show',this.old_client,0);
             }
 
             this.$('.client-list-contents').delegate('.client-line','click',function(event){
-                console.log('uh');
                 self.line_select(event,$(this),parseInt($(this).data('id')));
             });
 
@@ -622,20 +654,28 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         clear_search: function(){
-            var customers = this.pos.db.get_partners_sorted();
+            var customers = this.pos.db.get_partners_sorted(1000);
             this.render_list(customers);
             this.$('.searchbox input')[0].value = '';
             this.$('.searchbox input').focus();
         },
         render_list: function(partners){
-            var contents = this.$('.client-list-contents');
-            contents.empty();
-            for(var i = 0, len = partners.length; i < len; i++){
-                var clientline = $(QWeb.render('ClientLine',{partner:partners[i]}));
-                if( partners[i] === this.new_client ){
-                    clientline.addClass('highlight');
+            var contents = this.$el[0].querySelector('.client-list-contents');
+            contents.innerHTML = "";
+            for(var i = 0, len = Math.min(partners.length,1000); i < len; i++){
+                var partner    = partners[i];
+                var clientline_html = QWeb.render('ClientLine',{widget: this, partner:partners[i]});
+                var clientline = document.createElement('tbody');
+                clientline.innerHTML = clientline_html;
+                clientline = clientline.childNodes[1];
+
+                if( partners === this.new_client ){
+                    clientline.classList.add('highlight');
+                }else{
+                    clientline.classList.remove('highlight');
                 }
-                contents.append(clientline);
+
+                contents.appendChild(clientline);
             }
         },
         save_changes: function(){

@@ -500,7 +500,7 @@ class hr_employee(osv.osv):
         if diff > 0:
             leave_id = holiday_obj.create(cr, uid, {'name': _('Allocation for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
         elif diff < 0:
-            leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
+            raise osv.except_osv(_('Warning!'), _('You cannot reduce validated allocation requests'))
         else:
             return False
         for sig in ('confirm', 'validate', 'second_validate'):

@@ -47,7 +47,7 @@
                         </table>
 
                         <t t-set="total" t-value="reduce(lambda x,y: x+y['balance'], cur_lines['line'], 0.00)"/>
-                        <p>Total: <span t-esc="formatLang(total, currency_obj=res_company.currency_id)"/></p>
+                        <p>Total: <span t-esc="formatLang(total, currency_obj=cur_lines['currency'])"/></p>
                     </t>
             </div>
             </t>

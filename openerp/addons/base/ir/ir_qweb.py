@@ -289,7 +289,7 @@ class QWeb(orm.AbstractModel):
             result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
 
         if element.tail:
-            result += element.tail
+            result += element.tail.encode('utf-8')
 
         if isinstance(result, unicode):
             return result.encode('utf-8')
@@ -353,7 +353,7 @@ class QWeb(orm.AbstractModel):
 
     def render_tag_esc(self, element, template_attributes, generated_attributes, qwebcontext):
         options = json.loads(template_attributes.get('esc-options') or '{}')
-        widget = self.get_widget_for(options.get('widget', ''))
+        widget = self.get_widget_for(options.get('widget'))
         inner = widget.format(template_attributes['esc'], options, qwebcontext)
         return self.render_element(element, template_attributes, generated_attributes, qwebcontext, inner)
 
@@ -462,7 +462,8 @@ class QWeb(orm.AbstractModel):
         return self.pool.get('ir.qweb.field.' + field_type, self.pool['ir.qweb.field'])
 
     def get_widget_for(self, widget):
-        return self.pool.get('ir.qweb.widget.' + widget, self.pool['ir.qweb.widget'])
+        widget_model = ('ir.qweb.widget.' + widget) if widget else 'ir.qweb.widget'
+        return self.pool.get(widget_model) or self.pool['ir.qweb.widget']
 
     def get_attr_bool(self, attr, default=False):
         if attr:
@@ -1014,7 +1015,6 @@ class AssetsBundle(object):
     # Use this:
     #       sudo gem install compass --pre
     cmd_sass = ['sass', '--stdin', '-t', 'compressed', '--unix-newlines', '--compass', '-r', 'bootstrap-sass']
-    cache = openerp.tools.lru.LRU(32)
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
     rx_sass_import = re.compile("""(@import\s?['"]([^'"]+)['"])""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
@@ -1114,21 +1114,15 @@ class AssetsBundle(object):
         return hashlib.sha1(check).hexdigest()
 
     def js(self):
-        key = 'js_%s' % self.xmlid
-        if key in self.cache and self.cache[key][0] != self.version:
-            # Invalidate cache on version mismach
-            self.cache.pop(key)
-        if key not in self.cache:
-            content =';\n'.join(asset.minify() for asset in self.javascripts)
-            self.cache[key] = (self.version, content)
-        return self.cache[key][1]
+        content = self.get_cache('js')
+        if content is None:
+            content = ';\n'.join(asset.minify() for asset in self.javascripts)
+            self.set_cache('js', content)
+        return content
 
     def css(self):
-        key = 'css_%s' % self.xmlid
-        if key in self.cache and self.cache[key][0] != self.version:
-            # Invalidate cache on version mismach
-            self.cache.pop(key)
-        if key not in self.cache:
+        content = self.get_cache('css')
+        if content is None:
             self.compile_sass()
             content = '\n'.join(asset.minify() for asset in self.stylesheets)
 
@@ -1148,9 +1142,32 @@ class AssetsBundle(object):
             content = u'\n'.join(matches)
             if self.css_errors:
                 return content
-            self.cache[key] = (self.version, content)
+            self.set_cache('css', content)
 
-        return self.cache[key][1]
+        return content
+
+    def get_cache(self, type):
+        content = None
+        domain = [('url', '=', '/web/%s/%s/%s' % (type, self.xmlid, self.version))]
+        bundle = self.registry['ir.attachment'].search_read(self.cr, self.uid, domain, ['datas'], context=self.context)
+        if bundle:
+            content = bundle[0]['datas'].decode('base64')
+        return content
+
+    def set_cache(self, type, content):
+        ira = self.registry['ir.attachment']
+        url_prefix = '/web/%s/%s/' % (type, self.xmlid)
+        # Invalidate previous caches
+        oids = ira.search(self.cr, self.uid, [('url', '=like', url_prefix + '%')], context=self.context)
+        if oids:
+            ira.unlink(self.cr, openerp.SUPERUSER_ID, oids, context=self.context)
+        url = url_prefix + self.version
+        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+                    datas=content.encode('utf8').encode('base64'),
+                    type='binary',
+                    name=url,
+                    url=url,
+                ), context=self.context)
 
     def css_message(self, message):
         return """

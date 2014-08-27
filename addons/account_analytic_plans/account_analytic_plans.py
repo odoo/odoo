@@ -210,7 +210,7 @@ class account_analytic_plan_instance(osv.osv):
         ana_plan_instance_obj = self.pool.get('account.analytic.plan.instance')
         acct_anal_acct = self.pool.get('account.analytic.account')
         acct_anal_plan_line_obj = self.pool.get('account.analytic.plan.line')
-        if context and 'journal_id' in context:
+        if context and context.get('journal_id'):
             journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
 
             pids = ana_plan_instance_obj.search(cr, uid, [('name','=',vals['name']), ('code','=',vals['code']), ('plan_id','<>',False)], context=context)
@@ -392,7 +392,7 @@ class account_invoice(osv.osv):
                 if inv.type in ('in_invoice', 'in_refund'):
                     ref = inv.reference
                 else:
-                    ref = self._convert_ref(cr, uid, inv.number)
+                    ref = self._convert_ref(inv.number)
                 obj_move_line = acct_ins_obj.browse(cr, uid, il['analytics_id'], context=context)
                 ctx = context.copy()
                 ctx.update({'date': inv.date_invoice})

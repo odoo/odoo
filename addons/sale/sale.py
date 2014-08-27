@@ -27,6 +27,12 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 import openerp.addons.decimal_precision as dp
 from openerp import workflow
 
+class res_company(osv.Model):
+    _inherit = "res.company"
+    _columns = {
+        'sale_note': fields.text('Default Terms and Conditions', translate=True, help="Default terms and conditions for quotations."),
+    }
+
 class sale_order(osv.osv):
     _name = "sale.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -269,7 +275,7 @@ class sale_order(osv.osv):
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def copy_quotation(self, cr, uid, ids, context=None):
-        id = self.copy(cr, uid, ids[0], context=None)
+        id = self.copy(cr, uid, ids[0], context=context)
         view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
         view_id = view_ref and view_ref[1] or False,
         return {
@@ -1164,12 +1170,6 @@ class sale_order_line(osv.osv):
             if rec.state not in ['draft', 'cancel']:
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
-
-class res_company(osv.Model):
-    _inherit = "res.company"
-    _columns = {
-        'sale_note': fields.text('Default Terms and Conditions', translate=True, help="Default terms and conditions for quotations."),
-    }
 
 
 class mail_compose_message(osv.Model):

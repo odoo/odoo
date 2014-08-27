@@ -227,7 +227,11 @@ class project(osv.osv):
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
+        'analytic_account_id': fields.many2one(
+            'account.analytic.account', 'Contract/Analytic',
+            help="Link this project to an analytic account if you need financial management on projects. "
+                 "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
+            ondelete="cascade", required=True, auto_join=True),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
@@ -695,10 +699,10 @@ class task(osv.osv):
         if default is None:
             default = {}
         if not default.get('name'):
-            current = self.browse(cr, uid, id, context=context)       
+            current = self.browse(cr, uid, id, context=context)
             default['name'] = _("%s (copy)") % current.name
         return super(task, self).copy_data(cr, uid, id, default, context)
-    
+
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -778,7 +782,7 @@ class task(osv.osv):
         'project_id': _get_default_project_id,
         'date_last_stage_update': fields.datetime.now,
         'kanban_state': 'normal',
-        'priority': '1',
+        'priority': '0',
         'progress': 0,
         'sequence': 10,
         'active': True,
@@ -787,8 +791,8 @@ class task(osv.osv):
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=ctx),
         'partner_id': lambda self, cr, uid, ctx=None: self._get_default_partner(cr, uid, context=ctx),
     }
-    _order = "priority, sequence, date_start, name, id"
-    
+    _order = "priority desc, sequence, date_start, name, id"
+
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
             visited_branch = set()
@@ -1309,6 +1313,7 @@ class project_task_history_cumulative(osv.osv):
 
     _columns = {
         'end_date': fields.date('End Date'),
+        'nbr_tasks': fields.integer('# of Tasks', readonly=True),
         'project_id': fields.many2one('project.project', 'Project'),
     }
 
@@ -1325,11 +1330,16 @@ class project_task_history_cumulative(osv.osv):
                     h.id AS history_id,
                     h.date+generate_series(0, CAST((coalesce(h.end_date, DATE 'tomorrow')::date - h.date) AS integer)-1) AS date,
                     h.task_id, h.type_id, h.user_id, h.kanban_state,
+                    count(h.task_id) as nbr_tasks,
                     greatest(h.remaining_hours, 1) AS remaining_hours, greatest(h.planned_hours, 1) AS planned_hours,
                     t.project_id
                 FROM
                     project_task_history AS h
                     JOIN project_task AS t ON (h.task_id = t.id)
+                GROUP BY
+                  h.id,
+                  h.task_id,
+                  t.project_id
 
             ) AS history
         )

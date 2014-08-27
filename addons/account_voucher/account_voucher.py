@@ -361,7 +361,7 @@ class account_voucher(osv.osv):
                         \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                         \n* The \'Cancelled\' status is used when user cancel voucher.'),
         'amount': fields.float('Total', digits_compute=dp.get_precision('Account'), required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'tax_amount':fields.float('Tax Amount', digits_compute=dp.get_precision('Account'), readonly=True, states={'draft':[('readonly',False)]}),
+        'tax_amount':fields.float('Tax Amount', digits_compute=dp.get_precision('Account'), readonly=True),
         'reference': fields.char('Ref #', readonly=True, states={'draft':[('readonly',False)]},
                                  help="Transaction reference number.", copy=False),
         'number': fields.char('Number', readonly=True, copy=False),
@@ -946,6 +946,8 @@ class account_voucher(osv.osv):
             # refresh to make sure you don't unlink an already removed move
             voucher.refresh()
             for line in voucher.move_ids:
+                # refresh to make sure you don't unreconcile an already unreconciled entry
+                line.refresh()
                 if line.reconcile_id:
                     move_lines = [move_line.id for move_line in line.reconcile_id.line_id]
                     move_lines.remove(line.id)
@@ -1042,7 +1044,8 @@ class account_voucher(osv.osv):
                 'period_id': voucher.period_id.id,
                 'partner_id': voucher.partner_id.id,
                 'currency_id': company_currency <> current_currency and  current_currency or False,
-                'amount_currency': company_currency <> current_currency and sign * voucher.amount or 0.0,
+                'amount_currency': (sign * abs(voucher.amount) # amount < 0 for refunds
+                    if company_currency != current_currency else 0.0),
                 'date': voucher.date,
                 'date_maturity': voucher.date_due
             }
@@ -1208,7 +1211,7 @@ class account_voucher(osv.osv):
             if line.amount == line.amount_unreconciled:
                 if not line.move_line_id:
                     raise osv.except_osv(_('Wrong voucher line'),_("The invoice you are willing to pay is not valid anymore."))
-                sign = voucher.type in ('payment', 'purchase') and -1 or 1
+                sign = line.type =='dr' and -1 or 1
                 currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:
                 currency_rate_difference = 0.0
@@ -1266,8 +1269,7 @@ class account_voucher(osv.osv):
                         # otherwise we use the rates of the system
                         amount_currency = currency_obj.compute(cr, uid, company_currency, line.move_line_id.currency_id.id, move_line['debit']-move_line['credit'], context=ctx)
                 if line.amount == line.amount_unreconciled:
-                    sign = voucher.type in ('payment', 'purchase') and -1 or 1
-                    foreign_currency_diff = sign * line.move_line_id.amount_residual_currency + amount_currency
+                    foreign_currency_diff = line.move_line_id.amount_residual_currency - abs(amount_currency)
 
             move_line['amount_currency'] = amount_currency
             voucher_line = move_line_obj.create(cr, uid, move_line)
@@ -1328,10 +1330,14 @@ class account_voucher(osv.osv):
             if voucher.payment_option == 'with_writeoff':
                 account_id = voucher.writeoff_acc_id.id
                 write_off_name = voucher.comment
-            elif voucher.type in ('sale', 'receipt'):
-                account_id = voucher.partner_id.property_account_receivable.id
+            elif voucher.partner_id:
+                if voucher.type in ('sale', 'receipt'):
+                    account_id = voucher.partner_id.property_account_receivable.id
+                else:
+                    account_id = voucher.partner_id.property_account_payable.id
             else:
-                account_id = voucher.partner_id.property_account_payable.id
+                # fallback on account of voucher
+                account_id = voucher.account_id.id
             sign = voucher.type == 'payment' and -1 or 1
             move_line = {
                 'name': write_off_name or name,

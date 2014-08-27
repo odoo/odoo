@@ -916,40 +916,61 @@
 
                   <div class="clearfix"/>
 
-                  <div class="form-group col-lg-6">
-                      <label>
-                          <input type="checkbox" name="shipping_different" t-att-checked="checkout.get('shipping_different')"/>
-                          <span>Ship to a different address</span>
-                      </label>
+                  <div class="form-group col-lg-12">
+                      <label>Shipping</label>
+                      <select name="shipping_id" class="form-control">
+                          <option value="0">Ship to the same address</option>
+                          <t t-foreach="shippings" t-as="shipping">
+                              <option t-att-value="shipping.id" t-att-selected="shipping.id == shipping_id"
+                                t-att-data-shipping_name="shipping.name"
+                                t-att-data-shipping_phone="shipping.phone"
+                                t-att-data-shipping_street="shipping.street"
+                                t-att-data-shipping_city="shipping.city"
+                                t-att-data-shipping_zip="shipping.zip"
+                                t-att-data-shipping_state_id="shipping.state_id and shipping.state_id.id"
+                                t-att-data-shipping_country_id="shipping.country_id and shipping.country_id.id"
+                                ><t t-esc="', '.join('\n'.join(shipping.name_get()[0][1].split(',')).split('\n')[1:])"/></option>
+                          </t>
+                          <option value="-1">-- Create a new address --</option>
+                      </select>
                   </div>
               </div>
-              <div class="js_shipping row mb16" t-att-style="not checkout.get('shipping_different') and 'display:none' or ''">
+              <div class="js_shipping row mb16" t-att-style="not shipping_id and 'display:none' or ''">
                   <h3 class="oe_shipping col-lg-12 mt16">Shipping Information</h3>
 
                   <div t-attf-class="form-group #{error.get('shipping_name') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_name">Name (Shipping)</label>
-                      <input type="text" name="shipping_name" class="form-control" t-att-value="checkout.get('shipping_name', '')"/>
+                      <input type="text" name="shipping_name" class="form-control" t-att-value="checkout.get('shipping_name', '')" t-att-readonly="'readonly' if shipping_id &gt;= 0 else ''"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_phone') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_phone">Phone</label>
-                      <input type="tel" name="shipping_phone" class="form-control" t-att-value="checkout.get('shipping_phone', '')"/>
+                      <input type="tel" name="shipping_phone" class="form-control" t-att-value="checkout.get('shipping_phone', '')" t-att-readonly="  'readonly' if shipping_id &gt;= 0 else ''"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_street') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_street">Street</label>
-                      <input type="text" name="shipping_street" class="form-control" t-att-value="checkout.get('shipping_street', '')"/>
+                      <input type="text" name="shipping_street" class="form-control" t-att-value="checkout.get('shipping_street', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else ''"/>
                   </div>
                   <div class="clearfix"/>
                   <div t-attf-class="form-group #{error.get('shipping_city') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_city">City</label>
-                      <input type="text" name="shipping_city" class="form-control" t-att-value="checkout.get('shipping_city', '')"/>
+                      <input type="text" name="shipping_city" class="form-control" t-att-value="checkout.get('shipping_city', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else ''"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_zip') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_zip">Zip / Postal Code</label>
-                      <input type="text" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')"/>
+                      <input type="text" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else ''"/>
+                  </div>
+                  <div t-attf-class="form-group #{error.get('shipping_state_id') and 'has-error' or ''} col-lg-6">
+                      <label class="control-label" for="shipping_state_id" style="font-weight: normal">State / Province</label>
+                      <select name="shipping_state_id" class="form-control" t-att-readonly="  'readonly' if shipping_id &gt;= 0 else ''">
+                          <option value="">State / Province...</option>
+                          <t t-foreach="states or []" t-as="state">
+                              <option t-att-value="state.id" t-att-selected="state.id == checkout.get('shipping_state_id')"><t t-esc="state.name"/></option>
+                          </t>
+                      </select>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_country_id') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_country_id">Country</label>
-                      <select name="shipping_country_id" class="form-control">
+                      <select name="shipping_country_id" class="form-control" t-att-readonly="  'readonly' if shipping_id &gt;= 0 else ''">
                           <option value="">Country...</option>
                           <t t-foreach="countries or []" t-as="country">
                               <option t-att-value="country.id" t-att-selected="country.id == checkout.get('shipping_country_id')"><t t-esc="country.name"/></option>
@@ -966,8 +987,10 @@
                       </select>
                   </div>
               </div>
-              <a href="/shop/cart" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Return to Cart</a>
-              <a class="btn btn-default btn-primary pull-right mb32 a-submit">Confirm <span class="fa fa-long-arrow-right"/></a>
+              <div class="clearfix">
+                <a href="/shop/cart" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Return to Cart</a>
+                <a class="btn btn-default btn-primary pull-right mb32 a-submit">Confirm <span class="fa fa-long-arrow-right"/></a>
+              </div>
           </div>
           <div class="col-lg-offset-1 col-lg-3 col-md-3 text-muted">
               <h3 class="page-header mt16">Your Order <small><a href="/shop/cart"><span class="fa fa-arrow-right"/> change</a></small></h3>
@@ -1192,6 +1215,21 @@
         </thead>
     </table>
 </template>
+
+<template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
+    <xpath expr="//footer" position="inside">
+        <div class="container mt16 mb8">
+            <div class="pull-right" t-ignore="true" t-if="not editable">
+                Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
+                the #1 <a href="http://www.odoo.com/page/e-commerce">Open Source eCommerce</a>.
+            </div>
+            <div class="pull-left text-muted">
+                Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+            </div>
+        </div>
+    </xpath>
+</template>
+
 
 <!-- User Navbar -->
 <template id="content_new_product" inherit_id="website.user_navbar" groups="base.group_sale_manager">

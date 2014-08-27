@@ -134,6 +134,7 @@ class _column(object):
             ('_origin', self),                  # field interfaces self
             ('copy', self.copy),
             ('index', self.select),
+            ('manual', self.manual),
             ('string', self.string),
             ('help', self.help),
             ('readonly', self.readonly),
@@ -145,8 +146,10 @@ class _column(object):
             ('translate', self.translate),
             ('domain', self._domain),
             ('context', self._context),
+            ('change_default', self.change_default),
+            ('deprecated', self.deprecated),
         ]
-        return dict(item for item in items if items[1])
+        return dict(item for item in items if item[1])
 
     def restart(self):
         pass
@@ -186,7 +189,7 @@ class _column(object):
 class boolean(_column):
     _type = 'boolean'
     _symbol_c = '%s'
-    _symbol_f = lambda x: x and 'True' or 'False'
+    _symbol_f = bool
     _symbol_set = (_symbol_c, _symbol_f)
 
     def __init__(self, string='unknown', required=False, **args):
@@ -290,6 +293,11 @@ class html(text):
         # symbol_set redefinition because of sanitize specific behavior
         self._symbol_f = self._symbol_set_html
         self._symbol_set = (self._symbol_c, self._symbol_f)
+
+    def to_field_args(self):
+        args = super(html, self).to_field_args()
+        args['sanitize'] = self._sanitize
+        return args
 
 import __builtin__
 
@@ -463,17 +471,16 @@ class datetime(_column):
             registry = openerp.modules.registry.RegistryManager.get(cr.dbname)
             user = registry['res.users'].browse(cr, SUPERUSER_ID, uid)
             tz_name = user.tz
+        utc_timestamp = pytz.utc.localize(timestamp, is_dst=False) # UTC = no DST
         if tz_name:
             try:
-                utc = pytz.utc
                 context_tz = pytz.timezone(tz_name)
-                utc_timestamp = utc.localize(timestamp, is_dst=False) # UTC = no DST
                 return utc_timestamp.astimezone(context_tz)
             except Exception:
                 _logger.debug("failed to compute context/client-specific timestamp, "
                               "using the UTC value",
                               exc_info=True)
-        return timestamp
+        return utc_timestamp
 
 class binary(_column):
     _type = 'binary'
@@ -682,7 +689,7 @@ class one2many(_column):
         result = []
         context = dict(context or {})
         context.update(self._context)
-        context['no_store_function'] = True
+        context['recompute'] = False    # recomputation is done by outer create/write
         if not values:
             return
         obj = obj.pool[self._obj]
@@ -1293,9 +1300,9 @@ class function(_column):
         # if we already have a value, don't recompute it.
         # This happen if case of stored many2one fields
         if values and not multi and name in values[0]:
-            result = {v['id']: v[name] for v in values}
+            result = dict((v['id'], v[name]) for v in values)
         elif values and multi and all(n in values[0] for n in name):
-            result = {v['id']: dict((n, v[n]) for n in name) for v in values}
+            result = dict((v['id'], dict((n, v[n]) for n in name)) for v in values)
         else:
             result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
         if multi:
@@ -1559,8 +1566,15 @@ class property(function):
             column = obj._all_columns[prop_name].column
             values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
             if column._type == 'many2one':
+                # name_get the non-null values as SUPERUSER_ID
+                vals = sum(set(filter(None, values.itervalues())),
+                           obj.pool[column._obj].browse(cr, uid, [], context=context))
+                vals_name = dict(vals.sudo().name_get()) if vals else {}
                 for id, value in values.iteritems():
-                    res[id][prop_name] = value.name_get()[0] if value else False
+                    ng = False
+                    if value and value.id in vals_name:
+                        ng = value.id, vals_name[value.id]
+                    res[id][prop_name] = ng
             else:
                 for id, value in values.iteritems():
                     res[id][prop_name] = value
@@ -1570,12 +1584,12 @@ class property(function):
     def __init__(self, **args):
         if 'view_load' in args:
             _logger.warning("view_load attribute is deprecated on ir.fields. Args: %r", args)
-        obj = 'relation' in args and args['relation'] or ''
+        args = dict(args)
+        args['obj'] = args.pop('relation', '') or args.get('obj', '')
         super(property, self).__init__(
             fnct=self._fnct_read,
             fnct_inv=self._fnct_write,
             fnct_search=self._fnct_search,
-            obj=obj,
             multi='properties',
             **args
         )

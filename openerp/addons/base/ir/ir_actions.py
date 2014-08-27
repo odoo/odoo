@@ -494,7 +494,7 @@ class ir_actions_server(osv.osv):
         'model_name': fields.related('model_id', 'model', type='char',
                                      string='Model Name', readonly=True),
         'menu_ir_values_id': fields.many2one('ir.values', 'More Menu entry', readonly=True,
-                                             help='More menu entry.'),
+                                             help='More menu entry.', copy=False),
         # Client Action
         'action_id': fields.many2one('ir.actions.actions', 'Client Action',
                                      help="Select the client action that has to be executed."),
@@ -740,26 +740,30 @@ class ir_actions_server(osv.osv):
     def on_change_write_expression(self, cr, uid, ids, write_expression, model_id, context=None):
         """ Check the write_expression and update crud_model_id accordingly """
         values = {}
-        valid, model_name, message = self._check_expression(cr, uid, write_expression, model_id, context=context)
-        if valid:
+        if write_expression:
+            valid, model_name, message = self._check_expression(cr, uid, write_expression, model_id, context=context)
+        else:
+            valid, model_name, message = True, None, False
+            if model_id:
+                model_name = self.pool['ir.model'].browse(cr, uid, model_id, context).model
+        if not valid:
+            return {
+                'warning': {
+                    'title': 'Incorrect expression',
+                    'message': message or 'Invalid expression',
+                }
+            }
+        if model_name:
             ref_model_id = self.pool['ir.model'].search(cr, uid, [('model', '=', model_name)], context=context)[0]
             values['crud_model_id'] = ref_model_id
             return {'value': values}
-        if not message:
-            message = 'Invalid expression'
-        return {
-            'warning': {
-                'title': 'Incorrect expression',
-                'message': message,
-            }
-        }
+        return {'value': {}}
 
     def on_change_crud_model_id(self, cr, uid, ids, crud_model_id, context=None):
         """ When changing the CRUD model, update its stored name also """
         crud_model_name = False
         if crud_model_id:
             crud_model_name = self.pool.get('ir.model').browse(cr, uid, crud_model_id, context).model
-        
         values = {'link_field_id': False, 'crud_model_name': crud_model_name}
         return {'value': values}
 
@@ -888,11 +892,7 @@ class ir_actions_server(osv.osv):
         """
         res = {}
         for exp in action.fields_lines:
-            if exp.type == 'equation':
-                expr = eval(exp.value, eval_context)
-            else:
-                expr = exp.value
-            res[exp.col1.name] = expr
+            res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
 
         if action.use_write == 'current':
             model = action.model_id.model
@@ -925,11 +925,7 @@ class ir_actions_server(osv.osv):
         """
         res = {}
         for exp in action.fields_lines:
-            if exp.type == 'equation':
-                expr = eval(exp.value, eval_context)
-            else:
-                expr = exp.value
-            res[exp.col1.name] = expr
+            res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
 
         if action.use_create in ['new', 'copy_current']:
             model = action.model_id.model
@@ -1032,7 +1028,9 @@ class ir_actions_server(osv.osv):
 
 class ir_server_object_lines(osv.osv):
     _name = 'ir.server.object.lines'
+    _description = 'Server Action value mapping'
     _sequence = 'ir_actions_id_seq'
+
     _columns = {
         'server_id': fields.many2one('ir.actions.server', 'Related Server Action'),
         'col1': fields.many2one('ir.model.fields', 'Field', required=True),
@@ -1045,9 +1043,24 @@ class ir_server_object_lines(osv.osv):
             ('equation', 'Python expression')
         ], 'Evaluation Type', required=True, change_default=True),
     }
+
     _defaults = {
         'type': 'value',
     }
+
+    def eval_value(self, cr, uid, ids, eval_context=None, context=None):
+        res = dict.fromkeys(ids, False)
+        for line in self.browse(cr, uid, ids, context=context):
+            expr = line.value
+            if line.type == 'equation':
+                expr = eval(line.value, eval_context)
+            elif line.col1.ttype in ['many2one', 'integer']:
+                try:
+                    expr = int(line.value)
+                except Exception:
+                    pass
+            res[line.id] = expr
+        return res
 
 
 TODO_STATES = [('open', 'To Do'),

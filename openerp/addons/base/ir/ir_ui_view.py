@@ -38,7 +38,7 @@ import openerp
 from openerp import tools, api
 from openerp.http import request
 from openerp.osv import fields, osv, orm
-from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
+from openerp.tools import graph, SKIPPED_ELEMENT_TYPES, SKIPPED_ELEMENTS
 from openerp.tools.parse_version import parse_version
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
@@ -47,7 +47,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath']
+MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-oe-source-id']
 
 def keep_query(*keep_params, **additional_params):
     """
@@ -957,7 +957,7 @@ class view(osv.osv):
                 return None
             return Translations._get_source(cr, uid, 'website', 'view', lang, text, id_)
 
-        if arch.tag not in ['script']:
+        if type(arch) not in SKIPPED_ELEMENT_TYPES and arch.tag not in SKIPPED_ELEMENTS:
             text = get_trans(arch.text)
             if text:
                 arch.text = arch.text.replace(arch.text.strip(), text)
@@ -965,7 +965,7 @@ class view(osv.osv):
             if tail:
                 arch.tail = arch.tail.replace(arch.tail.strip(), tail)
 
-            for attr_name in ('title', 'alt', 'placeholder'):
+            for attr_name in ('title', 'alt', 'label', 'placeholder'):
                 attr = get_trans(arch.get(attr_name))
                 if attr:
                     arch.set(attr_name, attr)

@@ -18,9 +18,6 @@
                 <field name="credit"/>
                 <field name="balance"/>
                 <field name="move_state" invisible="1"/>
-                <field name="day" invisible="1"/>
-                <field name="month" invisible="1"/>
-                <field name="year"  invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="product_uom_id" invisible="1"/>
@@ -39,10 +36,11 @@
          <field name="model">account.entries.report</field>
          <field name="arch" type="xml">
              <graph string="Entries Analysis" type="pivot">
-                <field name="partner_id" type="row"/>
-                <field name="debit" operator="+"/>
-                <field name="credit" operator="+"/>
-                <field name="balance" operator="+"/>
+                <field name="user_type" type="row"/>
+                <field name="period_id" type="col"/>
+                <field name="debit" type="measure"/>
+                <field name="credit" type="measure"/>
+                <field name="balance" type="measure"/>
              </graph>
          </field>
     </record>
@@ -66,14 +64,14 @@
                 <field name="date"/>
                 <field name="date_created"/>
                 <field name="date_maturity"/>
-                <filter icon="terp-go-year" string="This F.Year" name="thisyear" context="{'year':'current_year'}" help="Journal Entries with period in current year"/>
-                <filter icon="terp-go-month" string="This Period" name="period" context="{'period':'current_period'}" help="Journal Entries with period in current period"/>
+                <filter string="This F.Year" name="thisyear" domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="Journal Entries with period in current year"/>
+                <filter string="This Period" name="period" context="{'period':'current_period'}" help="Journal Entries with period in current period"/>
                 <separator/>
-                <filter string="Unposted" icon="terp-document-new" domain="[('move_state','=','draft')]" help = "entries"/>
-                <filter string="Posted" icon="terp-camera_test" domain="[('move_state','=','posted')]" help = "Posted entries"/>
+                <filter string="Unposted" domain="[('move_state','=','draft')]" help = "entries"/>
+                <filter string="Posted" domain="[('move_state','=','posted')]" help = "Posted entries"/>
                 <separator/>
-                <filter string="Unreconciled" icon="terp-dolar_ok!" domain="[('reconcile_id','=',False), ('account_id.reconcile','=',True)]" help = "Unreconciled entries"/>
-                <filter string="Reconciled" icon="terp-dolar" domain="[('reconcile_id','!=',False)]" help = "Reconciled entries"/>
+                <filter string="Unreconciled" domain="[('reconcile_id','=',False), ('account_id.reconcile','=',True)]" help = "Unreconciled entries"/>
+                <filter string="Reconciled" domain="[('reconcile_id','!=',False)]" help = "Reconciled entries"/>
                 <field name="account_id"/>
                 <field name="journal_id"/>
                 <field name="period_id"/>
@@ -84,17 +82,13 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <group expand="1" string="Group By">
-                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
-                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':['product_id','product_uom_id'], 'quantity_visible':1}"/>
-                    <filter string="Currency" name="group_currency" icon="terp-dolar" context="{'group_by':'currency_id', 'currency_id_visible':1, 'amount_currency_visible':1}"/>
-                    <filter string="Journal" name="group_journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
-                    <filter string="Account" name="group_account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
-                    <filter string="Acc.Type" icon="terp-stock_symbol-selection" context="{'group_by':'user_type'}" name="usertype"/>
-                    <filter string="Int.Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
-                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Entries Month" icon="terp-go-today" context="{'group_by':'date'}" help="Entries Date by Month"/>
-                    <filter string="Period" icon="terp-go-month" name="group_period" context="{'group_by':'period_id'}"/>
-                    <filter string="Fiscal Year" icon="terp-go-year" context="{'group_by':'fiscalyear_id'}"/>
+                    <filter string="Partner" context="{'group_by':'partner_id'}"/>
+                    <filter string="Journal" name="group_journal" context="{'group_by':'journal_id'}"/>
+                    <filter string="Acc.Type" context="{'group_by':'user_type'}" name="usertype"/>
+                    <filter string="Int.Type" context="{'group_by':'type'}"/>
+                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Entries Month" context="{'group_by':'date:month'}" help="Entries Date by Month"/>
                  </group>
             </search>
         </field>

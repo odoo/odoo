@@ -319,10 +319,10 @@ class ir_values(osv.osv):
                              (SELECT company_id from res_users where id = %%s)
                           )
                       %s
-                   ORDER BY v.user_id, u.company_id, v.key2"""
+                   ORDER BY v.user_id, u.company_id"""
         params = ('default', model, uid, uid)
         if condition:
-            query %= 'AND (v.key2 = %s OR v.key2 IS NULL)'
+            query %= 'AND v.key2 = %s'
             params += (condition[:200],)
         else:
             query %= 'AND v.key2 is NULL'

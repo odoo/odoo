@@ -41,6 +41,9 @@ from openerp.tools.func import lazy_property
 
 _logger = logging.getLogger(__name__)
 
+# 1 week cache for statics as advised by Google Page Speed
+STATIC_CACHE = 60 * 60 * 24 * 7
+
 #----------------------------------------------------------
 # RequestHandler
 #----------------------------------------------------------
@@ -1192,7 +1195,7 @@ class Root(object):
 
         if statics:
             _logger.info("HTTP Configuring static files")
-        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics)
+        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics, cache_timeout=STATIC_CACHE)
         self.dispatch = DisableCacheMiddleware(app)
 
     def setup_session(self, httprequest):

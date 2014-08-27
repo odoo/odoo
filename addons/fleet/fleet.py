@@ -53,15 +53,6 @@ class fleet_vehicle_cost(osv.Model):
         odometer_id = self.pool.get('fleet.vehicle.odometer').create(cr, uid, data, context=context)
         return self.write(cr, uid, id, {'odometer_id': odometer_id}, context=context)
 
-    def _year_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            if (record.date):
-                res[record.id] = str(time.strptime(record.date, tools.DEFAULT_SERVER_DATE_FORMAT).tm_year)
-            else:
-                res[record.id] = _('Unknown')
-        return res
-
     _columns = {
         'name': fields.related('vehicle_id', 'name', type="char", string='Name', store=True),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log'),
@@ -76,7 +67,6 @@ class fleet_vehicle_cost(osv.Model):
         'date' :fields.date('Date',help='Date when the cost has been executed'),
         'contract_id': fields.many2one('fleet.vehicle.log.contract', 'Contract', help='Contract attached to this cost'),
         'auto_generated': fields.boolean('Automatically Generated', readonly=True, required=True),
-        'year': fields.function(_year_get_fnc, type="char", string='Year', store=True),
     }
 
     _defaults ={

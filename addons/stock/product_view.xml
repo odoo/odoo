@@ -134,10 +134,10 @@
                     </group>
                 </group>
                 <group name="weight" position="before">
-                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
-                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
-                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
-                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
+                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties" attrs="{'invisible':[('type','=','service')]}">
+                        <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
+                        <field name="property_stock_production" domain="[('usage','=','production')]"/>
+                        <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
                     </group>
                 </group>
                 <field name="product_manager" position="attributes">

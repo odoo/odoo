@@ -23,7 +23,7 @@
             <field name="name">Goal List</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
-                <tree string="Goal List" colors="red:state == 'failed';green:state == 'reached';grey:state == 'canceled'"> 
+                <tree string="Goal List" colors="red:state == 'failed';green:state == 'reached';grey:state == 'canceled'" create="false">
                     <field name="definition_id" invisible="1" />
                     <field name="user_id" invisible="1" />
                     <field name="start_date"/>

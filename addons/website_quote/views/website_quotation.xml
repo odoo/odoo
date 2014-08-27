@@ -167,7 +167,7 @@
             <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
             <t t-raw="head or ''"/>
         </t>
-        <body data-spy="scroll" data-target=".navspy">
+        <body data-spy="scroll" data-target=".navspy" data-offset="50">
             <div class="container">
               <div class="row mt16">
                   <div class="col-md-3">
@@ -462,7 +462,7 @@
             <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
             <t t-raw="head or ''"/>
         </t>
-        <body data-spy="scroll" data-target=".navspy">
+        <body data-spy="scroll" data-target=".navspy" data-offset="50">
             <div class="container">
                 <div class="row mt16">
                     <div class="col-md-3">
@@ -515,6 +515,21 @@
         </body>
         </t>
   </template>
+
+  <template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
+      <xpath expr="//footer" position="inside">
+          <div class="container mt16 mb8">
+              <div class="pull-right" t-ignore="true" t-if="not editable">
+                  Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
+                  an awesome <a href="http://www.odoo.com/page/crm">Open Source CRM</a>.
+              </div>
+              <div class="pull-left text-muted">
+                  Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+              </div>
+          </div>
+      </xpath>
+  </template>
+
 
 </data>
 </openerp>

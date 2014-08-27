@@ -7,27 +7,24 @@
             <field name="model">report.membership</field>
             <field name="arch" type="xml">
                 <search string="Membership">
-                    <field name="date_from"/>
-                    <filter string="Forecast" icon="terp-gtk-jump-to-ltr" context="{'waiting_invoiced_totpending_visible':0}" help="This will display waiting, invoiced and total pending columns"/>
-                    <filter string="Revenue Done" name="Revenue" icon="terp-dolar" context="{'paid_old_totearned_visible':0}" help="This will display paid, old and total earned columns"/>
+                    <filter string="Forecast" context="{'waiting_invoiced_totpending_visible':0}" help="This will display waiting, invoiced and total pending columns"/>
+                    <filter string="Revenue Done" name="Revenue" context="{'paid_old_totearned_visible':0}" help="This will display paid, old and total earned columns"/>
                     <field name="partner_id"/>
                     <field name="membership_id"/>
                     <field name="user_id"/>
                     <group expand="1" string="Group By">
-                        <filter string="Salesperson" icon="terp-personal" name="salesman"
-                            domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Associated Partner" icon="terp-partner" name="associate_member_id"
-                            domain="[]" context="{'group_by':'associate_member_id'}"/>
-                        <filter string="Membership Product" icon="terp-accessories-archiver" name="product"
-                            domain="[]" context="{'group_by':'membership_id'}"/>
-                        <filter string="Current Membership State" icon="terp-stock_effects-object-colorize"
-                            domain="[]" context="{'group_by':'membership_state'}"/>
-                        <filter string="Company" icon="terp-go-home"
-                            domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Year" name="year" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'year'}"/>
-                        <filter string="Month" name="month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}"/>
+                        <filter string="Salesperson" name="salesman"
+                            context="{'group_by':'user_id'}"/>
+                        <filter string="Associated Partner" name="associate_member_id"
+                            context="{'group_by':'associate_member_id'}"/>
+                        <filter string="Membership Product" name="product"
+                            context="{'group_by':'membership_id'}"/>
+                        <filter string="Current Membership State"
+                            context="{'group_by':'membership_state'}"/>
+                        <filter string="Company"
+                            context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Month" name="start_date"
+                            context="{'group_by':'start_date:month'}"/>
                     </group>
                 </search>
             </field>
@@ -38,8 +35,11 @@
             <field name="model">report.membership</field>
             <field name="arch" type="xml">
                 <graph string="Membership" type="pivot">
-                    <field name="year" type="row" />
+                    <field name="membership_id" type="row"/>
+                    <field name="start_date" interval="month" type="col"/>
+                    <field name="quantity" type="measure"/>
                     <field name="num_paid" type="measure"/>
+                    <field name="num_invoiced" type="measure"/>
                     <field name="tot_earned" type="measure"/>
                 </graph>
             </field>
@@ -51,7 +51,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph</field>
             <field name="search_view_id" ref="view_report_membership_search"/>
-            <field name="context">{"search_default_year":1,"search_default_member":1, 'search_default_Revenue':1, 'search_default_this_month':1, 'search_default_salesman':1,'group_by_no_leaf':1}</field>
+            <field name="context">{"search_default_start_date":1,"search_default_member":1, 'search_default_Revenue':1, 'search_default_this_month':1, 'search_default_salesman':1,'group_by_no_leaf':1}</field>
         </record>
 
         <menuitem name="Members Analysis" parent="base.menu_report_association"

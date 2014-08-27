@@ -3,6 +3,7 @@
 from datetime import datetime
 import werkzeug.urls
 import werkzeug.wrappers
+import re
 import simplejson
 
 from openerp import tools
@@ -12,6 +13,7 @@ from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
 from openerp.addons.website.models.website import slug
+from openerp.tools.translate import _
 
 controllers = controllers()
 
@@ -276,6 +278,10 @@ class WebsiteForum(http.Controller):
     def post_new(self, forum, post, **kwargs):
         if not request.session.uid:
             return login_redirect()
+        cr, uid, context = request.cr, request.uid, request.context
+        user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        if not user.email or not tools.single_email_re.match(user.email):
+            return werkzeug.utils.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), uid))
         request.registry['forum.post'].create(
             request.cr, request.uid, {
                 'forum_id': forum.id,
@@ -309,9 +315,9 @@ class WebsiteForum(http.Controller):
             return {'error': 'anonymous_user'}
 
         # set all answers to False, only one can be accepted
-        request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids], {'is_correct': False}, context=context)
+        request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids if not c.id == post.id], {'is_correct': False}, context=context)
         request.registry['forum.post'].write(cr, uid, [post.id], {'is_correct': not post.is_correct}, context=context)
-        return not post.is_correct
+        return post.is_correct
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/delete', type='http', auth="user", methods=['POST'], website=True)
     def post_delete(self, forum, post, **kwargs):
@@ -490,7 +496,11 @@ class WebsiteForum(http.Controller):
         posts_ids = Post.browse(cr, uid, posts.keys(), context=context)
         posts = dict(map(lambda x: (x.id, (x.parent_id or x, x.parent_id and x or False)), posts_ids))
 
-        post['users'] = 'True'
+        # TDE CLEANME MASTER: couldn't it be rewritten using a 'menu' key instead of one key for each menu ?
+        if user.id == uid:
+            post['my_profile'] = True
+        else:
+            post['users'] = True
 
         values.update({
             'uid': uid,
@@ -517,6 +527,7 @@ class WebsiteForum(http.Controller):
         countries = country.browse(request.cr, SUPERUSER_ID, country_ids, context=request.context)
         values = self._prepare_forum_values(forum=forum, searches=kwargs)
         values.update({
+            'email_required': kwargs.get('email_required'),
             'countries': countries,
             'notifications': self._get_notifications(),
         })
@@ -585,4 +596,4 @@ class WebsiteForum(http.Controller):
     def delete_comment(self, forum, post, comment, **kwarg):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        return request.registry['forum.post'].unlink(request.cr, request.uid, post.id, comment.id, context=request.context)
+        return request.registry['forum.post'].unlink_comment(request.cr, request.uid, post.id, comment.id, context=request.context)

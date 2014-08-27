@@ -83,7 +83,7 @@ class account_invoice(models.Model):
         return journal.currency or journal.company_id.currency_id
 
     @api.model
-    @api.returns('account.analytic.journal')
+    @api.returns('account.analytic.journal', lambda r: r.id)
     def _get_journal_analytic(self, inv_type):
         """ Return the analytic journal corresponding to the given invoice type. """
         journal_type = TYPE2JOURNAL.get(inv_type, 'sale')
@@ -91,14 +91,12 @@ class account_invoice(models.Model):
         if not journal:
             raise except_orm(_('No Analytic Journal!'),
                 _("You must define an analytic journal of type '%s'!") % (journal_type,))
-        return journal
+        return journal[0]
 
     @api.one
     @api.depends('account_id', 'move_id.line_id.account_id', 'move_id.line_id.reconcile_id')
     def _compute_reconciled(self):
         self.reconciled = self.test_paid()
-        if not self.reconciled and self.state == 'paid':
-            self.signal_workflow('open_test')
 
     @api.model
     def _get_reference_type(self):
@@ -116,7 +114,7 @@ class account_invoice(models.Model):
     def _compute_residual(self):
         nb_inv_in_partial_rec = max_invoice_id = 0
         self.residual = 0.0
-        for line in self.move_id.line_id:
+        for line in self.sudo().move_id.line_id:
             if line.account_id.type in ('receivable', 'payable'):
                 if line.currency_id == self.currency_id:
                     self.residual += line.amount_residual_currency
@@ -179,6 +177,8 @@ class account_invoice(models.Model):
     def _compute_payments(self):
         partial_lines = lines = self.env['account.move.line']
         for line in self.move_id.line_id:
+            if line.account_id != self.account_id:
+                continue
             if line.reconcile_id:
                 lines |= line.reconcile_id.line_id
             elif line.reconcile_partial_id:
@@ -379,7 +379,7 @@ class account_invoice(models.Model):
         assert len(self) == 1, 'This option should only be used for a single id at a time.'
         template = self.env.ref('account.email_template_edi_invoice', False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        ctx = dict(self._context,
+        ctx = dict(
             default_model='account.invoice',
             default_res_id=self.id,
             default_use_template=bool(template),
@@ -574,8 +574,8 @@ class account_invoice(models.Model):
             if 'journal_id' in journal_defaults:
                 values['journal_id'] = journal_defaults['journal_id']
             if not values.get('journal_id'):
-                field_desc = journals.fields_get(['journal_id'])
-                type_label = next(t for t, label in field_desc['journal_id']['selection'] if t == journal_type)
+                field_desc = journals.fields_get(['type'])
+                type_label = next(t for t, label in field_desc['type']['selection'] if t == journal_type)
                 action = self.env.ref('account.action_account_journal_form')
                 msg = _('Cannot find any account journal of type "%s" for this company, You should create one.\n Please go to Journal Configuration') % type_label
                 raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
@@ -793,7 +793,10 @@ class account_invoice(models.Model):
                 continue
 
             ctx = dict(self._context, lang=inv.partner_id.lang)
-            date_invoice = inv.date_invoice or fields.Date.context_today(self)
+
+            if not inv.date_invoice:
+                inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
+            date_invoice = inv.date_invoice
 
             company_currency = inv.company_id.currency_id
             # create the analytical lines, one move line per invoice line
@@ -906,7 +909,6 @@ class account_invoice(models.Model):
             move = account_move.with_context(ctx).create(move_vals)
             # make the invoice point to that move
             vals = {
-                'date_invoice': date_invoice,
                 'move_id': move.id,
                 'period_id': period.id,
                 'move_name': move.name,
@@ -1395,8 +1397,7 @@ class account_invoice_line(models.Model):
         res = []
         for line in inv.invoice_line:
             mres = self.move_line_get_item(line)
-            if not mres:
-                continue
+            mres['invl_id'] = line.id
             res.append(mres)
             tax_code_found = False
             taxes = line.invoice_line_tax_id.compute_all(

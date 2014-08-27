@@ -6,11 +6,9 @@
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
                 <graph string="Point of Sale Analysis" type="pivot">
-                    <field name="date" interval="day" type="row"/>
-                    <field name="nbr" type="measure"/>
+                    <field name="product_categ_id" type="row"/>
+                    <field name="date" interval="month" type="col"/>
                     <field name="product_qty" type="measure"/>
-                    <field name="average_price" type="measure"/>
-                    <field name="total_discount" type="measure"/>
                     <field name="price_total" type="measure"/>
                 </graph>
             </field>
@@ -22,24 +20,22 @@
             <field name="arch" type="xml">
                 <search string="Point of Sale Analysis">
                     <field name="date"/>
-                    <filter icon="terp-dolar" string="Invoiced" domain="[('state','=',('invoiced'))]"/>
-                    <filter icon="terp-dolar" string="Not Invoiced" domain="[('state','=',('paid'))]"/>
+                    <filter string="Invoiced" domain="[('state','=',('invoiced'))]"/>
+                    <filter string="Not Invoiced" domain="[('state','=',('paid'))]"/>
                     <separator/>
-                    <filter icon="terp-go-year" string="Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="POS ordered created during current year"/>
+                    <filter string="Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="POS ordered created during current year"/>
                     <separator/>
-                    <filter icon="terp-personal" string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
+                    <filter string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <group expand="1" string="Group By">
-                        <filter string="Salesperson" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
-                        <filter string="Customer" icon="terp-personal" context="{'group_by':'partner_id'}"/>
-                        <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                        <filter string="Stock Location" context="{'group_by': 'location_id'}"/>
-                        <filter string="Order Date (day)" icon="terp-go-today" context="{'group_by':'date:day'}" help="Day of order date"/>
-                        <filter string="Order Date (month)" icon="terp-go-month" context="{'group_by':'date:month'}" help="Month of order date"/>
-                        <filter string="Order Date (year)" icon="terp-go-year" context="{'group_by':'date:year'}" help="Year of order date"/>
+                        <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
+                        <filter string="Product Category" context="{'group_by':'product_categ_id'}"/>
+                        <filter string="Product" context="{'group_by':'product_id'}"/>
+                        <separator/>
+                        <filter string="Order Month" context="{'group_by':'date:month'}" help="Month of order date"/>
                     </group>
                 </search>
             </field>
@@ -51,7 +47,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph</field>
             <field name="search_view_id" ref="view_report_pos_order_search"/>
-            <field name="context">{'search_default_year':1, 'group_by_no_leaf':1,'group_by':['product_id']}</field>
+            <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
 
         <menuitem action="action_report_pos_order_all" id="menu_report_pos_order_all" parent="menu_point_rep" sequence="3"/>

@@ -346,18 +346,17 @@ class website_sale(http.Controller):
         countries = orm_country.browse(cr, SUPERUSER_ID, country_ids, context)
         states_ids = state_orm.search(cr, SUPERUSER_ID, [], context=context)
         states = state_orm.browse(cr, SUPERUSER_ID, states_ids, context)
+        partner = orm_user.browse(cr, SUPERUSER_ID, request.uid, context).partner_id
 
+        order = None
+
+        shipping_id = None
+        shipping_ids = []
         checkout = {}
         if not data:
             if request.uid != request.website.user_id.id:
-                partner = orm_user.browse(cr, SUPERUSER_ID, request.uid, context).partner_id
                 checkout.update( self.checkout_parse("billing", partner) )
-
-                shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], limit=1, context=context)
-                if shipping_ids:
-                    shipping = orm_user.browse(cr, SUPERUSER_ID, request.uid, context)
-                    checkout.update( self.checkout_parse("shipping", shipping) )
-                    checkout['shipping_different'] = True
+                shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=context)
             else:
                 order = request.website.sale_get_order(force_create=1, context=context)
                 if order.partner_id:
@@ -367,9 +366,37 @@ class website_sale(http.Controller):
                         checkout.update( self.checkout_parse("billing", order.partner_id) )
         else:
             checkout = self.checkout_parse('billing', data)
-            if data.get("shipping_different"):
+            try: 
+                shipping_id = int(data["shipping_id"])
+            except ValueError:
+                pass
+            if shipping_id == -1:
                 checkout.update(self.checkout_parse('shipping', data))
-                checkout["shipping_different"] = True
+
+        if shipping_id is None:
+            if not order:
+                order = request.website.sale_get_order(context=context)
+            if order and order.partner_shipping_id:
+                shipping_id = order.partner_shipping_id.id
+
+        shipping_ids = list(set(shipping_ids) - set([partner.id]))
+
+        if shipping_id == partner.id:
+            shipping_id = 0
+        elif shipping_id > 0 and shipping_id not in shipping_ids:
+            shipping_ids.append(shipping_id)
+        elif shipping_id is None and shipping_ids:
+            shipping_id = shipping_ids[0]
+
+        ctx = dict(context, show_address=1)
+        shippings = []
+        if shipping_ids:
+            shippings = shipping_ids and orm_partner.browse(cr, SUPERUSER_ID, list(shipping_ids), ctx) or []
+        if shipping_id > 0:
+            shipping = orm_partner.browse(cr, SUPERUSER_ID, shipping_id, ctx)
+            checkout.update( self.checkout_parse("shipping", shipping) )
+
+        checkout['shipping_id'] = shipping_id
 
         # Default search by user country
         country_code = request.session['geoip'].get('country_code')
@@ -382,10 +409,12 @@ class website_sale(http.Controller):
             'countries': countries,
             'states': states,
             'checkout': checkout,
-            'shipping_different': checkout.get('shipping_different'),
+            'shipping_id': partner.id != shipping_id and shipping_id or 0,
+            'shippings': shippings,
             'error': {},
             'has_check_vat': hasattr(registry['res.partner'], 'check_vat')
         }
+
         return values
 
     mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
@@ -445,7 +474,7 @@ class website_sale(http.Controller):
             if not check_func(cr, uid, vat_country, vat_number, context=None): # simple_vat_check
                 error["vat"] = 'error'
 
-        if data.get("shipping_different"):
+        if data.get("shipping_id") == -1:
             for field_name in self.mandatory_shipping_fields:
                 field_name = 'shipping_' + field_name
                 if not data.get(field_name):
@@ -482,23 +511,22 @@ class website_sale(http.Controller):
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
 
         # create a new shipping partner
-        shipping_id = None
-        if checkout.get('shipping_different'):
+        if checkout.get('shipping_id') == -1:
             shipping_info = self.checkout_parse('shipping', checkout, True)
             shipping_info['type'] = 'delivery'
             shipping_info['parent_id'] = partner_id
-            shipping_id = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
+            checkout['shipping_id'] = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
 
         order_info = {
             'partner_id': partner_id,
             'message_follower_ids': [(4, partner_id)],
             'partner_invoice_id': partner_id,
-            'partner_shipping_id': shipping_id or partner_id
         }
         order_info.update(order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
-        order_info.update(order_obj.onchange_delivery_id(cr, SUPERUSER_ID, [], order.company_id.id, partner_id, shipping_id, None, context=context)['value'])
+        order_info.update(order_obj.onchange_delivery_id(cr, SUPERUSER_ID, [], order.company_id.id, partner_id, checkout.get('shipping_id'), None, context=context)['value'])
 
         order_info.pop('user_id')
+        order_info.update(partner_shipping_id=checkout.get('shipping_id') or partner_id)
 
         order_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
 
@@ -535,6 +563,7 @@ class website_sale(http.Controller):
             return request.website.render("website_sale.checkout", values)
 
         self.checkout_form_save(values["checkout"])
+
         request.session['sale_last_order_id'] = order.id
 
         request.website.sale_get_order(update_pricelist=True, context=context)
@@ -820,9 +849,22 @@ class website_sale(http.Controller):
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)
         return product.write({'website_size_x': x, 'website_size_y': y})
 
+    def order_lines_2_google_api(self, order_lines):
+        """ Transforms a list of order lines into a dict for google analytics """
+        ret = []
+        for line in order_lines:
+            ret.append({
+                'id': line.order_id and line.order_id.id,
+                'name': line.product_id.categ_id and line.product_id.categ_id.name or '-',
+                'sku': line.product_id.id,
+                'quantity': line.product_uom_qty,
+                'price': line.price_unit,
+            })
+        return ret
+
     @http.route(['/shop/tracking_last_order'], type='json', auth="public")
     def tracking_cart(self, **post):
-        """ return JS code for google analytics"""
+        """ return data about order in JSON needed for google analytics"""
         cr, uid, context = request.cr, request.uid, request.context
         ret = {}
         sale_order_id = request.session.get('sale_last_order_id')
@@ -834,16 +876,7 @@ class website_sale(http.Controller):
                 'revenue': order.amount_total,
                 'currency': order.currency_id.name
             }
-            ret['lines'] = []
-            for line in order.order_line:
-                if not line.is_delivery:
-                    ret['lines'].append({
-                        'id': line.order_id and line.order_id.id,
-                        'name': line.product_id.categ_id and line.product_id.categ_id.name or '-',
-                        'sku': line.product_id.id,
-                        'quantity': line.product_uom_qty,
-                        'price': line.price_unit,
-                    })
+            ret['lines'] = self.order_lines_2_google_api(order.order_line)
         return ret
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

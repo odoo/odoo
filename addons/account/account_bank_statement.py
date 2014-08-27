@@ -24,6 +24,8 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.report import report_sxw
 
+import time
+
 class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if vals.get('name', '/') == '/':
@@ -348,7 +350,7 @@ class account_bank_statement(osv.osv):
                 self.pool.get('account.move').post(cr, uid, move_ids, context=context)
             self.message_post(cr, uid, [st.id], body=_('Statement %s confirmed, journal items were created.') % (st.name,), context=context)
         self.link_bank_to_partner(cr, uid, ids, context=context)
-        return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
+        return self.write(cr, uid, ids, {'state': 'confirm', 'closing_date': time.strftime("%Y-%m-%d %H:%M:%S")}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
         bnk_st_line_ids = []
@@ -733,7 +735,7 @@ class account_bank_statement_line(osv.osv):
                     raise osv.except_osv(_('Error!'), _('A selected move line was already reconciled.'))
 
         # Create the move
-        move_name = st_line.statement_id.name + "/" + str(st_line.sequence)
+        move_name = (st_line.statement_id.name or st_line.name) + "/" + str(st_line.sequence)
         move_vals = bs_obj._prepare_move(cr, uid, st_line, move_name, context=context)
         move_id = am_obj.create(cr, uid, move_vals, context=context)
 

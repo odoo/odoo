@@ -720,7 +720,7 @@
                                     <field name="move_lines" nolabel="1" options="{'reload_on_button': true}">
                                         <tree colors="blue:state == 'draft';black:state in ('ready','assigned','in_production');gray:state in ('cancel','done');red:state in ('confirmed','waiting')" string="Products to Consume">
                                             <field name="product_id"/>
-                                            <field name="product_qty"  string="Quantity"/>
+                                            <field name="product_uom_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(mrp.move_consume)d"
@@ -740,7 +740,7 @@
                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in ('confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                            <field name="product_id" readonly="1"/>
                                            <field name="restrict_lot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
-                                           <field name="product_qty" readonly="1"/>
+                                           <field name="product_uom_qty" readonly="1"/>
                                            <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
                                            <field name="state" invisible="1"/>
                                            <field name="scrapped" invisible="1"/>
@@ -755,7 +755,7 @@
                                     <field name="move_created_ids" nolabel="1" options="{'reload_on_button': true}">
                                         <tree string="Products to Finish">
                                             <field name="product_id"/>
-                                            <field name="product_qty"/>
+                                            <field name="product_uom_qty"/>
                                             <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="state" invisible="1"/>
                                             <!--TODO: should have a partial picking here-->
@@ -766,7 +766,7 @@
                                     <field name="move_created_ids2" nolabel="1" options="{'reload_on_button': true}">
                                         <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
                                             <field name="product_id" readonly="1"/>
-                                            <field name="product_qty" readonly="1"/>
+                                            <field name="product_uom_qty" readonly="1"/>
                                             <field name="restrict_lot_id" groups="stock.group_production_lot"/>
                                             <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_locations"/>
@@ -872,7 +872,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a manufacturing order. 
               </p><p>
-                A manufacuring order, based on a bill of materials, will
+                A manufacturing order, based on a bill of materials, will
                 consume raw materials and produce finished products.
               </p><p>
                 Manufacturing orders are usually proposed automatically based
@@ -895,7 +895,7 @@
               <p class="oe_view_nocontent_create">
                 Click to start a new manufacturing order. 
               </p><p>
-                A manufacuring order, based on a bill of materials, will
+                A manufacturing order, based on a bill of materials, will
                 consume raw materials and produce finished products.
               </p><p>
                 Manufacturing orders are usually proposed automatically based
@@ -1055,20 +1055,6 @@
                         groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
-                </div>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="product_product_form_view_bom_button">
-            <field name="name">product.product.procurement</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <div name="buttons" position="inside">
-                    <button class="oe_inline oe_stat_button" name="%(product_open_bom)d" type="action"
-                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
-                        <field string="Bill of Materials" name="bom_count" widget="statinfo" />
-                    </button>
                     <button class="oe_inline oe_stat_button" name="action_view_mos" type="object" 
                         groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
@@ -1076,9 +1062,9 @@
                 </div>
             </field>
         </record>
-        
-        <record model="ir.ui.view" id="product_normal_form_view_bom_button">
-            <field name="name">product.product.mrp.button</field>
+
+        <record model="ir.ui.view" id="product_product_form_view_bom_button">
+            <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
@@ -1094,7 +1080,7 @@
                 </div>
             </field>
         </record>
-        
+
         <record id="view_warehouse_inherited" model="ir.ui.view">
             <field name="name">Stock Warehouse Inherited</field>
             <field name="model">stock.warehouse</field>

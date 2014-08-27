@@ -1,0 +1,39 @@
+Index: addons/openacademy/models.py
+===================================================================
+--- addons.orig/openacademy/models.py	2014-08-26 17:26:19.919783076 +0200
++++ addons/openacademy/models.py	2014-08-26 17:26:19.915783076 +0200
+@@ -1,7 +1,7 @@
+ # -*- coding: utf-8 -*-
+ 
+ from datetime import timedelta
+-from openerp import models, fields, api, exceptions
++from openerp import models, fields, api, exceptions, _
+ 
+ class Course(models.Model):
+     _name = 'openacademy.course'
+@@ -97,15 +97,15 @@
+         if self.seats < 0:
+             return {
+                 'warning': {
+-                    'title': "Incorrect 'seats' value",
+-                    'message': "The number of available seats may not be negative",
++                    'title': _("Incorrect 'seats' value"),
++                    'message': _("The number of available seats may not be negative"),
+                 },
+             }
+         if self.seats < len(self.attendee_ids):
+             return {
+                 'warning': {
+-                    'title': "Too many attendees",
+-                    'message': "Increase seats or remove excess attendees",
++                    'title': _("Too many attendees"),
++                    'message': _("Increase seats or remove excess attendees"),
+                 },
+             }
+ 
+@@ -147,4 +147,4 @@
+     @api.constrains('instructor_id', 'attendee_ids')
+     def _check_instructor_not_in_attendees(self):
+         if self.instructor_id and self.instructor_id in self.attendee_ids:
+-            raise exceptions.ValidationError("A session's instructor can't be an attendee")
++            raise exceptions.ValidationError(_("A session's instructor can't be an attendee"))

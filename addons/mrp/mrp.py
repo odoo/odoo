@@ -239,16 +239,27 @@ class mrp_bom(osv.osv):
         """
         if properties is None:
             properties = []
-        domain = None
         if product_id:
-            domain = ['|',('product_id', '=', product_id),('product_tmpl_id.product_variant_ids', '=', product_id)]
-        else:
+            if not product_tmpl_id:
+                product_tmpl_id = self.pool['product.product'].browse(cr, uid, product_id).product_tmpl_id.id
+            domain = [
+                '|',
+                    ('product_id', '=', product_id),
+                    '&',
+                        ('product_id', '=', False),
+                        ('product_tmpl_id', '=', product_tmpl_id)
+            ]
+        elif product_tmpl_id:
             domain = [('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]
+        else:
+            # neither product nor template, makes no sense to search
+            return False
         if product_uom:
             domain +=  [('product_uom','=',product_uom)]
         domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
                             '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
-        ids = self.search(cr, uid, domain)
+        # order to prioritize bom with product_id over the one without
+        ids = self.search(cr, uid, domain, order='product_id')
         for bom in self.pool.get('mrp.bom').browse(cr, uid, ids):
             if not set(map(int,bom.property_ids or [])) - set(properties or []):
                 return bom.id

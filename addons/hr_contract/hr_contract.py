@@ -20,6 +20,7 @@
 ##############################################################################
 import time
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 
 class hr_employee(osv.osv):
@@ -41,7 +42,7 @@ class hr_employee(osv.osv):
     def _contracts_count(self, cr, uid, ids, field_name, arg, context=None):
         Contract = self.pool['hr.contract']
         return {
-            employee_id: Contract.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context)
+            employee_id: Contract.search_count(cr, SUPERUSER_ID, [('employee_id', '=', employee_id)], context=context)
             for employee_id in ids
         }
 
@@ -53,7 +54,7 @@ class hr_employee(osv.osv):
         'vehicle': fields.char('Company Vehicle'),
         'vehicle_distance': fields.integer('Home-Work Dist.', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
-        'contract_id':fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
+        'contract_id': fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
         'contracts_count': fields.function(_contracts_count, type='integer', string='Contracts'),
     }
 
