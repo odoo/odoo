@@ -60,7 +60,7 @@
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form">
             <header>
-                <field name="stage_id" widget="statusbar" clickable="True"/>
+                <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}"/>
             </header>
             <sheet>
                 <div class="oe_right oe_button_box">
@@ -135,8 +135,8 @@
                     <group string="Job">
                         <field name="survey" invisible="1"/>
                         <field name="response_id" invisible="1"/>
-                        <field name="job_id" on_change="onchange_job(job_id)"/>
-                        <field name="department_id" on_change="onchange_department_id(department_id, stage_id)" groups="hr.group_multi_departments"/>
+                        <field name="job_id" on_change="onchange_job(job_id,stage_id)"/>
+                        <field name="department_id"/>
                         <field name="company_id" />
                         <label for="availability"/>
                         <div>
@@ -391,6 +391,13 @@
                     <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]"/>
                 </div>
             </group>
+            <group name="employee_data" position="after">
+                <notebook>
+                    <page string="Recruitment Stage" name="recruitment_stage">
+                        <field name="stage_ids" widget="many2many"></field>
+                    </page>
+                </notebook>
+            </group>
             <xpath expr="//field[@name='department_id']" position="after">
                     <label for="alias_name" string="Specific Email Address" attrs="{'invisible': [('alias_domain', '=', False)]}" help ="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                     <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
@@ -494,7 +501,9 @@
                                         <div class="col-md-6 oe_applications">
                                             <div class="oe_applications oe_job_font">
                                                 <a name="%(action_hr_job_applications)d" type="action">
-                                                    <span><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
+                                                    <span t-if="record.application_ids.raw_value.length == 0"><t t-esc="record.application_ids.raw_value.length"/> Application</span>
+                                                    <span t-if="record.application_ids.raw_value.length == 1"><t t-esc="record.application_ids.raw_value.length"/> Application</span>
+                                                    <span t-if="record.application_ids.raw_value.length gt 1"><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
                                                 </a>
                                                 <br/>
                                                 <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
@@ -563,9 +572,8 @@
         <field name="model">hr.recruitment.stage</field>
         <field name="arch" type="xml">
             <tree string="Stages">
-                <field name="sequence" invisible="1"/>
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="department_id" groups="hr.group_multi_departments"/>
                 <field name="fold"/>
             </tree>
         </field>
@@ -580,12 +588,12 @@
                 <group string="Stage Definition">
                     <group>
                         <field name="name"/>
-                        <field name="department_id" groups="hr.group_multi_departments"/>
                         <field name="sequence"/>
-                        <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
+                        <field name="case_default"/>
+                        <field name="fold"/>
                     </group>
                     <group>
-                        <field name="fold"/>
+                        <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
                         <field name="legend_priority"/>
                     </group>
                 </group>
