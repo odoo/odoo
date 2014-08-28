@@ -42,6 +42,8 @@ openerp_announcement = function(instance) {
 
                 $('.openerp_webclient_container').css('height', 'calc(100% - 64px)');
                 $('head').append($css);
+            }).fail(function(result, ev){
+                ev.preventDefault();
             });
         }
     });

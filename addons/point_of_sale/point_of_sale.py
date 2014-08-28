@@ -836,7 +836,7 @@ class pos_order(osv.osv):
             'amount': data['amount'],
             'date': data.get('payment_date', time.strftime('%Y-%m-%d')),
             'name': order.name + ': ' + (data.get('payment_name', '') or ''),
-            'partner_id': order.partner_id and order.partner_id.id or None,
+            'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
         }
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
         args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable \

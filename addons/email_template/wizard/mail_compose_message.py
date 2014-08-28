@@ -59,7 +59,7 @@ class mail_compose_message(osv.TransientModel):
         return res
 
     _columns = {
-        'template_id': fields.many2one('email.template', 'Use template', select=True),
+        'template_id': fields.many2one('email.template', 'Use template', select=True, groups="base.group_user"),
     }
 
     def send_mail(self, cr, uid, ids, context=None):
