@@ -567,6 +567,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 return server_ids;
             }).fail(function (error, event){
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
+                    //if warning do not need to dispaly traceback!!
+                    if(error.data.exception_type == 'warning'){
+                        delete error.data.debug;
+                    }
                     self.pos_widget.screen_selector.show_popup('error-traceback',{
                         message: error.data.message,
                         comment: error.data.debug
