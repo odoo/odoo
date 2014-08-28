@@ -1,8 +1,8 @@
 Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-27 15:04:45.891070910 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-27 15:27:13.919050898 +0200
-@@ -242,7 +242,7 @@
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:34:28.583004473 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-28 14:34:28.579004473 +0200
+@@ -245,7 +245,7 @@
              <field name="arch" type="xml">
                  <form string="Add Attendees">
                      <group>
@@ -13,8 +13,8 @@ Index: addons/openacademy/views/openacademy.xml
                      <footer>
 Index: addons/openacademy/wizard.py
 ===================================================================
---- addons.orig/openacademy/wizard.py	2014-08-27 15:05:28.407070278 +0200
-+++ addons/openacademy/wizard.py	2014-08-27 15:27:07.119050999 +0200
+--- addons.orig/openacademy/wizard.py	2014-08-28 14:34:28.583004473 +0200
++++ addons/openacademy/wizard.py	2014-08-28 14:34:28.579004473 +0200
 @@ -5,14 +5,15 @@
  class Wizard(models.TransientModel):
      _name = 'openacademy.wizard'

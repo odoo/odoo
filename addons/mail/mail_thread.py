@@ -1549,8 +1549,8 @@ class mail_thread(osv.AbstractModel):
         # set in the context.
         model = False
         if thread_id:
-            model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
-            if model != self._name and hasattr(self.pool[model], 'message_post'):
+            model = context.get('thread_model', False) if self._name == 'mail.thread' else self._name
+            if model and model != self._name and hasattr(self.pool[model], 'message_post'):
                 del context['thread_model']
                 return self.pool[model].message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
 
@@ -1603,7 +1603,7 @@ class mail_thread(osv.AbstractModel):
             self.message_subscribe(cr, uid, [thread_id], list(partner_to_subscribe), context=context)
 
         # _mail_flat_thread: automatically set free messages to the first posted message
-        if self._mail_flat_thread and not parent_id and thread_id:
+        if self._mail_flat_thread and model and not parent_id and thread_id:
             message_ids = mail_message.search(cr, uid, ['&', ('res_id', '=', thread_id), ('model', '=', model)], context=context, order="id ASC", limit=1)
             parent_id = message_ids and message_ids[0] or False
         # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
@@ -1622,7 +1622,7 @@ class mail_thread(osv.AbstractModel):
         values.update({
             'author_id': author_id,
             'model': model,
-            'res_id': thread_id or False,
+            'res_id': model and thread_id or False,
             'body': body,
             'subject': subject or False,
             'type': type,
@@ -1644,7 +1644,7 @@ class mail_thread(osv.AbstractModel):
             # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
             self.write(cr, SUPERUSER_ID, [thread_id], {'message_last_post': fields.datetime.now()}, context=context)
         message = mail_message.browse(cr, uid, msg_id, context=context)
-        if message.author_id and thread_id and type != 'notification' and not context.get('mail_create_nosubscribe'):
+        if message.author_id and model and thread_id and type != 'notification' and not context.get('mail_create_nosubscribe'):
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
         return msg_id
 

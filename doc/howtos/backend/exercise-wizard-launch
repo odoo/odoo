@@ -1,7 +1,7 @@
 Index: addons/openacademy/wizard.py
 ===================================================================
---- addons.orig/openacademy/wizard.py	2014-08-27 14:24:39.195106637 +0200
-+++ addons/openacademy/wizard.py	2014-08-27 14:43:02.323090261 +0200
+--- addons.orig/openacademy/wizard.py	2014-08-28 14:34:07.879004780 +0200
++++ addons/openacademy/wizard.py	2014-08-28 14:34:07.871004780 +0200
 @@ -5,6 +5,9 @@
  class Wizard(models.TransientModel):
      _name = 'openacademy.wizard'
@@ -15,9 +15,9 @@ Index: addons/openacademy/wizard.py
      attendee_ids = fields.Many2many('res.partner', string="Attendees")
 Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-27 14:20:50.071110038 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-27 15:01:00.355074258 +0200
-@@ -235,5 +235,26 @@
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:34:07.879004780 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-28 14:34:07.871004780 +0200
+@@ -238,5 +238,26 @@
          <menuitem id="session_menu" name="Sessions"
                    parent="openacademy_menu"
                    action="session_list_action"/>
