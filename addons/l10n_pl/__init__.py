@@ -6,7 +6,7 @@
 #    $Id$
 #
 #    l10n_pl module improved for Poland
-#    by Grzegorz Grzelak grzegorz.grzelak@openglobe.pl 
+#    by Grzegorz Grzelak grzegorz.grzelak@openglobe.pl
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

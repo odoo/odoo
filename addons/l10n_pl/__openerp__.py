@@ -31,11 +31,7 @@ This is the module to manage the accounting chart and taxes for Poland in OpenER
 ==================================================================================
 
 To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów podatkowych i
-<<<<<<< HEAD
-rejestrów podatkowych. Moduł ustawia też konta do kupna i sprzedaży towarów 
-=======
 rejestrów podatkowych. Moduł ustawia też konta do kupna i sprzedaży towarów
->>>>>>> 8915883a43003a91fa5fcb87a1d3ed461fa74a58
 zakładając, że wszystkie towary są w obrocie hurtowym.
 
 Niniejszy moduł jest przeznaczony dla odoo 8.0.
