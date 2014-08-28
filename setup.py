@@ -171,6 +171,7 @@ setuptools.setup(
           'psutil', # windows binary code.google.com/p/psutil/downloads/list
           'psycopg2 >= 2.2',
           'pydot',
+          'pyPdf',
           'pyparsing < 2',
           'pyserial',
           'python-dateutil < 2',
