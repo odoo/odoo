@@ -39,20 +39,20 @@ class view(osv.osv):
         except:
             ids=[ids]
         website_id=context.get('website_id')
-        for id in ids:
-            current = self.browse(cr, uid, [id], context=context)[0]
-            if not context.get('mykey') and current.type=='qweb' and website_id:
-                ctx = dict(context, mykey=True)
-                #from pudb import set_trace; set_trace()
-                if current.website_id:
-                    super(view, self).write(cr, uid, id, vals, context=ctx)
-                else:
-                    copy_id=super(view, self).copy(cr,uid, id,{'website_id':website_id},context=ctx)
-                    super(view, self).write(cr, uid, [copy_id], vals, context=ctx)
-            else:
-                ctx = dict(context, mykey=True)
-                super(view, self).write(cr, uid, id, vals, context=ctx)
+        if website_id:
+            for current in self.browse(cr, uid, ids, context=context):
+                if current.type=='qweb':
+                    #from pudb import set_trace; set_trace()
+                    if current.website_id.id == website_id:
+                        super(view, self).write(cr, uid, [current.id], vals, context=context)
+                    else:
+                        copy_id = super(view, self).copy(cr,uid, current.id, {'website_id':website_id},context=context)
+                        super(view, self).write(cr, uid, [copy_id], vals, context=context)
+        else:
+            return super(view, self).write(cr, uid, ids, vals, context=context)
 
+    def copy(self, cr, uid, id, vals, context=None):
+        return super(view, self).copy(cr, uid, id, dict(vals or {}, website_id=False),context=context)
 
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
