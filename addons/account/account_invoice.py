@@ -949,9 +949,7 @@ class account_invoice(osv.osv):
             self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
 
             # I disabled the check_total feature
-            group_check_total_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'group_supplier_inv_check_total')[1]
-            group_check_total = self.pool.get('res.groups').browse(cr, uid, group_check_total_id, context=context)
-            if group_check_total and uid in [x.id for x in group_check_total.users]:
+            if self.pool['res.users'].has_group(cr, uid, 'account.group_supplier_inv_check_total'):
                 if (inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0)):
                     raise osv.except_osv(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
