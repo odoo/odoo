@@ -2763,5 +2763,13 @@ div.tour-backdrop
 
 body
     overflow: auto
+
+// hack to make IE11 work
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) 
+    .oe_secondary_menus_container 
+        position: static !important
+
+
+
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
