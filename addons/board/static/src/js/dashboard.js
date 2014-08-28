@@ -429,7 +429,7 @@ instance.web.SearchViewDrawer.include({
     add_common_inputs: function() {
         this._super();
         var vm = this.getParent().getParent();
-        if (vm.inner_action && vm.inner_action.views) {
+        if (vm.inner_action && vm.inner_action.id && vm.inner_action.views) {
             (new instance.board.AddToDashboard(this));
         }
     }

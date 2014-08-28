@@ -796,7 +796,6 @@ form: module.record_id""" % (xml_id,)
         record.append(Field(name, name='name'))
         record.append(Field("qweb", name='type'))
         record.append(Field(el.get('priority', "16"), name='priority'))
-        record.append(Field(el, name="arch", type="xml"))
         if 'inherit_id' in el.attrib:
             record.append(Field(name='inherit_id', ref=el.get('inherit_id')))
         groups = el.attrib.pop('groups', None)
@@ -817,6 +816,9 @@ form: module.record_id""" % (xml_id,)
             record.append(Field('primary', name='mode'))
         if el.get('optional'):
             record.append(Field(el.get('optional'), name='application'))
+        # inject complete <template> element (after changing node name) into
+        # the ``arch`` field
+        record.append(Field(el, name="arch", type="xml"))
 
         return self._tag_record(cr, record, data_node)
 

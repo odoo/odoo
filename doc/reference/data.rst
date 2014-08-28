@@ -199,6 +199,8 @@ Groups
 ``id``
     the menu item's :term:`external id`
 
+.. _reference/data/template:
+
 ``template``
 ------------
 
