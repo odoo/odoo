@@ -327,20 +327,15 @@ class account_coda_import(osv.osv_memory):
                     self.pool.get('account.bank.statement.line').create(cr, uid, data, context=context)
             if statement['coda_note'] != '':
                 self.pool.get('account.bank.statement').write(cr, uid, [statement['id']], {'coda_note': statement['coda_note']}, context=context)
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_statement_tree')
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_reconcile_bank_statements')
         action = self.pool[model].browse(cr, uid, action_id, context=context)
+        statements_ids = [statement['id'] for statement in statements]
         return {
             'name': action.name,
-            'view_type': action.view_type,
-            'view_mode': action.view_mode,
-            'res_model': action.res_model,
-            'domain': action.domain,
-            'context': action.context,
-            'type': 'ir.actions.act_window',
-            'search_view_id': action.search_view_id.id,
-            'views': [(v.view_id.id, v.view_mode) for v in action.view_ids]
+            'tag': action.tag,
+            'context': {'statement_ids': statements_ids},
+            'type': 'ir.actions.client',
         }
-
 
 def rmspaces(s):
     return " ".join(s.split())
