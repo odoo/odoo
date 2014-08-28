@@ -886,7 +886,6 @@ openerp.account = function (instance) {
                 self.$el.css("opacity", "0");
                 self.updateBalance();
                 self.$(".change_partner_container").show(0);
-                self.change_partner_field.$el.find("input").attr("placeholder", _t("Select Partner"));
                 self.$(".match").slideUp(0);
                 self.$el.addClass("no_partner");
                 self.set("mode", self.context.mode);
@@ -1062,6 +1061,7 @@ openerp.account = function (instance) {
             self.change_partner_field.on("change:value", self.change_partner_field, function() {
                 self.changePartner(this.get_value());
             });
+            self.change_partner_field.$el.find("input").attr("placeholder", _t("Select Partner"));
     
             field_manager.do_show();
         },
@@ -1117,6 +1117,7 @@ openerp.account = function (instance) {
             _.each(self.create_form, function(field) {
                 field.set("value", false);
             });
+            self.label_field.set("value", self.st_line.name);
             self.amount_field.set("value", -1*self.get("balance"));
             self.account_id_field.focus();
         },
@@ -1197,9 +1198,14 @@ openerp.account = function (instance) {
     
         partnerNameClickHandler: function() {
             var self = this;
-            self.$(".partner_name").hide();
-            self.change_partner_field.$el.find("input").attr("placeholder", self.st_line.partner_name);
-            self.$(".change_partner_container").show();
+            // Delete statement line's partner
+            return self.model_bank_statement_line
+                .call("write", [[self.st_line_id], {'partner_id': ''}])
+                .then(function () {
+                    // Show the many2one widget
+                    self.$(".partner_name").hide();
+                    self.$(".change_partner_container").show();
+                });
         },
     
     
