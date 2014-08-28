@@ -297,10 +297,22 @@ class account_bank_statement_import(osv.TransientModel):
                     }
                     statement_line.append((0, 0, line_data))
             if statement['coda_note'] != '':
+<<<<<<< HEAD
                 statement_data.update({'coda_note': statement['coda_note']})
             statement_data.update({'journal_id': journal_id, 'line_ids': statement_line})
         return [statement_data]
-
+=======
+                self.pool.get('account.bank.statement').write(cr, uid, [statement['id']], {'coda_note': statement['coda_note']}, context=context)
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_reconcile_bank_statements')
+        action = self.pool[model].browse(cr, uid, action_id, context=context)
+        statements_ids = [statement['id'] for statement in statements]
+        return {
+            'name': action.name,
+            'tag': action.tag,
+            'context': {'statement_ids': statements_ids},
+            'type': 'ir.actions.client',
+        }
+>>>>>>> 000af80... [IMP] account: CODA import redirects to statement(s) reconciliation
 
 def rmspaces(s):
     return " ".join(s.split())
