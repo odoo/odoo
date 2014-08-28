@@ -36,7 +36,7 @@ class crm_partner_report_assign(osv.osv):
         'date_partnership' : fields.date('Partnership Date'),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
-        'opp': fields.integer('# of Opportunity', readonly=True),
+        'opp': fields.integer('# of Opportunity', readonly=True),  # TDE FIXME master: rename into nbr_opportunities
         'turnover': fields.float('Turnover', readonly=True),
         'period_id': fields.many2one('account.period', 'Invoice Period', readonly=True),
     }

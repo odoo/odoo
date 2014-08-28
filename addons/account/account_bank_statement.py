@@ -735,7 +735,7 @@ class account_bank_statement_line(osv.osv):
                     raise osv.except_osv(_('Error!'), _('A selected move line was already reconciled.'))
 
         # Create the move
-        move_name = st_line.statement_id.name + "/" + str(st_line.sequence)
+        move_name = (st_line.statement_id.name or st_line.name) + "/" + str(st_line.sequence)
         move_vals = bs_obj._prepare_move(cr, uid, st_line, move_name, context=context)
         move_id = am_obj.create(cr, uid, move_vals, context=context)
 

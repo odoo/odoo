@@ -1,10 +1,10 @@
 # HG changeset patch
 # Parent 8c721171aa16a41e94059f53d6780c67b5ef2dfc
 
-Index: doc-backend/openacademy/models.py
+Index: addons/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/models.py	2014-08-24 12:20:31.953390654 +0200
-+++ doc-backend/openacademy/models.py	2014-08-24 12:20:31.949390654 +0200
+--- addons.orig/openacademy/models.py	2014-08-26 17:26:14.907783150 +0200
++++ addons/openacademy/models.py	2014-08-26 17:26:14.899783151 +0200
 @@ -66,6 +66,24 @@
      attendees_count = fields.Integer(
          string="Attendees count", compute='_get_attendees_count', store=True)
@@ -30,30 +30,14 @@ Index: doc-backend/openacademy/models.py
      @api.one
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-Index: doc-backend/openacademy/views/openacademy.xml
+Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-24 12:20:31.953390654 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:20:31.949390654 +0200
-@@ -91,22 +91,37 @@
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-26 17:26:14.907783150 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-26 17:26:14.899783151 +0200
+@@ -93,6 +93,19 @@
              <field name="model">openacademy.session</field>
              <field name="arch" type="xml">
                  <form string="Session Form">
--                    <group colspan="2" col="2">
--                        <separator string="General" colspan="2"/>
--                        <field name="course_id"/>
--                        <field name="name"/>
--                        <field name="instructor_id"/>
--                        <field name="active"/>
--                    </group>
--                    <group colspan="2" col="2">
--                        <separator string="Schedule" colspan="2"/>
--                        <field name="start_date"/>
--                        <field name="duration"/>
--                        <field name="seats"/>
--                        <field name="taken_seats" widget="progressbar"/>
--                    </group>
--                    <separator string="Attendees" colspan="4"/>
--                    <field name="attendee_ids" colspan="4" nolabel="1"/>
 +                    <header>
 +                        <button name="action_draft" type="object"
 +                                string="Reset to draft"
@@ -67,24 +51,6 @@ Index: doc-backend/openacademy/views/openacademy.xml
 +                        <field name="state" widget="statusbar"/>
 +                    </header>
 +
-+                    <sheet>
-+                        <group colspan="2" col="2">
-+                            <separator string="General" colspan="2"/>
-+                            <field name="course_id"/>
-+                            <field name="name"/>
-+                            <field name="instructor_id"/>
-+                            <field name="active"/>
-+                        </group>
-+                        <group colspan="2" col="2">
-+                            <separator string="Schedule" colspan="2"/>
-+                            <field name="start_date"/>
-+                            <field name="duration"/>
-+                            <field name="seats"/>
-+                            <field name="taken_seats" widget="progressbar"/>
-+                        </group>
-+                        <separator string="Attendees" colspan="4"/>
-+                        <field name="attendee_ids" colspan="4" nolabel="1"/>
-+                    </sheet>
-                 </form>
-             </field>
-         </record>
+                     <sheet>
+                         <group>
+                             <group string="General">

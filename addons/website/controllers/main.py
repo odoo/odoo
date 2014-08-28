@@ -56,8 +56,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {
             'path': page,
         }
-        # allow shortcut for /page/<website_xml_id>
-        if '.' not in page:
+        # /page/website.XXX --> /page/XXX
+        if page.startswith('website.'):
+            return request.redirect('/page/' + page[8:], code=301)
+        elif '.' not in page:
             page = 'website.%s' % page
 
         try:
@@ -138,6 +140,22 @@ class Website(openerp.addons.web.controllers.main.Home):
             create_sitemap('/sitemap.xml', content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
+
+    @http.route('/website/info', type='http', auth="public", website=True)
+    def website_info(self):
+        try:
+            request.website.get_template('website.info').name
+        except Exception, e:
+            return request.registry['ir.http']._handle_exception(e, 404)
+        irm = request.env()['ir.module.module'].sudo()
+        apps = irm.search([('state','=','installed'),('application','=',True)])
+        modules = irm.search([('state','=','installed'),('application','=',False)])
+        values = {
+            'apps': apps,
+            'modules': modules,
+            'version': openerp.service.common.exp_version()
+        }
+        return request.render('website.info', values)
 
     #------------------------------------------------------
     # Edit

@@ -59,7 +59,7 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="arch" type="xml">
-                <filter string="Customer" position="after">
+                <filter string="Stage" position="after">
                     <filter string="Assigned Partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
                 <filter name="unassigned" position="after">
@@ -148,7 +148,7 @@
                 if context.get('active_model') == 'crm.lead':
                     ids = []
                     if context.get('active_domain'):
-                        ids = self.search(cr, uid, context['active_domain'], context=context) 
+                        ids = self.search(cr, uid, context['active_domain'], context=context)
                     elif context.get('active_ids'):
                         ids = context['active_ids']
                     if ids:

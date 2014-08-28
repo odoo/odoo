@@ -315,9 +315,9 @@ class WebsiteForum(http.Controller):
             return {'error': 'anonymous_user'}
 
         # set all answers to False, only one can be accepted
-        request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids], {'is_correct': False}, context=context)
+        request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids if not c.id == post.id], {'is_correct': False}, context=context)
         request.registry['forum.post'].write(cr, uid, [post.id], {'is_correct': not post.is_correct}, context=context)
-        return not post.is_correct
+        return post.is_correct
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/delete', type='http', auth="user", methods=['POST'], website=True)
     def post_delete(self, forum, post, **kwargs):
@@ -496,7 +496,11 @@ class WebsiteForum(http.Controller):
         posts_ids = Post.browse(cr, uid, posts.keys(), context=context)
         posts = dict(map(lambda x: (x.id, (x.parent_id or x, x.parent_id and x or False)), posts_ids))
 
-        post['users'] = 'True'
+        # TDE CLEANME MASTER: couldn't it be rewritten using a 'menu' key instead of one key for each menu ?
+        if user.id == uid:
+            post['my_profile'] = True
+        else:
+            post['users'] = True
 
         values.update({
             'uid': uid,
@@ -592,4 +596,4 @@ class WebsiteForum(http.Controller):
     def delete_comment(self, forum, post, comment, **kwarg):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        return request.registry['forum.post'].unlink(request.cr, request.uid, post.id, comment.id, context=request.context)
+        return request.registry['forum.post'].unlink_comment(request.cr, request.uid, post.id, comment.id, context=request.context)
