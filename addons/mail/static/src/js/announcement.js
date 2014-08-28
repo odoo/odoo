@@ -36,6 +36,8 @@ openerp_announcement = function(instance) {
                 });
 
                 $('head').append($css);
+            }).fail(function(result, ev){
+                ev.preventDefault();
             });
         }
     });
