@@ -32,58 +32,6 @@
             }
         },
         // mutations filter
-        _child_of_loading_node: function(mutations){
-            var self = this;
-            var children = [];
-            _.each(mutations, function(m){
-                if(m.f === 'applyChanged'){
-                    _.each(m.args[1], function(item){
-                        if(item.parentNode && item.parentNode.id && item.parentNode.id === self.loading_node_id){
-                            children.push(item.id);
-                        }
-                    });
-                }
-             });
-            return children;
-        },
-        _find_loading_node_id: function(){
-            var self = this;
-            var node_id = this.loading_node_id;
-            if(this.treeMirrorClient && !this.loading_node_id){
-                _.each(this.treeMirrorClient.knownNodes.nodes, function(n){
-                    var classes = n.classList || [];
-                    if(_.contains(classes, 'oe_loading')){
-                        node_id = self.treeMirrorClient.knownNodes.nodeId(n);
-                    }
-                });
-                // find the real id of the loading node
-                if(node_id){
-                    node_id = this.treeMirrorClient.knownNodes.values[node_id];
-                }
-            }
-            return node_id;
-        },
-        _filter: function(mutations){
-            var self = this;
-            _.each(mutations, function(m){
-                // remove 'loading' mutations
-                if(m.f === 'applyChanged'){
-                    // remove the Removed Element (generally child of loading node)
-                    m.args[0] = _.filter(m.args[0], function(item){
-                        return !(item.id && _.contains(self.loading_children_ids, item.id));
-                    });
-                    // remove the element from addedOrMoved containing the node_id
-                    m.args[1] = _.filter(m.args[1], function(item){
-                        return !(item.parentNode && item.parentNode.id && item.parentNode.id === self.loading_node_id);
-                    });
-                    // remove the element from attributes category containing the node_id
-                    m.args[2] = _.filter(m.args[2], function(item){
-                        return !(item.id && item.id === self.loading_node_id);
-                    });
-                }
-            });
-            return mutations;
-        },
         _remove_empty_mutations: function(mutations){
             var self = this;
             var clean_mutations = [];
@@ -149,6 +97,12 @@
         },
         _start_record: function(){
             var self = this;
+            // disabled loading by replacing the on_rpc_event function
+            if(openerp.webclient){
+                this._on_rpc_function = openerp.webclient.loading.on_rpc_event;
+                openerp.webclient.loading.on_rpc_event = function(){};
+            }
+
             this.queue({
                 base: location.href.match(/^(.*\/)[^\/]*$/)[1],
                 timestamp: Date.now(),
@@ -194,17 +148,16 @@
             this.loading_children_ids = [];
             this.uuid = false;
             this.record_id = false;
+            // restore the initial on_rpc_event function
+            if(openerp.webclient){
+                openerp.webclient.loading.on_rpc_event = this._on_rpc_function;
+            }
         },
         send_record: function(mutations){
-            // find the TreeMirroir id of the loading node
-            this.loading_node_id = this._find_loading_node_id();
-            // find new child of the loading node
-            this.loading_children_ids = this.loading_children_ids.slice((this.loading_children_ids.length-1), this.loading_children_ids.length).concat(this._child_of_loading_node(mutations));
-            // filter the mutations
-            mutations = this._filter(mutations);
             // remove the empty mutations
             mutations = this._remove_empty_mutations(mutations);
             if(mutations.length !== 0){
+                console.log(JSON.stringify(mutations));
                 return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, record_id : this.record_id, mutations : mutations});
             }else{
                 return $.Deferred().resolve();
