@@ -152,11 +152,16 @@
                     <field name="name" string="Mailings"/>
                     <field name="mass_mailing_campaign_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="State" name="group_state"
-                            context="{'group_by': 'state'}"/>
                         <filter string="Campaign" name="group_mass_mailing_campaign_id"
                             groups="mass_mailing.group_mass_mailing_campaign"
                             context="{'group_by': 'mass_mailing_campaign_id'}"/>
+                        <filter string="State" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                        <filter string="Sent By" domain="[]"
+                            context="{'group_by':'email_from'}"/>
+                        <separator/>
+                        <filter string="Sent Month"
+                            domain="[]" context="{'group_by':'sent_date:month'}"/>
                     </group>
                 </search>
             </field>
@@ -343,11 +348,22 @@
             </field>
         </record>
 
+        <record id="view_mail_mass_mailing_graph" model="ir.ui.view">
+            <field name="name">mail.mass_mailing.graph</field>
+            <field name="model">mail.mass_mailing</field>
+            <field name="arch" type="xml">
+                <graph string="Mass Mailing" type="bar" stacked="True">
+                    <field name="mass_mailing_campaign_id" type="row"/>
+                    <field name="sent_date" interval="month" type="col"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="action_view_mass_mailings" model="ir.actions.act_window">
             <field name="name">Mass Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree,form,graph</field>
             <field name="help" type="html">
 <p class="oe_view_nocontent_create">
     Click here to create a new mailing.
@@ -362,7 +378,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{
-                'search_default_mass_mailing_campaign_id': [active_id], 
+                'search_default_mass_mailing_campaign_id': [active_id],
                 'default_mass_mailing_campaign_id': active_id,
             }
             </field>
