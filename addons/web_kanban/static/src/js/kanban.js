@@ -227,6 +227,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     value: new_record[0],
                     length: 0,
                     aggregates: {},
+                    attributes: {length: 0},
                 };
                 var new_group = new instance.web_kanban.KanbanGroup(self, [], datagroup, dataset);
                 self.do_add_groups([new_group]).done(function() {
@@ -408,7 +409,16 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     var new_group = ui.item.parents('.oe_kanban_column:first').data('widget');
                     if (!(old_group.title === new_group.title && old_group.value === new_group.value && old_index == new_index)) {
                         self.on_record_moved(record, old_group, old_index, new_group, new_index).done(function() {
-                            self.recompute_aggregates(old_group, new_group);
+                            var groups = [], old_group_domain = null, new_group_domain = null;
+                            old_group.update_length(-1);
+                            new_group.update_length(1);
+                            old_group_domain = old_group.get_domain_for_group();
+                            if (old_group_domain)
+                                groups.push(old_group_domain);
+                            new_group_domain = new_group.get_domain_for_group();
+                            if (new_group_domain)
+                                groups.push(new_group_domain);
+                            self.recompute_aggregates(groups);
                         });
                     }
                     setTimeout(function() {
@@ -488,25 +498,26 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             });
         }
     },
-    recompute_aggregates: function(old_group, new_group) {
+    recompute_aggregates: function(groups) {
         var self = this;
-        var old_group_data = {}, new_group_data = {};
-        old_group_data['domain'] = old_group.group.model.domain();
-        new_group_data['domain'] = new_group.group.model.domain();
-        old_group_data['index'] = old_group.index;
-        new_group_data['index'] = new_group.index;
+
         var grouping_fields = this.group_by ? [this.group_by].concat(_.keys(this.aggregates)) : undefined;
         //Do single call to controller to get aggregation result of read_group for both column
         instance.session.rpc('/web_kanban/recompute_aggregates', {
             model: self.dataset.model,
             fields: self.fields_keys,
             group_fields: grouping_fields,
-            groups: [old_group_data, new_group_data],
+            groups: groups,
             context: _.extend(this.search_context, {no_group_by_full: true})
         }).then(function (result) {
             _.each(result, function(result_group, key) {
                 var group = _.findWhere(self.groups, {'index': parseInt(key)});
-                group.update_group_header(result_group[0]);
+                if (result_group.length) {
+                    group.update_group_header(result_group[0]);
+                } else {
+                    $(group.$el).find(".oe_kanban_group_length").text(group.group.get('length'));
+                    $(group.$el).find('.oe_kanban_aggregates').hide();
+                }
             });
         });
     },
@@ -863,11 +874,24 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var id = record, self = this;
         self.view.remove_no_result();
         self.trigger("add_record");
+        self.update_length(1);
+        var domain_group = self.get_domain_for_group()
+        if (domain_group)
+            self.view.recompute_aggregates([domain_group]);
         this.dataset.read_ids([id], this.view.fields_keys)
             .done(function (records) {
                 self.view.dataset.ids.push(id);
                 self.do_add_records(records, true);
             });
+    },
+    update_length: function(sign) {
+        this.group.attributes.length += 1*sign;
+    },
+    get_domain_for_group: function() {
+        var group_with_domain = null;
+        if (this.group.model)
+            group_with_domain = { domain: this.group.model.domain(), index: this.index };
+        return group_with_domain;
     },
     highlight: function(show){
         if(show){
