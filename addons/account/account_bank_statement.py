@@ -403,9 +403,9 @@ class account_bank_statement(osv.osv):
             'context':ctx,
         }
 
-    def number_of_lines_reconciled(self, cr, uid, id, context=None):
+    def number_of_lines_reconciled(self, cr, uid, ids, context=None):
         bsl_obj = self.pool.get('account.bank.statement.line')
-        return bsl_obj.search_count(cr, uid, [('statement_id', '=', id), ('journal_entry_id', '!=', False)], context=context)
+        return bsl_obj.search_count(cr, uid, [('statement_id', 'in', ids), ('journal_entry_id', '!=', False)], context=context)
 
     def link_bank_to_partner(self, cr, uid, ids, context=None):
         for statement in self.browse(cr, uid, ids, context=context):
