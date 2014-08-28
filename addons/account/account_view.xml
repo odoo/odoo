@@ -100,24 +100,22 @@
                         <button name="action_draft" states="done" string="Re-Open Period" type="object" groups="account.group_account_manager"/>
                         <field name="state" widget="statusbar" nolabel="1"/>
                     </header>
-                    <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="fiscalyear_id" widget="selection"/>
-                                <label for="date_start" string="Duration"/>
-                                <div>
-                                    <field name="date_start" class="oe_inline" nolabel="1"/> -
-                                    <field name="date_stop" nolabel="1" class="oe_inline"/>
-                                </div>
-                            </group>
-                            <group>
-                                <field name="code"/>
-                                <field name="special"/>
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
+                            <field name="name"/>
+                            <field name="fiscalyear_id" widget="selection"/>
+                            <label for="date_start" string="Duration"/>
+                            <div>
+                                <field name="date_start" class="oe_inline" nolabel="1"/> -
+                                <field name="date_stop" nolabel="1" class="oe_inline"/>
+                            </div>
                         </group>
-                    </sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="special"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -439,7 +437,7 @@
                                     <field name="internal_account_id" domain="[('type','!=','view')]"/>
                                 </group>
                                 <group string="Miscellaneous">
-                                    <field name="with_last_closing_balance"/>
+                                    <field name="with_last_closing_balance" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                                     <field name="cash_control" attrs="{'invisible':[('type','not in', ('cash',))]}"/>
                                 </group>
                             </group>
@@ -575,12 +573,16 @@
                         <button class="oe_inline oe_stat_button" name="%(action_view_account_statement_from_invoice_lines)d"
                             string="Import Invoice" type="action"
                             attrs="{'invisible':[('state','=','confirm')]}" widget="statinfo" icon="fa-pencil-square-o"/>
+                        <button class="oe_inline oe_stat_button" name="button_journal_entries"
+                                string="Journal Items" type="object"
+                                attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
+                        <field name="move_line_ids" invisible="1"/>
                     </div>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <group>
                         <group>
-                            <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
+                            <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" attrs="{'readonly': [('move_line_ids', '!=', [])]}" widget="selection"/>
                             <label for="date" string="Date / Period"/>
                             <div>
                                 <field name="date" on_change="onchange_date(date, company_id)" class="oe_inline"/>
@@ -630,19 +632,6 @@
             </field>
         </record>
 
-        <record id="view_bank_statement_form_journal_items" model="ir.ui.view">
-            <field name="name">account.bank.statement.journal.items.form.inherit</field>
-            <field name="model">account.bank.statement</field>
-            <field name="inherit_id" ref="view_bank_statement_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='import_buttons']" position="inside">
-                    <button name="button_journal_entries"
-                            string="Journal Items" type="object"
-                            attrs="{'invisible':[('state','!=','confirm')]}"/>
-                </xpath>
-            </field>
-        </record>
-
         <record id="action_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Bank Statements</field>
             <field name="res_model">account.bank.statement</field>
@@ -659,7 +648,7 @@
                 occurring over a given period of time on a bank account. You
                 should receive this periodicaly from your bank.
               </p><p>
-                OpenERP allows you to reconcile a statement line directly with
+                Odoo allows you to reconcile a statement line directly with
                 the related sale or puchase invoices.
               </p>
             </field>
@@ -711,9 +700,9 @@
                         </div>
                         <group>
                             <group>
-                                <field name="account_id"/>
+                                <field name="account_id" domain="[('type', 'not in', ['view', 'closed', 'consolidation'])]"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id"/>
+                                <field name="tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
                             </group>
                             <group>
                                 <field name="label"/>
@@ -929,7 +918,7 @@
                 Click to define a new tax code.
               </p><p>
                 Depending on the country, a tax code is usually a cell to fill
-                in your legal tax statement. OpenERP allows you to define the
+                in your legal tax statement. Odoo allows you to define the
                 tax structure and each tax computation will be registered in
                 one or several tax code.
               </p>
@@ -1218,7 +1207,7 @@
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
                     <field name="date_maturity" invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund']"/>
-                    <field name="reconcile"/>
+                    <field name="reconcile_ref"/>
                     <field name="invoice" invisible="1"/>
                     <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
                     <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
@@ -1278,8 +1267,8 @@
                 Select the period and the journal you want to fill.
               </p><p>
                 This view can be used by accountants in order to quickly record
-                entries in OpenERP. If you want to record a supplier invoice,
-                start by recording the line of the expense account. OpenERP
+                entries in Odoo. If you want to record a supplier invoice,
+                start by recording the line of the expense account. Odoo
                 will propose to you automatically the Tax related to this
                 account and the counterpart "Account Payable".
               </p>
@@ -1515,7 +1504,7 @@
                 A journal entry consists of several journal items, each of
                 which is either a debit or a credit transaction.
               </p><p>
-                OpenERP automatically creates one journal entry per accounting
+                Odoo automatically creates one journal entry per accounting
                 document: invoice, refund, supplier payment, bank statements,
                 etc. So, you should record journal entries manually only/mainly
                 for miscellaneous operations.
@@ -1686,7 +1675,7 @@
                 <form string="Payment Term">
                     <group>
                         <group string="Amount Computation">
-                            <field name="value"/>
+                            <field name="value" widget="radio" nolabel="1" colspan="4"/>
                             <label for="value_amount" string="Amount To Pay"  attrs="{'invisible':[('value','=','balance')]}"/>
                             <div attrs="{'invisible':[('value','=','balance')]}">
                                 <field name="value_amount" class="oe_inline"/>
@@ -1934,7 +1923,7 @@
             <field name="arch" type="xml">
                 <search string="Search Account Templates">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account Template"/>
-                    <filter icon="terp-sale" string="Receivale Accounts" domain="[('type','=','receivable')]"/>
+                    <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
                     <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                     <field name="parent_id"/>
                     <field name="user_type"/>

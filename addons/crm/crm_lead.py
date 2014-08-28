@@ -28,18 +28,19 @@ from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.addons.base.res.res_partner import format_address
 from openerp.osv import fields, osv, orm
-from openerp.tools import html2plaintext
 from openerp.tools.translate import _
+from openerp.tools import email_re
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
-    'channel_id',
+    'campaign_id',
     'company_id',
     'country_id',
     'section_id',
     'state_id',
     'stage_id',
-    'type_id',
+    'medium_id',
+    'source_id',
     'user_id',
     'title',
     'city',
@@ -68,7 +69,7 @@ class crm_lead(format_address, osv.osv):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority,date_action,id desc"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin', 'crm.tracking.mixin']
 
     _track = {
         'stage_id': {
@@ -82,6 +83,7 @@ class crm_lead(format_address, osv.osv):
     _mail_mass_mailing = _('Leads / Opportunities')
 
     def get_empty_list_help(self, cr, uid, help, context=None):
+        context = dict(context or {})
         if context.get('default_type') == 'lead':
             context['empty_list_help_model'] = 'crm.case.section'
             context['empty_list_help_id'] = context.get('default_section_id')
@@ -214,9 +216,6 @@ class crm_lead(format_address, osv.osv):
         'write_date': fields.datetime('Update Date', readonly=True),
         'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Tags', \
             domain="['|', ('section_id', '=', section_id), ('section_id', '=', False), ('object_id.model', '=', 'crm.lead')]", help="Classify and analyze your lead/opportunity categories like: Training, Service"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
-        'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
         'opt_out': fields.boolean('Opt-Out', oldname='optout',
@@ -224,7 +223,7 @@ class crm_lead(format_address, osv.osv):
                     "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."),
         'type': fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', select=True, help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
-        'date_closed': fields.datetime('Closed', readonly=True),
+        'date_closed': fields.datetime('Closed', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange', select=True,
                         domain="['&', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
@@ -883,8 +882,7 @@ class crm_lead(format_address, osv.osv):
         return res
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         if vals.get('type') and not context.get('default_type'):
             context['default_type'] = vals.get('type')
         if vals.get('section_id') and not context.get('default_section_id'):
@@ -917,11 +915,10 @@ class crm_lead(format_address, osv.osv):
             default['date_open'] = fields.datetime.now()
         else:
             default['date_open'] = False
-        default['date_closed'] = False
-        default['stage_id'] = self._get_default_stage_id(cr, uid, local_context)
-        return super(crm_lead, self).copy(cr, uid, id, default, context=context)
+        return super(crm_lead, self).copy(cr, uid, id, default, context=local_context)
 
     def get_empty_list_help(self, cr, uid, help, context=None):
+        context = dict(context or {})
         context['empty_list_help_model'] = 'crm.case.section'
         context['empty_list_help_id'] = context.get('default_section_id', None)
         context['empty_list_help_document_name'] = _("opportunity")
@@ -1035,5 +1032,17 @@ class crm_lead(format_address, osv.osv):
             country_id=self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
             return {'value':{'country_id':country_id}}
         return {}
+
+    def message_partner_info_from_emails(self, cr, uid, id, emails, link_mail=False, context=None):
+        res = super(crm_lead, self).message_partner_info_from_emails(cr, uid, id, emails, link_mail=link_mail, context=context)
+        lead = self.browse(cr, uid, id, context=context)
+        for partner_info in res:
+            if not partner_info.get('partner_id') and (lead.partner_name or lead.contact_name):
+                emails = email_re.findall(partner_info['full_name'] or '')
+                email = emails and emails[0] or ''
+                if email and lead.email_from and email.lower() == lead.email_from.lower():
+                    partner_info['full_name'] = '%s <%s>' % (lead.partner_name or lead.contact_name, email)
+                    break
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

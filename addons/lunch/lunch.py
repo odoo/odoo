@@ -299,7 +299,9 @@ class lunch_order(osv.Model):
     _columns = {
         'user_id': fields.many2one('res.users', 'User Name', required=True, readonly=True, states={'new':[('readonly', False)]}),
         'date': fields.date('Date', required=True, readonly=True, states={'new':[('readonly', False)]}),
-        'order_line_ids': fields.one2many('lunch.order.line', 'order_id', 'Products', ondelete="cascade", readonly=True, states={'new':[('readonly', False)]}),
+        'order_line_ids': fields.one2many('lunch.order.line', 'order_id', 'Products',
+                                          ondelete="cascade", readonly=True, states={'new':[('readonly', False)]},
+                                          copy=True),
         'total': fields.function(_price_get, string="Total", store={
                  'lunch.order.line': (_fetch_orders_from_lines, ['product_id','order_id'], 20),
             }),
@@ -307,7 +309,7 @@ class lunch_order(osv.Model):
                                     ('confirmed','Confirmed'), \
                                     ('cancelled','Cancelled'), \
                                     ('partially','Partially Confirmed')] \
-                                ,'Status', readonly=True, select=True),
+                                ,'Status', readonly=True, select=True, copy=False),
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
     }
 
@@ -336,8 +338,7 @@ class lunch_order_line(osv.Model):
         """ 
         The order_line is ordered to the supplier but isn't received yet
         """
-        for order_line in self.browse(cr, uid, ids, context=context):
-            order_line.write({'state': 'ordered'}, context=context)
+        self.write(cr, uid, ids, {'state': 'ordered'}, context=context)
         return self._update_order_lines(cr, uid, ids, context=context)
 
     def confirm(self, cr, uid, ids, context=None):
@@ -356,7 +357,7 @@ class lunch_order_line(osv.Model):
                     'date': order_line.date,
                 }
                 cashmove_ref.create(cr, uid, values, context=context)
-                order_line.write({'state': 'confirmed'}, context=context)
+                order_line.write({'state': 'confirmed'})
         return self._update_order_lines(cr, uid, ids, context=context)
 
     def _update_order_lines(self, cr, uid, ids, context=None):
@@ -384,8 +385,8 @@ class lunch_order_line(osv.Model):
         cancel one or more order.line, update order status and unlink existing cashmoves
         """
         cashmove_ref = self.pool.get('lunch.cashmove')
+        self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
         for order_line in self.browse(cr, uid, ids, context=context):
-            order_line.write({'state':'cancelled'}, context=context)
             cash_ids = [cash.id for cash in order_line.cashmove]
             cashmove_ref.unlink(cr, uid, cash_ids, context=context)
         return self._update_order_lines(cr, uid, ids, context=context)

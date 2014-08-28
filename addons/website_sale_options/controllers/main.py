@@ -53,12 +53,18 @@ class website_sale_options(website_sale):
     @http.route(['/shop/modal'], type='json', auth="public", methods=['POST'], website=True)
     def modal(self, product_id, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        pricelist = self.get_pricelist()
         if not context.get('pricelist'):
-            context['pricelist'] = int(self.get_pricelist())
+            context['pricelist'] = int(pricelist)
+
+        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+        to_currency = pricelist.currency_id
+        compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
 
         product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
 
         return request.website._render("website_sale_options.modal", {
                 'product': product,
+                'compute_currency': compute_currency,
                 'get_attribute_value_ids': self.get_attribute_value_ids,
             })

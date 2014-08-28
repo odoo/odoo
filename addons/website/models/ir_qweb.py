@@ -48,17 +48,17 @@ class QWeb(orm.AbstractModel):
     def add_template(self, qcontext, name, node):
         # preprocessing for multilang static urls
         if request.website:
-            for tag, attr in self.URL_ATTRS.items():
-                for e in node.getElementsByTagName(tag):
-                    url = e.getAttribute(attr)
+            for tag, attr in self.URL_ATTRS.iteritems():
+                for e in node.iterdescendants(tag=tag):
+                    url = e.get(attr)
                     if url:
-                        e.setAttribute(attr, qcontext.get('url_for')(url))
+                        e.set(attr, qcontext.get('url_for')(url))
         super(QWeb, self).add_template(qcontext, name, node)
 
     def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
         att, val = super(QWeb, self).render_att_att(element, attribute_name, attribute_value, qwebcontext)
 
-        if request.website and att == self.URL_ATTRS.get(element.nodeName) and isinstance(val, basestring):
+        if request.website and att == self.URL_ATTRS.get(element.tag) and isinstance(val, basestring):
             val = qwebcontext.get('url_for')(val)
         return att, val
 
@@ -78,7 +78,7 @@ class Field(orm.AbstractModel):
         attrs = [('data-oe-translate', 1 if column.translate else 0)]
 
         placeholder = options.get('placeholder') \
-                   or source_element.getAttribute('placeholder') \
+                   or source_element.get('placeholder') \
                    or getattr(column, 'placeholder', None)
         if placeholder:
             attrs.append(('placeholder', placeholder))
@@ -275,7 +275,7 @@ class Image(orm.AbstractModel):
 
     def to_html(self, cr, uid, field_name, record, options,
                 source_element, t_att, g_att, qweb_context, context=None):
-        assert source_element.nodeName != 'img',\
+        assert source_element.tag != 'img',\
             "Oddly enough, the root tag of an image field can not be img. " \
             "That is because the image goes into the tag, or it gets the " \
             "hose again."

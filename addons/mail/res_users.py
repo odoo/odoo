@@ -20,8 +20,10 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
+import openerp
 
 
 class res_users(osv.Model):
@@ -38,7 +40,7 @@ class res_users(osv.Model):
     _columns = {
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="Email address internally associated with this user. Incoming "\
-                 "emails will appear in the user's notifications."),
+                 "emails will appear in the user's notifications.", copy=False),
         'display_groups_suggestions': fields.boolean("Display Groups Suggestions"),
     }
 
@@ -68,7 +70,9 @@ class res_users(osv.Model):
 
     def create(self, cr, uid, data, context=None):
         if not data.get('login', False):
-            raise osv.except_osv(_('Invalid Action!'), _('You may not create a user. To create new users, you should use the "Settings > Users" menu.'))
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'action_res_users')
+            msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
+            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
         if context is None:
             context = {}
 
@@ -112,6 +116,7 @@ class res_users(osv.Model):
             thread_id = thread_id[0]
         return self.browse(cr, SUPERUSER_ID, thread_id).partner_id.id
 
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         """ Redirect the posting of message on res.users to the related partner.
             This is done because when giving the context of Chatter on the

@@ -39,21 +39,27 @@ class account_bank_statement(osv.osv):
         return res
 
     def button_confirm_bank(self, cr, uid, ids, context=None):
+        bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         super(account_bank_statement, self).button_confirm_bank(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context=context):
             if st.line_ids:
+                line_ids = [l.id for l in st.line_ids]
                 cr.execute("UPDATE account_bank_statement_line  \
                     SET state='confirm' WHERE id in %s ",
-                    (tuple([x.id for x in st.line_ids]),))
+                    (tuple(line_ids),))
+                bank_statement_line_obj.invalidate_cache(cr, uid, ['state'], line_ids, context=context)
         return True
 
     def button_cancel(self, cr, uid, ids, context=None):
+        bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         super(account_bank_statement, self).button_cancel(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context=context):
             if st.line_ids:
+                line_ids = [l.id for l in st.line_ids]
                 cr.execute("UPDATE account_bank_statement_line  \
                     SET state='draft' WHERE id in %s ",
-                    (tuple([x.id for x in st.line_ids]),))
+                    (tuple([line_ids]),))
+                bank_statement_line_obj.invalidate_cache(cr, uid, ['state'], line_ids, context=context)
         return True
 
 
@@ -65,7 +71,7 @@ class account_bank_statement_line_global(osv.osv):
         'name': fields.char('OBI', required=True, help="Originator to Beneficiary Information"),
         'code': fields.char('Code', size=64, required=True),
         'parent_id': fields.many2one('account.bank.statement.line.global', 'Parent Code', ondelete='cascade'),
-        'child_ids': fields.one2many('account.bank.statement.line.global', 'parent_id', 'Child Codes'),
+        'child_ids': fields.one2many('account.bank.statement.line.global', 'parent_id', 'Child Codes', copy=True),
         'type': fields.selection([
             ('iso20022', 'ISO 20022'),
             ('coda', 'CODA'),
@@ -110,7 +116,7 @@ class account_bank_statement_line(osv.osv):
         'globalisation_amount': fields.related('globalisation_id', 'amount', type='float',
             relation='account.bank.statement.line.global', string='Glob. Amount', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed')],
-            'Status', required=True, readonly=True),
+            'Status', required=True, readonly=True, copy=False),
         'counterparty_name': fields.char('Counterparty Name', size=35),
         'counterparty_bic': fields.char('Counterparty BIC', size=11),
         'counterparty_number': fields.char('Counterparty Number', size=34),

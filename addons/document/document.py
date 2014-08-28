@@ -235,18 +235,8 @@ class document_directory(osv.osv):
         _parent(dir_id, path)
         return path
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from document_directory where id in ('+','.join(map(str,ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
     _constraints = [
-        (_check_recursion, 'Error! You cannot create recursive directories.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error! You cannot create recursive directories.', ['parent_id'])
     ]
 
     def onchange_content_id(self, cr, uid, ids, ressource_type_id):
@@ -572,6 +562,7 @@ class document_storage(osv.osv):
             # to write the fname and size, and update them in the db concurrently.
             # We cannot use a write() here, because we are already in one.
             cr.execute('UPDATE ir_attachment SET file_size = %s, index_content = %s, file_type = %s WHERE id = %s', (filesize, icont_u, mime, file_node.file_id))
+            self.pool.get('ir.attachment').invalidate_cache(cr, uid, ['file_size', 'index_content', 'file_type'], [file_node.file_id], context=context)
             file_node.content_length = filesize
             file_node.content_type = mime
             return True
@@ -1124,7 +1115,7 @@ class node_dir(node_database):
         if not self.check_perms('u'):
             raise IOError(errno.EPERM,"Permission denied.")
 
-        if directory._table_name=='document.directory':
+        if directory._name == 'document.directory':
             if self.children(cr):
                 raise OSError(39, 'Directory not empty.')
             res = self.context._dirobj.unlink(cr, uid, [directory.id])
@@ -1704,7 +1695,7 @@ class node_file(node_class):
             return False
         document = document_obj.browse(cr, uid, self.file_id, context=self.context.context)
         res = False
-        if document and document._table_name == 'ir.attachment':
+        if document and document._name == 'ir.attachment':
             res = document_obj.unlink(cr, uid, [document.id])
         return res
 

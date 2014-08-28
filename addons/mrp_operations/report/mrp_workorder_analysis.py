@@ -45,7 +45,7 @@ class mrp_workorder(osv.osv):
         cr.execute("""
             create or replace view mrp_workorder as (
                 select
-                    to_date(to_char(wl.date_planned, 'MM-dd-YYYY'),'MM-dd-YYYY') as date,
+                    date(wl.date_planned) as date,
                     min(wl.id) as id,
                     mp.product_id as product_id,
                     sum(wl.hour) as total_hours,

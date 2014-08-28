@@ -5,9 +5,13 @@ import logging
 import re
 import sys
 
-import werkzeug
+import werkzeug.exceptions
+import werkzeug.routing
+import werkzeug.urls
+import werkzeug.utils
 
 import openerp
+import openerp.exceptions
 from openerp import http
 from openerp.http import request
 from openerp.osv import osv, orm
@@ -59,7 +63,7 @@ class ir_http(osv.AbstractModel):
         request.uid = request.session.uid
         if not request.uid:
             if not request.params.get('noredirect'):
-                query = werkzeug.url_encode({
+                query = werkzeug.urls.url_encode({
                     'redirect': request.httprequest.url,
                 })
                 response = werkzeug.utils.redirect('/web/login?%s' % query)

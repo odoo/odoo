@@ -64,9 +64,9 @@ class payroll_advice(osv.osv):
             ('confirm', 'Confirmed'),
             ('cancel', 'Cancelled'),
         ], 'Status', select=True, readonly=True),
-        'number':fields.char('Reference', readonly=True),
-        'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
-        'chaque_nos':fields.char('Cheque Numbers'),
+        'number': fields.char('Reference', readonly=True),
+        'line_ids': fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True, copy=True),
+        'chaque_nos': fields.char('Cheque Numbers'),
         'neft': fields.boolean('NEFT Transaction', help="Check this box if your company use online transfer for salary"),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank from which the salary is going to be paid"),
@@ -162,13 +162,10 @@ class hr_payslip_run(osv.osv):
     _inherit = 'hr.payslip.run'
     _description = 'Payslip Batches'
     _columns = {
-        'available_advice': fields.boolean('Made Payment Advice?', help="If this box is checked which means that Payment Advice exists for current batch", readonly=False),
+        'available_advice': fields.boolean('Made Payment Advice?',
+                                           help="If this box is checked which means that Payment Advice exists for current batch",
+                                           readonly=False, copy=False),
     }
-    def copy(self, cr, uid, id, default={}, context=None):
-        if not default:
-            default = {}
-        default.update({'available_advice': False})
-        return super(hr_payslip_run, self).copy(cr, uid, id, default, context=context)    
 
     def draft_payslip_run(self, cr, uid, ids, context=None):
         res = super(hr_payslip_run, self).draft_payslip_run(cr, uid, ids, context=context)
@@ -195,8 +192,8 @@ class hr_payslip_run(osv.osv):
             slip_ids = []
             for slip_id in run.slip_ids:
                 # TODO is it necessary to interleave the calls ?
-                payslip_pool.signal_hr_verify_sheet(cr, uid, [slip_id.id])
-                payslip_pool.signal_process_sheet(cr, uid, [slip_id.id])
+                payslip_pool.signal_workflow(cr, uid, [slip_id.id], 'hr_verify_sheet')
+                payslip_pool.signal_workflow(cr, uid, [slip_id.id], 'process_sheet')
                 slip_ids.append(slip_id.id)
 
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
@@ -252,15 +249,8 @@ class hr_payslip(osv.osv):
     _inherit = 'hr.payslip'
     _description = 'Pay Slips'
     _columns = {
-        'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice')
+        'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice', copy=False)
     }
-
-    def copy(self, cr, uid, id, default={}, context=None):
-        if not default:
-            default = {}
-        default.update({'advice_id' : False})
-        return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
-
 
 class res_company(osv.osv):
 

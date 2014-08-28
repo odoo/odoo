@@ -33,7 +33,6 @@ class hr_timesheet_report(osv.osv):
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'date_from': fields.date('Date from',readonly=True,),
         'date_to': fields.date('Date to',readonly=True),
-        'date_current': fields.date('Current date', required=True),
         'state' : fields.selection([
             ('new', 'New'),
             ('draft','Draft'),

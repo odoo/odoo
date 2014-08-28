@@ -153,8 +153,7 @@ class crm_claim(osv.osv):
         return {'value': {'email_from': address.email, 'partner_phone': address.phone}}
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         if vals.get('section_id') and not context.get('default_section_id'):
             context['default_section_id'] = vals.get('section_id')
 

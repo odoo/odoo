@@ -27,7 +27,7 @@ from openerp.tools import mute_logger
 
 class TestMailGroup(TestMail):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_00_mail_group_access_rights(self):
         """ Testing mail_group access rights and basic mail_thread features """
         cr, uid, user_noone_id, user_employee_id = self.cr, self.uid, self.user_noone_id, self.user_employee_id

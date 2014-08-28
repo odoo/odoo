@@ -29,7 +29,7 @@ class ir_exports(osv.osv):
         'name': fields.char('Export Name'),
         'resource': fields.char('Resource', select=True),
         'export_fields': fields.one2many('ir.exports.line', 'export_id',
-                                         'Export ID'),
+                                         'Export ID', copy=True),
     }
 
 

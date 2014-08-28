@@ -27,13 +27,13 @@
                 element:   "#customize-menu a:contains(Product Attribute's Filters)",
             },
             {
-                title:     "select product attribute memory 16 Go",
-                waitNot:   '#customize-menu:visible',
-                element:   'form.js_attributes label:contains(16 Go) input:not(:checked)',
+                title:     "select product attribute memory 16 GB",
+                waitNot:   '#customize-menu:visible .dropdown-menu:visible',
+                element:   'form.js_attributes label:contains(16 GB) input:not(:checked)',
             },
             {
                 title:     "check the selection",
-                waitFor:   'form.js_attributes label:contains(16 Go) input:checked',
+                waitFor:   'form.js_attributes label:contains(16 GB) input:checked',
             },
             {
                 title:     "select iPad",
@@ -42,7 +42,6 @@
             },
             {
                 title:     "click on 'Add to Cart' button",
-                waitNot:   '#customize-menu:visible',
                 element:   "a:contains(Add to Cart)",
             },
             {

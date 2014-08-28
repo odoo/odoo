@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
 import textwrap
 import unittest2
-from xml.dom.minidom import getDOMImplementation
 
-from lxml import html
+from lxml import etree, html
 from lxml.builder import E
 
 from openerp.tests import common
 from openerp.addons.base.ir import ir_qweb
 from openerp.addons.website.models.ir_qweb import html_to_text
 from openerp.addons.website.models.website import slugify, unslug
-
-impl = getDOMImplementation()
-document = impl.createDocument(None, None, None)
 
 class TestUnslug(unittest2.TestCase):
     def test_unslug(self):
@@ -150,9 +146,9 @@ class TestConvertBack(common.TransactionCase):
             })
         [record] = Model.browse(self.cr, self.uid, [id])
 
-        e = document.createElement('span')
+        e = etree.Element('span')
         field_value = 'record.%s' % field
-        e.setAttribute('t-field', field_value)
+        e.set('t-field', field_value)
 
         rendered = self.registry('website.qweb').render_tag_field(
             e, {'field': field_value}, '', ir_qweb.QWebContext(self.cr, self.uid, {
@@ -231,9 +227,9 @@ class TestConvertBack(common.TransactionCase):
         id = Model.create(self.cr, self.uid, {field: sub_id})
         [record] = Model.browse(self.cr, self.uid, [id])
 
-        e = document.createElement('span')
+        e = etree.Element('span')
         field_value = 'record.%s' % field
-        e.setAttribute('t-field', field_value)
+        e.set('t-field', field_value)
 
         rendered = self.registry('website.qweb').render_tag_field(
             e, {'field': field_value}, '', ir_qweb.QWebContext(self.cr, self.uid, {

@@ -335,25 +335,13 @@
         </div>
     </t>
 
-    <!--
-        mail.compose_message.button_top_bar
-        render of the button on the user bar for open wizard compose message
-        -->
-    <t t-name="mail.ComposeMessageTopButton">
-        <li title='Compose new Message'>
-            <a href="#">
-                <i id="oe_topbar_compose_full_email_icon" class="fa fa-envelope-o"/>
-            </a>
-        </li>
-    </t>
-
     <!-- mail.thread.message.vote
         Template used to display Like/Unlike in a mail.message
     -->
     <span t-name="mail.thread.message.vote">
         <span class="oe_mail_vote_count" t-if='widget.vote_nb > 0'>
             <t t-esc='widget.vote_nb' />
-            <span class='oe_e'>8</span>
+            <i class="fa fa-thumbs-o-up"></i>
         </span>
         <a href='#' class="oe_msg_vote">
             <t t-if="!widget.has_voted">like</t>

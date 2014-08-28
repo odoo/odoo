@@ -26,7 +26,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 import openerp
-from openerp import netsvc
+from openerp import SUPERUSER_ID, netsvc, api
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
@@ -149,36 +149,38 @@ class ir_cron(osv.osv):
         except Exception, e:
             self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
 
-    def _process_job(self, job_cr, job, cron_cr):
+    def _process_job(self, cr, job, cron_cr):
         """ Run a given job taking care of the repetition.
 
-        :param job_cr: cursor to use to execute the job, safe to commit/rollback
+        :param cr: cursor to use to execute the job, safe to commit/rollback
         :param job: job to be run (as a dictionary).
         :param cron_cr: cursor holding lock on the cron job row, to use to update the next exec date,
             must not be committed/rolled back!
         """
         try:
-            now = datetime.now() 
-            nextcall = datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT)
-            numbercall = job['numbercall']
+            with api.Environment.manage():
+                now = datetime.now() 
+                nextcall = datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT)
+                numbercall = job['numbercall']
 
-            ok = False
-            while nextcall < now and numbercall:
-                if numbercall > 0:
-                    numbercall -= 1
-                if not ok or job['doall']:
-                    self._callback(job_cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
-                if numbercall:
-                    nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
-                ok = True
-            addsql = ''
-            if not numbercall:
-                addsql = ', active=False'
-            cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
-                       (nextcall.strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
+                ok = False
+                while nextcall < now and numbercall:
+                    if numbercall > 0:
+                        numbercall -= 1
+                    if not ok or job['doall']:
+                        self._callback(cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
+                    if numbercall:
+                        nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
+                    ok = True
+                addsql = ''
+                if not numbercall:
+                    addsql = ', active=False'
+                cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
+                           (nextcall.strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
+                self.invalidate_cache(cr, SUPERUSER_ID)
 
         finally:
-            job_cr.commit()
+            cr.commit()
             cron_cr.commit()
 
     @classmethod

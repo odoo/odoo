@@ -26,7 +26,9 @@ class account_move(osv.osv):
     _inherit = 'account.move'
 
     _columns = {
-        'internal_sequence_number': fields.char('Internal Number', readonly=True, help='Internal Sequence Number'),
+        'internal_sequence_number': fields.char('Internal Number',
+                                                readonly=True, copy=False,
+                                                help='Internal Sequence Number'),
     }
 
     def post(self, cr, uid, ids, context=None):

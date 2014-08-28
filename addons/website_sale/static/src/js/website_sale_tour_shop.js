@@ -55,6 +55,7 @@
             },
             {
                 waitNot:   '.product_price .oe_currency_value:visible:containsExact(1.00)',
+                waitFor:   '#snippet_structure',
                 element:   '#wrap img.product_detail_img',
                 placement: 'top',
                 title:     _t("Update image"),

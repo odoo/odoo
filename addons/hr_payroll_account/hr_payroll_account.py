@@ -36,7 +36,7 @@ class hr_payslip(osv.osv):
     _columns = {
         'period_id': fields.many2one('account.period', 'Force Period',states={'draft': [('readonly', False)]}, readonly=True, domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
         'journal_id': fields.many2one('account.journal', 'Salary Journal',states={'draft': [('readonly', False)]}, readonly=True, required=True),
-        'move_id': fields.many2one('account.move', 'Accounting Entry', readonly=True),
+        'move_id': fields.many2one('account.move', 'Accounting Entry', readonly=True, copy=False),
     }
 
     def _get_default_journal(self, cr, uid, context=None):
@@ -49,12 +49,6 @@ class hr_payslip(osv.osv):
     _defaults = {
         'journal_id': _get_default_journal,
     }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['move_id'] = False
-        return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if context is None:

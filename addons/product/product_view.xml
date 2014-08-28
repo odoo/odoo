@@ -40,9 +40,11 @@
             </field>
         </record>
 
+        <!-- base structure of product.template, common with product.product -->
         <record id="product_template_form_view" model="ir.ui.view">
-            <field name="name">product.template.product.form</field>
+            <field name="name">product.template.common.form</field>
             <field name="model">product.template</field>
+            <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <form string="Product">
                     <field name="is_product_variant" invisible="1"/>
@@ -69,7 +71,7 @@
                                     <group>
                                         <field name="type"/>
                                         <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                        <field name="lst_price"/>
+                                        <field name="list_price"/>
                                     </group>
                                     <group>
                                         <field name="active"/>
@@ -109,7 +111,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}">
+                            <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
                                 <group name="sale">
                                     <group name="sale_condition" string="Sale Conditions" colspan="3">
                                         <label for="warranty"/>
@@ -128,14 +130,6 @@
                                 <separator string="Description for Quotations"/>
                                 <field name="description_sale" placeholder="note to be displayed on quotations..."/>
                             </page>
-                            <page name="variants" string="Variants">
-                                <field name="attribute_line_ids" widget="one2many_list">
-                                    <tree string="Variants" editable="bottom">
-                                        <field name="attribute_id"/>
-                                        <field name="value_ids" widget="many2many_tags" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
-                                    </tree>
-                                </field>
-                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
@@ -146,47 +140,26 @@
             </field>
         </record>
 
-        <record id="product_template_kanban_view" model="ir.ui.view">
-            <field name="name">Product.template.product.kanban</field>
-            <field name="model">product.template</field>
+        <record id="product_search_form_view" model="ir.ui.view">
+            <field name="name">product.product.search</field>
+            <field name="model">product.product</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <kanban>
-                    <field name="image_small"/>
-                    <field name="lst_price"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_vignette oe_semantic_html_override">
-                                <a type="open"><img t-att-src="kanban_image('product.template', 'image_small', record.id.value)" class="oe_kanban_image"/></a>
-                                <div class="oe_kanban_details">
-                                    <h4>
-                                        <a type="open">
-                                             <field name="name"/> 
-                                        </a>
-                                    </h4>
-                                    <div name="tags"/>
-                                    <ul>
-                                        <li>Price: <field name="lst_price"></field></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
+                <field name="name" position="replace">
+                   <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
+                </field>
+                <field name="product_variant_ids" position="replace">
+                    <field name="attribute_value_ids"/>
+                </field>
+                <field name="name" position="after">
+                   <field name="product_tmpl_id" string="Product Template"/>
+                </field>
+                <xpath expr="//group[@string='Group by...']" position="inside">
+                    <filter string='Product Template' name="template_id" domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
+                </xpath>
             </field>
         </record>
-
-        <record id="product_template_action" model="ir.actions.act_window">
-            <field name="name">Products</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.template</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="product_template_kanban_view"/>
-        </record>
-
-        <menuitem action="product_template_action"
-            id="menu_product_template_action"
-            parent="base.menu_product" sequence="1" />
 
         <!-- variants -->
 
@@ -212,30 +185,122 @@
             <field name="context">{'default_product_tmpl_id': active_id}</field>
         </record>
 
-        <!-- product product -->
+        <record id="product_normal_action" model="ir.actions.act_window">
+            <field name="name">Product Variants</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new product.
+              </p><p>
+                You must define a product for everything you buy or sell,
+                whether it's a physical product, a consumable or service.
+              </p>
+            </field>
+        </record>
+        <record id="product_variant_action" model="ir.actions.act_window">
+            <field name="name">Product Variants</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_type">form</field>
+            <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
+            <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new product.
+              </p><p>
+                You must define a product for everything you buy or sell,
+                whether it's a physical product, a consumable or service.
+              </p>
+            </field>
+        </record>
 
-        <menuitem id="prod_config_main" name="Product Variants" parent="base.menu_base_config" sequence="70" groups="base.group_no_one"/>
 
-        <record id="product_search_form_view" model="ir.ui.view">
-            <field name="name">product.product.search</field>
-            <field name="model">product.product</field>
+        <!-- view specific to product.template -->
+        <record id="product_template_only_form_view" model="ir.ui.view">
+            <field name="name">product.template.product.form</field>
+            <field name="model">product.template</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="priority" eval="8" />
+            <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="name" position="replace">
-                   <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
-                </field>
-                <field name="product_variant_ids" position="replace">
-                    <field name="attribute_value_ids"/>
-                </field>
-                <field name="name" position="after">
-                   <field name="product_tmpl_id" string="Product Template"/>
-                </field>
-                <xpath expr="//group[@string='Group by...']" position="inside">
-                    <filter string='Product Template' name="template_id" domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
+                <xpath expr="//form" position="attributes">
+                    <attribute name="name">Product Template</attribute>
+                </xpath>
+                <xpath expr="//page[@string='Sales']" position="after">
+                    <page name="variants" string="Variants">
+                        <div class="oe_right">
+                            <button class="oe_inline oe_stat_button" string="Variant Prices"  name="%(variants_template_action)d" type="action" icon="fa-strikethrough"/>
+                            <button class="oe_inline oe_stat_button" name="%(product.product_variant_action)d" type="action" icon="fa-sitemap">
+                                <field string="List of Variants" name="product_variant_count" widget="statinfo" />
+                            </button>
+                        </div>
+                        <field name="attribute_line_ids" widget="one2many_list">
+                            <tree string="Variants" editable="bottom">
+                                <field name="attribute_id"/>
+                                <field name="value_ids" widget="many2many_tags" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
+                            </tree>
+                        </field>
+                    </page>
                 </xpath>
             </field>
         </record>
+
+        <record id="product_template_kanban_view" model="ir.ui.view">
+            <field name="name">Product.template.product.kanban</field>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="image_small"/>
+                    <field name="lst_price"/>
+                    <field name="is_product_variant"/>
+                    <field name="product_variant_count"/>
+                    <field name="product_variant_ids"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open"><img t-att-src="kanban_image('product.template', 'image_small', record.id.value)" class="oe_kanban_image"/></a>
+                                <div class="oe_kanban_details">
+                                    <h4>
+                                        <a type="open">
+                                             <field name="name"/> 
+                                        </a>
+                                    </h4>
+                                    <a name="%(product.product_variant_action)d" type="action">
+                                        <t t-esc="record.product_variant_count.value"/> Variants
+                                    </a>
+                                    <div name="tags"/>
+                                    <ul>
+                                        <li>Price: <field name="lst_price"></field></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="product_template_action" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product_template_kanban_view"/>
+        </record>
+
+        <menuitem action="product_template_action"
+            id="menu_product_template_action"
+            parent="base.menu_product" sequence="1" />
+
+        <!-- product product -->
+
+        <menuitem id="prod_config_main" name="Product Categories &amp; Attributes" parent="base.menu_base_config" sequence="70" groups="base.group_no_one"/>
 
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>
@@ -254,7 +319,6 @@
                     <field name="state" invisible="1"/>
                     <field name="product_tmpl_id" invisible="1"/>
                 </tree>
-
             </field>
         </record>
 
@@ -268,6 +332,9 @@
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
                 </form>
+                <field name="list_price" position="attributes">
+                   <attribute name="name">lst_price</attribute>
+                </field>
                 <field name="name" position="replace">
                     <field name="name" attrs="{'invisible': [('id', '!=', False)]}"/>
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)], 'required': [('id', '!=', False)]}"/>
@@ -275,8 +342,6 @@
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags"/>
                 </xpath>
-                <page name="variants" position="replace">
-                </page>
             </field>
         </record>
 
@@ -312,76 +377,51 @@
 
         <!--  -->
 
-        <record id="product_normal_action" model="ir.actions.act_window">
-            <field name="name">Product Variants</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">tree,form,kanban</field>
-            <field name="view_type">form</field>
-            <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new product.
-              </p><p>
-                You must define a product for everything you buy or sell,
-                whether it's a physical product, a consumable or service.
-              </p>
-            </field>
-        </record>
-
-        <!--  -->
-
-        <record id="product_variant_action" model="ir.actions.act_window">
-            <field name="name">Product Variants</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">tree,form,kanban</field>
-            <field name="view_type">form</field>
-            <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
-            <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new product.
-              </p><p>
-                You must define a product for everything you buy or sell,
-                whether it's a physical product, a consumable or service.
-              </p>
-            </field>
-        </record>
-
-        <record id="product_template_form_view_variant_button" model="ir.ui.view">
-            <field name="name">product.template.form</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_form_view"/>
+        <record id="attribute_tree_view" model="ir.ui.view">
+            <field name="name">product.attribute.tree</field>
+            <field name="model">product.attribute</field>
             <field name="arch" type="xml">
-                <field name="attribute_line_ids" position="before">
-                    <div class="oe_right">
-                        <button class="oe_inline oe_stat_button" string="Variant Prices"  name="%(product.variants_template_action)d" type="action" icon="fa-strikethrough"/>
-                        <button class="oe_inline oe_stat_button" name="%(product.product_variant_action)d" type="action" icon="fa-sitemap">
-                            <field string="Variants" name="product_variant_count" widget="statinfo" />
-                        </button>
-                    </div>
-                </field>
+                <tree string="Variant Values" editable="top">
+                    <field name="name"/>
+                </tree>
             </field>
         </record>
 
-        <record id="product_template_kanban_view_variant_button" model="ir.ui.view">
-            <field name="name">product.template.form</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <record id="attribute_action" model="ir.actions.act_window">
+            <field name="name">Attributes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.attribute</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <menuitem action="attribute_action"
+            id="menu_attribute_action"
+            parent="product.prod_config_main" sequence="9" />
+
+        <record id="variants_tree_view" model="ir.ui.view">
+            <field name="name">product.attribute.value.tree</field>
+            <field name="model">product.attribute.value</field>
             <field name="arch" type="xml">
-                <field name="lst_price" position="after">
-                    <field name="is_product_variant"/>
-                    <field name="product_variant_count"/>
-                    <field name="product_variant_ids"/>
-                </field>
-                <h4 position="after">
-                    <a name="%(product.product_variant_action)d" type="action">
-                        <t t-esc="record.product_variant_count.value"/> Variants
-                    </a>
-                </h4>
+                <tree string="Variant Values" editable="top">
+                    <field name="sequence" widget="handle"/>
+                    <field name="attribute_id"/>
+                    <field name="name"/>
+                </tree>
             </field>
         </record>
+
+        <record id="variants_action" model="ir.actions.act_window">
+            <field name="name">Attribute Values</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.attribute.value</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <menuitem action="variants_action"
+            id="menu_variants_action"
+            parent="product.prod_config_main" sequence="10" />
 
         <!--  -->
 
@@ -426,20 +466,18 @@
             <field name="model">product.category</field>
             <field name="arch" type="xml">
                 <form string="Product Categories">
-                    <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <group name="parent" col="4">
-                                <field name="parent_id"/>
-                                <field name="type"/>
-                            </group>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="parent" col="4">
+                            <field name="parent_id"/>
+                            <field name="type"/>
                         </group>
-                    </sheet>
+                    </group>
                 </form>
             </field>
         </record>

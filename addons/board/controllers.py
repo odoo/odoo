@@ -2,7 +2,7 @@
 from xml.etree import ElementTree
 
 from openerp.addons.web.controllers.main import load_actions_from_ir_values
-from openerp.addons.web.http import Controller, route, request
+from openerp.http import Controller, route, request
 
 class Board(Controller):
     @route('/board/add_to_dashboard', type='json', auth='user')

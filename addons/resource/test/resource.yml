@@ -12,13 +12,15 @@
   First, I  generate the resource detail and check the resource Efficiency assigned.
 -
   !python {model: resource.resource}: |
+    from openerp.tools import float_compare
     resources = self.generate_resources(cr, uid, [ref('base.user_root'),ref('base.user_demo')], ref('timesheet_group1'), context)
     for resource in resources.values():
-        assert resource.get('efficiency', 0.0) == 1.0, 'Invalid resource generated.'
+        assert float_compare(resource.get('efficiency', 0.0), 1.0, precision_digits=2) == 0, 'Invalid resource generated.'
 -
   I check per day work hour availability of the Resource based on Working Calendar Assigned to each resource, for first day of the week.
 -
   !python {model: resource.resource}: |
+    from openerp.tools import float_compare
     calendar_pool = self.pool.get('resource.calendar')
     resources = self.browse(cr, uid,  [ref('resource_analyst'), ref('resource_designer'), ref('resource_developer')], context)
     from datetime import datetime, timedelta
@@ -26,7 +28,7 @@
     dt = now - timedelta(days=now.weekday()) 
     for resource in resources:
         result = calendar_pool.working_hours_on_day(cr, uid, resource.calendar_id, dt, context)
-        assert result == 9.0, 'Wrong calculation of day work hour availability of the Resource (found %d).' % result
+        assert float_compare(result, 9.0, precision_digits=2) == 0, 'Wrong calculation of day work hour availability of the Resource (found %d).' % result
 -
   Now, resource "Developer" drafted leave on Thursday in this week.
 -

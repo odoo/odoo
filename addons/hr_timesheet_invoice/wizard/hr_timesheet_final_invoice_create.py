@@ -43,7 +43,7 @@ class final_invoice_create(osv.osv_memory):
     }
 
     def do_create(self, cr, uid, ids, context=None):
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         # hack for fixing small issue (context should not propagate implicitly between actions)
         if 'default_type' in context:
             del context['default_type']
@@ -53,7 +53,7 @@ class final_invoice_create(osv.osv_memory):
         act_obj = self.pool.get('ir.actions.act_window')
         mod_ids = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')], context=context)[0]
         res_id = mod_obj.read(cr, uid, mod_ids, ['res_id'], context=context)['res_id']
-        act_win = act_obj.read(cr, uid, res_id, [], context=context)
+        act_win = act_obj.read(cr, uid, [res_id], context=context)[0]
         act_win['domain'] = [('id','in',invs),('type','=','out_invoice')]
         act_win['name'] = _('Invoices')
         return act_win

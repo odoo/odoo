@@ -31,6 +31,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 import re
 from openerp.addons.decimal_precision import decimal_precision as dp
 
+from openerp import api
 from openerp.osv import fields, osv
 from openerp.report import render_report
 from openerp.tools.translate import _
@@ -43,43 +44,6 @@ _intervalTypes = {
 }
 
 DT_FMT = '%Y-%m-%d %H:%M:%S'
-
-def dict_map(f, d):
-    return dict((k, f(v)) for k,v in d.items())
-
-def _find_fieldname(model, field):
-    inherit_columns = dict_map(itemgetter(2), model._inherit_fields)
-    all_columns = dict(inherit_columns, **model._columns)
-    for fn in all_columns:
-        if all_columns[fn] is field:
-            return fn
-    raise ValueError('Field not found: %r' % (field,))
-
-class selection_converter(object):
-    """Format the selection in the browse record objects"""
-    def __init__(self, value):
-        self._value = value
-        self._str = value
-
-    def set_value(self, cr, uid, _self_again, record, field, lang):
-        # this design is terrible
-        # search fieldname from the field
-        fieldname = _find_fieldname(record._table, field)
-        context = dict(lang=lang.code)
-        fg = record._table.fields_get(cr, uid, [fieldname], context=context)
-        selection = dict(fg[fieldname]['selection'])
-        self._str = selection[self.value]
-
-    @property
-    def value(self):
-        return self._value
-
-    def __str__(self):
-        return self._str
-
-translate_selections = {
-    'selection': selection_converter,
-}
 
 
 class marketing_campaign(osv.osv):
@@ -126,7 +90,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                    ('running', 'Running'),
                                    ('cancelled', 'Cancelled'),
                                    ('done', 'Done')],
-                                   'Status'),
+                                   'Status', copy=False),
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
         'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Product Price')),
@@ -186,7 +150,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
             raise ValueError('Signal cannot be False.')
 
         Workitems = self.pool.get('marketing.campaign.workitem')
-        domain = [('object_id.model', '=', record._table._name),
+        domain = [('object_id.model', '=', record._name),
                   ('state', '=', 'running')]
         campaign_ids = self.search(cr, uid, domain, context=context)
         for campaign in self.browse(cr, uid, campaign_ids, context=context):
@@ -282,7 +246,7 @@ class marketing_campaign_segment(osv.osv):
                                    ('cancelled', 'Cancelled'),
                                    ('running', 'Running'),
                                    ('done', 'Done')],
-                                   'Status'),
+                                   'Status', copy=False),
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
         'date_next_sync': fields.function(_get_next_sync, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
@@ -344,6 +308,7 @@ class marketing_campaign_segment(osv.osv):
         self.process_segment(cr, uid, ids)
         return True
 
+    @api.cr_uid_ids_context
     def process_segment(self, cr, uid, segment_ids=None, context=None):
         Workitems = self.pool.get('marketing.campaign.workitem')
         Campaigns = self.pool.get('marketing.campaign')
@@ -523,20 +488,30 @@ class marketing_campaign_transition(osv.osv):
     _description = "Campaign Transition"
 
     _interval_units = [
-        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
-        ('months', 'Month(s)'), ('years','Year(s)')
+        ('hours', 'Hour(s)'),
+        ('days', 'Day(s)'),
+        ('months', 'Month(s)'),
+        ('years', 'Year(s)'),
     ]
 
     def _get_name(self, cr, uid, ids, fn, args, context=None):
-        result = dict.fromkeys(ids, False)
+        # name formatters that depend on trigger
         formatters = {
             'auto': _('Automatic transition'),
             'time': _('After %(interval_nbr)d %(interval_type)s'),
             'cosmetic': _('Cosmetic'),
         }
-        for tr in self.browse(cr, uid, ids, context=context,
-                              fields_process=translate_selections):
-            result[tr.id] = formatters[tr.trigger.value] % tr
+        # get the translations of the values of selection field 'interval_type'
+        fields = self.fields_get(cr, uid, ['interval_type'], context=context)
+        interval_type_selection = dict(fields['interval_type']['selection'])
+
+        result = dict.fromkeys(ids, False)
+        for trans in self.browse(cr, uid, ids, context=context):
+            values = {
+                'interval_nbr': trans.interval_nbr,
+                'interval_type': interval_type_selection.get(trans.interval_type, ''),
+            }
+            result[trans.id] = formatters[trans.trigger] % values
         return result
 
 
@@ -656,7 +631,7 @@ class marketing_campaign_workitem(osv.osv):
                                     ('cancelled', 'Cancelled'),
                                     ('exception', 'Exception'),
                                     ('done', 'Done'),
-                                   ], 'Status', readonly=True),
+                                   ], 'Status', readonly=True, copy=False),
         'error_msg' : fields.text('Error Message', readonly=True)
     }
     _defaults = {
@@ -664,12 +639,14 @@ class marketing_campaign_workitem(osv.osv):
         'date': False,
     }
 
+    @api.cr_uid_ids_context
     def button_draft(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('exception', 'cancelled'):
                 self.write(cr, uid, [wi.id], {'state':'todo'}, context=context)
         return True
 
+    @api.cr_uid_ids_context
     def button_cancel(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('todo','exception'):
@@ -698,9 +675,9 @@ class marketing_campaign_workitem(osv.osv):
             if condition:
                 if not eval(condition, eval_context):
                     if activity.keep_if_condition_not_met:
-                        workitem.write({'state': 'cancelled'}, context=context)
+                        workitem.write({'state': 'cancelled'})
                     else:
-                        workitem.unlink(context=context)
+                        workitem.unlink()
                     return
             result = True
             if campaign_mode in ('manual', 'active'):
@@ -711,11 +688,11 @@ class marketing_campaign_workitem(osv.osv):
             values = dict(state='done')
             if not workitem.date:
                 values['date'] = datetime.now().strftime(DT_FMT)
-            workitem.write(values, context=context)
+            workitem.write(values)
 
             if result:
                 # process _chain
-                workitem = workitem.browse(context=context)[0] # reload
+                workitem.refresh()       # reload
                 date = datetime.strptime(workitem.date, DT_FMT)
 
                 for transition in activity.to_ids:
@@ -760,9 +737,9 @@ class marketing_campaign_workitem(osv.osv):
 
         except Exception:
             tb = "".join(format_exception(*exc_info()))
-            workitem.write({'state': 'exception', 'error_msg': tb},
-                     context=context)
+            workitem.write({'state': 'exception', 'error_msg': tb})
 
+    @api.cr_uid_ids_context
     def process(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             self._process_one(cr, uid, wi, context=context)

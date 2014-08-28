@@ -53,14 +53,6 @@ class res_partner(osv.osv):
         'phonecall_count': fields.function(_opportunity_meeting_phonecall_count, string="Phonecalls", type="integer", multi='opp_meet'),
     }
 
-    def copy(self, cr, uid, record_id, default=None, context=None):
-        if default is None:
-            default = {}
-
-        default.update({'opportunity_ids': [], 'meeting_ids' : [], 'phonecall_ids' : []})
-
-        return super(res_partner, self).copy(cr, uid, record_id, default, context)
-
     def redirect_partner_form(self, cr, uid, partner_id, context=None):
         search_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'view_res_partner_filter')
         value = {

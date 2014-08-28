@@ -209,152 +209,108 @@
             }
         });
 
-        CKEDITOR.plugins.add('linkstyle', {
+        CKEDITOR.plugins.add('customColor', {
             requires: 'panelbutton,floatpanel',
             init: function (editor) {
-                var label = "Link Style";
+                function create_button (buttonID, label) {
+                    var btnID = buttonID;
+                    editor.ui.add(buttonID, CKEDITOR.UI_PANELBUTTON, {
+                        label: label,
+                        title: label,
+                        modes: { wysiwyg: true },
+                        editorFocus: true,
+                        context: 'font',
+                        panel: {
+                            css: [  '/web/css/web.assets_common/' + (new Date().getTime()),
+                                    '/web/css/website.assets_frontend/' + (new Date().getTime()),
+                                    '/web/css/website.assets_editor/' + (new Date().getTime())],
+                            attributes: { 'role': 'listbox', 'aria-label': label },
+                        },
+                        enable: function () {
+                            this.setState(CKEDITOR.TRISTATE_OFF);
+                        },
+                        disable: function () {
+                            this.setState(CKEDITOR.TRISTATE_DISABLED);
+                        },
+                        onBlock: function (panel, block) {
+                            var self = this;
+                            var html = openerp.qweb.render('website.colorpicker');
+                            block.autoSize = true;
+                            block.element.setHtml( html );
+                            $(block.element.$).on('click', 'button', function () {
+                                self.clicked(this);
+                            });
+                            if (btnID === "TextColor") {
+                                $(".only-text", block.element.$).css("display", "block");
+                                $(".only-bg", block.element.$).css("display", "none");
+                            }
+                            var $body = $(block.element.$).parents("body");
+                            setTimeout(function () {
+                                $body.css('background-color', '#fff');
+                            }, 0);
+                        },
+                        getClasses: function () {
+                            var self = this;
+                            var classes = [];
+                            var id = this._.id;
+                            var block = this._.panel._.panel._.blocks[id];
+                            var $root = $(block.element.$);
+                            $root.find("button").map(function () {
+                                var color = self.getClass(this);
+                                if(color) classes.push( color );
+                            });
+                            return classes;
+                        },
+                        getClass: function (button) {
+                            var color = btnID === "BGColor" ? $(button).attr("class") : $(button).attr("class").replace(/^bg-/i, 'text-');
+                            return color.length && color;
+                        },
+                        clicked: function (button) {
+                            var className = this.getClass(button);
+                            var ancestor = editor.getSelection().getCommonAncestor();
 
-                editor.ui.add('LinkStyle', CKEDITOR.UI_PANELBUTTON, {
-                    label: label,
-                    title: label,
-                    icon: '/website/static/src/img/bglink.png',
-                    modes: { wysiwyg: true },
-                    editorFocus: true,
-                    context: 'a',
-                    panel: {
-                        css: '/web/static/lib/bootstrap/css/bootstrap.css',
-                        attributes: { 'role': 'listbox', 'aria-label': label },
-                    },
+                            editor.focus();
+                            this._.panel.hide();
+                            editor.fire('saveSnapshot');
 
-                    types: {
-                        'btn-default': _t("Basic"),
-                        'btn-primary': _t("Primary"),
-                        'btn-success': _t("Success"),
-                        'btn-info': _t("Info"),
-                        'btn-warning': _t("Warning"),
-                        'btn-danger': _t("Danger"),
-                    },
-                    sizes: {
-                        'btn-xs': _t("Extra Small"),
-                        'btn-sm': _t("Small"),
-                        '': _t("Default"),
-                        'btn-lg': _t("Large")
-                    },
-
-                    onRender: function () {
-                        var self = this;
-                        editor.on('selectionChange', function (e) {
-                            var path = e.data.path, el;
-
-                            if (!(e = path.contains('a')) || e.isReadOnly()) {
-                                self.disable();
-                                return;
+                            // remove style
+                            var classes = [];
+                            var $ancestor = $(ancestor.$);
+                            var $fonts = $(ancestor.$).find('font');
+                            if (!ancestor.$.tagName) {
+                                $ancestor = $ancestor.parent();
+                            }
+                            if ($ancestor.is('font')) {
+                                $fonts = $fonts.add($ancestor[0]);
                             }
 
-                            self.enable();
-                        });
-                        // no hook where button is available, so wait
-                        // "some time" after render.
-                        setTimeout(function () {
-                            self.disable();
-                        }, 0)
-                    },
-                    enable: function () {
-                        this.setState(CKEDITOR.TRISTATE_OFF);
-                    },
-                    disable: function () {
-                        this.setState(CKEDITOR.TRISTATE_DISABLED);
-                    },
+                            $fonts.filter("."+this.getClasses().join(",.")).map(function () {
+                                var className = $(this).attr("class");
+                                if (classes.indexOf(className) === -1) {
+                                    classes.push(className);
+                                }
+                            });
+                            for (var k in classes) {
+                                editor.removeStyle( new CKEDITOR.style({
+                                    element: 'font',
+                                    attributes: { 'class': classes[k] },
+                                }) );
+                            }
 
-                    onOpen: function () {
-                        var link = get_selected_link(editor);
-                        var id = this._.id;
-                        var block = this._.panel._.panel._.blocks[id];
-                        var $root = $(block.element.$);
-                        $root.find('button').removeClass('active').removeProp('disabled');
-
-                        // enable buttons matching link state
-                        for (var type in this.types) {
-                            if (!this.types.hasOwnProperty(type)) { continue; }
-                            if (!link.hasClass(type)) { continue; }
-
-                            $root.find('button[data-type=types].' + type)
-                                 .addClass('active');
+                            // add new style
+                            if (className) {
+                                editor.applyStyle( new CKEDITOR.style({
+                                    element: 'font',
+                                    attributes: { 'class': className },
+                                }) );
+                            }
+                            editor.fire('saveSnapshot');
                         }
-                        var found;
-                        for (var size in this.sizes) {
-                            if (!this.sizes.hasOwnProperty(size)) { continue; }
-                            if (!size || !link.hasClass(size)) { continue; }
-                            found = true;
-                            $root.find('button[data-type=sizes].' + size)
-                                 .addClass('active');
-                        }
-                        if (!found && link.hasClass('btn')) {
-                            $root.find('button[data-type="sizes"][data-set-class=""]')
-                                 .addClass('active');
-                        }
-                    },
 
-                    onBlock: function (panel, block) {
-                        var self = this;
-                        block.autoSize = true;
-
-                        var html = ['<div style="padding: 5px">'];
-                        html.push('<div style="white-space: nowrap">');
-                        _(this.types).each(function (label, key) {
-                            html.push(_.str.sprintf(
-                                '<button type="button" class="btn %s" ' +
-                                        'data-type="types" data-set-class="%s">%s</button>',
-                                key, key, label));
-                        });
-                        html.push('</div>');
-                        html.push('<div style="white-space: nowrap; margin: 5px 0; text-align: center">');
-                        _(this.sizes).each(function (label, key) {
-                            html.push(_.str.sprintf(
-                                '<button type="button" class="btn btn-default %s" ' +
-                                        'data-type="sizes" data-set-class="%s">%s</button>',
-                                key, key, label));
-                        });
-                        html.push('</div>');
-                        html.push('<button type="button" class="btn btn-link btn-block" ' +
-                                          'data-type="reset">Reset</button>');
-                        html.push('</div>');
-
-                        block.element.setHtml(html.join(' '));
-                        var $panel = $(block.element.$);
-                        $panel.on('click', 'button', function () {
-                            self.clicked(this);
-                        });
-                    },
-                    clicked: function (button) {
-                        editor.focus();
-                        editor.fire('saveSnapshot');
-
-                        var $button = $(button),
-                              $link = $(get_selected_link(editor).$);
-                        if (!$link.hasClass('btn')) {
-                            $link.addClass('btn btn-default');
-                        }
-                        switch($button.data('type')) {
-                        case 'reset':
-                            $link.removeClass('btn')
-                                 .removeClass(_.keys(this.types).join(' '))
-                                 .removeClass(_.keys(this.sizes).join(' '));
-                            break;
-                        case 'types':
-                            $link.removeClass(_.keys(this.types).join(' '))
-                                 .addClass($button.data('set-class'));
-                            break;
-                        case 'sizes':
-                            $link.removeClass(_.keys(this.sizes).join(' '))
-                                 .addClass($button.data('set-class'));
-                        }
-                        this._.panel.hide();
-
-                        editor.fire('saveSnapshot');
-                    },
-
-                });
+                    });
+                }
+                create_button("BGColor", "Background Color");
+                create_button("TextColor", "Text Color");
             }
         });
 
@@ -505,7 +461,13 @@
             observer.disconnect();
             var editor = this.rte.editor;
             var root = editor.element && editor.element.$;
-            editor.destroy();
+            try {
+                editor.destroy();
+            }
+            catch(err) {
+                // Hack to avoid the lost of all changes because ckeditor fails in destroy
+                console.log("Error in editor.destroy() : " + err.toString() + "\n  " + err.stack);
+            }
             // FIXME: select editables then filter by dirty?
             var defs = this.rte.fetch_editables(root)
                 .filter('.oe_dirty')
@@ -707,7 +669,7 @@
     website.EditorBarCustomize = openerp.Widget.extend({
         events: {
             'mousedown a.dropdown-toggle': 'load_menu',
-            'click ul a[data-action!=ace]': 'do_customize',
+            'click li:not(#html_editor):not(#theme_customize):not(#install_apps) a': 'do_customize',
         },
         start: function() {
             var self = this;
@@ -754,7 +716,7 @@
         },
     });
 
-    website.ready().done(function() {
+    $(document).ready(function() {
         var editorBarCustomize = new website.EditorBarCustomize();
         editorBarCustomize.setElement($('li[id=customize-menu]'));
         editorBarCustomize.start();
@@ -1011,7 +973,7 @@
                 fillEmptyBlocks: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
-                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref,linkstyle',
+                extraPlugins: 'customColor,sharedspace,customdialogs,tablebutton,oeref',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
                 toolbar: [{
@@ -1020,7 +982,7 @@
                         "Superscript", "TextColor", "BGColor", "RemoveFormat"
                     ]},{
                     name: 'span', items: [
-                        "Link", "LinkStyle", "Blockquote", "BulletedList",
+                        "Link", "Blockquote", "BulletedList",
                         "NumberedList", "Indent", "Outdent"
                     ]},{
                     name: 'justify', items: [
@@ -1043,7 +1005,7 @@
                     {name: "Heading 5", element: 'h5'},
                     {name: "Heading 6", element: 'h6'},
                     {name: "Formatted", element: 'pre'},
-                    {name: "Address", element: 'address'}
+                    {name: "Address", element: 'address'},
                 ],
             };
         },
@@ -1081,19 +1043,23 @@
     website.editor.LinkDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.link',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'change :input.url-source': function (e) { this.changed($(e.target)); },
+            'change :input.url-source': 'changed',
+            'keyup :input.url': 'onkeyup',
+            'keyup :input': 'preview',
             'mousedown': function (e) {
-                var $target = $(e.target).closest('.list-group-item');
+                var $target = $(e.target).closest('.list-group-item:has(.url-source)');
                 if (!$target.length || $target.hasClass('active')) {
                     // clicked outside groups, or clicked in active groups
                     return;
                 }
-
-                this.changed($target.find('.url-source').filter(':input'));
+                $target.find("input.url-source").change();
             },
             'click button.remove': 'remove_link',
             'change input#link-text': function (e) {
-                this.text = $(e.target).val()
+                this.text = $(e.target).val();
+            },
+            'change .link-style': function (e) {
+                this.preview();
             },
         }),
         init: function (editor) {
@@ -1117,7 +1083,7 @@
                         self.fetch_pages(q.term)
                     ).then(function (exists, results) {
                         var rs = _.map(results, function (r) {
-                            return { id: r.url, text: r.name, };
+                            return { id: r.loc, text: r.loc, };
                         });
                         if (!exists) {
                             rs.push({
@@ -1137,67 +1103,90 @@
             });
             return this._super().then(this.proxy('bind_data'));
         },
-        save: function () {
-            var self = this, _super = this._super.bind(this);
-            var $e = this.$('.list-group-item.active .url-source').filter(':input');
-            var val = $e.val();
-            if (!val || !$e[0].checkValidity()) {
+        get_data: function (test) {
+            var self = this,
+                def = new $.Deferred(),
+                $e = this.$('.active input.url-source').filter(':input'),
+                val = $e.val(),
+                label = this.$('#link-text').val() || val;
+
+            if (test !== false && (!val || !$e[0].checkValidity())) {
                 // FIXME: error message
                 $e.closest('.form-group').addClass('has-error');
                 $e.focus();
-                return;
+                def.reject();
             }
 
-            var done = $.when();
-            if ($e.hasClass('email-address')) {
-                this.make_link('mailto:' + val, false, val);
-            } else if ($e.hasClass('page')) {
+            var style = this.$("input[name='link-style-type']:checked").val();
+            var size = this.$("input[name='link-style-size']:checked").val();
+            var classes = (style && style.length ? "btn " : "") + style + " " + size;
+
+            if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
+                def.resolve('mailto:' + val, false, label);
+            } else if ($e.val() && $e.val().length && $e.hasClass('page')) {
                 var data = $e.select2('data');
                 if (!data.create) {
-                    self.make_link(data.id, false, data.text);
+                    def.resolve(data.id, false, data.text);
                 } else {
                     // Create the page, get the URL back
-                    done = $.get(_.str.sprintf(
+                    $.get(_.str.sprintf(
                             '/website/add/%s?noredirect=1', encodeURI(data.id)))
                         .then(function (response) {
-                            self.make_link(response, false, data.id);
+                            def.resolve(response, false, data.id);
                         });
                 }
             } else {
-                this.make_link(val, this.$('input.window-new').prop('checked'));
+                def.resolve(val, this.$('input.window-new').prop('checked'), label, classes);
             }
-            done.then(_super);
+            return def;
         },
-        make_link: function (url, new_window, label) {
+        save: function () {
+            var self = this;
+            var _super = this._super.bind(this);
+            return this.get_data()
+                .then(function (url, new_window, label, classes) {
+                    self.make_link(url, new_window, label, classes);
+                }).then(_super);
         },
-        bind_data: function (text, href, new_window) {
-            href = href || this.element && (this.element.data( 'cke-saved-href')
+        make_link: function (url, new_window, label, classes) {
+        },
+        bind_data: function () {
+            var href = this.element && (this.element.data( 'cke-saved-href')
                                     ||  this.element.getAttribute('href'));
-
-            if (new_window === undefined) {
-                new_window = this.element
+            var new_window = this.element
                         ? this.element.getAttribute('target') === '_blank'
                         : false;
-            }
-            if (text === undefined) {
-                text = this.element ? this.element.getText() : '';
+            var text = this.element ? this.element.getText() : '';
+            if (!text.length) {
+                var selection = this.editor.getSelection();
+                text = selection.getSelectedText();
             }
 
             this.$('input#link-text').val(text);
             this.$('input.window-new').prop('checked', new_window);
 
-            if (!href) { return; }
-            var match, $control;
-            if ((match = /mailto:(.+)/.exec(href))) {
-                $control = this.$('input.email-address').val(match[1]);
-            }
-            if (!$control) {
-                $control = this.$('input.url').val(href);
+            var classes = this.element && this.element.$.className;
+            if (classes) {
+                this.$('input[value!=""]').each(function () {
+                    var $option = $(this);
+                    if (classes.indexOf($option.val()) !== -1) {
+                        $option.attr("checked", "checked");
+                    }
+                });
             }
 
-            this.changed($control);
+            var match, $control;
+            if (href && (match = /mailto:(.+)/.exec(href))) {
+                this.$('input.email-address').val(match[1]).change();
+            }
+            if (href && !$control) {
+                this.$('input.url').val(href).change();
+                this.$('input.window-new').closest("div").show();
+            }
+            this.preview();
         },
-        changed: function ($e) {
+        changed: function (e) {
+            var $e = $(e.target);
             this.$('.url-source').filter(':input').not($e).val('')
                     .filter(function () { return !!$(this).data('select2'); })
                     .select2('data', null);
@@ -1205,6 +1194,7 @@
                 .addClass('active')
                 .siblings().removeClass('active')
                 .addBack().removeClass('has-error');
+            this.preview();
         },
         call: function (method, args, kwargs) {
             var self = this;
@@ -1232,6 +1222,20 @@
                 context: website.get_context(),
             });
         },
+        onkeyup: function (e) {
+            var $e = $(e.target);
+            var is_link = ($e.val()||'').length && $e.val().indexOf("@") === -1;
+            this.$('input.window-new').closest("div").toggle(is_link);
+            this.preview();
+        },
+        preview: function () {
+            var $preview = this.$("#link-preview");
+            this.get_data(false).then(function (url, new_window, label, classes) {
+                $preview.attr("target", new_window ? '_blank' : "")
+                    .text((label && label.length ? label : url))
+                    .attr("class", classes);
+            });
+        }
     });
     website.editor.RTELinkDialog = website.editor.LinkDialog.extend({
         start: function () {
@@ -1271,13 +1275,16 @@
          * @param {Boolean} [new_window=false]
          * @param {String} [label=null]
          */
-        make_link: function (url, new_window, label) {
+        make_link: function (url, new_window, label, classes) {
             var attributes = {href: url, 'data-cke-saved-href': url};
             var to_remove = [];
             if (new_window) {
                 attributes['target'] = '_blank';
             } else {
                 to_remove.push('target');
+            }
+            if (classes && classes.length) {
+                attributes['class'] = classes;
             }
 
             if (this.element) {
@@ -1561,9 +1568,9 @@
             }
             var callback = _.uniqueId('func_');
             this.$('input[name=func]').val(callback);
-            window[callback] = function (url, error) {
+            window[callback] = function (attachments, error) {
                 delete window[callback];
-                self.file_selected(url, error);
+                self.file_selected(attachments[0]['website_url'], error);
             };
         },
         file_selection: function () {

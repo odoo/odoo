@@ -48,7 +48,7 @@ class test_portal(TestMail):
         # Set an email address for the user running the tests, used as Sender for outgoing mails
         self.res_users.write(cr, uid, uid, {'email': 'test@localhost'})
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_00_mail_access_rights(self):
         """ Test basic mail_message and mail_group access rights for portal users. """
         cr, uid = self.cr, self.uid
@@ -90,7 +90,7 @@ class test_portal(TestMail):
         # Do: Chell replies to a Pigs message using the composer
         compose_id = mail_compose.create(cr, self.user_chell_id,
             {'subject': 'Subject', 'body': 'Body text'},
-            {'default_composition_mode': 'reply', 'default_parent_id': pigs_msg_id})
+            {'default_composition_mode': 'comment', 'default_parent_id': pigs_msg_id})
         mail_compose.send_mail(cr, self.user_chell_id, [compose_id])
 
         # Do: Chell browses PigsPortal -> ok because groups security, ko for partners (no read permission)
@@ -167,7 +167,7 @@ class test_portal(TestMail):
         self.assertIn('login=%s' % partner_raoul.user_ids[0].login, url,
                         'notification email: link should contain the user login')
 
-    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
+    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.models')
     def test_21_inbox_redirection(self):
         """ Tests designed to test the inbox redirection of emails notification URLs. """
         cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs

@@ -35,7 +35,7 @@ import base64
 from openerp import addons
 
 from openerp.osv import fields, osv
-from openerp import tools
+from openerp import tools, api
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -52,7 +52,7 @@ class fetchmail_server(osv.osv):
         'state':fields.selection([
             ('draft', 'Not Confirmed'),
             ('done', 'Confirmed'),
-        ], 'Status', select=True, readonly=True),
+        ], 'Status', select=True, readonly=True, copy=False),
         'server' : fields.char('Server Name', readonly=True, help="Hostname or IP of the mail server", states={'draft':[('readonly', False)]}),
         'port' : fields.integer('Port', readonly=True, states={'draft':[('readonly', False)]}),
         'type':fields.selection([
@@ -129,6 +129,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
         self.write(cr, uid, ids , {'state':'draft'})
         return True
 
+    @api.cr_uid_ids_context
     def connect(self, cr, uid, server_id, context=None):
         if isinstance(server_id, (list,tuple)):
             server_id = server_id[0]
@@ -179,8 +180,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
 
     def fetch_mail(self, cr, uid, ids, context=None):
         """WARNING: meant for cron usage only - will commit() after each email!"""
-        if context is None:
-            context = {}
+        context = dict(context or {})
         context['fetchmail_cron_running'] = True
         mail_thread = self.pool.get('mail.thread')
         action_pool = self.pool.get('ir.actions.server')

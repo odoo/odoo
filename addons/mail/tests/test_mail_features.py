@@ -280,7 +280,7 @@ class test_mail(TestMail):
         self.assertNotIn('res_id=%s' % group_pigs.id, url,
                          'notification email: link based on message should not contain res_id')
 
-    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
+    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.models')
     def test_12_inbox_redirection(self):
         """ Tests designed to test the inbox redirection of emails notification URLs. """
         cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
@@ -467,14 +467,10 @@ class test_mail(TestMail):
                             'message_post: notification email subject incorrect')
             self.assertIn(_body1, sent_email['body'],
                             'message_post: notification email body incorrect')
-            self.assertIn(user_raoul.signature, sent_email['body'],
-                            'message_post: notification email body should contain the sender signature')
             self.assertIn('Pigs rules', sent_email['body_alternative'],
                             'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
-            self.assertIn(html2plaintext(user_raoul.signature), sent_email['body_alternative'],
-                            'message_post: notification email body alternative should contain the sender signature')
             self.assertFalse(sent_email['references'],
                             'message_post: references should be False when sending a message that is not a reply')
 
@@ -538,14 +534,10 @@ class test_mail(TestMail):
                             'message_post: notification email subject incorrect')
             self.assertIn(html_sanitize(_body2), sent_email['body'],
                             'message_post: notification email does not contain the body')
-            self.assertIn(user_raoul.signature, sent_email['body'],
-                            'message_post: notification email body should contain the sender signature')
             self.assertIn('Pigs rocks', sent_email['body_alternative'],
                             'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
-            self.assertIn(html2plaintext(user_raoul.signature), sent_email['body_alternative'],
-                            'message_post: notification email body alternative should contain the sender signature')
             self.assertIn(msg_message_id, sent_email['references'],
                             'message_post: notification email references lacks parent message message_id')
         # Test: attachments + download
@@ -629,7 +621,8 @@ class test_mail(TestMail):
         mail_compose.send_mail(cr, user_raoul.id, [compose_id], {'mail_post_autofollow': True, 'mail_create_nosubscribe': True})
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
-
+        # Test: mail_mail: notifications have been deleted
+        self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', message.id)]),'message_send: mail.mail message should have been auto-deleted!')
         # Test: mail.group: followers (c and d added by auto follow key; raoul not added by nosubscribe key)
         pigs_pids = [p.id for p in group_pigs.message_follower_ids]
         test_pids = [self.partner_admin_id, p_b_id, p_c_id, p_d_id]
@@ -654,7 +647,7 @@ class test_mail(TestMail):
             {
                 'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])]
             }, context={
-                'default_composition_mode': 'reply',
+                'default_composition_mode': 'comment',
                 'default_res_id': self.group_pigs_id,
                 'default_parent_id': message.id
             })
@@ -711,6 +704,12 @@ class test_mail(TestMail):
 
         # Test: Pigs and Bird did receive their message
         test_msg_ids = self.mail_message.search(cr, uid, [], limit=2)
+        mail_ids = self.mail_mail.search(cr, uid, [('mail_message_id', '=', message2.id)])
+        mail_record_id = self.mail_mail.browse(cr, uid, mail_ids)[0]
+        self.assertTrue(mail_record_id, "'message_send: mail.mail message should have in processing mail queue'" )
+        #check mass mail state...
+        test_mail_ids = self.mail_mail.search(cr, uid, [('state', '=', 'exception')])
+        self.assertNotIn(mail_ids, test_mail_ids, 'compose wizard: Mail sending Failed!!')
         self.assertIn(message1.id, test_msg_ids, 'compose wizard: Pigs did not receive its mass mailing message')
         self.assertIn(message2.id, test_msg_ids, 'compose wizard: Bird did not receive its mass mailing message')
 
@@ -772,14 +771,13 @@ class test_mail(TestMail):
     def test_30_needaction(self):
         """ Tests for mail.message needaction. """
         cr, uid, user_admin, user_raoul, group_pigs = self.cr, self.uid, self.user_admin, self.user_raoul, self.group_pigs
-        group_pigs_demo = self.mail_group.browse(cr, self.user_raoul_id, self.group_pigs_id)
         na_admin_base = self.mail_message._needaction_count(cr, uid, domain=[])
         na_demo_base = self.mail_message._needaction_count(cr, user_raoul.id, domain=[])
 
         # Test: number of unread notification = needaction on mail.message
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_admin.partner_id.id),
-            ('read', '=', False)
+            ('is_read', '=', False)
             ])
         na_count = self.mail_message._needaction_count(cr, uid, domain=[])
         self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
@@ -787,13 +785,14 @@ class test_mail(TestMail):
         # Do: post 2 message on group_pigs as admin, 3 messages as demo user
         for dummy in range(2):
             group_pigs.message_post(body='My Body', subtype='mt_comment')
+        raoul_pigs = group_pigs.sudo(user_raoul)
         for dummy in range(3):
-            group_pigs_demo.message_post(body='My Demo Body', subtype='mt_comment')
+            raoul_pigs.message_post(body='My Demo Body', subtype='mt_comment')
 
         # Test: admin has 3 new notifications (from demo), and 3 new needaction
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_admin.partner_id.id),
-            ('read', '=', False)
+            ('is_read', '=', False)
             ])
         self.assertEqual(len(notif_ids), na_admin_base + 3, 'Admin should have 3 new unread notifications')
         na_admin = self.mail_message._needaction_count(cr, uid, domain=[])
@@ -803,7 +802,7 @@ class test_mail(TestMail):
         # Test: demo has 0 new notifications (not a follower, not receiving its own messages), and 0 new needaction
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_raoul.partner_id.id),
-            ('read', '=', False)
+            ('is_read', '=', False)
             ])
         self.assertEqual(len(notif_ids), na_demo_base + 0, 'Demo should have 0 new unread notifications')
         na_demo = self.mail_message._needaction_count(cr, user_raoul.id, domain=[])
@@ -861,7 +860,7 @@ class test_mail(TestMail):
         # Test: first produced message: no subtype, name change tracked
         last_msg = self.group_pigs.message_ids[-1]
         self.assertFalse(last_msg.subtype_id, 'tracked: message should not have been linked to a subtype')
-        self.assertIn(u'SelectedGroupOnly\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
+        self.assertIn(u"Selectedgroupofusers\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
         self.assertIn('Pigs', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
 
         # Test: change name as supername, public as private -> 2 subtypes
@@ -877,7 +876,7 @@ class test_mail(TestMail):
         last_msg = self.group_pigs.message_ids[-3]
         self.assertEqual(last_msg.subtype_id.id, mt_name_supername_id, 'tracked: message should be linked to mt_name_supername subtype')
         self.assertIn('Supername name', last_msg.body, 'tracked: message body does not hold the subtype description')
-        self.assertIn(u'Public\u2192Private', _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
+        self.assertIn(u"Everyone\u2192Invitedpeopleonly", _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
         self.assertIn(u'Pigs\u2192supername', _strip_string_spaces(last_msg.body), 'tracked feature: message body does not hold always tracked field')
 
         # Test: change public as public, group_public_id -> 2 subtypes, name always tracked
@@ -888,13 +887,13 @@ class test_mail(TestMail):
         last_msg = self.group_pigs.message_ids[-4]
         self.assertEqual(last_msg.subtype_id.id, mt_group_public_set_id, 'tracked: message should be linked to mt_group_public_set_id')
         self.assertIn('Group set', last_msg.body, 'tracked: message body does not hold the subtype description')
-        self.assertIn(u'Private\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
+        self.assertIn(u"Invitedpeopleonly\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
         self.assertIn(u'HumanResources/Employee\u2192Administration/Settings', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
         # Test: second produced message: mt_group_public_id, with name always tracked, public tracked on change
         last_msg = self.group_pigs.message_ids[-5]
         self.assertEqual(last_msg.subtype_id.id, mt_group_public_id, 'tracked: message should be linked to mt_group_public_id')
         self.assertIn('Group changed', last_msg.body, 'tracked: message body does not hold the subtype description')
-        self.assertIn(u'Private\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
+        self.assertIn(u"Invitedpeopleonly\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
         self.assertIn(u'HumanResources/Employee\u2192Administration/Settings', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
 
         # Test: change group_public_id to False -> 1 subtype, name always tracked

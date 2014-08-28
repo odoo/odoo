@@ -19,15 +19,29 @@
 #
 ##############################################################################
 
+from operator import itemgetter
 import time
 
-from openerp.osv import osv, fields
-from openerp.osv.orm import browse_record, browse_null
+from openerp import models, api
+from openerp.osv import osv, orm, fields
 from openerp.tools.misc import attrgetter
 
 # -------------------------------------------------------------------------
 # Properties
 # -------------------------------------------------------------------------
+
+TYPE2FIELD = {
+    'char': 'value_text',
+    'float': 'value_float',
+    'boolean': 'value_integer',
+    'integer': 'value_integer',
+    'text': 'value_text',
+    'binary': 'value_binary',
+    'many2one': 'value_reference',
+    'date': 'value_datetime',
+    'datetime': 'value_datetime',
+    'selection': 'value_text',
+}
 
 class ir_property(osv.osv):
     _name = 'ir.property'
@@ -80,24 +94,12 @@ class ir_property(osv.osv):
             else:
                 type_ = self._defaults['type']
 
-        type2field = {
-            'char': 'value_text',
-            'float': 'value_float',
-            'boolean' : 'value_integer',
-            'integer': 'value_integer',
-            'text': 'value_text',
-            'binary': 'value_binary',
-            'many2one': 'value_reference',
-            'date' : 'value_datetime',
-            'datetime' : 'value_datetime',
-            'selection': 'value_text',
-        }
-        field = type2field.get(type_)
+        field = TYPE2FIELD.get(type_)
         if not field:
             raise osv.except_osv('Error', 'Invalid type')
 
         if field == 'value_reference':
-            if isinstance(value, browse_record):
+            if isinstance(value, orm.BaseModel):
                 value = '%s,%d' % (value._name, value.id)
             elif isinstance(value, (int, long)):
                 field_id = values.get('fields_id')
@@ -132,9 +134,10 @@ class ir_property(osv.osv):
             return record.value_binary
         elif record.type == 'many2one':
             if not record.value_reference:
-                return browse_null()
+                return False
             model, resource_id = record.value_reference.split(',')
-            return self.pool.get(model).browse(cr, uid, int(resource_id), context=context)
+            value = self.pool[model].browse(cr, uid, int(resource_id), context=context)
+            return value.exists()
         elif record.type == 'datetime':
             return record.value_datetime
         elif record.type == 'date':
@@ -154,12 +157,6 @@ class ir_property(osv.osv):
             return self.get_by_record(cr, uid, record, context=context)
         return False
 
-    def _get_domain_default(self, cr, uid, prop_name, model, context=None):
-        domain = self._get_domain(cr, uid, prop_name, model, context=context)
-        if domain is None:
-            return None
-        return ['&', ('res_id', '=', False)] + domain
-
     def _get_domain(self, cr, uid, prop_name, model, context=None):
         context = context or {}
         cr.execute('select id from ir_model_fields where name=%s and model=%s', (prop_name, model))
@@ -167,14 +164,143 @@ class ir_property(osv.osv):
         if not res:
             return None
 
-        if 'force_company' in context and context['force_company']:
-            cid = context['force_company']
-        else:
+        cid = context.get('force_company')
+        if not cid:
             company = self.pool.get('res.company')
             cid = company._company_default_get(cr, uid, model, res[0], context=context)
 
-        domain = ['&', ('fields_id', '=', res[0]),
-                  '|', ('company_id', '=', cid), ('company_id', '=', False)]
-        return domain
+        return [('fields_id', '=', res[0]), ('company_id', 'in', [cid, False])]
+
+    @api.model
+    def get_multi(self, name, model, ids):
+        """ Read the property field `name` for the records of model `model` with
+            the given `ids`, and return a dictionary mapping `ids` to their
+            corresponding value.
+        """
+        if not ids:
+            return {}
+
+        domain = self._get_domain(name, model)
+        if domain is None:
+            return dict.fromkeys(ids, False)
+
+        # retrieve the values for the given ids and the default value, too
+        refs = {('%s,%s' % (model, id)): id for id in ids}
+        refs[False] = False
+        domain += [('res_id', 'in', list(refs))]
+
+        # note: order by 'company_id asc' will return non-null values first
+        props = self.search(domain, order='company_id asc')
+        result = {}
+        for prop in props:
+            # for a given res_id, take the first property only
+            id = refs.pop(prop.res_id, None)
+            if id is not None:
+                result[id] = self.get_by_record(prop)
+
+        # set the default value to the ids that are not in result
+        default_value = result.pop(False, False)
+        for id in ids:
+            result.setdefault(id, default_value)
+
+        return result
+
+    @api.model
+    def set_multi(self, name, model, values):
+        """ Assign the property field `name` for the records of model `model`
+            with `values` (dictionary mapping record ids to their value).
+        """
+        def clean(value):
+            return value.id if isinstance(value, models.BaseModel) else value
+
+        if not values:
+            return
+
+        domain = self._get_domain(name, model)
+        if domain is None:
+            raise Exception()
+
+        # retrieve the default value for the field
+        default_value = clean(self.get(name, model))
+
+        # retrieve the properties corresponding to the given record ids
+        self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (name, model))
+        field_id = self._cr.fetchone()[0]
+        company_id = self.env['res.company']._company_default_get(model, field_id)
+        refs = {('%s,%s' % (model, id)): id for id in values}
+        props = self.search([
+            ('fields_id', '=', field_id),
+            ('company_id', '=', company_id),
+            ('res_id', 'in', list(refs)),
+        ])
+
+        # modify existing properties
+        for prop in props:
+            id = refs.pop(prop.res_id)
+            value = clean(values[id])
+            if value == default_value:
+                prop.unlink()
+            elif value != clean(prop.get_by_record(prop)):
+                prop.write({'value': value})
+
+        # create new properties for records that do not have one yet
+        for ref, id in refs.iteritems():
+            value = clean(values[id])
+            if value != default_value:
+                self.create({
+                    'fields_id': field_id,
+                    'company_id': company_id,
+                    'res_id': ref,
+                    'name': name,
+                    'value': value,
+                    'type': self.env[model]._fields[name].type,
+                })
+
+    @api.model
+    def search_multi(self, name, model, operator, value):
+        """ Return a domain for the records that match the given condition. """
+        field = self.env[model]._fields[name]
+        if field.type == 'many2one':
+            comodel = field.comodel_name
+            def makeref(value):
+                return value and '%s,%s' % (comodel, value)
+            if operator in ('=', '!=', '<=', '<', '>', '>='):
+                value = makeref(value)
+            elif operator in ('in', 'not in'):
+                value = map(makeref, value)
+            elif operator in ('=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike'):
+                # most probably inefficient... but correct
+                target = self.env[comodel]
+                target_names = target.name_search(value, operator=operator, limit=None)
+                target_ids = map(itemgetter(0), target_names)
+                operator, value = 'in', map(makeref, target_ids)
+
+        # retrieve the properties that match the condition
+        domain = self._get_domain(name, model)
+        if domain is None:
+            raise Exception()
+        props = self.search(domain + [(TYPE2FIELD[field.type], operator, value)])
+
+        # retrieve the records corresponding to the properties that match
+        good_ids = []
+        default_matches = False
+        for prop in props:
+            if prop.res_id:
+                res_model, res_id = prop.res_id.split(',')
+                good_ids.append(int(res_id))
+            else:
+                default_matches = True
+
+        if default_matches:
+            # exclude all records with a property that does not match
+            all_ids = []
+            props = self.search(domain + [('res_id', '!=', False)])
+            for prop in props:
+                res_model, res_id = prop.res_id.split(',')
+                all_ids.append(int(res_id))
+            bad_ids = list(set(all_ids) - set(good_ids))
+            return [('id', 'not in', bad_ids)]
+        else:
+            return [('id', 'in', good_ids)]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

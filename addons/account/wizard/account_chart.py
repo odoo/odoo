@@ -85,7 +85,7 @@ class account_chart(osv.osv_memory):
         fy_obj = self.pool.get('account.fiscalyear')
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         result = mod_obj.get_object_reference(cr, uid, 'account', 'action_account_tree')
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]

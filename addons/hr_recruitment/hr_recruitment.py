@@ -83,6 +83,9 @@ class hr_applicant(osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _track = {
+        'emp_id': {
+            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj.emp_id,
+        },
         'stage_id': {
             # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
             'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
@@ -232,7 +235,7 @@ class hr_applicant(osv.Model):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
-        'emp_id': fields.many2one('hr.employee', string='Employee', help='Employee linked to the applicant.'),
+        'emp_id': fields.many2one('hr.employee', string='Employee', track_visibility='onchange', help='Employee linked to the applicant.'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'attachment_number': fields.function(_get_attachment_number, string='Number of Attachments', type="integer"),
     }
@@ -253,6 +256,7 @@ class hr_applicant(osv.Model):
 
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         department_id = False
+        user_id = False
         if job_id:
             job_record = self.pool.get('hr.job').browse(cr, uid, job_id, context=context)
             department_id = job_record and job_record.department_id and job_record.department_id.id or False
@@ -324,7 +328,7 @@ class hr_applicant(osv.Model):
         return res
 
     def action_start_survey(self, cr, uid, ids, context=None):
-        context = context if context else {}
+        context = dict(context or {})
         applicant = self.browse(cr, uid, ids, context=context)[0]
         survey_obj = self.pool.get('survey.survey')
         response_obj = self.pool.get('survey.user_input')
@@ -341,7 +345,7 @@ class hr_applicant(osv.Model):
 
     def action_print_survey(self, cr, uid, ids, context=None):
         """ If response is available then print this response otherwise print survey form (print template of the survey) """
-        context = context if context else {}
+        context = dict(context or {})
         applicant = self.browse(cr, uid, ids, context=context)[0]
         survey_obj = self.pool.get('survey.survey')
         response_obj = self.pool.get('survey.user_input')
@@ -397,8 +401,7 @@ class hr_applicant(osv.Model):
         return super(hr_applicant, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         context['mail_create_nolog'] = True
         if vals.get('department_id') and not context.get('default_department_id'):
             context['default_department_id'] = vals.get('department_id')
@@ -500,13 +503,14 @@ class hr_applicant(osv.Model):
                 raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
-        dict_act_window = act_window.read(cr, uid, action_id, [])
+        dict_act_window = act_window.read(cr, uid, [action_id], [])[0]
         if emp_id:
             dict_act_window['res_id'] = emp_id
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
 
     def get_empty_list_help(self, cr, uid, help, context=None):
+        context = dict(context or {})
         context['empty_list_help_model'] = 'hr.job'
         context['empty_list_help_id'] = context.get('default_job_id', None)
         context['empty_list_help_document_name'] = _("job applicants")
@@ -570,6 +574,7 @@ class hr_job(osv.osv):
             'hr.applicant', self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=context)
 
     def create(self, cr, uid, vals, context=None):
+        # TDE note: shouldn't it be in mail_create_nolog ?
         alias_context = dict(context, alias_model_name='hr.applicant', alias_parent_model_name=self._name)
         job_id = super(hr_job, self).create(cr, uid, vals, context=alias_context)
         job = self.browse(cr, uid, job_id, context=context)
@@ -609,5 +614,3 @@ class applicant_category(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

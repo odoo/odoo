@@ -20,6 +20,7 @@
 ##############################################################################
 import pickle
 
+from openerp import tools
 from openerp.osv import osv, fields
 from openerp.osv.orm import except_orm
 
@@ -188,6 +189,21 @@ class ir_values(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_values_key_model_key2_res_id_user_id_idx ON ir_values (key, model, key2, res_id, user_id)')
 
+    def create(self, cr, uid, vals, context=None):
+        res = super(ir_values, self).create(cr, uid, vals, context=context)
+        self.get_defaults_dict.clear_cache(self)
+        return res
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(ir_values, self).write(cr, uid, ids, vals, context=context)
+        self.get_defaults_dict.clear_cache(self)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(ir_values, self).unlink(cr, uid, ids, context=context)
+        self.get_defaults_dict.clear_cache(self)
+        return res
+
     def set_default(self, cr, uid, model, field_name, value, for_all_users=True, company_id=False, condition=False):
         """Defines a default value for the given model and field_name. Any previous
            default for the same scope (model, field_name, value, for_all_users, company_id, condition)
@@ -319,6 +335,15 @@ class ir_values(osv.osv):
                 (row['id'], row['name'], pickle.loads(row['value'].encode('utf-8'))))
         return defaults.values()
 
+    # use ormcache: this is called a lot by BaseModel.add_default_value()!
+    @tools.ormcache(skiparg=2)
+    def get_defaults_dict(self, cr, uid, model, condition=False):
+        """ Returns a dictionary mapping field names with their corresponding
+            default value. This method simply improves the returned value of
+            :meth:`~.get_defaults`.
+        """
+        return dict((f, v) for i, f, v in self.get_defaults(cr, uid, model, condition))
+
     def set_action(self, cr, uid, name, action_slot, model, action, res_id=False):
         """Binds an the given action to the given model's action slot - for later
            retrieval via :meth:`~.get_actions`. Any existing binding of the same action
@@ -395,9 +420,9 @@ class ir_values(osv.osv):
             if not action['value']:
                 continue    # skip if undefined
             action_model_name, action_id = action['value'].split(',')
-            action_model = self.pool.get(action_model_name)
-            if not action_model:
+            if action_model_name not in self.pool:
                 continue    # unknow model? skip it
+            action_model = self.pool[action_model_name]
             fields = [field for field in action_model._all_columns if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:

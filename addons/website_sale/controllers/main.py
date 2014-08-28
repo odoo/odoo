@@ -2,8 +2,8 @@
 import werkzeug
 
 from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
 
@@ -163,7 +163,11 @@ class website_sale(http.Controller):
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list)
 
         if not context.get('pricelist'):
-            context['pricelist'] = int(self.get_pricelist())
+            pricelist = self.get_pricelist()
+            context['pricelist'] = int(pricelist)
+        else:
+            pricelist = pool.get('product.pricelist').browse(cr, uid, context['pricelist'], context)
+
         product_obj = pool.get('product.template')
 
         product_count = product_obj.search_count(cr, uid, domain, context=context)
@@ -181,8 +185,12 @@ class website_sale(http.Controller):
         categs = filter(lambda x: not x.parent_id, categories)
 
         attributes_obj = request.registry['product.attribute']
-        attributes_ids = attributes_obj.search(cr, uid, [], context=request.context)
-        attributes = attributes_obj.browse(cr, uid, attributes_ids, context=request.context)
+        attributes_ids = attributes_obj.search(cr, uid, [], context=context)
+        attributes = attributes_obj.browse(cr, uid, attributes_ids, context=context)
+
+        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+        to_currency = pricelist.currency_id
+        compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
 
         values = {
             'search': search,
@@ -190,18 +198,18 @@ class website_sale(http.Controller):
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'pager': pager,
-            'pricelist': self.get_pricelist(),
+            'pricelist': pricelist,
             'products': products,
             'bins': table_compute().process(products),
             'rows': PPR,
             'styles': styles,
             'categories': categs,
             'attributes': attributes,
+            'compute_currency': compute_currency,
             'keep': keep,
             'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
             'attrib_encode': lambda attribs: werkzeug.url_encode([('attrib',i) for i in attribs]),
         }
-
         return request.website.render("website_sale.products", values)
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
@@ -225,6 +233,12 @@ class website_sale(http.Controller):
         category_list = category_obj.name_get(cr, uid, category_ids, context=context)
         category_list = sorted(category_list, key=lambda category: category[1])
 
+        pricelist = self.get_pricelist()
+
+        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+        to_currency = pricelist.currency_id
+        compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
+
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
             product = template_obj.browse(cr, uid, int(product), context=context)
@@ -232,8 +246,9 @@ class website_sale(http.Controller):
         values = {
             'search': search,
             'category': category,
-            'pricelist': self.get_pricelist(),
+            'pricelist': pricelist,
             'attrib_values': attrib_values,
+            'compute_currency': compute_currency,
             'attrib_set': attrib_set,
             'keep': keep,
             'category_list': category_list,
@@ -265,9 +280,16 @@ class website_sale(http.Controller):
     def cart(self, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         order = request.website.sale_get_order()
+        if order:
+            from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+            to_currency = order.pricelist_id.currency_id
+            compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
+        else:
+            compute_currency = lambda price: price
 
         values = {
             'order': order,
+            'compute_currency': compute_currency,
             'suggested_products': [],
         }
         if order:
@@ -456,6 +478,7 @@ class website_sale(http.Controller):
         if partner_id and request.website.partner_id.id != partner_id:
             orm_partner.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
+            # create partner
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
 
         # create a new shipping partner
@@ -472,7 +495,9 @@ class website_sale(http.Controller):
             'partner_invoice_id': partner_id,
             'partner_shipping_id': shipping_id or partner_id
         }
-        order_info.update(registry.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
+        order_info.update(order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
+        order_info.update(order_obj.onchange_delivery_id(cr, SUPERUSER_ID, [], order.company_id.id, partner_id, shipping_id, None, context=context)['value'])
+
         order_info.pop('user_id')
 
         order_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
@@ -511,6 +536,8 @@ class website_sale(http.Controller):
 
         self.checkout_form_save(values["checkout"])
         request.session['sale_last_order_id'] = order.id
+
+        request.website.sale_get_order(update_pricelist=True, context=context)
 
         return request.redirect("/shop/payment")
 
@@ -555,7 +582,7 @@ class website_sale(http.Controller):
         #     acquirer_ids = [tx.acquirer_id.id]
         # else:
         acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
-        values['acquirers'] = payment_obj.browse(cr, uid, acquirer_ids, context=context)
+        values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
         render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
         for acquirer in values['acquirers']:
             acquirer.button = payment_obj.render(
@@ -633,7 +660,7 @@ class website_sale(http.Controller):
         if not order:
             return {
                 'state': 'error',
-                'message': '<p>There seems to be an error with your request.</p>',
+                'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
             }
 
         tx_ids = request.registry['payment.transaction'].search(
@@ -645,7 +672,7 @@ class website_sale(http.Controller):
             if order.amount_total:
                 return {
                     'state': 'error',
-                    'message': '<p>There seems to be an error with your request.</p>',
+                    'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
                 }
             else:
                 state = 'done'
@@ -655,15 +682,15 @@ class website_sale(http.Controller):
             tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
             state = tx.state
             if state == 'done':
-                message = '<p>Your payment has been received.</p>'
+                message = '<p>%s</p>' % _('Your payment has been received.')
             elif state == 'cancel':
-                message = '<p>The payment seems to have been canceled.</p>'
+                message = '<p>%s</p>' % _('The payment seems to have been canceled.')
             elif state == 'pending' and tx.acquirer_id.validation == 'manual':
-                message = '<p>Your transaction is waiting confirmation.</p>'
+                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
                 if tx.acquirer_id.post_msg:
                     message += tx.acquirer_id.post_msg
             else:
-                message = '<p>Your transaction is waiting confirmation.</p>'
+                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
             validation = tx.acquirer_id.validation
 
         return {
@@ -793,5 +820,34 @@ class website_sale(http.Controller):
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)
         return product.write({'website_size_x': x, 'website_size_y': y})
 
+    def order_lines_2_google_api(self, order_lines):
+        """ Transforms a list of order lines into a dict for google analytics """
+        ret = []
+        for line in order_lines:
+            ret.append({
+                'id': line.order_id and line.order_id.id,
+                'name': line.product_id.categ_id and line.product_id.categ_id.name or '-',
+                'sku': line.product_id.id,
+                'quantity': line.product_uom_qty,
+                'price': line.price_unit,
+            })
+        return ret
+
+    @http.route(['/shop/tracking_last_order'], type='json', auth="public")
+    def tracking_cart(self, **post):
+        """ return data about order in JSON needed for google analytics"""
+        cr, uid, context = request.cr, request.uid, request.context
+        ret = {}
+        sale_order_id = request.session.get('sale_last_order_id')
+        if sale_order_id:
+            order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
+            ret['transaction'] = {
+                'id': sale_order_id,
+                'affiliation': order.company_id.name,
+                'revenue': order.amount_total,
+                'currency': order.currency_id.name
+            }
+            ret['lines'] = self.order_lines_2_google_api(order.order_line)
+        return ret
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

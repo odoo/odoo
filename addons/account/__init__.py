@@ -22,7 +22,6 @@
 import partner
 import account
 import installer
-import project
 import account_invoice
 import account_bank_statement
 import account_bank

@@ -658,6 +658,7 @@
                                 <field name="iface_invoicing" />
                             </group>
                             <group>
+                                <field name="iface_fullscreen" />
                                 <field name="iface_big_scrollbars" />
                             </group>
                         </group>
@@ -671,6 +672,34 @@
                         <group string="Receipt" >
                             <field name="receipt_header" placeholder="A custom receipt header message"/>
                             <field name="receipt_footer" placeholder="A custom receipt header footage"/>
+                        </group>
+                        <group string="Barcode Types" col="1">
+                            <p>
+                                Barcode Patterns allow to match barcodes to actions or to embed information such as price and quantity in the barcode.
+                                Barcode Patterns only work with EAN13 barcodes.
+                            </p>
+                            <p> 
+                                Each type of barcode accepts a list of patterns seprated by commas. A scanned 
+                                barcode will be attributed to a type if it matches one of its patterns. 
+                                The patterns take the form of EAN13 barcodes. Numbers in the pattern must match
+                                the number in the scanned barcode. A 'x' or a '*' in a pattern will match
+                                any one number. If the patterns are shorter than EAN13 barcodes, they are assumed
+                                to be prefixes and match at the beginning. Weight, Price and Discount patterns also
+                                tell how the weight, price or discount is encoded in the barcode. 'N' indicate the
+                                positions where the integer part is en encoded, and 'D' where the decimals are encoded.
+                                If multiple pattern match one barcode, the longest pattern with the less 'x' or '*' is
+                                considered the matching one. If a barcode matches no pattern it will not be found in
+                                the POS.
+                            </p>
+                            <group col="4">
+
+                                <field name="barcode_product" />
+                                <field name="barcode_cashier" />
+                                <field name="barcode_customer" />
+                                <field name="barcode_weight" />
+                                <field name="barcode_discount" />
+                                <field name="barcode_price" />
+                            </group>
                         </group>
                     </sheet>
 
@@ -703,6 +732,7 @@
             </field>
         </record>
 
+        <!-- Sessions -->
 
         <act_window
             id="act_pos_config_sessions"
@@ -965,3 +995,4 @@
 
     </data>
 </openerp>
+

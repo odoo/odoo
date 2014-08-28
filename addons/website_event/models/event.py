@@ -89,7 +89,7 @@ class event(osv.osv):
 
     _columns = {
         'twitter_hashtag': fields.char('Twitter Hashtag'),
-        'website_published': fields.boolean('Visible in Website'),
+        'website_published': fields.boolean('Visible in Website', copy=False),
         # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',

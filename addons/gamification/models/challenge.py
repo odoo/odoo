@@ -124,7 +124,7 @@ class gamification_challenge(osv.Model):
                 ('draft', 'Draft'),
                 ('inprogress', 'In Progress'),
                 ('done', 'Done'),
-            ],
+            ], copy=False,
             string='State', required=True, track_visibility='onchange'),
         'manager_id': fields.many2one('res.users',
             string='Responsible', help="The user responsible for the challenge."),
@@ -155,7 +155,7 @@ class gamification_challenge(osv.Model):
         'line_ids': fields.one2many('gamification.challenge.line', 'challenge_id',
             string='Lines',
             help="List of goals that will be set",
-            required=True),
+            required=True, copy=True),
 
         'reward_id': fields.many2one('gamification.badge', string="For Every Succeding User"),
         'reward_first_id': fields.many2one('gamification.badge', string="For 1st user"),
@@ -283,7 +283,7 @@ class gamification_challenge(osv.Model):
 
         # in cron mode, will do intermediate commits
         # TODO in trunk: replace by parameter
-        context.update({'commit_gamification': True})
+        context = dict(context, commit_gamification=True)
         return self._update_all(cr, uid, ids, context=context)
 
     def _update_all(self, cr, uid, ids, context=None):

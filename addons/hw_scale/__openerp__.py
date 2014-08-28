@@ -27,7 +27,7 @@
     'sequence': 6,
     'summary': 'Hardware Driver for Weighting Scales',
     'description': """
-Barcode Scanner Hardware Driver
+Weighting Scale Hardware Driver
 ================================
 
 This module allows the point of sale to connect to a scale using a USB HSM Serial Scale Interface,

@@ -141,6 +141,7 @@ class crm_phonecall(osv.osv):
                     'partner_phone' : call.partner_phone,
                     'partner_mobile' : call.partner_mobile,
                     'priority': call.priority,
+                    'opportunity_id': call.opportunity_id and call.opportunity_id.id or False,
             }
             new_id = self.create(cr, uid, vals, context=context)
             if action == 'log':

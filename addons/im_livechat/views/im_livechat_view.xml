@@ -29,7 +29,7 @@
             <field name="arch" type="xml">
                 <kanban>
                     <field name="name"/>
-                    <field name="web_page"/>
+                    <field name="web_page" widget="url"/>
                     <field name="are_you_inside"/>
                     <field name="user_ids"/>
                     <templates>
@@ -112,7 +112,7 @@
                         <p>
                             or copy this url and send it by email to your customers or suppliers:
                         </p>
-                        <field name="web_page" readonly="1" class="oe_tag"/>
+                        <field name="web_page" readonly="1" class="oe_tag" widget="url"/>
                         <p>For website built with Odoo CMS, please install the website_livechat module. Then go to Settings > Website Settings and select the Live Chat Channel you want to add on your website.</p>
                     </div>
 

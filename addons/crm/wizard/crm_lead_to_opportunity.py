@@ -158,7 +158,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             lead_ids = [lead_id]
             lead = lead_obj.read(cr, uid, lead_id, ['type', 'user_id'], context=context)
             if lead['type'] == "lead":
-                context.update({'active_ids': lead_ids})
+                context = dict(context, active_ids=lead_ids)
                 self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids, 'user_ids': [w.user_id.id], 'section_id': w.section_id.id}, context=context)
             elif not context.get('no_force_assignation') or not lead['user_id']:
                 lead_obj.write(cr, uid, lead_id, {'user_id': w.user_id.id, 'section_id': w.section_id.id}, context=context)

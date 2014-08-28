@@ -43,7 +43,7 @@ class MailMessage(osv.Model):
             help='Message description: either the subject, or the beginning of the body'
         ),
         'website_published': fields.boolean(
-            'Published', help="Visible on the website as a comment"
+            'Published', help="Visible on the website as a comment", copy=False,
         ),
     }
 

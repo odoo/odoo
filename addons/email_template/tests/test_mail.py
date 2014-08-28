@@ -202,7 +202,7 @@ class test_message_compose(TestMail):
         mail_value = mail_compose.generate_email_for_composer(cr, uid, email_template_id, uid)
         self.assertEqual(set(mail_value['partner_ids']), set(send_to), 'mail.message partner_ids list created by template is incorrect')
 
-    @mute_logger('openerp.osv.orm', 'openerp.osv.orm')
+    @mute_logger('openerp.models')
     def test_10_email_templating(self):
         """ Tests designed for the mail.compose.message wizard updated by email_template. """
         cr, uid, context = self.cr, self.uid, {}

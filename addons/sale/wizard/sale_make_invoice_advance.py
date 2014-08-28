@@ -37,6 +37,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 Use Some Order Lines to invoice a selection of the sales order lines."""),
         'qtty': fields.float('Quantity', digits=(16, 2), required=True),
         'product_id': fields.many2one('product.product', 'Advance Product',
+            domain=[('type', '=', 'service')],
             help="""Select a product of type service which is called 'Advance Product'.
                 You may have to create it and set it as a default value on this field."""),
         'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Account'),

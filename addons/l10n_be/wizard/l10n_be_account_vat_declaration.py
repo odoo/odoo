@@ -196,6 +196,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         data_of_file += '\n\t</ns2:VATDeclaration> \n</ns2:VATConsignment>'
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_vat_save')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        context = dict(context or {})
         context['file_save'] = data_of_file
         return {
             'name': _('Save XML For Vat declaration'),

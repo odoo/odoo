@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp.exceptions import Warning
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.workflow
@@ -36,6 +37,9 @@ class workflow(osv.osv):
     _defaults = {
         'on_create': lambda *a: True
     }
+
+    def copy(self, cr, uid, id, values, context=None):
+        raise Warning(_("Duplicating workflows is not possible, please create a new workflow"))
 
     def write(self, cr, user, ids, vals, context=None):
         if not context:

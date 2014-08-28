@@ -62,8 +62,7 @@ class stock_production_lot(osv.osv):
         for f in ('life_date', 'use_date', 'removal_date', 'alert_date'):
             if not getattr(obj, f):
                 towrite.append(f)
-        if context is None:
-            context = {}
+        context = dict(context or {})
         context['product_id'] = obj.product_id.id
         self.write(cr, uid, [obj.id], self.default_get(cr, uid, towrite, context=context))
         return newid

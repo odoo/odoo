@@ -38,15 +38,6 @@ class stock_move(osv.osv):
         'move_dest_id_lines': fields.one2many('stock.move','move_dest_id', 'Children Moves')
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({
-            'move_dest_id_lines': [],
-        })
-        return super(stock_move, self).copy(cr, uid, id, default, context)
-
-
 class mrp_production_workcenter_line(osv.osv):
 
     def _get_date_end(self, cr, uid, ids, field_name, arg, context=None):
@@ -84,7 +75,7 @@ class mrp_production_workcenter_line(osv.osv):
     _order = "sequence, date_planned"
 
     _columns = {
-       'state': fields.selection([('draft','Draft'),('cancel','Cancelled'),('pause','Pending'),('startworking', 'In Progress'),('done','Finished')],'Status', readonly=True,
+       'state': fields.selection([('draft','Draft'),('cancel','Cancelled'),('pause','Pending'),('startworking', 'In Progress'),('done','Finished')],'Status', readonly=True, copy=False,
                                  help="* When a work order is created it is set in 'Draft' status.\n" \
                                        "* When user sets work order in start mode that time it will be set in 'In Progress' status.\n" \
                                        "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n" \
@@ -120,27 +111,24 @@ class mrp_production_workcenter_line(osv.osv):
         oper_obj = self.browse(cr, uid, ids)[0]
         prod_obj = oper_obj.production_id
         if action == 'start':
-               if prod_obj.state =='confirmed':
-                   prod_obj_pool.force_production(cr, uid, [prod_obj.id])
-                   prod_obj_pool.signal_button_produce(cr, uid, [prod_obj.id])
-               elif prod_obj.state =='ready':
-                   prod_obj_pool.signal_button_produce(cr, uid, [prod_obj.id])
-               elif prod_obj.state =='in_production':
-                   return
-               else:
-                   raise osv.except_osv(_('Error!'),_('Manufacturing order cannot be started in state "%s"!') % (prod_obj.state,))
+            if prod_obj.state =='confirmed':
+                prod_obj_pool.force_production(cr, uid, [prod_obj.id])
+                prod_obj_pool.signal_workflow(cr, uid, [prod_obj.id], 'button_produce')
+            elif prod_obj.state =='ready':
+                prod_obj_pool.signal_workflow(cr, uid, [prod_obj.id], 'button_produce')
+            elif prod_obj.state =='in_production':
+                return
+            else:
+                raise osv.except_osv(_('Error!'),_('Manufacturing order cannot be started in state "%s"!') % (prod_obj.state,))
         else:
-            oper_ids = self.search(cr,uid,[('production_id','=',prod_obj.id)])
-            obj = self.browse(cr,uid,oper_ids)
-            flag = True
-            for line in obj:
-                if line.state != 'done':
-                     flag = False
+            open_count = self.search_count(cr,uid,[('production_id','=',prod_obj.id), ('state', '!=', 'done')])
+            flag = not bool(open_count)
+
             if flag:
                 for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context= None):
                     if production.move_lines or production.move_created_ids:
                         prod_obj_pool.action_produce(cr,uid, production.id, production.product_qty, 'consume_produce', context = None)
-                prod_obj_pool.signal_button_produce_done(cr, uid, [oper_obj.production_id.id])
+                prod_obj_pool.signal_workflow(cr, uid, [oper_obj.production_id.id], 'button_produce_done')
         return
 
     def write(self, cr, uid, ids, vals, context=None, update=True):
@@ -228,8 +216,8 @@ class mrp_production(osv.osv):
         workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         for workcenter_line in obj.workcenter_lines:
             if workcenter_line.state == 'draft':
-                workcenter_pool.signal_button_start_working(cr, uid, [workcenter_line.id])
-            workcenter_pool.signal_button_done(cr, uid, [workcenter_line.id])
+                workcenter_line.signal_workflow('button_start_working')
+            workcenter_line.signal_workflow('button_done')
         return super(mrp_production,self).action_production_end(cr, uid, ids)
 
     def action_in_production(self, cr, uid, ids):
@@ -239,7 +227,7 @@ class mrp_production(osv.osv):
         workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         for prod in self.browse(cr, uid, ids):
             if prod.workcenter_lines:
-                workcenter_pool.signal_button_start_working(cr, uid, [prod.workcenter_lines[0].id])
+                workcenter_pool.signal_workflow(cr, uid, [prod.workcenter_lines[0].id], 'button_start_working')
         return super(mrp_production,self).action_in_production(cr, uid, ids)
     
     def action_cancel(self, cr, uid, ids, context=None):
@@ -248,8 +236,7 @@ class mrp_production(osv.osv):
         """
         workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         obj = self.browse(cr, uid, ids,context=context)[0]
-        for workcenter_line in obj.workcenter_lines:
-            workcenter_pool.signal_button_cancel(cr, uid, [workcenter_line.id])
+        workcenter_pool.signal_workflow(cr, uid, [record.id for record in obj.workcenter_lines], 'button_cancel')
         return super(mrp_production,self).action_cancel(cr,uid,ids,context=context)
 
     def _compute_planned_workcenter(self, cr, uid, ids, context=None, mini=False):
@@ -507,24 +494,24 @@ class mrp_operations_operation(osv.osv):
                 wc_op_id.append(workcenter_pool.create(cr,uid,{'production_id':vals['production_id'],'name':production_obj.product_id.name,'workcenter_id':vals['workcenter_id']}))
             if code.start_stop=='start':
                 workcenter_pool.action_start_working(cr,uid,wc_op_id)
-                workcenter_pool.signal_button_start_working(cr, uid, [wc_op_id[0]])
+                workcenter_pool.signal_workflow(cr, uid, [wc_op_id[0]], 'button_start_working')
 
             if code.start_stop=='done':
                 workcenter_pool.action_done(cr,uid,wc_op_id)
-                workcenter_pool.signal_button_done(cr, uid, [wc_op_id[0]])
+                workcenter_pool.signal_workflow(cr, uid, [wc_op_id[0]], 'button_done')
                 self.pool.get('mrp.production').write(cr,uid,vals['production_id'],{'date_finished':datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
 
             if code.start_stop=='pause':
                 workcenter_pool.action_pause(cr,uid,wc_op_id)
-                workcenter_pool.signal_button_pause(cr, uid, [wc_op_id[0]])
+                workcenter_pool.signal_workflow(cr, uid, [wc_op_id[0]], 'button_pause')
 
             if code.start_stop=='resume':
                 workcenter_pool.action_resume(cr,uid,wc_op_id)
-                workcenter_pool.signal_button_resume(cr, uid, [wc_op_id[0]])
+                workcenter_pool.signal_workflow(cr, uid, [wc_op_id[0]], 'button_resume')
 
             if code.start_stop=='cancel':
                 workcenter_pool.action_cancel(cr,uid,wc_op_id)
-                workcenter_pool.signal_button_cancel(cr, uid, [wc_op_id[0]])
+                workcenter_pool.signal_workflow(cr, uid, [wc_op_id[0]], 'button_cancel')
 
         if not self.check_operation(cr, uid, vals):
             return
@@ -560,4 +547,3 @@ class mrp_operations_operation(osv.osv):
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

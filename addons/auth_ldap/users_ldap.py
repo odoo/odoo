@@ -190,7 +190,7 @@ class CompanyLDAP(osv.osv):
             if res[1]:
                 user_id = res[0]
         elif conf['create_user']:
-            _logger.debug("Creating new OpenERP user \"%s\" from LDAP" % login)
+            _logger.debug("Creating new Odoo user \"%s\" from LDAP" % login)
             user_obj = self.pool['res.users']
             values = self.map_ldap_attributes(cr, uid, conf, login, ldap_entry)
             if conf['user']:
@@ -237,14 +237,14 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'ldaps': fields.one2many(
-            'res.company.ldap', 'company', 'LDAP Parameters'),
+            'res.company.ldap', 'company', 'LDAP Parameters', copy=True),
     }
 
 
 class users(osv.osv):
     _inherit = "res.users"
-    def login(self, db, login, password):
-        user_id = super(users, self).login(db, login, password)
+    def _login(self, db, login, password):
+        user_id = super(users, self)._login(db, login, password)
         if user_id:
             return user_id
         registry = RegistryManager.get(db)

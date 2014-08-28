@@ -34,7 +34,7 @@ class Binary(openerp.http.Controller):
         _scheme, _netloc, path, params, query, fragment = urlparse(url)
         # media.linkedin.com is the master domain for LinkedIn media (replicated to CDNs),
         # so forcing it should always work and prevents abusing this method to load arbitrary URLs
-        url = urlunparse(('http', 'media.linkedin.com', path, params, query, fragment))
+        url = urlunparse(('http', 'media.licdn.com', path, params, query, fragment))
         bfile = urllib2.urlopen(url)
         return base64.b64encode(bfile.read())
     
@@ -52,7 +52,7 @@ class web_linkedin_settings(osv.osv_memory):
     
     def set_linkedin(self, cr, uid, ids, context=None):
         key = self.browse(cr, uid, ids[0], context)["api_key"] or ""
-        self.pool.get("ir.config_parameter").set_param(cr, uid, "web.linkedin.apikey", key, groups=['base.group_users'])
+        self.pool.get("ir.config_parameter").set_param(cr, uid, "web.linkedin.apikey", key, groups=['base.group_user'])
 
 class web_linkedin_fields(osv.Model):
     _inherit = 'res.partner'

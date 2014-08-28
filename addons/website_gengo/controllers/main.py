@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import openerp
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 import time
 
 GENGO_DEFAULT_LIMIT = 20

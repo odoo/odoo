@@ -15,7 +15,7 @@
                    <xpath expr="//button[@name='action_view_invoice']" position="after">
                        <field name="picking_ids" invisible="1"/>
                        <button name="action_view_delivery" string="View Delivery Order" type="object" class="oe_highlight"
-                           attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual', 'done')),('shipped','=',True)]}" groups="base.group_user"/>
+                           attrs="{'invisible': ['|',('picking_ids','=',False),('picking_ids','=',[])]}" groups="base.group_user"/>
                    </xpath>
                     <xpath expr="//button[@name='action_cancel']" position="after">
                         <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>

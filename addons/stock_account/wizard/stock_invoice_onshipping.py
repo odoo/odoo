@@ -115,7 +115,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         return True
 
     def create_invoice(self, cr, uid, ids, context=None):
-        context = context or {}
+        context = dict(context or {})
         picking_pool = self.pool.get('stock.picking')
         data = self.browse(cr, uid, ids[0], context=context)
         journal2type = {'sale':'out_invoice', 'purchase':'in_invoice', 'sale_refund':'out_refund', 'purchase_refund':'in_refund'}

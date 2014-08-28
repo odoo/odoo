@@ -3,12 +3,12 @@
 	<data>
 		<record model="ir.ui.view" id="res_partner_form_ro">
 			<field name="name">res.partner.form.ro</field>
-			<field name="inherit_id" ref="base_vat.view_partner_form"/>
+			<field name="inherit_id" ref="base.view_partner_form"/>
 			<field name="model">res.partner</field>
 			<field name="arch" type="xml">
-				<xpath expr="//div[@name='vat_info']" position="after">
+				<field name="property_account_position" position="after">
 					<field name="nrc" placeholder="e.g. J12/1234/2012" class="oe_inline"/>
-                </xpath>
+                </field>
 			</field>
 		</record>
 	</data>

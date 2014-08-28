@@ -31,10 +31,17 @@ from openerp.tools.translate import _
 
 class hr_timesheet_sheet(osv.osv):
     _name = "hr_timesheet_sheet.sheet"
-    _inherit = "mail.thread"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _table = 'hr_timesheet_sheet_sheet'
     _order = "id desc"
-    _description="Timesheet"
+    _description = "Timesheet"
+
+    _track = {
+        'state': {
+            'hr_timesheet_sheet.mt_timesheet_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirm',
+            'hr_timesheet_sheet.mt_timesheet_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
+        },
+    }
 
     def _total(self, cr, uid, ids, name, args, context=None):
         """ Compute the attendances, analytic lines timesheets and differences between them
@@ -123,7 +130,7 @@ class hr_timesheet_sheet(osv.osv):
             self.check_employee_attendance_state(cr, uid, sheet.id, context=context)
             di = sheet.user_id.company_id.timesheet_max_difference
             if (abs(sheet.total_difference) < di) or not di:
-                self.signal_confirm(cr, uid, [sheet.id])
+                sheet.signal_workflow('confirm')
             else:
                 raise osv.except_osv(_('Warning!'), _('Please verify that the total difference of the sheet is lower than %.2f.') %(di,))
         return True
@@ -165,6 +172,7 @@ class hr_timesheet_sheet(osv.osv):
             ('draft','Open'),
             ('confirm','Waiting Approval'),
             ('done','Approved')], 'Status', select=True, required=True, readonly=True,
+            track_visibility='onchange',
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed timesheet. \
                 \n* The \'Confirmed\' status is used for to confirm the timesheet by user. \
                 \n* The \'Done\' status is used when users timesheet is accepted by his/her senior.'),
@@ -532,6 +540,11 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
         'total_attendance': fields.float('Attendance', readonly=True),
         'total_difference': fields.float('Difference', readonly=True),
     }
+    _depends = {
+        'account.analytic.line': ['date', 'unit_amount'],
+        'hr.analytic.timesheet': ['line_id', 'sheet_id'],
+        'hr.attendance': ['action', 'name', 'sheet_id'],
+    }
 
     def init(self, cr):
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_day as
@@ -601,6 +614,12 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
         'total': fields.float('Total Time', digits=(16,2), readonly=True),
         'invoice_rate': fields.many2one('hr_timesheet_invoice.factor', 'Invoice rate', readonly=True),
         }
+
+    _depends = {
+        'account.analytic.line': ['account_id', 'date', 'to_invoice', 'unit_amount', 'user_id'],
+        'hr.analytic.timesheet': ['line_id'],
+        'hr_timesheet_sheet.sheet': ['date_from', 'date_to', 'user_id'],
+    }
 
     def init(self, cr):
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_account as (

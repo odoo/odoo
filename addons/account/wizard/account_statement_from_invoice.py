@@ -34,8 +34,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
     }
 
     def populate_statement(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         statement_id = context.get('statement_id', False)
         if not statement_id:
             return {'type': 'ir.actions.act_window_close'}

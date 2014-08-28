@@ -45,7 +45,7 @@
         <record id="expenses_line0" model="hr.expense.line">
             <field name="name">Travel Expenses</field>
             <field name="date_value" eval="time.strftime('%Y-08-10')"/>
-            <field name="analytic_account" ref="account.analytic_consultancy"/>
+            <field name="analytic_account" ref="analytic.analytic_consultancy"/>
             <field name="expense_id" ref="expenses0"/>
             <field eval="200.0" name="unit_amount"/>
             <field name="uom_id" ref="product.product_uom_unit"/>
@@ -61,7 +61,7 @@
         <record id="travel_by_air_sep" model="hr.expense.line">
             <field name="name">Travel by Air</field>
             <field name="date_value" eval="time.strftime('%Y-09-03')"/>
-            <field name="analytic_account" ref="account.analytic_consultancy"/>
+            <field name="analytic_account" ref="analytic.analytic_consultancy"/>
             <field name="product_id" ref="air_ticket"/>
             <field name="expense_id" ref="sep_expenses"/>
             <field eval="700.0" name="unit_amount"/>
@@ -72,7 +72,7 @@
         <record id="hotel_bill_sep" model="hr.expense.line">
             <field name="name">Hotel Expenses - Thymbra</field>
             <field name="date_value" eval="time.strftime('%Y-09-20')"/>
-            <field name="analytic_account" ref="account.analytic_nebula"/>
+            <field name="analytic_account" ref="analytic.analytic_nebula"/>
             <field name="product_id" ref="hotel_rent"/>
             <field name="expense_id" ref="sep_expenses"/>
             <field eval="400.0" name="unit_amount"/>
@@ -83,7 +83,7 @@
         <record id="car_travel_sep" model="hr.expense.line">
                 <field name="name">Bruxelles - Paris</field>
                 <field name="date_value" eval="time.strftime('%Y-09-15')"/>
-                <field name="analytic_account" ref="account.analytic_nebula"/>
+                <field name="analytic_account" ref="analytic.analytic_nebula"/>
                 <field name="product_id" ref="car_travel"/>
                 <field name="expense_id" ref="sep_expenses"/>
                 <field eval="0.30" name="unit_amount"/>

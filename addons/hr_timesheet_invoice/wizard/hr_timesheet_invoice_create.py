@@ -56,14 +56,14 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                 raise osv.except_osv(_('Warning!'), _("Invoice is already linked to some of the analytic line(s)!"))
 
     def do_create(self, cr, uid, ids, context=None):
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         # Create an invoice based on selected timesheet lines
         invs = self.pool.get('account.analytic.line').invoice_cost_create(cr, uid, context['active_ids'], data, context=context)
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-        mod_ids = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')], context=context)[0]
-        res_id = mod_obj.read(cr, uid, mod_ids, ['res_id'], context=context)['res_id']
-        act_win = act_obj.read(cr, uid, res_id, [], context=context)
+        mod_ids = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')], context=context)
+        res_id = mod_obj.read(cr, uid, mod_ids, ['res_id'], context=context)[0]['res_id']
+        act_win = act_obj.read(cr, uid, [res_id], context=context)[0]
         act_win['domain'] = [('id','in',invs),('type','=','out_invoice')]
         act_win['name'] = _('Invoices')
         return act_win

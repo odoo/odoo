@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import api
 from openerp.osv import osv
 from openerp.tools import config
 from openerp.tools.translate import _
@@ -34,10 +35,8 @@ import lxml.html
 import cStringIO
 import subprocess
 from distutils.version import LooseVersion
-try:
-    from pyPdf import PdfFileWriter, PdfFileReader
-except ImportError:
-    PdfFileWriter = PdfFileReader = None
+from functools import partial
+from pyPdf import PdfFileWriter, PdfFileReader
 
 
 _logger = logging.getLogger(__name__)
@@ -61,7 +60,7 @@ else:
         wkhtmltopdf_state = 'ok'
 
     if config['workers'] == 1:
-        _logger.info('You need to start OpenERP with at least two workers to print a pdf version of the reports.')
+        _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
         wkhtmltopdf_state = 'workers'
 
 
@@ -70,23 +69,6 @@ class Report(osv.Model):
     _description = "Report"
 
     public_user = None
-
-    MINIMAL_HTML_PAGE = """
-<base href="{base_url}">
-<!DOCTYPE html>
-<html style="height: 0;">
-    <head>
-        <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
-        <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-        <link href="/website/static/src/css/website.css" rel="stylesheet"/>
-        <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-        <style type='text/css'>{css}</style>
-        {subst}
-    </head>
-    <body class="container" onload="subst()">
-        {body}
-    </body>
-</html>"""
 
     #--------------------------------------------------------------------------
     # Extension of ir_ui_view.render with arguments frequently used in reports
@@ -133,7 +115,9 @@ class Report(osv.Model):
         user = self.pool['res.users'].browse(cr, uid, uid)
         website = None
         if request and hasattr(request, 'website'):
-            website = request.website
+            if request.website is not None:
+                website = request.website
+                context = dict(context, translatable=context.get('lang') != request.website.default_lang_code)
         values.update(
             time=time,
             translate_doc=translate_doc,
@@ -141,13 +125,14 @@ class Report(osv.Model):
             user=user,
             res_company=user.company_id,
             website=website,
-            editable_no_editor=True,
+            editable_no_editor=_("The preferred way to edit a report is to use the HTML Editor"),
         )
         return view_obj.render(cr, uid, template, values, context=context)
 
     #--------------------------------------------------------------------------
     # Main report methods
     #--------------------------------------------------------------------------
+    @api.v7
     def get_html(self, cr, uid, ids, report_name, data=None, context=None):
         """This method generates and returns html version of a report.
         """
@@ -168,6 +153,12 @@ class Report(osv.Model):
             }
             return self.render(cr, uid, [], report.report_name, docargs, context=context)
 
+    @api.v8
+    def get_html(self, records, report_name, data=None):
+        return self._model.get_html(self._cr, self._uid, records.ids, report_name,
+                                    data=data, context=self._context)
+
+    @api.v7
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
         """This method generates and returns pdf version of a report.
         """
@@ -191,12 +182,15 @@ class Report(osv.Model):
             paperformat = report.paperformat_id
 
         # Preparing the minimal html pages
-        subst = "<script src='/report/static/src/js/subst.js'></script> "
         css = ''  # Will contain local css
         headerhtml = []
         contenthtml = []
         footerhtml = []
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+
+        # Minimal page renderer
+        view_obj = self.pool['ir.ui.view']
+        render_minimal = partial(view_obj.render, cr, uid, 'report.minimal_layout', context=context)
 
         # The received html report must be simplified. We convert it in a xml tree
         # in order to extract headers, bodies and footers.
@@ -208,12 +202,12 @@ class Report(osv.Model):
 
             for node in root.xpath("//div[@class='header']"):
                 body = lxml.html.tostring(node)
-                header = self.MINIMAL_HTML_PAGE.format(css=css, subst=subst, body=body, base_url=base_url)
+                header = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
                 headerhtml.append(header)
 
             for node in root.xpath("//div[@class='footer']"):
                 body = lxml.html.tostring(node)
-                footer = self.MINIMAL_HTML_PAGE.format(css=css, subst=subst, body=body, base_url=base_url)
+                footer = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
                 footerhtml.append(footer)
 
             for node in root.xpath("//div[@class='page']"):
@@ -230,7 +224,7 @@ class Report(osv.Model):
                     reportid = False
 
                 body = lxml.html.tostring(node)
-                reportcontent = self.MINIMAL_HTML_PAGE.format(css=css, subst='', body=body, base_url=base_url)
+                reportcontent = render_minimal(dict(css=css, subst=False, body=body, base_url=base_url))
 
                 # FIXME: imo the best way to extract record id from html reports is by using the
                 # qweb branding. As website editor is not yet splitted in a module independant from
@@ -254,12 +248,17 @@ class Report(osv.Model):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
         # Run wkhtmltopdf process
-        pdf = self._generate_wkhtml_pdf(
+        return self._run_wkhtmltopdf(
             cr, uid, headerhtml, footerhtml, contenthtml, context.get('landscape'),
             paperformat, specific_paperformat_args, save_in_attachment
         )
-        return pdf
 
+    @api.v8
+    def get_pdf(self, records, report_name, html=None, data=None):
+        return self._model.get_pdf(self._cr, self._uid, records.ids, report_name,
+                                   html=html, data=data, context=self._context)
+
+    @api.v7
     def get_action(self, cr, uid, ids, report_name, data=None, context=None):
         """Return an action of type ir.actions.report.xml.
 
@@ -269,7 +268,7 @@ class Report(osv.Model):
         if ids:
             if not isinstance(ids, list):
                 ids = [ids]
-            context['active_ids'] = ids
+            context = dict(context or {}, active_ids=ids)
 
         report_obj = self.pool['ir.actions.report.xml']
         idreport = report_obj.search(cr, uid, [('report_name', '=', report_name)], context=context)
@@ -291,9 +290,15 @@ class Report(osv.Model):
             'context': context,
         }
 
+    @api.v8
+    def get_action(self, records, report_name, data=None):
+        return self._model.get_action(self._cr, self._uid, records.ids, report_name,
+                                      data=data, context=self._context)
+
     #--------------------------------------------------------------------------
     # Report generation helpers
     #--------------------------------------------------------------------------
+    @api.v7
     def _check_attachment_use(self, cr, uid, ids, report):
         """ Check attachment_use field. If set to true and an existing pdf is already saved, load
         this one now. Else, mark save it.
@@ -326,10 +331,15 @@ class Report(osv.Model):
                         save_in_attachment[record_id] = filename
         return save_in_attachment
 
+    @api.v8
+    def _check_attachment_use(self, records, report):
+        return self._model._check_attachment_use(
+            self._cr, self._uid, records.ids, report, context=self._context)
+
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
 
-    def _generate_wkhtml_pdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None):
+    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 

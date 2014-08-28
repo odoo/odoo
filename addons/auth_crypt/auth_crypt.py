@@ -32,6 +32,7 @@ class res_users(osv.osv):
     def set_pw(self, cr, uid, id, name, value, args, context):
         if value:
             self._set_password(cr, uid, id, value, context=context)
+            self.invalidate_cache(cr, uid, context=context)
 
     def get_pw( self, cr, uid, ids, name, args, context ):
         cr.execute('select id, password from res_users where id in %s', (tuple(map(int, ids)),))
@@ -39,7 +40,7 @@ class res_users(osv.osv):
 
     _columns = {
         'password': fields.function(get_pw, fnct_inv=set_pw, type='char', string='Password', invisible=True, store=True),
-        'password_crypt': fields.char(string='Encrypted Password', invisible=True),
+        'password_crypt': fields.char(string='Encrypted Password', invisible=True, copy=False),
     }
 
     def check_credentials(self, cr, uid, password):
@@ -50,6 +51,7 @@ class res_users(osv.osv):
             stored, encrypted = cr.fetchone()
             if stored and not encrypted:
                 self._set_password(cr, uid, uid, stored)
+                self.invalidate_cache(cr, uid)
         try:
             return super(res_users, self).check_credentials(cr, uid, password)
         except openerp.exceptions.AccessDenied:
