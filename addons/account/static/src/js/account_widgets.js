@@ -1093,9 +1093,18 @@ openerp.account = function (instance) {
         /** Matching */
     
         selectMoveLine: function(mv_line) {
-            this._super(mv_line);
+            var self = this;
             var line_id = mv_line.dataset.lineid;
-            this.getParent().excludeMoveLines([line_id]);
+            var line = _.find(this.get("mv_lines"), function(o) { return o.id == line_id });
+
+            if (!this.st_line.partner_id && line.partner_id) {
+                self.changePartner(line.partner_id, function() {
+                    self.selectMoveLine(mv_line);
+                });
+            } else {
+                this._super(mv_line);
+                this.getParent().excludeMoveLines([line_id]);
+            }
         },
 
         deselectMoveLine: function(mv_line) {
@@ -1199,13 +1208,10 @@ openerp.account = function (instance) {
         partnerNameClickHandler: function() {
             var self = this;
             // Delete statement line's partner
-            return self.model_bank_statement_line
-                .call("write", [[self.st_line_id], {'partner_id': ''}])
-                .then(function () {
-                    // Show the many2one widget
-                    self.$(".partner_name").hide();
-                    self.$(".change_partner_container").show();
-                });
+            return self.changePartner('', function() {
+                self.$(".partner_name").hide();
+                self.$(".change_partner_container").show();
+            });
         },
     
     
@@ -1513,7 +1519,7 @@ openerp.account = function (instance) {
         },
 
         // Changes the partner_id of the statement_line in the DB and reloads the widget
-        changePartner: function(partner_id) {
+        changePartner: function(partner_id, callback) {
             var self = this;
             self.is_consistent = false;
             return self.model_bank_statement_line
@@ -1523,6 +1529,7 @@ openerp.account = function (instance) {
                     return $.when(self.restart(self.get("mode"))).then(function(){
                         self.is_consistent = true;
                         self.set("mode", "match");
+                        if (callback) callback();
                     });
                 });
         },
