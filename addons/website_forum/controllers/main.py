@@ -596,4 +596,4 @@ class WebsiteForum(http.Controller):
     def delete_comment(self, forum, post, comment, **kwarg):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        return request.registry['forum.post'].unlink(request.cr, request.uid, post.id, comment.id, context=request.context)
+        return request.registry['forum.post'].unlink_comment(request.cr, request.uid, post.id, comment.id, context=request.context)
