@@ -151,7 +151,7 @@ class website_event(http.Controller):
                 tags.append(tag.id)
 
         e = openerp.tools.escape
-        track_description = '''<section data-option="text-block">
+        track_description = '''<section>
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-center">
