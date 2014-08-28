@@ -257,8 +257,8 @@ class account_bank_statement(osv.osv):
         amt_cur = False
         if st_line.statement_id.currency.id != company_currency_id:
             amt_cur = st_line.amount
-            cur_id = st_line.currency_id or st_line.statement_id.currency.id
-        if st_line.currency_id and st_line.amount_currency:
+            cur_id = st_line.statement_id.currency.id
+        elif st_line.currency_id and st_line.amount_currency:
             amt_cur = st_line.amount_currency
             cur_id = st_line.currency_id.id
         return self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit,
@@ -741,9 +741,12 @@ class account_bank_statement_line(osv.osv):
 
         # Create the move line for the statement line
         if st_line.statement_id.currency.id != company_currency.id:
-            ctx = context.copy()
-            ctx['date'] = st_line.date
-            amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount_currency, context=ctx)
+            if st_line.currency_id == company_currency:
+                amount = st_line.amount_currency
+            else:
+                ctx = context.copy()
+                ctx['date'] = st_line.date
+                amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount, context=ctx)
         else:
             amount = st_line.amount
         bank_st_move_vals = bs_obj._prepare_bank_move_line(cr, uid, st_line, move_id, amount, company_currency.id, context=context)
@@ -790,6 +793,10 @@ class account_bank_statement_line(osv.osv):
                 else:
                     mv_line_dict['debit'] = debit_at_current_rate
                     mv_line_dict['credit'] = credit_at_current_rate
+            elif statement_currency.id != company_currency.id:
+                #statement is in foreign currency but the transaction is in company currency
+                prorata_factor = (mv_line_dict['debit'] - mv_line_dict['credit']) / st_line.amount_currency
+                mv_line_dict['amount_currency'] = prorata_factor * st_line.amount
             to_create.append(mv_line_dict)
         # Create move lines
         move_line_pairs_to_reconcile = []
