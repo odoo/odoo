@@ -151,12 +151,14 @@ class product_product(osv.osv):
                                     'account_id': stock_input_acc,
                                     'debit': amount_diff,
                                     'move_id': move_id,
+                                    'product_id': product.id,
                                     })
                         move_line_obj.create(cr, uid, {
                                     'name': product.categ_id.name,
                                     'account_id': account_valuation_id,
                                     'credit': amount_diff,
-                                    'move_id': move_id
+                                    'move_id': move_id,
+                                    'product_id': product.id,                                    
                                     })
                     elif diff < 0:
                         if not stock_output_acc:
@@ -176,13 +178,15 @@ class product_product(osv.osv):
                                         'name': product.name,
                                         'account_id': stock_output_acc,
                                         'credit': amount_diff,
-                                        'move_id': move_id
+                                        'move_id': move_id,
+                                        'product_id': product.id,
                                     })
                         move_line_obj.create(cr, uid, {
                                         'name': product.categ_id.name,
                                         'account_id': account_valuation_id,
                                         'debit': amount_diff,
-                                        'move_id': move_id
+                                        'move_id': move_id,
+                                        'product_id': product.id,                                        
                                     })
         self.write(cr, uid, ids, {'standard_price': new_price})
 
