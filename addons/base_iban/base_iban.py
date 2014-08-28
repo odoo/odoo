@@ -170,14 +170,8 @@ class res_partner_bank(osv.osv):
                     break
         return res
 
-    _columns = {
-        # Deprecated: we keep it for backward compatibility, to be removed in v7
-        # We use acc_number instead of IBAN since v6.1, but we keep this field
-        # to not break community modules.
-        'iban': fields.related('acc_number', string='IBAN', size=34, readonly=True, help="International Bank Account Number", type="char"),
-    }
     _constraints = [
-        (check_iban, _construct_constraint_msg, ["iban"]),
+        (check_iban, _construct_constraint_msg, ["acc_number"]),
         (_check_bank, '\nPlease define BIC/Swift code on bank for bank type IBAN Account to make valid payments', ['bic'])
     ]
 
