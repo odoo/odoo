@@ -56,7 +56,7 @@ class mail_compose_message(osv.TransientModel):
         return res
 
     _columns = {
-        'template_id': fields.many2one('email.template', 'Use template', select=True, groups="base.group_user"),
+        'template_id': fields.many2one('email.template', 'Use template', select=True),
         'partner_to': fields.char('To (Partner IDs)',
             help="Comma-separated list of recipient partners ids (placeholders may be used here)"),
         'email_to': fields.char('To (Emails)',
