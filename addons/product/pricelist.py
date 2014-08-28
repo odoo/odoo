@@ -24,7 +24,7 @@ import time
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-
+from collections import OrderedDict
 import openerp.addons.decimal_precision as dp
 
 
@@ -41,7 +41,7 @@ class price_type(osv.osv):
         res = []
         for field in mf.browse(cr, uid, ids, context=context):
             res.append((field.name, field.field_description))
-        return res
+        return OrderedDict.fromkeys(res).keys()
 
     def _get_field_currency(self, cr, uid, fname, ctx):
         ids = self.search(cr, uid, [('field','=',fname)], context=ctx)
