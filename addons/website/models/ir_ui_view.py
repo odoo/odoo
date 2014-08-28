@@ -31,6 +31,28 @@ class view(osv.osv):
         'page': False,
     }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        try:
+            iter(ids)
+        except:
+            ids=[ids]
+        website_id=context.get('website_id')
+        for id in ids:
+            current = self.browse(cr, uid, [id], context=context)[0]
+            if not context.get('mykey') and current.type=='qweb' and website_id:
+                ctx = dict(context, mykey=True)
+                #from pudb import set_trace; set_trace()
+                if current.website_id:
+                    super(view, self).write(cr, uid, id, vals, context=ctx)
+                else:
+                    copy_id=super(view, self).copy(cr,uid, id,{'website_id':website_id},context=ctx)
+                    super(view, self).write(cr, uid, [copy_id], vals, context=ctx)
+            else:
+                ctx = dict(context, mykey=True)
+                super(view, self).write(cr, uid, id, vals, context=ctx)
+
 
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):

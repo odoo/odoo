@@ -278,7 +278,7 @@ class website(osv.osv):
             key=module+'.'+xmlid
             #website_id=self.get_current_website(cr, uid, context=context).id
             website_id=request.context.get('website_id')
-            print 'Website_id={}'.format(website_id)
+            #print 'Website_id={}'.format(website_id)
             view_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', key),'|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)
             if view_id==[]:
                 #from pudb import set_trace; set_trace()
