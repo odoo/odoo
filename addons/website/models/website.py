@@ -208,7 +208,7 @@ class website(osv.osv):
                 'website_id': context.get('website_id'),
                 'arch': page.arch.replace(template, page_xmlid),
                 'name': page_name,
-                'key': 'website'+'.'+page_name,
+                'key': 'website.%s' % page_name,
                 'page': ispage,
             })
             imd.create(cr, uid, {
@@ -240,6 +240,7 @@ class website(osv.osv):
 
     #sig-ajout
     def get_current_website(self, cr, uid, context=None):
+        #from pudb import set_trace; set_trace()
         ids=self.search(cr, uid, [], context=context)
         url = request.httprequest.url
         
@@ -275,11 +276,14 @@ class website(osv.osv):
             module, xmlid = template.split('.', 1)
             model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
             key=module+'.'+xmlid
-            website_id=self.get_current_website(cr, uid, context=context).id
+            #website_id=self.get_current_website(cr, uid, context=context).id
+            website_id=request.context.get('website_id')
+            print 'Website_id={}'.format(website_id)
             view_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', key),'|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)
             if view_id==[]:
+                #from pudb import set_trace; set_trace()
                 raise QWebTemplateNotFound("Template %r not found" % xmlid, template=template)
-
+        #self.pool["ir.ui.view"].clear_cache()
         return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):

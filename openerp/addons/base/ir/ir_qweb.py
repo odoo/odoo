@@ -231,8 +231,12 @@ class QWeb(orm.AbstractModel):
         return int(bool(self.eval(expr, qwebcontext)))
 
     def render(self, cr, uid, id_or_xml_id, qwebcontext=None, loader=None, context=None):
+        #from pudb import set_trace; set_trace()
         if qwebcontext is None:
             qwebcontext = {}
+
+        website_id=request.context.get('website_id')
+        id_or_xml_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id),'|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)[0]
 
         if not isinstance(qwebcontext, QWebContext):
             qwebcontext = QWebContext(cr, uid, qwebcontext, loader=loader, context=context)
