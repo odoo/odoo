@@ -73,7 +73,7 @@
   </div>
   <div class="oe_product_image">
       <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
-          <img itemprop="image" class="img img-responsive" t-attf-src="/website/image/product.template/#{product.id}/image#{'' if product_image_big else '?max_width=300&amp;max_height=300'}"/>
+          <img itemprop="image" class="img img-responsive" t-attf-src="/website/image/product.template/#{product.id}/image{{'' if product_image_big else '/300x300' }}"/>
       </a>
   </div>
   <section>
@@ -604,7 +604,7 @@
                 <ul class="media-list" id="comments-list"  t-if="product.website_message_ids">
                     <li t-foreach="product.website_message_ids" t-as="message" class="media">
                         <div class="media-body oe_msg">
-                            <img class="media-object pull-left oe_msg_avatar" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                            <img class="media-object pull-left oe_msg_avatar" t-attf-src="/website/image/res.partner/{{ message.author_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
                             <div class="media-body oe_msg_content">
                                 <t t-call="website.publish_short">
                                     <t t-set="object" t-value="message"/>
@@ -634,7 +634,7 @@
                 </ul>
                 <div class="css_editable_mode_hidden">
                     <form id="comment" t-attf-action="/shop/product/comment/#{product.id}" method="POST">
-                        <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
+                        <img class="img pull-left img-rounded" t-attf-src="/website/image/res.partner/{{ user_id.partner_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
                         <div class="pull-left mb32" style="width: 75%%">
                             <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
                             <a class="btn btn-primary mt8 a-submit">Post</a>
