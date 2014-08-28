@@ -31,12 +31,16 @@ openerp_announcement = function(instance) {
                     var close = function() {
                         var ttl = 7*24*60*60;
                         self.session.set_cookie('ab', 'c', ttl);
-                        $bar.slideUp('slow');
+                        $bar.slideUp();
+                        setTimeout(function () {
+                            $('.openerp_webclient_container').css('height', 'calc(100% - 34px)');                            
+                        }, 400);
                     };
                     $bar.find('.close').on('click', close);
                     self.trigger('ab_loaded', $bar);
                 });
 
+                $('.openerp_webclient_container').css('height', 'calc(100% - 64px)');
                 $('head').append($css);
             });
         }
