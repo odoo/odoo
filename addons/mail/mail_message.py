@@ -792,7 +792,7 @@ class mail_message(osv.Model):
         email_reply_to = None
 
         ir_config_parameter = self.pool.get("ir.config_parameter")
-        catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
+        catchall_domain = ir_config_parameter.get_param(cr, SUPERUSER_ID, "mail.catchall.domain", context=context)
 
         # model, res_id, email_from: comes from values OR related message
         model, res_id, email_from = values.get('model'), values.get('res_id'), values.get('email_from')
@@ -802,7 +802,7 @@ class mail_message(osv.Model):
             email_reply_to = self.pool[model].message_get_reply_to(cr, uid, [res_id], context=context)[0]
         # no alias reply_to -> catchall alias
         if not email_reply_to and catchall_domain:
-            catchall_alias = ir_config_parameter.get_param(cr, uid, "mail.catchall.alias", context=context)
+            catchall_alias = ir_config_parameter.get_param(cr, SUPERUSER_ID, "mail.catchall.alias", context=context)
             if catchall_alias:
                 email_reply_to = '%s@%s' % (catchall_alias, catchall_domain)
         # still no reply_to -> reply_to will be the email_from
