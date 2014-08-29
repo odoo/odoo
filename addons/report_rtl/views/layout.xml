@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <template id="style">
+            .container{
+                direction: rtl !important;
+                text-align: rtl;
+            }
+            .pull-right{
+                float: left !important;
+            }
+            .header .text-right{
+                float: left !important;
+                text-align: left !important;
+            }
+            .footer .text-right{
+                float: left !important;
+                text-align: left !important;
+            }
+            
+        </template>
+        <template id="external_layout_header" inherit_id="report.external_layout_header">
+            
+            <xpath expr="//div[@class='header']" position="attributes">
+                <attribute name="t-att-class">'header ' + web_lang_dir</attribute>
+            </xpath>
+        </template>
+
+        <template id="external_layout_footer" inherit_id="report.external_layout_footer">
+
+            <xpath expr="//div[@class='footer']" position="attributes">
+                <attribute name="t-att-class">'footer ' + web_lang_dir</attribute>
+            </xpath>
+        </template>
+        <template id="html_container" inherit_id="report.html_container">
+            
+            <xpath expr="//t[@t-set='body_classname']" position="replace">
+                <t t-set="body_classname" t-value="'container '+web_lang_dir"/>
+            </xpath>
+        </template>
+        
+        <template id="minimal_layout" inherit_id="report.minimal_layout">
+
+            <xpath expr="//body" position="attributes">
+                <attribute name="class"></attribute>     
+                <attribute name="t-att-class">'container ' + web_lang_dir</attribute>      
+            </xpath>
+            <xpath expr="//head/style[@type='text/css']" position="after">
+                <link t-if="web_lang_dir == 'rtl'" rel="stylesheet" href="/web_rtl/static/src/css/bootstrap-rtl.min.css"/>
+                <link t-if="web_lang_dir == 'rtl'" rel="stylesheet" href="/report_rtl/static/src/css/rtl.css"/>
+                <style t-if="web_lang_dir == 'rtl'">
+                    <t t-call="report_rtl.style"/>
+                </style>
+
+                
+            </xpath>
+        </template>
+    </data>
+</openerp>
