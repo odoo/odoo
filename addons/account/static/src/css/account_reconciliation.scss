@@ -17,6 +17,12 @@ $aestetic_animation_speed: 300ms;
     cursor: default;
     height: 100%;
 
+    *[tabindex='0']:focus {
+        outline: 1px solid #888;
+        outline-offset: 2px;
+        //outline-color: invert;
+    }
+
     .oe_form_sheetbg {
         border-bottom: 0;
         padding: 0;
@@ -301,7 +307,7 @@ $aestetic_animation_speed: 300ms;
                 color: #555;
             }
 
-            tr:hover .glyphicon, tr.active .glyphicon {
+            tr:hover .glyphicon, tr:focus .glyphicon, tr.active .glyphicon {
                 visibility: visible;
             }
 
@@ -372,6 +378,7 @@ $aestetic_animation_speed: 300ms;
 
         /* Match view */
         .match {
+            padding: 1px;
 
             .match_controls {
                 padding: 0 0 5px ($actionColWidth+$mainTableBordersPadding);
