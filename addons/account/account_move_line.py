@@ -906,24 +906,24 @@ class account_move_line(osv.osv):
         target_currency = account.currency_id or account.company_currency_id # TODO : m'kay ?
         return self.prepare_move_lines_for_reconciliation_widget(cr, uid, aml_ids, target_currency=target_currency, context=context)
 
-    def prepare_move_lines_for_reconciliation_widget(self, cr, uid, ids, target_currency=False, target_date=False, context=None):
+    def prepare_move_lines_for_reconciliation_widget(self, cr, uid, lines, target_currency=False, target_date=False, context=None):
         """ Returns move lines formatted for the manual/bank reconciliation widget
 
             :param target_currency: curreny you want the move line debit/credit converted into
             :param target_date: date to use for the monetary conversion
         """
-        if not ids:
+        if not lines:
             return []
         if context is None:
             context = {}
         ctx = context.copy()
         currency_obj = self.pool.get('res.currency')
-        company_currency = self.browse(cr, uid, ids[0], context=context).account_id.company_id.currency_id
-        rml_parser = report_sxw.rml_parse(cr, uid, 'statement_line_counterpart_widget', context=context)
+        company_currency = lines[0].account_id.company_id.currency_id
+        rml_parser = report_sxw.rml_parse(cr, uid, 'reconciliation_widget_aml', context=context)
         reconcile_partial_ids = [] # for a partial reconciliation, take only one line
-        lines = []
+        ret=[]
 
-        for line in self.browse(cr, uid, ids, context=context):
+        for line in lines:
             if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
                 continue
             if line.reconcile_partial_id:
@@ -987,14 +987,10 @@ class account_move_line(osv.osv):
             ret_line['debit'] = debit
             ret_line['amount_str'] = amount_str
             ret_line['amount_currency_str'] = amount_currency_str
-            lines.append(ret_line)
-
-        return lines
-
-    # Utilisé dans :
-    # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/account_move_line.py:                partner = self.list_partners_to_reconcile(cr, uid, context=context)
-    # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/static/src/js/account_widgets.js:    return mod.call("list_partners_to_reconcile", []).then(function(result) {
-    # /Users/arthurmaniet/Developpement/Odoo/odoo/addons/account/wizard/account_reconcile_partner_process.py:        partner = move_line_obj.list_partners_to_reconcile(cr, uid, context=context)
+            ret.append(ret_line)
+    
+        return ret
+    
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
              """SELECT partner_id FROM (
