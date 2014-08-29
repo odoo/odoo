@@ -250,6 +250,14 @@ class QWeb(orm.AbstractModel):
         generated_attributes = ""
         t_render = None
         template_attributes = {}
+
+        debugger = element.get('t-debug')
+        if debugger is not None:
+            if openerp.tools.config['dev_mode']:
+                __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
+            else:
+                _logger.warning("@t-debug in template '%s' is only available in --dev mode" % qwebcontext['__template__'])
+
         for (attribute_name, attribute_value) in element.attrib.iteritems():
             attribute_name = str(attribute_name)
             if attribute_name == "groups":
@@ -280,9 +288,6 @@ class QWeb(orm.AbstractModel):
             else:
                 generated_attributes += ' %s="%s"' % (attribute_name, escape(attribute_value))
 
-        if 'debug' in template_attributes:
-            debugger = template_attributes.get('debug', 'pdb')
-            __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
         if t_render:
             result = self._render_tag[t_render](self, element, template_attributes, generated_attributes, qwebcontext)
         else:
