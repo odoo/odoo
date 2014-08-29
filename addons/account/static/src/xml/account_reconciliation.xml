@@ -61,7 +61,7 @@
     </t>
 
     <t t-name="reconciliation_move_line">
-        <tr class="mv_line" t-att-data-lineid="line.id" t-att-data-selected="selected">
+        <tr class="mv_line" tabindex="0" t-att-data-lineid="line.id" t-att-data-selected="selected">
             <td class="cell_action"><span class="glyphicon glyphicon-add-remove"></span></td>
             <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
             <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
