@@ -19,6 +19,7 @@ class Blog(osv.Model):
     _columns = {
         'name': fields.char('Blog Name', required=True, translate=True),
         'subtitle': fields.char('Blog Subtitle', translate=True),
+        'post_ids': fields.one2many('blog.post', 'blog_id'),
     }
 
     def all_tags(self, cr, uid, ids, min_limit=1, context=None):

@@ -102,6 +102,9 @@
 <!-- Blog Post List: Displaying a list of Blog Posts -->
 <template id="blog_post_short" name="Blog Posts">
     <t t-call="website_blog.index">
+        <t t-set="head">
+            <link rel="alternate" type="application/rss+xml" t-att-href="'/blog/%s/rss?limit=15' % (blog.id)" title="RSS"/>
+        </t>
         <div class="container">
             <t t-call="website.pager" >
                 <t t-set="classname">pull-right</t>
@@ -454,6 +457,7 @@
                 <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
                 <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
                 <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
+                <a t-att-href="'/blog/%s/rss?limit=15' % (blog.id)"><i class="fa fa-rss-square"/></a>
             </h2>
         </section>
     </xpath>
@@ -487,5 +491,55 @@
          <li><a href="#" data-action="new_blog_post">New Blog Post</a></li>
     </xpath>
 </template>
+
+<!-- RSS Feed -->
+<template id="website_blog_rss" name="Blog RSS">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+    <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <channel>
+            <title><t t-esc="blog.name" /></title>
+            <link><t t-esc="blog_url"/></link>
+            <description><t t-esc="blog.name" /></description>
+            <docs>http://www.rssboard.org/rss-specification</docs>
+            <lastBuildDate><t t-esc="blog_date"/></lastBuildDate>
+            <item t-foreach="blog_posts" t-as="post">
+                <title><t t-esc="post['title']" /></title>
+                <link><t t-esc="post['link']"/></link>
+                <description><t t-esc="post['description']" /></description>
+                <author>
+                    <t t-esc="post['author_email']" /> (<t t-esc="post['author_name']" />)
+                </author>
+                <pubDate><t t-esc="post['pubdate']" /></pubDate>
+                <guid><t t-esc="post['guid']"/></guid>
+            </item>
+        </channel>
+    </rss>
+</template>
+    
+<!-- ATOM Feed -->
+<template id="website_blog_atom" name="Blog ATOM">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+    <feed t-att-xmlns="'http://www.w3.org/2005/Atom'">
+        <id><t t-esc="blog_url"/></id>
+        <title><t t-esc="blog.name"/></title>
+        <link type="text/html" rel="alternate" t-att-href="blog_url"/>
+        <link type="application/atom+xml" rel="self" t-att-href="'%s/atom' % (blog_url)"/>
+        <subtitle><t t-esc="blog.subtitle"/></subtitle>
+        <updated><t t-esc="blog_date" /></updated>
+        <t t-foreach="blog_posts" t-as="post">
+        <entry>
+            <id><t t-esc="post['id']"/></id>
+            <title><t t-esc="post['title']"/></title>
+            <updated><t t-esc="post['updated']" /></updated>
+            <author>
+                <name><t t-esc="post['author_name']"/></name>
+                <email><t t-esc="post['author_email']"/></email>
+            </author>
+            <content><t t-esc="post['content']"/></content>
+            <link t-att-href="post['link']" rel="alternate"></link>
+            <published><t t-esc="post['published']" /></published>
+        </entry>
+        </t>
+    </feed> 
+</template>
+
 </data>
 </openerp>

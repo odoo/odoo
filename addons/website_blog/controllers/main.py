@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import pytz
 import datetime
 import json
 import werkzeug
@@ -169,6 +170,48 @@ class WebsiteBlog(http.Controller):
         }
         response = request.website.render("website_blog.blog_post_short", values)
         return response
+
+    @http.route(['/blog/<model("blog.blog"):blog>/<any("atom","rss"):feed_type>'], type='http', auth="public")
+    def blog_feed(self, blog, feed_type, **post):
+        limit = int(post.get('limit', 15))
+        cr, uid = request.cr, request.uid,
+        base_url = request.registry['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+        blog_url = '%s/blog/%s' % (base_url, slug(blog))
+
+        rss_formate = '%a, %d %b %Y %H:%M:%S %z'
+        atom_formate = '%Y-%m-%dT%H:%M:%SZ'
+
+        if feed_type == 'rss':
+            blog_date = self._blog_date_formate(blog.write_date, rss_formate)
+        else:
+            blog_date = self._blog_date_formate(blog.write_date, atom_formate)
+
+        blog_posts = []
+        for post in blog.post_ids[:limit]:
+            blog_posts.append({
+                'title': post.name,
+                'link': base_url + post.website_url,
+                'description': post.subtitle,
+                'author_name': post.author_id.sudo().name,
+                'author_email': post.author_id.sudo().email,
+                'guid': base_url + post.website_url,
+                'updated': self._blog_date_formate(post.write_date, atom_formate), #atom
+                'pubdate': self._blog_date_formate(post.create_date, rss_formate), #rss
+                'published': self._blog_date_formate(post.create_date, atom_formate), #atom
+                'id': base_url + post.website_url,
+                'content': post.content or post.subtitle,
+            })
+        values = {
+            'blog': blog,
+            'blog_date': blog_date,
+            'blog_posts': blog_posts,
+            'blog_url': blog_url
+        }
+        response = request.render("website_blog.website_blog_%s" % (feed_type), values)
+        return response
+
+    def _blog_date_formate(self, date_str, date_formate):
+        return datetime.datetime.strptime(date_str, tools.DEFAULT_SERVER_DATETIME_FORMAT).replace(tzinfo=pytz.utc).strftime(date_formate)
 
     @http.route([
             '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog[0])]"):blog_post>''',
