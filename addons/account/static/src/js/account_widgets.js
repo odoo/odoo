@@ -354,8 +354,6 @@ openerp.account = function (instance) {
     
         updateBalance: function() {},
     
-        loadReconciliationProposition: function() {},
-
         filterMoveLines: function() {},
     
         // Returns an object that can be passed to process_reconciliation()
@@ -695,6 +693,11 @@ openerp.account = function (instance) {
                 }
             }
         },
+
+        decorateMoveLine: function(line, currency_id) {
+            line['credit'] = [line['debit'], line['debit'] = line['credit']][0];
+            this._super(line, currency_id);
+        },
     
         displayDoneMessage: function() {
             var self = this;
@@ -836,14 +839,23 @@ openerp.account = function (instance) {
             if (! self.context.initial_data_provided) {
                 // Load statement line
                 self.model_bank_statement_line
-                    .call("get_statement_line_for_reconciliation", [self.st_line_id])
+                    .call("get_data_for_reconciliations", [[self.st_line_id]])
                     .then(function (data) {
-                        self.st_line = data;
+                        self.st_line = data[0].st_line;
                         self.decorateStatementLine(self.st_line);
-                        self.partner_id = data.partner_id;
-                        $.when(self.loadReconciliationProposition()).then(function(){
-                            deferred_fetch_data.resolve();
-                        });
+                        self.partner_id = data[0].st_line.partner_id;
+
+                        var excluded_move_lines_ids = self.getParent().excluded_move_lines_ids;
+                        var mv_lines = [];
+                        _.each(data[0].reconciliation_proposition, function(line) {
+                            if (!excluded_move_lines_ids.contains(line.id)) {
+                                self.decorateMoveLine(line, self.st_line.display_currency_id);
+                                mv_lines.append(line);
+                            }
+                        }, this);
+                        self.set("mv_lines_selected", self.get("mv_lines_selected").concat(mv_lines));
+
+                        deferred_fetch_data.resolve();
                     });
             } else {
                 deferred_fetch_data.resolve();
@@ -851,7 +863,7 @@ openerp.account = function (instance) {
             return $.when(deferred_fetch_data).then(function(){
                 //load all lines that can be usefull for counterparts
                 var deferred_total_move_lines_num = self.model_bank_statement_line
-                    .call("get_move_lines_counterparts_id", [self.st_line.id, []])
+                    .call("get_move_lines_for_reconciliation_by_statement_line_id", [self.st_line.id, []])
                     .then(function(lines){
                         _.each(lines, function(line) {
                             self.decorateMoveLine(line, self.st_line.display_currency_id);
@@ -1504,18 +1516,6 @@ openerp.account = function (instance) {
                 mv_lines_selected[0].propose_partial_reconcile = true;
                 self.updateAccountingViewMatchedLines();
             }
-        },
-    
-        loadReconciliationProposition: function() {
-            var self = this;
-            return self.model_bank_statement_line
-                .call("get_reconciliation_proposition", [self.st_line.id, self.getParent().excluded_move_lines_ids])
-                .then(function (lines) {
-                    _.each(lines, function(line) {
-                        self.decorateMoveLine(line, self.st_line.display_currency_id);
-                    }, this);
-                    self.set("mv_lines_selected", self.get("mv_lines_selected").concat(lines));
-                });
         },
 
         // Changes the partner_id of the statement_line in the DB and reloads the widget
