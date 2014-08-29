@@ -35,7 +35,6 @@ import re
 import socket
 import time
 import xmlrpclib
-import re
 from email.message import Message
 from email.utils import formataddr
 from urllib import urlencode
