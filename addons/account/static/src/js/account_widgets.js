@@ -124,6 +124,8 @@ openerp.account = function (instance) {
             "click .pager_control_right:not(.disabled)": "pagerControlRightHandler",
             "keyup .filter": "filterHandler",
             "click .line_info_button": function(e){e.stopPropagation()},
+            // Prevent non natively focusable elements from gaining focus on click
+            "mousedown *[tabindex='0']": function(e){e.preventDefault()},
         },
 
         init: function(parent, context) {

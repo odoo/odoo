@@ -8,6 +8,9 @@
   cursor: default;
   height: 100%;
   /* icons */ }
+  .openerp .oe_reconciliation *[tabindex='0']:focus {
+    outline: 1px solid #888;
+    outline-offset: 2px; }
   .openerp .oe_reconciliation .oe_form_sheetbg {
     border-bottom: 0;
     padding: 0;
@@ -179,7 +182,7 @@
       .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr .glyphicon:not(.line_info_button), .openerp .oe_reconciliation .oe_reconciliation_line .match table tr .glyphicon:not(.line_info_button) {
         visibility: hidden;
         color: #555; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr:hover .glyphicon, .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr.active .glyphicon, .openerp .oe_reconciliation .oe_reconciliation_line .match table tr:hover .glyphicon, .openerp .oe_reconciliation .oe_reconciliation_line .match table tr.active .glyphicon {
+      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr:hover .glyphicon, .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr:focus .glyphicon, .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr.active .glyphicon, .openerp .oe_reconciliation .oe_reconciliation_line .match table tr:hover .glyphicon, .openerp .oe_reconciliation .oe_reconciliation_line .match table tr:focus .glyphicon, .openerp .oe_reconciliation .oe_reconciliation_line .match table tr.active .glyphicon {
         visibility: visible; }
       .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr .do_partial_reconcile_button, .openerp .oe_reconciliation .oe_reconciliation_line .match table tr .do_partial_reconcile_button {
         color: #f0ad4e;
@@ -224,22 +227,24 @@
         cursor: pointer; }
     .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td.cell_credit {
       border-left: 1px solid black; }
-    .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls {
-      padding: 0 0 5px 18px; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .filter {
-        width: 240px; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .pager_control_left, .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .pager_control_right {
+    .openerp .oe_reconciliation .oe_reconciliation_line .match {
+      padding: 1px; }
+      .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls {
+        padding: 0 0 5px 18px; }
+        .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .filter {
+          width: 240px; }
+        .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .pager_control_left, .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .pager_control_right {
+          display: inline-block;
+          cursor: pointer; }
+        .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .pager_control_left {
+          margin-right: 10px; }
+        .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .pager_control_left.disabled, .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .pager_control_right.disabled {
+          color: #ddd;
+          cursor: default; }
+      .openerp .oe_reconciliation .oe_reconciliation_line .match .show_more {
         display: inline-block;
-        cursor: pointer; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .pager_control_left {
-        margin-right: 10px; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .pager_control_left.disabled, .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls .pager_control_right.disabled {
-        color: #ddd;
-        cursor: default; }
-    .openerp .oe_reconciliation .oe_reconciliation_line .match .show_more {
-      display: inline-block;
-      margin-left: 18px;
-      margin-top: 5px; }
+        margin-left: 18px;
+        margin-top: 5px; }
     .openerp .oe_reconciliation .oe_reconciliation_line .create {
       margin: 0 15px;
       border: 1px solid #d5d5d5;
