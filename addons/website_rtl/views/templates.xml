@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <template id="website_rtl.layout" inherit_id="website.layout" name="RTL Layout">
+            <xpath expr="//html/head/t[@name='layout_head']" position="after">
+                
+                <link t-if="request.context.get('website_lang_dir', 'ltr') == 'rtl'" rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-rtl/3.1.1/css/bootstrap-rtl.min.css"/>
+                <link t-if="request.context.get('website_lang_dir', 'ltr') == 'rtl'" href="/website_rtl/static/src/css/rtl.css" rel="stylesheet"/>
+            </xpath>
+            <xpath expr="//html" position="before">
+                <t t-set="body_classname" t-value="request.context.get('website_lang_dir', 'ltr')"/>
+            </xpath>
+            <xpath expr="//html/body" position="attributes">
+                <attribute name="t-att-class">request.context.get('website_lang_dir', 'ltr') + ' container'</attribute>
+            </xpath>
+            
+            
+        </template>
+    </data>
+</openerp>
