@@ -74,9 +74,15 @@ class account_bank_statement_import(osv.TransientModel):
         data = self.browse(cr, uid, ids[0], context=context)
         vals = self._process_file(cr, uid, base64.b64decode(data.data_file), data.journal_id.id, context=context)
         statement_ids = self.import_bank_statement(cr, uid, vals, context=context)
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_statement_tree')
-        action = self.pool[model].read(cr, uid, action_id, context=context)
-        action['domain'] = "[('id', 'in', [" + ', '.join(map(str, statement_ids)) + "])]"
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_reconcile_bank_statements')
+        action = self.pool[model].browse(cr, uid, action_id, context=context)
+        return {
+            'name': action.name,
+            'tag': action.tag,
+            'context': {'statement_ids': statement_ids},
+            'type': 'ir.actions.client',
+        }
+
         return action
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
