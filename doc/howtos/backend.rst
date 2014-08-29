@@ -1262,6 +1262,13 @@ graphical tools. Workflows, activities (nodes or actions) and transitions
 (conditions) are declared as XML records, as usual. The tokens that navigate
 in workflows are called workitems.
 
+.. warning::
+
+    A workflow associated with a model is only created when the
+    model's records are created. Thus there is no workflow instance
+    associated with session instances created before the workflow's
+    definition
+
 .. exercise:: Workflow
 
     Replace the ad-hoc *Session* workflow by a real workflow. Transform the
@@ -1271,13 +1278,6 @@ in workflows are called workitems.
     .. only:: solutions
 
         .. patch::
-
-        .. warning::
-
-            A workflow associated with a model is only created when the
-            model's records are created. Thus there is no workflow instance
-            associated with session instances created before the workflow's
-            definition
 
         .. tip::
 
