@@ -57,9 +57,11 @@ class Controller(openerp.addons.bus.bus.Controller):
         if uuid:
             registry.get('bus.bus').sendone(cr, uid, uuid, mutations)
         if record_id:
+            record = registry.get('im_screenshare.record').browse(cr, uid, record_id, context=context)
+            record_ts = int(datetime.datetime.strptime(record.create_date, DEFAULT_SERVER_DATETIME_FORMAT).strftime("%s"))*1000
             data = {
                 "screen_record_id" : record_id,
-                "timestamp" : 0, # TODO : repair timestamp to make the record start at zero, and then increase the number for events
+                "timestamp" : 'timestamp' in mutations[0] and (mutations[0]['timestamp']-record_ts)/1000 or 0,
                 "mutations" : simplejson.dumps(mutations),
             }
             registry['im_screenshare.record.event'].create(cr, uid, data, context=context)
