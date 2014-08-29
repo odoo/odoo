@@ -30,10 +30,7 @@ class picking(report_sxw.rml_parse):
             'get_product_desc': self.get_product_desc,
         })
     def get_product_desc(self, move_line):
-        desc = move_line.product_id.name
-        if move_line.product_id.default_code:
-            desc = '[' + move_line.product_id.default_code + ']' + ' ' + desc
-        return desc
+        return move_line.product_id.name_get()[0][1]
 
 for suffix in ['', '.in', '.out']:
     report_sxw.report_sxw('report.stock.picking.list' + suffix,
