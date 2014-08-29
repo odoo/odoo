@@ -31,12 +31,12 @@
                 this._start_record();
             }
         },
-        // mutations filter
+        // mutations utils
         _remove_empty_mutations: function(mutations){
             var self = this;
             var clean_mutations = [];
             _.each(mutations, function(m){
-                if(m.f === 'initialize' || m.f === 'message' || m.base){
+                if(m.base || _.contains(['initialize', 'notificationMessage', 'formData'], m.f)){
                     clean_mutations.push(m);
                 }
                 if(m.f === 'forwardData'){
@@ -56,6 +56,17 @@
                 }
             });
             return clean_mutations;
+        },
+        _mutations_contain_tag: function(mutations, tag_name, search_values, args_index){
+            var found = false;
+            _.each(mutations, function(m){
+                _.each(m.args[args_index], function(a){
+                    if(!found && a[tag_name] && _.contains(search_values, a[tag_name])){
+                        found = true;
+                    }
+                });
+            });
+            return found;
         },
         // mutations queue
         send_queue: function(msg) {
@@ -102,10 +113,19 @@
                 this._on_rpc_function = openerp.webclient.loading.on_rpc_event;
                 openerp.webclient.loading.on_rpc_event = function(){};
             }
-
+            // initialize the mirrorClients
             this.queue({
                 base: location.href.match(/^(.*\/)[^\/]*$/)[1],
                 timestamp: Date.now(),
+            });
+            this.formDataMirrorClient = new FormDataMirrorClient({
+                setData: function(data){
+                    self.queue({
+                        f: 'formData',
+                        args: data,
+                        timestamp: Date.now()
+                    });
+                }
             });
             this.treeMirrorClient = new TreeMirrorClient(document, {
                 initialize: function(rootId, children) {
@@ -116,11 +136,16 @@
                     });
                 },
                 applyChanged: function(removed, addedOrMoved, attributes, text) {
-                    self.queue({
+                    var mutation = {
                         f: 'applyChanged',
                         args: [removed, addedOrMoved, attributes, text],
                         timestamp: Date.now(),
-                    });
+                    };
+                    self.queue(mutation);
+                    // check if the mutation contains input elements
+                    if(self._mutations_contain_tag([mutation], "tagName", ["INPUT", "TEXTEAREA", "SELECT"], 1)){
+                        self.formDataMirrorClient.setData();
+                    }
                 }
             });
             this.cursorMirrorClient = new CursorMirrorClient({
@@ -135,7 +160,11 @@
         },
         stop_record: function(){
             // send notification to the player message zone
-            this.send_record([{f: "message", message : _t("The sharing/recording is not now finished."), timestamp: Date.now()}])
+            this.send_record([{
+                f: "notificationMessage",
+                args : [_t("The sharing/recording is not now finished.")],
+                timestamp: Date.now()
+            }]);
             // erase cookie
             openerp.session.set_cookie("odoo-screenshare-" + this.mode, "", -1);
             // re-init data
@@ -157,7 +186,6 @@
             // remove the empty mutations
             mutations = this._remove_empty_mutations(mutations);
             if(mutations.length !== 0){
-                console.log(JSON.stringify(mutations));
                 return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, record_id : this.record_id, mutations : mutations});
             }else{
                 return $.Deferred().resolve();
@@ -213,7 +241,7 @@
                 next_event_delay = next.timestamp - current.timestamp;
                 window.setTimeout(function(){self.load();}, next_event_delay);
             }
-            this.handleMessage(current);
+            this.handleMutation(current);
             this.counter++;
         },
         // screen sharing (bus notifications)
@@ -224,7 +252,7 @@
             if(channel === this.channel){
                 _.each(mutations, function(m){
                     try{
-                        self.handleMessage(m);
+                        self.handleMutation(m);
                     }catch(e){
                         console.warn(e);
                     }
@@ -256,19 +284,22 @@
                 }
             });
             this.cursorMirror = new CursorMirror();
+            this.formDataMirror = new FormDataMirror();
         },
-        handleMessage: function(msg) {
+        handleMutation: function(msg) {
             if (msg.base) {
                 this.base = msg.base;
                 this.clearPage();
                 this._init_mirroirs();
             } else {
-                if (msg.f === 'forwardData') {
-                    this.cursorMirror[msg.f].apply(this.cursorMirror, msg.args);
-                } else {
-                    if(msg.f === 'message'){ // message to be display in the message zone
-                        $('.oe_screenshare_message_zone').text(msg.message);
-                    }else{
+                if(msg.f){
+                    if (msg.f === 'forwardData') {
+                        this.cursorMirror[msg.f].apply(this.cursorMirror, msg.args);
+                    }
+                    if(msg.f === 'notificationMessage'){ // message to be display in the message zone
+                        this.notificationMessage(msg.args);
+                    }
+                    if(msg.f === 'initialize' || msg.f === 'applyChanged'){
                         // DOM mutation (initialize, or applyChanged)
                         this.treeMirror[msg.f].apply(this.treeMirror, msg.args);
                         if(msg.f === 'initialize'){
@@ -276,8 +307,14 @@
                             $("body").prepend(mzone);
                         }
                     }
+                    if(msg.f === 'formData'){
+                        this.formDataMirror[msg.f].apply(this.formDataMirror, msg.args);
+                    }
                 }
             }
+        },
+        notificationMessage: function(m){
+            $('.oe_screenshare_message_zone').text(m);
         }
     });
 
