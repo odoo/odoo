@@ -416,10 +416,9 @@ class WebsiteForum(http.Controller):
     @http.route(['/forum/<model("forum.forum"):forum>/partner/<int:partner_id>'], type='http', auth="public", website=True)
     def open_partner(self, forum, partner_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        pids = request.registry['res.partner'].search(cr, SUPERUSER_ID, [('id', '=', partner_id)], context=context)
-        if pids:
-            partner = request.registry['res.partner'].browse(cr, SUPERUSER_ID, pids[0], context=context)
-            if partner.user_ids:
+        if partner_id:
+            partner = request.registry['res.partner'].browse(cr, SUPERUSER_ID, partner_id, context=context)
+            if partner.exists() and partner.user_ids:
                 return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), partner.user_ids[0].id))
         return werkzeug.utils.redirect("/forum/%s" % slug(forum))
 
@@ -445,8 +444,10 @@ class WebsiteForum(http.Controller):
         Data = request.registry["ir.model.data"]
 
         user = User.browse(cr, SUPERUSER_ID, user_id, context=context)
+        if not user.exists() or user.karma < 1:
+            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         values = self._prepare_forum_values(forum=forum, **post)
-        if not user.exists() or (user_id != request.session.uid and (not user.website_published or user.karma < 1)):
+        if user_id != request.session.uid and not user.website_published:
             return request.website.render("website_forum.private_profile", values)
         # questions and answers by user
         user_questions, user_answers = [], []
@@ -535,14 +536,17 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/user/<model("res.users"):user>/save', type='http', auth="user", methods=['POST'], website=True)
     def save_edited_profile(self, forum, user, **kwargs):
-        request.registry['res.users'].write(request.cr, request.uid, [user.id], {
+        values = {
             'name': kwargs.get('name'),
             'website': kwargs.get('website'),
             'email': kwargs.get('email'),
             'city': kwargs.get('city'),
             'country_id': int(kwargs.get('country')) if kwargs.get('country') else False,
             'website_description': kwargs.get('description'),
-        }, context=request.context)
+        }
+        if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
+            values['website_published'] = kwargs.get('website_published') == 'True'
+        request.registry['res.users'].write(request.cr, request.uid, [user.id], values, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), user.id))
 
     # Badges

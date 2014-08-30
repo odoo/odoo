@@ -922,7 +922,7 @@ Model constraints
 
 Odoo provides two ways to set up automatically verified invariants:
 :func:`Python constraints <openerp.api.constrains>` and
-:attr:`SQL constaints <openerp.models.Model._sql_constraints>`.
+:attr:`SQL constraints <openerp.models.Model._sql_constraints>`.
 
 A Python constraint is defined as a method decorated with
 :func:`~openerp.api.constrains`, and invoked on a recordset. The decorator
@@ -1064,21 +1064,35 @@ field (to define the label for each calendar event)
 Search views
 ------------
 
-Search view fields can take custom operators or :ref:`reference/orm/domains`
-for more flexible matching of results.
+Search view ``<field>`` elements can have a ``@filter_domain`` that overrides
+the domain generated for searching on the given field. In the given domain,
+``self`` represents the value entered by the user. In the example below, it is
+used to search on both fields ``name`` and ``description``.
 
-Search views can also contain *filters* which act as toggles for predefined
-searches (defined using :ref:`reference/orm/domains`):
+Search views can also contain ``<filter>`` elements, which act as toggles for
+predefined searches. Filters must have one of the following attributes:
+
+``domain``
+    add the given domain to the current search
+``context``
+    add some context to the current search; use the key ``group_by`` to group
+    results on the given field name
 
 .. code-block:: xml
 
     <search string="Ideas">
-        <filter name="my_ideas" domain="[('inventor_id','=',uid)]"
-                string="My Ideas" icon="terp-partner"/>
         <field name="name"/>
-        <field name="description"/>
+        <field name="description" string="Name and description"
+               filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]"/>
         <field name="inventor_id"/>
         <field name="country_id" widget="selection"/>
+
+        <filter name="my_ideas" string="My Ideas"
+                domain="[('inventor_id', '=', uid)]"/>
+        <group string="Group By">
+            <filter name="group_by_inventor" string="Inventor"
+                    context="{'group_by': 'inventor'}"/>
+        </group>
     </search>
 
 To use a non-default search view in an action, it should be linked using the
@@ -1092,8 +1106,9 @@ default and behave as booleans (they can only be enabled by default).
 
 .. exercise:: Search views
 
-    Add a button to filter the courses for which the current user is the
-    responsible in the course search view. Make it selected by default.
+    #. Add a button to filter the courses for which the current user is the
+       responsible in the course search view. Make it selected by default.
+    #. Add a button to group courses by responsible user.
 
     .. only:: solutions
 
@@ -1247,6 +1262,13 @@ graphical tools. Workflows, activities (nodes or actions) and transitions
 (conditions) are declared as XML records, as usual. The tokens that navigate
 in workflows are called workitems.
 
+.. warning::
+
+    A workflow associated with a model is only created when the
+    model's records are created. Thus there is no workflow instance
+    associated with session instances created before the workflow's
+    definition
+
 .. exercise:: Workflow
 
     Replace the ad-hoc *Session* workflow by a real workflow. Transform the
@@ -1256,13 +1278,6 @@ in workflows are called workitems.
     .. only:: solutions
 
         .. patch::
-
-        .. warning::
-
-            A workflow associated with a model is only created when the
-            model's records are created. Thus there is no workflow instance
-            associated with session instances created before the workflow's
-            definition
 
         .. tip::
 
@@ -1544,8 +1559,8 @@ for editing and merging PO/POT files.
            dedicated PO-file editor e.g. POEdit_ and translate the missing
            terms
 
-        #. Add ``from openerp import _`` to ``course.py`` and
-           mark missing strings as translatable
+        #. In ``models.py``, add an import statement for the function
+           ``openerp._`` and mark missing strings as translatable
 
         #. Repeat steps 3-6
 

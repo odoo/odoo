@@ -35,18 +35,21 @@
 </template>
 
 <template id="search" name="Search hidden fields">
-  <t t-if="attrib_values">
-    <t t-foreach="attrib_values" t-as="a">
-      <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])"/>
+  <form t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else '', search=0)" method="get" t-att-class="search_class">
+
+    <t t-if="attrib_values">
+      <t t-foreach="attrib_values" t-as="a">
+        <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])"/>
+      </t>
     </t>
-  </t>
-  <input t-if="category" type="hidden" name="category" t-att-value="int(category or 0)"/>
-  <div class="input-group">
-    <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search"/>
-    <span class="input-group-btn">
-      <a class="btn btn-default a-submit"><i class="fa fa-search"/></a>
-    </span>
+    <div class="input-group">
+      <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search"/>
+      <span class="input-group-btn">
+        <a class="btn btn-default a-submit"><i class="fa fa-search"/></a>
+      </span>
   </div>
+
+  </form>
 </template>
 
 <template id="404">
@@ -73,7 +76,7 @@
   </div>
   <div class="oe_product_image">
       <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
-          <img itemprop="image" class="img img-responsive" t-attf-src="/website/image/product.template/#{product.id}/image#{'' if product_image_big else '?max_width=300&amp;max_height=300'}"/>
+          <img itemprop="image" class="img img-responsive" t-attf-src="/website/image/product.template/#{product.id}/image{{'' if product_image_big else '/300x300' }}"/>
       </a>
   </div>
   <section>
@@ -133,9 +136,7 @@
         <div class="container oe_website_sale">
           <div class="products_pager">
             <div class="row">
-              <form t-att-action="keep('/shop',search='')" method="get" class="pagination form-inline col-md-3">
-                <t t-call="website_sale.search"/>
-              </form>
+              <t t-call="website_sale.search"><t t-set="search_class">pagination form-inline col-md-3</t></t>
               <t t-call="website.pager"/>
             </div>
           </div>
@@ -358,9 +359,7 @@
                 </ol>
             </div>
             <div class="col-sm-3">
-              <form t-att-action="keep(search=0)" method="get" class="pull-right">
-                  <t t-call="website_sale.search"/>
-              </form>
+              <t t-call="website_sale.search"><t t-set="search_class">pull-right</t></t>
             </div>
             <div class="col-sm-4" groups="base.group_sale_manager">
                 <t t-call="website.publish_management">
@@ -604,7 +603,7 @@
                 <ul class="media-list" id="comments-list"  t-if="product.website_message_ids">
                     <li t-foreach="product.website_message_ids" t-as="message" class="media">
                         <div class="media-body oe_msg">
-                            <img class="media-object pull-left oe_msg_avatar" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                            <img class="media-object pull-left oe_msg_avatar" t-attf-src="/website/image/res.partner/{{ message.author_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
                             <div class="media-body oe_msg_content">
                                 <t t-call="website.publish_short">
                                     <t t-set="object" t-value="message"/>
@@ -634,7 +633,7 @@
                 </ul>
                 <div class="css_editable_mode_hidden">
                     <form id="comment" t-attf-action="/shop/product/comment/#{product.id}" method="POST">
-                        <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
+                        <img class="img pull-left img-rounded" t-attf-src="/website/image/res.partner/{{ user_id.partner_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
                         <div class="pull-left mb32" style="width: 75%%">
                             <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
                             <a class="btn btn-primary mt8 a-submit">Post</a>

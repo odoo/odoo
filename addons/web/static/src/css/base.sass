@@ -1660,8 +1660,8 @@ $sheet-padding: 16px
         font-size: 20px
         margin: 15px 0px 10px 0px
         color: $section-title-color
-    .oe_horizontal_separator:empty
-        height: 5px
+        &:empty
+            height: 5px
     .oe_vertical_separator
         border-left: 1px solid #666
         padding: 0 4px 0 4px
@@ -2763,5 +2763,13 @@ div.tour-backdrop
 
 body
     overflow: auto
+
+// hack to make IE11 work
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) 
+    .oe_secondary_menus_container 
+        position: static !important
+
+
+
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

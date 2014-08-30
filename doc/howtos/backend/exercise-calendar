@@ -3,8 +3,8 @@
 
 Index: addons/openacademy/models.py
 ===================================================================
---- addons.orig/openacademy/models.py	2014-08-26 17:26:10.179783221 +0200
-+++ addons/openacademy/models.py	2014-08-26 17:26:10.171783221 +0200
+--- addons.orig/openacademy/models.py	2014-08-28 13:45:01.987048512 +0200
++++ addons/openacademy/models.py	2014-08-28 13:59:30.387035620 +0200
 @@ -1,5 +1,6 @@
  # -*- coding: utf-8 -*-
  
@@ -21,7 +21,7 @@ Index: addons/openacademy/models.py
  
      @api.one
      @api.depends('seats', 'attendee_ids')
-@@ -82,6 +85,26 @@
+@@ -82,6 +85,30 @@
              }
  
      @api.one
@@ -31,8 +31,10 @@ Index: addons/openacademy/models.py
 +            self.end_date = self.start_date
 +            return
 +
++        # Add duration to start_date, but: Monday + 5 days = Saturday, so
++        # subtract one second to get on Friday instead
 +        start = fields.Datetime.from_string(self.start_date)
-+        duration = timedelta(days=self.duration)
++        duration = timedelta(days=self.duration, seconds=-1)
 +        self.end_date = start + duration
 +
 +    @api.one
@@ -40,9 +42,11 @@ Index: addons/openacademy/models.py
 +        if not (self.start_date and self.end_date):
 +            return
 +
++        # Compute the difference between dates, but: Friday - Monday = 4 days,
++        # so add one day to get 5 days instead
 +        start_date = fields.Datetime.from_string(self.start_date)
 +        end_date = fields.Datetime.from_string(self.end_date)
-+        self.duration = (end_date - start_date).days
++        self.duration = (end_date - start_date).days + 1
 +
 +    @api.one
      @api.constrains('instructor_id', 'attendee_ids')
@@ -50,8 +54,8 @@ Index: addons/openacademy/models.py
          if self.instructor_id and self.instructor_id in self.attendee_ids:
 Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-26 17:26:10.179783221 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-26 17:26:10.171783221 +0200
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-28 13:45:01.987048512 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-28 13:54:02.000000000 +0200
 @@ -125,11 +125,24 @@
              </field>
          </record>

@@ -347,6 +347,7 @@ class survey_survey(osv.Model):
         ''' Compute statistical data for questions by counting number of vote per choice on basis of filter '''
         current_filters = current_filters if current_filters else []
         context = context if context else {}
+        result_summary = {}
 
         #Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:

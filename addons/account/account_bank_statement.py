@@ -439,6 +439,15 @@ class account_bank_statement(osv.osv):
 
 class account_bank_statement_line(osv.osv):
 
+    def unlink(self, cr, uid, ids, context=None):
+        for item in self.browse(cr, uid, ids, context=context):
+            if item.journal_entry_id:
+                raise osv.except_osv(
+                    _('Invalid Action!'), 
+                    _('In order to delete a bank statement line, you must first cancel it to delete related journal items.')
+                )
+        return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
+
     def cancel(self, cr, uid, ids, context=None):
         account_move_obj = self.pool.get('account.move')
         move_ids = []
@@ -522,7 +531,7 @@ class account_bank_statement_line(osv.osv):
             'statement_id': line.statement_id.id,
             'account_code': line.journal_id.default_debit_account_id.code,
             'account_name': line.journal_id.default_debit_account_id.name,
-            'partner_name': line.partner_id.name,
+            'partner_name': line.partner_id and line.partner_id.name or line.partner_name,
             'amount_currency_str': amount_currency_str,
             'has_no_partner': not line.partner_id.id,
         }
@@ -533,9 +542,7 @@ class account_bank_statement_line(osv.osv):
         return data
 
     def search_structured_com(self, cr, uid, st_line, context=None):
-        if not st_line.ref:
-            return
-        domain = [('ref', '=', st_line.ref)]
+        domain = [('ref', '=', st_line.name.replace('/', ''))]
         if st_line.partner_id:
             domain += [('partner_id', '=', st_line.partner_id.id)]
         ids = self.pool.get('account.move.line').search(cr, uid, domain, limit=1, context=context)
@@ -600,14 +607,13 @@ class account_bank_statement_line(osv.osv):
         """
         mv_line_pool = self.pool.get('account.move.line')
 
-        domain = additional_domain + [('reconcile_id', '=', False),('state', '=', 'valid')]
+        domain = additional_domain + [('reconcile_id', '=', False), ('state', '=', 'valid')]
         if st_line.partner_id.id:
             domain += [('partner_id', '=', st_line.partner_id.id),
                 '|', ('account_id.type', '=', 'receivable'),
                 ('account_id.type', '=', 'payable')]
         else:
-            domain += [('account_id.reconcile', '=', True)]
-            #domain += [('account_id.reconcile', '=', True), ('account_id.type', '=', 'other')]
+            domain += [('account_id.reconcile', '=', True), ('account_id.type', '=', 'other')]
         if excluded_ids:
             domain.append(('id', 'not in', excluded_ids))
         line_ids = mv_line_pool.search(cr, uid, domain, order="date_maturity asc, id asc", context=context)
@@ -829,7 +835,7 @@ class account_bank_statement_line(osv.osv):
     _description = "Bank Statement Line"
     _inherit = ['ir.needaction_mixin']
     _columns = {
-        'name': fields.char('Description', required=True),
+        'name': fields.char('Communication', required=True),
         'date': fields.date('Date', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'partner_id': fields.many2one('res.partner', 'Partner'),
@@ -837,7 +843,8 @@ class account_bank_statement_line(osv.osv):
         'account_id': fields.many2one('account.account', 'Account', help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account"),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='cascade'),
         'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
-        'ref': fields.char('Structured Communication'),
+        'partner_name': fields.char('Partner Name', help="This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found)."),
+        'ref': fields.char('Reference'),
         'note': fields.text('Notes'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of bank statement lines."),
         'company_id': fields.related('statement_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),

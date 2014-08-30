@@ -251,7 +251,8 @@ class rml_parse(object):
                 res='%s %s'%(currency_obj.symbol, res)
         return res
 
-    def display_address(self, address_record):
+    def display_address(self, address_record, without_company=False):
+        # FIXME handle `without_company`
         return address_record.contact_address
 
     def repeatIn(self, lst, name,nodes_parent=False):
