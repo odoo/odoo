@@ -1,5 +1,5 @@
 {
-    'name' : 'Live Support',
+    'name' : 'Live Chat',
     'author': 'OpenERP SA',
     'version': '1.0',
     'summary': 'Live Chat with Visitors/Customers',

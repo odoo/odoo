@@ -20,5 +20,4 @@ Display best tweets
     'demo': [],
     'qweb': [],
     'installable': True,
-    'application': True,
 }
