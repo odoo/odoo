@@ -47,7 +47,6 @@ This module allows you to easily add extra costs on pickings and decide the spli
         'test/stock_landed_costs.yml'
     ],
     'installable': True,
-    'application': True,
     'auto_install': False,
 }
 

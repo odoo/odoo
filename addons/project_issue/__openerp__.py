@@ -21,7 +21,7 @@
 ##############################################################################
 
 {
-    'name': 'Issue Tracker',
+    'name': 'Issue Tracking',
     'version': '1.0',
     'category': 'Project Management',
     'sequence': 9,

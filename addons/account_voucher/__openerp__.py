@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name' : 'eInvoicing & Payments',
+    'name' : 'Online Billing',
     'version' : '1.0',
     'author' : 'OpenERP SA',
     'summary': 'Send Invoices and Track Payments',

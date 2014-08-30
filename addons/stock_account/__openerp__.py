@@ -63,6 +63,5 @@ Dashboard / Reports for Warehouse Management includes:
 
     ],
     'installable': True,
-    'application': True,
     'auto_install': True,
 }
