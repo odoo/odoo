@@ -768,10 +768,10 @@ openerp.account = function (instance) {
             line.q_amount = (line.debit !== 0 ? "- "+line.q_debit : "") + (line.credit !== 0 ? line.q_credit : "");
             line.q_popover = QWeb.render("bank_statement_reconciliation_move_line_details", {line: line});
             line.q_label = line.name;
+    
             if (line.has_no_partner){
                 line.q_label = line.partner_name + ': ' +line.q_label;
             }
-    
             // WARNING : pretty much of a ugly hack
             // The value of account_move.ref is either the move's communication or it's name without the slashes
             if (line.ref && line.ref !== line.name.replace(/\//g,''))
