@@ -860,17 +860,16 @@ openerp.account = function (instance) {
             } else {
                 deferred_fetch_data.resolve();
             }
-            return $.when(deferred_fetch_data).then(function(){
+            return deferred_fetch_data.then(function(){
                 //load all lines that can be usefull for counterparts
-                var deferred_total_move_lines_num = self.model_bank_statement_line
-                    .call("get_move_lines_for_reconciliation_by_statement_line_id", [self.st_line.id, []])
-                    .then(function(lines){
-                        _.each(lines, function(line) {
-                            self.decorateMoveLine(line, self.st_line.display_currency_id);
-                        }, this);
-                        self.propositions_lines = lines;
-                    });
-                return deferred_total_move_lines_num;
+                // return deferred_total_move_lines_num = self.model_bank_statement_line
+                //     .call("get_move_lines_for_reconciliation_by_statement_line_id", [self.st_line.id, []])
+                //     .then(function(lines){
+                //         _.each(lines, function(line) {
+                //             self.decorateMoveLine(line, self.st_line.display_currency_id);
+                //         }, this);
+                //         self.propositions_lines = lines;
+                //     });
             });
         },
 
@@ -1253,6 +1252,7 @@ openerp.account = function (instance) {
             var self = this;
             var balance = self.get("balance");
             self.$(".tbody_open_balance").empty();
+            
             // Special case hack : no identified partner
             if (self.st_line.has_no_partner) {
                 if (Math.abs(balance).toFixed(3) === "0.000") {
@@ -1272,7 +1272,7 @@ openerp.account = function (instance) {
                         credit: credit,
                         account_code: self.map_account_id_code[self.st_line.open_balance_account_id]
                     }));
-                    $line.find('.js_open_balance')[0].innerHTML = "Choose counterpart";
+                    $line.find('.js_open_balance')[0].innerHTML = _("Choose counterpart");
                     self.$(".tbody_open_balance").append($line);
                 }
                 return;
