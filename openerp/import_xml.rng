@@ -204,14 +204,8 @@
                         </rng:optional>
                     </rng:optional>
                     <rng:optional><rng:attribute name="groups"/></rng:optional>
-                    <rng:optional>
-                        <rng:attribute name="optional">
-                            <rng:choice>
-                                <rng:value>enabled</rng:value>
-                                <rng:value>disabled</rng:value>
-                            </rng:choice>
-                        </rng:attribute>
-                    </rng:optional>
+                    <rng:optional><rng:attribute name="active"></rng:attribute></rng:optional>
+                    <rng:optional><rng:attribute name="customize_show"></rng:attribute></rng:optional>
                 </rng:group>
                 <rng:optional>
                     <rng:attribute name="page"><rng:value>True</rng:value></rng:attribute>

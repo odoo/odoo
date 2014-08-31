@@ -186,19 +186,18 @@ class Website(openerp.addons.web.controllers.main.Home):
             request.cr, request.uid, 'website', 'theme')
         views = Views.search(request.cr, request.uid, [
             ('inherit_id', '=', theme_template_id),
-            ('application', '=', 'enabled'),
         ], context=request.context)
         Views.write(request.cr, request.uid, views, {
-            'application': 'disabled',
-        }, context=request.context)
+            'active': False,
+        }, context=dict(request.context or {}, active_test=True))
 
         if theme_id:
             module, xml_id = theme_id.split('.')
             _, view_id = imd.get_object_reference(
                 request.cr, request.uid, module, xml_id)
             Views.write(request.cr, request.uid, [view_id], {
-                'application': 'enabled'
-            }, context=request.context)
+                'active': True
+            }, context=dict(request.context or {}, active_test=True))
 
         return request.render('website.themes', {'theme_changed': True})
 
@@ -242,13 +241,13 @@ class Website(openerp.addons.web.controllers.main.Home):
         user_groups = set(user.groups_id)
 
         views = request.registry["ir.ui.view"]\
-            ._views_get(request.cr, request.uid, xml_id, context=request.context)
+            ._views_get(request.cr, request.uid, xml_id, context=dict(request.context or {}, active_test=False))
         done = set()
         result = []
         for v in views:
             if not user_groups.issuperset(v.groups_id):
                 continue
-            if full or (v.application != 'always' and v.inherit_id.id != view_theme_id):
+            if full or (v.customize_show and v.inherit_id.id != view_theme_id):
                 if v.inherit_id not in done:
                     result.append({
                         'name': v.inherit_id.name,
@@ -265,7 +264,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'xml_id': v.xml_id,
                     'inherit_id': v.inherit_id.id,
                     'header': False,
-                    'active': v.application in ('always', 'enabled'),
+                    'active': v.active,
                 })
         return result
 
