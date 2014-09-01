@@ -292,7 +292,7 @@ class account_coda_import(osv.osv_memory):
                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
                     line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
                     partner_id = None
-                    structured_com = ""
+                    structured_com = False
                     bank_account_id = False
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
                         structured_com = line['communication']

@@ -763,7 +763,6 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         ctx = context.copy()
-        currency_obj = self.pool.get('res.currency')
         company_currency = lines[0].account_id.company_id.currency_id
         rml_parser = report_sxw.rml_parse(cr, uid, 'reconciliation_widget_aml', context=context)
         reconcile_partial_ids = [] # for a partial reconciliation, take only one line
@@ -815,11 +814,12 @@ class account_move_line(osv.osv):
                 else:
                     ctx.update({'date': line.date})
                 src_currency = line.currency_id or company_currency
+                src_currency = src_currency.with_context(ctx)
                 # Make amount_currency_str, convert the amount, and make amount_str
                 amount_currency_str = debit or -credit
                 amount_currency_str = rml_parser.formatLang(amount_currency_str, currency_obj=src_currency)
-                debit = currency_obj.compute(cr, uid, src_currency.id, target_currency.id, debit, context=ctx)
-                credit = currency_obj.compute(cr, uid, src_currency.id, target_currency.id, credit, context=ctx)
+                debit = src_currency.compute(debit, target_currency)
+                credit = src_currency.compute(credit, target_currency)
                 amount_str = debit or -credit
                 amount_str = rml_parser.formatLang(amount_str, currency_obj=target_currency)
             else:

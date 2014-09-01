@@ -457,15 +457,14 @@ class account_bank_statement_line(osv.osv):
         """ Returns the data required by the bank statement reconciliation widget to display a statement line """
         if context is None:
             context = {}
-        currency_obj = self.pool.get('res.currency')
         statement_currency = st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
         rml_parser = report_sxw.rml_parse(cr, uid, 'reconciliation_widget_asl', context=context)
 
         if st_line.amount_currency and st_line.currency_id:
             # If the statement line is not in the same currency as the statement, put amount in original currency in
             # amount_currency_str and put converted amount in amount_str
-            ctx = dict(context, date=st_line.date)
-            amount = currency_obj.compute(cr, uid, st_line.currency_id.id, statement_currency.id, st_line.amount_currency, context=ctx)
+            src_currency = st_line.currency_id.with_context(dict(context, date=st_line.date))
+            amount = src_currency.compute(st_line.amount_currency, statement_currency)
             amount_str = amount > 0 and amount or -amount
             amount_str = rml_parser.formatLang(amount_str, currency_obj=statement_currency)
             amount_currency_str = rml_parser.formatLang(st_line.amount_currency, currency_obj=st_line.currency_id)
@@ -506,14 +505,15 @@ class account_bank_statement_line(osv.osv):
         """ Returns move lines that constitute the best guess to reconcile a statement line. """
 
         # Look for structured communication
-        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[('ref', '=', st_line.ref)])
-        if match_id:
-            mv_line = match_id[0]
-            # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
-            if (mv_line['partner_id']):
-                self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
-                mv_line['has_no_partner'] = False
-            return [mv_line]
+        if st_line.ref:
+            match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[('ref', '=', st_line.ref)])
+            if match_id:
+                mv_line = match_id[0]
+                # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
+                if (mv_line['partner_id']):
+                    self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
+                    mv_line['has_no_partner'] = False
+                return [mv_line]
 
         # If there is no identified partner or structured communication, don't look further
         if not st_line.partner_id.id:
