@@ -30,17 +30,19 @@
         <field name="model">report.crm.case.section.categ2</field>
         <field name="arch" type="xml">
             <form string="Cases by Team and Category2">
-                <field name="name"/>
-                <field name="month"/>
-                <field name="user_id"/>
-                <field name="section_id" widget="selection"
-                        groups="base.group_multi_salesteams"/>
-                <field name="category2_id" />
-                <field name="stage_id"/>
-                <field name="amount_revenue"/>
-                <field name="nbr" />
-                <field name="state" />
-                <field name="delay_close"/>
+                <group col="4">
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="user_id"/>
+                    <field name="section_id" widget="selection"
+                            groups="base.group_multi_salesteams"/>
+                    <field name="category2_id" />
+                    <field name="stage_id"/>
+                    <field name="amount_revenue"/>
+                    <field name="nbr" />
+                    <field name="state" />
+                    <field name="delay_close"/>
+                </group>
             </form>
         </field>
     </record>
@@ -114,16 +116,18 @@
         <field name="model">report.crm.case.section.stage</field>
         <field name="arch" type="xml">
             <form string="Cases by Team and Stage">
-                <field name="name"/>
-                <field name="month"/>
-                <field name="user_id"/>
-                <field name="section_id" widget="selection"
-                        groups="base.group_multi_salesteams"/>
-                <field name="stage_id"/>
-                <field name="amount_revenue"/>
-                <field name="nbr" />
-                <field name="state" />
-                <field name="delay_close"/>
+                <group col="4">
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="user_id"/>
+                    <field name="section_id" widget="selection"
+                            groups="base.group_multi_salesteams"/>
+                    <field name="stage_id"/>
+                    <field name="amount_revenue"/>
+                    <field name="nbr" />
+                    <field name="state" />
+                    <field name="delay_close"/>
+                </group>
             </form>
         </field>
     </record>
@@ -195,15 +199,17 @@
         <field name="model">report.crm.case.section.categ.stage</field>
         <field name="arch" type="xml">
             <form string="Cases by Section, Category and Stage">
-                <field name="name"/>
-                <field name="month"/>
-                <field name="user_id"/>
-                <field name="section_id"  widget="selection" groups="base.group_multi_salesteams"/>
-                <field name="categ_id"/>
-                <field name="stage_id"/>
-                <field name="nbr" />
-                <field name="state" />
-                <field name="delay_close"/>
+                <group col="4">
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="user_id"/>
+                    <field name="section_id"  widget="selection" groups="base.group_multi_salesteams"/>
+                    <field name="categ_id"/>
+                    <field name="stage_id"/>
+                    <field name="nbr" />
+                    <field name="state" />
+                    <field name="delay_close"/>
+                </group>
             </form>
         </field>
     </record>
@@ -276,16 +282,18 @@
         <field name="model">report.crm.case.section.categ.categ2</field>
         <field name="arch" type="xml">
             <form string="Cases by Section, Category and Type">
-                <field name="name"/>
-                <field name="month"/>
-                <field name="user_id"/>
-                <field name="section_id"  widget="selection" groups="base.group_multi_salesteams"/>
-                <field name="categ_id"/>
-                <field name="category2_id"/>
-                <field name="stage_id"/>
-                <field name="nbr" />
-                <field name="state" />
-                <field name="delay_close"/>
+                <group col="4">
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="user_id"/>
+                    <field name="section_id"  widget="selection" groups="base.group_multi_salesteams"/>
+                    <field name="categ_id"/>
+                    <field name="category2_id"/>
+                    <field name="stage_id"/>
+                    <field name="nbr" />
+                    <field name="state" />
+                    <field name="delay_close"/>
+                </group>
             </form>
         </field>
     </record>

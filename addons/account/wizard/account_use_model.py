@@ -58,7 +58,7 @@ class account_use_model(osv.osv_memory):
             model_ids = context['active_ids']
         move_ids = account_model_obj.generate(cr, uid, model_ids, context=context)
 
-        context.update({'move_ids':move_ids})
+        context = dict(context, move_ids=move_ids)
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_move_form')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {

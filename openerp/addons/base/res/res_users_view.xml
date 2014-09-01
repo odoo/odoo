@@ -7,7 +7,7 @@
             <field name="name">Change Password</field>
             <field name="model">change.password.wizard</field>
             <field name="arch" type="xml">
-                <form string="Change Password" version="7.0">
+                <form string="Change Password">
                     <field name="user_ids"/>
                     <footer>
                         <button string="Change Password" name="change_password_button" type="object" class="oe_highlight"/>
@@ -50,7 +50,7 @@
             <field name="name">res.groups.form</field>
             <field name="model">res.groups</field>
             <field name="arch" type="xml">
-                <form string="Groups" version="7.0">
+                <form string="Groups">
                   <sheet>
                     <group col="4">
                         <field name="category_id"/>
@@ -80,7 +80,7 @@
                                     <field name="perm_unlink"/>
                                     <field name="name"/>
                                 </tree>
-                                <form string="Access Controls" version="7.0">
+                                <form string="Access Controls">
                                     <group col="4">
                                         <field name="name"/>
                                         <field name="active"/>
@@ -125,7 +125,7 @@
             <field name="model">res.users</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <form string="Users" version="7.0">
+                <form string="Users">
                     <sheet>
                         <field name="id" invisible="1"/>
                         <div class="oe_form_box_info oe_text_center" style="margin-bottom: 10px" attrs="{'invisible': [('id', '>', 0)]}">
@@ -162,7 +162,7 @@
             <field name="name">res.users.form</field>
             <field name="model">res.users</field>
             <field name="arch" type="xml">
-                <form string="Users" version="7.0">
+                <form string="Users">
                     <sheet>
                         <field name="id" invisible="1"/>
                         <div class="oe_right oe_button_box">
@@ -272,7 +272,7 @@
             <field name="model">res.users</field>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Users" version="7.0">
+                <form string="Users">
                     <field name="image" readonly="0" widget='image' class="oe_right oe_avatar" options='{"preview_image": "image_small"}'/>
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>

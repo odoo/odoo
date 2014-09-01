@@ -73,4 +73,13 @@
             </div>
         </div>
      </t>
+
+    <t t-extend="CalendarView.sidebar.responsible">
+        <t t-jquery="span#color_filter" t-operation="after">
+            <t t-if="(filters_value.value != -1) &amp;&amp; (filters_value.is_remove != false)">
+                <span class="oe_remove_follower oe_e hidden" title="Remove this favorite from the list" t-att-data-id="filters_value.value">X</span>
+           </t>
+        </t>
+    </t>
+
 </template>

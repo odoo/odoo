@@ -55,12 +55,13 @@ class stock_history(osv.osv):
                     product_tmpl_obj = self.pool.get("product.template")
                     lines_rec = self.browse(cr, uid, lines, context=context)
                     for line_rec in lines_rec:
-                        if not line_rec.product_id.id in prod_dict:
-                            if line_rec.product_id.cost_method == 'real':
-                                prod_dict[line_rec.product_id.id] = line_rec.price_unit_on_quant
-                            else:
+                        if line_rec.product_id.cost_method == 'real':
+                            price = line_rec.price_unit_on_quant
+                        else:
+                            if not line_rec.product_id.id in prod_dict:
                                 prod_dict[line_rec.product_id.id] = product_tmpl_obj.get_history_price(cr, uid, line_rec.product_id.product_tmpl_id.id, line_rec.company_id.id, date=date, context=context)
-                        inv_value += prod_dict[line_rec.product_id.id] * line_rec.quantity
+                            price = prod_dict[line_rec.product_id.id]
+                        inv_value += price * line_rec.quantity
                     line['inventory_value'] = inv_value
         return res
 

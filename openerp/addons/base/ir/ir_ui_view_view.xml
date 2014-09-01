@@ -5,7 +5,7 @@
         <record id="view_view_form" model="ir.ui.view">
             <field name="model">ir.ui.view</field>
             <field name="arch" type="xml">
-                <form string="Views" version="7.0">
+                <form string="Views">
                    <sheet>
                     <group>
                         <group>
@@ -27,6 +27,15 @@
                         </page>
                         <page string="Groups">
                             <field name="groups_id"/>
+                        </page>
+                        <page name="inherit_children" string="Inherited Views">
+                            <field name="inherit_children_ids" context="{'default_model':model,'default_type':type,'default_inherit_id':active_id}">
+                                <tree>
+                                    <field name="priority"/>
+                                    <field name="name"/>
+                                    <field name="xml_id"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                   </sheet>
@@ -60,7 +69,7 @@
                     <field name="inherit_id"/>
                     <field name="type"/>
                     <field name="arch"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Object" domain="[]" context="{'group_by':'model'}"/>
                         <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Inherit" domain="[]" context="{'group_by':'inherit_id'}"/>
@@ -73,7 +82,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.ui.view</field>
             <field name="view_id" ref="view_view_tree"/>
-            <field name="help">Views allows you to personalize each view of OpenERP. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
+            <field name="help">Views allows you to personalize each view of Odoo. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
         </record>
         <menuitem action="action_ui_view" id="menu_action_ui_view" parent="base.next_id_2" sequence="2"/>
 
@@ -81,7 +90,7 @@
         <record id="view_view_custom_form" model="ir.ui.view">
             <field name="model">ir.ui.view.custom</field>
             <field name="arch" type="xml">
-                <form string="Customized Views" version="7.0">
+                <form string="Customized Views">
                   <sheet>
                     <group col="4">
                         <field name="user_id"/>

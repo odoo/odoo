@@ -3,8 +3,8 @@
 
     var website = openerp.website;
 
-    website.snippet.animationRegistry.follow = website.snippet.Animation.extend({
-        selector: ".js_follow",
+    website.snippet.animationRegistry.follow_alias = website.snippet.Animation.extend({
+        selector: ".js_follow_alias",
         start: function (editable_mode) {
             var self = this;
             this.is_user = false;
@@ -23,8 +23,8 @@
 
             // not if editable mode to allow designer to edit alert field
             if (!editable_mode) {
-                $('.js_follow > .alert').addClass("hidden");
-                $('.js_follow > .input-group-btn.hidden').removeClass("hidden");
+                $('.js_follow_alias > .alert').addClass("hidden");
+                $('.js_follow_alias > .input-group-btn.hidden').removeClass("hidden");
                 this.$target.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
                     event.preventDefault();
                     self.on_click();

@@ -65,7 +65,7 @@ module in it:
 .. code-block:: console
 
     $ createdb academy
-    $ ./openerp-server --addons-path=../web/addons,../addons,../my-modules \
+    $ ./openerp-server --addons-path=addons,../my-modules \
                        -d academy -i academy --db-filter=academy
 
 * ``--addons-path`` tells OpenERP where it can find its modules. By default it
@@ -159,6 +159,10 @@ Let's move our 2 pseudo-templates from inline strings to actual templates:
 This simplifies the controller code by moving data formatting out of it, and
 generally makes it simpler for designers to edit the markup.
 
+.. note::
+
+    You'll need to update the module to install the new templates
+
 .. todo:: link to section about reusing/altering existing stuff, template
           overriding
 
@@ -175,7 +179,7 @@ First, we'll install the ``website`` module: restart your server with
 
 .. code-block:: console
 
-    $ ./openerp-server --addons-path=../web/addons,../addons,../my-modules \
+    $ ./openerp-server --addons-path=addons,../my-modules \
                        -d academy -i website --db-filter=academy
 
 If you navigate to `your openerp`_, your basic page may have been replaced by
@@ -202,7 +206,7 @@ ensures ``academy``'s index page overwrites ``website``'s.
 
     .. code-block:: console
 
-        $ ./openerp-server --addons-path=../web/addons,../addons,../my-modules \
+        $ ./openerp-server --addons-path=addons,../my-modules \
                            -d academy -u academy --db-filter=academy
 
     instead of the previous command (note: ``-i`` was replaced by ``-u``)
@@ -460,14 +464,14 @@ of all records in the object) and the "form" view (view an manipulation of a
 single record). The :guilabel:`Create` button above the list lets you create
 new record, you can select records to delete them.
 
-There's one big issue to fix right now, the labeling of the column in the list
-and the fields in the form view, which are all currently :guilabel:`unknown`.
-We can fix that by adding a ``string`` attribute to the model field:
+The names of the fields in the search and list view are automatically inferred
+from the logical field names, but it's probably a good idea to specify them
+anyway, by adding a ``string`` to the model field:
 
 .. patch::
 
-The second problem is that the list view only displays the ``name`` field. To
-fix this, we have to create an explicit list view for lectures:
+An issue is that the list view only displays the ``name`` field. To fix this,
+we have to create an explicit list view for lectures:
 
 .. patch::
 
@@ -491,7 +495,7 @@ the server as:
 
 .. code-block:: console
 
-    $ ./openerp-server --addons-path=../web/addons,../addons,../my-modules \
+    $ ./openerp-server --addons-path=addons,../my-modules \
                        -d academy -i website_event --db-filter=academy
 
 We'll also add it as a dependency to our module:
@@ -517,7 +521,7 @@ Restart the server with
 
 .. code-block:: console
 
-    $ ./openerp-server --addons-path=../web/addons,../addons,../my-modules \
+    $ ./openerp-server --addons-path=addons,../my-modules \
                        -d academy -i academy --db-filter=academy
 
 and the menu item has been renamed to Lectures.
@@ -572,6 +576,12 @@ The gist of the operation is fairly simple, but there are lots of changes:
 * Finally demo files must be converted, and existing demo data should be
   purged if we do not need it (e.g. existing non-lectures events and event
   types can be removed before adding our own)
+
+.. note::
+
+    because we're reusing the old XIDs on completely different models, we need
+    to either remove the old reference or (simpler) just drop and re-create
+    the database
 
 .. patch::
 

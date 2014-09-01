@@ -28,7 +28,7 @@ class asset_modify(osv.osv_memory):
     _description = 'Modify Asset'
 
     _columns = {
-        'name': fields.char('Reason', size=64, required=True),
+        'name': fields.char('Reason', required=True),
         'method_number': fields.integer('Number of Depreciations', required=True),
         'method_period': fields.integer('Period Length'),
         'method_end': fields.date('Ending date'),

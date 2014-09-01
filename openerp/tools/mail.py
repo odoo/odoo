@@ -49,7 +49,7 @@ allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
      'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translate', 'data-oe-nodeid',
-     'data-snippet-id', 'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
+     'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
      ])
 
 
@@ -498,6 +498,8 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = re.sub('<br\s*/?>', '\n', html)
     html = re.sub('<.*?>', ' ', html)
     html = html.replace(' ' * 2, ' ')
+    html = html.replace('&gt;', '>')
+    html = html.replace('&lt;', '<')
 
     # strip all lines
     html = '\n'.join([x.strip() for x in html.splitlines()])

@@ -6,7 +6,7 @@
             <field name="name">share.step0.form</field>
             <field name="model">share.wizard</field>
             <field name="arch" type="xml">
-                <form string="Sharing: preparation" version="7.0">
+                <form string="Sharing: preparation">
                     <separator
                         string="Please select the action that opens the screen containing the data you want to share."/>
                     <group>
@@ -28,7 +28,7 @@
             <field name="name">share.step1.form</field>
             <field name="model">share.wizard</field>
             <field name="arch" type="xml">
-                <form string="Configuration" version="7.0">
+                <form string="Configuration">
                     <group>
                         <field name="user_type" invisible="1"/>
                         <field name="invite" invisible="1"/>
@@ -66,14 +66,14 @@
             <field name="name">share.step2.form</field>
             <field name="model">share.wizard</field>
             <field name="arch" type="xml">
-                <form string="Access granted!" version="7.0">
+                <form string="Access granted!">
                     <group attrs="{'invisible':[('user_type','=','embedded')]}"
                         string="An email notification with instructions has been sent to the following people:">
                         <field name="result_line_ids" nolabel="1" mode="tree">
                             <tree string="Summary">
                                 <field name="login"/>
                             </tree>
-                            <form string="Access info" version="7.0">
+                            <form string="Access info">
                                 <group>
                                     <field name="login"/>
                                 </group>

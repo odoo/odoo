@@ -11,7 +11,7 @@
             <field name="name">product.pricelist.version.form</field>
             <field name="model">product.pricelist.version</field>
             <field name="arch" type="xml">
-                <form string="Pricelist Version" version="7.0">
+                <form string="Pricelist Version">
                     <group>
                         <group>
                             <field name="name"/>
@@ -86,7 +86,7 @@
             <field name="name">product.pricelist.item.form</field>
             <field name="model">product.pricelist.item</field>
             <field name="arch" type="xml">
-                <form string="Products Listprices Items" version="7.0">
+                <form string="Products Listprices Items">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field colspan="4" name="name"/></h1>
 
@@ -149,7 +149,7 @@
             <field name="name">product.pricelist.form</field>
             <field name="model">product.pricelist</field>
             <field name="arch" type="xml">
-                <form string="Products Price List" version="7.0">
+                <form string="Products Price List">
                     <label for="name" class="oe_edit_only"/>
                     <h1>
                         <field name="name"/>
@@ -161,7 +161,7 @@
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <field name="version_id" context="{'type':type}">
-                        <form string="Pricelist Version" version="7.0">
+                        <form string="Pricelist Version">
                             <group col="4">
                                 <field name="name"/>
                                 <field name="active"/>
@@ -233,7 +233,7 @@
             <field name="name">product.price.type.form</field>
             <field name="model">product.price.type</field>
             <field name="arch" type="xml">
-                <form string="Products Price Type" version="7.0">
+                <form string="Products Price Type">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>

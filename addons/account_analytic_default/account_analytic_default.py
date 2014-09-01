@@ -39,7 +39,7 @@ class account_analytic_default(osv.osv):
         'date_stop': fields.date('End Date', help="Default end date for this Analytic Account."),
     }
 
-    def account_get(self, cr, uid, product_id=None, partner_id=None, user_id=None, date=None, context=None):
+    def account_get(self, cr, uid, product_id=None, partner_id=None, user_id=None, date=None, company_id=None, context=None):
         domain = []
         if product_id:
             domain += ['|', ('product_id', '=', product_id)]
@@ -47,6 +47,9 @@ class account_analytic_default(osv.osv):
         if partner_id:
             domain += ['|', ('partner_id', '=', partner_id)]
         domain += [('partner_id', '=', False)]
+        if company_id:
+            domain += ['|', ('company_id', '=', company_id)]
+        domain += [('company_id', '=', False)]
         if user_id:
             domain += ['|',('user_id', '=', user_id)]
         domain += [('user_id','=', False)]
@@ -59,6 +62,7 @@ class account_analytic_default(osv.osv):
             index = 0
             if rec.product_id: index += 1
             if rec.partner_id: index += 1
+            if rec.company_id: index += 1
             if rec.user_id: index += 1
             if rec.date_start: index += 1
             if rec.date_stop: index += 1
@@ -74,7 +78,7 @@ class account_invoice_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
         res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id=currency_id, context=context, company_id=company_id)
-        rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context=context)
+        rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), company_id=company_id, context=context)
         if rec:
             res_prod['value'].update({'account_analytic_id': rec.analytic_id.id})
         else:
@@ -88,7 +92,7 @@ class stock_picking(osv.osv):
 
     def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
         partner_id = picking.partner_id and picking.partner_id.id or False
-        rec = self.pool.get('account.analytic.default').account_get(cursor, user, move_line.product_id.id, partner_id , user, time.strftime('%Y-%m-%d'), context={})
+        rec = self.pool.get('account.analytic.default').account_get(cursor, user, move_line.product_id.id, partner_id, user, time.strftime('%Y-%m-%d'))
 
         if rec:
             return rec.analytic_id.id
@@ -125,5 +129,28 @@ class product_product(osv.Model):
     _columns = {
         'rules_count': fields.function(_rules_count, string='# Analytic Rules', type='integer'),
     }
+
+class product_template(osv.Model):
+    _inherit = 'product.template'
+    
+    def _rules_count(self, cr, uid, ids, field_name, arg, context=None):
+        Analytic = self.pool['account.analytic.default']
+        res = {}
+        for product_tmpl_id in self.browse(cr, uid, ids, context=context):
+            res[product_tmpl_id.id] = sum([p.rules_count for p in product_tmpl_id.product_variant_ids])
+        return res
+
+    _columns = {
+        'rules_count': fields.function(_rules_count, string='# Analytic Rules', type='integer'),
+    }
+
+
+    def action_view_rules(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'account_analytic_default.action_product_default_list', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        # Remove context so it is not going to filter on product_id with active_id of template
+        result['context'] = "{}"
+        return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -68,7 +68,7 @@ class purchase_report(osv.osv):
             create or replace view purchase_report as (
                 select
                     min(l.id) as id,
-                    s.date_order as date,
+                    date(s.date_order) as date,
                     s.state,
                     s.date_approve,
                     s.minimum_planned_date as expected_date,

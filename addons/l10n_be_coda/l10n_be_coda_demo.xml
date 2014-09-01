@@ -32,5 +32,27 @@
             <field eval="'2011-01-31'" name="date_stop"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
+
+        <!-- invoice with BBA -->
+        <record id="coda_demo_invoice_1" model="account.invoice">
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="journal_id" ref="account.sales_journal"/>
+            <field name="period_id" ref="period_1_2011"/>
+            <field name="state">draft</field>
+            <field name="type">out_invoice</field>
+            <field name="account_id" ref="account.a_recv"/>
+            <field name="partner_id" ref="base.res_partner_9"/>
+            <field name="reference_type">bba</field>
+            <field name="reference">+++240/2838/42818+++</field>
+        </record>
+        <record id="invoice_1_line_1" model="account.invoice.line">
+            <field name="name">Otpez Laptop without OS</field>
+            <field name="invoice_id" ref="coda_demo_invoice_1"/>
+            <field name="price_unit">608.89</field>
+            <field name="quantity">10</field>
+            <field name="account_id" ref="account.a_sale"/>
+        </record>
+        <workflow action="invoice_open" model="account.invoice" ref="coda_demo_invoice_1"/>
     </data> 
 </openerp>

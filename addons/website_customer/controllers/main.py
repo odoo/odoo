@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import re
-
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
+from openerp.addons.website.models.website import unslug
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 import werkzeug.urls
@@ -43,11 +42,12 @@ class WebsiteCustomer(http.Controller):
         if country_id:
             domain += [('country_id', '=', country_id)]
             if not any(x['country_id'][0] == country_id for x in countries):
-                country = country_obj.browse(cr, uid, country_id, context)
-                countries.append({
-                    'country_id_count': 0,
-                    'country_id': (country_id, country.name)
-                })
+                country = country_obj.read(cr, uid, country_id, ['name'], context)
+                if country:
+                    countries.append({
+                        'country_id_count': 0,
+                        'country_id': (country_id, country['name'])
+                    })
                 countries.sort(key=lambda d: d['country_id'][1])
 
         countries.insert(0, {
@@ -84,9 +84,8 @@ class WebsiteCustomer(http.Controller):
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/customers/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
-        mo = re.search('([-0-9]+)$', str(partner_id))
-        if mo:
-            partner_id = int(mo.group(1))
+        _, partner_id = unslug(partner_id)
+        if partner_id:
             partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
             if partner.exists() and partner.website_published:
                 values = {}

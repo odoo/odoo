@@ -5,7 +5,7 @@
         <record id="view_attachment_form" model="ir.ui.view">
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
-                <form string="Attachments" version="7.0">
+                <form string="Attachments">
                    <sheet>
                     <label for="name" class="oe_edit_only"/>
                     <h1>
@@ -74,7 +74,7 @@
                         help="Filter on my documents"/>
                     <field name="create_uid"/>
                     <field name="type"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
                         <filter string="Company" icon="terp-gtk-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>

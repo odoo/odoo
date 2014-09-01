@@ -57,7 +57,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         return this.model.call('fields_get', []).then(function (f) {
             self.fields = f;
             self.fields.__count = {field:'__count', type: 'integer', string:_t('Quantity')};
-            self.important_fields = self.get_search_fields();
+            self.groupby_fields = self.get_groupby_fields();
             self.measure_list = self.get_measures();
             self.add_measures_to_options();
             self.pivot_options.row_groupby = self.create_field_values(self.pivot_options.row_groupby || []);
@@ -81,12 +81,31 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         });
     },
 
+    get_groupby_fields: function () {
+        var search_fields = this.get_search_fields(),
+            search_field_names = _.pluck(search_fields, 'field'),
+            other_fields = [],
+            groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
+
+        _.each(this.fields, function (val, key) {
+            if (!_.contains(search_field_names, key) && 
+                _.contains(groupable_types, val.type) && 
+                val.store === true) {
+                other_fields.push({
+                    field: key,
+                    string: val.string,
+                });
+            }
+        });
+        return search_fields.concat(other_fields);
+    },
+
     // this method gets the fields that appear in the search view, under the 
     // 'Groupby' heading
     get_search_fields: function () {
         var self = this;
 
-        var groupbygroups = _(this.search_view.inputs).select(function (g) {
+        var groupbygroups = _(this.search_view.drawer.inputs).select(function (g) {
             return g instanceof openerp.web.search.GroupbyGroup;
         });
 
@@ -114,7 +133,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // Extracts the integer/float fields which are not 'id'
     get_measures: function() {
         return _.compact(_.map(this.fields, function (f, id) {
-            if (((f.type === 'integer') || (f.type === 'float')) && (id !== 'id')) {
+            if (((f.type === 'integer') || (f.type === 'float')) && 
+                (id !== 'id') &&
+                (f.store !== false)) {
                 return {field:id, type: f.type, string: f.string};
             }
         }));
@@ -194,7 +215,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     create_field_value: function (f) {
         var field = (_.contains(f, ':')) ? f.split(':')[0] : f,
-            groupby_field = _.findWhere(this.important_fields, {field:field}),
+            groupby_field = _.findWhere(this.groupby_fields, {field:field}),
             string = groupby_field ? groupby_field.string : this.fields[field].string,
             result =  {field: f, string: string, type: this.fields[field].type };
 
@@ -307,11 +328,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             this.expand(id);
             return;
         }
-        if (!this.important_fields.length) {
+        if (!this.groupby_fields.length) {
             return;
         }
 
-        var fields = _.map(this.important_fields, function (field) {
+        var fields = _.map(this.groupby_fields, function (field) {
                 return {id: field.field, value: field.string, type:self.fields[field.field.split(':')[0]].type};
         });
         if (this.dropdown) {
@@ -320,9 +341,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
         $(event.target).after(this.dropdown);
         this.dropdown.css({position:'absolute',
-                           left:event.pageX,
-                           top:event.pageY});
-        this.$('.field-selection').next('.dropdown-menu').toggle();
+                           left:event.originalEvent.layerX,
+                           top:event.originalEvent.layerY});
+        this.$('.field-selection').next('.dropdown-menu').first().toggle();
         
         
     },
@@ -421,23 +442,22 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     build_headers: function () {
         var pivot = this.pivot,
             nbr_measures = pivot.measures.length,
-            height = _.max(_.map(pivot.cols.headers, function(g) {return g.path.length;})),
+            height = _.max(_.map(pivot.cols.headers, function(g) {return g.path.length;})) + 1,
             rows = [];
 
         _.each(pivot.cols.headers, function (col) {
-            if (col.path.length === 0) { return;}
             var cell_width = nbr_measures * (col.expanded ? pivot.get_ancestor_leaves(col).length : 1),
-                cell_height = col.expanded ? 1 : height - col.path.length + 1,
+                cell_height = col.expanded ? 1 : height - col.path.length,
                 cell = {width: cell_width, height: cell_height, title: col.title, id: col.id, expanded: col.expanded};
-            if (rows[col.path.length - 1]) {
-                rows[col.path.length - 1].push(cell);
+            if (rows[col.path.length]) {
+                rows[col.path.length].push(cell);
             } else {
-                rows[col.path.length - 1] = [cell];
+                rows[col.path.length] = [cell];
             }
         });
 
         if (pivot.get_cols_leaves().length > 1) {
-            rows[0].push({width: nbr_measures, height: height, title: _t('Total'), id: pivot.main_col().id });
+            rows[0].push({width: nbr_measures, height: height, title: ' ', id: pivot.main_col().id });
         }
         if (pivot.cols.headers.length === 1) {
             rows = [[{width: nbr_measures, height: 1, title: _t('Total'), id: pivot.main_col().id, expanded: false}]];

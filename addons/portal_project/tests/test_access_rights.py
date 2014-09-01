@@ -78,7 +78,7 @@ class TestPortalProjectBase(TestProjectBase):
 
 
 class TestPortalProject(TestPortalProjectBase):
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_00_project_access_rights(self):
         """ Test basic project access rights, for project and portal_project """
         cr, uid, pigs_id = self.cr, self.uid, self.project_pigs_id
@@ -88,7 +88,7 @@ class TestPortalProject(TestPortalProjectBase):
         # ----------------------------------------
 
         # Do: Alfred reads project -> ok (employee ok public)
-        self.project_project.read(cr, self.user_projectuser_id, pigs_id, ['name'])
+        self.project_project.read(cr, self.user_projectuser_id, [pigs_id], ['state'])
         # Test: all project tasks visible
         task_ids = self.project_task.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
         test_task_ids = set([self.task_1_id, self.task_2_id, self.task_3_id, self.task_4_id, self.task_5_id, self.task_6_id])
@@ -100,7 +100,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_task.write(cr, self.user_projectuser_id, task_ids, {'description': 'TestDescription'})
 
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, [pigs_id], ['state'])
         # Test: no project task visible
         self.assertRaises(AccessError, self.project_task.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
         # Test: no project task readable
@@ -109,7 +109,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.assertRaises(AccessError, self.project_task.write, cr, self.user_none_id, task_ids, {'description': 'TestDescription'})
 
         # Do: Chell reads project -> ok (portal ok public)
-        self.project_project.read(cr, self.user_portal_id, pigs_id, ['name'])
+        self.project_project.read(cr, self.user_portal_id, [pigs_id], ['state'])
         # Test: all project tasks visible
         task_ids = self.project_task.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
         self.assertEqual(set(task_ids), test_task_ids,
@@ -120,7 +120,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.assertRaises(AccessError, self.project_task.write, cr, self.user_portal_id, task_ids, {'description': 'TestDescription'})
 
         # Do: Donovan reads project -> ok (public)
-        self.project_project.read(cr, self.user_public_id, pigs_id, ['name'])
+        self.project_project.read(cr, self.user_public_id, [pigs_id], ['state'])
         # Test: all project tasks visible
         task_ids = self.project_task.search(cr, self.user_public_id, [('project_id', '=', pigs_id)])
         self.assertEqual(set(task_ids), test_task_ids,
@@ -134,16 +134,17 @@ class TestPortalProject(TestPortalProjectBase):
         # CASE2: portal project
         # ----------------------------------------
         self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'portal'})
+        self.project_project.invalidate_cache(cr, uid)
 
         # Do: Alfred reads project -> ok (employee ok public)
-        self.project_project.read(cr, self.user_projectuser_id, pigs_id, ['name'])
+        self.project_project.read(cr, self.user_projectuser_id, [pigs_id], ['state'])
         # Test: all project tasks visible
         task_ids = self.project_task.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
         self.assertEqual(set(task_ids), test_task_ids,
                          'access rights: project user cannot see all tasks of a portal project')
 
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, [pigs_id], ['state'])
         # Test: no project task searchable
         self.assertRaises(AccessError, self.project_task.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
 
@@ -151,7 +152,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_task.message_subscribe_users(cr, self.user_projectuser_id, [self.task_1_id, self.task_3_id], [self.user_portal_id])
 
         # Do: Chell reads project -> ok (portal ok public)
-        self.project_project.read(cr, self.user_portal_id, pigs_id, ['name'])
+        self.project_project.read(cr, self.user_portal_id, [pigs_id], ['state'])
         # Test: only followed project tasks visible + assigned
         task_ids = self.project_task.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
         test_task_ids = set([self.task_1_id, self.task_3_id, self.task_5_id])
@@ -159,7 +160,7 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: portal user should see the followed tasks of a portal project')
 
         # Do: Donovan reads project -> ko (public ko portal)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, pigs_id, ['name'])
+        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_public_id, [('project_id', '=', pigs_id)])
         self.assertFalse(task_ids, 'access rights: public user should not see tasks of a portal project')
@@ -171,9 +172,10 @@ class TestPortalProject(TestPortalProjectBase):
         # CASE3: employee project
         # ----------------------------------------
         self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'employees'})
+        self.project_project.invalidate_cache(cr, uid)
 
         # Do: Alfred reads project -> ok (employee ok employee)
-        self.project_project.read(cr, self.user_projectuser_id, pigs_id, ['name'])
+        self.project_project.read(cr, self.user_projectuser_id, [pigs_id], ['state'])
         # Test: all project tasks visible
         task_ids = self.project_task.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
         test_task_ids = set([self.task_1_id, self.task_2_id, self.task_3_id, self.task_4_id, self.task_5_id, self.task_6_id])
@@ -181,16 +183,16 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: project user cannot see all tasks of an employees project')
 
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, [pigs_id], ['state'])
 
         # Do: Chell reads project -> ko (portal ko employee)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_portal_id, pigs_id, ['name'])
+        self.assertRaises(except_orm, self.project_project.read, cr, self.user_portal_id, [pigs_id], ['state'])
         # Test: no project task visible + assigned
         task_ids = self.project_task.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
         self.assertFalse(task_ids, 'access rights: portal user should not see tasks of an employees project, even if assigned')
 
         # Do: Donovan reads project -> ko (public ko employee)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, pigs_id, ['name'])
+        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_public_id, [('project_id', '=', pigs_id)])
         self.assertFalse(task_ids, 'access rights: public user should not see tasks of an employees project')
@@ -199,9 +201,10 @@ class TestPortalProject(TestPortalProjectBase):
         # CASE4: followers project
         # ----------------------------------------
         self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'followers'})
+        self.project_project.invalidate_cache(cr, uid)
 
         # Do: Alfred reads project -> ko (employee ko followers)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_projectuser_id, pigs_id, ['name'])
+        self.assertRaises(except_orm, self.project_project.read, cr, self.user_projectuser_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
         test_task_ids = set([self.task_4_id])
@@ -209,10 +212,10 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: employee user should not see tasks of a not-followed followers project, only assigned')
 
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, [pigs_id], ['state'])
 
         # Do: Chell reads project -> ko (portal ko employee)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_portal_id, pigs_id, ['name'])
+        self.assertRaises(except_orm, self.project_project.read, cr, self.user_portal_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
         test_task_ids = set([self.task_5_id])
@@ -220,7 +223,7 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: portal user should not see tasks of a not-followed followers project, only assigned')
 
         # Do: Donovan reads project -> ko (public ko employee)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, pigs_id, ['name'])
+        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_public_id, [('project_id', '=', pigs_id)])
         self.assertFalse(task_ids, 'access rights: public user should not see tasks of a followers project')
@@ -230,7 +233,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_task.message_subscribe_users(cr, self.user_manager_id, [self.task_1_id, self.task_3_id], [self.user_portal_id, self.user_projectuser_id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
-        self.project_project.read(cr, self.user_projectuser_id, pigs_id, ['name'])
+        self.project_project.read(cr, self.user_projectuser_id, [pigs_id], ['state'])
         # Test: followed + assigned tasks visible
         task_ids = self.project_task.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
         test_task_ids = set([self.task_1_id, self.task_3_id, self.task_4_id])
@@ -238,7 +241,7 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: employee user should not see followed + assigned tasks of a follower project')
 
         # Do: Chell reads project -> ok (follower ok follower)
-        self.project_project.read(cr, self.user_portal_id, pigs_id, ['name'])
+        self.project_project.read(cr, self.user_portal_id, [pigs_id], ['state'])
         # Test: followed + assigned tasks visible
         task_ids = self.project_task.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
         test_task_ids = set([self.task_1_id, self.task_3_id, self.task_5_id])
@@ -246,4 +249,4 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: employee user should not see followed + assigned tasks of a follower project')
 
         # Do: Donovan reads project -> ko (public ko follower even if follower)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, pigs_id, ['name'])
+        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])

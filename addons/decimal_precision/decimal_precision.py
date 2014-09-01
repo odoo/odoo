@@ -28,7 +28,7 @@ from openerp.modules.registry import RegistryManager
 class decimal_precision(orm.Model):
     _name = 'decimal.precision'
     _columns = {
-        'name': fields.char('Usage', size=50, select=True, required=True),
+        'name': fields.char('Usage', select=True, required=True),
         'digits': fields.integer('Digits', required=True),
     }
     _defaults = {

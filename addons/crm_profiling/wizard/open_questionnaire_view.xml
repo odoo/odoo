@@ -6,7 +6,7 @@
             <field name="name">Open Questionnaires</field>
             <field name="model">open.questionnaire</field>
             <field name="arch" type="xml">
-                <form string="Questionnaires" version="7.0">
+                <form string="Questionnaires">
                     <group>
                         <field name="questionnaire_id"/>
                     </group>
@@ -32,7 +32,7 @@
             <field name="name">open.questionnaire.form</field>
             <field name="model">open.questionnaire</field>
             <field name="arch" type="xml">
-                <form string="Open Questionnaire" version="7.0">
+                <form string="Open Questionnaire">
                     <separator colspan="4" string="Questionnaire"/>
                     <field name="question_ans_ids" colspan="4" nolabel="1" mode="tree" width="550" height="200"/>
                     <footer>
@@ -59,7 +59,7 @@
             <field name="name">open.questionnaire.line.form</field>
             <field name="model">open.questionnaire.line</field>
             <field name="arch" type="xml">
-                <form string="Questionnaire" version="7.0">
+                <form string="Questionnaire">
                     <field name="question_id"/>
                     <field name="answer_id" domain="[('question_id', '=', question_id)]"/>
                 </form>

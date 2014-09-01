@@ -25,7 +25,7 @@ class product_template(osv.Model):
     _inherit = 'product.template'
 
     _columns = {
-        'website_published': fields.boolean('Available in the website'),
+        'website_published': fields.boolean('Available in the website', copy=False),
     }
     _defaults = {
         'website_published': False,

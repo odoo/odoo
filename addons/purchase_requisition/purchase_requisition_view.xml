@@ -28,7 +28,7 @@
         <field name="name">purchase.requisition.form</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <form string="Call for Bids" version="7.0">
+            <form string="Call for Bids">
             <header>              
                 <button name="sent_suppliers" states="draft" string="Confirm Call" class="oe_highlight"/>
                 <button name="open_bid" states="in_progress" string="Close Call for Bids" class="oe_highlight"/>
@@ -84,7 +84,7 @@
                                 <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/>
                                 
                             </tree>
-                            <form string="Products" version="7.0">
+                            <form string="Products">
                                 <group>
                                     <field name="product_id" />
                                     <field name="product_qty"/>
@@ -160,7 +160,7 @@
                     <separator/>
                     <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
                     <field name="user_id" />
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>

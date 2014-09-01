@@ -1,7 +1,7 @@
 import simplejson
 import openerp
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+import openerp.http as http
+from openerp.http import request
 import openerp.addons.web.controllers.main as webmain
 import json
 
@@ -67,5 +67,5 @@ class meeting_invitation(http.Controller):
         uid = request.session.uid
         context = request.session.context
         with registry.cursor() as cr:
-            res = registry.get("res.partner").calendar_last_notif_ack(cr, uid, context=context)
+            res = registry.get("res.partner")._set_calendar_last_notif_ack(cr, uid, context=context)
             return res

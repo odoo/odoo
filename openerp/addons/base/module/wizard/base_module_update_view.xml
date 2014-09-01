@@ -6,15 +6,15 @@
             <field name="name">Module Update</field>
             <field name="model">base.module.update</field>
             <field name="arch" type="xml">
-                <form string="Update Module List" version="7.0">
+                <form string="Update Module List">
                     <field name="state" invisible="1"/>
                     <separator string="Module Update Result"/>
                     <group states="init">
                         <label string="Click on Update below to start the process..." />
                     </group>
                     <group states="done" >
-                        <field name="update"/>
-                        <field name="add" />
+                        <field name="updated"/>
+                        <field name="added" />
                     </group>
                     <footer>
                         <div states="init">

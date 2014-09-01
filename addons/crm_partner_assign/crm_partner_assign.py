@@ -32,7 +32,7 @@ class res_partner_grade(osv.osv):
     _columns = {
         'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
-        'name': fields.char('Grade Name', size=32),
+        'name': fields.char('Grade Name'),
         'partner_weight': fields.integer('Grade Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
     }
@@ -47,7 +47,7 @@ class res_partner_activation(osv.osv):
 
     _columns = {
         'sequence' : fields.integer('Sequence'),
-        'name' : fields.char('Name', size=32, required=True),
+        'name' : fields.char('Name', required=True),
     }
 
 
@@ -56,8 +56,6 @@ class res_partner(osv.osv):
     _columns = {
         'partner_weight': fields.integer('Grade Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
-        'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
-            'Assigned Opportunities'),
         'grade_id': fields.many2one('res.partner.grade', 'Grade'),
         'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
         'date_partnership' : fields.date('Partnership Date'),
@@ -191,7 +189,7 @@ class crm_lead(osv.osv):
                         ('partner_weight','>', 0),
                         ('partner_latitude','>', latitude - 8), ('partner_latitude','<', latitude + 8),
                         ('partner_longitude','>', longitude - 8), ('partner_longitude','<', longitude + 8),
-                        ('country', '=', lead.country_id.id),
+                        ('country_id', '=', lead.country_id.id),
                     ], context=context)
 
                 # 5. fifth way: anywhere in same country

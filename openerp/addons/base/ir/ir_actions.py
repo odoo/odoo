@@ -47,9 +47,9 @@ class actions(osv.osv):
     _table = 'ir_actions'
     _order = 'name'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'type': fields.char('Action Type', required=True, size=32),
-        'usage': fields.char('Action Usage', size=32),
+        'name': fields.char('Name', required=True),
+        'type': fields.char('Action Type', required=True),
+        'usage': fields.char('Action Usage'),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
             translate=True),
@@ -58,6 +58,13 @@ class actions(osv.osv):
         'usage': lambda *a: False,
     }
 
+    def unlink(self, cr, uid, ids, context=None):
+        """unlink ir.action.todo which are related to actions which will be deleted.
+           NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
+        todo_obj = self.pool.get('ir.actions.todo')
+        todo_ids = todo_obj.search(cr, uid, [('action_id', 'in', ids)], context=context)
+        todo_obj.unlink(cr, uid, todo_ids, context=context)
+        return super(actions, self).unlink(cr, uid, ids, context=context)
 
 class ir_actions_report_xml(osv.osv):
 
@@ -148,8 +155,8 @@ class ir_actions_report_xml(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
     _columns = {
-        'type': fields.char('Action Type', size=32, required=True),
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'type': fields.char('Action Type', required=True),
+        'name': fields.char('Name', required=True, translate=True),
 
         'model': fields.char('Model', required=True),
         'report_type': fields.selection([('qweb-pdf', 'PDF'),
@@ -165,10 +172,10 @@ class ir_actions_report_xml(osv.osv):
         # options
         'multi': fields.boolean('On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
-        'attachment': fields.char('Save as Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
+        'attachment': fields.char('Save as Attachment Prefix', help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
 
         # Deprecated rml stuff
-        'usage': fields.char('Action Usage', size=32),
+        'usage': fields.char('Action Usage'),
         'header': fields.boolean('Add RML Header', help="Add or not the corporate RML header"),
         'parser': fields.char('Parser Class'),
         'auto': fields.boolean('Custom Python Parser'),
@@ -257,24 +264,24 @@ class ir_actions_act_window(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Action Name', size=64, translate=True),
-        'type': fields.char('Action Type', size=32, required=True),
+        'name': fields.char('Action Name', translate=True),
+        'type': fields.char('Action Type', required=True),
         'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
         'domain': fields.char('Domain Value',
             help="Optional domain filtering of the destination data, as a Python expression"),
         'context': fields.char('Context Value', required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
         'res_id': fields.integer('Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only"),
-        'res_model': fields.char('Destination Model', size=64, required=True,
+        'res_model': fields.char('Destination Model', required=True,
             help="Model name of the object to open in the view window"),
-        'src_model': fields.char('Source Model', size=64,
+        'src_model': fields.char('Source Model',
             help="Optional model name of the objects on which this action should be visible"),
         'target': fields.selection([('current','Current Window'),('new','New Window'),('inline','Inline Edit'),('inlineview','Inline View')], 'Target Window'),
-        'view_mode': fields.char('View Mode', size=250, required=True,
+        'view_mode': fields.char('View Mode', required=True,
             help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)"),
         'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
             help="View type: Tree type to use for the tree view, set to 'tree' for a hierarchical tree view, or 'form' for a regular list view"),
-        'usage': fields.char('Action Usage', size=32,
+        'usage': fields.char('Action Usage',
             help="Used to filter menu and home actions from the user form."),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
         'views': fields.function(_views_get_fnc, type='binary', string='Views',
@@ -313,24 +320,26 @@ class ir_actions_act_window(osv.osv):
             ids = [ids]
         results = super(ir_actions_act_window, self).read(cr, uid, ids, fields=fields, context=context, load=load)
 
-        if not fields or 'help' in fields:
-            context = dict(context or {})
-            eval_dict = {
-                'active_model': context.get('active_model'),
-                'active_id': context.get('active_id'),
-                'active_ids': context.get('active_ids'),
-                'uid': uid,
-            }
-            for res in results:
-                model = res.get('res_model')
-                if model and self.pool.get(model):
-                    try:
-                        with tools.mute_logger("openerp.tools.safe_eval"):
-                            eval_context = eval(res['context'] or "{}", eval_dict) or {}
-                    except Exception:
-                        continue
+        context = dict(context or {})
+        eval_dict = {
+            'active_model': context.get('active_model'),
+            'active_id': context.get('active_id'),
+            'active_ids': context.get('active_ids'),
+            'uid': uid,
+            'context': context,
+        }
+        for res in results:
+            model = res.get('res_model')
+            if model in self.pool:
+                try:
+                    with tools.mute_logger("openerp.tools.safe_eval"):
+                        eval_context = eval(res['context'] or "{}", eval_dict) or {}
+                        res['context'] = str(eval_context)
+                except Exception:
+                    continue
+                if not fields or 'help' in fields:
                     custom_context = dict(context, **eval_context)
-                    res['help'] = self.pool.get(model).get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
+                    res['help'] = self.pool[model].get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
         if ids_int:
             return results[0]
         return results
@@ -346,7 +355,7 @@ class ir_actions_act_window(osv.osv):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id (cr, SUPERUSER_ID, module, xml_id)
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
-        return self.read(cr, uid, res_id, [], context)
+        return self.read(cr, uid, [res_id], [], context)[0]
 
 VIEW_TYPES = [
     ('tree', 'Tree'),
@@ -394,8 +403,8 @@ class ir_actions_act_url(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
     _columns = {
-        'name': fields.char('Action Name', size=64, translate=True),
-        'type': fields.char('Action Type', size=32, required=True),
+        'name': fields.char('Action Name', translate=True),
+        'type': fields.char('Action Type', required=True),
         'url': fields.text('Action URL',required=True),
         'target': fields.selection((
             ('new', 'New Window'),
@@ -458,7 +467,7 @@ class ir_actions_server(osv.osv):
         return self._get_states(cr, uid, context)
 
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64, translate=True),
+        'name': fields.char('Action Name', required=True, translate=True),
         'condition': fields.char('Condition',
                                  help="Condition verified before executing the server action. If it "
                                  "is not verified, the action will not be executed. The condition is "
@@ -474,16 +483,18 @@ class ir_actions_server(osv.osv):
                                   "- 'Write on a Record': update the values of a record\n"
                                   "- 'Execute several actions': define an action that triggers several other server actions\n"
                                   "- 'Send Email': automatically send an email (available in email_template)"),
-        'usage': fields.char('Action Usage', size=32),
-        'type': fields.char('Action Type', size=32, required=True),
+        'usage': fields.char('Action Usage'),
+        'type': fields.char('Action Type', required=True),
         # Generic
         'sequence': fields.integer('Sequence',
                                    help="When dealing with multiple actions, the execution order is "
                                    "based on the sequence. Low number means high priority."),
         'model_id': fields.many2one('ir.model', 'Base Model', required=True, ondelete='cascade',
                                     help="Base model on which the server action runs."),
+        'model_name': fields.related('model_id', 'model', type='char',
+                                     string='Model Name', readonly=True),
         'menu_ir_values_id': fields.many2one('ir.values', 'More Menu entry', readonly=True,
-                                             help='More menu entry.'),
+                                             help='More menu entry.', copy=False),
         # Client Action
         'action_id': fields.many2one('ir.actions.actions', 'Client Action',
                                      help="Select the client action that has to be executed."),
@@ -539,7 +550,7 @@ class ir_actions_server(osv.osv):
                                         help="Provide an expression that, applied on the current record, gives the field to update."),
         'fields_lines': fields.one2many('ir.server.object.lines', 'server_id',
                                         string='Value Mapping',
-                                        help=""),
+                                        copy=True),
 
         # Fake fields used to implement the placeholder assistant
         'model_object_field': fields.many2one('ir.model.fields', string="Field",
@@ -566,7 +577,7 @@ class ir_actions_server(osv.osv):
         'sequence': 5,
         'code': """# You can use the following variables:
 #  - self: ORM model of the record on which the action is triggered
-#  - object: browse_record of the record on which the action is triggered if there is one, otherwise None
+#  - object: Record on which the action is triggered if there is one, otherwise None
 #  - pool: ORM model pool (i.e. self.pool)
 #  - cr: database cursor
 #  - uid: current user id
@@ -641,6 +652,10 @@ class ir_actions_server(osv.osv):
             'wkf_field_id': False,
             'crud_model_id': model_id,
         }
+
+        if model_id:
+            values['model_name'] = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
+
         return {'value': values}
 
     def on_change_wkf_wonfig(self, cr, uid, ids, use_relational_model, wkf_field_id, wkf_model_id, model_id, context=None):
@@ -744,6 +759,7 @@ class ir_actions_server(osv.osv):
         crud_model_name = False
         if crud_model_id:
             crud_model_name = self.pool.get('ir.model').browse(cr, uid, crud_model_id, context).model
+        
         values = {'link_field_id': False, 'crud_model_name': crud_model_name}
         return {'value': values}
 
@@ -822,7 +838,7 @@ class ir_actions_server(osv.osv):
     def run_action_client_action(self, cr, uid, action, eval_context=None, context=None):
         if not action.action_id:
             raise osv.except_osv(_('Error'), _("Please specify an action to launch!"))
-        return self.pool[action.action_id.type].read(cr, uid, action.action_id.id, context=context)
+        return self.pool[action.action_id.type].read(cr, uid, [action.action_id.id], context=context)[0]
 
     def run_action_code_multi(self, cr, uid, action, eval_context=None, context=None):
         eval(action.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
@@ -832,9 +848,9 @@ class ir_actions_server(osv.osv):
     def run_action_trigger(self, cr, uid, action, eval_context=None, context=None):
         """ Trigger a workflow signal, depending on the use_relational_model:
 
-         - `base`: base_model_pool.signal_<TRIGGER_NAME>(cr, uid, context.get('active_id'))
+         - `base`: base_model_pool.signal_workflow(cr, uid, context.get('active_id'), <TRIGGER_NAME>)
          - `relational`: find the related model and object, using the relational
-           field, then target_model_pool.signal_<TRIGGER_NAME>(cr, uid, target_id)
+           field, then target_model_pool.signal_workflow(cr, uid, target_id, <TRIGGER_NAME>)
         """
         obj_pool = self.pool[action.model_id.model]
         if action.use_relational_model == 'base':
@@ -1049,7 +1065,7 @@ class ir_actions_todo(osv.osv):
             'ir.actions.actions', 'Action', select=True, required=True),
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='Status', required=True),
-        'name': fields.char('Name', size=64),
+        'name': fields.char('Name'),
         'type': fields.selection(TODO_TYPES, 'Type', required=True,
             help="""Manual: Launched manually.
 Automatic: Runs whenever the system is reconfigured.
@@ -1084,10 +1100,10 @@ Launch Manually Once: after having been launched manually, it sets automatically
             wizard.write({'state': 'done'})
 
         # Load action
-        act_type = self.pool.get('ir.actions.actions').read(cr, uid, wizard.action_id.id, ['type'], context=context)
+        act_type = wizard.action_id.type
 
-        res = self.pool[act_type['type']].read(cr, uid, wizard.action_id.id, [], context=context)
-        if act_type['type'] != 'ir.actions.act_window':
+        res = self.pool[act_type].read(cr, uid, [wizard.action_id.id], [], context=context)[0]
+        if act_type != 'ir.actions.act_window':
             return res
         res.setdefault('context','{}')
         res['nodestroy'] = True
@@ -1167,14 +1183,14 @@ class ir_actions_act_client(osv.osv):
             self.write(cr, uid, id, {'params_store': field_value}, context=context)
 
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64, translate=True),
-        'tag': fields.char('Client action tag', size=64, required=True,
+        'name': fields.char('Action Name', required=True, translate=True),
+        'tag': fields.char('Client action tag', required=True,
                            help="An arbitrary string, interpreted by the client"
                                 " according to its own needs and wishes. There "
                                 "is no central tag repository across clients."),
-        'res_model': fields.char('Destination Model', size=64, 
+        'res_model': fields.char('Destination Model', 
             help="Optional model, mostly used for needactions."),
-        'context': fields.char('Context Value', size=250, required=True,
+        'context': fields.char('Context Value', required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
         'params': fields.function(_get_params, fnct_inv=_set_params,
                                   type='binary', 

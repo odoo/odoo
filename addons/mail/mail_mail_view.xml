@@ -5,7 +5,7 @@
             <field name="name">mail.mail.form</field>
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
-                <form string="Email message" version="7.0">
+                <form string="Email message">
                     <header>
                         <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
                         <button name="mark_outgoing" string="Retry" type="object" states='exception,cancel'/>
@@ -34,30 +34,26 @@
                             </page>
                             <page string="Advanced" groups="base.group_no_one">
                                 <group>
-                                    <div>
-                                        <group string="Status">
-                                            <field name="auto_delete"/>
-                                            <field name="notification"/>
-                                            <field name="type"/>
-                                            <field name="mail_server_id"/>
-                                            <field name="model"/>
-                                            <field name="res_id"/>
-                                        </group>
-                                    </div>
-                                    <div>
-                                        <group string="Headers">
-                                            <field name="message_id"/>
-                                            <field name="references"/>
-                                        </group>
-                                        <group string="Recipients">
-                                            <field name="partner_ids" widget="many2many_tags"/>
-                                            <field name="notified_partner_ids" widget="many2many_tags"/>
-                                        </group>
-                                    </div>
+                                    <group string="Status">
+                                        <field name="auto_delete"/>
+                                        <field name="notification"/>
+                                        <field name="type"/>
+                                        <field name="mail_server_id"/>
+                                        <field name="model"/>
+                                        <field name="res_id"/>
+                                    </group>
+                                    <group string="Headers">
+                                        <field name="message_id"/>
+                                        <field name="references"/>
+                                        <field name="headers"/>
+                                    </group>
                                 </group>
                             </page>
                             <page string="Attachments">
                                 <field name="attachment_ids"/>
+                            </page>
+                            <page string="Failure Reason" attrs="{'invisible': [('state', '!=', 'exception')]}">
+                                <field name="failure_reason"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -108,7 +104,7 @@
                         <field name="model"/>
                         <field name="res_id"/>
                     </group>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Author" name="author" context="{'group_by':'author_id'}"/>
                         <filter string="Thread" name="thread" domain="[]" context="{'group_by':'message_id'}"/>
@@ -123,7 +119,7 @@
             <field name="res_model">mail.mail</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_outgoing': 1}</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_mail_search"/>
         </record>
 

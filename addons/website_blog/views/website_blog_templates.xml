@@ -2,10 +2,20 @@
 <openerp>
 <data>
 
-<template id="assets_editor" inherit_id="website.assets_editor" name="Blog Editor" groups="base.group_document_user">
+<template id="assets_editor" inherit_id="website.assets_editor" name="Blog Editor">  <!-- groups="base.group_document_user" -->
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
         <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js"></script>
+    </xpath>
+</template>
+
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Blog Front-end assets">
+    <xpath expr="." position="inside">
+        <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
+
+        <script type="text/javascript" src="/website_blog/static/lib/contentshare.js"/>
+        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.inline.discussion.js"></script>
+        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
     </xpath>
 </template>
 
@@ -36,7 +46,7 @@
                     <t t-set="classname">pull-right</t>
                 </t>
             </section>
-            <section data-snippet-id="title" class="container">
+            <section class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <h1>Latest Posts</h1>
@@ -222,7 +232,7 @@
     <section id="comments" class="read_width">
         <hr/>
         <ul class="media-list" id="comments-list">
-            <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
+            <li t-foreach="comments" t-as="message" class="media">
                 <span class="pull-left">
                     <img class="media-object img img-circle" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width: 30px"/>
                 </span>
@@ -340,12 +350,6 @@
 <!-- Page -->
 <template id="index" name="Blog Navigation">
     <t t-call="website.layout">
-        <t t-set="head">
-            <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
-            <script type="text/javascript" src="/website_blog/static/src/js/website_blog.inline.discussion.js"></script>
-            <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
-            <script type="text/javascript" src="/website_blog/static/lib/contentshare.js"/>
-        </t>
         <div id="wrap" class="js_blog">
             <t t-raw="0"/>
         </div>
@@ -461,5 +465,11 @@
     </xpath>
 </template>
 
+<!-- User Navbar -->
+<template id="content_new_blogpost" inherit_id="website.user_navbar" groups="base.group_document_user">
+    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
+         <li><a href="#" data-action="new_blog_post">New Blog Post</a></li>
+    </xpath>
+</template>
 </data>
 </openerp>

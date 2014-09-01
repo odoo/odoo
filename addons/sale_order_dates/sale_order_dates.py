@@ -29,11 +29,6 @@ class sale_order_dates(osv.osv):
     """Add several date fields to Sale Orders, computed or user-entered"""
     _inherit = 'sale.order'
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        """Don't copy the requested date along with the Sales Order"""
-        default = dict(default or {}, requested_date=False)
-        return super(sale_order_dates, self).copy(cr, uid, id, default=default, context=context)
-
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         """Compute the expected date from the requested date, not the order date"""
         if order and order.requested_date:
@@ -93,7 +88,7 @@ class sale_order_dates(osv.osv):
                  "a date that you can promise to the customer, based on the "
                  "Product Lead Times."),
         'requested_date': fields.datetime('Requested Date',
-            readonly=True, states={'draft': [('readonly', False)]},
+            readonly=True, states={'draft': [('readonly', False)]}, copy=False,
             help="Date by which the customer has requested the items to be "
                  "delivered.\n"
                  "When this Order gets confirmed, the Delivery Order's "

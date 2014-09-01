@@ -56,12 +56,12 @@ class ir_attachment(osv.osv):
             if model_object and res_id:
                 model_pool = self.pool[model_object]
                 res = model_pool.name_get(cr,uid,[res_id],context)
-                res_name = res and res[0][1] or False
+                res_name = res and res[0][1] or None
                 if res_name:
                     field = self._columns.get('res_name',False)
                     if field and len(res_name) > field.size:
-                        res_name = res_name[:field.size-3] + '...' 
-                data[attachment.id] = res_name
+                        res_name = res_name[:30] + '...' 
+                data[attachment.id] = res_name or False
             else:
                 data[attachment.id] = False
         return data
@@ -69,7 +69,7 @@ class ir_attachment(osv.osv):
     def _storage(self, cr, uid, context=None):
         return self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'ir_attachment.location', 'file')
 
-    @tools.ormcache()
+    @tools.ormcache(skiparg=3)
     def _filestore(self, cr, uid, context=None):
         return tools.config.filestore(cr.dbname)
 
@@ -182,11 +182,11 @@ class ir_attachment(osv.osv):
 
     _name = 'ir.attachment'
     _columns = {
-        'name': fields.char('Attachment Name',size=256, required=True),
-        'datas_fname': fields.char('File Name',size=256),
+        'name': fields.char('Attachment Name', required=True),
+        'datas_fname': fields.char('File Name'),
         'description': fields.text('Description'),
-        'res_name': fields.function(_name_get_resname, type='char', size=128, string='Resource Name', store=True),
-        'res_model': fields.char('Resource Model',size=64, readonly=True, help="The database object this attachment will be attached to"),
+        'res_name': fields.function(_name_get_resname, type='char', string='Resource Name', store=True),
+        'res_model': fields.char('Resource Model', readonly=True, help="The database object this attachment will be attached to"),
         'res_id': fields.integer('Resource ID', readonly=True, help="The record id this is attached to"),
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
@@ -196,7 +196,7 @@ class ir_attachment(osv.osv):
         'url': fields.char('Url', size=1024),
         # al: We keep shitty field names for backward compatibility with document
         'datas': fields.function(_data_get, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
-        'store_fname': fields.char('Stored Filename', size=256),
+        'store_fname': fields.char('Stored Filename'),
         'db_datas': fields.binary('Database Data'),
         'file_size': fields.integer('File Size'),
     }
@@ -273,7 +273,7 @@ class ir_attachment(osv.osv):
         # performed in batch as much as possible.
         ima = self.pool.get('ir.model.access')
         for model, targets in model_attachments.iteritems():
-            if not self.pool.get(model):
+            if model not in self.pool:
                 continue
             if not ima.check(cr, uid, model, 'read', False):
                 # remove all corresponding attachment ids
@@ -297,7 +297,7 @@ class ir_attachment(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         self.check(cr, uid, ids, 'read', context=context)
-        return super(ir_attachment, self).read(cr, uid, ids, fields_to_read, context, load)
+        return super(ir_attachment, self).read(cr, uid, ids, fields_to_read, context=context, load=load)
 
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
@@ -329,5 +329,13 @@ class ir_attachment(osv.osv):
     def action_get(self, cr, uid, context=None):
         return self.pool.get('ir.actions.act_window').for_xml_id(
             cr, uid, 'base', 'action_attachment', context=context)
+
+    def invalidate_bundle(self, cr, uid, type='%', xmlid=None, context=None):
+        assert type in ('%', 'css', 'js'), "Unhandled bundle type"
+        xmlid = '%' if xmlid is None else xmlid + '%'
+        domain = [('url', '=like', '/web/%s/%s/%%' % (type, xmlid))]
+        ids = self.search(cr, uid, domain, context=context)
+        if ids:
+            self.unlink(cr, uid, ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

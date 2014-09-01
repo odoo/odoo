@@ -271,7 +271,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     }
                     action_loaded = this.do_action(state.action, { additional_context: add_context });
                     $.when(action_loaded || null).done(function() {
-                        instance.webclient.menu.has_been_loaded.done(function() {
+                        instance.webclient.menu.is_bound.done(function() {
                             if (self.inner_action && self.inner_action.id) {
                                 instance.webclient.menu.open_action(self.inner_action.id);
                             }
@@ -343,6 +343,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 return self.do_action(result, options);
             });
         }
+
+        instance.web.bus.trigger('action', action);
 
         // Ensure context & domain are evaluated and can be manipulated/used
         var ncontext = new instance.web.CompoundContext(options.additional_context, action.context || {});
@@ -607,7 +609,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
   
-
         return this.switch_mode(default_view, null, this.flags[default_view] && this.flags[default_view].options);
       
         
@@ -618,7 +619,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var view_promise;
         var form = this.views['form'];
         if (!view || (form && form.controller && !form.controller.can_be_discarded())) {
-            self.trigger('switch_mode', view_type, no_store, view_options);
             return $.Deferred().reject();
         }
         if (!no_store) {
@@ -647,7 +647,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
-                    var container = self.$el.find("> .oe_view_manager_body > .oe_view_manager_view_" + view_name);
+                    var container = self.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_name);
                     if (view_name === view_type) {
                         container.show();
                         controller.do_show(view_options || {});
@@ -690,11 +690,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         controller.on('switch_mode', self, this.switch_mode);
         controller.on('previous_view', self, this.prev_view);
         
-        var container = this.$el.find("> .oe_view_manager_body > .oe_view_manager_view_" + view_type);
+        var container = this.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
-        this.views[view_type].deferred.resolve(view_type);
         return $.when(view_promise).done(function() {
+            self.views[view_type].deferred.resolve(view_type);
             if (self.searchview
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
@@ -705,6 +705,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             self.trigger("controller_inited",view_type,controller);
         });
     },
+
     /**
      * @returns {Number|Boolean} the view id of the given type, false if not found
      */
@@ -726,6 +727,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
                 views.push(mode);
             }
+            instance.web.bus.trigger('view_switch_mode', self, mode);
         });
         var item = _.extend({
             widget: this,
@@ -800,6 +802,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         if (this.searchview) {
             this.searchview.destroy();
         }
+
         var options = {
             hidden: this.flags.search_view === false,
             disable_custom_filters: this.flags.search_disable_custom_filters,
@@ -807,7 +810,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.searchview = new instance.web.SearchView(this, this.dataset, view_id, search_defaults, options);
 
         this.searchview.on('search_data', self, this.do_searchview_search);
-        return this.searchview.appendTo(this.$el.find(".oe_view_manager_view_search"));
+        return this.searchview.appendTo(this.$(".oe_view_manager_view_search"),
+                                      this.$(".oe_searchview_drawer_container"));
     },
     do_searchview_search: function(domains, contexts, groupbys) {
         var self = this,
@@ -953,12 +957,12 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     url: '/web/tests?mod=*'
                 });
                 break;
-            case 'perm_read':
+            case 'get_metadata':
                 var ids = current_view.get_selected_ids();
                 if (ids.length === 1) {
-                    this.dataset.call('perm_read', [ids]).done(function(result) {
+                    this.dataset.call('get_metadata', [ids]).done(function(result) {
                         var dialog = new instance.web.Dialog(this, {
-                            title: _.str.sprintf(_t("View Log (%s)"), self.dataset.model),
+                            title: _.str.sprintf(_t("Metadata (%s)"), self.dataset.model),
                             size: 'medium',
                         }, QWeb.render('ViewManagerDebugViewLog', {
                             perm : result[0],
@@ -1121,7 +1125,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             );
         } 
 
-        $.when(defs).done(function() {
+        $.when(this.views[this.active_view] ? this.views[this.active_view].deferred : $.when(), defs).done(function() {
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
@@ -1461,7 +1465,7 @@ instance.web.View = instance.web.Widget.extend({
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', {
                 action_id: action_data.name,
-                context: _.extend({'active_model': dataset.model, 'active_ids': dataset.ids, 'active_id': record_id}, instance.web.pyeval.eval('context', context)),
+                context: _.extend(instance.web.pyeval.eval('context', context), {'active_model': dataset.model, 'active_ids': dataset.ids, 'active_id': record_id}),
                 do_not_eval: true
             }).then(handler);
         } else  {
@@ -1480,6 +1484,7 @@ instance.web.View = instance.web.Widget.extend({
     },
     do_show: function () {
         this.$el.show();
+        instance.web.bus.trigger('view_shown', this);
     },
     do_hide: function () {
         this.$el.hide();

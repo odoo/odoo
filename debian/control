@@ -1,0 +1,67 @@
+Source: openerp
+Section: net
+Priority: optional
+Maintainer: OpenERP SA <al@openerp.com>
+Build-Depends: debhelper (>= 7.0.50~), python, rsync
+Standards-Version: 3.9.1
+Homepage: http://www.openerp.com/
+Vcs-Bzr: https://launchpad.net/openobject
+
+Package: openerp
+Section: net
+Architecture: all
+Depends:
+ ${misc:Depends},
+ adduser,
+ python,
+ postgresql-client,
+ python-dateutil,
+ python-decorator,
+ python-docutils,
+ python-feedparser,
+ python-gdata,
+ python-imaging,
+ python-jinja2,
+ python-ldap,
+ python-libxslt1,
+ python-lxml,
+ python-mako,
+ python-mock,
+ python-openid,
+ python-passlib,
+ python-psutil,
+ python-psycopg2,
+ python-pybabel,
+ python-pychart,
+ python-pydot,
+ python-pyparsing,
+ python-pypdf,
+ python-reportlab,
+ python-requests,
+ python-simplejson,
+ python-tz,
+ python-unittest2,
+ python-vatnumber,
+ python-vobject,
+ python-webdav,
+ python-werkzeug,
+ python-xlwt,
+ python-yaml,
+ python-zsi
+Conflicts: tinyerp-server, openerp-server, openerp-web
+Replaces: tinyerp-server, openerp-server, openerp-web
+Recommends:
+ antiword,
+ graphviz,
+ ghostscript,
+ postgresql,
+ python-gevent,
+ poppler-utils
+Description: OpenERP Enterprise Resource Management
+ OpenERP, previously known as TinyERP, is a complete ERP and CRM. The main
+ features are accounting (analytic and financial), stock management, sales and
+ purchases management, tasks automation, marketing campaigns, help desk, POS,
+ etc. Technical features include a distributed server, flexible workflows, an
+ object database, a dynamic GUI, customizable reports, and an XML-RPC
+ interface.
+

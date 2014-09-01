@@ -114,7 +114,7 @@ class procurement_order(osv.osv):
                 procurement.refresh()
                 self.production_order_create_note(cr, uid, procurement, context=context)
                 production_obj.action_compute(cr, uid, [produce_id], properties=[x.id for x in procurement.property_ids])
-                production_obj.signal_button_confirm(cr, uid, [produce_id])
+                production_obj.signal_workflow(cr, uid, [produce_id], 'button_confirm')
             else:
                 res[procurement.id] = False
                 self.message_post(cr, uid, [procurement.id], body=_("No BoM exists for this product!"), context=context)

@@ -21,6 +21,22 @@
              </field>
         </record>
 
+        <!-- Custom reports (aka filters) -->
+        <record id="filter_task_report_responsible" model="ir.filters">
+            <field name="name">By Responsible</field>
+            <field name="model_id">report.project.task.user</field>
+            <field name="domain">[]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['project_id', 'user_id']}</field>
+        </record>
+        <record id="filter_task_report_reviewer" model="ir.filters">
+            <field name="name">By Reviewer</field>
+            <field name="model_id">report.project.task.user</field>
+            <field name="domain">[]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['project_id', 'reviewer_id']}</field>
+        </record>
+
         <record id="view_task_project_user_search" model="ir.ui.view">
             <field name="name">report.project.task.user.search</field>
             <field name="model">report.project.task.user</field>
@@ -34,23 +50,21 @@
                     <field name="user_id"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="stage_id"/>
-                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=',False)]"/>
-                    <filter string="New" name="new" domain="[('stage_id.sequence', '=', 1)]"/>
-                    <separator/>
                     <filter string="My Task" domain="[('user_id','=',uid)]" />
-                    <group expand="0" string="Extended Filters...">
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=',False)]"/>
+                    <separator/>
+                    <filter string="New" name="new" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
+                    <group expand="0" string="Extended Filters">
                         <field name="priority"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
-                    <group expand="1" string="Group By...">
+                    <group expand="1" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
                         <filter string="Task" context="{'group_by':'name'}" />
                         <filter string="Contact" context="{'group_by':'partner_id'}" />
                         <filter string="Assigned to" name="User" context="{'group_by':'user_id'}" />
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Assignation date (day)" context="{'group_by':'date_start:day'}" help="Creation Date"/>
-                        <filter string="Assignation date (month)" context="{'group_by':'date_start:month'}" help="Creation Date"/>
-                        <filter string="Assignation date (year)" context="{'group_by':'date_start:year'}" help="Creation Date"/>
+                        <filter string="Assignation date" context="{'group_by':'date_start:month'}" help="Creation Date"/>
                         <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}" help="Last Stage Update"/>
                     </group>
                 </search>

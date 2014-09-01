@@ -5,41 +5,39 @@
             <field name="name">fleet.vehicle.model.form</field>
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
-                <form string="Model" version="7.0">
-                    <sheet>
-                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
-                        <div class="oe_title">
-                            <label for="modelname" class="oe_edit_only"/>
-                            <h1>
-                                <field name="modelname" />
-                            </h1>
-                            <label for="brand_id" class="oe_edit_only"/>
-                            <h2>
-                                <field name="brand_id" on_change="on_change_brand(brand_id)"/>
-                            </h2>
-                        </div>
-                        <notebook>
-                            <page string="Vendors">
-                                <field name="vendors" widget="many2many_kanban">
-                                    <kanban quick_create="false" create="true">
-                                        <field name="name"/>
-                                        <templates>
-                                            <t t-name="kanban-box">
-                                                <div style="position: relative">
-                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                    <div class="oe_module_vignette">
-                                                        <div class="oe_module_desc">
-                                                            <field name="name"/>
-                                                        </div>
+                <form string="Model">
+                    <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="modelname" class="oe_edit_only"/>
+                        <h1>
+                            <field name="modelname" />
+                        </h1>
+                        <label for="brand_id" class="oe_edit_only"/>
+                        <h2>
+                            <field name="brand_id" on_change="on_change_brand(brand_id)"/>
+                        </h2>
+                    </div>
+                    <notebook>
+                        <page string="Vendors">
+                            <field name="vendors" widget="many2many_kanban">
+                                <kanban quick_create="false" create="true">
+                                    <field name="name"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div style="position: relative">
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                <div class="oe_module_vignette">
+                                                    <div class="oe_module_desc">
+                                                        <field name="name"/>
                                                     </div>
                                                 </div>
-                                            </t>
-                                        </templates>
-                                    </kanban>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -48,7 +46,7 @@
             <field name="name">fleet.vehicle.model.tree</field>
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
-                <tree string="Models" version="7.0">
+                <tree string="Models">
                     <field name="brand_id" />
                     <field name="modelname" />
                 </tree>
@@ -61,8 +59,8 @@
             <field name="arch" type="xml">
                 <search string="Vehicles costs" >
                     <field name="brand_id" />
-                    <group expand="1" string="Group By...">
-                        <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Brand"/>
+                    <group expand="1" string="Group By">
+                        <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Make"/>
                     </group>
                 </search>
             </field>
@@ -78,7 +76,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new model.
               </p><p>
-                You can define several models (e.g. A3, A4) for each brand (Audi).
+                You can define several models (e.g. A3, A4) for each make (Audi).
               </p>
             </field>
         </record>
@@ -87,7 +85,7 @@
             <field name="name">fleet.vehicle.model.brand.tree</field>
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
-                <tree string="Model Brand" version="7.0">
+                <tree string="Model Make">
                     <field name="name" />
                 </tree>
             </field>
@@ -97,18 +95,16 @@
             <field name="name">fleet.vehicle.model.brand.form</field>
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
-                <form string="Model Brand" version="7.0">
-                    <sheet>
-                        <group>
-                            <div>
-                                <field name="image_medium" widget="image" class="oe_left oe_avatar"/>
-                                <label for="name" class="oe_edit_only"/>
-                                <h1>
-                                    <field name="name" class="oe_inline" />
-                                </h1>
-                            </div>
-                        </group>
-                    </sheet>
+                <form string="Model Make">
+                    <group>
+                        <div>
+                            <field name="image_medium" widget="image" class="oe_left oe_avatar"/>
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline" />
+                            </h1>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>
@@ -144,13 +140,13 @@
         </record>
 
         <record model='ir.actions.act_window' id='fleet_vehicle_model_brand_act'>
-            <field name="name">Model brand of Vehicle</field>
+            <field name="name">Model make of Vehicle</field>
             <field name="res_model">fleet.vehicle.model.brand</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new brand.
+                Click to create a new make.
               </p>
             </field>
         </record>
@@ -159,7 +155,7 @@
             <field name="name">fleet.vehicle.state.tree</field>
             <field name="model">fleet.vehicle.state</field>
             <field name="arch" type="xml">
-                <tree string="State" version="7.0" editable="bottom">
+                <tree string="State" editable="bottom">
                     <field name="sequence" widget="handler" invisible="1"/>
                     <field name="name" />
                     
@@ -192,7 +188,7 @@
             <field name="name">fleet.vehicle.form</field>
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
-                <form string="Vehicle" version="7.0">
+                <form string="Vehicle">
                     <header>
                         <field name="state_id"  widget="statusbar" clickable="True" />
                     </header>
@@ -302,7 +298,7 @@
             <field name="name">fleet.vehicle.tree</field>
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
-                <tree string="Vehicle" version="7.0" colors="orange:contract_renewal_due_soon and not contract_renewal_overdue;red:contract_renewal_overdue">
+                <tree string="Vehicle" colors="orange:contract_renewal_due_soon and not contract_renewal_overdue;red:contract_renewal_overdue">
                     <field name="license_plate" />
                     <field name="model_id" />
                     <field name="driver_id" />
@@ -329,7 +325,7 @@
                     <field name="location"/>
                     <field name="state_id" />
                     <filter name="alert_true" domain="['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]" string="Has Alert(s)"/>
-                    <group expand="1" string="Group By...">
+                    <group expand="1" string="Group By">
                         <filter name="groupby_status" context="{'group_by' : 'state_id'}" string="Status"/>
                         <filter name="groupby_model" context="{'group_by' : 'model_id'}" string="Model"/>
                     </group>
@@ -418,7 +414,7 @@
                 contracts, services, fixed and recurring costs, odometers and
                 fuel logs associated to each vehicle.
             </p><p>
-                OpenERP will warn you when services or contract have to be
+                Odoo will warn you when services or contract have to be
                 renewed.
               </p>
             </field>
@@ -433,7 +429,7 @@
             <field name="name">fleet.vehicle.log_contract.form</field>
             <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
-                <form string="Contract logs" version="7.0">
+                <form string="Contract logs">
                     <header>
                         <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="open" type="object" class="oe_highlight" string="Terminate Contract" groups="fleet.group_fleet_manager"/>
                         <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="toclose" type="object" class="oe_highlight" string="Terminate Contract" groups="fleet.group_fleet_manager"/>
@@ -477,7 +473,7 @@
                             <page string="Included Services">
                                 <group>
                                     <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1" on_change="on_change_indic_cost(cost_ids)">
-                                        <tree version="7.0" editable="bottom">
+                                        <tree editable="bottom">
                                             <field name="cost_subtype_id" string="Service" domain="[('category','=','service')]"/>
                                             <field name="amount" sum="Price" string="Indicative Cost" />
                                         </tree>
@@ -489,7 +485,7 @@
                             <page string="Generated Recurring Costs">
                                 <group>
                                     <field name="generated_cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1" sum="amount">
-                                        <tree version="7.0" editable="bottom" >
+                                        <tree editable="bottom" >
                                             <field name="date" />
                                             <field name="amount" sum="amount"/>
                                         </tree>
@@ -521,7 +517,7 @@
             <field name="name">fleet.vehicle.log.contract.tree</field>
             <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contract logs" version="7.0" colors="orange:days_left>0 and days_left&lt;15;red:days_left==0;grey:state=='closed'">
+                <tree string="Contract logs" colors="orange:days_left>0 and days_left&lt;15;red:days_left==0;grey:state=='closed'">
                     <field name="start_date" />
                     <field name="expiration_date" />
                     <field name="days_left" invisible="1"/>
@@ -558,7 +554,7 @@
                 Click to create a new contract. 
               </p><p>
                 Manage all your contracts (leasing, insurances, etc.) with
-                their related services, costs. OpenERP will automatically warn
+                their related services, costs. Odoo will automatically warn
                 you when some contracts have to be renewed.
               </p><p>
                 Each contract (e.g.: leasing) may include several services
@@ -573,7 +569,7 @@
             <field name="name">fleet.vehicle.odometer.form</field>
             <field name="model">fleet.vehicle.odometer</field>
             <field name="arch" type="xml">
-                <form string="Odometer Logs" version="7.0">
+                <form string="Odometer Logs">
                     <sheet>
                         <group>
                             <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
@@ -592,7 +588,7 @@
             <field name="name">fleet.vehicle.odometer.tree</field>
             <field name="model">fleet.vehicle.odometer</field>
             <field name="arch" type="xml">
-                <tree string="Odometer Logs" version="7.0" editable="top">
+                <tree string="Odometer Logs" editable="top">
                     <field name="date" />
                     <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                     <field name="value" />
@@ -610,7 +606,7 @@
                     <field name="value"/>
                     <field name="unit"/>
                     <field name="date"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
                     </group>
                 </search>
@@ -652,7 +648,7 @@
             <field name="name">fleet.vehicle.log.fuel.form</field>
             <field name="model">fleet.vehicle.log.fuel</field>
             <field name="arch" type="xml">
-                <form string="Fuel Logs" version="7.0">
+                <form string="Fuel Logs">
                     <sheet>
                         <group col="2">
                             <group string="Vehicle Details">
@@ -716,7 +712,7 @@
                     <field name="purchaser_id" />
                     <field name="liter" />
                     <field name="amount" sum="Price"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
                     </group>
                 </search>
@@ -758,7 +754,7 @@
             <field name="name">fleet.vehicle.log.services.form</field>
             <field name="model">fleet.vehicle.log.services</field>
             <field name="arch" type="xml">
-                <form string="Services Logs" version="7.0">
+                <form string="Services Logs">
                     <sheet>
                         <group col="2">
                             <group string="Services Details">
@@ -784,7 +780,7 @@
                         </group>
                         <group string="Included Services">
                             <field name="cost_ids" nolabel="1">
-                                <tree string="Included Services" version="7.0" editable="bottom">
+                                <tree string="Included Services" editable="bottom">
                                     <field name="cost_subtype_id" string="Service" domain="[('category','=','service')]"/>
                                     <field name="amount" sum="Price" string="Indicative Cost"/>
                                 </tree>
@@ -847,7 +843,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new service entry. 
               </p><p>
-                OpenERP helps you keeping track of all the services done
+                Odoo helps you keeping track of all the services done
                 on your vehicle. Services can be of many type: occasional
                 repair, fixed maintenance, etc.
               </p>
@@ -919,13 +915,12 @@
                 <search string="Vehicles costs" >
                     <field name="vehicle_id" />
                     <field name="cost_subtype_id"/>
-                    <field name="year"/>
                     <field name="date"/>
                     <field name="parent_id"/>
                     <filter name="parent_false" domain="[('parent_id','=',False)]" string="Effective Costs"/>
                     <filter name="parent_true" domain="[('parent_id','!=',False)]" string="Indicative Costs"/>
-                    <group expand="1" string="Group By...">
-                        <filter name="groupby_year" context="{'group_by' : 'year'}" string="Year"/>
+                    <group expand="1" string="Group By">
+                        <filter name="groupby_year" context="{'group_by' : 'date:year'}" string="Year"/>
                         <filter name="groupby_date" context="{'group_by' : 'date'}" string="Vehicle Costs Month" help="Vehicle Costs by Month"/>
                         <filter name="groupby_cost_type" context="{'group_by' : 'cost_type'}" string="Cost Type"/>
                         <filter name="groupby_cost_subtype_id" context="{'group_by' : 'cost_subtype_id'}" string="Cost Subtype"/>
@@ -940,7 +935,7 @@
             <field name="name">fleet.vehicle.cost.form</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
-                <form string="Vehicle costs" version="7.0">
+                <form string="Vehicle costs">
                     <sheet>
                         <group col="2" string="Cost Details">
                             <group>
@@ -980,7 +975,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new cost.
               </p><p>
-                OpenERP helps you managing the costs for your different
+                Odoo helps you managing the costs for your different
                 vehicles. Costs are created automatically from services,
                 contracts (fixed or recurring) and fuel logs.
               </p>

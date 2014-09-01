@@ -113,7 +113,7 @@ class mail_compose_message(osv.TransientModel):
                 }
                 values.setdefault('attachment_ids', list()).append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
-            values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to', 'attachment_ids', 'mail_server_id'], context=context)
+            values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'], context=context)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')

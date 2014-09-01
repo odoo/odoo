@@ -59,13 +59,10 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="arch" type="xml">
-                <filter string="Team" position="after">
-                    <filter string="Assigned Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
-                    <filter string="Assigned Month"  icon="terp-go-month"
-                            domain="[]" context="{'group_by':'date_assign'}"/>
-
+                <filter string="Customer" position="after">
+                    <filter string="Assigned Partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
-                <filter string="My Team(s)" position="after">
+                <filter name="unassigned" position="after">
                     <filter string="My Assigned Partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
                 </filter>
                 <field name="partner_id" position="after">
@@ -131,10 +128,10 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="arch" type="xml">
-                <filter string="Team" position="after">
-                    <filter string="Assigned Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                <filter string="Customer" position="after">
+                    <filter string="Assigned Partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
-                <filter string="My Team(s)" position="after">
+                <filter name="unassigned" position="after">
                     <filter string="My Assigned Partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
                 </filter>
                 <field name="partner_id" position="after">

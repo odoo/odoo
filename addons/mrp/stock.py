@@ -31,16 +31,10 @@ class StockMove(osv.osv):
     _inherit = 'stock.move'
 
     _columns = {
-        'production_id': fields.many2one('mrp.production', 'Production Order for Produced Products', select=True),
+        'production_id': fields.many2one('mrp.production', 'Production Order for Produced Products', select=True, copy=False),
         'raw_material_production_id': fields.many2one('mrp.production', 'Production Order for Raw Materials', select=True),
         'consumed_for': fields.many2one('stock.move', 'Consumed for', help='Technical field used to make the traceability of produced products'),
     }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default['production_id'] = False
-        return super(StockMove, self).copy(cr, uid, id, default, context=context)
 
     def check_tracking(self, cr, uid, move, lot_id, context=None):
         super(StockMove, self).check_tracking(cr, uid, move, lot_id, context=context)
@@ -91,6 +85,8 @@ class StockMove(osv.osv):
                     'product_uos_qty': line['product_uos_qty'],
                     'state': state,
                     'name': line['name'],
+                    'procurement_id': move.procurement_id.id,
+                    'split_from': move.id, #Needed in order to keep purchase connection, but will be removed by unlink
                 }
                 mid = move_obj.copy(cr, uid, move.id, default=valdef)
                 to_explode_again_ids.append(mid)
@@ -165,7 +161,7 @@ class StockMove(osv.osv):
                                                     'consumed_for': consumed_for}, context=context)
             self.action_done(cr, uid, res, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
-            production_obj.signal_button_produce(cr, uid, production_ids)
+            production_obj.signal_workflow(cr, uid, production_ids, 'button_produce')
             for new_move in res:
                 if new_move != move.id:
                     #This move is not already there in move lines of production order
@@ -187,7 +183,7 @@ class StockMove(osv.osv):
             #If we are not scrapping our whole move, tracking and lot references must not be removed
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
-                production_obj.signal_button_produce(cr, uid, [prod_id])
+                production_obj.signal_workflow(cr, uid, [prod_id], 'button_produce')
             for new_move in new_moves:
                 production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
                 res.append(new_move)

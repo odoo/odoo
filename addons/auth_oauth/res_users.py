@@ -17,8 +17,8 @@ class res_users(osv.Model):
 
     _columns = {
         'oauth_provider_id': fields.many2one('auth.oauth.provider', 'OAuth Provider'),
-        'oauth_uid': fields.char('OAuth User ID', help="Oauth Provider user_id"),
-        'oauth_access_token': fields.char('OAuth Access Token', readonly=True),
+        'oauth_uid': fields.char('OAuth User ID', help="Oauth Provider user_id", copy=False),
+        'oauth_access_token': fields.char('OAuth Access Token', readonly=True, copy=False),
     }
 
     _sql_constraints = [

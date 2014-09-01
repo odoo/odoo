@@ -70,7 +70,7 @@ class open_questionnaire(osv.osv_memory):
         result = models_data._get_id(cr, uid, 'crm_profiling', 'open_questionnaire_form')
         res_id = models_data.browse(cr, uid, result, context=context).res_id
         datas = self.browse(cr, uid, ids[0], context=context)
-        context.update({'questionnaire_id': datas.questionnaire_id.id})
+        context = dict(context or {}, questionnaire_id=datas.questionnaire_id.id)
 
         return {
             'name': _('Questionnaire'),

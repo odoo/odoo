@@ -1,10 +1,10 @@
 # HG changeset patch
-# Parent e8b98f4c8f9070f7d5b91936381324cd1fe12e17
+# Parent 3fbc9c92bcee395900c441aeb80e68036004a7a0
 
 diff --git a/controllers/academy.py b/controllers/academy.py
 --- a/controllers/academy.py
 +++ b/controllers/academy.py
-@@ -3,19 +3,13 @@
+@@ -3,19 +3,12 @@
  from openerp import http
  from openerp.addons.web.controllers import main
  
@@ -19,9 +19,8 @@ diff --git a/controllers/academy.py b/controllers/academy.py
  class academy(main.Home):
      @http.route('/', auth='public', website=True)
      def index(self):
-+        tas = http.request.registry['academy.tas'].search_read(
-+            http.request.cr, http.request.uid, context=http.request.context)
-         return http.request.website.render('academy.index', {
++        tas = http.request.env['academy.tas'].search([])
+         return http.request.render('academy.index', {
 -            'tas': teaching_assistants,
 +            'tas': tas,
          })
@@ -30,17 +29,16 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 diff --git a/models/academy.py b/models/academy.py
 --- a/models/academy.py
 +++ b/models/academy.py
-@@ -1,8 +1,8 @@
- # -*- coding: utf-8 -*-
- from openerp.osv import orm, fields
+@@ -2,7 +2,7 @@
+ from openerp.models import Model
+ from openerp.fields import Char
  
--class academy(orm.Model):
+-class academy(Model):
 -    _name = "academy.academy"
-+class TeachingAssistants(orm.Model):
++class TeachingAssistants(Model):
 +    _name = "academy.tas"
  
-     _columns = {
-         'name': fields.char(),
+     name = Char()
 diff --git a/security/ir.model.access.csv b/security/ir.model.access.csv
 --- a/security/ir.model.access.csv
 +++ b/security/ir.model.access.csv
@@ -48,3 +46,15 @@ diff --git a/security/ir.model.access.csv b/security/ir.model.access.csv
  id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 -access_academy_academy,access_academy_academy,model_academy_academy,,1,0,0,0
 +access_academy_tas,access_academy_tas,model_academy_tas,,1,0,0,0
+diff --git a/views/templates.xml b/views/templates.xml
+--- a/views/templates.xml
++++ b/views/templates.xml
+@@ -17,7 +17,7 @@
+                     <h2>Teaching Assistants</h2>
+                     <ul>
+                         <li t-foreach="tas" t-as="ta">
+-                            <a t-att-href="url_for('/tas/%d/' % ta_index)">
++                            <a t-att-href="url_for('/tas/%d/' % ta['id'])">
+                                 <t t-esc="ta['name']"/>
+                             </a>
+                         </li>

@@ -42,16 +42,14 @@
                         <field name="create_date"/>
                         <field name="date_closed" string="Close Date"/>
                     </group>
-                    <group expand="1" string="Group By...">
+                    <group expand="1" string="Group By">
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}" />
                         <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
                         <filter string="Company" icon="terp-go-home" domain="[]" groups="base.group_multi_company" context="{'group_by':'company_id'}" />
-                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}" help="Date of helpdesk requests"/>
-                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Month of helpdesk requests"/>
-                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'name'}" help="Year of helpdesk requests" />
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Month of helpdesk requests"/>
                     </group>
                 </search>
             </field>
@@ -77,12 +75,8 @@
             <field name="act_window_id" ref="action_report_crm_helpdesk"/>
         </record>
 
-        <menuitem id="base.menu_project_report" name="Project"
-            groups="base.group_no_one"
-            parent="base.menu_reporting" sequence="30"/>
-
         <menuitem name="Helpdesk Analysis" action="action_report_crm_helpdesk"
-            id="menu_report_crm_helpdesks_tree" parent="base.menu_project_report" sequence="20"/>
+            id="menu_report_crm_helpdesks_tree" parent="base.next_id_64" sequence="20"/>
 
     </data>
 </openerp>

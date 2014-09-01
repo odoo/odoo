@@ -1806,28 +1806,7 @@
         <field name="user_type" ref="l10n_syscohada.account_type_special" />
         <field name="parent_id" ref="pcg_classe_9" />
     </record>
-        <!--
-    #
-    # SYSCOHADA : Définition de la devise de référence
-    # Auteur : BAAMTU Sénégal
-    # Version du fichier : 1.0 
-    # Date : 02/2010
-    # 
-    #
-    -->
-
-      <record id="base.XOF" model="res.currency">
-        <field name="name">XOF</field>
-        <field name="symbol">CFA</field>
-        <field name="rounding">1</field>
-        <field name="accuracy">4</field>
-    </record>
-    <record id="base.rateXOF" model="res.currency.rate">
-           <field name="rate">655.957</field>
-           <field name="currency_id" ref="base.XOF"/>
-           <field eval="time.strftime('%Y-01-01')" name="name"/>
-       </record>
-           ﻿<!--
+    <!--
     #
     # SYSCOHADA : Définition des taux de TVA SYSCOHADA
     # Auteur : BAAMTU Sénégal

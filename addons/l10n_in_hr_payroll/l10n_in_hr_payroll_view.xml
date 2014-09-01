@@ -76,7 +76,7 @@
             <field name="name">hr.payroll.advice.form</field>
             <field name="model">hr.payroll.advice</field>
             <field name="arch" type="xml">
-                <form string="Bank Advice" version="7.0">
+                <form string="Bank Advice">
                     <header>
                         <button name="confirm_sheet"  string="Confirm Sheet" states="draft" type="object" class="oe_highlight"/>
                         <button name="compute_advice" string="Compute Advice" states="draft" type="object" class="oe_highlight"/>
@@ -144,7 +144,7 @@
                         <field name="batch_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Bank" name="bank_id" icon="terp-go-home" context="{'group_by':'bank_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Status" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
@@ -174,7 +174,7 @@
             <field name="name">advice.line.form</field>
             <field name="model">hr.payroll.advice.line</field>
             <field name="arch" type="xml">
-                <form string="Advice Lines" version="7.0">
+                <form string="Advice Lines">
                     <sheet>
                     <label for="advice_id" class="oe_edit_only"/>
                     <h1><field name="advice_id"/></h1>

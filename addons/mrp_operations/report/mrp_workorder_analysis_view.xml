@@ -29,14 +29,12 @@
                     <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]"/>
                     <field name="product_id" />
                     <field name="workcenter_id"/>
-                    <group expand="1" string="Group By...">
+                    <group expand="1" string="Group By">
                         <filter string="Product" name="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}" />
                         <filter string="Work Center" name="Workcenter" icon="terp-go-home" context="{'group_by':'workcenter_id'}" />
                         <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                        <filter string="Date Planned (day)" icon="terp-go-today" context="{'group_by':'date:day'}" help="Planned Day"/>
-                        <filter string="Date Planned (month)" name="terp-go-month" icon="terp-go-month" context="{'group_by':'date:month'}" help="Planned Month"/>
-                        <filter string="Date Planned (year)" icon="terp-go-year" context="{'group_by':'date:year'}" help="Planned Year"/>
+                        <filter string="Date Planned" name="terp-go-month" icon="terp-go-month" context="{'group_by':'date:month'}" help="Planned Month"/>
                     </group>
                 </search>
             </field>

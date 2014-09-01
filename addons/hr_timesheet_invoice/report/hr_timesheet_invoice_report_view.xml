@@ -51,7 +51,7 @@
                         <field name="date"/>
                         <field name="invoice_id"/>
                     </group>
-                    <group expand="1" string="Group By...">
+                    <group expand="1" string="Group By">
                         <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
@@ -93,9 +93,11 @@
             <field name="model">report_timesheet.user</field>
             <field name="arch" type="xml">
                 <form string="Timesheet by user">
-                    <field name="name"/>
-                    <field name="month"/>
-                    <field name="user_id"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="month"/>
+                        <field name="user_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -165,9 +167,11 @@
             <field name="model">report_timesheet.invoice</field>
             <field name="arch" type="xml">
                 <form string="Timesheet by invoice">
-                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                    <field name="manager_id"/>
-                    <field name="user_id"/>
+                    <group col="4">
+                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="manager_id"/>
+                        <field name="user_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -238,11 +242,13 @@
             <field name="model">report_timesheet.account.date</field>
             <field name="arch" type="xml">
                 <form string="Daily timesheet by account">
-                    <field name="name"/>
-                    <field name="month"/>
-                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                    <field name="user_id"/>
-                    <field name="quantity"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="month"/>
+                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="user_id"/>
+                        <field name="quantity"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -300,11 +306,13 @@
             <field name="model">report_timesheet.account</field>
             <field name="arch" type="xml">
                 <form string="Timesheet by account">
-                    <field name="name"/>
-                    <field name="month"/>
-                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                    <field name="user_id"/>
-                    <field name="quantity"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="month"/>
+                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="user_id"/>
+                        <field name="quantity"/>
+                    </group>
                 </form>
             </field>
         </record>

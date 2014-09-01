@@ -7,7 +7,7 @@
             <field name="name">stock.landed.cost.form</field>
             <field name="model">stock.landed.cost</field>
             <field name="arch" type="xml">
-                <form string="Landed Costs" version="7.0">
+                <form string="Landed Costs">
                     <header>
                         <button name="button_validate" string="Validate" states="draft" class="oe_highlight" type="object"/>
                         <button name="button_cancel" string="Cancel" states="draft" type="object"/>
@@ -35,7 +35,7 @@
                             <separator string="Cost Lines" colspan="4"/>
                             <group>
                                 <field name="cost_lines" nolabel="1">
-                                    <form string="Cost Lines" version="7.0">
+                                    <form string="Cost Lines">
                                         <group>
                                             <group>
                                                 <field name="product_id"
@@ -74,7 +74,7 @@
                         <group>
                             <group>
                                 <field name="valuation_adjustment_lines" nolabel="1">
-                                    <form string="Valuation Adjustments" version="7.0">
+                                    <form string="Valuation Adjustments">
                                         <group>
                                             <group>
                                                 <field name="product_id"/>
@@ -132,7 +132,7 @@
                     <separator/>
                     <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
                     <filter string="Done" name="done" domain="[('state','=','done')]"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Month" context="{'group_by': 'date'}"/>
                         <filter string="Status" context="{'group_by': 'state'}"/>
                     </group>
@@ -163,7 +163,7 @@
             <field name="name">stock.landed.cost.type.form</field>
             <field name="model">product.product</field>
 	    <field name="arch" type="xml">
-                <form string="Landed Costs" version="7.0">
+                <form string="Landed Costs">
 		    <sheet>
                         <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
                         <div class="oe_title">

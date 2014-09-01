@@ -24,7 +24,7 @@ class TestORM(common.TransactionCase):
         employee_gid = self.ref('base.group_user')
         self.uid2 = self.users.create(cr, uid, {'name': 'test user', 'login': 'test', 'groups_id': [4,employee_gid]})
 
-    @mute_logger('openerp.osv.orm')
+    @mute_logger('openerp.models')
     def testAccessDeletedRecords(self):
         """ Verify that accessing deleted records works as expected """
         cr, uid, uid2, p1, p2 = self.cr, self.uid, self.uid2, self.p1, self.p2
@@ -45,7 +45,7 @@ class TestORM(common.TransactionCase):
         with self.assertRaises(Exception):
             self.partner.write(cr, uid, [p1], {'name': 'foo'})
 
-    @mute_logger('openerp.osv.orm')
+    @mute_logger('openerp.models')
     def testAccessFilteredRecords(self):
         """ Verify that accessing filtered records works as expected for non-admin user """
         cr, uid, uid2, p1, p2 = self.cr, self.uid, self.uid2, self.p1, self.p2
@@ -77,7 +77,17 @@ class TestORM(common.TransactionCase):
         with self.assertRaises(Exception):
             self.partner.unlink(cr, uid2, [p1,p2])
 
-    @mute_logger('openerp.osv.orm')
+    def test_multi_read(self):
+        record_id = self.partner.create(self.cr, UID, {'name': 'MyPartner1'})
+        records = self.partner.read(self.cr, UID, [record_id])
+        self.assertIsInstance(records, list)
+
+    def test_one_read(self):
+        record_id = self.partner.create(self.cr, UID, {'name': 'MyPartner1'})
+        record = self.partner.read(self.cr, UID, record_id)
+        self.assertIsInstance(record, dict)
+
+    @mute_logger('openerp.models')
     def test_search_read(self):
         # simple search_read
         self.partner.create(self.cr, UID, {'name': 'MyPartner1'})
@@ -177,7 +187,7 @@ class TestInherits(common.TransactionCase):
         self.assertEqual(foo.name, 'Foo')
         self.assertEqual(foo.partner_id.id, par_id)
 
-    @mute_logger('openerp.osv.orm')
+    @mute_logger('openerp.models')
     def test_read(self):
         """ inherited fields should be read without any indirection """
         foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
@@ -189,13 +199,15 @@ class TestInherits(common.TransactionCase):
         foo = self.user.browse(self.cr, UID, foo_id)
         self.assertEqual(foo.name, foo.partner_id.name)
 
-    @mute_logger('openerp.osv.orm')
+    @mute_logger('openerp.models')
     def test_copy(self):
         """ copying a user should automatically copy its partner, too """
         foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
         foo_before, = self.user.read(self.cr, UID, [foo_id])
+        del foo_before['__last_update']
         bar_id = self.user.copy(self.cr, UID, foo_id, {'login': 'bar', 'password': 'bar'})
         foo_after, = self.user.read(self.cr, UID, [foo_id])
+        del foo_after['__last_update']
 
         self.assertEqual(foo_before, foo_after)
 
@@ -204,16 +216,19 @@ class TestInherits(common.TransactionCase):
         self.assertNotEqual(foo.id, bar.id)
         self.assertNotEqual(foo.partner_id.id, bar.partner_id.id)
 
-    @mute_logger('openerp.osv.orm')
+    @mute_logger('openerp.models')
     def test_copy_with_ancestor(self):
         """ copying a user with 'parent_id' in defaults should not duplicate the partner """
-        foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
+        foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo',
+                                                 'login_date': '2016-01-01'})
         par_id = self.partner.create(self.cr, UID, {'name': 'Bar'})
 
         foo_before, = self.user.read(self.cr, UID, [foo_id])
+        del foo_before['__last_update']
         partners_before = self.partner.search(self.cr, UID, [])
         bar_id = self.user.copy(self.cr, UID, foo_id, {'partner_id': par_id, 'login': 'bar'})
         foo_after, = self.user.read(self.cr, UID, [foo_id])
+        del foo_after['__last_update']
         partners_after = self.partner.search(self.cr, UID, [])
 
         self.assertEqual(foo_before, foo_after)
@@ -223,7 +238,7 @@ class TestInherits(common.TransactionCase):
         self.assertNotEqual(foo.id, bar.id)
         self.assertEqual(bar.partner_id.id, par_id)
         self.assertEqual(bar.login, 'bar', "login is given from copy parameters")
-        self.assertEqual(bar.password, foo.password, "password is given from original record")
+        self.assertEqual(bar.login_date, foo.login_date, "login_date copied from original record")
         self.assertEqual(bar.name, 'Bar', "name is given from specific partner")
 
 

@@ -23,5 +23,36 @@
 
         <menuitem name="My Current Timesheet" id="menu_act_hr_timesheet_sheet_form_my_current" parent="hr_attendance.menu_hr_time_tracking" action="ir_actions_server_timsheet_sheet" sequence="1"/>
 
+        <!-- Timesheet sheet related subtypes for messaging / Chatter -->
+        <record id="mt_timesheet_confirmed" model="mail.message.subtype">
+            <field name="name">Waiting Approval</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="default" eval="True"/>
+            <field name="description">waiting approval</field>
+        </record>
+        <record id="mt_timesheet_approved" model="mail.message.subtype">
+            <field name="name">Approved</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="default" eval="True"/>
+            <field name="description">Timesheet approved</field>
+        </record>
+        <!-- Department (Parent) related subtypes for messaging / Chatter -->
+        <record id="mt_department_timesheet_confirmed" model="mail.message.subtype">
+            <field name="name">Timesheets to Approve</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_timesheet_confirmed')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="5"/>
+        </record>
+         <record id="mt_department_timesheet_approved" model="mail.message.subtype">
+            <field name="name">Timesheets Approved</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_timesheet_approved')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="5"/>
+        </record>
+
     </data>
 </openerp>

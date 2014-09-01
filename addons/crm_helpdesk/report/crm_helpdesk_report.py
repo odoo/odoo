@@ -39,24 +39,18 @@ class crm_helpdesk_report(osv.osv):
     _auto = False
 
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'date': fields.datetime('Date', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', readonly=True),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'date_deadline': fields.date('Deadline', select=True),
         'priority': fields.selection([('5', 'Lowest'), ('4', 'Low'), \
                     ('3', 'Normal'), ('2', 'High'), ('1', 'Highest')], 'Priority'),
-        'channel_id': fields.many2one('crm.case.channel', 'Channel'),
+        'channel_id': fields.many2one('crm.tracking.medium', 'Channel'),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"),
@@ -64,7 +58,6 @@ class crm_helpdesk_report(osv.osv):
         'create_date': fields.date('Creation Date' , readonly=True, select=True),
         'date_closed': fields.date('Close Date', readonly=True, select=True),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
-        'day': fields.char('Day', size=128, readonly=True),
         'email': fields.integer('# Emails', size=128, readonly=True),
     }
 
@@ -80,11 +73,9 @@ class crm_helpdesk_report(osv.osv):
             create or replace view crm_helpdesk_report as (
                 select
                     min(c.id) as id,
-                    to_char(c.date, 'YYYY') as name,
-                    to_char(c.date, 'MM') as month,
-                    to_char(c.date, 'YYYY-MM-DD') as day,
-                    to_char(c.create_date, 'YYYY-MM-DD') as create_date,
-                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
+                    c.date as date,
+                    date(c.create_date) as create_date,
+                    date(c.date_closed) as date_closed,
                     c.state,
                     c.user_id,
                     c.section_id,
@@ -102,7 +93,7 @@ class crm_helpdesk_report(osv.osv):
                 from
                     crm_helpdesk c
                 where c.active = 'true'
-                group by to_char(c.date, 'YYYY'), to_char(c.date, 'MM'),to_char(c.date, 'YYYY-MM-DD'),\
+                group by c.date,\
                      c.state, c.user_id,c.section_id,c.priority,\
                      c.partner_id,c.company_id,c.date_deadline,c.create_date,c.date,c.date_closed,\
                      c.categ_id,c.channel_id,c.planned_cost,c.id

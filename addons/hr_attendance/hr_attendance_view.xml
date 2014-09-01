@@ -6,7 +6,7 @@
             <field name="name">hr.attendance.form</field>
             <field name="model">hr.attendance</field>
             <field name="arch" type="xml">
-                <form string="Employee attendances" version="7.0">
+                <form string="Employee attendances">
                     <sheet>
                     <group>
                         <field name="employee_id"/>
@@ -56,7 +56,7 @@
                     <separator/>
                     <filter icon="terp-stock_align_left_24" string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
                     <field name="employee_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter name="name" string="Date" icon="terp-personal" domain="[]" context="{'group_by':'name'}"/>
                     </group>
@@ -83,7 +83,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{"search_default_today":1}</field>
             <field name="search_view_id" ref="view_hr_attendance_filter" />
-            <field name="help">The Time Tracking functionality aims to manage employee attendances from Sign in/Sign out actions. You can also link this feature to an attendance device using OpenERP's web service features.</field>
+            <field name="help">The Time Tracking functionality aims to manage employee attendances from Sign in/Sign out actions. You can also link this feature to an attendance device using Odoo's web service features.</field>
         </record>
 
         <record id="action_hr_attendance_graph" model="ir.actions.act_window">
@@ -111,7 +111,7 @@
             <field name="name">hr.action.reason.form</field>
             <field name="model">hr.action.reason</field>
             <field name="arch" type="xml">
-                <form string="Define attendance reason" version="7.0">
+                <form string="Define attendance reason">
                     <group col="4">
                         <field name="name"/>
                         <field name="action_type"/>
@@ -141,7 +141,7 @@
         </record>
 
         <menuitem
-            sequence="35" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" groups="base.group_hr_attendance" name="Attendance"/>
+            sequence="35" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" groups="base.group_hr_attendance,base.group_hr_manager" name="Attendance"/>
         <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config" groups="base.group_hr_attendance"/>
 
         <record id="hr_attendance_employee" model="ir.ui.view">

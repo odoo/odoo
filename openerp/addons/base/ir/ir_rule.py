@@ -72,13 +72,13 @@ class ir_rule(osv.osv):
         return not any(rule.model_id.model == self._name for rule in self.browse(cr, uid, ids, context))
 
     _columns = {
-        'name': fields.char('Name', size=128, select=1),
+        'name': fields.char('Name', select=1),
         'active': fields.boolean('Active', help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module."),
         'model_id': fields.many2one('ir.model', 'Object',select=1, required=True, ondelete="cascade"),
         'global': fields.function(_get_value, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone"),
         'groups': fields.many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
         'domain_force': fields.text('Domain'),
-        'domain': fields.function(_domain_force_get, string='Domain', type='text'),
+        'domain': fields.function(_domain_force_get, string='Domain', type='binary'),
         'perm_read': fields.boolean('Apply for Read'),
         'perm_write': fields.boolean('Apply for Write'),
         'perm_create': fields.boolean('Apply for Create'),
@@ -127,7 +127,7 @@ class ir_rule(osv.osv):
             group_domains = {}                  # map: group -> list of domains
             for rule in self.browse(cr, SUPERUSER_ID, rule_ids):
                 # read 'domain' as UID to have the correct eval context for the rule.
-                rule_domain = self.read(cr, uid, rule.id, ['domain'])['domain']
+                rule_domain = self.read(cr, uid, [rule.id], ['domain'])[0]['domain']
                 dom = expression.normalize_domain(rule_domain)
                 for group in rule.groups:
                     if group in user.groups_id:

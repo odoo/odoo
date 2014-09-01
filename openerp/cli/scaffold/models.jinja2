@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import orm, fields
+from openerp.models import Model
+from openerp.fields import Char
 
 
-class {{ model }}(orm.Model):
+class {{ model }}(Model):
     _name = "{{ module }}.{{ model }}"
 
-    _columns = {
-        'name': fields.char(),
-    }
+    name = Char()

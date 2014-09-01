@@ -7,7 +7,6 @@
             <field name="period_id" ref="account.period_5"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="reference_type">none</field>
             <field name="name">BNK/2014/001</field>
             <field name="balance_end" eval="2040.0"/>
             <field name="company_id" ref="base.main_company"/>
@@ -16,7 +15,7 @@
             <field name="balance_end_real" eval="3707.58"/>
         </record>
         <record id="demo_bank_statement_line_1" model="account.bank.statement.line">
-            <field name="ref">001</field>
+            <field name="ref"></field>
             <field name="statement_id" ref="demo_bank_statement_1"/>
             <field name="sequence" eval="1"/>
             <field name="company_id" ref="base.main_company"/>
@@ -27,7 +26,7 @@
             <field name="partner_id" ref="base.res_partner_9"/>
         </record>
         <record id="demo_bank_statement_line_2" model="account.bank.statement.line">
-            <field name="ref">002</field>
+            <field name="ref">SAJ2014002</field>
             <field name="statement_id" ref="demo_bank_statement_1"/>
             <field name="sequence" eval="2"/>
             <field name="company_id" ref="base.main_company"/>
@@ -38,7 +37,7 @@
             <field name="partner_id" ref="base.res_partner_9"/>
         </record>
         <record id="demo_bank_statement_line_3" model="account.bank.statement.line">
-            <field name="ref">003</field>
+            <field name="ref"></field>
             <field name="statement_id" ref="demo_bank_statement_1"/>
             <field name="sequence" eval="3"/>
             <field name="company_id" ref="base.main_company"/>
@@ -48,7 +47,7 @@
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
         </record>
         <record id="demo_bank_statement_line_4" model="account.bank.statement.line">
-            <field name="ref">004</field>
+            <field name="ref"></field>
             <field name="statement_id" ref="demo_bank_statement_1"/>
             <field name="sequence" eval="4"/>
             <field name="company_id" ref="base.main_company"/>

@@ -58,7 +58,7 @@ class config(osv.osv):
             formula = '=oe_browse("%s";"%s";"%s")' % (model, fields, domain)
         url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         dbname = cr.dbname
-        user = self.pool['res.users'].read(cr, uid, uid, ['login', 'password'], context=context)
+        user = self.pool['res.users'].read(cr, uid, [uid], ['login', 'password'], context=context)[0]
         username = user['login']
         password = user['password']
         if not password:

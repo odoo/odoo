@@ -34,5 +34,16 @@
             </field>
         </record>
 
+        <record id="bank_statement_cancel_form_inherit" model="ir.ui.view">
+            <field name="name">bank.statement.cancel.form.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bank_account_id']" position="after">
+                    <button name="cancel" attrs="{'invisible': [('journal_entry_id', '=', False)]}" string="Cancel" type="object" icon="gtk-undo"/>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>

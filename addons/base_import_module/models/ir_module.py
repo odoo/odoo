@@ -16,7 +16,7 @@ MAX_FILE_SIZE = 100 * 1024 * 1024 # in megabytes
 class view(osv.osv):
     _inherit = "ir.module.module"
 
-    def import_module(self, cr, uid, module, path, context=None):
+    def import_module(self, cr, uid, module, path, force=False, context=None):
         known_mods = self.browse(cr, uid, self.search(cr, uid, []))
         known_mods_names = dict([(m.name, m) for m in known_mods])
 
@@ -30,7 +30,7 @@ class view(osv.osv):
 
         if mod:
             self.write(cr, uid, mod.id, values)
-            mode = 'update'
+            mode = 'update' if not force else 'init'
         else:
             assert terp.get('installable', True), "Module not installable"
             self.create(cr, uid, dict(name=module, state='uninstalled', **values))
@@ -73,7 +73,7 @@ class view(osv.osv):
 
         return True
 
-    def import_zipfile(self, cr, uid, module_file, context=None):
+    def import_zipfile(self, cr, uid, module_file, force=False, context=None):
         if not module_file:
             raise Exception("No file sent.")
         if not zipfile.is_zipfile(module_file):
@@ -95,7 +95,7 @@ class view(osv.osv):
                     try:
                         # assert mod_name.startswith('theme_')
                         path = opj(module_dir, mod_name)
-                        self.import_module(cr, uid, mod_name, path, context=context)
+                        self.import_module(cr, uid, mod_name, path, force=force, context=context)
                         success.append(mod_name)
                     except Exception, e:
                         errors[mod_name] = str(e)

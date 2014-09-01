@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
+from openerp import api
 from openerp import tools, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
@@ -162,7 +163,7 @@ class calendar_attendee(osv.Model):
                 elif interval == 'minutes':
                     delta = timedelta(minutes=duration)
                 trigger.value = delta
-                valarm.add('DESCRIPTION').value = alarm.name or 'OpenERP'
+                valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
         for attendee in event_obj.attendee_ids:
             attendee_add = event.add('attendee')
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
@@ -297,7 +298,7 @@ class res_partner(osv.Model):
         Used by web_calendar.js : Many2ManyAttendee
         """
         datas = []
-        meeting = False
+        meeting = None
         if meeting_id:
             meeting = self.pool['calendar.event'].browse(cr, uid, get_real_ids(meeting_id), context=context)
         for partner in self.browse(cr, uid, ids, context=context):
@@ -309,7 +310,7 @@ class res_partner(osv.Model):
             datas.append(data)
         return datas
 
-    def calendar_last_notif_ack(self, cr, uid, context=None):
+    def _set_calendar_last_notif_ack(self, cr, uid, context=None):
         partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id
         self.write(cr, uid, partner.id, {'calendar_last_notif_ack': datetime.now()}, context=context)
         return
@@ -708,6 +709,7 @@ class calendar_event(osv.Model):
         return (format_date, format_time)
 
     def get_display_time_tz(self, cr, uid, ids, tz=False, context=None):
+        context = dict(context or {})
         if tz:
             context["tz"] = tz
         ev = self.browse(cr, uid, ids, context=context)[0]
@@ -720,8 +722,7 @@ class calendar_event(osv.Model):
             1) if user add duration for 2 hours, return : August-23-2013 at (04-30 To 06-30) (Europe/Brussels)
             2) if event all day ,return : AllDay, July-31-2013
         """
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         tz = context.get('tz', False)
         if not tz:  # tz can have a value False, so dont do it in the default value of get !
@@ -745,6 +746,8 @@ class calendar_event(osv.Model):
 
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}
+        if not isinstance(fields, list):
+            fields = [fields]
         for meeting_id in ids:
             res[meeting_id] = {}
             attendee = self._find_my_attendee(cr, uid, [meeting_id], context)
@@ -762,7 +765,6 @@ class calendar_event(osv.Model):
                     res[meeting_id][field] = meeting.start_date if meeting.allday else meeting.start_datetime
                 elif field == 'stop':
                     res[meeting_id][field] = meeting.stop_date if meeting.allday else meeting.stop_datetime
-
         return res
 
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
@@ -783,7 +785,7 @@ class calendar_event(osv.Model):
             if data.count and data.count <= 0:
                 raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
 
-            data = self.read(cr, uid, id, ['id', 'byday', 'recurrency', 'month_list', 'final_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list'], context=context)
+            data = self.read(cr, uid, id, ['id', 'byday', 'recurrency', 'final_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list'], context=context)
             event = data['id']
             if data['recurrency']:
                 result[event] = self.compute_rule_string(data)
@@ -869,7 +871,7 @@ class calendar_event(osv.Model):
         'stop_datetime': fields.datetime('End Datetime', states={'done': [('readonly', True)]}, track_visibility='onchange'),  # old date_deadline
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
-        'class': fields.selection([('public', 'Public'), ('private', 'Private'), ('confidential', 'Public for Employees')], 'Privacy', states={'done': [('readonly', True)]}),
+        'class': fields.selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', states={'done': [('readonly', True)]}),
         'location': fields.char('Location', help="Location of Event", track_visibility='onchange', states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}),
 
@@ -901,7 +903,7 @@ class calendar_event(osv.Model):
         'categ_ids': fields.many2many('calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags'),
         'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
         'partner_ids': fields.many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}),
-        'alarm_ids': fields.many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict"),
+        'alarm_ids': fields.many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False),
     }
     _defaults = {
         'end_type': 'count',
@@ -981,22 +983,22 @@ class calendar_event(osv.Model):
         value['allday'] = checkallday  # Force to be rewrited
 
         if allday:
-            if fromtype == 'start':
+            if fromtype == 'start' and start:
                 start = datetime.strptime(start, DEFAULT_SERVER_DATE_FORMAT)
                 value['start_datetime'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['start'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
 
-            if fromtype == 'stop':
+            if fromtype == 'stop' and end:
                 end = datetime.strptime(end, DEFAULT_SERVER_DATE_FORMAT)
                 value['stop_datetime'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
 
         else:
-            if fromtype == 'start':
+            if fromtype == 'start' and start:
                 start = datetime.strptime(start, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['start_date'] = datetime.strftime(start, DEFAULT_SERVER_DATE_FORMAT)
                 value['start'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
-            if fromtype == 'stop':
+            if fromtype == 'stop' and end:
                 end = datetime.strptime(end, DEFAULT_SERVER_DATETIME_FORMAT)
                 value['stop_date'] = datetime.strftime(end, DEFAULT_SERVER_DATE_FORMAT)
                 value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
@@ -1322,6 +1324,7 @@ class calendar_event(osv.Model):
             ('user_id', '=', uid),
         ]
 
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         if isinstance(thread_id, str):
             thread_id = get_real_ids(thread_id)
@@ -1405,16 +1408,9 @@ class calendar_event(osv.Model):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-
         default = default or {}
-
         self._set_date(cr, uid, default, id=default.get('id'), context=context)
-        default['attendee_ids'] = False
-
-        res = super(calendar_event, self).copy(cr, uid, calendar_id2real_id(id), default, context)
-        return res
+        return super(calendar_event, self).copy(cr, uid, calendar_id2real_id(id), default, context)
 
     def _detach_one_event(self, cr, uid, id, values=dict(), context=None):
         real_event_id = calendar_id2real_id(id)
@@ -1548,8 +1544,7 @@ class calendar_event(osv.Model):
         return res
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
-        if not context:
-            context = {}
+        context = dict(context or {})
 
         if 'date' in groupby:
             raise osv.except_osv(_('Warning!'), _('Group by date is not supported, use the calendar view instead.'))
@@ -1576,6 +1571,12 @@ class calendar_event(osv.Model):
             select = [ids]
         else:
             select = ids
+
+        # FIXME: find a better way to not push virtual ids in the cache
+        # (leading to their prefetching and ultimately a type error when
+        # postgres tries to convert '14-3489274297' to an integer)
+        self.invalidate_cache(cr, uid, context=context)
+
         select = map(lambda x: (x, calendar_id2real_id(x)), select)
         result = []
         real_data = super(calendar_event, self).read(cr, uid, [real_id for calendar_id, real_id in select], fields=fields2, context=context, load=load)

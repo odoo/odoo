@@ -194,12 +194,6 @@ $initialLineBackground: #f0f0f0;
             }
         }
 
-        &.no_partner {
-            .partner_name, .line_open_balance {
-                display: none !important;
-            }
-        }
-
         /* gap between accounting_view and action view */
         > table > tbody > tr:nth-child(1) > td table {
             margin-bottom: 10px;
@@ -341,10 +335,6 @@ $initialLineBackground: #f0f0f0;
 
             // accounting "T"
             td:nth-child(6) { border-left: $accountingBorder; }
-            tr.initial_line > td {
-                &:nth-child(5) { border-top: $accountingBorder; }
-                &:nth-child(6) { border-top: $accountingBorder; }
-            }
         }
 
 

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data noupdate="1">
+
         <!-- After installation of the module, open the related menu -->
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="hr.action_client_hr_menu"/>
@@ -47,9 +48,15 @@
 
         <!-- Holidays-related subtypes for messaging / Chatter -->
         <record id="mt_holidays_confirmed" model="mail.message.subtype">
-            <field name="name">To Approve</field>
+            <field name="name">Confirmed</field>
             <field name="res_model">hr.holidays</field>
-            <field name="description">Request confirmed and waiting approval</field>
+            <field name="description">Request created and waiting confirmation</field>
+        </record>
+        <record id="mt_holidays_first_validated" model="mail.message.subtype">
+            <field name="name">Waiting Second Validation</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="default" eval="False"/>
+            <field name="description">Request validated, waiting second validation</field>
         </record>
         <record id="mt_holidays_approved" model="mail.message.subtype">
             <field name="name">Approved</field>
@@ -61,6 +68,40 @@
             <field name="res_model">hr.holidays</field>
             <field name="default" eval="False"/>
             <field name="description">Request refused</field>
+        </record>
+
+        <!-- Department related subtypes for messaging / Chatter -->
+        <record id="mt_department_holidays_confirmed" model="mail.message.subtype">
+            <field name="name">Leaves/Allocations: first approval</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_holidays_confirmed')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="6"/>
+        </record>
+        <record id="mt_department_holidays_first_validated" model="mail.message.subtype">
+            <field name="name">Leaves/Allocations: second approval</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_holidays_first_validated')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="7"/>
+        </record>
+        <record id="mt_department_holidays_approved" model="mail.message.subtype">
+            <field name="name">Leaves/Allocation Approved</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_holidays_approved')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="8"/>
+        </record>
+        <record id="mt_department_holidays_refused" model="mail.message.subtype">
+            <field name="name">Leaves/Allocation Refused</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_holidays_refused')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="9"/>
         </record>
 
     </data>

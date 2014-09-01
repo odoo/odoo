@@ -98,6 +98,24 @@ class account_invoice_report(osv.osv):
     }
     _order = 'date desc'
 
+    _depends = {
+        'account.invoice': [
+            'account_id', 'amount_total', 'commercial_partner_id', 'company_id',
+            'currency_id', 'date_due', 'date_invoice', 'fiscal_position',
+            'journal_id', 'partner_bank_id', 'partner_id', 'payment_term',
+            'period_id', 'residual', 'state', 'type', 'user_id',
+        ],
+        'account.invoice.line': [
+            'account_id', 'invoice_id', 'price_subtotal', 'product_id',
+            'quantity', 'uos_id',
+        ],
+        'product.product': ['product_tmpl_id'],
+        'product.template': ['categ_id'],
+        'product.uom': ['category_id', 'factor', 'name', 'uom_type'],
+        'res.currency.rate': ['currency_id', 'name'],
+        'res.partner': ['country_id'],
+    }
+
     def _select(self):
         select_str = """
             SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id,

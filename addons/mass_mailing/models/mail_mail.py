@@ -74,6 +74,11 @@ class MailMail(osv.Model):
         """ Override to add the tracking URL to the body. """
         body = super(MailMail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
 
+        # prepend <base> tag for images using absolute urls
+        domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
+        base = "<base href='%s'>" % domain
+        body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
+
         # generate tracking URL
         if mail.statistics_ids:
             tracking_url = self._get_tracking_url(cr, uid, mail, partner, context=context)
@@ -84,7 +89,8 @@ class MailMail(osv.Model):
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
         res = super(MailMail, self).send_get_email_dict(cr, uid, mail, partner, context=context)
         if mail.mailing_id and res.get('body') and res.get('email_to'):
-            email_to = tools.email_split(res.get('email_to')[0])
+            emails = tools.email_split(res.get('email_to')[0])
+            email_to = emails and emails[0] or False
             unsubscribe_url = self._get_unsubscribe_url(cr, uid, mail, email_to, context=context)
             if unsubscribe_url:
                 res['body'] = tools.append_content_to_html(res['body'], unsubscribe_url, plaintext=False, container_tag='p')
