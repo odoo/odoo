@@ -246,6 +246,9 @@ class NewId(object):
 IdType = (int, long, basestring, NewId)
 
 
+# maximum number of prefetched records
+PREFETCH_MAX = 200
+
 # special columns automatically created by the ORM
 LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
@@ -3136,6 +3139,9 @@ class BaseModel(object):
         """
         # fetch the records of this model without field_name in their cache
         records = self._in_cache_without(field)
+
+        if len(records) > PREFETCH_MAX:
+            records = records[:PREFETCH_MAX] | self
 
         # by default, simply fetch field
         fnames = {field.name}
