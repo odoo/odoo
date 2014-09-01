@@ -18,83 +18,87 @@
                         <a class="btn btn-primary active oe_timesheet_switch oe_timesheet_white" t-attf-data-mode="week"><span class="fa fa-th-list"/> Week</a>
                     </div>
                 </div>
-                <table class="table table-hover table-responsive panel panel-default">
-                    <thead>
-                        <tr class="info">
-                            <td></td>
-                            <t t-foreach="widget.dates" t-as="date">
-                                <td t-att-class="'oe_timesheet_weekly_date_head' + (Date.compare(date, Date.today()) === 0 ? ' oe_timesheet_weekly_today' : '')">
-                                    <span class="text-primary">
-                                        <t t-esc="date.toString('ddd')"/><br />
-                                        <t t-esc="date.toString('d MMM')"/>
-                                    </span>
-                                </td>
-                            </t>
-                            <td class="text-primary">Total</td>
-                        </tr>
-                    </thead>
-                    <thead t-if="widget.accounts.length == 0" class="oe_timesheet_background_white">
-                        <tr>
-                            <td colspan="9">
-                                <div class="oe_view_nocontent">
-                                    <p class="oe_view_nocontent_create">
-                                        Click to add projects, contracts or analytic accounts.
-                                    </p>
-                                    <p>You will be able to register your working hours and activities.</p>
-                                </div>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tr t-foreach="widget.accounts" t-as="account">
-                        <td class="oe_timesheet_weekly_account">
-                            <a href="javascript:void(0)" t-att-data-id="JSON.stringify(account.account)">
-                                <t t-esc="widget.account_names[account.account]"/>
-                            </a>
-                        </td>
-                        <t t-set="day_count" t-value="0"/>
-                        <t t-foreach="account.days" t-as="day">
-                            <td>
-                                <t t-if="day.lines[day.lines.length-1].date_start">
-                                    <input disabled="1" t-if="!widget.get('effective_readonly')" class="oe_timesheet_box" t-att-data-account="account.account"
-                                    t-att-data-day-count="day_count" type="text"/>
+                <div class="oe_timesheet_weekly_body row">
+                    <table class="table table-hover table-responsive panel panel-default">
+                        <thead class="panel-heading">
+                            <tr><td t-att-colspan="widget.dates.length+2" style="padding: 5px; border: none;"></td></tr>
+                            <tr>
+                                <td class="oe_timesheet_weekly_day"></td>
+                                <t t-foreach="widget.dates" t-as="date">
+                                    <td t-attf-class="btn-default oe_timesheet_weekly_day">
+                                        <span class="text-primary">
+                                            <t t-esc="date.toString('ddd')"/><br />
+                                            <t t-esc="date.toString('d MMM')"/>
+                                        </span>
+                                    </td>
                                 </t>
-                                <t t-if="!day.lines[day.lines.length-1].date_start">
-                                    <input t-if="!widget.get('effective_readonly')" class="oe_timesheet_box" t-att-data-account="account.account"
-                                    t-att-data-day-count="day_count" type="text"/>
-                                </t>
-                                <span t-if="widget.get('effective_readonly')" t-att-data-account="account.account"
-                                t-att-data-day-count="day_count" class="oe_timesheet_box"/>
-                                <t t-set="day_count" t-value="day_count + 1"/>
-                            </td>
-                        </t>
-                        <td t-att-data-account-total="account.account" class="oe_timesheet_total text-primary" />
-                    </tr>
-                    <tr>
-                        <td t-att-colspan="widget.dates.length + 2" class="oe_timesheet_add_row oe_hide">
-                            <a class="btn btn-primary btn-sm oe_timesheet_white">Add</a>
-                        </td>
-                    </tr>
-                    <thead>
-                        <tr class="oe_timesheet_total info">
-                            <td>
-                                <div class="oe_timesheet_weekly_adding_tot">
-                                    <div class="oe_timesheet_weekly_adding">
-                                        <a class="btn btn-primary btn-sm oe_timesheet_button_add oe_timesheet_white">
-                                            <span class="fa fa-plus" /> Add Line
-                                        </a>
+                                <td class="oe_timesheet_weekly_day btn-primary">Total</td>
+                            </tr>
+                            <tr><td t-att-colspan="widget.dates.length+2" style="padding: 5px; border: none;"></td></tr>
+                        </thead>
+                        <thead t-if="widget.accounts.length == 0" class="oe_timesheet_background_white">
+                            <tr>
+                                <td colspan="9">
+                                    <div class="oe_view_nocontent">
+                                        <p class="oe_view_nocontent_create">
+                                            Click to add projects, contracts or analytic accounts.
+                                        </p>
+                                        <p>You will be able to register your working hours and activities.</p>
                                     </div>
-                                    <p class="text-primary">Total</p>
-                                </div>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tr t-foreach="widget.accounts" t-as="account">
+                            <td class="oe_timesheet_weekly_account">
+                                <a href="javascript:void(0)" t-att-data-id="JSON.stringify(account.account)">
+                                    <t t-esc="widget.account_names[account.account]"/>
+                                </a>
                             </td>
                             <t t-set="day_count" t-value="0"/>
-                            <td class="info text-primary" t-foreach="widget.dates" t-as="date">
-                                <p t-att-data-day-total="day_count" />
-                                <t t-set="day_count" t-value="day_count + 1"/>
-                            </td>
-                            <td><p class="oe_timesheet_weekly_supertotal text-info" /></td>
+                            <t t-foreach="account.days" t-as="day">
+                                <td>
+                                    <t t-if="day.lines[day.lines.length-1].date_start">
+                                        <input disabled="1" t-if="!widget.get('effective_readonly')" class="oe_timesheet_box" t-att-data-account="account.account"
+                                        t-att-data-day-count="day_count" type="text"/>
+                                    </t>
+                                    <t t-if="!day.lines[day.lines.length-1].date_start">
+                                        <input t-if="!widget.get('effective_readonly')" class="oe_timesheet_box" t-att-data-account="account.account"
+                                        t-att-data-day-count="day_count" type="text"/>
+                                    </t>
+                                    <span t-if="widget.get('effective_readonly')" t-att-data-account="account.account"
+                                    t-att-data-day-count="day_count" class="oe_timesheet_box"/>
+                                    <t t-set="day_count" t-value="day_count + 1"/>
+                                </td>
+                            </t>
+                            <td t-att-data-account-total="account.account" class="oe_timesheet_total text-primary" />
                         </tr>
-                    </thead>
-                </table>
+                        <tr>
+                            <td t-att-colspan="widget.dates.length + 2" class="oe_timesheet_add_row oe_hide">
+                                <a class="btn btn-primary btn-sm oe_timesheet_white">Add</a>
+                            </td>
+                        </tr>
+                        <thead>
+                            <tr class="oe_timesheet_total">
+                                <td>
+                                    <div class="oe_timesheet_weekly_adding_tot">
+                                        <div class="oe_timesheet_weekly_adding">
+                                            <a class="btn btn-primary btn-sm oe_timesheet_button_add oe_timesheet_white">
+                                                <span class="fa fa-plus" /> Add Line
+                                            </a>
+                                        </div>
+                                        <p class="text-primary">Total</p>
+                                    </div>
+                                </td>
+                                <t t-set="day_count" t-value="0"/>
+                                <td class="text-primary" t-foreach="widget.dates" t-as="date">
+                                    <p t-att-data-day-total="day_count" />
+                                    <t t-set="day_count" t-value="day_count + 1"/>
+                                </td>
+                                <td><p class="oe_timesheet_weekly_supertotal text-info" /></td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </t>
@@ -102,8 +106,8 @@
         <div class="hr_timesheet_container">
             <div class="oe_timesheet_daily">
                 <div t-if="widget.days and widget.days.length != 0">
-                    <div class="row">
-                        <div class="col-xs-4 col-md-5 oe_mt">
+                    <div class="row oe_mt oe_mb">
+                        <div class="col-xs-5 col-md-5">
                             <h1>
                                 <t t-esc="widget.days[widget.get('count')].day.toString('dddd')"/> <t t-esc="widget.days[widget.get('count')].day.toString('dd MMMM')"/>
                             </h1>
@@ -115,7 +119,7 @@
                                 <li><a class="oe_nav_button fa fa-angle-right" t-attf-data-navigate="next_day"/></li>
                             </ul>
                         </div>
-                        <div class="col-xs-3 col-md-3 btn-group oe_mt">
+                        <div class="col-xs-3 col-md-3 btn-group">
                             <a class="btn btn-primary active oe_timesheet_switch oe_timesheet_white" t-attf-data-mode="day"><span class="fa fa-calendar"/> Day</a>
                             <a class="btn btn-primary oe_timesheet_switch oe_timesheet_white" t-attf-data-mode="week"><span class="fa fa-th-list"/> Week</a>
                         </div>
@@ -131,7 +135,7 @@
                                         </h5>
                                     </t>
                                 </t>
-                                <a class="btn btn-primary oe_header_total oe_timesheet_white oe_header" disabled="disabled" />
+                                <a class="btn btn-primary oe_header_total oe_header oe_timesheet_white" disabled="disabled" />
                             </div>
                             <div class="panel-body">
                                 <table class="table table-hover table-responsive">
@@ -173,6 +177,9 @@
                                                             <i t-att-class="days.account_group[data][0].date_start and 'fa fa-cog fa-stack-1x fa-spin cog oe_timer_clock' or 'fa fa-cog fa-stack-1x fa-spin cog hidden oe_timer_clock'" />
                                                         </span>
                                                         <strong><span class="hour"><t t-esc="days.account_group[data][0].date_diff_hour or '0'" /></span>H <span class="minute"><t t-esc="days.account_group[data][0].date_diff_minute or '0'" /></span>M</strong>
+                                                    </span>
+                                                    <span class="oe_timesheet_daily_delete" width="15px" t-if="!widget.get('effective_readonly')" t-att-data-account="data" t-att-data-day-count="day_count" t-attf-title="Delete">
+                                                        <button class="oe_i" name="delete" type="button">d</button>
                                                     </span>
                                                 </td>
                                             </tr>
