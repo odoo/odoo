@@ -2,6 +2,8 @@
 Modules
 =======
 
+
+
 .. _reference/module/manifest:
 
 Manifest
@@ -59,21 +61,6 @@ Available manifest fields are:
     to ``auto_install``. When both ``sale`` and ``crm`` are installed, it
     automatically adds CRM campaigns tracking to sale orders without either
     ``sale`` or ``crm`` being aware of one another
-
-.. _reference/module/lifecycle:
-
-Lifecycle
-=========
-
-.. _reference/module/lifecycle/install:
-
-Install
--------
-
-.. _reference/module/lifecycle/update:
-
-Update
-------
 
 .. _semantic versioning: http://semver.org
 .. _existing categories:
