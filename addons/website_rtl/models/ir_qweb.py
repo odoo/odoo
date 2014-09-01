@@ -23,16 +23,17 @@
 from openerp.http import request
 from openerp.osv import orm
 
+class QWeb(orm.AbstractModel):
+    """ QWeb object for rendering stuff in the website context
+    """
+    _inherit = 'website.qweb'
 
-class ir_http(orm.AbstractModel):
-    _inherit = 'ir.http'
-
-    def _dispatch(self):
-        resp = super(ir_http, self)._dispatch()
+    def render(self, cr, uid, id_or_xml_id, qwebcontext=None, loader=None, context=None):
         if request.website:
             langs = request.website.get_languages_dir()
             direction = langs.get(request.context['lang'], None)
             if direction is None:
                 direction = 'ltr'
-            request.context['website_lang_dir'] = direction 
-        return resp
+        qwebcontext['website_lang_dir'] = direction
+        return super(QWeb, self).render(cr, uid, id_or_xml_id, qwebcontext=qwebcontext, loader=loader, context=context)
+
