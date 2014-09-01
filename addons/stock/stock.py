@@ -3503,6 +3503,22 @@ class stock_location_path(osv.osv):
         'active': True,
     }
 
+    def _prepare_push_apply(self, cr, uid, rule, move, context=None):
+        newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return {
+                'location_id': move.location_dest_id.id,
+                'location_dest_id': rule.location_dest_id.id,
+                'date': newdate,
+                'company_id': rule.company_id and rule.company_id.id or False,
+                'date_expected': newdate,
+                'picking_id': False,
+                'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
+                'propagate': rule.propagate,
+                'push_rule_id': rule.id,
+                'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
+            }
+        
+
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')
         newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -3519,18 +3535,8 @@ class stock_location_path(osv.osv):
                 #call again push_apply to see if a next step is defined
                 move_obj._push_apply(cr, uid, [move], context=context)
         else:
-            move_id = move_obj.copy(cr, uid, move.id, {
-                'location_id': move.location_dest_id.id,
-                'location_dest_id': rule.location_dest_id.id,
-                'date': newdate,
-                'company_id': rule.company_id and rule.company_id.id or False,
-                'date_expected': newdate,
-                'picking_id': False,
-                'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
-                'propagate': rule.propagate,
-                'push_rule_id': rule.id,
-                'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
-            })
+            vals = self._prepare_push_apply(cr, uid, rule, move, context=context)
+            move_id = move_obj.copy(cr, uid, move.id, vals, context=context)
             move_obj.write(cr, uid, [move.id], {
                 'move_dest_id': move_id,
             })

@@ -289,7 +289,7 @@ class sale_order_line(osv.osv):
         product_obj = self.pool.get('product.product')
         warning = {}
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty=qty,
-            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
+            uom=False, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
             lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
 
         if not product:

@@ -741,6 +741,7 @@ class purchase_order(osv.osv):
                 'group_id': procurement.group_id.id or group_id,  #move group is same as group of procurements if it exists, otherwise take another group
                 'procurement_id': procurement.id,
                 'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state=='picking' and '2binvoiced') or (order.invoice_method == 'picking' and '2binvoiced') or 'none', #dropship case takes from sale
+                'propagate': procurement.rule_id.propagate,
             })
             diff_quantity -= min(procurement_qty, diff_quantity)
             res.append(tmp)
@@ -821,7 +822,8 @@ class purchase_order(osv.osv):
             picking_vals = {
                 'picking_type_id': order.picking_type_id.id,
                 'partner_id': order.dest_address_id.id or order.partner_id.id,
-                'date': max([l.date_planned for l in order.order_line])
+                'date': max([l.date_planned for l in order.order_line]),
+                'origin': order.name
             }
             picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)

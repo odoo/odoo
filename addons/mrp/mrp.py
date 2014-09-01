@@ -1059,19 +1059,25 @@ class mrp_production(osv.osv):
             return "make_to_order"
         return "make_to_stock"
 
+
+
     def _create_previous_move(self, cr, uid, move_id, product, source_location_id, dest_location_id, context=None):
         '''
         When the routing gives a different location than the raw material location of the production order, 
         we should create an extra move from the raw material location to the location of the routing, which 
         precedes the consumption line (chained)
         '''
+        
         stock_move = self.pool.get('stock.move')
+        type_obj = self.pool.get('stock.picking.type')
+        types = type_obj.search(cr, uid, [('code','=','outgoing')], context=context)
         move = stock_move.copy(cr, uid, move_id, default = {
             'location_id': source_location_id,
             'location_dest_id': dest_location_id,
             'procure_method': self._get_raw_material_procure_method(cr, uid, product, context=context),
             'raw_material_production_id': False, 
             'move_dest_id': move_id,
+            'picking_type_id': types and types[0] or False,
         }, context=context)
         return move
 
@@ -1109,6 +1115,7 @@ class mrp_production(osv.osv):
         
         if prev_move:
             prev_move = self._create_previous_move(cr, uid, move_id, product, prod_location_id, source_location_id, context=context)
+            stock_move.action_confirm(cr, uid, [prev_move], context=context)
         return move_id
 
     def _make_production_consume_line(self, cr, uid, line, context=None):

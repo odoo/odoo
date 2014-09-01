@@ -33,6 +33,11 @@ class stock_location_path(osv.osv):
         'invoice_state': '',
     }
 
+    def _prepare_push_apply(self, cr, uid, rule, move, context=None):
+        res = super(stock_location_path, self)._prepare_push_apply(cr, uid, rule, move, context=context)
+        res['invoice_state'] = rule.invoice_state or 'none'
+        return res
+
 #----------------------------------------------------------
 # Procurement Rule
 #----------------------------------------------------------
