@@ -79,7 +79,7 @@ class hr_recruitment_degree(osv.osv):
 class hr_applicant(osv.Model):
     _name = "hr.applicant"
     _description = "Applicant"
-    _order = "id desc"
+    _order = "priority desc, id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _track = {
@@ -244,6 +244,7 @@ class hr_applicant(osv.Model):
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s._get_default_company_id(cr, uid, s._get_default_department_id(cr, uid, c), c),
         'color': 0,
+        'priority': '0',
         'date_last_stage_update': fields.datetime.now,
     }
 

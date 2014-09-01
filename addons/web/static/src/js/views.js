@@ -1447,12 +1447,12 @@ instance.web.View = instance.web.Widget.extend({
         if (action_data.special === 'cancel') {
             return handler({"type":"ir.actions.act_window_close"});
         } else if (action_data.type=="object") {
-            var args = [[record_id]], additional_args = [];
+            var args = [[record_id]];
             if (action_data.args) {
                 try {
                     // Warning: quotes and double quotes problem due to json and xml clash
                     // Maybe we should force escaping in xml or do a better parse of the args array
-                    additional_args = JSON.parse(action_data.args.replace(/'/g, '"'));
+                    var additional_args = JSON.parse(action_data.args.replace(/'/g, '"'));
                     args = args.concat(additional_args);
                 } catch(e) {
                     console.error("Could not JSON.parse arguments", action_data.args);

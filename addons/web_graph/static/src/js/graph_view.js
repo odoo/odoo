@@ -52,24 +52,21 @@ instance.web_graph.GraphView = instance.web.View.extend({
             if (_.has(field.attrs, 'interval')) {
                 field_name = field.attrs.name + ':' + field.attrs.interval;
             }
-            if (_.has(field.attrs, 'type')) {
-                switch (field.attrs.type) {
-                    case 'row':
-                        self.widget_config.row_groupby.push(field_name);
-                        break;
-                    case 'col':
-                        self.widget_config.col_groupby.push(field_name);
-                        break;
-                    case 'measure':
-                        self.widget_config.measures.push(field_name);
-                        break;
-                }
-            } else {  // old style, kept for backward compatibility
+            //noinspection FallThroughInSwitchStatementJS
+            switch (field.attrs.type) {
+            case 'measure':
+                self.widget_config.measures.push(field_name);
+                break;
+            case 'col':
+                self.widget_config.col_groupby.push(field_name);
+                break;
+            default:
                 if ('operator' in field.attrs) {
                     self.widget_config.measures.push(field_name);
-                } else {
-                    self.widget_config.row_groupby.push(field_name);
+                    break;
                 }
+            case 'row':
+                self.widget_config.row_groupby.push(field_name);
             }
         });
         if (self.widget_config.measures.length === 0) {

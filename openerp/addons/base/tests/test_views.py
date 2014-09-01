@@ -642,7 +642,7 @@ class test_views(ViewCase):
         """Insert view into database via a query to passtrough validation"""
         kw.pop('id', None)
         kw.setdefault('mode', 'extension' if kw.get('inherit_id') else 'primary')
-        kw.setdefault('application', 'always')
+        kw.setdefault('active', True)
 
         keys = sorted(kw.keys())
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)
@@ -1095,21 +1095,21 @@ class TestOptionalViews(ViewCase):
         self.v1 = self.create({
             'model': 'a',
             'inherit_id': self.v0,
-            'application': 'always',
+            'active': True,
             'priority': 10,
             'arch': '<xpath expr="//base" position="after"><v1/></xpath>',
         })
         self.v2 = self.create({
             'model': 'a',
             'inherit_id': self.v0,
-            'application': 'enabled',
+            'active': True,
             'priority': 9,
             'arch': '<xpath expr="//base" position="after"><v2/></xpath>',
         })
         self.v3 = self.create({
             'model': 'a',
             'inherit_id': self.v0,
-            'application': 'disabled',
+            'active': False,
             'priority': 8,
             'arch': '<xpath expr="//base" position="after"><v3/></xpath>'
         })
@@ -1128,10 +1128,10 @@ class TestOptionalViews(ViewCase):
         )
 
     def test_applied_state_toggle(self):
-        """ Change application states of v2 and v3, check that the results
+        """ Change active states of v2 and v3, check that the results
         are as expected
         """
-        self.browse(self.v2).write({'application': 'disabled'})
+        self.browse(self.v2).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
             ET.fromstring(arch),
@@ -1141,7 +1141,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.browse(self.v3).write({'application': 'enabled'})
+        self.browse(self.v3).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
             ET.fromstring(arch),
@@ -1152,7 +1152,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.browse(self.v2).write({'application': 'enabled'})
+        self.browse(self.v2).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
             ET.fromstring(arch),

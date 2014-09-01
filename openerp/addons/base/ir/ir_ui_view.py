@@ -167,21 +167,15 @@ class view(osv.osv):
   (<xpath/>) are applied, and the result is used as if it were this view's
   actual arch.
 """),
-        'application': fields.selection([
-                ('always', "Always applied"),
-                ('enabled', "Optional, enabled"),
-                ('disabled', "Optional, disabled"),
-            ],
-            required=True, string="Application status",
+        'active': fields.boolean("Active", required=True,
             help="""If this view is inherited,
-* if always, the view always extends its parent
-* if enabled, the view currently extends its parent but can be disabled
-* if disabled, the view currently does not extend its parent but can be enabled
+* if True, the view always extends its parent
+* if False, the view currently does not extend its parent but can be enabled
              """),
     }
     _defaults = {
         'mode': 'primary',
-        'application': 'always',
+        'active': True,
         'priority': 16,
     }
     _order = "priority,name"
@@ -289,18 +283,10 @@ class view(osv.osv):
         return ret
 
     def toggle(self, cr, uid, ids, context=None):
-        """ Switches between enabled and disabled application statuses
+        """ Switches between enabled and disabled statuses
         """
-        for view in self.browse(cr, uid, ids, context=context):
-            if view.application == 'enabled':
-                view.write({'application': 'disabled'})
-            elif view.application == 'disabled':
-                view.write({'application': 'enabled'})
-            else:
-                raise ValueError(_("Can't toggle view %d with application %r") % (
-                    view.id,
-                    view.application,
-                ))
+        for view in self.browse(cr, uid, ids, context=dict(context or {}, active_test=False)):
+            view.write({'active': not view.active})
 
     # default view selection
     def default_view(self, cr, uid, model, view_type, context=None):
@@ -346,7 +332,7 @@ class view(osv.osv):
             ['inherit_id', '=', view_id],
             ['model', '=', model],
             ['mode', '=', 'extension'],
-            ['application', 'in', ['always', 'enabled']],
+            ['active', '=', True],
         ]
         if self.pool._init:
             # Module init currently in progress, only consider views from

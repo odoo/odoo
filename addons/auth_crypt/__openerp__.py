@@ -23,7 +23,7 @@
     'version': '1.1',
     'author': ['OpenERP SA', 'FS3'],
     'maintainer': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'category': 'Tools',
     'description': """
 Ecrypted passwords

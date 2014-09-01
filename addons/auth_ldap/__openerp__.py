@@ -93,7 +93,7 @@ allows pre-setting the default groups and menus of the first-time users.
          user to a username that does not exist in LDAP, and setup its groups
          the way you want.
     """,
-    'website' : 'http://www.openerp.com',
+    'website' : 'https://www.odoo.com',
     'category' : 'Authentication',
     'data' : [
         'users_ldap_view.xml',

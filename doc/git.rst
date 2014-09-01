@@ -1,3 +1,5 @@
+:orphan: true
+
 =============
 Bazaar to git
 =============

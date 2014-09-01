@@ -83,10 +83,9 @@
             <title><t t-esc="title"/></title>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
-            <t t-if="request and request.website_multilang">
-                <t t-foreach="languages" t-as="lg">
-                    <t t-set="force_lang" t-value="lg[0] if website and lg[0] != website.default_lang_code else None"/>
-                    <link rel="alternate" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=force_lang)" t-att-hreflang="lg[0].replace('_', '-').lower()" />
+            <t t-if="request and request.website_multilang and website">
+                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lang">
+                    <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
                 </t>
             </t>
 
@@ -170,7 +169,7 @@
     </xpath>
 </template>
 
-<template id="layout_logo_show" inherit_id="website.layout" optional="enabled" name="Show Logo">
+<template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
             <img src="/logo.png"/>
@@ -231,7 +230,7 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" optional="enabled" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
+<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
     <xpath expr="//ul[@id='top_menu']" position="inside">
         <li class="divider"/>
         <li>
@@ -273,7 +272,7 @@
     </xpath>
 </template>
 
-<template id="footer_default" inherit_id="website.footer_custom" optional="enabled" name="Automatic Footer">
+<template id="footer_default" inherit_id="website.footer_custom" customize_show="True" name="Automatic Footer">
     <xpath expr="//div[@id='footer']" position="replace">
         <div class="container hidden-print">
             <div class="row">
@@ -439,6 +438,66 @@
 </template>
 
 <!-- Error and special pages -->
+
+<template id="info" name="Odoo Information">
+    <t t-call="website.layout">
+      <div id="wrap">
+        <div class="oe_structure">
+
+            <section class="container">
+                <h1><t t-esc="res_company.name"/>
+                    <small>Odoo Version <t t-raw="version.get('server_version')"/></small>
+                </h1>
+                <p>
+                    Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a href="https://www.odoo.com">Open Source ERP</a>.
+                </p>
+
+                <div class="alert alert-warning alert-dismissable mt16" groups="base.group_website_publisher">
+                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                   <p>
+                     Note: To hide this page, uncheck it from the top Customize menu.
+                   </p>
+                </div>
+                <h2>Installed Applications</h2>
+                <dl class="dl-horizontal" t-foreach="apps" t-as="app">
+                    <dt>
+                        <a t-att-href="app.website" t-if="app.website">
+                            <t t-raw="app.shortdesc"/>
+                        </a>
+                        <span t-raw="app.shortdesc" t-if="not app.website"/>
+                    </dt>
+                    <dd>
+                        <span t-raw="app.summary"/>
+                    </dd><dd class="text-muted">
+                        Technical name: <span t-field="app.name"/>, updated: <span t-field="app.write_date"/>, author: <span t-field="app.author"/>
+                    </dd>
+                </dl>
+
+                <h2>Installed Modules</h2>
+                <dl class="dl-horizontal">
+                    <t t-foreach="modules" t-as="app">
+                        <dt>
+                            <span t-raw="app.shortdesc"/>
+                        </dt>
+                        <dd t-if="app.summary">
+                            <span t-raw="app.summary"/>
+                        </dd><dd>
+                            Technical name: <span t-field="app.name"/>,
+                            updated: <span t-field="app.write_date"/>
+                            <t t-if="app.author">
+                                , author: <span t-field="app.author"/>
+                            </t>
+                        </dd>
+                    </t>
+                </dl>
+
+
+            </section>
+
+        </div>
+      </div>
+    </t>
+</template>
 
 <template id="default_page">
     <t t-call="website.layout">

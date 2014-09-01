@@ -106,10 +106,10 @@
                                         <field name="state"/>
                                         <field name="product_manager"/>
                                     </group>
-                                    <group name="weight" string="Weights">
-                                        <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
+                                    <group name="weight" string="Weights" attrs="{'invisible':[('type','=','service')]}">
+                                        <field digits="(14, 3)" name="volume"/>
+                                        <field digits="(14, 3)" name="weight"/>
+                                        <field digits="(14, 3)" name="weight_net"/>
                                     </group>
                                 </group>
                             </page>
@@ -245,7 +245,7 @@
                         <field name="attribute_line_ids" widget="one2many_list">
                             <tree string="Variants" editable="bottom">
                                 <field name="attribute_id"/>
-                                <field name="value_ids" widget="many2many_tags" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
+                                <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
                             </tree>
                         </field>
                     </page>

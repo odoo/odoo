@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -2218,8 +2218,7 @@
   line-height: 0;
   font-size: 12px;
   position: absolute;
-  top: -30px;
-  width: 100%;
+  top: 1px;
   left: 0;
   right: 0;
   opacity: 0;
@@ -3386,4 +3385,10 @@ div.tour-backdrop {
 
 body {
   overflow: auto;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .oe_secondary_menus_container {
+    position: static !important;
+  }
 }

@@ -785,7 +785,7 @@ class stock_picking(osv.osv):
                  store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
                  store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
-        'date': fields.datetime('Commitment Date', help="Date promised for the completion of the transfer order, usually set the time of the order and revised later on.", select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, track_visibility='onchange'),
+        'date': fields.datetime('Creation Date', help="Creation Date, usually the time of the order", select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, track_visibility='onchange'),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=True),
         'quant_reserved_exist': fields.function(_get_quant_reserved_exist, type='boolean', string='Quant already reserved ?', help='technical field used to know if there is already at least one quant reserved on moves of a given picking'),
@@ -1333,8 +1333,9 @@ class stock_picking(osv.osv):
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
-                if (need_rereserve or not all_op_processed) and not picking.location_id.usage in ("supplier", "production", "inventory"):
-                    self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
+                if need_rereserve or not all_op_processed: 
+                    if not picking.location_id.usage in ("supplier", "production", "inventory"):
+                        self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
                     self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
                 if todo_move_ids and not context.get('do_only_split'):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
@@ -2413,7 +2414,7 @@ class stock_move(osv.osv):
             'product_uos_qty': move.product_uos_qty - uos_qty,
         }, context=ctx)
 
-        if move.move_dest_id and move.propagate:
+        if move.move_dest_id and move.propagate and move.move_dest_id.state not in ('done', 'cancel'):
             new_move_prop = self.split(cr, uid, move.move_dest_id, qty, context=context)
             self.write(cr, uid, [new_move], {'move_dest_id': new_move_prop}, context=context)
         #returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and

@@ -62,10 +62,10 @@ from . import SUPERUSER_ID
 from . import api
 from . import tools
 from .api import Environment
-from .exceptions import except_orm, AccessError, MissingError
+from .exceptions import except_orm, AccessError, MissingError, ValidationError
 from .osv import fields
 from .osv.query import Query
-from .tools import lazy_property
+from .tools import lazy_property, ormcache
 from .tools.config import config
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from .tools.safe_eval import safe_eval as eval
@@ -836,8 +836,23 @@ class BaseModel(object):
         # prepare ormcache, which must be shared by all instances of the model
         cls._ormcache = {}
 
+    @api.model
+    @ormcache()
+    def _is_an_ordinary_table(self):
+        self.env.cr.execute("""\
+            SELECT  1
+            FROM    pg_class
+            WHERE   relname = %s
+            AND     relkind = %s""", [self._table, 'r'])
+        return bool(self.env.cr.fetchone())
+
     def __export_xml_id(self):
         """ Return a valid xml_id for the record `self`. """
+        if not self._is_an_ordinary_table():
+            raise Exception(
+                "You can not export the column ID of model %s, because the "
+                "table %s is not an ordinary table."
+                % (self._name, self._table))
         ir_model_data = self.sudo().env['ir.model.data']
         data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
         if data:
@@ -1268,26 +1283,33 @@ class BaseModel(object):
                         (', '.join(names), res_msg)
                 )
         if errors:
-            raise except_orm('ValidateError', '\n'.join(errors))
+            raise ValidationError('\n'.join(errors))
 
         # new-style constraint methods
         for check in self._constraint_methods:
             if set(check._constrains) & field_names:
-                check(self)
+                try:
+                    check(self)
+                except ValidationError, e:
+                    raise
+                except Exception, e:
+                    raise ValidationError("Error while validating constraint\n\n%s" % tools.ustr(e))
 
     def default_get(self, cr, uid, fields_list, context=None):
-        """ Return default values for the fields in `fields_list`. Default
-            values are determined by the context, user defaults, and the model
-            itself.
+        """ default_get(fields) -> default_values
 
-            :param fields_list: a list of field names
-            :return: a dictionary mapping each field name to its corresponding
-                default value; the keys of the dictionary are the fields in
-                `fields_list` that have a default value different from ``False``.
+        Return default values for the fields in `fields_list`. Default
+        values are determined by the context, user defaults, and the model
+        itself.
 
-            This method should not be overridden. In order to change the
-            mechanism for determining default values, you should override method
-            :meth:`add_default_value` instead.
+        :param fields_list: a list of field names
+        :return: a dictionary mapping each field name to its corresponding
+            default value; the keys of the dictionary are the fields in
+            `fields_list` that have a default value different from ``False``.
+
+        This method should not be overridden. In order to change the
+        mechanism for determining default values, you should override method
+        :meth:`add_default_value` instead.
         """
         # trigger view init hook
         self.view_init(cr, uid, fields_list, context)
@@ -1477,7 +1499,8 @@ class BaseModel(object):
         return view
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        """
+        """ fields_view_get([view_id | view_type='form'])
+
         Get the detailed composition of the requested view like fields, model, view architecture
 
         :param view_id: id of the view or None
@@ -1616,6 +1639,11 @@ class BaseModel(object):
             cr, uid, self._name, node, view_id, context=context)
 
     def search_count(self, cr, user, args, context=None):
+        """ search_count(args) -> int
+
+        Returns the number of records in the current model matching :ref:`the
+        provided domain <reference/orm/domains>`.
+        """
         res = self.search(cr, user, args, context=context, count=True)
         if isinstance(res, list):
             return len(res)
@@ -1623,46 +1651,22 @@ class BaseModel(object):
 
     @api.returns('self')
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        """
-        Search for records based on a search domain.
+        """ search(args[, offset=0][, limit=None][, order=None][, count=False])
 
-        :param cr: database cursor
-        :param user: current user id
-        :param args: list of tuples specifying the search domain [('field_name', 'operator', value), ...]. Pass an empty list to match all records.
-        :param offset: optional number of results to skip in the returned values (default: 0)
-        :param limit: optional max number of records to return (default: **None**)
-        :param order: optional columns to sort by (default: self._order=id )
-        :param context: optional context arguments, like lang, time zone
-        :type context: dictionary
-        :param count: optional (default: **False**), if **True**, returns only the number of records matching the criteria, not their ids
-        :return: id or list of ids of records matching the criteria
-        :rtype: integer or list of integers
+        Searches for records based on the ``args``
+        :ref:`search domain <reference/orm/domains>`.
+
+        :param args: :ref:`A search domain <reference/orm/domains>`. Use an empty
+                     list to match all records.
+        :param int offset: number of results to ignore (default: none)
+        :param int limit: maximum number of records to return (default: all)
+        :param str order: sort string
+        :param bool count: if ``True``, the call should return the number of
+                           records matching ``args`` rather than the records
+                           themselves.
+        :returns: at most ``limit`` records matching the search criteria
+
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
-
-        **Expressing a search domain (args)**
-
-        Each tuple in the search domain needs to have 3 elements, in the form: **('field_name', 'operator', value)**, where:
-
-            * **field_name** must be a valid name of field of the object model, possibly following many-to-one relationships using dot-notation, e.g 'street' or 'partner_id.country' are valid values.
-            * **operator** must be a string with a valid comparison operator from this list: ``=, !=, >, >=, <, <=, like, ilike, in, not in, child_of, parent_left, parent_right``
-              The semantics of most of these operators are obvious.
-              The ``child_of`` operator will look for records who are children or grand-children of a given record,
-              according to the semantics of this model (i.e following the relationship field named by
-              ``self._parent_name``, by default ``parent_id``.
-            * **value** must be a valid value to compare with the values of **field_name**, depending on its type.
-
-        Domain criteria can be combined using 3 logical operators than can be added between tuples:  '**&**' (logical AND, default), '**|**' (logical OR), '**!**' (logical NOT).
-        These are **prefix** operators and the arity of the '**&**' and '**|**' operator is 2, while the arity of the '**!**' is just 1.
-        Be very careful about this when you combine them the first time.
-
-        Here is an example of searching for Partners named *ABC* from Belgium and Germany whose language is not english ::
-
-            [('name','=','ABC'),'!',('language.code','=','en_US'),'|',('country_id.code','=','be'),('country_id.code','=','de'))
-
-        The '&' is omitted as it is the default, and of course we could have used '!=' for the language, but what this domain really represents is::
-
-            (name is 'ABC' AND (language is NOT english) AND (country is Belgium OR Germany))
-
         """
         return self._search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
@@ -1677,11 +1681,13 @@ class BaseModel(object):
 
     @api.multi
     def name_get(self):
-        """ Return a textual representation for the records in `self`.
-            By default this is the value of field ``display_name``.
+        """ name_get() -> [(id, name), ...]
 
-            :rtype: list(tuple)
-            :return: list of pairs ``(id, text_repr)`` for all records
+        Returns a textual representation for the records in ``self``.
+        By default this is the value of the ``display_name`` field.
+
+        :return: list of pairs ``(id, text_repr)`` for each records
+        :rtype: list(tuple)
         """
         result = []
         name = self._rec_name
@@ -1697,16 +1703,18 @@ class BaseModel(object):
 
     @api.model
     def name_create(self, name):
-        """ Create a new record by calling :meth:`~.create` with only one value
-            provided: the display name of the new record.
+        """ name_create(name) -> record
 
-            The new record will be initialized with any default values
-            applicable to this model, or provided through the context. The usual
-            behavior of :meth:`~.create` applies.
+        Create a new record by calling :meth:`~.create` with only one value
+        provided: the display name of the new record.
 
-            :param name: display name of the record to create
-            :rtype: tuple
-            :return: the :meth:`~.name_get` pair value of the created record
+        The new record will be initialized with any default values
+        applicable to this model, or provided through the context. The usual
+        behavior of :meth:`~.create` applies.
+
+        :param name: display name of the record to create
+        :rtype: tuple
+        :return: the :meth:`~.name_get` pair value of the created record
         """
         if self._rec_name:
             record = self.create({self._rec_name: name})
@@ -1717,26 +1725,28 @@ class BaseModel(object):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
-        """ Search for records that have a display name matching the given
-            `name` pattern when compared with the given `operator`, while also
-            matching the optional search domain (`args`).
+        """ name_search(name='', args=None, operator='ilike', limit=100) -> records
 
-            This is used for example to provide suggestions based on a partial
-            value for a relational field. Sometimes be seen as the inverse
-            function of :meth:`~.name_get`, but it is not guaranteed to be.
+        Search for records that have a display name matching the given
+        `name` pattern when compared with the given `operator`, while also
+        matching the optional search domain (`args`).
 
-            This method is equivalent to calling :meth:`~.search` with a search
-            domain based on `display_name` and then :meth:`~.name_get` on the
-            result of the search.
+        This is used for example to provide suggestions based on a partial
+        value for a relational field. Sometimes be seen as the inverse
+        function of :meth:`~.name_get`, but it is not guaranteed to be.
 
-            :param name: the name pattern to match
-            :param list args: optional search domain (see :meth:`~.search` for
-                syntax), specifying further restrictions
-            :param str operator: domain operator for matching `name`, such as
-                ``'like'`` or ``'='``.
-            :param int limit: optional max number of records to return
-            :rtype: list
-            :return: list of pairs ``(id, text_repr)`` for all matching records.
+        This method is equivalent to calling :meth:`~.search` with a search
+        domain based on ``display_name`` and then :meth:`~.name_get` on the
+        result of the search.
+
+        :param str name: the name pattern to match
+        :param list args: optional search domain (see :meth:`~.search` for
+                          syntax), specifying further restrictions
+        :param str operator: domain operator for matching `name`, such as
+                             ``'like'`` or ``'='``.
+        :param int limit: optional max number of records to return
+        :rtype: list
+        :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
         return self._name_search(name, args, operator, limit=limit)
 
@@ -2665,7 +2675,7 @@ class BaseModel(object):
                                 dest_model = self.pool[f._obj]
                                 ref = dest_model._table
                                 # ir_actions is inherited so foreign key doesn't work on it
-                                if ref != 'ir_actions':
+                                if dest_model._auto and ref != 'ir_actions':
                                     self._m2o_add_foreign_key_checked(k, dest_model, f.ondelete)
                             if f.select:
                                 cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
@@ -2990,7 +3000,9 @@ class BaseModel(object):
                 field.computed_fields = []
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
-        """ Return the definition of each field.
+        """ fields_get([fields])
+
+        Return the definition of each field.
 
         The returned value is a dictionary (indiced by field name) of
         dictionaries. The _inherits'd fields are included. The string, help,
@@ -3063,18 +3075,26 @@ class BaseModel(object):
 
         return fields
 
-    # new-style implementation of read(); old-style is defined below
+    # add explicit old-style implementation to read()
+    @api.v7
+    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+        records = self.browse(cr, user, ids, context)
+        result = BaseModel.read(records, fields, load=load)
+        return result if isinstance(ids, list) else (bool(result) and result[0])
+
+    # new-style implementation of read()
     @api.v8
     def read(self, fields=None, load='_classic_read'):
-        """ Read the given fields for the records in `self`.
+        """ read([fields])
 
-            :param fields: optional list of field names to return (default is
-                    all fields)
-            :param load: deprecated, this argument is ignored
-            :return: a list of dictionaries mapping field names to their values,
-                    with one dictionary per record
-            :raise AccessError: if user has no read rights on some of the given
-                    records
+        Reads the requested fields for the records in `self`, low-level/RPC
+        method. In Python code, prefer :meth:`~.browse`.
+
+        :param fields: list of field names to return (default is all fields)
+        :return: a list of dictionaries mapping field names to their values,
+                 with one dictionary per record
+        :raise AccessError: if user has no read rights on some of the given
+                records
         """
         # check access rights
         self.check_access_rights('read')
@@ -3109,20 +3129,13 @@ class BaseModel(object):
 
         return result
 
-    # add explicit old-style implementation to read()
-    @api.v7
-    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        records = self.browse(cr, user, ids, context)
-        result = BaseModel.read(records, fields, load=load)
-        return result if isinstance(ids, list) else (bool(result) and result[0])
-
     @api.multi
     def _prefetch_field(self, field):
         """ Read from the database in order to fetch `field` (:class:`Field`
             instance) for `self` in cache.
         """
         # fetch the records of this model without field_name in their cache
-        records = self
+        records = self._in_cache_without(field)
 
         # by default, simply fetch field
         fnames = {field.name}
@@ -3198,16 +3211,8 @@ class BaseModel(object):
                     'order': self._parent_order or self._order,
                 }
 
-        empty = self.browse()
-        prefetch = set()
-        todo = set()
-        for field in (self._fields[name] for name in field_names):
-            prefetch.update(self._in_cache_without(field).ids)
-            todo.update(self.env.todo.get(field, empty).ids)
-        records = self.browse(prefetch - todo | set(self.ids))
-
         result = []
-        for sub_ids in cr.split_for_in_conditions(records.ids):
+        for sub_ids in cr.split_for_in_conditions(self.ids):
             cr.execute(query, [tuple(sub_ids)] + rule_params)
             result.extend(cr.dictfetchall())
 
@@ -3280,9 +3285,9 @@ class BaseModel(object):
 
         # store failed values in cache for the records that could not be read
         fetched = self.browse(ids)
-        missing = records - fetched
+        missing = self - fetched
         if missing:
-            extras = fetched - records
+            extras = fetched - self
             if extras:
                 raise AccessError(
                     _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(
@@ -3479,14 +3484,10 @@ class BaseModel(object):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
-        """
-        Delete records with given ids
+        """ unlink()
 
-        :param cr: database cursor
-        :param uid: current user id
-        :param ids: id or list of ids
-        :param context: (optional) context arguments, like lang, time zone
-        :return: True
+        Deletes the records of the current set
+
         :raise AccessError: * if user has no unlink rights on the requested object
                             * if user tries to bypass access rules for unlink on the requested object
         :raise UserError: if the record is default property for other records
@@ -3572,46 +3573,54 @@ class BaseModel(object):
     #
     @api.multi
     def write(self, vals):
-        """
-        Update records in `self` with the given field values.
+        """ write(vals)
 
-        :param vals: field values to update, e.g {'field_name': new_field_value, ...}
-        :type vals: dictionary
-        :return: True
+        Updates all records in the current set with the provided values.
+
+        :param dict vals: fields to update and the value to set on them e.g::
+
+                {'foo': 1, 'bar': "Qux"}
+
+            will set the field ``foo`` to ``1`` and the field ``bar`` to
+            ``"Qux"`` if those are valid (otherwise it will trigger an error).
+
         :raise AccessError: * if user has no write rights on the requested object
                             * if user tries to bypass access rules for write on the requested object
         :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
 
-        **Note**: The type of field values to pass in ``vals`` for relationship fields is specific:
+        .. _openerp/models/relationals/format:
 
-            + For a many2many field, a list of tuples is expected.
-              Here is the list of tuple that are accepted, with the corresponding semantics ::
+        .. note:: Relational fields use a special "commands" format to manipulate their values
 
-                 (0, 0,  { values })    link to a new record that needs to be created with the given values dictionary
-                 (1, ID, { values })    update the linked record with id = ID (write *values* on it)
-                 (2, ID)                remove and delete the linked record with id = ID (calls unlink on ID, that will delete the object completely, and the link to it as well)
-                 (3, ID)                cut the link to the linked record with id = ID (delete the relationship between the two objects but does not delete the target object itself)
-                 (4, ID)                link to existing record with id = ID (adds a relationship)
-                 (5)                    unlink all (like using (3,ID) for all linked records)
-                 (6, 0, [IDs])          replace the list of linked IDs (like using (5) then (4,ID) for each ID in the list of IDs)
+            This format is a list of command triplets executed sequentially,
+            possible command triplets are:
 
-                 Example:
-                    [(6, 0, [8, 5, 6, 4])] sets the many2many to ids [8, 5, 6, 4]
+            ``(0, _, values: dict)``
+                links to a new record created from the provided values
+            ``(1, id, values: dict)``
+                updates the already-linked record of id ``id`` with the
+                provided ``values``
+            ``(2, id, _)``
+                unlinks and deletes the linked record of id ``id``
+            ``(3, id, _)``
+                unlinks the linked record of id ``id`` without deleting it
+            ``(4, id, _)``
+                links to an existing record of id ``id``
+            ``(5, _, _)``
+                unlinks all records in the relation, equivalent to using
+                the command ``3`` on every linked record
+            ``(6, _, ids)``
+                replaces the existing list of linked records by the provoded
+                ones, equivalent to using ``5`` then ``4`` for each id in
+                ``ids``)
 
-            + For a one2many field, a lits of tuples is expected.
-              Here is the list of tuple that are accepted, with the corresponding semantics ::
+            (in command triplets, ``_`` values are ignored and can be
+            anything, generally ``0`` or ``False``)
 
-                 (0, 0,  { values })    link to a new record that needs to be created with the given values dictionary
-                 (1, ID, { values })    update the linked record with id = ID (write *values* on it)
-                 (2, ID)                remove and delete the linked record with id = ID (calls unlink on ID, that will delete the object completely, and the link to it as well)
-
-                 Example:
-                    [(0, 0, {'field_name':field_value_record1, ...}), (0, 0, {'field_name':field_value_record2, ...})]
-
-            + For a many2one field, simply use the ID of target record, which must already exist, or ``False`` to remove the link.
-            + For a reference field, use a string with the model name, a comma, and the target object id (example: ``'product.product, 5'``)
-
+            Any command can be used on :class:`~openerp.fields.Many2many`,
+            only ``0``, ``1`` and ``2`` can be used on
+            :class:`~openerp.fields.One2many`.
         """
         if not self:
             return True
@@ -3883,18 +3892,24 @@ class BaseModel(object):
     @api.model
     @api.returns('self', lambda value: value.id)
     def create(self, vals):
-        """ Create a new record for the model.
+        """ create(vals) -> record
 
-            The values for the new record are initialized using the dictionary
-            `vals`, and if necessary the result of :meth:`default_get`.
+        Creates a new record for the model.
 
-            :param vals: field values like ``{'field_name': field_value, ...}``,
-                see :meth:`write` for details about the values format
-            :return: new record created
-            :raise AccessError: * if user has no create rights on the requested object
-                                * if user tries to bypass access rules for create on the requested object
-            :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
-            :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
+        The new record is initialized using the values from ``vals`` and
+        if necessary those from :meth:`~.default_get`.
+
+        :param dict vals:
+            values for the model's fields, as a dictionary::
+
+                {'field_name': field_value, ...}
+
+            see :meth:`~.write` for details
+        :return: new record created
+        :raise AccessError: * if user has no create rights on the requested object
+                            * if user tries to bypass access rules for create on the requested object
+        :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
+        :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
         """
         self.check_access_rights('create')
 
@@ -4656,17 +4671,13 @@ class BaseModel(object):
 
     @api.returns('self', lambda value: value.id)
     def copy(self, cr, uid, id, default=None, context=None):
-        """
+        """ copy(default=None)
+
         Duplicate record with given id updating it with default values
 
-        :param cr: database cursor
-        :param uid: current user id
-        :param id: id of the record to copy
-        :param default: dictionary of field values to override in the original values of the copied record, e.g: ``{'field_name': overriden_value, ...}``
-        :type default: dictionary
-        :param context: context arguments, like lang, time zone
-        :type context: dictionary
-        :return: id of the newly created record
+        :param dict default: dictionary of field values to override in the
+               original values of the copied record, e.g: ``{'field_name': overriden_value, ...}``
+        :returns: new record
 
         """
         if context is None:
@@ -4680,13 +4691,15 @@ class BaseModel(object):
     @api.multi
     @api.returns('self')
     def exists(self):
-        """ Return the subset of records in `self` that exist, and mark deleted
-            records as such in cache. It can be used as a test on records::
+        """  exists() -> records
 
-                if record.exists():
-                    ...
+        Returns the subset of records in `self` that exist, and marks deleted
+        records as such in cache. It can be used as a test on records::
 
-            By convention, new records are returned as existing.
+            if record.exists():
+                ...
+
+        By convention, new records are returned as existing.
         """
         ids = filter(None, self._ids)           # ids to check in database
         if not ids:
@@ -5052,20 +5065,24 @@ class BaseModel(object):
         env.prefetch[cls._name].update(ids)
         return records
 
-    @api.v8
-    def browse(self, arg=None):
-        """ Return an instance corresponding to `arg` and attached to
-            `self.env`; `arg` is either a record id, or a collection of record ids.
-        """
-        ids = _normalize_ids(arg)
-        #assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
-        return self._browse(self.env, ids)
-
     @api.v7
     def browse(self, cr, uid, arg=None, context=None):
         ids = _normalize_ids(arg)
         #assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
         return self._browse(Environment(cr, uid, context or {}), ids)
+
+    @api.v8
+    def browse(self, arg=None):
+        """ browse([ids]) -> records
+
+        Returns a recordset for the ids provided as parameter in the current
+        environment.
+
+        Can take no ids, a single id or a sequence of ids.
+        """
+        ids = _normalize_ids(arg)
+        #assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
+        return self._browse(self.env, ids)
 
     #
     # Internal properties, for manipulating the instance's implementation
@@ -5073,7 +5090,9 @@ class BaseModel(object):
 
     @property
     def ids(self):
-        """ Return the list of non-false record ids of this instance. """
+        """ List of actual record ids in this recordset (ignores placeholder
+        ids for records to create)
+        """
         return filter(None, list(self._ids))
 
     # backward-compatibility with former browse records
@@ -5086,29 +5105,44 @@ class BaseModel(object):
     #
 
     def ensure_one(self):
-        """ Return `self` if it is a singleton instance, otherwise raise an
-            exception.
+        """ Verifies that the current recorset holds a single record. Raises
+        an exception otherwise.
         """
         if len(self) == 1:
             return self
         raise except_orm("ValueError", "Expected singleton: %s" % self)
 
     def with_env(self, env):
-        """ Return an instance equivalent to `self` attached to `env`.
+        """ Returns a new version of this recordset attached to the provided
+        environment
+
+        :type env: :class:`~openerp.api.Environment`
         """
         return self._browse(env, self._ids)
 
     def sudo(self, user=SUPERUSER_ID):
-        """ Return an instance equivalent to `self` attached to an environment
-            based on `self.env` with the given `user`.
+        """ sudo([user=SUPERUSER])
+
+        Returns a new version of this recordset attached to the provided
+        user.
         """
         return self.with_env(self.env(user=user))
 
     def with_context(self, *args, **kwargs):
-        """ Return an instance equivalent to `self` attached to an environment
-            based on `self.env` with another context. The context is given by
-            `self._context` or the positional argument if given, and modified by
-            `kwargs`.
+        """ with_context([context][, **overrides]) -> records
+
+        Returns a new version of this recordset attached to an extended
+        context.
+
+        The extended context is either the provided ``context`` in which
+        ``overrides`` are merged or the *current* context in which
+        ``overrides`` are merged e.g.::
+
+            # current context is {'key1': True}
+            r2 = records.with_context({}, key2=True)
+            # -> r2._context is {'key2': True}
+            r2 = records.with_context(key2=True)
+            # -> r2._context is {'key1': True, 'key2': True}
         """
         context = dict(args[0] if args else self._context, **kwargs)
         return self.with_env(self.env(context=context))
@@ -5209,9 +5243,11 @@ class BaseModel(object):
 
     @api.model
     def new(self, values={}):
-        """ Return a new record instance attached to `self.env`, and
-            initialized with the `values` dictionary. Such a record does not
-            exist in the database.
+        """ new([values]) -> record
+
+        Return a new record instance attached to the current environment and
+        initialized with the provided ``value``. The record is *not* created
+        in database, it only exists in memory.
         """
         record = self.browse([NewId()])
         record._cache.update(record._convert_to_cache(values, update=True))

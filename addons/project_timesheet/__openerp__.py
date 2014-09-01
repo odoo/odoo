@@ -32,7 +32,7 @@ Management to the Timesheet line entries for particular date and particular user
 with the effect of creating, editing and deleting either ways.
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/project-management',
     'images': ['images/invoice_task_work.jpeg', 'images/my_timesheet.jpeg', 'images/working_hour.jpeg'],
     'depends': ['resource', 'project', 'hr_timesheet_sheet', 'hr_timesheet_invoice', 'account_analytic_analysis', 'procurement'],
     'data': [
