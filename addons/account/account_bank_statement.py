@@ -434,15 +434,14 @@ class account_bank_statement_line(osv.osv):
             account_move_obj.button_cancel(cr, uid, move_ids, context=context)
             account_move_obj.unlink(cr, uid, move_ids, context)
 
-    def get_data_for_reconciliations(self, cr, uid, ids, context=None):
+    def get_data_for_reconciliations(self, cr, uid, ids, excluded_ids=[], context=None):
         """ Returns the data required to display a reconciliation, for each statement line id in ids """
         ret = []
-        mv_line_ids_selected = []
+        mv_line_ids_selected = excluded_ids
 
         for st_line in self.browse(cr, uid, ids, context=context):
             reconciliation_proposition = self.get_reconciliation_proposition(cr, uid, st_line, excluded_ids=mv_line_ids_selected, context=context)
             st_line = self.get_statement_line_for_reconciliation(cr, uid, st_line, context=context)
-            st_line['no_match'] = len(reconciliation_proposition) == 0
             for mv_line in reconciliation_proposition:
                 mv_line_ids_selected.append(mv_line['id'])
             reconciliation_data = {
@@ -543,12 +542,12 @@ class account_bank_statement_line(osv.osv):
 
         return []
 
-    def get_move_lines_for_reconciliation_by_statement_line_id(self, cr, uid, st_line_id, excluded_ids=[], additional_domain=[], count=False, context=None):
+    def get_move_lines_for_reconciliation_by_statement_line_id(self, cr, uid, st_line_id, excluded_ids=[], str="", offset=0, limit=None, count=False, additional_domain=[], context=None):
         """ Bridge between the web client reconciliation widget and get_move_lines_for_reconciliation (which expects a browse record) """
         st_line = self.browse(cr, uid, st_line_id, context=context)
-        return self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids, additional_domain, count, context=context)
+        return self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids, str, offset, limit, count, additional_domain, context=context)
 
-    def get_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=[], additional_domain=[], count=False, context=None):
+    def get_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=[], str="", offset=0, limit=None, count=False, additional_domain=[], context=None):
         """ Find the move lines that could be used to reconcile a statement line. If count is true, only returns the count.
 
             :param st_line: the browse record of the statement line
@@ -558,6 +557,7 @@ class account_bank_statement_line(osv.osv):
         """
         mv_line_pool = self.pool.get('account.move.line')
 
+        # Make domain
         domain = additional_domain + [('reconcile_id', '=', False),('state', '=', 'valid')]
         if st_line.partner_id.id:
             domain += [('partner_id', '=', st_line.partner_id.id),
@@ -565,11 +565,18 @@ class account_bank_statement_line(osv.osv):
                 ('account_id.type', '=', 'payable')]
         else:
             domain += [('account_id.reconcile', '=', True)]
+            if str:
+                domain += [('partner_id.name', 'ilike', str)]
         if excluded_ids:
             domain.append(('id', 'not in', excluded_ids))
+        if str:
+            domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
 
-        line_ids = mv_line_pool.search(cr, uid, domain, order="date_maturity asc, id asc", context=context)
+        # Get move lines
+        line_ids = mv_line_pool.search(cr, uid, domain, offset=offset, limit=limit, order="date_maturity asc, id asc", context=context)
         lines = mv_line_pool.browse(cr, uid, line_ids, context=context)
+        
+        # Either return number of lines
         if count:
             nb_lines = 0
             reconcile_partial_ids = [] # for a partial reconciliation, take only one line
@@ -580,6 +587,8 @@ class account_bank_statement_line(osv.osv):
                 if line.reconcile_partial_id:
                     reconcile_partial_ids.append(line.reconcile_partial_id.id)
             return nb_lines
+        
+        # Or return list of dicts representing the formatted move lines
         else:
             target_currency = st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
             mv_lines = mv_line_pool.prepare_move_lines_for_reconciliation_widget(cr, uid, lines, target_currency=target_currency, target_date=st_line.date, context=context)

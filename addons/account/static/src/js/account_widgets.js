@@ -38,7 +38,7 @@ openerp.account = function (instance) {
             // We'll need to get the code of an account selected in a many2one (whose value is the id)
             this.map_account_id_code = {};
             // The same move line cannot be selected for multiple resolutions
-            this.excluded_move_lines_ids = [];
+            this.excluded_move_lines_ids = {};
             // Description of the fields to initialize in the "create new line" form
             // NB : for presets to work correctly, a field id must be the same string as a preset field
             this.create_form_fields = {
@@ -122,10 +122,12 @@ openerp.account = function (instance) {
             // Retreive statement infos and reconciliation data from the model
             var lines_filter = [['journal_entry_id', '=', false], ['account_id', '=', false]];
             var deferred_promises = [];
-    
+            
+            // Working on specified statement(s)
             if (self.statement_ids && self.statement_ids.length > 0) {
                 lines_filter.push(['statement_id', 'in', self.statement_ids]);
 
+                // If only one statement, retreive its name
                 if (self.statement_ids.length === 1) {
                     deferred_promises.push(self.model_bank_statement
                         .query(["name"])
@@ -136,7 +138,7 @@ openerp.account = function (instance) {
                         })
                     );
                 }
-
+                // Anyway, find out how many statement lines are reconciled (for the progressbar)
                 deferred_promises.push(self.model_bank_statement
                     .call("number_of_lines_reconciled", [self.statement_ids])
                     .then(function(num) {
@@ -144,7 +146,8 @@ openerp.account = function (instance) {
                     })
                 );
             }
-    
+            
+            // Get operation templates
             deferred_promises.push(new instance.web.Model("account.statement.operation.template")
                 .query(['id','name','account_id','label','amount_type','amount','tax_id','analytic_account_id'])
                 .all().then(function (data) {
@@ -162,6 +165,7 @@ openerp.account = function (instance) {
                 })
             );
     
+            // Get statement lines
             deferred_promises.push(self.model_bank_statement_line
                 .query(['id'])
                 .filter(lines_filter)
@@ -181,20 +185,18 @@ openerp.account = function (instance) {
                 }
     
                 // Create a dict account id -> account code for display facilities
-                deferred_promises.push(new instance.web.Model("account.account")
+                new instance.web.Model("account.account")
                     .query(['id', 'code'])
                     .all().then(function(data) {
                         _.each(data, function(o) { self.map_account_id_code[o.id] = o.code });
-                    })
-                );
+                    });
 
                 // Create a dict tax id -> amount
-                deferred_promises.push(new instance.web.Model("account.tax")
+                new instance.web.Model("account.tax")
                     .query(['id', 'amount'])
                     .all().then(function(data) {
                         _.each(data, function(o) { self.map_tax_id_amount[o.id] = o.amount });
-                    })
-                );
+                    });
             
                 new instance.web.Model("ir.model.data")
                     .call("xmlid_to_res_id", ["account.menu_bank_reconcile_bank_statements"])
@@ -202,7 +204,7 @@ openerp.account = function (instance) {
                         self.reconciliation_menu_id = data;
                         self.doReloadMenuReconciliation();
                     });
-    
+
                 // Bind keyboard events TODO : méthode standard ?
                 $("body").on("keypress", function (e) {
                     self.keyboardShortcutsHandler(e);
@@ -243,33 +245,58 @@ openerp.account = function (instance) {
             }
         },
 
-        excludeMoveLines: function(line_ids) {
+        // Adds move line ids to the list of move lines not to fetch for a given partner
+        // This is required because the same move line cannot be selected for multiple reconciliation
+        excludeMoveLines: function(source_child, partner_id, line_ids) {
             var self = this;
+        
+            var excluded_ids = this.excluded_move_lines_ids[partner_id];
+            var excluded_move_lines_changed = false;
             _.each(line_ids, function(line_id){
-                line_id = parseInt(line_id);
-                if (self.excluded_move_lines_ids.indexOf(line_id) === -1) {
-                    self.excluded_move_lines_ids.push(line_id);
+                if (excluded_ids.indexOf(line_id) === -1) {
+                    excluded_ids.push(line_id);
+                    excluded_move_lines_changed = true;
                 }
             });
-            //update all children view
+            if (! excluded_move_lines_changed)
+                return;
+        
+            // Function that finds if an array of line objects contains at least a line identified by its id
+            var contains_lines = function(lines_array, line_ids) {
+                for (var i = 0; i < lines_array.length; i++)
+                    for (var j = 0; j < line_ids.length; j++)
+                        if (lines_array[i].id === line_ids[j])
+                            return true;
+                return false;
+            };
+        
+            // Update children if needed
             _.each(self.getChildren(), function(child){
-                child.filterMoveLines();
+                if (child.partner_id === partner_id && child !== source_child) {
+                    if (contains_lines(child.get("mv_lines_selected"), line_ids)) {
+                        child.set("mv_lines_selected", _.filter(child.get("mv_lines_selected"), function(o){ return line_ids.indexOf(o.id) === -1 }));
+                    } else if (contains_lines(child.mv_lines_deselected, line_ids)) {
+                        child.mv_lines_deselected = _.filter(child.mv_lines_deselected, function(o){ return line_ids.indexOf(o.id) === -1 });
+                        child.updateMatches();
+                    } else if (contains_lines(child.get("mv_lines"), line_ids)) {
+                        child.updateMatches();
+                    }
+                }
             });
         },
-
-        unexcludeMoveLines: function(line_ids) {
+        
+        unexcludeMoveLines: function(source_child, partner_id, line_ids) {
             var self = this;
-            var index = -1;
-            _.each(line_ids, function(line_id){
-                line_id = parseInt(line_id);
-                index = self.excluded_move_lines_ids.indexOf(line_id);
-                if (index > -1) {
-                    self.excluded_move_lines_ids.splice(index,1);
-                }
-            });
-            //update all children view
+        
+            var initial_excluded_lines_num = this.excluded_move_lines_ids[partner_id].length;
+            this.excluded_move_lines_ids[partner_id] = _.difference(this.excluded_move_lines_ids[partner_id], line_ids);
+            if (this.excluded_move_lines_ids[partner_id].length === initial_excluded_lines_num)
+                return;
+        
+            // Update children if needed
             _.each(self.getChildren(), function(child){
-                child.filterMoveLines();
+                if (child.partner_id === partner_id && child !== source_child && (child.get("mode") === "match" || child.$el.hasClass("no_match")))
+                    child.updateMatches();
             });
         },
     
@@ -459,7 +486,9 @@ openerp.account = function (instance) {
     
                 // Exclude selected move lines
                 var selected_line_ids = _(context.reconciliation_proposition).map(function(o){ return o.id });
-                this.getParent().excludeMoveLines(selected_line_ids);
+                if (this.getParent().excluded_move_lines_ids[this.partner_id] === undefined)
+                    this.getParent().excluded_move_lines_ids[this.partner_id] = [];
+                this.getParent().excludeMoveLines(this, this.partner_id, selected_line_ids);
             } else {
                 this.set("mv_lines_selected", []);
                 this.st_line = undefined;
@@ -479,6 +508,7 @@ openerp.account = function (instance) {
             this.presets = this.getParent().presets;
             this.is_valid = true;
             this.is_consistent = true; // Used to prevent bad server requests
+            this.total_move_lines_num = undefined; // Used for pagers
             this.filter = "";
     
             this.set("mode", undefined);
@@ -490,14 +520,12 @@ openerp.account = function (instance) {
             // NB : mv_lines represent the counterpart that will be created to reconcile existing move lines, so debit and credit are inverted
             this.set("mv_lines", []);
             this.on("change:mv_lines", this, this.mvLinesChanged);
+            this.mv_lines_deselected = []; // deselected lines are displayed on top of the match table
             this.on("change:mv_lines_selected", this, this.mvLinesSelectedChanged);
             this.set("lines_created", []);
             this.set("line_created_being_edited", [{'id': 0}]);
             this.on("change:lines_created", this, this.createdLinesChanged);
             this.on("change:line_created_being_edited", this, this.createdLinesChanged);
-
-            //all lines associated to current reconciliation
-            this.propositions_lines = undefined;
         },
     
         start: function() {
@@ -528,42 +556,30 @@ openerp.account = function (instance) {
 
         loadData: function() {
             var self = this;
-            var deferred_fetch_data = new $.Deferred();
-            if (! self.context.initial_data_provided) {
-                // Load statement line
-                self.model_bank_statement_line
-                    .call("get_data_for_reconciliations", [[self.st_line_id]])
-                    .then(function (data) {
-                        self.st_line = data[0].st_line;
-                        self.decorateStatementLine(self.st_line);
-                        self.partner_id = data[0].st_line.partner_id;
+            if (self.context.initial_data_provided)
+                return;
 
-                        var excluded_move_lines_ids = self.getParent().excluded_move_lines_ids;
-                        var mv_lines = [];
-                        _.each(data[0].reconciliation_proposition, function(line) {
-                            if (excluded_move_lines_ids.indexOf(line.id) === -1) {
-                                self.decorateMoveLine(line, self.st_line.display_currency_id);
-                                mv_lines.push(line);
-                            }
-                        }, self);
-                        self.set("mv_lines_selected", self.get("mv_lines_selected").concat(mv_lines));
-
-                        deferred_fetch_data.resolve();
-                    });
-            } else {
-                deferred_fetch_data.resolve();
-            }
-            return deferred_fetch_data.then(function(){
-                // load all lines that can be usefull for counterparts
-                return self.model_bank_statement_line
-                    .call("get_move_lines_for_reconciliation_by_statement_line_id", [self.st_line.id, []])
-                    .then(function(lines){
-                        _.each(lines, function(line) {
-                            self.decorateMoveLine(line, self.st_line.display_currency_id);
-                        }, this);
-                        self.propositions_lines = lines;
-                    });
+            // Get ids of selected move lines (to exclude them from reconciliation proposition)
+            var excluded_move_lines_ids = []
+            _.each(self.getParent().excluded_move_lines_ids, function(o){
+                excluded_move_lines_ids = excluded_move_lines_ids.concat(o);
             });
+            // Load statement line
+            return self.model_bank_statement_line
+                .call("get_data_for_reconciliations", [[self.st_line_id], excluded_move_lines_ids])
+                .then(function (data) {
+                    self.st_line = data[0].st_line;
+                    self.decorateStatementLine(self.st_line);
+                    self.partner_id = data[0].st_line.partner_id;
+                    if (self.getParent().excluded_move_lines_ids[self.partner_id] === undefined)
+                        self.getParent().excluded_move_lines_ids[self.partner_id] = [];
+                    var mv_lines = [];
+                    _.each(data[0].reconciliation_proposition, function(line) {
+                        self.decorateMoveLine(line, self.st_line.display_currency_id);
+                        mv_lines.push(line);
+                    }, self);
+                    self.set("mv_lines_selected", self.get("mv_lines_selected").concat(mv_lines));
+                });
         },
 
         render: function() {
@@ -582,7 +598,8 @@ openerp.account = function (instance) {
             self.$(".match").slideUp(0);
             self.$(".create").slideUp(0);
             if (self.st_line.no_match) self.$el.addClass("no_match");
-            if (self.context.mode !== "match") self.filterMoveLines();
+            // TODO : Why would you do that ?
+            //if (self.context.mode !== "match") self.updateMatches();
             self.bindPopoverTo(self.$(".line_info_button"));
             self.createFormWidgets();
             // Special case hack : no identified partner
@@ -618,7 +635,7 @@ openerp.account = function (instance) {
             _.each(self.getChildren(), function(o){ o.destroy() });
             self.is_consistent = false;
             return $.when(self.$el.animate({opacity: 0}, self.animation_speed)).then(function() {
-                self.getParent().unexcludeMoveLines(_.map(self.get("mv_lines_selected"), function(o){ return o.id }));
+                self.getParent().unexcludeMoveLines(self, self.partner_id, _.map(self.get("mv_lines_selected"), function(o){ return o.id }));
                 $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
                 self.$el.empty();
                 self.$el.removeClass("no_partner");
@@ -627,12 +644,12 @@ openerp.account = function (instance) {
                 self.is_valid = true;
                 self.is_consistent = true;
                 self.filter = "";
-                self.propositions_lines = [];
                 self.set("balance", undefined, {silent: true});
                 self.set("mode", undefined, {silent: true});
                 self.set("pager_index", 0, {silent: true});
                 self.set("mv_lines", [], {silent: true});
                 self.set("mv_lines_selected", [], {silent: true});
+                self.mv_lines_deselected = [];
                 self.set("lines_created", [], {silent: true});
                 self.set("line_created_being_edited", [{'id': 0}], {silent: true});
                 // Rebirth
@@ -839,17 +856,36 @@ openerp.account = function (instance) {
         selectMoveLine: function(mv_line) {
             var self = this;
             var line_id = mv_line.dataset.lineid;
+
+            // find the line in mv_lines or mv_lines_deselected
             var line = _.find(self.get("mv_lines"), function(o){ return o.id == line_id});
-            
+            if (! line) {
+                line = _.find(self.mv_lines_deselected, function(o){ return o.id == line_id });
+                self.mv_lines_deselected = _.filter(self.mv_lines_deselected, function(o) { return o.id != line_id });
+            }
+            if (! line) return; // If no line found, we've got a syncing problem (let's turn a deaf ear)
+
+            // Warn the user if he's selecting lines from both a payable and a receivable account
+            var last_selected_line = _.last(self.get("mv_lines_selected"));
+            if (last_selected_line && last_selected_line.account_type != line.account_type) {
+                new instance.web.Dialog(this, {
+                    title: _t("Warning"),
+                    size: 'medium',
+                }, $("<div />").text(_.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), last_selected_line.account_type))).open();
+                return;
+            }
+
+            // If statement line has no partner, give it the partner of the selected move line
             if (!this.st_line.partner_id && line.partner_id) {
                 self.changePartner(line.partner_id, function() {
                     self.selectMoveLine(mv_line);
                 });
             } else {
-                $(mv_line).attr('data-selected','true');
                 self.set("mv_lines_selected", self.get("mv_lines_selected").concat(line));
-                this.set("mv_lines", _.reject(this.get("mv_lines"), function(o){return o.id == line_id}));
-                this.getParent().excludeMoveLines([line_id]);
+                // $(mv_line).attr('data-selected','true');
+                // self.set("mv_lines_selected", self.get("mv_lines_selected").concat(line));
+                // this.set("mv_lines", _.reject(this.get("mv_lines"), function(o){return o.id == line_id}));
+                // this.getParent().excludeMoveLines([line_id]);
             }
         },
 
@@ -857,33 +893,51 @@ openerp.account = function (instance) {
             var self = this;
             var line_id = mv_line.dataset.lineid;
             var line = _.find(self.get("mv_lines_selected"), function(o){ return o.id == line_id});
-            $(mv_line).attr('data-selected','false');
-            self.set("mv_lines_selected",_.filter(self.get("mv_lines_selected"), function(o) { return o.id != line_id }));
-            this.set("mv_lines", this.get("mv_lines").concat(line));
+            if (! line) return; // If no line found, we've got a syncing problem (let's turn a deaf ear)
+
+            // add the line to mv_lines_deselected and remove it from mv_lines_selected
+            self.mv_lines_deselected.unshift(line);
+            var mv_lines_selected = _.filter(self.get("mv_lines_selected"), function(o) { return o.id != line_id });
+            
+            // remove partial reconciliation stuff if necessary
+            if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
+            if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
+            
+            self.$el.removeClass("no_match");
             self.set("mode", "match");
-            if (line.partial_reconcile)
-                this.unpartialReconcileLine(line);
-            if (line.propose_partial_reconcile)
-                line.propose_partial_reconcile = false;
-            this.getParent().unexcludeMoveLines([line_id]);
+            self.set("mv_lines_selected", mv_lines_selected);
+
+
+            // $(mv_line).attr('data-selected','false');
+            // this.set("mv_lines", this.get("mv_lines").concat(line));
+            // this.getParent().unexcludeMoveLines([line_id]);
         },
     
         /** Matches pagination */
     
         pagerControlLeftHandler: function() {
-            this.set("pager_index", this.get("pager_index")-1 );
+            var self = this;
+            if (self.$(".pager_control_left").hasClass("disabled")) { return; /* shouldn't happen, anyway*/ }
+            if (self.total_move_lines_num < 0) { return; }
+            self.set("pager_index", self.get("pager_index")-1 );
         },
-    
+        
         pagerControlRightHandler: function() {
-            this.set("pager_index", this.get("pager_index")+1 );
+            var self = this;
+            var new_index = self.get("pager_index")+1;
+            if (self.$(".pager_control_right").hasClass("disabled")) { return; /* shouldn't happen, anyway*/ }
+            if ((new_index * self.max_move_lines_displayed) >= self.total_move_lines_num) { return; }
+            self.set("pager_index", new_index );
         },
     
         filterHandler: function() {
             var self = this;
             self.set("pager_index", 0);
             self.filter = self.$(".filter").val();
-            self.filterMoveLines();
+            window.clearTimeout(self.apply_filter_timeout);
+            self.apply_filter_timeout = window.setTimeout(self.proxy('updateMatches'), 200);
         },
+
     
         /** Creating */
     
@@ -1018,40 +1072,42 @@ openerp.account = function (instance) {
             var self = this;
             var table = self.$(".match table");
             var nothing_displayed = true;
-    
+        
             // Display move lines
             $.each(self.$(".match table .bootstrap_popover"), function(){ $(this).popover('destroy') });
             table.empty();
             var slice_start = self.get("pager_index") * self.max_move_lines_displayed;
             var slice_end = (self.get("pager_index")+1) * self.max_move_lines_displayed;
-
-            var visible = 0;
-            _(self.get("mv_lines")).each(function(line){
-                if (visible >= slice_start && visible < slice_end) {
-                    var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: false}));
-                    self.bindPopoverTo($line.find(".line_info_button"));
-                    table.append($line);
-                    nothing_displayed = false;
-                }
-                visible = visible + 1;
+            _( _.filter(self.mv_lines_deselected, function(o){
+                    return o.name.indexOf(self.filter) !== -1 || o.ref.indexOf(self.filter) !== -1 })
+                .slice(slice_start, slice_end)).each(function(line){
+                var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: false}));
+                self.bindPopoverTo($line.find(".line_info_button"));
+                table.append($line);
+                nothing_displayed = false;
             });
-            if (nothing_displayed && this.filter !== "") {
+            _(self.get("mv_lines")).each(function(line){
+                var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: false}));
+                self.bindPopoverTo($line.find(".line_info_button"));
+                table.append($line);
+                nothing_displayed = false;
+            });
+            if (nothing_displayed && this.filter !== "")
                 table.append(QWeb.render("filter_no_match", {filter_str: self.filter}));
-            }
         },
     
         updatePagerControls: function() {
             var self = this;
+        
             if (self.get("pager_index") === 0)
                 self.$(".pager_control_left").addClass("disabled");
             else
                 self.$(".pager_control_left").removeClass("disabled");
-            if (self.get('mv_lines').length <= ((self.get("pager_index")+1) * self.max_move_lines_displayed))
+            if (self.total_move_lines_num <= ((self.get("pager_index")+1) * self.max_move_lines_displayed))
                 self.$(".pager_control_right").addClass("disabled");
             else
                 self.$(".pager_control_right").removeClass("disabled");
         },
-    
     
         /** Properties changed */
     
@@ -1124,7 +1180,7 @@ openerp.account = function (instance) {
                 self.el.dataset.mode = "inactive";
     
             } else if (self.get("mode") === "match") {
-                return $.when(self.filterMoveLines()).then(function() {
+                return $.when(self.updateMatches()).then(function() {
                     if (self.$el.hasClass("no_match")) {
                         self.set("mode", "inactive");
                         return;
@@ -1143,14 +1199,18 @@ openerp.account = function (instance) {
         },
     
         pagerChanged: function() {
-            this.filterMoveLines();
+            this.updateMatches();
         },
     
         mvLinesChanged: function() {
             var self = this;
-    
+            // If pager_index is out of range, set it to display the last page
+            if (self.get("pager_index") !== 0 && self.total_move_lines_num <= (self.get("pager_index") * self.max_move_lines_displayed)) {
+                self.set("pager_index", Math.ceil(self.total_move_lines_num/self.max_move_lines_displayed)-1);
+            }
+        
             // If there is no match to display, disable match view and pass in mode inactive
-            if (self.get("mv_lines").length === 0 && self.filter === "") {
+            if (self.total_move_lines_num + self.mv_lines_deselected.length === 0 && self.filter === "") {
                 self.$el.addClass("no_match");
                 if (self.get("mode") === "match") {
                     self.set("mode", "inactive");
@@ -1164,14 +1224,18 @@ openerp.account = function (instance) {
         },
     
         mvLinesSelectedChanged: function(elt, val) {
+            var self = this;
+        
             var added_lines_ids = _.map(_.difference(val.newValue, val.oldValue), function(o){ return o.id });
             var removed_lines_ids = _.map(_.difference(val.oldValue, val.newValue), function(o){ return o.id });
-            
-            this.getParent().excludeMoveLines(added_lines_ids);
-            this.getParent().unexcludeMoveLines(removed_lines_ids);
-
-            this.updateAccountingViewMatchedLines();
-            this.updateBalance();
+        
+            self.getParent().excludeMoveLines(self, self.partner_id, added_lines_ids);
+            self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines_ids);
+        
+            $.when(self.updateMatches()).then(function(){
+                self.updateAccountingViewMatchedLines();
+                self.updateBalance();
+            });
         },
 
         // Generic function for updating the line_created_being_edited
@@ -1246,18 +1310,6 @@ openerp.account = function (instance) {
     
         /** Model */
     
-        filterMoveLines: function() {
-            var self = this;
-            var lines_to_show = [];
-            _.each(self.propositions_lines, function(line){
-                var filter = (line.q_label.toLowerCase().indexOf(self.filter.toLowerCase()) > -1 || line.account_code.toLowerCase().indexOf(self.filter.toLowerCase()) > -1);
-                if (self.getParent().excluded_move_lines_ids.indexOf(line.id) === -1 && filter) {
-                    lines_to_show.push(line);
-                }
-            });
-            self.set("mv_lines", lines_to_show);
-        },
-
         doPartialReconcileButtonClickHandler: function(e) {
             var self = this;
     
@@ -1347,6 +1399,46 @@ openerp.account = function (instance) {
             }
         },
 
+        // Loads move lines according to the widget's state
+        updateMatches: function() {
+            var self = this;
+            var deselected_lines_num = self.mv_lines_deselected.length;
+            var move_lines = {};
+            var move_lines_num = 0;
+            var offset = self.get("pager_index") * self.max_move_lines_displayed - deselected_lines_num;
+            if (offset < 0) offset = 0;
+            var limit = (self.get("pager_index")+1) * self.max_move_lines_displayed - deselected_lines_num;
+            if (limit > self.max_move_lines_displayed) limit = self.max_move_lines_displayed;
+            var excluded_ids = _.collect(self.get("mv_lines_selected").concat(self.mv_lines_deselected), function(o){ return o.id });
+            excluded_ids = excluded_ids.concat(self.getParent().excluded_move_lines_ids[self.partner_id]);
+            
+            var deferred_move_lines;
+            var move_lines = [];
+            if (limit > 0) {
+                // Load move lines
+                deferred_move_lines = self.model_bank_statement_line
+                    .call("get_move_lines_for_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, offset, limit])
+                    .then(function (lines) {
+                        _.each(lines, function(line) {
+                            self.decorateMoveLine(line, self.st_line.display_currency_id);
+                            move_lines.push(line);
+                        }, self);
+                    });
+            }
+        
+            // Fetch the number of move lines corresponding to this statement line and this filter
+            var deferred_total_move_lines_num = self.model_bank_statement_line
+                .call("get_move_lines_for_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, 0, undefined, true])
+                .then(function(num){
+                    move_lines_num = num;
+                });
+        
+            return $.when(deferred_move_lines, deferred_total_move_lines_num).then(function(){
+                self.total_move_lines_num = move_lines_num + deselected_lines_num;
+                self.set("mv_lines", move_lines);
+            });
+        },
+
         // Changes the partner_id of the statement_line in the DB and reloads the widget
         changePartner: function(partner_id, callback) {
             var self = this;
@@ -1407,6 +1499,8 @@ openerp.account = function (instance) {
             var self = this;
             speed = (isNaN(speed) ? self.animation_speed : speed);
             if (! self.is_consistent) return;
+
+            self.getParent().unexcludeMoveLines(self, self.partner_id, _.map(self.get("mv_lines_selected"), function(o){ return o.id }));
             
             // Sliding animation
             var height = self.$el.outerHeight();
