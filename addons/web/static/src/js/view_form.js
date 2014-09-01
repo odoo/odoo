@@ -3376,7 +3376,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
                 self.floating = false;
             }
-            if (used && self.get("value") === false && ! self.no_ed) {
+            if (used && self.get("value") === false && ! self.no_ed && ! (self.options && (self.options.no_create || self.options.no_quick_create))) {
                 self.ed_def.reject();
                 self.uned_def.reject();
                 self.ed_def = $.Deferred();
