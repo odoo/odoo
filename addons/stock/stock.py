@@ -2235,7 +2235,11 @@ class stock_move(osv.osv):
                     pickings[move.picking_id.id] = 1
                     r = res.pop(0)
                     product_uos_qty = self.pool.get('stock.move').onchange_quantity(cr, uid, [move.id], move.product_id.id, r[0], move.product_id.uom_id.id, move.product_id.uos_id.id)['value']['product_uos_qty']
-                    cr.execute('update stock_move set location_id=%s, product_qty=%s, product_uos_qty=%s where id=%s', (r[1], r[0],product_uos_qty, move.id))
+                    move.write({
+                        'location_id': r[1],
+                        'product_qty': r[0],
+                        'product_uos_qty': product_uos_qty,
+                        })
 
                     while res:
                         r = res.pop(0)
