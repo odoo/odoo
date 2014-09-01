@@ -137,15 +137,13 @@ def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
 
 class website(osv.osv):
-    def _get_menu_website(self, cr, uid, ids, context=None):
-        # IF a menu is changed, update all websites
-        return self.search(cr, uid, [], context=context)
-
     def _get_menu(self, cr, uid, ids, name, arg, context=None):
-        root_domain = [('parent_id', '=', False)]
-        menus = self.pool.get('website.menu').search(cr, uid, root_domain, order='id', context=context)
-        menu = menus and menus[0] or False
-        return dict( map(lambda x: (x, menu), ids) )
+        res = {}
+        menu_obj = self.pool.get('website.menu')
+        for id in ids:
+            menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False), ('website_id', '=', id)], order='id', context=context)
+            res[id] = menu_ids and menu_ids[0] or False
+        return res
 
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
@@ -164,10 +162,7 @@ class website(osv.osv):
         'google_analytics_key': fields.char('Google Analytics Key'),
         'user_id': fields.many2one('res.users', string='Public User'),
         'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
-        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
-            store= {
-                'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
-            })
+        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu')
     }
     #sig-ajout
     _defaults = {
@@ -201,16 +196,17 @@ class website(osv.osv):
         except ValueError:
             # new page
             _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
-            page_id = view.copy(cr, uid, template_id, context=context)
+            #from pudb import set_trace; set_trace()
+            page_id = view.copy(cr, uid, template_id, {}, context=context)
             page = view.browse(cr, uid, page_id, context=context)
             #sig-ajout
+            web_id = self.get_current_website(cr, uid, context=context)
             page.write({
-                'website_id': context.get('website_id'),
+                'website_id': web_id.id,#context.get('website_id'),
                 'arch': page.arch.replace(template, page_xmlid),
                 'name': page_name,
                 'key': 'website.%s' % page_name,
-                'page': ispage,
-            })
+                'page': ispage})
             imd.create(cr, uid, {
                 'name': page_name,
                 'module': template_module,
@@ -604,7 +600,7 @@ class website_menu(osv.osv):
         'new_window': fields.boolean('New Window'),
         'sequence': fields.integer('Sequence'),
         # TODO: support multiwebsite once done for ir.ui.views
-        'website_id': fields.many2one('website', 'Website'),
+        'website_id': fields.many2one('website', 'Website', required=True),
         'parent_id': fields.many2one('website.menu', 'Parent Menu', select=True, ondelete="cascade"),
         'child_id': fields.one2many('website.menu', 'parent_id', string='Child Menus'),
         'parent_left': fields.integer('Parent Left', select=True),

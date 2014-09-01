@@ -52,6 +52,7 @@ class view(osv.osv):
             return super(view, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, vals, context=None):
+        #from pudb import set_trace; set_trace()
         return super(view, self).copy(cr, uid, id, dict(vals or {}, website_id=False),context=context)
 
     def _view_obj(self, cr, uid, view_id, context=None):
@@ -166,6 +167,7 @@ class view(osv.osv):
         return arch
 
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
+        #from pudb import set_trace; set_trace()
         if request and getattr(request, 'website_enabled', False):
             engine='website.qweb'
 

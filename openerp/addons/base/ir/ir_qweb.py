@@ -194,7 +194,7 @@ class QWeb(orm.AbstractModel):
 
     def eval(self, expr, qwebcontext):
         try:
-            return qwebcontext.context.get(expr) or qwebcontext.safe_eval(expr)
+            return qwebcontext.safe_eval(expr)
         except Exception:
             template = qwebcontext.get('__template__')
             raise_qweb_exception(message="Could not evaluate expression %r" % expr, expression=expr, template=template)
@@ -235,6 +235,7 @@ class QWeb(orm.AbstractModel):
         if qwebcontext is None:
             qwebcontext = {}
 
+        #sig-ajout
         context = context or qwebcontext.context           
         website_id=context.get('website_id')
         cr = cr or qwebcontext.cr

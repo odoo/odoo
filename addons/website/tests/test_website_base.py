@@ -9,6 +9,7 @@ class TestWebsiteBase(common.TransactionCase):
         # Usefull models
         self.ir_ui_view = self.registry('ir.ui.view')
         self.website = self.registry('website')
+        self.res_company = self.registry('res.company')
 
         #Usefull objects
         master_view_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website', 'homepage')
@@ -29,6 +30,10 @@ class TestWebsiteBase(common.TransactionCase):
         default_website_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website', 'default_website')
         self.default_website_id = default_website_ref and default_website_ref[1] or False
         self.default_website = self.website.browse(cr, uid, [self.default_website_id], context=None)[0]
+
+        res_company_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'main_company')
+        self.res_company_id = res_company_ref and res_company_ref[1] or False
+        self.res_company_object = self.res_company.browse(cr, uid, [self.res_company_id], context=None)[0]
         
         second_website_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website', 'second_website')
         self.second_website_id = second_website_ref and second_website_ref[1] or False
