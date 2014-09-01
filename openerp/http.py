@@ -298,9 +298,9 @@ class WebRequest(object):
 
         .. deprecated:: 8.0
 
-            Use the ``id`` attribute on :attr:`.session`
+            Use the ``sid`` attribute on :attr:`.session`
         """
-        return self.session.id
+        return self.session.sid
 
     @property
     def registry(self):
