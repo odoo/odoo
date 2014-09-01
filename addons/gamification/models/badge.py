@@ -96,12 +96,17 @@ class gamification_badge(osv.Model):
             the total number of users this badge was granted to
         """
         result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            res = list(set(owner.user_id.id for owner in obj.owner_ids))
-            result[obj.id] = {
-                'unique_owner_ids': res,
-                'stat_count': len(obj.owner_ids),
-                'stat_count_distinct': len(res)
+        for badge_id in ids:
+            cr.execute("""
+                SELECT user_id
+                FROM gamification_badge_user
+                WHERE badge_id = %s
+                """, (badge_id,))
+            res = [user_id[0] for user_id in cr.fetchall()]
+            result[badge_id] = {
+                'unique_owner_ids': list(set(res)),
+                'stat_count': len(res),
+                'stat_count_distinct': len(list(set(res)))
             }
         return result
 
