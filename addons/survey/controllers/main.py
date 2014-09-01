@@ -98,7 +98,10 @@ class WebsiteSurvey(http.Controller):
 
         # Manual surveying
         if not token:
-            user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id}, context=context)
+            vals = {'survey_id': survey.id}
+            if request.website.user_id.id != uid:
+                vals['partner_id'] = request.registry['res.users'].browse(cr, uid, uid, context=context).partner_id.id
+            user_input_id = user_input_obj.create(cr, uid, vals, context=context)
             user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
         else:
             try:
