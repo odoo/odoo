@@ -60,6 +60,8 @@ from misc import SKIPPED_ELEMENT_TYPES
 
 from misc import unquote
 
+from openerp import SUPERUSER_ID
+
 # Import of XML records requires the unsafe eval as well,
 # almost everywhere, which is ok because it supposedly comes
 # from trusted data, but at least we make it obvious now.
@@ -289,7 +291,7 @@ form: module.record_id""" % (xml_id,)
         if len(id) > 64:
             _logger.error('id: %s is to long (max: 64)', id)
 
-    def _tag_delete(self, cr, rec, data_node=None):
+    def _tag_delete(self, cr, rec, data_node=None, mode=None):
         d_model = rec.get("model")
         d_search = rec.get("search",'').encode('utf-8')
         d_id = rec.get("id")
@@ -320,7 +322,7 @@ form: module.record_id""" % (xml_id,)
 
         return True
 
-    def _tag_report(self, cr, rec, data_node=None):
+    def _tag_report(self, cr, rec, data_node=None, mode=None):
         res = {}
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.get(f,'').encode('utf8')
@@ -369,7 +371,7 @@ form: module.record_id""" % (xml_id,)
             self._remove_ir_values(cr, res['name'], value, res['model'])
         return id
 
-    def _tag_function(self, cr, rec, data_node=None):
+    def _tag_function(self, cr, rec, data_node=None, mode=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
         context = self.get_context(data_node, rec, {'ref': _ref(self, cr)})
@@ -377,7 +379,7 @@ form: module.record_id""" % (xml_id,)
         _eval_xml(self,rec, self.pool, cr, uid, self.idref, context=context)
         return
 
-    def _tag_url(self, cr, rec, data_node=None):
+    def _tag_url(self, cr, rec, data_node=None, mode=None):
         url = rec.get("url",'').encode('utf8')
         target = rec.get("target",'').encode('utf8')
         name = rec.get("name",'').encode('utf8')
@@ -389,7 +391,7 @@ form: module.record_id""" % (xml_id,)
         id = self.pool['ir.model.data']._update(cr, self.uid, "ir.actions.act_url", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
-    def _tag_act_window(self, cr, rec, data_node=None):
+    def _tag_act_window(self, cr, rec, data_node=None, mode=None):
         name = rec.get('name','').encode('utf-8')
         xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
@@ -497,7 +499,7 @@ form: module.record_id""" % (xml_id,)
             self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
         # TODO add remove ir.model.data
 
-    def _tag_ir_set(self, cr, rec, data_node=None):
+    def _tag_ir_set(self, cr, rec, data_node=None, mode=None):
         if self.mode != 'init':
             return
         res = {}
@@ -507,7 +509,7 @@ form: module.record_id""" % (xml_id,)
             res[f_name] = f_val
         self.pool['ir.model.data'].ir_set(cr, self.uid, res['key'], res['key2'], res['name'], res['models'], res['value'], replace=res.get('replace',True), isobject=res.get('isobject', False), meta=res.get('meta',None))
 
-    def _tag_workflow(self, cr, rec, data_node=None):
+    def _tag_workflow(self, cr, rec, data_node=None, mode=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
         model = rec.get('model').encode('ascii')
@@ -533,7 +535,7 @@ form: module.record_id""" % (xml_id,)
     #   action="action_id"
     #   parent="parent_id"
     #
-    def _tag_menuitem(self, cr, rec, data_node=None):
+    def _tag_menuitem(self, cr, rec, data_node=None, mode=None):
         rec_id = rec.get("id",'').encode('ascii')
         self._test_xml_id(rec_id)
         m_l = map(escape, escape_re.split(rec.get("name",'').encode('utf8')))
@@ -622,7 +624,7 @@ form: module.record_id""" % (xml_id,)
     def _assert_equals(self, f1, f2, prec=4):
         return not round(f1 - f2, prec)
 
-    def _tag_assert(self, cr, rec, data_node=None):
+    def _tag_assert(self, cr, rec, data_node=None, mode=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
 
@@ -686,7 +688,7 @@ form: module.record_id""" % (xml_id,)
         else: # all tests were successful for this assertion tag (no break)
             self.assertion_report.record_success()
 
-    def _tag_record(self, cr, rec, data_node=None):
+    def _tag_record(self, cr, rec, data_node=None, mode=None):
         rec_model = rec.get("model").encode('ascii')
         model = self.pool[rec_model]
         rec_id = rec.get("id",'').encode('ascii')
@@ -767,7 +769,7 @@ form: module.record_id""" % (xml_id,)
             cr.commit()
         return rec_model, id
 
-    def _tag_template(self, cr, el, data_node=None):
+    def _tag_template(self, cr, el, data_node=None, mode=None):
         # This helper transforms a <template> element into a <record> and forwards it
         tpl_id = el.get('id', el.get('t-name', '')).encode('ascii')
         full_tpl_id = tpl_id
@@ -798,6 +800,10 @@ form: module.record_id""" % (xml_id,)
         record.append(Field(el.get('priority', "16"), name='priority'))
         if 'inherit_id' in el.attrib:
             record.append(Field(name='inherit_id', ref=el.get('inherit_id')))
+        if el.get('active') in ("True", "False") and mode != "update":
+            record.append(Field(name='active', eval=el.get('active')))
+        if el.get('customize_show') in ("True", "False"):
+            record.append(Field(name='customize_show', eval=el.get('customize_show')))
         groups = el.attrib.pop('groups', None)
         if groups:
             grp_lst = map(lambda x: "ref('%s')" % x, groups.split(','))
@@ -814,8 +820,6 @@ form: module.record_id""" % (xml_id,)
                 )
             )
             record.append(Field('primary', name='mode'))
-        if el.get('optional'):
-            record.append(Field(el.get('optional'), name='application'))
         # inject complete <template> element (after changing node name) into
         # the ``arch`` field
         record.append(Field(el, name="arch", type="xml"))
@@ -836,7 +840,7 @@ form: module.record_id""" % (xml_id,)
             mod,id_str = id_str.split('.')
         return model_data_obj.get_object_reference(cr, self.uid, mod, id_str)
 
-    def parse(self, de):
+    def parse(self, de, mode=None):
         if de.tag != 'openerp':
             raise Exception("Mismatch xml format: root tag must be `openerp`.")
 
@@ -844,7 +848,7 @@ form: module.record_id""" % (xml_id,)
             for rec in n:
                 if rec.tag in self._tags:
                     try:
-                        self._tags[rec.tag](self.cr, rec, n)
+                        self._tags[rec.tag](self.cr, rec, n, mode=mode)
                     except Exception, e:
                         self.cr.rollback()
                         exc_info = sys.exc_info()
@@ -883,6 +887,7 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
         pathname = os.path.join(module, filename)
     fp = misc.file_open(pathname)
     ext = os.path.splitext(filename)[1].lower()
+
     try:
         if ext == '.csv':
             convert_csv_import(cr, module, pathname, fp.read(), idref, mode, noupdate)
@@ -977,7 +982,7 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     if idref is None:
         idref={}
     obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate)
-    obj.parse(doc.getroot())
+    obj.parse(doc.getroot(), mode=mode)
     return True
 
 

@@ -169,7 +169,7 @@
     </xpath>
 </template>
 
-<template id="layout_logo_show" inherit_id="website.layout" optional="enabled" name="Show Logo">
+<template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
             <img src="/logo.png"/>
@@ -230,7 +230,7 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" optional="enabled" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
+<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
     <xpath expr="//ul[@id='top_menu']" position="inside">
         <li class="divider"/>
         <li>
@@ -272,7 +272,7 @@
     </xpath>
 </template>
 
-<template id="footer_default" inherit_id="website.footer_custom" optional="enabled" name="Automatic Footer">
+<template id="footer_default" inherit_id="website.footer_custom" customize_show="True" name="Automatic Footer">
     <xpath expr="//div[@id='footer']" position="replace">
         <div class="container hidden-print">
             <div class="row">
@@ -439,7 +439,7 @@
 
 <!-- Error and special pages -->
 
-<template id="info" name="Odoo Information" optional="enabled">
+<template id="info" name="Odoo Information">
     <t t-call="website.layout">
       <div id="wrap">
         <div class="oe_structure">

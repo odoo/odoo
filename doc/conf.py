@@ -18,7 +18,13 @@ needs_sphinx = '1.1'
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.todo', 'sphinx.ext.autodoc', 'odoodoc', 'patchqueue']
+extensions = [
+    'sphinx.ext.todo',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
+    'odoodoc',
+    'patchqueue'
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -152,3 +158,7 @@ html_sidebars = {
 # base URL from which the finished HTML is served.
 #html_use_opensearch = ''
 
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/2/', None),
+    'werkzeug': ('http://werkzeug.pocoo.org/docs/0.9/', None),
+}
