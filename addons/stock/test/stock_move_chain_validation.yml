@@ -1,0 +1,97 @@
+-
+ I create an outgoing move for 2 LCD17
+-
+  !record {model: stock.move, id: dest_move_lcd17}:
+     product_qty: 2
+     product_id: product.product_product_7
+     product_uom: product.product_uom_unit
+     location_id: stock_location_components
+     location_dest_id: stock_location_customers
+-
+ I create 2 moves for 1 LCD17 chained with the outgoing one
+-
+  !record {model: stock.move, id: move_lcd17_1}:
+     product_qty: 1
+     product_id: product.product_product_7
+     product_uom: product.product_uom_unit
+     location_id: stock_location_stock
+     location_dest_id: stock_location_components
+     move_dest_id: dest_move_lcd17
+-
+  !record {model: stock.move, id: move_lcd17_2}:
+     product_qty: 1
+     product_id: product.product_product_7
+     product_uom: product.product_uom_unit
+     location_id: stock_location_stock
+     location_dest_id: stock_location_components
+     move_dest_id: dest_move_lcd17
+-
+ I confirm all moves
+-
+ !python {model: stock.move}: |
+   self.action_confirm(cr, uid, [ref('stock.dest_move_lcd17'),ref('stock.move_lcd17_1'),ref('stock.move_lcd17_2')], context=context)
+-
+  I process the 2 moves chained with the outgoing move
+-
+ !python {model: stock.move}: |
+   self.action_done(cr, uid, [ref('stock.move_lcd17_1'),ref('stock.move_lcd17_2')], context=context)
+-
+  the outgoing move must be assigned
+-
+ !python {model: stock.move}: |
+   move = self.browse(cr, uid, ref('stock.dest_move_lcd17'), context=context)
+   assert move.state == 'assigned', "out move was not assigned when internal moves where processed"
+-
+ I create an outgoing move for 2 LCD17
+-
+  !record {model: stock.move, id: dest_move2_lcd17}:
+     product_qty: 2
+     product_id: product.product_product_7
+     product_uom: product.product_uom_unit
+     location_id: stock_location_components
+     location_dest_id: stock_location_customers
+-
+ I create 2 moves for 1 LCD17 chained with the outgoing one
+-
+  !record {model: stock.move, id: move2_lcd17_1}:
+     product_qty: 1
+     product_id: product.product_product_7
+     product_uom: product.product_uom_unit
+     location_id: stock_location_stock
+     location_dest_id: stock_location_components
+     move_dest_id: dest_move2_lcd17
+-
+  !record {model: stock.move, id: move2_lcd17_2}:
+     product_qty: 1
+     product_id: product.product_product_7
+     product_uom: product.product_uom_unit
+     location_id: stock_location_stock
+     location_dest_id: stock_location_components
+     move_dest_id: dest_move2_lcd17
+-
+ I confirm all moves
+-
+ !python {model: stock.move}: |
+   self.action_confirm(cr, uid, [ref('stock.dest_move2_lcd17'),ref('stock.move2_lcd17_1'),ref('stock.move2_lcd17_2')], context=context)
+-
+  I process the 1st move chained with the outgoing move
+-
+ !python {model: stock.move}: |
+   self.action_done(cr, uid, [ref('stock.move2_lcd17_1')], context=context)
+-
+  the outgoing move must not be assigned
+-
+ !python {model: stock.move}: |
+   move = self.browse(cr, uid, ref('stock.dest_move2_lcd17'), context=context)
+   assert move.state != 'assigned', "out move was assigned when only 1st internal moves where processed"
+-
+  I process the 2nd move chained with the outgoing move
+-
+ !python {model: stock.move}: |
+   self.action_done(cr, uid, [ref('stock.move2_lcd17_2')], context=context)
+-
+  the outgoing move must not be assigned
+-
+ !python {model: stock.move}: |
+   move = self.browse(cr, uid, ref('stock.dest_move2_lcd17'), context=context)
+   assert move.state == 'assigned', "out move was not assigned when internal moves where processed"
