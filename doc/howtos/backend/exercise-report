@@ -3,8 +3,8 @@
 
 Index: addons/openacademy/__openerp__.py
 ===================================================================
---- addons.orig/openacademy/__openerp__.py	2014-08-26 17:26:20.735783064 +0200
-+++ addons/openacademy/__openerp__.py	2014-08-26 17:26:20.727783064 +0200
+--- addons.orig/openacademy/__openerp__.py	2014-08-29 08:39:43.975536806 +0200
++++ addons/openacademy/__openerp__.py	2014-08-29 08:39:52.000000000 +0200
 @@ -31,6 +31,7 @@
          'views/openacademy.xml',
          'views/partner.xml',
@@ -16,7 +16,7 @@ Index: addons/openacademy/__openerp__.py
 Index: addons/openacademy/reports.xml
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ addons/openacademy/reports.xml	2014-08-26 17:26:20.727783064 +0200
++++ addons/openacademy/reports.xml	2014-08-29 08:41:12.663540061 +0200
 @@ -0,0 +1,30 @@
 +<openerp>
 +<data>
@@ -38,7 +38,7 @@ Index: addons/openacademy/reports.xml
 +                        <h3>Attendees:</h3>
 +                        <ul>
 +                            <t t-foreach="doc.attendee_ids" t-as="attendee">
-+                                <li t-field="attendee.name"/>
++                                <li><span t-field="attendee.name"/></li>
 +                            </t>
 +                        </ul>
 +                    </div>

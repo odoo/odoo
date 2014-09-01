@@ -24,6 +24,16 @@
                 </field>
         </record>
 
+        <record model="ir.ui.view" id="invoice_form_portal">
+            <field name="name">account.invoice.form.portal</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="groups_id" eval="[(4,ref('base.group_portal'))]"/>
+            <field name="arch" type="xml">
+                <field name="payment_ids" position="replace" />
+            </field>
+        </record>
+
         <record id="view_account_invoice_filter_share" model="ir.ui.view">
             <field name="name">account.invoice.select.share</field>
             <field name="model">account.invoice</field>

@@ -2,12 +2,10 @@
 <openerp>
     <data>
 
-<!-- Editor custo -->
-<template id="editor_head" inherit_id="website.editor_head"
-    name="Event Editor">
-    <xpath expr="." position="inside">
+<!-- Editor custom -->
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="website_forum assets">
+    <xpath expr="/t" position="inside">
         <link rel='stylesheet' href="/website_forum/static/src/css/website_forum.css"/>
-
         <script type="text/javascript" src="/website_forum/static/src/js/website.tour.forum.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.editor.js"/>
     </xpath>
@@ -30,21 +28,27 @@
     </form>
 </template>
 
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="website_forum assets">
+    <xpath expr="." position="inside">
+        <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
+        <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
+        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
+        <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
+    </xpath>
+</template>
+
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
         <t t-set="head">
-            <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
-            <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
-            <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
-            <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
             <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
             <script type="text/javascript">
                 CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
                 ,['Outdent','Indent','Link','Unlink','Image'],] ;
             </script>
+            <t t-raw="0"/>
         </t>
-        <div class="container mt16">
+        <div class="container mt16 website_forum">
             <div class="navbar navbar-default">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe-help-navbar-collapse">
@@ -658,9 +662,14 @@
         <div class="col-sm-10 col-sm-offset-2">
             <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="comment oe_comment_grey">
                 <small class="text-muted">
-                    <button type="button" t-if="user.partner_id.id == message.author_id.id and user.karma&gt;=750"
-                        t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/delete"
-                        class="close comment_delete">&amp;times;</button>
+                    <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
+                    <t t-call="website_forum.link_button">
+                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/delete'"/>
+                        <t t-set="label" t-value="' '"/>
+                        <t t-set="karma" t-value="user.karma&lt;required_karma and required_karma or 0"/>
+                        <t t-set="classes" t-value="'close comment_delete fa-times'"/>
+                    </t>
+
                     <span t-field="message.body"/>
                     <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_convert_own or object.forum_id.karma_comment_convert_all"/>
                     <t t-call="website_forum.link_button">
@@ -814,55 +823,74 @@
 
 <template id="edit_profile">
     <t t-call="website_forum.header">
-        <h3>Edit Profile
-            <t t-call="website.publish_management">
-              <t t-set="object" t-value="user"/>
-            </t>
-        </h3>
-        <div class="col-md-2">
-            <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
+        <h3>Edit Profile</h3>
+        <div class="row">
+            <div class="col-md-2">
+                <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
+            </div>
+            <div class="col-md-10">
+            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal">
+                <input name="user_id" t-att-value="user.id" type="hidden"/>
+                <div class="form-group">
+                    <label class="col-md-2 control-label mb16" for="user_name">Real name</label>
+                    <div class="col-md-8 mb16">
+                        <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
+                    <div class="col-md-8 mb16" t-if="user.id == uid">
+                        <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
+                        <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label mb16" for="user_website">Website</label>
+                    <div class="col-md-8 mb16">
+                        <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div t-if="email_required" class="alert alert-danger alert-dismissable oe_forum_email_required">
+                        <button type="button" class="close" data-dismiss="alert">x</button>
+                        <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
+                    </div>
+                    <label class="col-md-2 control-label mb16" for="user_email">Email</label>
+                    <div class="col-md-8 mb16">
+                        <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label mb16" for="user_city">City</label>
+                    <div class="col-md-8 mb16">
+                        <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label mb16">Country</label>
+                    <div class="col-md-8 mb16">
+                        <select class="form-control" name="country">
+                            <option value="">Country...</option>
+                            <t t-foreach="countries or []" t-as="country">
+                                <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
+                            </t>
+                         </select>
+                    </div>
+                </div>
+                <!--Note: using website_description fiels instead of using commnt firld of partner-->
+                <div class="form-group">
+                    <label class="col-md-2 control-label mb16" for="description">Biography</label>
+                    <div class="col-md-8 mb16">
+                        <textarea name="description" id="description" style="min-height: 120px" required="True" 
+                            class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-offset-2 col-md-2 mb16">
+                    <button class="btn btn-primary btn-lg">Update</button>
+                </div>
+            </form>
+            </div>
         </div>
-        <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal">
-            <input name="user_id" t-att-value="user.id" type="hidden"/>
-            <label class="col-md-2 control-label mb16" for="user.name">Real name</label>
-            <div class="col-md-7 mb16">
-                <input type="text" class="col-md-7 mb16 form-control" name="name" required="True" t-attf-value="#{user.name}"/>
-            </div> 
-            <label class="col-md-2 control-label mb16" for="user.partner_id.website">Website</label>
-            <div class="col-md-7 mb16">
-                <input type="text" class="form-control" name="website" t-attf-value="#{user.partner_id.website or ''}"/>
-            </div>
-            <div t-if="email_required" class="alert alert-danger alert-dismissable oe_forum_email_required">
-                <button type="button" class="close" data-dismiss="alert">x</button>
-                <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
-            </div>
-            <label class="col-md-4 control-label mb16" for="user.partner_id.email">Email</label>
-            <div class="col-md-7 mb16">
-                <input type="text" class="form-control" name="email" required="True" t-attf-value="#{user.partner_id.email}"/>
-            </div>
-            <label class="col-md-4 control-label mb16" for="user.partner_id.city">City</label>
-            <div class="col-md-7  mb16">
-                <input type="text" class="form-control" name="city" t-attf-value="#{user.partner_id.city or ''}"/>
-            </div>
-            <label class="col-md-4 control-label mb16" for="contact_name">Country</label>
-            <div class="col-md-7 mb16">
-                <select class="form-control" name="country">
-                    <option value="">Country...</option>
-                    <t t-foreach="countries or []" t-as="country">
-                        <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
-                    </t>
-                 </select>
-            </div>
-            <!--Note: using website_description fiels instead of using commnt firld of partner-->
-            <label class="col-md-4 control-label mb16" for="user.partner_id.website_description">Biography</label>
-            <div class="col-md-7 mb16">
-                <textarea name="description" style="min-height: 120px" required="True" 
-                    class="form-control load_editor" id="description"><t t-esc="user.partner_id.website_description"/></textarea>
-            </div>
-            <div class="col-sm-offset-4 col-md-4 mb16">
-                <button class="btn btn-primary btn-lg">Update</button>
-            </div>
-        </form>
         <script type="text/javascript">
             CKEDITOR.replace("description");
         </script>

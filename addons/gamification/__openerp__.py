@@ -51,9 +51,7 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'data/badge.xml',
         'views/gamification.xml',
     ],
-    'installable': True,
     'application': True,
     'auto_install': False,
-
     'qweb': ['static/src/xml/gamification.xml'],
 }

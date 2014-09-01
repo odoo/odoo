@@ -306,22 +306,19 @@ class res_users(osv.Model):
     }
 
     def im_search(self, cr, uid, name, limit, context=None):
-        """ search users with a name and return its id, name and im_status """
-        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
-        user_ids = self.name_search(cr, uid, name, [('id','!=', uid), ('groups_id', 'in', [group_user_id])], limit=limit, context=context)
-        domain = [('user_id', 'in', [i[0] for i in user_ids])]
-        ids = self.pool['im_chat.presence'].search(cr, uid, domain, order="last_poll desc", context=context)
-        presences = self.pool['im_chat.presence'].read(cr, uid, ids, ['user_id','status'], context=context)
-        res = []
-        for user_id in user_ids:
-            user = {
-                'id' : user_id[0],
-                'name' : user_id[1]
-            }
-            tmp = filter(lambda p: p['user_id'][0] == user_id[0], presences)
-            user['im_status'] = len(tmp) > 0 and tmp[0]['status'] or 'offline'
-            res.append(user)
-        return res
+        group_employee = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')[1]
+        found_presence_ids = self.pool["im_chat.presence"].search(cr, uid, [["user_id.name", "ilike", name], ["user_id.id", "<>", uid], ["status", "!=", "offline"], ["user_id.groups_id", "in", [group_employee]]],
+            limit=limit, context=context)
+        if len(found_presence_ids) < limit:
+            found_presence_ids += self.pool["im_chat.presence"].search(cr, uid, [["user_id.name", "ilike", name], ["user_id.id", "<>", uid], ["status", "!=", "offline"], ["id", "not in", found_presence_ids]],
+                limit=limit, context=context)
+        found_user_ids = [p.user_id.id for p in self.pool["im_chat.presence"].browse(cr, uid, found_presence_ids, context=context)]
+        if len(found_user_ids) < limit:
+            found_user_ids += self.search(cr, uid, [["name", "ilike", name], ["id", "<>", uid], ["id", "not in", found_user_ids]],
+                limit=limit-len(found_user_ids), context=context)
+        users = self.read(cr,openerp.SUPERUSER_ID, found_user_ids, ["name", "id", "im_status"], context=context)
+        users.sort(key=lambda obj: found_user_ids.index(obj['id']))
+        return users
 
 #----------------------------------------------------------
 # Controllers
@@ -331,8 +328,10 @@ class Controller(openerp.addons.bus.bus.Controller):
         if request.session.uid:
             registry, cr, uid, context = request.registry, request.cr, request.session.uid, request.context
             registry.get('im_chat.presence').update(cr, uid, ('im_presence' in options), context=context)
-            # listen to connection and disconnections
-            channels.append((request.db,'im_chat.presence'))
+            ## For performance issue, the real time status notification is disabled. This means a change of status are still braoadcasted
+            ## but not received by anyone. Otherwise, all listening user restart their longpolling at the same time and cause a 'ConnectionPool Full Error'
+            ## since there is not enought cursors for everyone. Now, when a user open his list of users, an RPC call is made to update his user status list.
+            ##channels.append((request.db,'im_chat.presence'))
             # channel to receive message
             channels.append((request.db,'im_chat.session', request.uid))
         return super(Controller, self)._poll(dbname, channels, last, options)

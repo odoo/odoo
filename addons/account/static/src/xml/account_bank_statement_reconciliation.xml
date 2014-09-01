@@ -53,7 +53,7 @@
                     <table class="accounting_view">
                         <caption>
                             <button class="button_ok"></button>
-                            <span class="partner_name"><t t-esc="line.partner_name"/></span>
+                            <span class="partner_name"><t t-if="line.partner_id"><t t-esc="line.partner_name"/></t></span>
                             <div class="change_partner_container oe_form"></div>
                         </caption>
                         <tbody class="tbody_initial_line">
@@ -61,7 +61,8 @@
                                 <td><span class="toggle_match glyphicon glyphicon-cog"></span></td>
                                 <td><t t-esc="line.account_code"/></td>
                                 <td><t t-esc="line.date"/></td>
-                                <td><t t-esc="line.name"/>
+                                <td><t t-if="!line.partner_id"><t t-if="line.partner_name"><t t-esc="line.partner_name"/>: </t></t>
+                                    <t t-esc="line.name"/>
                                     <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td>
                                 <td><t t-if="line.amount &gt; 0">
                                       <t t-esc="line.amount_str"/></t></td>

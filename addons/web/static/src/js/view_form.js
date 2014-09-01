@@ -3660,10 +3660,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             focusout: anyoneLoosesFocus,
             focus: function () { self.trigger('focused'); },
             autocompleteopen: function () { ignore_blur = true; },
-            autocompleteclose: function () { ignore_blur = false; },
+            autocompleteclose: function () { setTimeout(function() {ignore_blur = false;},0); },
             blur: function () {
                 // autocomplete open
-                if (ignore_blur) { return; }
+                if (ignore_blur) { $(this).focus(); return; }
                 if (_(self.getChildren()).any(function (child) {
                     return child instanceof instance.web.form.AbstractFormPopup;
                 })) { return; }

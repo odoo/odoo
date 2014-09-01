@@ -90,11 +90,11 @@ class crm_lead(format_address, osv.osv):
         context['empty_list_help_document_name'] = _("leads")
         return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
-    def _get_default_section_id(self, cr, uid, context=None):
+    def _get_default_section_id(self, cr, uid, user_id=False, context=None):
         """ Gives default section by checking if present in the context """
         section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
         if not section_id:
-            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
+            section_id = self.pool.get('res.users').browse(cr, uid, user_id or uid, context).default_section_id.id or False
         return section_id
 
     def _get_default_stage_id(self, cr, uid, context=None):
@@ -279,7 +279,7 @@ class crm_lead(format_address, osv.osv):
         'type': 'lead',
         'user_id': lambda s, cr, uid, c: uid,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
-        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
+        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, context=c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
@@ -324,7 +324,7 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a section_id or restrict section id
             to the ones user_id is member of. """
-        section_id = self._get_default_section_id(cr, uid, context=context) or False
+        section_id = self._get_default_section_id(cr, uid, user_id=user_id, context=context) or False
         if user_id and not section_id:
             section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if section_ids:
@@ -580,7 +580,7 @@ class crm_lead(format_address, osv.osv):
                 values = {'res_id': opportunity_id,}
                 for attachment_in_first in first_attachments:
                     if attachment.name == attachment_in_first.name:
-                        name = "%s (%s)" % (attachment.name, count,),
+                        values['name'] = "%s (%s)" % (attachment.name, count,),
                 count+=1
                 attachment.write(values)
         return True
