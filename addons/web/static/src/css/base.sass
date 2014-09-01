@@ -528,19 +528,19 @@ $sheet-padding: 16px
                 height: 16px
         &.oe_vertical
             label
-                margin-left: 4px
-        &.oe_form_required
-            .oe_radio_input
-                border: 2px solid transparent
                 display: inline-block
-                height: 12px
-                width: 12px
-                vertical-align: top
-                border-radius: 10px
-                margin: 1px 0
-            &.oe_form_invalid
-                .oe_radio_input
-                    border-color: red
+                margin-left: 20px
+        .oe_radio_input
+            border: 2px solid transparent
+            display: inline-block
+            height: 12px
+            width: 12px
+            vertical-align: top
+            border-radius: 10px
+            margin: 1px 0
+            position: absolute
+        &.oe_form_required.oe_form_invalid .oe_radio_input
+            border-color: red
     .oe_tags
         &.oe_inline
             min-width: 250px
@@ -1761,8 +1761,6 @@ $sheet-padding: 16px
             white-space: nowrap
         .oe_form_field_boolean
             width: auto
-        .oe_datepicker_container
-            display: none
         .oe_datepicker_root
             display: inline-block
         .oe_form_required

@@ -78,6 +78,10 @@
                 groups_def.done(function() {
                     self.eval_tip(action_id, model, fields_view.type);
                 });
+            } else if (fields_view.type === 'tree') {
+                view.on('view_list_rendered', self, function() {
+                    self.eval_tip(action_id, model, fields_view.type);
+                });
             }
         },
 

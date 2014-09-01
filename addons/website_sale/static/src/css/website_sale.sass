@@ -289,16 +289,9 @@ label.css_attribute_color.css_not_available
 
 /* ---- Publish managment and options ---- */
 
-#products_grid .css_options
-    display: none
-    position: absolute
-    top: -6px
-    left: 50%
-    z-index: 10
+.oe_overlay_options
     .dropdown
-        position: relative
-        left: -50%
-        [name="size"]
+        ul[name="size"]
             table
                 margin-left: 20px
             td
@@ -314,10 +307,6 @@ label.css_attribute_color.css_not_available
                 background-color: transparent
             table.oe_hover td.select
                 background-color: #B1D4F1
-
-.cke_editable
-    #products_grid .oe_product_cart:hover > .css_options
-        display: block
 
 /* Wizard */
 

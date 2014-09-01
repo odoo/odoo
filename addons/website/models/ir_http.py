@@ -87,6 +87,8 @@ class ir_http(orm.AbstractModel):
             if first_pass:
                 request.lang = request.website.default_lang_code
             request.context['lang'] = request.lang
+            if not request.context.get('tz'):
+                request.context['tz'] = request.session['geoip'].get('time_zone')
             if not func:
                 path = request.httprequest.path.split('/')
                 langs = [lg[0] for lg in request.website.get_languages()]
@@ -190,7 +192,14 @@ class ir_http(orm.AbstractModel):
                 exception=exception,
                 traceback=traceback.format_exc(exception),
             )
-            code = getattr(exception, 'code', code)
+
+            if isinstance(exception, werkzeug.exceptions.HTTPException):
+                if exception.code is None:
+                    # Hand-crafted HTTPException likely coming from abort(),
+                    # usually for a redirect response -> return it directly
+                    return exception
+                else:
+                    code = exception.code
 
             if isinstance(exception, openerp.exceptions.AccessError):
                 code = 403
@@ -199,11 +208,6 @@ class ir_http(orm.AbstractModel):
                 values.update(qweb_exception=exception)
                 if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
                     code = 403
-
-            if isinstance(exception, werkzeug.exceptions.HTTPException) and code is None:
-                # Hand-crafted HTTPException likely coming from abort(),
-                # usually for a redirect response -> return it directly
-                return exception
 
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])

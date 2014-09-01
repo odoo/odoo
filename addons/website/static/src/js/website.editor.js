@@ -1568,9 +1568,9 @@
             }
             var callback = _.uniqueId('func_');
             this.$('input[name=func]').val(callback);
-            window[callback] = function (url, error) {
+            window[callback] = function (attachments, error) {
                 delete window[callback];
-                self.file_selected(url, error);
+                self.file_selected(attachments[0]['website_url'], error);
             };
         },
         file_selection: function () {

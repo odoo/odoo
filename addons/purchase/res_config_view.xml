@@ -25,12 +25,9 @@
                     </header>
                     <separator string="Invoicing Process"/>
                     <group>
-                        <label for="id" string="Invoicing Settings"/>
+                        <label for="id" string="Default Invoicing Settings"/>
                         <div>
-                            <div>
-                                <label for="default_invoice_method"/>
-                                <field name="default_invoice_method" class="oe_inline"/>
-                            </div>
+                            <field name="default_invoice_method" widget="radio" class="oe_inline"/>
                         </div>
                     </group>
                     <separator string="Purchase Order"/>

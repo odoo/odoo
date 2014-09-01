@@ -37,7 +37,7 @@ class sale_configuration(osv.osv_memory):
                  'and to automatically creates project tasks from procurement lines.\n'
                  '-This installs the modules project_timesheet and sale_service.'),
         'default_order_policy': fields.selection(
-            [('manual', 'Invoice based on sales orders'), ('picking', 'Invoice based on deliveries')],
+            [('manual', 'Create invoice on sales order'), ('picking', 'Create invoice on deliveries')],
             'The default invoicing method is', default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
         'module_delivery': fields.boolean('Allow adding shipping costs',
