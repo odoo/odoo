@@ -3156,7 +3156,9 @@ class BaseModel(object):
             # here we can optimize: prefetch all classic and many2one fields
             fnames = set(fname
                 for fname, fcolumn in self._columns.iteritems()
-                if fcolumn._prefetch)
+                if fcolumn._prefetch
+                if not fcolumn.groups or self.user_has_groups(fcolumn.groups)
+            )
 
         # fetch records with read()
         assert self in records and field.name in fnames

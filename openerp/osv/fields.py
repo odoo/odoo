@@ -120,7 +120,7 @@ class _column(object):
 
         # prefetch only if self._classic_write, not self.groups, and not
         # self.deprecated
-        if not self._classic_write or self.groups or self.deprecated:
+        if not self._classic_write or self.deprecated:
             self._prefetch = False
 
     def to_field(self):
