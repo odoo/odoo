@@ -4,11 +4,14 @@
   .oe_form_readonly .oe_timesheet_weekly .oe_timesheet_button_add
     display: none
   .oe_timesheet_weekly
-    overflow-x: auto
+    .oe_timesheet_weekly_body
+      overflow-x: auto
+      table
+        border-collapse: separate
     .oe_timesheet_white
       color: #FFFFFF
   .oe_timesheet_daily .oe_timesheet_white
-    color: #FFFFFF
+    color: #FFFFFF !important
   .oe_timesheet_weekly .oe_timesheet_weekly_account, .oe_timesheet_daily .oe_timesheet_daily_account
     font-weight: bold
     color: #000000
@@ -26,6 +29,23 @@
     .oe_timesheet_weekly_adding
       display: table-cell
       text-align: left
+  .oe_timesheet_weekly_day
+    border: 1px solid
+    border-color: #CCC
+    border-left: 0px
+    border-bottom: 1px solid
+    border-style: solid solid solid none
+    border-color: #cccccc #cccccc #cccccc
+    &:first-child
+      border: none 
+    &:nth-child(2)
+      border-left: 1px solid #cccccc
+      border-bottom-left-radius: 4px
+      border-top-left-radius: 4px
+    &:last-child
+      border-top-right-radius: 4px
+      border-bottom-right-radius: 4px
+      vertical-align: middle
   .oe_timesheet_add_row .oe_form_field_many2one
     display: inline-block
     width: 200px
@@ -46,24 +66,36 @@
   .oe_mb
     margin-bottom: 20px
   .oe_timesheet_daily
-    .oe_active_day
-      background-color: #428BCA
-      color: #FFFFFF
     .oe_daily_header
       width: 100%
+    .oe_nav
+      margin: 0px !important
+    h5
+      color: #428bca !important
     .oe_header
       width: 12.5%
+    .oe_header.oe_active_day
+      background-color: #428BCA
+      color: #FFFFFF !important
     .oe_hide
       display: none
     .oe_timesheet_box
       text-align: right
     .oe_timesheet_daily_footer h4
       text-align: right
+      color: #428bca
     .oe_timer .oe_timer_clock
       bottom: 0
       right: 0px
       left: initial
       line-height: initial
       width: initial
+    .oe_timesheet_daily_delete
+      float: right
+      padding-top: 5px
+      button
+        border: none
+        background: transparent
+        padding: 0
     .oe_display_day_total
       font-size: 12px
