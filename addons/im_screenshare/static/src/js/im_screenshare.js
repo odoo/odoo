@@ -14,9 +14,7 @@
             this.mode = mode || 'share';
             this.uuid = false;
             this.record_id = false;
-            // filter nodes
-            this.loading_node_id = false;
-            this.loading_children_ids = [];
+            this.cookie_data = {};
             // business
             this.treeMirrorClient = null;
             this.cursorMirrorClient = null;
@@ -26,6 +24,7 @@
             var cookie = openerp.session.get_cookie('odoo-screenshare-' + this.mode);
             if(cookie){
                 // then import data from cookie
+                this.cookie_data = cookie;
                 this.record_id = cookie.record_id;
                 this.uuid = cookie.uuid;
                 this._start_record();
@@ -99,8 +98,8 @@
                     self.record_id = result;
                 }
                 // create cookie for 1h
-                var data = {uuid : self.uuid, record_id : self.record_id};
-                openerp.session.set_cookie("odoo-screenshare-" + self.mode, data, 60*60*1000);
+                self.cookie_data = _.extend(self.cookie_data, {uuid : self.uuid, record_id : self.record_id});
+                openerp.session.set_cookie("odoo-screenshare-" + self.mode, self.cookie_data, 60*60*1000);
                 // start sending mutations
                 self._start_record();
                 return result;
@@ -111,7 +110,9 @@
             // disabled loading by replacing the on_rpc_event function
             if(openerp.webclient){
                 this._on_rpc_function = openerp.webclient.loading.on_rpc_event;
+                clearTimeout(openerp.webclient.loading.long_running_timer);
                 openerp.webclient.loading.on_rpc_event = function(){};
+                $('.oe_loading').hide();
             }
             // initialize the mirrorClients
             this.queue({
@@ -173,13 +174,12 @@
             this.cursorMirrorClient.disconnect();
             this.cursorMirrorClient = null;
 
-            this.loading_node_id = false;
-            this.loading_children_ids = [];
             this.uuid = false;
             this.record_id = false;
             // restore the initial on_rpc_event function
             if(openerp.webclient){
                 openerp.webclient.loading.on_rpc_event = this._on_rpc_function;
+                openerp.webclient.loading.count = 0;
             }
         },
         send_record: function(mutations){
@@ -361,22 +361,29 @@
         init: function(parent){
             this._super(parent, 'share');
             this.conv = parent;
+            this.cookie_data = _.extend(this.cookie_data, {conv_uuid: parent.get('session').uuid});
         },
         start: function() {
-            this.$el.html('<button class="oe_im_screenshare_button" title="Share your screen"><i class="fa fa-caret-square-o-right"></i></button>');//this.generate_button());
+            this.$el.html('<button class="oe_im_screenshare_button" title="Share your screen"><i class="fa fa-caret-square-o-right"></i></button>');
+            this.color_button(!this.is_recording());
             this.$el.on('click','button',_.bind(this.click,this));
         },
-        click: function(event){
-            var self = this;
-            event.stopPropagation();
-            if(this.is_recording()){
-                this.stop_record();
+        color_button: function(is_recording) {
+            if(is_recording){
                 this.$('.oe_im_screenshare_button').css('color','gray');
                 this.$('.oe_im_screenshare_button').css('title','Share your screen');
             }else{
-                self.start_record();
-                self.$('.oe_im_screenshare_button').css('color','red');
-                self.$('.oe_im_screenshare_button').css('title','Stop sharing screen');
+                this.$('.oe_im_screenshare_button').css('color','red');
+                this.$('.oe_im_screenshare_button').css('title','Stop sharing screen');
+            }
+        },
+        click: function(event){
+            event.stopPropagation();
+            this.color_button(this.is_recording());
+            if(this.is_recording()){
+                this.stop_record();
+            }else{
+                this.start_record();
             }
         },
         // override functions
