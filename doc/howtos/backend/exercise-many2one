@@ -1,10 +1,10 @@
 # HG changeset patch
 # Parent a6e217b1fbbc64111581c269629b1c25c23abb99
 
-Index: doc-backend/openacademy/models.py
+Index: addons/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/models.py	2014-08-24 12:04:40.829368641 +0200
-+++ doc-backend/openacademy/models.py	2014-08-24 12:04:57.509369027 +0200
+--- addons.orig/openacademy/models.py	2014-08-27 10:37:10.135932250 +0200
++++ addons/openacademy/models.py	2014-08-27 10:37:10.131932250 +0200
 @@ -8,6 +8,9 @@
      name = fields.Char(string="Title", required=True)
      description = fields.Text()
@@ -23,24 +23,73 @@ Index: doc-backend/openacademy/models.py
 +    instructor_id = fields.Many2one('res.partner', string="Instructor")
 +    course_id = fields.Many2one('openacademy.course',
 +        ondelete='cascade', string="Course", required=True)
-Index: doc-backend/openacademy/views/openacademy.xml
+Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-24 12:04:40.829368641 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:04:40.825368641 +0200
-@@ -63,5 +63,16 @@
-         <!-- Full id location:
-              action="openacademy.course_list_action"
-              It is not required when it is the same module -->
-+
-+        <record model="ir.actions.act_window" id="session_list_action">
-+            <field name="name">Sessions</field>
-+            <field name="res_model">openacademy.session</field>
-+            <field name="view_type">form</field>
-+            <field name="view_mode">tree,form</field>
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-27 10:37:10.135932250 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-27 10:37:10.131932250 +0200
+@@ -9,6 +9,7 @@
+                     <sheet>
+                         <group>
+                             <field name="name"/>
++                            <field name="responsible_id"/>
+                         </group>
+                         <notebook>
+                             <page string="Description">
+@@ -34,6 +35,18 @@
+             </field>
+         </record>
+ 
++        <!-- override the automatically generated list view for courses -->
++        <record model="ir.ui.view" id="course_tree_view">
++            <field name="name">course.tree</field>
++            <field name="model">openacademy.course</field>
++            <field name="arch" type="xml">
++                <tree string="Course Tree">
++                    <field name="name"/>
++                    <field name="responsible_id"/>
++                </tree>
++            </field>
 +        </record>
 +
-+        <menuitem id="session_menu" name="Sessions"
-+                  parent="openacademy_menu"
-+                  action="session_list_action"/>
-     </data>
- </openerp>
+         <!-- window action -->
+         <!--
+             The following tag is an action definition for a "window action",
+@@ -73,16 +86,34 @@
+                 <form string="Session Form">
+                     <sheet>
+                         <group>
+-                            <field name="name"/>
+-                            <field name="start_date"/>
+-                            <field name="duration"/>
+-                            <field name="seats"/>
++                            <group string="General">
++                                <field name="course_id"/>
++                                <field name="name"/>
++                                <field name="instructor_id"/>
++                            </group>
++                            <group string="Schedule">
++                                <field name="start_date"/>
++                                <field name="duration"/>
++                                <field name="seats"/>
++                            </group>
+                         </group>
+                     </sheet>
+                 </form>
+             </field>
+         </record>
+ 
++        <!-- session tree/list view -->
++        <record model="ir.ui.view" id="session_tree_view">
++            <field name="name">session.tree</field>
++            <field name="model">openacademy.session</field>
++            <field name="arch" type="xml">
++                <tree string="Session Tree">
++                    <field name="name"/>
++                    <field name="course_id"/>
++                </tree>
++            </field>
++        </record>
++
+         <record model="ir.actions.act_window" id="session_list_action">
+             <field name="name">Sessions</field>
+             <field name="res_model">openacademy.session</field>

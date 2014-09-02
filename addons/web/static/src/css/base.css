@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -8,6 +8,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: "EntypoRegular";
   src: url("/web/static/src/font/entypo-webfont.eot") format("eot");
@@ -2996,6 +2997,7 @@
     top: 0px;
   }
 }
+
 .kitten-mode-activated {
   background-size: cover;
   background-attachment: fixed;
@@ -3383,4 +3385,10 @@ div.tour-backdrop {
 
 body {
   overflow: auto;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .oe_secondary_menus_container {
+    position: static !important;
+  }
 }

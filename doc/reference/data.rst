@@ -52,8 +52,7 @@ following attributes:
 ``context``
     context to use when creating the record
 ``forcecreate``
-    in :ref:`update mode <reference/module/lifecycle/update>`, whether the
-    record should be created if it doesn't exist.
+    in update mode whether the record should be created if it doesn't exist
 
     Requires an :term:`external id`, defaults to ``True``.
 
@@ -198,6 +197,8 @@ Groups
     of an action to execute when the menu is open
 ``id``
     the menu item's :term:`external id`
+
+.. _reference/data/template:
 
 ``template``
 ------------

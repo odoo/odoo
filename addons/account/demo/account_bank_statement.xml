@@ -26,11 +26,11 @@
             <field name="partner_id" ref="base.res_partner_9"/>
         </record>
         <record id="demo_bank_statement_line_2" model="account.bank.statement.line">
-            <field name="ref">SAJ2014002</field>
+            <field name="ref"></field>
             <field name="statement_id" ref="demo_bank_statement_1"/>
             <field name="sequence" eval="2"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="name">SAJ/2014/002</field>
+            <field name="name">SAJ2014002</field>
             <field name="journal_id" ref="account.bank_journal"/>
             <field name="amount" eval="650.0"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>

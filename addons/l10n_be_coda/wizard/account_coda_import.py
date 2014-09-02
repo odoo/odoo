@@ -59,6 +59,7 @@ class account_coda_import(osv.osv_memory):
                 return {}
         recordlist = unicode(base64.decodestring(codafile), 'windows-1252', 'strict').split('\n')
         statements = []
+        globalisation_comm = {}
         for line in recordlist:
             if not line:
                 pass
@@ -69,7 +70,6 @@ class account_coda_import(osv.osv_memory):
                 statement['version'] = line[127]
                 if statement['version'] not in ['1', '2']:
                     raise osv.except_osv(_('Error') + ' R001', _('CODA V%s statements are not supported, please contact your bank') % statement['version'])
-                statement['globalisation_stack'] = []
                 statement['lines'] = []
                 statement['date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[5:11]), '%d%m%y'))
                 statement['separateApplication'] = rmspaces(line[83:88])
@@ -154,16 +154,11 @@ class account_coda_import(osv.osv_memory):
                     statementLine['entryDate'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[115:121]), '%d%m%y'))
                     statementLine['type'] = 'normal'
                     statementLine['globalisation'] = int(line[124])
-                    if len(statement['globalisation_stack']) > 0 and statementLine['communication'] != '':
-                        statementLine['communication'] = "\n".join([statement['globalisation_stack'][-1]['communication'], statementLine['communication']])
                     if statementLine['globalisation'] > 0:
-                        if len(statement['globalisation_stack']) > 0 and statement['globalisation_stack'][-1]['globalisation'] == statementLine['globalisation']:
-                            # Destack
-                            statement['globalisation_stack'].pop()
-                        else:
-                            #Stack
-                            statementLine['type'] = 'globalisation'
-                            statement['globalisation_stack'].append(statementLine)
+                        statementLine['type'] = 'globalisation'
+                        globalisation_comm[statementLine['ref_move']] = statementLine['communication']
+                    if not statementLine.get('communication'):
+                        statementLine['communication'] = globalisation_comm.get(statementLine['ref_move'], '')
                     statement['lines'].append(statementLine)
                 elif line[1] == '2':
                     if statement['lines'][-1]['ref'][0:4] != line[2:6]:
@@ -290,7 +285,6 @@ class account_coda_import(osv.osv_memory):
 
                     if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
-                    line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
                     partner_id = None
                     structured_com = False
                     bank_account_id = False
@@ -311,16 +305,17 @@ class account_coda_import(osv.osv_memory):
                             except ValueError:
                                 bank_code = 'bank'
                             bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, {'acc_number': str(line['counterpartyNumber']), 'state': bank_code}, context=context)
-                    if 'communication' in line and line['communication'] != '':
+                    if line.get('communication', ''):
                         note.append(_('Communication') + ': ' + line['communication'])
                     data = {
-                        'name': line['name'],
+                        'name': structured_com or (line.get('communication', '') != '' and line['communication'] or '/'),
                         'note': "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
                         'partner_id': partner_id,
+                        'partner_name': line['counterpartyName'],
                         'statement_id': statement['id'],
-                        'ref': structured_com,
+                        'ref': line['ref'],
                         'sequence': line['sequence'],
                         'bank_account_id': bank_account_id,
                     }

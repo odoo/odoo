@@ -30,6 +30,7 @@ class MassMailingContact(osv.Model):
     be able to deal with large contact list to email without bloating the partner
     base."""
     _name = 'mail.mass_mailing.contact'
+    _inherit = 'mail.thread'
     _description = 'Mass Mailing Contact'
     _order = 'email'
     _rec_name = 'email'

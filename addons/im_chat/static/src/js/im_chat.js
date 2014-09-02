@@ -471,8 +471,8 @@
             $(window).resize(_.bind(this.calc_box, this));
             this.calc_box();
 
-            this.on("change:current_search", this, this.search_changed);
-            this.search_changed();
+            this.on("change:current_search", this, this.search_users_status);
+            this.search_users_status();
 
             // add a drag & drop listener
             self.c_manager.on("im_session_activated", self, function(conv) {
@@ -505,7 +505,7 @@
         input_change: function() {
             this.set("current_search", this.$(".oe_im_searchbox").val());
         },
-        search_changed: function(e) {
+        search_users_status: function(e) {
             var user_model = new openerp.web.Model("res.users");
             var self = this;
             return this.user_search_dm.add(user_model.call("im_search", [this.get("current_search"),
@@ -540,10 +540,12 @@
                     right: -this.$el.outerWidth(),
                 }, opt);
             } else {
-                 if (! openerp.bus.bus.activated) {
+                if (! openerp.bus.bus.activated) {
                     this.do_warn("Instant Messaging is not activated on this server. Try later.", "");
                     return;
                 }
+                // update the list of user status when show the IM
+                this.search_users_status();
                 this.$el.animate({
                     right: 0,
                 }, opt);

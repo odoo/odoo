@@ -42,6 +42,10 @@ class mail_mail(osv.Model):
                                                                 action='mail.action_mail_redirect',
                                                                 model=mail.model, res_id=mail.res_id,
                                                                 context=contex_signup)[partner.id]
-            return _(""", <span class='oe_mail_footer_access'><small>access %s %s through <a style='color:inherit' href="%s">our Customer Portal</a></small></span>""") % (context.get('model_name', ''), mail.record_name, signup_url)
+            return ", <span class='oe_mail_footer_access'><small>%(access_msg)s <a style='color:inherit' href='%(portal_link)s'>%(portal_msg)s</a></small></span>" % {
+                'access_msg': _('access directly to'),
+                'portal_link': signup_url,
+                'portal_msg': '%s %s' % (context.get('model_name', ''), mail.record_name) if mail.record_name else _('your messages '),
+            }
         else:
             return super(mail_mail, self)._get_partner_access_link(cr, uid, mail, partner=partner, context=context)

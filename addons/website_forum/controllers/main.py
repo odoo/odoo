@@ -315,9 +315,9 @@ class WebsiteForum(http.Controller):
             return {'error': 'anonymous_user'}
 
         # set all answers to False, only one can be accepted
-        request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids], {'is_correct': False}, context=context)
+        request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids if not c.id == post.id], {'is_correct': False}, context=context)
         request.registry['forum.post'].write(cr, uid, [post.id], {'is_correct': not post.is_correct}, context=context)
-        return not post.is_correct
+        return post.is_correct
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/delete', type='http', auth="user", methods=['POST'], website=True)
     def post_delete(self, forum, post, **kwargs):
@@ -416,10 +416,9 @@ class WebsiteForum(http.Controller):
     @http.route(['/forum/<model("forum.forum"):forum>/partner/<int:partner_id>'], type='http', auth="public", website=True)
     def open_partner(self, forum, partner_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        pids = request.registry['res.partner'].search(cr, SUPERUSER_ID, [('id', '=', partner_id)], context=context)
-        if pids:
-            partner = request.registry['res.partner'].browse(cr, SUPERUSER_ID, pids[0], context=context)
-            if partner.user_ids:
+        if partner_id:
+            partner = request.registry['res.partner'].browse(cr, SUPERUSER_ID, partner_id, context=context)
+            if partner.exists() and partner.user_ids:
                 return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), partner.user_ids[0].id))
         return werkzeug.utils.redirect("/forum/%s" % slug(forum))
 
@@ -445,8 +444,10 @@ class WebsiteForum(http.Controller):
         Data = request.registry["ir.model.data"]
 
         user = User.browse(cr, SUPERUSER_ID, user_id, context=context)
+        if not user.exists() or user.karma < 1:
+            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         values = self._prepare_forum_values(forum=forum, **post)
-        if not user.exists() or (user_id != request.session.uid and (not user.website_published or user.karma < 1)):
+        if user_id != request.session.uid and not user.website_published:
             return request.website.render("website_forum.private_profile", values)
         # questions and answers by user
         user_questions, user_answers = [], []
@@ -496,7 +497,11 @@ class WebsiteForum(http.Controller):
         posts_ids = Post.browse(cr, uid, posts.keys(), context=context)
         posts = dict(map(lambda x: (x.id, (x.parent_id or x, x.parent_id and x or False)), posts_ids))
 
-        post['users'] = 'True'
+        # TDE CLEANME MASTER: couldn't it be rewritten using a 'menu' key instead of one key for each menu ?
+        if user.id == uid:
+            post['my_profile'] = True
+        else:
+            post['users'] = True
 
         values.update({
             'uid': uid,
@@ -531,14 +536,17 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/user/<model("res.users"):user>/save', type='http', auth="user", methods=['POST'], website=True)
     def save_edited_profile(self, forum, user, **kwargs):
-        request.registry['res.users'].write(request.cr, request.uid, [user.id], {
+        values = {
             'name': kwargs.get('name'),
             'website': kwargs.get('website'),
             'email': kwargs.get('email'),
             'city': kwargs.get('city'),
             'country_id': int(kwargs.get('country')) if kwargs.get('country') else False,
             'website_description': kwargs.get('description'),
-        }, context=request.context)
+        }
+        if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
+            values['website_published'] = kwargs.get('website_published') == 'True'
+        request.registry['res.users'].write(request.cr, request.uid, [user.id], values, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), user.id))
 
     # Badges
@@ -592,4 +600,4 @@ class WebsiteForum(http.Controller):
     def delete_comment(self, forum, post, comment, **kwarg):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        return request.registry['forum.post'].unlink(request.cr, request.uid, post.id, comment.id, context=request.context)
+        return request.registry['forum.post'].unlink_comment(request.cr, request.uid, post.id, comment.id, context=request.context)
