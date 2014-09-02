@@ -267,7 +267,6 @@
                 this.set("pending", this.get("pending") + 1);
             }
             this.insert_messages([message]);
-            this._go_bottom();
         },
         send_message: function(message, type) {
             var self = this;
@@ -325,6 +324,7 @@
             });
             // render and set the content of the chatview
             this.$('.oe_im_chatview_content_bubbles').html($(openerp.qweb.render("im_chat.Conversation_content", {"list": res})));
+            this._go_bottom();
         },
         keydown: function(e) {
             if(e && e.which !== 13) {
