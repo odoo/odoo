@@ -1113,14 +1113,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_barcode_popup = new module.ErrorBarcodePopupWidget(this, {});
             this.error_barcode_popup.appendTo(this.$el);
 
-            this.error_session_popup = new module.ErrorSessionPopupWidget(this, {});
-            this.error_session_popup.appendTo(this.$el);
-
             this.choose_receipt_popup = new module.ChooseReceiptPopupWidget(this, {});
             this.choose_receipt_popup.appendTo(this.$el);
-
-            this.error_no_client_popup = new module.ErrorNoClientPopupWidget(this, {});
-            this.error_no_client_popup.appendTo(this.$el);
 
             this.error_invoice_transfer_popup = new module.ErrorInvoiceTransferPopupWidget(this, {});
             this.error_invoice_transfer_popup.appendTo(this.$el);
@@ -1198,10 +1192,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 popup_set:{
                     'error': this.error_popup,
                     'error-barcode': this.error_barcode_popup,
-                    'error-session': this.error_session_popup,
-                    'choose-receipt': this.choose_receipt_popup,
-                    'error-no-client': this.error_no_client_popup,
-                    'error-invoice-transfer': this.error_invoice_transfer_popup,
                     'error-traceback': this.error_traceback_popup,
                     'confirm': this.confirm_popup,
                     'unsent-orders': this.unsent_orders_popup,
