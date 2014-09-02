@@ -196,13 +196,12 @@ class website(osv.osv):
         except ValueError:
             # new page
             _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
-            #from pudb import set_trace; set_trace()
             page_id = view.copy(cr, uid, template_id, {}, context=context)
             page = view.browse(cr, uid, page_id, context=context)
             #sig-ajout
-            web_id = self.get_current_website(cr, uid, context=context)
+            current = self.get_current_website(cr, uid, context=context)
             page.write({
-                'website_id': web_id.id,#context.get('website_id'),
+                'website_id': current.id,#context.get('website_id'),
                 'arch': page.arch.replace(template, page_xmlid),
                 'name': page_name,
                 'key': 'website.%s' % page_name,
@@ -222,7 +221,7 @@ class website(osv.osv):
 
     def page_exists(self, cr, uid, ids, name, module='website', context=None):
         try:
-           return self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
+            return self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
         except:
             return False
 
@@ -270,7 +269,7 @@ class website(osv.osv):
             if '.' not in template:
                 template = 'website.%s' % template
             module, xmlid = template.split('.', 1)
-            model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
+            #model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
             key=module+'.'+xmlid
             #website_id=self.get_current_website(cr, uid, context=context).id
             website_id=request.context.get('website_id')
