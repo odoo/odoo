@@ -807,6 +807,7 @@ class account_move_line(osv.osv):
                 credit = line.credit > 0 and -line.amount_residual or 0.0
                 amount_str = rml_parser.formatLang(debit or -credit, currency_obj=company_currency)
                 if target_currency and target_currency != company_currency:
+                    amount_currency_str = rml_parser.formatLang(debit or -credit, currency_obj=line_currency)
                     ctx = context.copy()
                     if target_date:
                         ctx.update({'date': target_date})

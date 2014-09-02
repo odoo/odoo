@@ -477,7 +477,7 @@ openerp.account = function (instance) {
             if (context.initial_data_provided) {
                 // Process data
                 _.each(context.reconciliation_proposition, function(line) {
-                    this.decorateMoveLine(line, context.st_line.display_currency_id);
+                    this.decorateMoveLine(line, context.st_line.currency_id);
                 }, this);
                 this.set("mv_lines_selected", context.reconciliation_proposition);
                 this.st_line = context.st_line;
@@ -575,7 +575,7 @@ openerp.account = function (instance) {
                         self.getParent().excluded_move_lines_ids[self.partner_id] = [];
                     var mv_lines = [];
                     _.each(data[0].reconciliation_proposition, function(line) {
-                        self.decorateMoveLine(line, self.st_line.display_currency_id);
+                        self.decorateMoveLine(line, self.st_line.currency_id);
                         mv_lines.push(line);
                     }, self);
                     self.set("mv_lines_selected", self.get("mv_lines_selected").concat(mv_lines));
@@ -1126,8 +1126,8 @@ openerp.account = function (instance) {
                     self.$(".button_ok").attr("disabled", "disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = false;
-                    var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.display_currency_id) : "");
-                    var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.display_currency_id) : "");
+                    var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
+                    var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
                     var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {
                         debit: debit,
                         credit: credit,
@@ -1145,8 +1145,8 @@ openerp.account = function (instance) {
             } else {
                 self.$(".button_ok").removeClass("oe_highlight");
                 self.$(".button_ok").text("Keep open");
-                var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.display_currency_id) : "");
-                var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.display_currency_id) : "");
+                var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
+                var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
                 var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {
                     debit: debit,
                     credit: credit,
@@ -1247,7 +1247,7 @@ openerp.account = function (instance) {
             var self = this;
             var line_created_being_edited = self.get("line_created_being_edited");
             line_created_being_edited[0][elt.corresponding_property] = val.newValue;
-            line_created_being_edited[0].currency_id = self.st_line.display_currency_id;
+            line_created_being_edited[0].currency_id = self.st_line.currency_id;
     
             // Specific cases
             if (elt === self.account_id_field)
@@ -1276,7 +1276,7 @@ openerp.account = function (instance) {
                                         label: tax.name,
                                         amount: tax.amount,
                                         no_remove_action: true,
-                                        currency_id: self.st_line.display_currency_id,
+                                        currency_id: self.st_line.currency_id,
                                         is_tax_line: true
                                     };
                                     current_line_cursor = current_line_cursor + 1;
@@ -1333,10 +1333,10 @@ openerp.account = function (instance) {
             line.initial_amount = line.debit !== 0 ? line.debit : -1 * line.credit;
             if (balance < 0) {
                 line.debit += balance;
-                line.debit_str = self.formatCurrency(line.debit, self.st_line.display_currency_id);
+                line.debit_str = self.formatCurrency(line.debit, self.st_line.currency_id);
             } else {
                 line.credit -= balance;
-                line.credit_str = self.formatCurrency(line.credit, self.st_line.display_currency_id);
+                line.credit_str = self.formatCurrency(line.credit, self.st_line.currency_id);
             }
             line.propose_partial_reconcile = false;
             line.partial_reconcile = true;
@@ -1359,10 +1359,10 @@ openerp.account = function (instance) {
             var self = this;
             if (line.initial_amount > 0) {
                 line.debit = line.initial_amount;
-                line.debit_str = self.formatCurrency(line.debit, self.st_line.display_currency_id);
+                line.debit_str = self.formatCurrency(line.debit, self.st_line.currency_id);
             } else {
                 line.credit = -1 * line.initial_amount;
-                line.credit_str = self.formatCurrency(line.credit, self.st_line.display_currency_id);
+                line.credit_str = self.formatCurrency(line.credit, self.st_line.currency_id);
             }
             line.propose_partial_reconcile = true;
             line.partial_reconcile = false;
@@ -1425,7 +1425,7 @@ openerp.account = function (instance) {
                     .call("get_move_lines_for_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, offset, limit])
                     .then(function (lines) {
                         _.each(lines, function(line) {
-                            self.decorateMoveLine(line, self.st_line.display_currency_id);
+                            self.decorateMoveLine(line, self.st_line.currency_id);
                             move_lines.push(line);
                         }, self);
                     });

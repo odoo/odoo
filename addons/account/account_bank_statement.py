@@ -470,18 +470,15 @@ class account_bank_statement_line(osv.osv):
         rml_parser = report_sxw.rml_parse(cr, uid, 'reconciliation_widget_asl', context=context)
 
         if st_line.amount_currency and st_line.currency_id:
-            # If the statement line is not in the same currency as the statement, put amount in original currency in
-            # amount_currency_str and put converted amount in amount_str
-            src_currency = st_line.currency_id.with_context(dict(context, date=st_line.date))
-            amount = src_currency.compute(st_line.amount_currency, statement_currency)
-            amount_str = amount > 0 and amount or -amount
-            amount_str = rml_parser.formatLang(amount_str, currency_obj=statement_currency)
-            amount_currency_str = rml_parser.formatLang(st_line.amount_currency, currency_obj=st_line.currency_id)
+            amount = st_line.amount_currency
+            amount_currency = st_line.amount
+            amount_currency_str = amount_currency > 0 and amount_currency or -amount_currency
+            amount_currency_str = rml_parser.formatLang(amount_currency_str, currency_obj=statement_currency)
         else:
             amount = st_line.amount
-            amount_str = amount > 0 and amount or -amount
-            amount_str = rml_parser.formatLang(amount_str, currency_obj=statement_currency)
             amount_currency_str = ""
+        amount_str = amount > 0 and amount or -amount
+        amount_str = rml_parser.formatLang(amount_str, currency_obj=st_line.currency_id or statement_currency)
 
         data = {
             'id': st_line.id,
@@ -490,17 +487,15 @@ class account_bank_statement_line(osv.osv):
             'name': st_line.name,
             'date': st_line.date,
             'amount': amount,
-            'amount_str': amount_str,
+            'amount_str': amount_str, # Amount in the statement line currency
             'currency_id': st_line.currency_id.id or statement_currency.id,
             'partner_id': st_line.partner_id.id,
             'statement_id': st_line.statement_id.id,
             'account_code': st_line.journal_id.default_debit_account_id.code,
             'account_name': st_line.journal_id.default_debit_account_id.name,
             'partner_name': st_line.partner_id.name,
-            'amount_currency_str': amount_currency_str,
+            'amount_currency_str': amount_currency_str, # Amount in the statement currency
             'has_no_partner': not st_line.partner_id.id,
-            # ID of the currency used by the widget to format numbers. You want it to be the same currency you use to convert amounts in case of multicurrency or you're gonna have a bad time
-            'display_currency_id': st_line.journal_id.currency.id or st_line.journal_id.company_id.currency_id.id,
         }
         if st_line.partner_id.id:
             if amount > 0:
@@ -611,7 +606,7 @@ class account_bank_statement_line(osv.osv):
         
         # Or return list of dicts representing the formatted move lines
         else:
-            target_currency = st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
+            target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
             mv_lines = mv_line_pool.prepare_move_lines_for_reconciliation_widget(cr, uid, lines, target_currency=target_currency, target_date=st_line.date, context=context)
             has_no_partner = not bool(st_line.partner_id.id)
             for line in mv_lines:
