@@ -220,7 +220,13 @@ class MergePartnerAutomatic(osv.TransientModel):
                 return
             domain = [(field_model, '=', 'res.partner'), (field_id, '=', src.id)]
             ids = proxy.search(cr, openerp.SUPERUSER_ID, domain, context=context)
-            return proxy.write(cr, openerp.SUPERUSER_ID, ids, {field_id: dst_partner.id}, context=context)
+            try:
+                with mute_logger('openerp.sql_db'), cr.savepoint():
+                    return proxy.write(cr, openerp.SUPERUSER_ID, ids, {field_id: dst_partner.id}, context=context)
+            except psycopg2.Error:
+                # updating fails, most likely due to a violated unique constraint
+                # keeping record with nonexistent partner_id is useless, better delete it
+                return proxy.unlink(cr, openerp.SUPERUSER_ID, ids, context=context)
 
         update_records = functools.partial(update_records, context=context)
 
