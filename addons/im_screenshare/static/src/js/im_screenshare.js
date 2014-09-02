@@ -123,7 +123,7 @@
                 setData: function(data){
                     self.queue({
                         f: 'formData',
-                        args: data,
+                        args: [data],
                         timestamp: Date.now()
                     });
                 }
