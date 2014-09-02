@@ -511,12 +511,17 @@ class account_bank_statement_line(osv.osv):
 
     def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=[], context=None):
         """ Returns move lines that constitute the best guess to reconcile a statement line. """
+        mv_line_pool = self.pool.get('account.move.line')
 
         # Look for structured communication
-        if st_line.ref:
-            match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=[('ref', '=', st_line.ref)])
+        if st_line.name:
+            structured_com_match_domain = [('ref', '=', st_line.name),('reconcile_id', '=', False),('state', '=', 'valid'),('account_id.reconcile', '=', True),('id', 'not in', excluded_ids)]
+            match_id = mv_line_pool.search(cr, uid, structured_com_match_domain, offset=0, limit=1, context=context)
             if match_id:
-                mv_line = match_id[0]
+                mv_line_br = mv_line_pool.browse(cr, uid, match_id, context=context)
+                target_currency = st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
+                mv_line = mv_line_pool.prepare_move_lines_for_reconciliation_widget(cr, uid, mv_line_br, target_currency=target_currency, target_date=st_line.date, context=context)[0]
+                mv_line['has_no_partner'] = not bool(st_line.partner_id.id)
                 # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
                 if (mv_line['partner_id']):
                     self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
@@ -546,7 +551,7 @@ class account_bank_statement_line(osv.osv):
         # according to its debit/credit field, which is half the time wrong
         additional_domain = [('reconcile_partial_id','=',False)]
 
-        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, additional_domain=additional_domain + [(amount_field, '=', (sign * st_line.amount))])
+        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=additional_domain + [(amount_field, '=', (sign * st_line.amount))])
         if match_id:
             return [match_id[0]]
 
