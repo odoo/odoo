@@ -65,10 +65,22 @@ openerp.hr_timesheet_sheet = function(instance) {
         },
         update_sheets: function() {
             var self = this;
+            var data_to_update = [], tmp = [];
             if (self.querying)
                 return;
             self.updating = true;
-            self.field_manager.set_values({timesheet_ids: self.get("sheets")}).done(function() {
+
+            data_to_update = _(self.get("sheets")).chain()
+            .map(function(record) {
+                if (record.id) {
+                    tmp = [1, record.id, record]
+                    //delete record.id; //It'll be OK even if we do not delete id key, server will manage and will remove MAGIC COLUMNS from vals
+                } else {
+                    tmp = [0, false, record]
+                }
+                return tmp;
+            }).value();
+            self.field_manager.set_values({timesheet_ids: data_to_update}).done(function() {
                 self.updating = false;
             });
         },
@@ -476,30 +488,30 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         var self = this;
         var ops = [];
         var ignored_fields = self.parent.ignore_fields();
-            _.each(self.days, function(day) {
-                var auth_keys = _.extend(_.clone(day.account_defaults || {}), {
-                    name: true, amount:true, unit_amount: true, date: true, account_id:true, date_start: true,
-                });
-                _.each(day.account_group, function(account) {
-                    _.each(account,function(line) {
-                        var tmp = _.clone(line);
-                        tmp.id = undefined;
-                        _.each(line, function(v, k) {
-                            if (v instanceof Array) {
-                                tmp[k] = v[0];
-                            }
-                        });
-                        // we have to remove some keys, because analytic lines are shitty
-                        _.each(_.keys(tmp), function(key) {
-                            if (auth_keys[key] === undefined) {
-                                tmp[key] = undefined;
-                            }
-                        });
-                        tmp = _.omit(tmp, ignored_fields);
-                        ops.push(tmp);
+        _.each(self.days, function(day) {
+            var auth_keys = _.extend(_.clone(day.account_defaults || {}), {
+                id: true, name: true, amount:true, unit_amount: true, date: true, account_id:true, date_start: true,
+            });
+            _.each(day.account_group, function(account) {
+                _.each(account,function(line) {
+                    var tmp = _.clone(line);
+                    //tmp.id = undefined;
+                    _.each(line, function(v, k) {
+                        if (v instanceof Array) {
+                            tmp[k] = v[0];
+                        }
                     });
+                    // we have to remove some keys, because analytic lines are shitty
+                    _.each(_.keys(tmp), function(key) {
+                        if (auth_keys[key] === undefined) {
+                            tmp[key] = undefined;
+                        }
+                    });
+                    tmp = _.omit(tmp, ignored_fields);
+                    ops.push(tmp);
                 });
             });
+        });
         return ops;
     },
     is_any_accounts: function() {
@@ -787,13 +799,13 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         var ignored_fields = self.parent.ignore_fields();
         _.each(self.accounts, function(account) {
             var auth_keys = _.extend(_.clone(account.account_defaults), {
-                name: true, amount:true, unit_amount: true, date: true, account_id:true, date_start: true,
+                id: true, name: true, amount:true, unit_amount: true, date: true, account_id:true, date_start: true,
             });
             _.each(account.days, function(day) {
                 _.each(day.lines, function(line) {
                     if (line.unit_amount !== 0) {
                         var tmp = _.clone(line);
-                        tmp.id = undefined;
+                        //tmp.id = undefined;
                         _.each(line, function(v, k) {
                             if (v instanceof Array) {
                                 tmp[k] = v[0];
