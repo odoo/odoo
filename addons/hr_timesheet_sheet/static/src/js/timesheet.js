@@ -652,8 +652,9 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         $.when(def).then(function() {
             self.parent.sync();
             current_account[0].date_diff_hour = current_account[0].date_diff_minute = 0;
-            self.parent.view.save();
-            self.parent.display_data(self.options);
+            ret = self.parent.view.save().done(function() {
+                self.parent.view.reload(); //Need to reload view so that one2many have newly created ids in sheet or we should reload only timesheet_ids field, or do not display button on unsaved record
+            });
         });
     },
     toggle_active: function(day_count) {
