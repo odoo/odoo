@@ -2640,13 +2640,13 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
                 down: 'fa fa-chevron-down'
                },
             language : moment.locale(),
-            format : instance.web.convert_to_moment_format(l10n.date_format +' '+ l10n.time_format),
+            format : instance.web.normalize_format(l10n.date_format +' '+ l10n.time_format),
         };
         this.$input = this.$el.find('input.oe_datepicker_master');
         if (this.type_of_date === 'date') {
             options['pickTime'] = false;
             options['useSeconds'] = false;
-            options['format'] = instance.web.convert_to_moment_format(l10n.date_format);
+            options['format'] = instance.web.normalize_format(l10n.date_format);
         }
         this.picker = this.$('.oe_datepicker_main').datetimepicker(options);
         this.set_readonly(false);
