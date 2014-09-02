@@ -25,8 +25,8 @@
 {%- block document -%}
   <div class="sphinxsidebar">
     <div class="sphinxsidebarwrapper">
-      {# bootstrapify nav #}
-      {{ toc|replace("<ul>", '<ul class="nav">') }}
+      {{ toctree(maxdepth=4, collapse=False, includehidden=True,
+                 main_navbar=False, titles_only=False) }}
     </div>
   </div>
   {{ super() }}
