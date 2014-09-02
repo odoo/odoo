@@ -443,16 +443,17 @@ class account_bank_statement_line(osv.osv):
             account_move_obj.button_cancel(cr, uid, move_ids, context=context)
             account_move_obj.unlink(cr, uid, move_ids, context)
 
-    def get_data_for_reconciliations(self, cr, uid, ids, excluded_ids=[], context=None):
+    def get_data_for_reconciliations(self, cr, uid, ids, excluded_ids=None, context=None):
         """ Returns the data required to display a reconciliation, for each statement line id in ids """
         ret = []
-        mv_line_ids_selected = excluded_ids
+        if excluded_ids is None:
+            excluded_ids = []
 
         for st_line in self.browse(cr, uid, ids, context=context):
-            reconciliation_proposition = self.get_reconciliation_proposition(cr, uid, st_line, excluded_ids=mv_line_ids_selected, context=context)
+            reconciliation_proposition = self.get_reconciliation_proposition(cr, uid, st_line, excluded_ids=excluded_ids, context=context)
             st_line = self.get_statement_line_for_reconciliation(cr, uid, st_line, context=context)
             for mv_line in reconciliation_proposition:
-                mv_line_ids_selected.append(mv_line['id'])
+                excluded_ids.append(mv_line['id'])
             reconciliation_data = {
                 'st_line': st_line,
                 'reconciliation_proposition': reconciliation_proposition
@@ -509,8 +510,10 @@ class account_bank_statement_line(osv.osv):
 
         return data
 
-    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=[], context=None):
+    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
         """ Returns move lines that constitute the best guess to reconcile a statement line. """
+        if excluded_ids is None:
+            excluded_ids = []
         mv_line_pool = self.pool.get('account.move.line')
 
         # Look for structured communication
@@ -557,12 +560,16 @@ class account_bank_statement_line(osv.osv):
 
         return []
 
-    def get_move_lines_for_reconciliation_by_statement_line_id(self, cr, uid, st_line_id, excluded_ids=[], str="", offset=0, limit=None, count=False, additional_domain=[], context=None):
+    def get_move_lines_for_reconciliation_by_statement_line_id(self, cr, uid, st_line_id, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, context=None):
         """ Bridge between the web client reconciliation widget and get_move_lines_for_reconciliation (which expects a browse record) """
+        if excluded_ids is None:
+            excluded_ids = []
+        if additional_domain is None:
+            additional_domain = []
         st_line = self.browse(cr, uid, st_line_id, context=context)
         return self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids, str, offset, limit, count, additional_domain, context=context)
 
-    def get_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=[], str=False, offset=0, limit=None, count=False, additional_domain=[], context=None):
+    def get_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, context=None):
         """ Find the move lines that could be used to reconcile a statement line. If count is true, only returns the count.
 
             :param st_line: the browse record of the statement line
@@ -570,6 +577,10 @@ class account_bank_statement_line(osv.osv):
             :param boolean count: just return the number of records
             :param tuples list additional_domain: additional domain restrictions
         """
+        if excluded_ids is None:
+            excluded_ids = []
+        if additional_domain is None:
+            additional_domain = []
         mv_line_pool = self.pool.get('account.move.line')
 
         # Make domain

@@ -560,7 +560,7 @@ openerp.account = function (instance) {
                 return;
 
             // Get ids of selected move lines (to exclude them from reconciliation proposition)
-            var excluded_move_lines_ids = []
+            var excluded_move_lines_ids = [];
             _.each(self.getParent().excluded_move_lines_ids, function(o){
                 excluded_move_lines_ids = excluded_move_lines_ids.concat(o);
             });
