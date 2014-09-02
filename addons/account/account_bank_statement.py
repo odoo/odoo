@@ -549,12 +549,7 @@ class account_bank_statement_line(osv.osv):
             if st_line.amount < 0:
                 sign = -1
 
-        # TODO : in order to search for partial reconciliations too, amount_residual should be stored in DB
-        # otherwise the current algorithm just select the first line involved in a partial reconciliation
-        # according to its debit/credit field, which is half the time wrong
-        additional_domain = [('reconcile_partial_id','=',False)]
-
-        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=additional_domain + [(amount_field, '=', (sign * st_line.amount))])
+        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
         if match_id:
             return [match_id[0]]
 
