@@ -749,11 +749,9 @@ class account_bank_statement_line(osv.osv):
             new_aml_id = aml_obj.create(cr, uid, mv_line_dict, context=context)
             if counterpart_move_line_id != None:
                 move_line_pairs_to_reconcile.append([new_aml_id, counterpart_move_line_id])
-
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
             aml_obj.reconcile_partial(cr, uid, pair, context=context)
-
         # Mark the statement line as reconciled
         self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
 
@@ -762,7 +760,7 @@ class account_bank_statement_line(osv.osv):
     # Unfortunately, that spawns a "no access rights" error ; it shouldn't.
     def _needaction_domain_get(self, cr, uid, context=None):
         user = self.pool.get("res.users").browse(cr, uid, uid)
-        return ['|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('journal_entry_id', '=', False)]
+        return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_id', '=', False)]
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"
