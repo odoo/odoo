@@ -26,6 +26,7 @@ import os
 import time
 import datetime
 import dateutil
+import random
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -568,6 +569,10 @@ class ir_actions_server(osv.osv):
         # Fake fields used to implement the ID finding assistant
         'id_object': fields.reference('Record', selection=_select_objects, size=128),
         'id_value': fields.char('Record ID'),
+        'debug': fields.boolean('Debug',
+                                help="Run this server action through the Python debugger.\n"
+                                "This only works if the server has been launched with the --debug_server_actions flag, "
+                                "and aids in local development of new server actions."),
     }
 
     _defaults = {
@@ -841,7 +846,10 @@ class ir_actions_server(osv.osv):
         return self.pool[action.action_id.type].read(cr, uid, [action.action_id.id], context=context)[0]
 
     def run_action_code_multi(self, cr, uid, action, eval_context=None, context=None):
-        eval(action.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
+        debug_filename = '/tmp/debug_server_action_%i.py' % random.randint(1, 9999999999) if action.debug else ''
+        eval(action.code.strip(), eval_context, mode="exec", nocopy=True, debug_filename=debug_filename)  # nocopy allows to return 'action'
+        if debug_filename and os.access(debug_filename, os.W_OK):
+            os.unlink(debug_filename)
         if 'action' in eval_context:
             return eval_context['action']
 
