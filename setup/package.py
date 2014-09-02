@@ -198,15 +198,13 @@ class KVM(object):
 
 class KVMWinBuildExe(KVM):
     def run(self):
-        self.ssh("mkdir -p build")
-        self.ssh('easy_install decorator') # TODO sle: cannot figure how to include it in the vdi properly ...
-        self.ssh('easy_install  passlib')
-        self.rsync('%s/ %s@127.0.0.1:build/server/' % (self.o.build_dir, self.login))
         with open(join(self.o.build_dir, 'setup/win32/Makefile.version'), 'w') as f:
             f.write("VERSION=%s\n" % self.o.version_full)
         with open(join(self.o.build_dir, 'setup/win32/Makefile.python'), 'w') as f:
             f.write("PYTHON_VERSION=%s\n" % self.o.vm_winxp_python_version.replace('.', ''))
-        self.rsync('%s %s@127.0.0.1:build/server/setup/win32/' % (join(self.o.build_dir, 'setup/win32'), self.login))
+
+        self.ssh("mkdir -p build")
+        self.rsync('%s/ %s@127.0.0.1:build/server/' % (self.o.build_dir, self.login))
         self.ssh("cd build/server/setup/win32;time make allinone;")
         self.rsync('%s@127.0.0.1:build/server/setup/win32/release/ %s/' % (self.login, self.o.build_dir), '')
         print "KVMWinBuildExe.run(): done"
