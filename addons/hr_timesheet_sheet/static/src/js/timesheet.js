@@ -302,7 +302,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         "click .oe_copy_accounts a": "copy_accounts",
         "click .oe_timer": "timer",
         "click .oe_timesheet_edit_description" : "addDescription",
-        "click .oe_timesheet_daily_delete": "do_delete_record",
     },
     init: function (parent, options) {
         var self = this;
@@ -584,18 +583,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
             account[0].name = $(this).val();
             self.parent.sync();
         });
-    },
-    do_delete_record: function(e) {
-        console.log("Inside do_delete_record ::: ",this.days);
-        var $element = this.$(e.target).is('button') ? this.$(e.target).parent() : this.$(e.target);
-        var day_count = $element.attr("data-day-count");
-        var account_id = $element.attr("data-account");
-        console.log("day_count is ::: ",this.days[day_count], day_count, account_id);
-        //TODO: find the day and particular account and remove it from data and call generate_o2m_data
-        delete this.days[day_count].account_group[account_id];
-        console.log("account is ::: ",this.days[day_count]);
-        this.parent.sync();
-        console.log("account is ::: ",this.days[day_count]);
     },
     start_interval: function(){
         var self = this;
