@@ -589,7 +589,7 @@ class calendar_alarm(osv.Model):
     def create(self, cr, uid, values, context=None):
         res = super(calendar_alarm, self).create(cr, uid, values, context=context)
 
-        self._update_cron(cr, uid, active=True, context=context)
+        self._update_cron(cr, uid, context=context)
 
         return res
 

@@ -240,7 +240,7 @@ class base_action_rule(osv.osv):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
         if self._register_hook(cr, [res_id]):
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
-            self._update_cron(cr, uid, context=context)
+        self._update_cron(cr, uid, context=context)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -249,7 +249,7 @@ class base_action_rule(osv.osv):
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
         if self._register_hook(cr, ids):
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
-            self._update_cron(cr, uid, context=context)
+        self._update_cron(cr, uid, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
