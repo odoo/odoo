@@ -137,21 +137,9 @@
                         <notebook colspan="4">
                             <page string="Team Members">
                                 <field name="member_ids">
-                                    <kanban quick_create="false" create="true">
+                                    <tree>
                                         <field name="name"/>
-                                        <templates>
-                                            <t t-name="kanban-box">
-                                                <div style="position: relative">
-                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                    <div class="oe_module_vignette">
-                                                        <div class="oe_module_desc">
-                                                            <field name="name"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </t>
-                                        </templates>
-                                    </kanban>
+                                    </tree>
                                 </field>
                             </page>
                             <page string="Notes">
