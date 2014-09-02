@@ -1,9 +1,11 @@
 include Makefile.version
+include Makefile.python
 
-SERVER_DIRECTORY=../server
-FILES_DIRECTORY=files
+SERVER_DIRECTORY=../..
+FILES_DIRECTORY=release
 
-LAUNCH_PY2EXE=/cygdrive/c/python26/python.exe setup.py py2exe
+LAUNCH_PY2EXE_SERVICE=/cygdrive/c/python${PYTHON_VERSION}/python.exe win32_setup.py py2exe
+LAUNCH_PY2EXE=/cygdrive/c/python${PYTHON_VERSION}/python.exe setup.py py2exe
 
 MAKENSIS_ARGUMENTS=/DVERSION=$(VERSION)
 
@@ -23,14 +25,9 @@ server_clean:
 	rm -rf $(SERVER_DIRECTORY)/*.exe
 	rm -rf $(SERVER_DIRECTORY)/.cyg*
 
-server: server_clean
-	(cd $(SERVER_DIRECTORY)/win32 && $(LAUNCH_PY2EXE))
+allinone: server_clean
+	(cd $(SERVER_DIRECTORY)/setup/win32 && $(LAUNCH_PY2EXE_SERVICE))
 	(cd $(SERVER_DIRECTORY) && $(LAUNCH_PY2EXE))
-#	rm -rf `/usr/bin/find ${SERVER_DIRECTORY}/dist/openerp/addons -maxdepth 1 -mindepth 1 -not -name "web*" -and -not -name "base" -type d | xargs rm -rf`
-	(cd $(SERVER_DIRECTORY) && $(LAUNCH_MAKENSIS))
-	cp $(SERVER_DIRECTORY)/openerp-*.exe $(FILES_DIRECTORY)/openerp-server-setup-$(VERSION).exe
-
-allinone: server
-	$(LAUNCH_MAKENSIS)
-	cp ./openerp-*.exe $(FILES_DIRECTORY)/openerp-allinone-setup-$(VERSION).exe
-
+	(cd $(SERVER_DIRECTORY)/setup/win32 && $(LAUNCH_MAKENSIS))
+	(cd $(SERVER_DIRECTORY)/setup/win32 && mkdir -p $(FILES_DIRECTORY))
+	(cd $(SERVER_DIRECTORY)/setup/win32 && cp openerp-*.exe $(FILES_DIRECTORY)/openerp-server-setup-$(VERSION).exe)
