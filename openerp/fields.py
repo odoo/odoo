@@ -1386,13 +1386,32 @@ class Many2one(_Relational):
                 record[self.name] = record.env[self.comodel_name].new()
 
 
+class UnionUpdate(SpecialValue):
+    """ Placeholder for a value update; when this value is taken from the cache,
+        it returns ``record[field.name] | value`` and stores it in the cache.
+    """
+    def __init__(self, field, record, value):
+        self.args = (field, record, value)
+
+    def get(self):
+        field, record, value = self.args
+        # in order to read the current field's value, remove self from cache
+        del record._cache[field]
+        # read the current field's value, and update it in cache only
+        record._cache[field] = new_value = record[field.name] | value
+        return new_value
+
+
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
     def _update(self, records, value):
         """ Update the cached value of `self` for `records` with `value`. """
         for record in records:
-            record._cache[self] = record[self.name] | value
+            if self in record._cache:
+                record._cache[self] = record[self.name] | value
+            else:
+                record._cache[self] = UnionUpdate(self, record, value)
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, BaseModel):
