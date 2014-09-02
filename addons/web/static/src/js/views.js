@@ -373,6 +373,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var widget = executor.widget();
         if (executor.action.target === 'new') {
+            var pre_dialog = this.dialog;
+            if (pre_dialog){
+                pre_dialog.off('closing', null, pre_dialog.on_close);
+            }
             if (this.dialog_widget && !this.dialog_widget.isDestroyed()) {
                 this.dialog_widget.destroy();
             }
@@ -380,7 +384,13 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog = new instance.web.Dialog(this, {
                 dialogClass: executor.klass,
             });
-            this.dialog.on("closing", null, options.on_close);
+            this.dialog.on_close = function(){
+                options.on_close.apply(null, arguments);
+                if (pre_dialog && pre_dialog.on_close){
+                    pre_dialog.on_close();
+                }
+            };
+            this.dialog.on("closing", null, this.dialog.on_close);
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
