@@ -598,8 +598,6 @@ openerp.account = function (instance) {
             self.$(".match").slideUp(0);
             self.$(".create").slideUp(0);
             if (self.st_line.no_match) self.$el.addClass("no_match");
-            // TODO : Why would you do that ?
-            //if (self.context.mode !== "match") self.updateMatches();
             self.bindPopoverTo(self.$(".line_info_button"));
             self.createFormWidgets();
             // Special case hack : no identified partner
@@ -1163,15 +1161,21 @@ openerp.account = function (instance) {
     
             self.$(".action_pane.active").removeClass("active");
     
-            // Special case hack : if no_partner and mode == inactive
+            // Special case hack : if no_partner, either inactive or create
             if (self.st_line.has_no_partner) {
                 if (self.get("mode") === "inactive") {
                     self.$(".match").slideUp(self.animation_speed);
                     self.$(".create").slideUp(self.animation_speed);
                     self.$(".toggle_match").removeClass("visible_toggle");
                     self.el.dataset.mode = "inactive";
-                    return;
-                } 
+                } else {
+                    self.initializeCreateForm();
+                    self.$(".match").slideUp(self.animation_speed);
+                    self.$(".create").slideDown(self.animation_speed);
+                    self.$(".toggle_match").addClass("visible_toggle");
+                    self.el.dataset.mode = "create";
+                }
+                return;
             }
     
             if (self.get("mode") === "inactive") {
@@ -1401,6 +1405,7 @@ openerp.account = function (instance) {
 
         // Loads move lines according to the widget's state
         updateMatches: function() {
+            if (this.st_line.has_no_partner) return;
             var self = this;
             var deselected_lines_num = self.mv_lines_deselected.length;
             var move_lines = {};

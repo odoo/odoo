@@ -524,6 +524,7 @@ class account_bank_statement_line(osv.osv):
         sign = 1
         if statement_currency == company_currency:
             amount_field = 'credit'
+            sign = -1
             if st_line.amount > 0:
                 amount_field = 'debit'
         else:
@@ -547,7 +548,7 @@ class account_bank_statement_line(osv.osv):
         st_line = self.browse(cr, uid, st_line_id, context=context)
         return self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids, str, offset, limit, count, additional_domain, context=context)
 
-    def get_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=[], str="", offset=0, limit=None, count=False, additional_domain=[], context=None):
+    def get_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=[], str=False, offset=0, limit=None, count=False, additional_domain=[], context=None):
         """ Find the move lines that could be used to reconcile a statement line. If count is true, only returns the count.
 
             :param st_line: the browse record of the statement line
