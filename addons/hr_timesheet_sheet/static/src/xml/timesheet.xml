@@ -178,9 +178,6 @@
                                                         </span>
                                                         <strong><span class="hour"><t t-esc="days.account_group[data][0].date_diff_hour or '0'" /></span>H <span class="minute"><t t-esc="days.account_group[data][0].date_diff_minute or '0'" /></span>M</strong>
                                                     </span>
-                                                    <span class="oe_timesheet_daily_delete" width="15px" t-if="!widget.get('effective_readonly')" t-att-data-account="data" t-att-data-day-count="day_count" t-attf-title="Delete">
-                                                        <button class="oe_i" name="delete" type="button">d</button>
-                                                    </span>
                                                 </td>
                                             </tr>
                                         </t>
