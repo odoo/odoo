@@ -547,6 +547,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         _.each(self.days[count].account_group, function(account) {
             var d = self.days[count].day.toString("yyyy-MM-dd")
             _.each(account,function(account) {
+                account.id = undefined;
                 account.date = d;
                 account.name = self.parent.description_line;
                 account.date_start = false;
