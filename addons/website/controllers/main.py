@@ -453,10 +453,12 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route([
         '/website/image',
+        '/website/image/<xmlid>',
+        '/website/image/<xmlid>/<field>',
         '/website/image/<model>/<id>/<field>',
-        '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
+        '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>',
         ], auth="public", website=True)
-    def website_image(self, model, id, field, max_width=None, max_height=None):
+    def website_image(self, model=None, id=None, field=None, xmlid=None, max_width=None, max_height=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
 
@@ -470,19 +472,29 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         The requested field is assumed to be base64-encoded image data in
         all cases.
+
+        xmlid can be used to load the image. But the field image must by base64-encoded
         """
-        try:
+        if xmlid and "." in xmlid:
+            xmlid = xmlid.split(".", 1)
+            try:
+                model, id = request.registry['ir.model.data'].get_object_reference(request.cr, request.uid, xmlid[0], xmlid[1])
+            except:
+                raise werkzeug.exceptions.NotFound()
+            if model == 'ir.attachment':
+                field = "datas"
+        elif model and id and field:
             idsha = id.split('_')
-            id = idsha[0]
-            response = werkzeug.wrappers.Response()
-            return request.registry['website']._image(
-                request.cr, request.uid, model, id, field, response, max_width, max_height,
-                cache=STATIC_CACHE if len(idsha) > 1 else None)
-        except Exception:
-            logger.exception("Cannot render image field %r of record %s[%s] at size(%s,%s)",
-                             field, model, id, max_width, max_height)
-            response = werkzeug.wrappers.Response()
-            return self.placeholder(response)
+            try:
+                id = idsha[0]
+            except IndexError:
+                raise werkzeug.exceptions.NotFound()
+        else:
+            raise werkzeug.exceptions.NotFound()
+
+        response = werkzeug.wrappers.Response()
+        return request.registry['website']._image(
+                    request.cr, request.uid, model, id, field, response, max_width, max_height)
 
     #------------------------------------------------------
     # Server actions
