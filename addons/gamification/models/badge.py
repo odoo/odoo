@@ -95,18 +95,21 @@ class gamification_badge(osv.Model):
             the total number of time this badge was granted
             the total number of users this badge was granted to
         """
-        result = dict.fromkeys(ids, False)
-        for badge_id in ids:
-            cr.execute("""
-                SELECT user_id
-                FROM gamification_badge_user
-                WHERE badge_id = %s
-                """, (badge_id,))
-            res = [user_id[0] for user_id in cr.fetchall()]
+        result = dict.fromkeys(ids, {'stat_count':0, 'stat_count_distinct':0, 'unique_owner_ids':[]})
+
+        cr.execute("""
+            SELECT badge_id, count(user_id) as stat_count,
+                count(distinct(user_id)) as stat_count_distinct,
+                array_agg(distinct(user_id)) as unique_owner_ids
+            FROM gamification_badge_user
+            WHERE badge_id in %s
+            GROUP BY badge_id
+            """, (tuple(ids),))
+        for (badge_id, stat_count, stat_count_distinct, unique_owner_ids) in cr.fetchall():
             result[badge_id] = {
-                'unique_owner_ids': list(set(res)),
-                'stat_count': len(res),
-                'stat_count_distinct': len(list(set(res)))
+                'stat_count': stat_count,
+                'stat_count_distinct': stat_count_distinct,
+                'unique_owner_ids': unique_owner_ids,
             }
         return result
 
