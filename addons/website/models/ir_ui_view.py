@@ -51,10 +51,6 @@ class view(osv.osv):
         else:
             return super(view, self).write(cr, uid, ids, vals, context=context)
 
-    def copy(self, cr, uid, id, vals, context=None):
-        #from pudb import set_trace; set_trace()
-        return super(view, self).copy(cr, uid, id, dict(vals or {}, website_id=False),context=context)
-
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
             return self.pool['ir.model.data'].xmlid_to_object(

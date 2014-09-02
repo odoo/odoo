@@ -196,15 +196,13 @@ class website(osv.osv):
         except ValueError:
             # new page
             _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
-            page_id = view.copy(cr, uid, template_id, {}, context=context)
+            current = self.get_current_website(cr, uid, context=context)
+            page_id = view.copy(cr, uid, template_id, {'website_id': current.id, 'key': 'website.%s' % page_name}, context=context)
             page = view.browse(cr, uid, page_id, context=context)
             #sig-ajout
-            current = self.get_current_website(cr, uid, context=context)
             page.write({
-                'website_id': current.id,#context.get('website_id'),
                 'arch': page.arch.replace(template, page_xmlid),
                 'name': page_name,
-                'key': 'website.%s' % page_name,
                 'page': ispage})
             imd.create(cr, uid, {
                 'name': page_name,
