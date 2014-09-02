@@ -549,12 +549,7 @@ class account_bank_statement_line(osv.osv):
             if st_line.amount < 0:
                 sign = -1
 
-        # TODO : in order to search for partial reconciliations too, amount_residual should be stored in DB
-        # otherwise the current algorithm just select the first line involved in a partial reconciliation
-        # according to its debit/credit field, which is half the time wrong
-        additional_domain = [('reconcile_partial_id','=',False)]
-
-        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=additional_domain + [(amount_field, '=', (sign * st_line.amount))])
+        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
         if match_id:
             return [match_id[0]]
 
@@ -752,11 +747,9 @@ class account_bank_statement_line(osv.osv):
             new_aml_id = aml_obj.create(cr, uid, mv_line_dict, context=context)
             if counterpart_move_line_id != None:
                 move_line_pairs_to_reconcile.append([new_aml_id, counterpart_move_line_id])
-
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
             aml_obj.reconcile_partial(cr, uid, pair, context=context)
-
         # Mark the statement line as reconciled
         self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
 
@@ -765,7 +758,7 @@ class account_bank_statement_line(osv.osv):
     # Unfortunately, that spawns a "no access rights" error ; it shouldn't.
     def _needaction_domain_get(self, cr, uid, context=None):
         user = self.pool.get("res.users").browse(cr, uid, uid)
-        return ['|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('journal_entry_id', '=', False)]
+        return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_id', '=', False)]
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"
