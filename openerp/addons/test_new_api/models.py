@@ -85,10 +85,15 @@ class Discussion(models.Model):
         'test_new_api_discussion_category', 'discussion', 'category')
     participants = fields.Many2many('res.users')
     messages = fields.One2many('test_new_api.message', 'discussion')
+    message_changes = fields.Integer('Message changes')
 
     @api.onchange('moderator')
     def _onchange_moderator(self):
         self.participants |= self.moderator
+
+    @api.onchange('messages')
+    def _onchange_messages(self):
+        self.message_changes = len(self.messages)
 
 
 class Message(models.Model):
