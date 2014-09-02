@@ -62,7 +62,7 @@ DEFAULT_LOG_HANDLER = [':INFO']
 
 def _get_default_datadir():
     home = os.path.expanduser('~')
-    func = appdirs.user_data_dir if os.path.exists(home) else appdirs.site_data_dir
+    func = appdirs.user_data_dir if os.path.isdir(home) else appdirs.site_data_dir
     # No "version" kwarg as session and filestore paths are shared against series
     return func(appname='Odoo', appauthor=release.author)
 
