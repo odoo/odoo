@@ -694,7 +694,7 @@ class account_bank_statement_line(osv.osv):
         aml_obj.create(cr, uid, bank_st_move_vals, context=context)
         # Complete the dicts
         st_line_currency = st_line.currency_id or statement_currency
-        st_line_currency_rate = st_line.currency_id and statement_currency.id == company_currency.id and (st_line.amount_currency / st_line.amount) or False
+        st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or False
         to_create = []
         for mv_line_dict in mv_line_dicts:
             if mv_line_dict.get('is_tax_line'):
@@ -714,6 +714,9 @@ class account_bank_statement_line(osv.osv):
                 if st_line.currency_id and statement_currency.id == company_currency.id and st_line_currency_rate:
                     debit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['debit'] / st_line_currency_rate)
                     credit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['credit'] / st_line_currency_rate)
+                elif st_line.currency_id and st_line_currency_rate:
+                    debit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate, context=context)
+                    credit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['credit'] / st_line_currency_rate, context=context)
                 else:
                     debit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=context)
                     credit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=context)
