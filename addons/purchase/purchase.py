@@ -727,7 +727,7 @@ class purchase_order(osv.osv):
             'origin': order.name,
             'route_ids': order.picking_type_id.warehouse_id and [(6, 0, [x.id for x in order.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id':order.picking_type_id.warehouse_id.id,
-            'invoice_state': order.invoice_method == 'picking' and '2binvoiced' or 'none'
+            'invoice_state': order.invoice_method == 'picking' and '2binvoiced' or 'none',
         }
 
         diff_quantity = order_line.product_qty

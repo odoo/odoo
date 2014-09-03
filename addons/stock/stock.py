@@ -1525,12 +1525,6 @@ class stock_move(osv.osv):
             res.append((line.id, name))
         return res
 
-    def create(self, cr, uid, vals, context=None):
-        if vals.get('product_id') and not vals.get('price_unit'):
-            prod_obj = self.pool.get('product.product')
-            vals['price_unit'] = prod_obj.browse(cr, uid, vals['product_id'], context=context).standard_price
-        return super(stock_move, self).create(cr, uid, vals, context=context)
-
     def _quantity_normalize(self, cr, uid, ids, name, args, context=None):
         uom_obj = self.pool.get('product.uom')
         res = {}
@@ -2020,6 +2014,26 @@ class stock_move(osv.osv):
             date_expected = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {'value': {'date': date_expected}}
 
+    def attribute_price(self, cr, uid, move, context=None):
+        """
+            Attribute price to move, important in multi-company
+        """
+        if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' and not move.price_unit:
+            partner = move.partner_id or (move.picking_id and move.picking_id.partner_id)
+            price = False
+            # If partner given, search price in its purchase pricelist
+            if partner and partner.property_product_pricelist_purchase:
+                pricelist_obj = self.pool.get("product.pricelist")
+                pricelist = partner.property_product_pricelist.id
+                price = pricelist_obj.price_get(cr, uid, [pricelist],
+                                    move.product_id.id, move.product_uom_qty, partner, {
+                                                                                'uom': move.product_uom.id,
+                                                                                'date': move.date,
+                                                                                })[pricelist]
+            if not price:
+                price = move.product_id.standard_price
+            self.write(cr, uid, [move.id], {'price_unit': price})
+
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms stock move or put it in waiting if it's linked to another move.
@@ -2033,6 +2047,7 @@ class stock_move(osv.osv):
         }
         to_assign = {}
         for move in self.browse(cr, uid, ids, context=context):
+            self.attribute_price(cr, uid, move, context=context)
             state = 'confirmed'
             #if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
             if move.move_orig_ids:
