@@ -1,6 +1,7 @@
 (function(){
     var instance = openerp;
     instance.im_screenshare = {};
+    instance.im_screenshare.COOKIE_NAME = 'odoo-screenshare';
     var _t = openerp._t;
 
     // Default class : it records the summary mutation (start, stop, and send must be override to use the mutations)
@@ -11,24 +12,32 @@
     instance.im_screenshare.RecordHandler = instance.Widget.extend({
         init: function(parent, mode) {
             this._super(parent);
-            this.mode = mode || 'share';
+            this.mode = mode || 'record';
             this.uuid = false;
             this.record_id = false;
-            this.cookie_data = {};
             // business
             this.treeMirrorClient = null;
             this.cursorMirrorClient = null;
             this.def = $.when();
             this.msgQueue = [];
-
-            var cookie = openerp.session.get_cookie('odoo-screenshare-' + this.mode);
-            if(cookie){
-                // then import data from cookie
-                this.cookie_data = cookie;
-                this.record_id = cookie.record_id;
-                this.uuid = cookie.uuid;
-                this._start_record();
+        },
+        start: function(){
+            var cookie = openerp.session.get_cookie(instance.im_screenshare.COOKIE_NAME);
+            if(cookie && !this.is_recording()){
+                if(this.check_cookie_auto_start(cookie)){
+                    // then import data from cookie
+                    this.record_id = cookie.record_id;
+                    this.uuid = cookie.uuid;
+                    this.mode = cookie.mode;
+                    this._start_record();
+                    return true;
+                }
             }
+            return false;
+        },
+        // override this function to set the condition determining if the current object is responsible for the recording (for auto start after refresh)
+        check_cookie_auto_start: function(vals){
+            return false;
         },
         // mutations utils
         _remove_empty_mutations: function(mutations){
@@ -86,11 +95,20 @@
             }
         },
         // recording functions
-        is_recording: function(){
+        is_recording: function(){ // is the current object recording for now
             return this.treeMirrorClient !== null;
         },
-        start_record: function(){
+        is_screen_already_recording: function(){ // is the screen already recording or sharing
+            return !!(openerp.session.get_cookie(instance.im_screenshare.COOKIE_NAME));
+        },
+        start_record: function(extra_cookie_data){
             var self = this;
+            if(this.is_screen_already_recording()){
+                alert(_t("You are already sharing or recording your screen."));
+                return new $.Deferred().resolve().then(function(){
+                    return false;
+                });
+            }
             return openerp.session.rpc("/im_screenshare/start", {mode : this.mode}).then(function(result){
                 if(self.mode === 'share'){
                     self.uuid = result;
@@ -98,8 +116,8 @@
                     self.record_id = result;
                 }
                 // create cookie for 1h
-                self.cookie_data = _.extend(self.cookie_data, {uuid : self.uuid, record_id : self.record_id});
-                openerp.session.set_cookie("odoo-screenshare-" + self.mode, self.cookie_data, 60*60*1000);
+                var cookie_values = _.extend({uuid : self.uuid, record_id : self.record_id, mode : self.mode}, extra_cookie_data || {});
+                openerp.session.set_cookie(instance.im_screenshare.COOKIE_NAME, cookie_values, 60*60*1000);
                 // start sending mutations
                 self._start_record();
                 return result;
@@ -167,13 +185,12 @@
                 timestamp: Date.now()
             }]);
             // erase cookie
-            openerp.session.set_cookie("odoo-screenshare-" + this.mode, "", -1);
-            // re-init data
+            openerp.session.set_cookie(instance.im_screenshare.COOKIE_NAME, "", -1);
+            // reset data
             this.treeMirrorClient.disconnect();
             this.treeMirrorClient = null;
             this.cursorMirrorClient.disconnect();
             this.cursorMirrorClient = null;
-
             this.uuid = false;
             this.record_id = false;
             // restore the initial on_rpc_event function
@@ -324,20 +341,26 @@
         init: function(parent){
             this._super(parent, 'record');
         },
-        start: function() {
-            this.$el.html(this.generate_button(this.is_recording()));
+        start: function(){
+            var is_rec = this._super();
+            this.$el.html(this.generate_button(is_rec));
             this.$el.on('click','button',_.bind(this.click,this));
         },
-        generate_button: function(is_recording) {
+        check_cookie_auto_start: function(vals){
+            return !!(vals["record_id"]);
+        },
+        generate_button: function(is_recording){
             return (is_recording ? '<button>Stop</button>' : '<button>Record</button>');
         },
         click: function(){
-            var is_recording = this.is_recording();
-            this.$el.html(this.generate_button(!is_recording));
-            if(is_recording){
+            var self = this;
+            if(this.is_recording()){
                 this.stop_record();
+                this.$el.html(this.generate_button(false));
             }else{
-                this.start_record();
+                this.start_record().then(function(res){
+                    self.$el.html(self.generate_button(res));
+                });
             }
         }
     });
@@ -357,43 +380,45 @@
 
     // IM Screenshare with other users, depends on im_chat
     // This is the button on the header of the conversation : it starts and stops the screensharing.
-    instance.im_screenshare.IMSenderButton = openerp.im_screenshare.RecordHandler.extend({
+    instance.im_screenshare.IMSenderButton = instance.im_screenshare.RecordHandler.extend({
         init: function(parent){
             this._super(parent, 'share');
             this.conv = parent;
-            this.cookie_data = _.extend(this.cookie_data, {conv_uuid: parent.get('session').uuid});
         },
         start: function() {
-            this.$el.html('<button class="oe_im_screenshare_button" title="Share your screen"><i class="fa fa-caret-square-o-right"></i></button>');
-            this.color_button(!this.is_recording());
+            var is_rec = this._super();
+            this.$el.html('<button class="oe_im_screenshare_button"><i class="fa fa-caret-square-o-right"></i></button>');
+            this.color_button(is_rec);
             this.$el.on('click','button',_.bind(this.click,this));
+        },
+        check_cookie_auto_start: function(vals){
+            return !!(vals["uuid"] && vals["conv_uuid"] === this.conv.get('session').uuid);
         },
         color_button: function(is_recording) {
             if(is_recording){
-                this.$('.oe_im_screenshare_button').css('color','gray');
-                this.$('.oe_im_screenshare_button').css('title','Share your screen');
-            }else{
                 this.$('.oe_im_screenshare_button').css('color','red');
                 this.$('.oe_im_screenshare_button').css('title','Stop sharing screen');
+            }else{
+                this.$('.oe_im_screenshare_button').css('color','gray');
+                this.$('.oe_im_screenshare_button').css('title','Share your screen');
             }
         },
         click: function(event){
+            var self = this;
             event.stopPropagation();
-            this.color_button(this.is_recording());
             if(this.is_recording()){
                 this.stop_record();
+                this.color_button(false);
             }else{
-                this.start_record();
+                this.start_record({conv_uuid: this.conv.get('session').uuid}).then(function(res){
+                    if(res){
+                        var invit = "Screensharing with you, follow the link : " + openerp.session.server + '/im_screenshare/player/' + res;
+                        self.conv.send_message(invit, 'meta');
+                    }
+                    self.color_button(res);
+                });
             }
         },
-        // override functions
-        start_record: function(){
-            var self = this;
-            this._super().then(function(res){
-                var invit = "Screensharing with you, follow the link : " + openerp.session.server + '/im_screenshare/player/' + self.uuid;
-                self.conv.send_message(invit, 'meta');
-            });
-        }
     });
 
     // add the button to the header of the conversation

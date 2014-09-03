@@ -55,7 +55,6 @@ var FormDataMirror = (function(){
                 $elements[i].value = el.value;
             }
             if(el.tagName === 'SELECT'){
-                console.log($elements[i]);
                 $elements[i].selectedIndex = el.value;
             }
         });
