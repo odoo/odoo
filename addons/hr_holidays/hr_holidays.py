@@ -319,6 +319,7 @@ class hr_holidays(osv.osv):
             'state': 'draft',
             'manager_id': False,
             'manager_id2': False,
+            'number_of_days_temp': 0,
         })
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
