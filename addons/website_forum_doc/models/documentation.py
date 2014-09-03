@@ -67,11 +67,12 @@ class Post(osv.Model):
         'color': fields.integer('Color Index')
     }
 
-    def _get_documentation_stage(self, cr, uid, context=None):
-        return self.pool["forum.documentation.stage"].search(cr, uid, [], limit=1, context=context) or False
+    def _get_default_stage_id(self, cr, uid, context=None):
+        stage_ids = self.pool["forum.documentation.stage"].search(cr, uid, [], limit=1, context=context)
+        return stage_ids and stage_ids[0] or False
 
     _defaults = {
-        'documentation_stage_id': _get_documentation_stage,
+        'documentation_stage_id': _get_default_stage_id,
     }
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
