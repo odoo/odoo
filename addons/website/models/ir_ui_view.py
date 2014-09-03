@@ -31,28 +31,6 @@ class view(osv.osv):
         'page': False,
     }
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
-        try:
-            iter(ids)
-        except:
-            ids=[ids]
-    
-        website_id=context.get('website_id')
-        if website_id:
-            for current in self.browse(cr, uid, ids, context=context):
-                if current.type=='qweb':
-                    if current.website_id.id != website_id:
-                        ids.remove(current.id)
-                        new_ids = self.search(cr, uid, [('website_id', '=', website_id), ('key', '=', current.key)], context=context)
-                        if new_ids:
-                            ids.append(new_ids[0])
-                        else:
-                            self.copy(cr,uid, current.id, dict(vals, website_id=website_id), context=context)
-         
-        return super(view, self).write(cr, uid, ids, vals, context=context)
-
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
             return self.pool['ir.model.data'].xmlid_to_object(
