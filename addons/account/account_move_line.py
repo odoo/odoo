@@ -789,8 +789,6 @@ class account_move_line(osv.osv):
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
             }
-            # for debugging purposes
-            ret_line['reconcile_partial_id'] = line.reconcile_partial_id.id
 
             # Get right debit / credit:
             line_currency = line.currency_id or company_currency
@@ -815,7 +813,6 @@ class account_move_line(osv.osv):
                     credit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, credit, context=ctx)
                     amount_str = rml_parser.formatLang(debit or -credit, currency_obj=target_currency)
 
-            # And there you go, all good and ready
             ret_line['credit'] = credit
             ret_line['debit'] = debit
             ret_line['amount_str'] = amount_str
