@@ -3149,9 +3149,9 @@ class BaseModel(object):
         if self.env.in_draft:
             # we may be doing an onchange, do not prefetch other fields
             pass
-        elif field in self.env.todo:
+        elif self.env.field_todo(field):
             # field must be recomputed, do not prefetch records to recompute
-            records -= self.env.todo[field]
+            records -= self.env.field_todo(field)
         elif self._columns[field.name]._prefetch:
             # here we can optimize: prefetch all classic and many2one fields
             fnames = set(fname
@@ -5498,42 +5498,34 @@ class BaseModel(object):
         """ If `field` must be recomputed on some record in `self`, return the
             corresponding records that must be recomputed.
         """
-        for env in [self.env] + list(iter(self.env.all)):
-            if env.todo.get(field) and env.todo[field] & self:
-                return env.todo[field]
+        return self.env.check_todo(field, self)
 
     def _recompute_todo(self, field):
         """ Mark `field` to be recomputed. """
-        todo = self.env.todo
-        todo[field] = (todo.get(field) or self.browse()) | self
+        self.env.add_todo(field, self)
 
     def _recompute_done(self, field):
-        """ Mark `field` as being recomputed. """
-        todo = self.env.todo
-        if field in todo:
-            recs = todo.pop(field) - self
-            if recs:
-                todo[field] = recs
+        """ Mark `field` as recomputed. """
+        self.env.remove_todo(field, self)
 
     @api.model
     def recompute(self):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
-        for env in list(iter(self.env.all)):
-            while env.todo:
-                field, recs = next(env.todo.iteritems())
-                # evaluate the fields to recompute, and save them to database
-                for rec, rec1 in zip(recs, recs.with_context(recompute=False)):
-                    try:
-                        values = rec._convert_to_write({
-                            f.name: rec[f.name] for f in field.computed_fields
-                        })
-                        rec1._write(values)
-                    except MissingError:
-                        pass
-                # mark the computed fields as done
-                map(recs._recompute_done, field.computed_fields)
+        while self.env.has_todo():
+            field, recs = self.env.get_todo()
+            # evaluate the fields to recompute, and save them to database
+            for rec, rec1 in zip(recs, recs.with_context(recompute=False)):
+                try:
+                    values = rec._convert_to_write({
+                        f.name: rec[f.name] for f in field.computed_fields
+                    })
+                    rec1._write(values)
+                except MissingError:
+                    pass
+            # mark the computed fields as done
+            map(recs._recompute_done, field.computed_fields)
 
     #
     # Generic onchange method
