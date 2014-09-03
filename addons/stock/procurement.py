@@ -206,11 +206,13 @@ class procurement_order(osv.osv):
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def run(self, cr, uid, ids, autocommit=False, context=None):
-        res = super(procurement_order, self).run(cr, uid, ids, autocommit=autocommit, context=context)
+        new_ids = [x.id for x in self.browse(cr, uid, ids, context=context) if x.state not in ('running', 'done', 'cancel')]
+        res = super(procurement_order, self).run(cr, uid, new_ids, autocommit=autocommit, context=context)
+
         #after all the procurements are run, check if some created a draft stock move that needs to be confirmed
         #(we do that in batch because it fasts the picking assignation and the picking state computation)
         move_to_confirm_ids = []
-        for procurement in self.browse(cr, uid, ids, context=context):
+        for procurement in self.browse(cr, uid, new_ids, context=context):
             if procurement.state == "running" and procurement.rule_id and procurement.rule_id.action == "move":
                 move_to_confirm_ids += [m.id for m in procurement.move_ids if m.state == 'draft']
         if move_to_confirm_ids:
@@ -223,6 +225,9 @@ class procurement_order(osv.osv):
         '''
         if procurement.rule_id and procurement.rule_id.action == 'move':
             uom_obj = self.pool.get('product.uom')
+            # In case Phantom BoM splits only into procurements
+            if not procurement.move_ids:
+                return True
             cancel_test_list = [x.state == 'cancel' for x in procurement.move_ids]
             done_cancel_test_list = [x.state in ('done', 'cancel') for x in procurement.move_ids]
             at_least_one_cancel = any(cancel_test_list)

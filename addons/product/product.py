@@ -764,6 +764,9 @@ class product_template(osv.osv):
         return super(product_template, self).name_get(cr, user, ids, context)
 
 
+
+
+
 class product_product(osv.osv):
     _name = "product.product"
     _description = "Product"
@@ -1087,6 +1090,11 @@ class product_product(osv.osv):
             context = {}
         ctx = dict(context or {}, create_product_product=True)
         return super(product_product, self).create(cr, uid, vals, context=ctx)
+
+
+
+    def need_procurement(self, cr, uid, ids, context=None):
+        return False
 
 
 class product_packaging(osv.osv):

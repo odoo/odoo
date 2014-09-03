@@ -1269,6 +1269,7 @@ class stock_picking(osv.osv):
             move_obj.action_confirm(cr, uid, moves, context=context)
         return moves
 
+
     def rereserve_quants(self, cr, uid, picking, move_ids=[], context=None):
         """ Unreserve quants then try to reassign quants."""
         stock_move_obj = self.pool.get('stock.move')
@@ -2395,7 +2396,6 @@ class stock_move(osv.osv):
         defaults = {
             'product_uom_qty': uom_qty,
             'product_uos_qty': uos_qty,
-            'state': move.state,
             'procure_method': 'make_to_stock',
             'restrict_lot_id': restrict_lot_id,
             'restrict_partner_id': restrict_partner_id,
