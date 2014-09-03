@@ -3,3 +3,4 @@
 import test_views
 import test_ui
 import test_converter
+import test_crawl

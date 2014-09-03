@@ -38,18 +38,20 @@ class view(osv.osv):
             iter(ids)
         except:
             ids=[ids]
+    
         website_id=context.get('website_id')
         if website_id:
             for current in self.browse(cr, uid, ids, context=context):
                 if current.type=='qweb':
-                    #from pudb import set_trace; set_trace()
-                    if current.website_id.id == website_id:
-                        super(view, self).write(cr, uid, [current.id], vals, context=context)
-                    else:
-                        copy_id = super(view, self).copy(cr,uid, current.id, {'website_id':website_id},context=context)
-                        super(view, self).write(cr, uid, [copy_id], vals, context=context)
-        else:
-            return super(view, self).write(cr, uid, ids, vals, context=context)
+                    if current.website_id.id != website_id:
+                        ids.remove(current.id)
+                        new_ids = self.search(cr, uid, [('website_id', '=', website_id), ('key', '=', current.key)], context=context)
+                        if new_ids:
+                            ids.append(new_ids[0])
+                        else:
+                            self.copy(cr,uid, current.id, dict(vals, website_id=website_id), context=context)
+         
+        return super(view, self).write(cr, uid, ids, vals, context=context)
 
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
