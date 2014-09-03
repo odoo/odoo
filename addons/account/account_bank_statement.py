@@ -517,7 +517,7 @@ class account_bank_statement_line(osv.osv):
             match_id = mv_line_pool.search(cr, uid, structured_com_match_domain, offset=0, limit=1, context=context)
             if match_id:
                 mv_line_br = mv_line_pool.browse(cr, uid, match_id, context=context)
-                target_currency = st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
+                target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
                 mv_line = mv_line_pool.prepare_move_lines_for_reconciliation_widget(cr, uid, mv_line_br, target_currency=target_currency, target_date=st_line.date, context=context)[0]
                 mv_line['has_no_partner'] = not bool(st_line.partner_id.id)
                 # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
