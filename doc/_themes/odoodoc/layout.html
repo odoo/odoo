@@ -27,6 +27,11 @@
     <div class="sphinxsidebarwrapper">
       {{ toctree(maxdepth=4, collapse=False, includehidden=True,
                  main_navbar=False, titles_only=False) }}
+    {% if github %}
+      <p><a href="{{ github(pagename) }}" class="github">
+        Edit on GitHub
+      </a></p>
+    {% endif %}
     </div>
   </div>
   {{ super() }}

@@ -155,6 +155,33 @@ body {
       display: block;
     }
   }
+
+  > p {
+    margin: 5px 10px 10px;
+    a {
+      font-size: 13px;
+      &:hover {
+        text-decoration: none;
+      }
+
+      &.github {
+        padding-left: 15px;
+        position: relative;
+        &:before {
+          left: 0;
+          top: 1px;
+          content: '';
+          position: absolute;
+          width: 13px;
+          height: 13px;
+          background: url(github-link.png) left bottom / 13px no-repeat;
+        }
+        &:hover:before {
+          background-position: left top;
+        }
+      }
+    }
+  }
 }
 
 /* Side navigation graphical styling */
@@ -325,6 +352,16 @@ body {
 .headerlink {
   display: none;
 }
+// move [source] link to the right
+.viewcode-link {
+  font-weight: normal;
+  float: right;
+  display: none;
+}
+dt:hover > a > .viewcode-link {
+  display: inline;
+}
+
 // either that or overwrite visit_attribution/depart_attribution
 blockquote p.attribution:extend(blockquote footer) {}
 

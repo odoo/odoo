@@ -6346,6 +6346,31 @@ body {
 .sphinxsidebarwrapper > .nav li.current > .nav {
   display: block;
 }
+.sphinxsidebarwrapper > p {
+  margin: 5px 10px 10px;
+}
+.sphinxsidebarwrapper > p a {
+  font-size: 13px;
+}
+.sphinxsidebarwrapper > p a:hover {
+  text-decoration: none;
+}
+.sphinxsidebarwrapper > p a.github {
+  padding-left: 15px;
+  position: relative;
+}
+.sphinxsidebarwrapper > p a.github:before {
+  left: 0;
+  top: 1px;
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: url(github-link.png) left bottom / 13px no-repeat;
+}
+.sphinxsidebarwrapper > p a.github:hover:before {
+  background-position: left top;
+}
 /* Side navigation graphical styling */
 .sphinxsidebarwrapper {
   width: 100%;
@@ -6517,6 +6542,14 @@ body {
 }
 .headerlink {
   display: none;
+}
+.viewcode-link {
+  font-weight: normal;
+  float: right;
+  display: none;
+}
+dt:hover > a > .viewcode-link {
+  display: inline;
 }
 div.section > h1 {
   padding-bottom: 9px;
