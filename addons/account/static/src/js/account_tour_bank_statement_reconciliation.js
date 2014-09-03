@@ -28,15 +28,27 @@
                 element:   '.oe_form_container header button:contains("Reconcile")',
             },
 
+            
+            // Check mutual exclusion of move lines
+            {
+                title:      "set second reconciliation in match mode",
+                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .initial_line'
+            },
+            {
+                title:      "deselect SAJ/2014/002 from second reconciliation",
+                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .accounting_view .mv_line[data-lineid="6"]'
+            },
+            {
+                title:      "check it appeared in first reconciliation's matches list and select SAJ/2014/002 in second reconciliation",
+                waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(2) .accounting_view .mv_line[data-lineid="6"]',
+                waitFor:    '.oe_bank_statement_reconciliation_line:first-child .match .mv_line[data-lineid="6"]',
+                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .match .mv_line[data-lineid="6"]'
+            },
+
 
             // Make a partial reconciliation
             {
-                title:      "deselect SAJ/2014/005",
-                element:    '.oe_bank_statement_reconciliation_line:first-child .mv_line[data-lineid="15"]'
-            },
-            {
                 title:      "select SAJ/2014/001",
-                waitNot:    '.oe_bank_statement_reconciliation_line:first-child .accounting_view .mv_line[data-lineid="15"]',
                 element:    '.oe_bank_statement_reconciliation_line:first-child .mv_line[data-lineid="3"]'
             },
             {
@@ -52,7 +64,7 @@
             // Test changing the partner
             {
                 title:      "change the partner (1)",
-                waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(4)', // wait for the first reconciliation to be processed
+                waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(4)', // wait for the reconciliation to be processed
                 element:    '.oe_bank_statement_reconciliation_line:first-child .partner_name'
             },
             {
@@ -87,36 +99,11 @@
             },
 
 
-            {
-                title:      "check following reconciliation passes in mode match",
-                waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(3)', // wait for the first reconciliation to be processed
-                element:    '.oe_bank_statement_reconciliation_line:first-child[data-mode="match"]'
-            },
-
-
-            // Check mutual exclusion of move lines
-            {
-                title:      "deselect SAJ/2014/003 from second reconciliation",
-                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .accounting_view .mv_line[data-lineid="9"]'
-            },
-            {
-                title:      "check it appeared in first reconciliation's matches list and select SAJ/2014/003 in second reconciliation",
-                waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(2) .accounting_view .mv_line[data-lineid="9"]',
-                waitFor:    '.oe_bank_statement_reconciliation_line:first-child .match .mv_line[data-lineid="9"]',
-                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .match .mv_line[data-lineid="9"]'
-            },
-            // TODO : broken, nothing happens...
-            {
-                title:      "check SAJ/2014/003 disappeared in first reconciliation, second is in mode no-match and validate it",
-                waitNot:    '.oe_bank_statement_reconciliation_line:first-child .mv_line[data-lineid="9"]',
-                waitFor:    '.oe_bank_statement_reconciliation_line:nth-child(2).no_match',
-                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .button_ok.oe_highlight'
-            },
-
             // Create a new move line in first reconciliation and validate it
             {
-                title:      "set first reconciliation in create mode",
-                element:    '.oe_bank_statement_reconciliation_line:first-child .line_open_balance'
+                title:      "check following reconciliation passes in mode create",
+                waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(3)', // wait for the reconciliation to be processed
+                element:    '.oe_bank_statement_reconciliation_line:first-child[data-mode="create"]'
             },
             {
                 title:      "click the Profit/Loss preset",
@@ -127,12 +114,18 @@
                 element:    '.oe_bank_statement_reconciliation_line:first-child .button_ok.oe_highlight'
             },
 
-            // TODO : remove once broken step is fixed
+
+            // Leave an open balance
             {
-                title:      "Pompot la compote",
-                waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(2)',
-                element:    '.oe_bank_statement_reconciliation_line:first-child .button_ok.oe_highlight'
+                title:      "select SAJ/2014/003",
+                waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(2)', // wait for the reconciliation to be processed
+                element:    '.oe_bank_statement_reconciliation_line:first-child .mv_line[data-lineid="9"]'
             },
+            {
+                title:      "click on the Keep Open button",
+                element:    '.oe_bank_statement_reconciliation_line:first-child .button_ok:not(.oe_highlight)'
+            },
+
 
             // Be done
             {
