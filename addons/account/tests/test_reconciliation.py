@@ -27,9 +27,9 @@ class TestReconciliation(TransactionCase):
         #set expense_currency_exchange_account_id and income_currency_exchange_account_id to a random account
         self.registry("res.company").write(self.cr, self.uid, [0,1], {'expense_currency_exchange_account_id': self.account_rsa_id, 'income_currency_exchange_account_id':self.account_rsa_id})
 
-    def test_balanced_purchase_invoice(self):
+    def test_balanced_customer_invoice(self):
         cr, uid = self.cr, self.uid
-        #we create a receipt in CHF
+        #we create an invoice in CHF
         invoice_id = self.account_invoice_model.create(cr, uid, {'partner_id': self.partner_agrolait_id,
             'reference_type': 'none',
             'currency_id': self.currency_swiss_id,
@@ -94,9 +94,9 @@ class TestReconciliation(TransactionCase):
 
         
 
-    def test_balanced_sale_receipt(self):
+    def test_balanced_supplier_invoice(self):
         cr, uid = self.cr, self.uid
-        #we create a receipt in CHF
+        #we create a supplier invoice in CHF
         invoice_id = self.account_invoice_model.create(cr, uid, {'partner_id': self.partner_agrolait_id,
             'reference_type': 'none',
             'currency_id': self.currency_swiss_id,

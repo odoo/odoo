@@ -797,21 +797,21 @@ class account_move_line(osv.osv):
                 amount_currency_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
             if target_currency and line_currency == target_currency and target_currency != company_currency:
                 debit = line.debit > 0 and line.amount_residual_currency or 0.0
-                credit = line.credit > 0 and -line.amount_residual_currency or 0.0
+                credit = line.credit > 0 and line.amount_residual_currency or 0.0
                 amount_currency_str = rml_parser.formatLang(line.amount_residual, currency_obj=company_currency)
-                amount_str = rml_parser.formatLang(debit or -credit, currency_obj=target_currency)
+                amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
             else:
                 debit = line.debit > 0 and line.amount_residual or 0.0
-                credit = line.credit > 0 and -line.amount_residual or 0.0
-                amount_str = rml_parser.formatLang(debit or -credit, currency_obj=company_currency)
+                credit = line.credit > 0 and line.amount_residual or 0.0
+                amount_str = rml_parser.formatLang(debit or credit, currency_obj=company_currency)
                 if target_currency and target_currency != company_currency:
-                    amount_currency_str = rml_parser.formatLang(debit or -credit, currency_obj=line_currency)
+                    amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
                     ctx = context.copy()
                     if target_date:
                         ctx.update({'date': target_date})
                     debit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, debit, context=ctx)
                     credit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, credit, context=ctx)
-                    amount_str = rml_parser.formatLang(debit or -credit, currency_obj=target_currency)
+                    amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
 
             ret_line['credit'] = credit
             ret_line['debit'] = debit

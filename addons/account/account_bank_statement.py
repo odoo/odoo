@@ -720,7 +720,7 @@ class account_bank_statement_line(osv.osv):
                     mv_line_dict['debit'] = debit_at_old_rate
                     if debit_at_old_rate - debit_at_current_rate:
                         currency_diff = debit_at_current_rate - debit_at_old_rate
-                        to_create.append(self.get_currency_rate_line(cr, uid, st_line, currency_diff, move_id, context=context))
+                        to_create.append(self.get_currency_rate_line(cr, uid, st_line, -currency_diff, move_id, context=context))
                     if credit_at_old_rate - credit_at_current_rate:
                         currency_diff = credit_at_current_rate - credit_at_old_rate
                         to_create.append(self.get_currency_rate_line(cr, uid, st_line, currency_diff, move_id, context=context))
