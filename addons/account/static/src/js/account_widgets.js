@@ -510,6 +510,10 @@ openerp.account = function (instance) {
             this.is_consistent = true; // Used to prevent bad server requests
             this.total_move_lines_num = undefined; // Used for pagers
             this.filter = "";
+            // In rare cases like when deleting a statement line's partner we don't want the server to
+            // look for a reconciliation proposition (in this particular case it might find a move line
+            // matching the statement line and decide to set the statement line's partner accordingly)
+            this.do_load_reconciliation_proposition = true;
     
             this.set("mode", undefined);
             this.on("change:mode", this, this.modeChanged);
@@ -561,12 +565,14 @@ openerp.account = function (instance) {
 
             // Get ids of selected move lines (to exclude them from reconciliation proposition)
             var excluded_move_lines_ids = [];
-            _.each(self.getParent().excluded_move_lines_ids, function(o){
-                excluded_move_lines_ids = excluded_move_lines_ids.concat(o);
-            });
+            if (self.do_load_reconciliation_proposition) {
+                _.each(self.getParent().excluded_move_lines_ids, function(o){
+                    excluded_move_lines_ids = excluded_move_lines_ids.concat(o);
+                });
+            }
             // Load statement line
             return self.model_bank_statement_line
-                .call("get_data_for_reconciliations", [[self.st_line_id], excluded_move_lines_ids])
+                .call("get_data_for_reconciliations", [[self.st_line_id], excluded_move_lines_ids, self.do_load_reconciliation_proposition])
                 .then(function (data) {
                     self.st_line = data[0].st_line;
                     self.decorateStatementLine(self.st_line);
@@ -1451,7 +1457,9 @@ openerp.account = function (instance) {
                 // Update model
                 .call("write", [[self.st_line_id], {'partner_id': partner_id}])
                 .then(function () {
+                    self.do_load_reconciliation_proposition = false; // of the server might set the statement line's partner
                     return $.when(self.restart(self.get("mode"))).then(function(){
+                        self.do_load_reconciliation_proposition = true;
                         self.is_consistent = true;
                         self.set("mode", "match");
                         if (callback) callback();
