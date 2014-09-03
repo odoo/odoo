@@ -18,7 +18,6 @@ class view(osv.osv):
         'website_meta_title': fields.char("Website meta title", size=70, translate=True),
         'website_meta_description': fields.text("Website meta description", size=160, translate=True),
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
-        #sig-ajout
         'website_id': fields.many2one('website',ondelete='cascade', string="Website"),
     }
 
@@ -143,7 +142,6 @@ class view(osv.osv):
         return arch
 
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
-        #from pudb import set_trace; set_trace()
         if request and getattr(request, 'website_enabled', False):
             engine='website.qweb'
 

@@ -164,7 +164,6 @@ class website(osv.osv):
         'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu')
     }
-    #sig-ajout
     _defaults = {
         'user_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
         'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
@@ -180,7 +179,6 @@ class website(osv.osv):
         return super(website, self).write(cr, uid, ids, vals, context)
 
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
-        #from pudb import set_trace; set_trace()
         context = context or {}
         imd = self.pool.get('ir.model.data')
         view = self.pool.get('ir.ui.view')
@@ -199,7 +197,6 @@ class website(osv.osv):
             website_id = context.get('website_id')
             page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': 'website.%s' % page_name}, context=context)
             page = view.browse(cr, uid, page_id, context=context)
-            #sig-ajout
             page.write({
                 'arch': page.arch.replace(template, page_xmlid),
                 'name': page_name,
@@ -231,7 +228,6 @@ class website(osv.osv):
     def get_languages(self, cr, uid, ids, context=None):
         return self._get_languages(cr, uid, ids[0])
 
-    #sig-ajout
     def get_current_website(self, cr, uid, context=None):
         domain_name=request.httprequest.host.split(":")[0].lower()
         ids=self.search(cr, uid, [('name', '=', domain_name)], context=context)
@@ -248,7 +244,6 @@ class website(osv.osv):
         Access = self.pool['ir.model.access']
         return Access.check(cr, uid, 'ir.ui.menu', 'read', False, context=context)
 
-    #sig-ajout
     def get_template(self, cr, uid, ids, template, context=None):
         if isinstance(template, (int, long)):
             view_id = template

@@ -894,7 +894,6 @@ form: module.record_id""" % (xml_id,)
 
         record = etree.Element('record', attrib=record_attrs)
         record.append(Field(name, name='name'))
-        #sig-ajout
         record.append(Field(full_tpl_id, name='key'))
         record.append(Field("qweb", name='type'))
         record.append(Field(el.get('priority', "16"), name='priority'))

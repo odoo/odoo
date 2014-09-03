@@ -237,7 +237,6 @@ class QWeb(orm.AbstractModel):
         if not isinstance(qwebcontext, QWebContext):
             qwebcontext = QWebContext(cr, uid, qwebcontext, loader=loader, context=context)
 
-        #sig-ajout
         context = context or qwebcontext.context           
         website_id=context.get('website_id')
         cr = cr or qwebcontext.cr
