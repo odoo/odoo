@@ -592,7 +592,7 @@ class website_menu(osv.osv):
         'new_window': fields.boolean('New Window'),
         'sequence': fields.integer('Sequence'),
         # TODO: support multiwebsite once done for ir.ui.views
-        'website_id': fields.many2one('website', 'Website', required=True),
+        'website_id': fields.many2one('website', 'Website'),
         'parent_id': fields.many2one('website.menu', 'Parent Menu', select=True, ondelete="cascade"),
         'child_id': fields.one2many('website.menu', 'parent_id', string='Child Menus'),
         'parent_left': fields.integer('Parent Left', select=True),
