@@ -1017,12 +1017,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 instance.webclient.set_content_full_screen(true);
 
-                if (!self.pos.session) {
-                    self.screen_selector.show_popup('error', 'Sorry, we could not create a user session');
-                }else if(!self.pos.config){
-                    self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
-                }
-            
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').addClass('oe_hidden');});
 
                 self.pos.push_order();
@@ -1112,12 +1106,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.error_barcode_popup = new module.ErrorBarcodePopupWidget(this, {});
             this.error_barcode_popup.appendTo(this.$el);
-
-            this.choose_receipt_popup = new module.ChooseReceiptPopupWidget(this, {});
-            this.choose_receipt_popup.appendTo(this.$el);
-
-            this.error_invoice_transfer_popup = new module.ErrorInvoiceTransferPopupWidget(this, {});
-            this.error_invoice_transfer_popup.appendTo(this.$el);
 
             this.error_traceback_popup = new module.ErrorTracebackPopupWidget(this,{});
             this.error_traceback_popup.appendTo(this.$el);

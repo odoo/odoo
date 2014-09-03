@@ -202,6 +202,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     'discount': self.config.barcode_discount,
                     'price':    self.config.barcode_price,
                 });
+
+                if (self.config.company_id[0] !== self.user.company_id[0]) {
+                    throw new Error(_t("Error: The Point of Sale User must belong to the same company as the Point of Sale. You are probably trying to load the point of sale as an administrator in a multi-company setup, with the administrator account set to the wrong company."));
+                }
             },
         },{
             model: 'stock.location',
