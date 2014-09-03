@@ -319,6 +319,7 @@ class project_issue(osv.Model):
         context = dict(context or {})
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
+        vals.update({'date_open': fields.datetime.now() if vals.get('user_id') else False})
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
@@ -328,12 +329,17 @@ class project_issue(osv.Model):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
+            #SET 'date_end' IF STAGE LAST(done)
+            project_id = self.browse(cr, uid, ids, context=context)[0].project_id
+            if project_id:
+                task_type_ids = self.pool['project.project'].browse(cr, uid, project_id.id, context = context).type_ids
+                if task_type_ids[-1:].id == vals['stage_id']:
+                   vals.update({'date_closed': fields.datetime.now()})
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
         # user_id change: update date_start
-        if vals.get('user_id'):
-            vals['date_start'] = fields.datetime.now()
 
+        if vals.get('user_id'): vals.update({'date_open': fields.datetime.now()})
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
