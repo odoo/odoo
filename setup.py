@@ -19,51 +19,12 @@
 #
 ##############################################################################
 
-import glob, os, re, setuptools, sys
+import os, setuptools, sys
 from os.path import join
-
-# List all data files
-def data():
-    r = {}
-    for root, dirnames, filenames in os.walk('openerp'):
-        for filename in filenames:
-            if not re.match(r'.*(\.pyc|\.pyo|\~)$', filename):
-                r.setdefault(root, []).append(os.path.join(root, filename))
-
-    if os.name == 'nt':
-        r["Microsoft.VC90.CRT"] = glob.glob('C:\Microsoft.VC90.CRT\*.*')
-
-        import babel
-        # Add data, but also some .py files py2exe won't include automatically.
-        # TODO This should probably go under `packages`, instead of `data`,
-        # but this will work fine (especially since we don't use the ZIP file
-        # approach).
-        r["babel/localedata"] = glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata", '*'))
-        others = ['global.dat', 'numbers.py', 'support.py', 'plural.py']
-        r["babel"] = map(lambda f: os.path.join(os.path.dirname(babel.__file__), f), others)
-        others = ['frontend.py', 'mofile.py']
-        r["babel/messages"] = map(lambda f: os.path.join(os.path.dirname(babel.__file__), "messages", f), others)
-
-        import pytz
-        tzdir = os.path.dirname(pytz.__file__)
-        for root, _, filenames in os.walk(os.path.join(tzdir, "zoneinfo")):
-            base = os.path.join('pytz', root[len(tzdir) + 1:])
-            r[base] = [os.path.join(root, f) for f in filenames]
-
-        import docutils
-        dudir = os.path.dirname(docutils.__file__)
-        for root, _, filenames in os.walk(dudir):
-            base = os.path.join('docutils', root[len(dudir) + 1:])
-            r[base] = [os.path.join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
-
-    return r.items()
-
-def gen_manifest():
-    file_list="\n".join(data())
-    open('MANIFEST','w').write(file_list)
 
 if os.name == 'nt':
     sys.path.append("C:\Microsoft.VC90.CRT")
+
 
 def py2exe_options():
     if os.name == 'nt':
@@ -149,10 +110,9 @@ setuptools.setup(
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
       scripts          = ['openerp-server', 'openerp-gevent', 'odoo.py'],
-      data_files       = data(),
-      packages         = setuptools.find_packages(),
+      packages         = setuptools.find_packages() + ['addons.' + i for i in setuptools.find_packages('addons')],
       dependency_links = ['http://download.gna.org/pychart/'],
-      #include_package_data = True,
+      include_package_data = True,
       install_requires = [
           'pychart', # not on pypi, use: pip install http://download.gna.org/pychart/PyChart-1.39.tar.gz
           'babel >= 1.0',
