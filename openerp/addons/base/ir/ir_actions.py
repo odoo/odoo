@@ -846,10 +846,7 @@ class ir_actions_server(osv.osv):
         return self.pool[action.action_id.type].read(cr, uid, [action.action_id.id], context=context)[0]
 
     def run_action_code_multi(self, cr, uid, action, eval_context=None, context=None):
-        debug_filename = '/tmp/debug_server_action_%i.py' % random.randint(1, 9999999999) if action.debug else ''
-        eval(action.code.strip(), eval_context, mode="exec", nocopy=True, debug_filename=debug_filename)  # nocopy allows to return 'action'
-        if debug_filename and os.access(debug_filename, os.W_OK):
-            os.unlink(debug_filename)
+        eval(action.code.strip(), eval_context, mode="exec", nocopy=True, debug=action.debug)  # nocopy allows to return 'action'
         if 'action' in eval_context:
             return eval_context['action']
 
