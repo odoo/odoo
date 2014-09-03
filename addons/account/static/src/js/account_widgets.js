@@ -985,7 +985,7 @@ openerp.account = function (instance) {
 
             for (var key in preset) {
                 if (! preset.hasOwnProperty(key) || key === "amount") continue;
-                if (self.hasOwnProperty(key+"_field"))
+                if (preset[key] && self.hasOwnProperty(key+"_field"))
                     self[key+"_field"].set_value(preset[key]);
             }
             if (preset.amount && self.amount_field) {
