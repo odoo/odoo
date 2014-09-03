@@ -14,6 +14,12 @@
 <!doctype html>
 {%- endblock -%}
 
+{%- block extrahead -%}
+  {%- if canonical -%}
+    <link rel="canonical" href="{{ canonical }}"/>
+  {%- endif -%}
+{%- endblock -%}
+
 {%- block content -%}
   <div class="document-super">
     {{ super() }}
@@ -27,11 +33,11 @@
     <div class="sphinxsidebarwrapper">
       {{ toctree(maxdepth=4, collapse=False, includehidden=True,
                  main_navbar=False, titles_only=False) }}
-    {% if github %}
-      <p><a href="{{ github(pagename) }}" class="github">
-        Edit on GitHub
-      </a></p>
-    {% endif %}
+      {% if github_link %}
+        <p><a href="{{ github_link() }}" class="github">
+          Edit on GitHub
+        </a></p>
+      {% endif %}
     </div>
   </div>
   {{ super() }}
