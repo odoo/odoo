@@ -350,7 +350,7 @@ class procurement_order(osv.osv):
                     if prods < op.product_min_qty:
                         qty = max(op.product_min_qty, op.product_max_qty) - prods
 
-                        reste = qty % op.qty_multiple
+                        reste = op.qty_multiple > 0 and qty % op.qty_multiple or 0.0
                         if reste > 0:
                             qty += op.qty_multiple - reste
 
