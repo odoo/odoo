@@ -403,9 +403,11 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route([
         '/website/image',
+        '/website/image/<xmlid>',
+        '/website/image/<xmlid>/<field>',
         '/website/image/<model>/<id>/<field>'
         ], auth="public", website=True)
-    def website_image(self, model, id, field, max_width=None, max_height=None):
+    def website_image(self, model=None, id=None, field=None, xmlid=None, max_width=None, max_height=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
 
@@ -419,7 +421,21 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         The requested field is assumed to be base64-encoded image data in
         all cases.
+
+        xmlid can be used to load the image. But the field image must by base64-encoded
         """
+        if xmlid and "." in xmlid:
+            xmlid = xmlid.split(".", 1)
+            try:
+                model, id = request.registry['ir.model.data'].get_object_reference(request.cr, request.uid, xmlid[0], xmlid[1])
+            except:
+                raise werkzeug.exceptions.NotFound()
+            if model == 'ir.attachment':
+                field = "datas"
+
+        if not model or not id or not field:
+            raise werkzeug.exceptions.NotFound()
+
         response = werkzeug.wrappers.Response()
         return request.registry['website']._image(
                     request.cr, request.uid, model, id, field, response, max_width, max_height)
