@@ -176,12 +176,25 @@
 
 
 <template id="track_view">
-    <t t-call="website_event.layout">
+    <t t-call="website.layout">
+        <div id="wrap" class="js_event">
+            <div class="container">
+                <div class="row mt8">
+                    <div class="col-sm-7" id="event_menu">
+                        <ol class="breadcrumb mb0" id="event_menu" t-if="event.menu_id">
+                            <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                                <t t-call="website.submenu"/>
+                            </t>
+                        </ol>
+                    </div>
+                    <t t-call="website.publish_management">
+                        <t t-set="object" t-value="track"/>
+                        <t t-set="publish_edit" t-value="True"/>
+                    </t>
+                </div>
+            </div>
+        </div>
         <div class="container">
-            <t t-call="website.publish_management">
-                <t t-set="object" t-value="track"/>
-                <t t-set="publish_edit" t-value="True"/>
-            </t>
             <div class="clearfix"/>
 
             <h2 t-field="track.name" class="text-center"/>
