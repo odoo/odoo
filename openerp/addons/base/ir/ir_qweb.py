@@ -231,7 +231,6 @@ class QWeb(orm.AbstractModel):
         return int(bool(self.eval(expr, qwebcontext)))
 
     def render(self, cr, uid, id_or_xml_id, qwebcontext=None, loader=None, context=None):
-        #from pudb import set_trace; set_trace()
         if qwebcontext is None:
             qwebcontext = {}
 

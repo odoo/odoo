@@ -267,16 +267,11 @@ class website(osv.osv):
             if '.' not in template:
                 template = 'website.%s' % template
             module, xmlid = template.split('.', 1)
-            #model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
-            key=module+'.'+xmlid
-            #website_id=self.get_current_website(cr, uid, context=context).id
+            key = template
             website_id=request.context.get('website_id')
-            #print 'Website_id={}'.format(website_id)
             view_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', key),'|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)
-            if view_id==[]:
-                #from pudb import set_trace; set_trace()
+            if not view_id:
                 raise QWebTemplateNotFound("Template %r not found" % xmlid, template=template)
-        #self.pool["ir.ui.view"].clear_cache()
         return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
