@@ -310,11 +310,12 @@ class res_users(osv.Model):
         # find the employee group
         group_employee = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')[1]
         # built and execute SQL query. Using ORM is slow for big database, so query sql is required.
-        where_clause = "WHERE U.active = 't' "
+        where_clause = "WHERE U.active = 't' AND U.id != %s "
         query_params = (group_employee, limit)
         if name:
-            where_clause += " AND name ILIKE %s "
+            where_clause += " AND P.name ILIKE %s "
             query_params = ('%'+name+'%',) + query_params
+        query_params = (uid,) + query_params
         query = ''' SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
                     FROM res_users U
                     LEFT JOIN res_partner P ON P.id = U.partner_id
@@ -325,7 +326,7 @@ class res_users(osv.Model):
                                 WHEN S.status = 'away' THEN 2
                                 ELSE 3
                         END,
-                        name ASC
+                        P.name ASC
                     LIMIT %s'''
         cr.execute(query, query_params)
         return cr.dictfetchall()
