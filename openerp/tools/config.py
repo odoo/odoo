@@ -68,9 +68,9 @@ def _get_default_datadir():
         if sys.platform in ['win32', 'darwin']:
             func = appdirs.site_data_dir
         else:
-            func = lambda **kwarg: "/var/lib/%s" % kwarg['appname']
+            func = lambda **kwarg: "/var/lib/%s" % kwarg['appname'].lower()
     # No "version" kwarg as session and filestore paths are shared against series
-    return func(appname='openerp', appauthor=release.author)
+    return func(appname=release.product_name, appauthor=release.author)
 
 class configmanager(object):
     def __init__(self, fname=None):
