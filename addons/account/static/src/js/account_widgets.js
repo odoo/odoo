@@ -13,7 +13,7 @@ openerp.account = function (instance) {
         init: function(parent, context) {
             this._super(parent);
             this.max_reconciliations_displayed = 10;
-            this.statement_ids = context.context.statement_ids;
+            this.statement_ids = context.context.statement_ids || context.context.statement_id;
             if (! this.statement_ids instanceof Array) this.statement_ids = [this.statement_ids];
             this.title = context.context.title || _t("Reconciliation");
             this.st_lines = [];
@@ -794,9 +794,8 @@ openerp.account = function (instance) {
     
         // adds fields, prefixed with q_, to the move line for qweb rendering
         decorateMoveLine: function(line, currency_id) {
-            /* Seems useless
             line.partial_reconcile = false;
-            line.propose_partial_reconcile = false; */
+            line.propose_partial_reconcile = false;
             line['credit'] = [line['debit'], line['debit'] = line['credit']][0];
             line.q_due_date = (line.date_maturity === false ? line.date : line.date_maturity);
             line.q_amount = (line.debit !== 0 ? "- "+line.q_debit : "") + (line.credit !== 0 ? line.q_credit : "");
