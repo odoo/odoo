@@ -11,6 +11,8 @@ The easiest way to play with it is the <a href="https://www.odoo.com/page/start"
 Getting started with Odoo development
 --------------------------------------
 
+**Note you need to have [installed git](http://git-scm.com/book/en/Getting-Started-Installing-Git)**
+
 If you are a developer type the following command at your terminal [1]:
 
     wget -O- https://raw.githubusercontent.com/odoo/odoo/master/odoo.py | python
