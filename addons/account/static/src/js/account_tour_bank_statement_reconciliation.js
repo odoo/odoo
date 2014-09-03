@@ -13,15 +13,15 @@
             // Go to the first statement reconciliation
             {
                 title:     "go to accounting",
-                element:   '.oe_menu_toggler[data-menu="134"]',
+                element:   '.oe_menu_toggler:contains("Accounting"):visible',
             },
             {
                 title:     "go to bank statements",
-                element:   '.oe_menu_leaf[data-menu="176"]',
+                element:   '.oe_menu_leaf:contains("Bank Statement"):visible',
             },
             {
                 title:     "select first bank statement",
-                element:   '.oe_list_content tbody tr:first-child',
+                element:   '.oe_list_content tbody tr:contains("BNK/2014/001")',
             },
             {
                 title:     "click the reconcile button",
@@ -36,24 +36,24 @@
             },
             {
                 title:      "deselect SAJ/2014/002 from second reconciliation",
-                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .accounting_view .mv_line[data-lineid="6"]'
+                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .accounting_view .mv_line:contains("SAJ/2014/002")'
             },
             {
                 title:      "check it appeared in first reconciliation's matches list and select SAJ/2014/002 in second reconciliation",
-                waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(2) .accounting_view .mv_line[data-lineid="6"]',
-                waitFor:    '.oe_bank_statement_reconciliation_line:first-child .match .mv_line[data-lineid="6"]',
-                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .match .mv_line[data-lineid="6"]'
+                waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(2) .accounting_view .mv_line:contains("SAJ/2014/002")',
+                waitFor:    '.oe_bank_statement_reconciliation_line:first-child .mv_line:contains("SAJ/2014/002")',
+                element:    '.oe_bank_statement_reconciliation_line:nth-child(2) .mv_line:contains("SAJ/2014/002")'
             },
 
 
             // Make a partial reconciliation
             {
                 title:      "select SAJ/2014/001",
-                element:    '.oe_bank_statement_reconciliation_line:first-child .mv_line[data-lineid="3"]'
+                element:    '.oe_bank_statement_reconciliation_line:first-child .mv_line:contains("SAJ/2014/001")'
             },
             {
                 title:      "click on the partial reconciliation button",
-                element:    '.oe_bank_statement_reconciliation_line:first-child .mv_line[data-lineid="3"] .do_partial_reconcile_button'
+                element:    '.oe_bank_statement_reconciliation_line:first-child .mv_line:contains("SAJ/2014/001") .do_partial_reconcile_button'
             },
             {
                 title:      "click on the OK button",
@@ -94,6 +94,10 @@
                 element:    '.ui-autocomplete .ui-menu-item:contains("Best Designers")'
             },
             {
+                title:      "select SAJ/2014/002",
+                element:    '.oe_bank_statement_reconciliation_line:first-child .mv_line:contains("SAJ/2014/002")'
+            },
+            {
                 title:      "click on the OK button",
                 element:    '.oe_bank_statement_reconciliation_line:first-child .button_ok.oe_highlight'
             },
@@ -119,7 +123,7 @@
             {
                 title:      "select SAJ/2014/003",
                 waitNot:    '.oe_bank_statement_reconciliation_line:nth-child(2)', // wait for the reconciliation to be processed
-                element:    '.oe_bank_statement_reconciliation_line:first-child .mv_line[data-lineid="9"]'
+                element:    '.oe_bank_statement_reconciliation_line:first-child .mv_line:contains("SAJ/2014/003")'
             },
             {
                 title:      "click on the Keep Open button",
