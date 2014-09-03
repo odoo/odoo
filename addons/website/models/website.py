@@ -196,8 +196,8 @@ class website(osv.osv):
         except ValueError:
             # new page
             _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
-            current = self.get_current_website(cr, uid, context=context)
-            page_id = view.copy(cr, uid, template_id, {'website_id': current.id, 'key': 'website.%s' % page_name}, context=context)
+            website_id = context.get('website_id')
+            page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': 'website.%s' % page_name}, context=context)
             page = view.browse(cr, uid, page_id, context=context)
             #sig-ajout
             page.write({
@@ -233,19 +233,10 @@ class website(osv.osv):
 
     #sig-ajout
     def get_current_website(self, cr, uid, context=None):
-        #from pudb import set_trace; set_trace()
-        ids=self.search(cr, uid, [], context=context)
-        url = request.httprequest.url
-        
-        websites = self.browse(cr, uid, ids, context=context)
-        website = websites[0]
-        for web in websites:
-            if web.name in url:
-                website = web
-                break
-
+        domain_name=request.httprequest.host.split(":")[0].lower()
+        ids=self.search(cr, uid, [('name', '=', domain_name)], context=context)
+        website = self.browse(cr, uid, ids and ids[0] or 1, context=context)
         request.context['website_id'] = website.id
-
         return website
 
     def is_publisher(self, cr, uid, ids, context=None):
@@ -259,7 +250,6 @@ class website(osv.osv):
 
     #sig-ajout
     def get_template(self, cr, uid, ids, template, context=None):
-        #from pudb import set_trace; set_trace()
         if isinstance(template, (int, long)):
             view_id = template
 

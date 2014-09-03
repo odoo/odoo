@@ -145,7 +145,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         if add_menu:
             model, id  = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, 'website', 'main_menu')
             #sig-ajout
-            current = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
+            current = request.website
             new_menu_id = current.menu_id.id
             request.registry['website.menu'].create(request.cr, request.uid, {
                     'name': path,
