@@ -48,8 +48,6 @@ def py2exe_options():
         import py2exe
         return {
             'console': [
-                {'script': 'odoo.py'},
-                {'script': 'openerp-gevent'},
                 {'script': 'openerp-server', 'icon_resources': [
                     (1, join('setup', 'win32', 'static', 'pixmaps', 'openerp-icon.ico'))
                 ]},
@@ -64,7 +62,6 @@ def py2exe_options():
                         'commands',
                         'dateutil',
                         'decimal',
-                        'decorator',
                         'docutils',
                         'email',
                         'encodings',
@@ -83,10 +80,8 @@ def py2exe_options():
                         'pychart',
                         'pydot',
                         'pyparsing',
-                        'pyPdf',
                         'pytz',
                         'reportlab',
-                        'requests',
                         'select',
                         'simplejson',
                         'smtplib',
@@ -117,14 +112,13 @@ setup(
     author_email=author_email,
     classifiers=filter(None, classifiers.split('\n')),
     license=license,
-    scripts=['openerp-server', 'openerp-gevent', 'odoo.py'],
+    scripts=['openerp-server'],
     packages=find_packages(),
     package_dir={'%s' % lib_name: 'openerp'},
     include_package_data=True,
     dependency_links=['http://download.gna.org/pychart/'],
     install_requires=[
         'babel >= 1.0',
-        'decorator',
         'docutils',
         'feedparser',
         'gevent',
@@ -132,7 +126,6 @@ setup(
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'mako',
         'mock',
-        'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
         'psycogreen',
@@ -140,7 +133,6 @@ setup(
         'pychart',  # not on pypi, use: pip install http://download.gna.org/pychart/PyChart-1.39.tar.gz
         'pydot',
         'pyparsing < 2',
-        'pypdf',
         'pyserial',
         'python-dateutil',
         'python-ldap',  # optional
@@ -150,7 +142,6 @@ setup(
         'pyyaml',
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
-        'requests',
         'simplejson',
         'unittest2',
         'vatnumber',

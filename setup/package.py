@@ -25,12 +25,12 @@ import os
 import pexpect
 import shutil
 import signal
+import subprocess
 import time
 import xmlrpclib
 from contextlib import contextmanager
 from glob import glob
 from os.path import abspath, dirname, join
-from subprocess import check_output
 from tempfile import NamedTemporaryFile
 
 
@@ -84,7 +84,7 @@ def publish(o, releases):
         release_extension = PUBLISH_DIRS[extension][1] if isinstance(PUBLISH_DIRS[extension], list) else extension
         release_dir = PUBLISH_DIRS[extension][0] if isinstance(PUBLISH_DIRS[extension], list) else PUBLISH_DIRS[extension]
 
-        release_filename = 'odoo_%s-%s.%s' % (version, timestamp, release_extension)
+        release_filename = 'openerp_%s-%s.%s' % (version, timestamp, release_extension)
         release_path = join(o.pub, release_dir, release_filename)
 
         system('mkdir -p %s' % join(o.pub, release_dir))
@@ -110,7 +110,7 @@ class OdooDocker(object):
         self.log_file = NamedTemporaryFile(mode='w+b', prefix="bash", suffix=".txt", delete=False)
         self.port = 8069  # TODO sle: reliable way to get a free port?
         self.prompt_re = '(\r\nroot@|bash-).*# '
-        self.timeout = 600
+        self.timeout = 1000
 
     def system(self, command):
         self.docker.sendline(command)
@@ -127,7 +127,7 @@ class OdooDocker(object):
         )
         time.sleep(2)  # let the bash start
         self.docker.logfile_read = self.log_file
-        self.id = check_output('docker ps -l -q', shell=True)
+        self.id = subprocess.Popen('docker ps -l -q', shell=True, stdout=subprocess.PIPE).communicate()[0]
 
     def end(self):
         try:
@@ -234,80 +234,84 @@ def _prepare_build_dir(o):
         shutil.move(i, join(o.build_dir, 'openerp/addons'))
 
 def build_tgz(o):
-    system(['python2', 'setup.py', '--quiet', 'sdist'], o.build_dir)
-    system(['cp', glob('%s/dist/openerp-*.tar.gz' % o.build_dir)[0], '%s/odoo.tar.gz' % o.build_dir])
+    system(['python2.6', 'setup.py', 'sdist'], o.build_dir)
+    system(['cp', glob('%s/dist/openerp-*.tar.gz' % o.build_dir)[0], '%s/openerp.tar.gz' % o.build_dir])
 
 def build_deb(o):
     system(['dpkg-buildpackage', '-rfakeroot', '-uc', '-us'], o.build_dir)
-    system(['cp', glob('%s/../openerp_*.deb' % o.build_dir)[0], '%s/odoo.deb' % o.build_dir])
-    system(['cp', glob('%s/../openerp_*.dsc' % o.build_dir)[0], '%s/odoo.dsc' % o.build_dir])
-    system(['cp', glob('%s/../openerp_*_amd64.changes' % o.build_dir)[0], '%s/odoo_amd64.changes' % o.build_dir])
-    system(['cp', glob('%s/../openerp_*.tar.gz' % o.build_dir)[0], '%s/odoo.deb.tar.gz' % o.build_dir])
+    system(['cp', glob('%s/../openerp_*.deb' % o.build_dir)[0], '%s/openerp.deb' % o.build_dir])
+    system(['cp', glob('%s/../openerp_*.dsc' % o.build_dir)[0], '%s/openerp.dsc' % o.build_dir])
+    system(['cp', glob('%s/../openerp_*_amd64.changes' % o.build_dir)[0], '%s/openerp_amd64.changes' % o.build_dir])
+    system(['cp', glob('%s/../openerp_*.tar.gz' % o.build_dir)[0], '%s/openerp.deb.tar.gz' % o.build_dir])
 
 def build_rpm(o):
-    system(['python2', 'setup.py', '--quiet', 'bdist_rpm'], o.build_dir)
-    system(['cp', glob('%s/dist/openerp-*.noarch.rpm' % o.build_dir)[0], '%s/odoo.noarch.rpm' % o.build_dir])
-    system(['cp', glob('%s/dist/openerp-*.src.rpm' % o.build_dir)[0], '%s/odoo.src.rpm' % o.build_dir])
+    # echo "%_unpackaged_files_terminate_build   0" >> /etc/rpm/macros
+    system(['python2.6', 'setup.py', 'bdist_rpm'], o.build_dir)
+    system(['cp', glob('%s/dist/openerp-*.noarch.rpm' % o.build_dir)[0], '%s/openerp.noarch.rpm' % o.build_dir])
+    system(['cp', glob('%s/dist/openerp-*.src.rpm' % o.build_dir)[0], '%s/openerp.src.rpm' % o.build_dir])
 
 def build_exe(o):
     KVMWinBuildExe(o, o.vm_winxp_image, o.vm_winxp_ssh_key, o.vm_winxp_login).start()
-    system(['cp', glob('%s/openerp*.exe' % o.build_dir)[0], '%s/odoo.exe' % o.build_dir])
+    system(['cp', glob('%s/openerp*.exe' % o.build_dir)[0], '%s/openerp.exe' % o.build_dir])
 
 #----------------------------------------------------------
 # Stage: testing
 #----------------------------------------------------------
 def test_tgz(o):
-    with docker('debian:stable', o.build_dir, o.pub) as wheezy:
-        wheezy.release = 'odoo.tar.gz'
-        wheezy.system('apt-get update -qq && apt-get upgrade -qq -y')
-        wheezy.system("apt-get install postgresql python-dev postgresql-server-dev-all python-pip build-essential libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev libssl-dev libjpeg-dev -y")
-        wheezy.system("service postgresql start")
-        wheezy.system('su postgres -s /bin/bash -c "pg_dropcluster --stop 9.1 main"')
-        wheezy.system('su postgres -s /bin/bash -c "pg_createcluster --start -e UTF-8 9.1 main"')
-        wheezy.system('pip install -r /opt/release/requirements.txt')
-        wheezy.system('/usr/local/bin/pip install /opt/release/%s' % wheezy.release)
-        wheezy.system("useradd --system --no-create-home openerp")
-        wheezy.system('su postgres -s /bin/bash -c "createuser -s openerp"')
-        wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
-        wheezy.system('mkdir /var/lib/openerp')
-        wheezy.system('chown openerp:openerp /var/lib/openerp')
-        wheezy.system('su openerp -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany -i base --stop-after-init"')
-        wheezy.system('su openerp -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany &"')
+    with docker('debian:squeeze', o.build_dir, o.pub) as squeeze:
+        squeeze.release = 'openerp.tar.gz'
+        squeeze.system('apt-get update -qq')
+        squeeze.system('apt-get install apt-utils')
+        squeeze.system('apt-get upgrade -qq -y')
+        squeeze.system("apt-get install libpq-dev postgresql python-dev python-setuptools python-reportlab postgresql-server-dev-all build-essential libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev libssl-dev libjpeg-dev -y")
+        squeeze.system("service postgresql start")
+        squeeze.system('su postgres -s /bin/bash -c "pg_dropcluster --stop 8.4 main"')
+        squeeze.system('su postgres -s /bin/bash -c "pg_createcluster --start -e UTF-8 8.4 main"')
+        squeeze.system('mv /opt/release/%s /root/openerp.tar.gz' % squeeze.release)
+        squeeze.system('cd /root && tar xzf openerp.tar.gz')
+        squeeze.system('cd openerp-7.0 && python setup.py install')
+        squeeze.system("cd && useradd --system --no-create-home openerp")
+        squeeze.system('su postgres -s /bin/bash -c "createuser -s openerp"')
+        squeeze.system('su postgres -s /bin/bash -c "createdb mycompany"')
+        squeeze.system('mkdir /var/lib/openerp')
+        squeeze.system('chown openerp:openerp /var/lib/openerp')
+        squeeze.system('su openerp -s /bin/bash -c "openerp-server --addons-path=/usr/local/lib/python2.6/dist-packages/openerp-7.0-py2.6.egg/openerp/addons/ -d mycompany -i base --stop-after-init"')
+        squeeze.system('su openerp -s /bin/bash -c "openerp-server --addons-path=/usr/local/lib/python2.6/dist-packages/openerp-7.0-py2.6.egg/openerp/addons/ -d mycompany &"')
 
 def test_deb(o):
-    with docker('debian:stable', o.build_dir, o.pub) as wheezy:
-        wheezy.release = 'odoo.deb'
-        wheezy.system('/usr/bin/apt-get update -qq && /usr/bin/apt-get upgrade -qq -y')
-        wheezy.system("apt-get install postgresql -y")
-        wheezy.system("service postgresql start")
-        wheezy.system('su postgres -s /bin/bash -c "pg_dropcluster --stop 9.1 main"')
-        wheezy.system('su postgres -s /bin/bash -c "pg_createcluster --start -e UTF-8 9.1 main"')
-        wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
-        wheezy.system('/usr/bin/dpkg -i /opt/release/%s' % wheezy.release)
-        wheezy.system('/usr/bin/apt-get install -f -y')
-        wheezy.system('su openerp -s /bin/bash -c "odoo.py -c /etc/openerp/openerp-server.conf -d mycompany -i base --stop-after-init"')
-        wheezy.system('su openerp -s /bin/bash -c "odoo.py -c /etc/openerp/openerp-server.conf -d mycompany &"')
+    with docker('debian:squeeze', o.build_dir, o.pub) as squeeze:
+        squeeze.release = 'openerp.deb'
+        squeeze.system('/usr/bin/apt-get update -qq && /usr/bin/apt-get upgrade -qq -y')
+        squeeze.system("apt-get install postgresql -y")
+        squeeze.system("service postgresql start")
+        squeeze.system('su postgres -s /bin/bash -c "pg_dropcluster --stop 8.4 main"')
+        squeeze.system('su postgres -s /bin/bash -c "pg_createcluster --start -e UTF-8 8.4 main"')
+        squeeze.system('su postgres -s /bin/bash -c "createdb mycompany"')
+        squeeze.system('dpkg -i /opt/release/%s' % squeeze.release)
+        squeeze.system('apt-get install -f -y')
+        squeeze.system('su openerp -s /bin/bash -c "openerp-server -c /etc/openerp/openerp-server.conf -d mycompany -i base --stop-after-init"')
+        squeeze.system('su openerp -s /bin/bash -c "openerp-server -c /etc/openerp/openerp-server.conf -d mycompany &"')
 
 def test_rpm(o):
-    with docker('centos:centos7', o.build_dir, o.pub) as centos7:
-        centos7.release = 'odoo.noarch.rpm'
-        centos7.system('rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm')
-        centos7.system('yum update -y && yum upgrade -y')
-        centos7.system('yum install python-pip gcc python-devel -y')
-        centos7.system('pip install pydot pyPdf vatnumber xlwt http://download.gna.org/pychart/PyChart-1.39.tar.gz')
-        centos7.system('yum install postgresql postgresql-server postgresql-libs postgresql-contrib postgresql-devel -y')
-        centos7.system('mkdir -p /var/lib/postgres/data')
-        centos7.system('chown -R postgres:postgres /var/lib/postgres/data')
-        centos7.system('chmod 0700 /var/lib/postgres/data')
-        centos7.system('su postgres -c "initdb -D /var/lib/postgres/data -E UTF-8"')
-        centos7.system('cp /usr/share/pgsql/postgresql.conf.sample /var/lib/postgres/data/postgresql.conf')
-        centos7.system('su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"')
-        centos7.system('su postgres -c "createdb mycompany"')
-        centos7.system('export PYTHONPATH=${PYTHONPATH}:/usr/local/lib/python2.7/dist-packages')
-        centos7.system('su postgres -c "createdb mycompany"')
-        centos7.system('yum install /opt/release/%s -y' % centos7.release)
-        centos7.system('su openerp -s /bin/bash -c "openerp-server -c /etc/openerp/openerp-server.conf -d mycompany -i base --stop-after-init"')
-        centos7.system('su openerp -s /bin/bash -c "openerp-server -c /etc/openerp/openerp-server.conf -d mycompany &"')
+    with docker('centos:centos6', o.build_dir, o.pub) as centos6:
+        centos6.release = 'openerp.noarch.rpm'
+        centos6.system('rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm')
+        centos6.system('yum update -y && yum upgrade -y')
+        centos6.system('yum install python-pip gcc python-devel -y')
+        centos6.system('pip install xlwt http://download.gna.org/pychart/PyChart-1.39.tar.gz')
+        centos6.system('yum install postgresql postgresql-server postgresql-libs postgresql-contrib postgresql-devel -y')
+        centos6.system('mkdir -p /var/lib/postgres/data')
+        centos6.system('chown -R postgres:postgres /var/lib/postgres/data')
+        centos6.system('chmod 0700 /var/lib/postgres/data')
+        centos6.system('su postgres -c "initdb -D /var/lib/postgres/data -E UTF-8"')
+        centos6.system('cp /usr/share/pgsql/postgresql.conf.sample /var/lib/postgres/data/postgresql.conf')
+        centos6.system('su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"')
+        centos6.system('sleep 5')
+        centos6.system('su postgres -c "createdb mycompany"')
+        centos6.system('export PYTHONPATH=${PYTHONPATH}:/usr/local/lib/python2.6/dist-packages')
+        centos6.system('yum install /opt/release/%s -y' % centos6.release)
+        centos6.system('su openerp -s /bin/bash -c "openerp-server -c /etc/openerp/openerp-server.conf -d mycompany -i base --stop-after-init"')
+        centos6.system('su openerp -s /bin/bash -c "openerp-server -c /etc/openerp/openerp-server.conf -d mycompany &"')
 
 def test_exe(o):
     KVMWinTestExe(o, o.vm_winxp_image, o.vm_winxp_ssh_key, o.vm_winxp_login).start()
@@ -323,14 +327,14 @@ def options():
     op.add_option("-b", "--build-dir", default=build_dir, help="build directory (%default)", metavar="DIR")
     op.add_option("-p", "--pub", default=None, help="pub directory (%default)", metavar="DIR")
     op.add_option("", "--no-testing", action="store_true", help="don't test the builded packages")
-    op.add_option("-v", "--version", default='8.0', help="version (%default)")
+    op.add_option("-v", "--version", default='7.0', help="version (%default)")
 
     op.add_option("", "--no-debian", action="store_true", help="don't build the debian package")
     op.add_option("", "--no-rpm", action="store_true", help="don't build the rpm package")
     op.add_option("", "--no-tarball", action="store_true", help="don't build the tarball")
     op.add_option("", "--no-windows", action="store_true", help="don't build the windows package")
 
-    # Windows VM
+    # Windows VM()
     op.add_option("", "--vm-winxp-image", default='/home/odoo/vm/winxp27/winxp27.vdi', help="%default")
     op.add_option("", "--vm-winxp-ssh-key", default='/home/odoo/vm/winxp27/id_rsa', help="%default")
     op.add_option("", "--vm-winxp-login", default='Naresh', help="Windows login (%default)")
@@ -355,7 +359,7 @@ def main():
             if not o.no_testing:
                 try:
                     test_tgz(o)
-                    publish(o, 'odoo.tar.gz')
+                    publish(o, 'openerp.tar.gz')
                 except Exception, e:
                     print("Won't publish the tgz release.\n Exception: %s" % str(e))
         if not o.no_debian:
@@ -363,7 +367,7 @@ def main():
             if not o.no_testing:
                 try:
                     test_deb(o)
-                    publish(o, ['odoo.deb', 'odoo.dsc', 'odoo_amd64.changes', 'odoo.deb.tar.gz'])
+                    publish(o, ['openerp.deb', 'openerp.dsc', 'openerp_amd64.changes', 'openerp.deb.tar.gz'])
                     system('dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz', join(o.pub, 'deb'))
                 except Exception, e:
                     print("Won't publish the deb release.\n Exception: %s" % str(e))
@@ -372,7 +376,7 @@ def main():
             if not o.no_testing:
                 try:
                     test_rpm(o)
-                    publish(o, ['odoo.noarch.rpm', 'odoo.src.rpm'])
+                    publish(o, ['openerp.noarch.rpm', 'openerp.src.rpm'])
                 except Exception, e:
                     print("Won't publish the rpm release.\n Exception: %s" % str(e))
         if not o.no_windows:
@@ -380,7 +384,7 @@ def main():
             if not o.no_testing:
                 try:
                     test_exe(o)
-                    publish(o, 'odoo.exe')
+                    publish(o, 'openerp.exe')
                 except Exception, e:
                     print("Won't publish the exe release.\n Exception: %s" % str(e))
     except:

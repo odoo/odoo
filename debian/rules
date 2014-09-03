@@ -3,3 +3,6 @@
 
 %:
 	dh  ${@}
+
+override_dh_installchangelogs:
+	dh_installchangelogs -X./history

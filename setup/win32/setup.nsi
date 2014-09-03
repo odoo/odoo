@@ -256,10 +256,10 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     nsExec::Exec '"$INSTDIR\service\win32_service.exe" -auto -install'
 
     # TODO: don't hardcode the service name
-    nsExec::Exec "net stop openerp-server-8.0"
+    nsExec::Exec "net stop openerp-server-7.0"
     sleep 2
 
-    nsExec::Exec "net start openerp-server-8.0"
+    nsExec::Exec "net start openerp-server-7.0"
     sleep 2
 
 SectionEnd
@@ -318,8 +318,8 @@ Section "Uninstall"
     ReadRegStr $0 HKLM "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     ExecWait '"$0" /S'
 
-    nsExec::Exec "net stop openerp-server-8.0"
-    nsExec::Exec "sc delete openerp-server-8.0"
+    nsExec::Exec "net stop openerp-server-7.0"
+    nsExec::Exec "sc delete openerp-server-7.0"
     sleep 2
 
     Rmdir /r "$INSTDIR\server"
