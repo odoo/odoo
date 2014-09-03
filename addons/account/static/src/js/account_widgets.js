@@ -14,7 +14,7 @@ openerp.account = function (instance) {
             this._super(parent);
             this.max_reconciliations_displayed = 10;
             this.statement_ids = context.context.statement_ids || context.context.statement_id;
-            if (! this.statement_ids instanceof Array) this.statement_ids = [this.statement_ids];
+            if (! (this.statement_ids instanceof Array)) this.statement_ids = [this.statement_ids];
             this.title = context.context.title || _t("Reconciliation");
             this.st_lines = [];
             this.last_displayed_reconciliation_index = undefined; // Flow control
