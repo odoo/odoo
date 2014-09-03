@@ -94,7 +94,8 @@
                             <page string="Registrations">
                                 <group>
                                     <group>
-                                        <field name="seats_min"/>
+                                        <field name="auto_confirm" invisible="1"/>
+                                        <field name="seats_min" attrs="{'invisible':[('auto_confirm','=', True)]}"/>
                                         <field name="seats_max"/>
                                         <label for="seats_reserved" string="Current Registrations" groups="base.group_user"/>
                                         <div groups="base.group_user">

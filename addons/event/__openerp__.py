@@ -53,10 +53,6 @@ Key Features
     'demo': [
         'event_demo.xml',
     ],
-    'test': [
-        'test/ui/event_users.yml',
-        'test/process/event_draft2done.yml'
-    ],
     'installable': True,
     'auto_install': False,
     'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg','images/events_kanban.jpeg'],

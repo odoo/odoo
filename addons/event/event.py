@@ -1,25 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
-import datetime
 import pytz
 
 from openerp import models, fields, api, _
@@ -151,6 +131,7 @@ class event_event(models.Model):
             ('done', 'Done')
         ], string='Status', default='draft', readonly=True, required=True, copy=False,
         help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
+    auto_confirm = fields.Boolean(string='Auto Confirmation Activated', compute='_compute_auto_confirm')
     email_registration_id = fields.Many2one(
         'email.template', string='Registration Confirmation Email',
         domain=[('model', '=', 'event.registration')],
@@ -177,6 +158,10 @@ class event_event(models.Model):
 
     is_subscribed = fields.Boolean(string='Subscribed',
         compute='_compute_subscribe')
+
+    @api.one
+    def _compute_auto_confirm(self):
+        self.auto_confirm = self.env['ir.values'].get_default('marketing.config.settings', 'auto_confirmation')
 
     @api.one
     @api.depends('registration_ids')
@@ -215,6 +200,13 @@ class event_event(models.Model):
         if self.date_end < self.date_begin:
             raise Warning(_('Closing Date cannot be set before Beginning Date.'))
 
+    @api.model
+    def create(self, vals):
+        res = super(event_event, self).create(vals)
+        if res.auto_confirm:
+            res.confirm_event()
+        return res
+
     @api.one
     def button_draft(self):
         self.state = 'draft'
@@ -225,7 +217,7 @@ class event_event(models.Model):
             if event_reg.state == 'done':
                 raise Warning(_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event."))
         self.registration_ids.write({'state': 'cancel'})
-        self.state = 'cancel'                
+        self.state = 'cancel'
 
     @api.one
     def button_done(self):
@@ -262,7 +254,8 @@ class event_event(models.Model):
             })
         else:
             regs.write({'nb_register': num_of_seats})
-        regs.sudo().confirm_registration()
+        if regs._check_auto_confirmation():
+            regs.sudo().confirm_registration()
 
     @api.one
     def unsubscribe_to_event(self):
@@ -333,8 +326,21 @@ class event_registration(models.Model):
     @api.constrains('event_id', 'state', 'nb_register')
     def _check_seats_limit(self):
         if self.event_id.seats_max and \
-            self.event_id.seats_available < (self.nb_register if self.state == 'draft' else 0):
-                raise Warning(_('No more available seats.'))
+                self.event_id.seats_available < (self.nb_register if self.state == 'draft' else 0):
+            raise Warning(_('Only %s seats available for this event') % self.event_id.seats_available if self.event_id.seats_available > 0 else _('No more seats available for this event.'))
+
+    @api.one
+    def _check_auto_confirmation(self):
+        if self.event_id and self.event_id.state == 'confirm' and self.event_id.auto_confirm and self.event_id.seats_available:
+            return True
+        return False
+
+    @api.model
+    def create(self, vals):
+        res = super(event_registration, self).create(vals)
+        if res._check_auto_confirmation():
+            res.sudo().confirm_registration()
+        return res
 
     @api.one
     def do_draft(self):
@@ -393,5 +399,3 @@ class event_registration(models.Model):
                 self.name = contact.name
                 self.email = contact.email
                 self.phone = contact.phone
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
