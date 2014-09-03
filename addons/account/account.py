@@ -55,6 +55,19 @@ def check_cycle(self, cr, uid, ids, context=None):
         level -= 1
     return True
 
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'income_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Gain Exchange Rate Account",
+            domain="[('type', '=', 'other')]",),
+        'expense_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Loss Exchange Rate Account",
+            domain="[('type', '=', 'other')]",),
+    }
+
 class account_payment_term(osv.osv):
     _name = "account.payment.term"
     _description = "Payment Term"
