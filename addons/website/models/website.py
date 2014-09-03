@@ -29,7 +29,7 @@ from openerp.tools import html_escape as escape
 from openerp.tools import ustr as ustr
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request
-from openerp.addons.base.ir.ir_qweb import QWebTemplateNotFound
+from werkzeug.exceptions import NotFound
 
 logger = logging.getLogger(__name__)
 
@@ -256,7 +256,7 @@ class website(osv.osv):
             website_id=request.context.get('website_id')
             view_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', key),'|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)
             if not view_id:
-                raise QWebTemplateNotFound("Template %r not found" % xmlid, template=template)
+                raise NotFound
         return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
