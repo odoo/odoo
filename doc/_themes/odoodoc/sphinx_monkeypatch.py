@@ -17,8 +17,7 @@ def patch():
         if toc is None:
             return None
 
-        if main_navbar:
-            navbarify(toc[0])
+        navbarify(toc[0], main_navbar=main_navbar)
         return toc
 
     @monkey(StandaloneHTMLBuilder)
@@ -26,7 +25,10 @@ def patch():
         """ _get_local_toctree generates a documentation toctree for the local
         document (?), called from handle_page
         """
-        return old_local(self, *args, main_navbar=True, **kwargs)
+        # so can call toctree(main_navbar=False)
+        d = {'main_navbar': True}
+        d.update(kwargs)
+        return old_local(self, *args, **d)
 
     # monkeypatch visit_table to remove border and add .table
     HTMLTranslator.visit_table = visit_table
@@ -35,25 +37,33 @@ def patch():
     # copy data- attributes straight from source to dest
     HTMLTranslator.starttag = starttag_data
 
-def navbarify(node):
+def navbarify(node, main_navbar=False):
     # add classes to toplevel
-    node['classes'].extend(['nav', 'navbar-nav', 'navbar-right'])
-    for list_item in node.children:
-        # bullet_list
-        #     list_item
-        #         compact_paragraph
-        #             reference
-        #         bullet_list
-        #             list_item
-        #                 compact_paragraph
-        #                     reference
-        list_item['classes'].append('dropdown')
-        # list_item.compact_paragraph.reference
-        link = list_item.children[0].children[0]
-        link['classes'].append('dropdown-toggle')
-        link.attributes['data-toggle'] = 'dropdown'
-        # list_item.bullet_list
-        list_item.children[1]['classes'].append('dropdown-menu')
+    if not main_navbar:
+        navify([node])
+    else:
+        node['classes'].extend(['nav', 'navbar-nav', 'navbar-right'])
+        for list_item in node.children:
+            # bullet_list
+            #     list_item
+            #         compact_paragraph
+            #             reference
+            #         bullet_list
+            #             list_item
+            #                 compact_paragraph
+            #                     reference
+            list_item['classes'].append('dropdown')
+            # list_item.compact_paragraph.reference
+            link = list_item.children[0].children[0]
+            link['classes'].append('dropdown-toggle')
+            link.attributes['data-toggle'] = 'dropdown'
+            # list_item.bullet_list
+            list_item.children[1]['classes'].append('dropdown-menu')
+def navify(nodes):
+    for node in nodes:
+        if node.tagname == 'bullet_list':
+            node['classes'].append('nav')
+        navify(node.children)
 
 def visit_table(self, node):
     """

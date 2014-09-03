@@ -6238,30 +6238,6 @@ body {
     width: 25%;
   }
 }
-.sphinxsidebarwrapper {
-  width: 100%;
-}
-@media (max-width: 767px) {
-  .sphinxsidebarwrapper {
-    display: none !important;
-  }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-  .sphinxsidebarwrapper {
-    display: none !important;
-  }
-}
-@media print {
-  .sphinxsidebarwrapper {
-    display: none !important;
-  }
-}
-.sphinxsidebarwrapper > .nav > li > a {
-  display: none !important;
-}
-.sphinxsidebarwrapper > .nav .nav .nav .nav {
-  display: none !important;
-}
 .btn-outline {
   color: #a24689;
   background-color: transparent;
@@ -6362,17 +6338,84 @@ body {
     padding-left: 20px;
   }
 }
-/* First level of nav */
+/* Side navigation visibility changes */
+.sphinxsidebarwrapper > .nav .nav {
+  display: none;
+}
+.sphinxsidebarwrapper > .nav li.active > .nav,
+.sphinxsidebarwrapper > .nav li.current > .nav {
+  display: block;
+}
+.sphinxsidebarwrapper > p {
+  margin: 5px 10px 10px;
+}
+.sphinxsidebarwrapper > p a {
+  font-size: 13px;
+}
+.sphinxsidebarwrapper > p a:hover {
+  text-decoration: none;
+}
+.sphinxsidebarwrapper > p a.github {
+  padding-left: 15px;
+  position: relative;
+}
+.sphinxsidebarwrapper > p a.github:before {
+  left: 0;
+  top: 1px;
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: url(github-link.png) left bottom / 13px no-repeat;
+}
+.sphinxsidebarwrapper > p a.github:hover:before {
+  background-position: left top;
+}
+/* Side navigation graphical styling */
+.sphinxsidebarwrapper {
+  width: 100%;
+  /* First level of nav */
+  /* All levels of nav */
+}
+@media (max-width: 767px) {
+  .sphinxsidebarwrapper {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .sphinxsidebarwrapper {
+    display: none !important;
+  }
+}
+@media print {
+  .sphinxsidebarwrapper {
+    display: none !important;
+  }
+}
 .sphinxsidebarwrapper > .nav {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-/* All levels of nav */
+.sphinxsidebarwrapper .nav > li > a {
+  font-size: 13px;
+  font-weight: bold;
+  padding-left: 20px;
+}
+.sphinxsidebarwrapper .nav .nav > li > a {
+  font-size: 12px;
+  padding-left: 25px;
+}
+.sphinxsidebarwrapper .nav .nav .nav > li > a {
+  font-weight: normal;
+  padding-left: 30px;
+}
+.sphinxsidebarwrapper .nav .nav .nav .nav > li > a {
+  font-size: 11px;
+  padding-left: 35px;
+}
 .sphinxsidebarwrapper .nav > li > a {
   display: block;
   padding: 4px 20px;
-  font-size: 13px;
-  font-weight: 500;
   color: #999;
 }
 .sphinxsidebarwrapper .nav > li > a:hover,
@@ -6383,6 +6426,9 @@ body {
   background-color: transparent;
   border-left: 1px solid #a24689;
 }
+.sphinxsidebarwrapper .nav > .current > a,
+.sphinxsidebarwrapper .nav > .current:hover > a,
+.sphinxsidebarwrapper .nav > .current:focus > a,
 .sphinxsidebarwrapper .nav > .active > a,
 .sphinxsidebarwrapper .nav > .active:hover > a,
 .sphinxsidebarwrapper .nav > .active:focus > a {
@@ -6392,18 +6438,24 @@ body {
   background-color: transparent;
   border-left: 2px solid #a24689;
 }
-/* Nav: second level (shown on .active) */
+.sphinxsidebarwrapper .nav .nav > li > a:hover,
+.sphinxsidebarwrapper .nav .nav > li > a:focus {
+  padding-left: 24px;
+}
+.sphinxsidebarwrapper .nav .nav > .current > a,
+.sphinxsidebarwrapper .nav .nav > .current:hover > a,
+.sphinxsidebarwrapper .nav .nav > .current:focus > a,
+.sphinxsidebarwrapper .nav .nav > .active > a,
+.sphinxsidebarwrapper .nav .nav > .active:hover > a,
+.sphinxsidebarwrapper .nav .nav > .active:focus > a {
+  padding-left: 23px;
+}
 .sphinxsidebarwrapper .nav .nav .nav {
-  display: none;
-  /* Hide by default, but at >768px, show it */
   padding-bottom: 10px;
 }
 .sphinxsidebarwrapper .nav .nav .nav > li > a {
   padding-top: 1px;
   padding-bottom: 1px;
-  padding-left: 30px;
-  font-size: 12px;
-  font-weight: normal;
 }
 .sphinxsidebarwrapper .nav .nav .nav > li > a:hover,
 .sphinxsidebarwrapper .nav .nav .nav > li > a:focus {
@@ -6413,7 +6465,16 @@ body {
 .sphinxsidebarwrapper .nav .nav .nav > .active:hover > a,
 .sphinxsidebarwrapper .nav .nav .nav > .active:focus > a {
   padding-left: 28px;
-  font-weight: 500;
+  font-weight: bold;
+}
+.sphinxsidebarwrapper .nav .nav .nav .nav > li > a:hover,
+.sphinxsidebarwrapper .nav .nav .nav .nav > li > a:focus {
+  padding-left: 34px;
+}
+.sphinxsidebarwrapper .nav .nav .nav .nav > .active > a,
+.sphinxsidebarwrapper .nav .nav .nav .nav > .active:hover > a,
+.sphinxsidebarwrapper .nav .nav .nav .nav > .active:focus > a {
+  padding-left: 33px;
 }
 /* Show and affix the side nav when space allows it */
 @media (min-width: 992px) {
@@ -6481,6 +6542,14 @@ body {
 }
 .headerlink {
   display: none;
+}
+.viewcode-link {
+  font-weight: normal;
+  float: right;
+  display: none;
+}
+dt:hover > a > .viewcode-link {
+  display: inline;
 }
 div.section > h1 {
   padding-bottom: 9px;

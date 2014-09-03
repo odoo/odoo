@@ -22,6 +22,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.linkcode',
     'odoodoc',
     'patchqueue'
 ]
@@ -161,4 +162,12 @@ html_sidebars = {
 intersphinx_mapping = {
     'python': ('https://docs.python.org/2/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/0.9/', None),
+}
+
+from odoodoc.github import linkcode_resolve, github_doc_link
+github_user = 'odoo'
+github_project = 'odoo'
+
+html_context = {
+    'github': github_doc_link
 }

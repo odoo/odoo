@@ -87,7 +87,16 @@
             </field>
         </record>
 
-
+        <record id="view_forum_post_doc_list" model="ir.ui.view">
+            <field name="name">forum.post.list.doc</field>
+            <field name="model">forum.post</field>
+            <field name="inherit_id" ref="website_forum.view_forum_post_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='forum_id']" position="after">
+                    <field name="documentation_toc_id"/>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>
