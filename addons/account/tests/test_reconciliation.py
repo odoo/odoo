@@ -24,8 +24,9 @@ class TestReconciliation(TransactionCase):
         self.bank_journal_usd_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "account", "bank_journal_usd")[1]
         self.account_usd_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "account", "usd_bnk")[1]
         
+        self.company_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "base", "main_company")[1]
         #set expense_currency_exchange_account_id and income_currency_exchange_account_id to a random account
-        self.registry("res.company").write(self.cr, self.uid, [0,1], {'expense_currency_exchange_account_id': self.account_rsa_id, 'income_currency_exchange_account_id':self.account_rsa_id})
+        self.registry("res.company").write(self.cr, self.uid, [self.company_id], {'expense_currency_exchange_account_id': self.account_rsa_id, 'income_currency_exchange_account_id':self.account_rsa_id})
 
     def test_balanced_customer_invoice(self):
         cr, uid = self.cr, self.uid
