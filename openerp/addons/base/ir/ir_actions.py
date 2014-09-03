@@ -26,7 +26,6 @@ import os
 import time
 import datetime
 import dateutil
-import random
 
 import openerp
 from openerp import SUPERUSER_ID
