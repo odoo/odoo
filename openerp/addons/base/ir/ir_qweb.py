@@ -1144,7 +1144,7 @@ class AssetsBundle(object):
         content = None
         domain = [('url', '=', '/web/%s/%s/%s' % (type, self.xmlid, self.version))]
         bundle = self.registry['ir.attachment'].search_read(self.cr, self.uid, domain, ['datas'], context=self.context)
-        if bundle:
+        if bundle and bundle[0]['datas']:
             content = bundle[0]['datas'].decode('base64')
         return content
 
