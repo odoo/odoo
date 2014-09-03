@@ -646,7 +646,6 @@ class website_sale(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         transaction_obj = request.registry.get('payment.transaction')
-        sale_order_obj = request.registry['sale.order']
         order = request.website.sale_get_order(context=context)
 
         if not order or not order.order_line or acquirer_id is None:
@@ -676,13 +675,11 @@ class website_sale(http.Controller):
             request.session['sale_transaction_id'] = tx_id
 
         # update quotation
-        sale_order_obj.write(
+        request.registry['sale.order'].write(
             cr, SUPERUSER_ID, [order.id], {
                 'payment_acquirer_id': acquirer_id,
                 'payment_tx_id': request.session['sale_transaction_id']
             }, context=context)
-        # confirm the quotation
-        sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         return tx_id
 
