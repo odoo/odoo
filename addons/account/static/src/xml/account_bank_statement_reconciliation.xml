@@ -128,8 +128,8 @@
             <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
             <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
             <td class="cell_label js_qlabel"><t t-esc="line.q_label"/></td>
-            <td class="cell_debit"><t t-if="line.debit !== 0"><t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t><t t-if="line.partial_reconcile" t-call="icon_undo_partial_reconciliation"></t><t t-esc="line.debit_str"/></t></td>
-            <td class="cell_credit"><t t-if="line.credit !== 0"><t t-if="line.propose_partial_reconcile"><t t-call="icon_do_partial_reconciliation" /></t><t t-if="line.partial_reconcile"><t t-call="icon_undo_partial_reconciliation" /></t><t t-esc="line.credit_str"/></t></td>
+            <td class="cell_debit"><t t-if="line.debit !== 0"><t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t><t t-if="line.partial_reconcile" t-call="icon_undo_partial_reconciliation"></t><t t-esc="line.amount_str"/></t></td>
+            <td class="cell_credit"><t t-if="line.credit !== 0"><t t-if="line.propose_partial_reconcile"><t t-call="icon_do_partial_reconciliation" /></t><t t-if="line.partial_reconcile"><t t-call="icon_undo_partial_reconciliation" /></t><t t-esc="line.amount_str"/></t></td>
             <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
         </tr>
     </t>
@@ -146,10 +146,7 @@
             <tr><td>Period</td><td><t t-esc="line.period_name"/></td></tr>
             <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
             <tr><td>Due Date</td><td><t t-esc="line.q_due_date"/></td></tr>
-            <tr><td>Amount</td>
-                <td><t t-if="line.debit !== 0" t-esc="line.debit_str"/><t t-if="line.credit !== 0" t-esc="line.credit_str"/>
-                    <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
-                </td></tr>
+            <tr><td>Amount</td><td><t t-esc="line.amount_str"/><t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td></tr>
         </table>
     </t>
 

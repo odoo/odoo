@@ -806,8 +806,6 @@ openerp.account = function (instance) {
             line.q_due_date = (line.date_maturity === false ? line.date : line.date_maturity);
             line.q_amount = (line.debit !== 0 ? "- "+line.q_debit : "") + (line.credit !== 0 ? line.q_credit : "");
             line.q_label = line.name;
-            line.debit_str = this.formatCurrency(line.debit, currency_id);
-            line.credit_str = this.formatCurrency(line.credit, currency_id);
             line.q_popover = QWeb.render("bank_statement_reconciliation_move_line_details", {line: line});
             if (line.has_no_partner)
                 line.q_label = line.partner_name + ': ' + line.q_label;
@@ -1335,10 +1333,10 @@ openerp.account = function (instance) {
             line.initial_amount = line.debit !== 0 ? line.debit : -1 * line.credit;
             if (balance < 0) {
                 line.debit += balance;
-                line.debit_str = self.formatCurrency(line.debit, self.st_line.currency_id);
+                line.amount_str = self.formatCurrency(line.debit, self.st_line.currency_id);
             } else {
                 line.credit -= balance;
-                line.credit_str = self.formatCurrency(line.credit, self.st_line.currency_id);
+                line.amount_str = self.formatCurrency(line.credit, self.st_line.currency_id);
             }
             line.propose_partial_reconcile = false;
             line.partial_reconcile = true;
@@ -1361,10 +1359,10 @@ openerp.account = function (instance) {
             var self = this;
             if (line.initial_amount > 0) {
                 line.debit = line.initial_amount;
-                line.debit_str = self.formatCurrency(line.debit, self.st_line.currency_id);
+                line.amount_str = self.formatCurrency(line.debit, self.st_line.currency_id);
             } else {
                 line.credit = -1 * line.initial_amount;
-                line.credit_str = self.formatCurrency(line.credit, self.st_line.currency_id);
+                line.amount_str = self.formatCurrency(line.credit, self.st_line.currency_id);
             }
             line.propose_partial_reconcile = true;
             line.partial_reconcile = false;
