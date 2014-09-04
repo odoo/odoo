@@ -21,6 +21,7 @@
 
 import logging
 import time
+from datetime import datetime
 
 from openerp import tools
 from openerp.osv import fields, osv
@@ -578,7 +579,11 @@ class pos_order(osv.osv):
             order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
 
             for payments in order['statement_ids']:
-                self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
+                payment_fields = self._payment_fields(cr, uid, payments[2], context=context)
+                original_date = datetime.strptime(payment_fields.get('payment_date'),tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                adjusted_date = fields.datetime.context_timestamp(cr, uid, original_date)
+                payment_fields['payment_date'] = adjusted_date.strftime('%Y-%m-%d %H:%M:%S')
+                self.add_payment(cr, uid, order_id, payment_fields, context=context)
 
             session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
             if session.sequence_number <= order['sequence_number']:
