@@ -49,7 +49,6 @@
 <t t-name="CrashManager.warning">
     <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
     <tr>
-        <td class="oe_dialog_icon"><img t-att-src='_s + "/web/static/src/img/warning.png"'/></td>
         <td>
             <p>
                 <t t-js="d">
@@ -1368,6 +1367,7 @@
     </div>
 </t>
 <t t-name="WidgetButton">
+    <span t-if="widget.pre_text"> <t t-esc="widget.pre_text"/> </span>
     <button type="button" t-att-class="widget.is_stat_button ? 'oe_stat_button btn btn-default' : 'oe_button oe_form_button ' + (widget.node.attrs.class ? widget.node.attrs.class : '')"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
@@ -1378,6 +1378,7 @@
         <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
         <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
     </button>
+    <span t-if="widget.post_text"> <t t-esc="widget.post_text"/> </span>
 </t>
 <t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
     <t t-jquery="div.oe_tooltip_string" t-operation="replace">

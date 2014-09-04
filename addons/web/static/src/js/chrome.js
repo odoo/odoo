@@ -125,14 +125,16 @@ instance.web.Dialog = instance.web.Widget.extend({
         var $customButons = this.$buttons.find('.oe_dialog_custom_buttons').empty();
         _.each(buttons, function(fn, text) {
             // buttons can be object or array
+            var pre_text  = fn.pre_text || "";
+            var post_text = fn.post_text || "";
             var oe_link_class = fn.oe_link_class;
             if (!_.isFunction(fn)) {
                 text = fn.text;
                 fn = fn.click;
             }
-            var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': oe_link_class} }}}));
+            var $but = $(QWeb.render('WidgetButton', { widget : { pre_text: pre_text, post_text: post_text, string: text, node: { attrs: {'class': oe_link_class} }}}));
             $customButons.append($but);
-            $but.on('click', function(ev) {
+            $but.filter('button').on('click', function(ev) {
                 fn.call(self.$el, ev);
             });
         });
@@ -151,7 +153,6 @@ instance.web.Dialog = instance.web.Widget.extend({
             delete(options.buttons);
         }
         this.renderElement();
-
         this.$dialog_box = $(QWeb.render('Dialog', options)).appendTo("body");
         this.$el.modal({
             'backdrop': false,
@@ -343,13 +344,14 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
             size: 'medium',
             title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
-                {text: _t("Ok"), click: function() { self.$el.parents('.modal').modal('hide');  self.destroy();}},
-                {text: error.data.arguments[2],
-                 oe_link_class: 'oe_link',
-                 click: function() {
-                    window.location.href='#action='+error.data.arguments[1];
-                    self.destroy();
-                }}
+                {text: error.data.arguments[2], 
+                    oe_link_class : 'oe_highlight',
+                    post_text : _t("or"),
+                    click: function() {
+                        window.location.href='#action='+error.data.arguments[1]
+                        self.destroy();
+                    }},
+                {text: _t("Cancel"), oe_link_class: 'oe_link', click: function() { self.$el.parents('.modal').modal('hide');  self.destroy();}}
             ],
         }, QWeb.render('CrashManager.warning', {error: error})).open();
     }
