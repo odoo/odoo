@@ -1,7 +1,4 @@
-import re
 from openerp import models, fields, api, _
-
-URL_REGEX = r'https?://[^\s<>"]+|www\.[^\s<>"]+'
 
 class MassMailingCampaign(models.Model):
     _name = 'mail.mass_mailing.campaign'
@@ -29,21 +26,29 @@ class MassMailingCampaign(models.Model):
         return super(MassMailingCampaign, self).create(vals)
 
 class MassMailing(models.Model):
-    _inherit = ['mail.mass_mailing']
+    _name = 'mail.mass_mailing'
+    _inherit = ['mail.mass_mailing', 'crm.tracking.mixin']
 
     @api.model
     def add_mail_and_utm_stuff(self, url):
         campaign = self.mass_mailing_campaign_id
         append =  '?' if url.find('?') == -1 else '&'
-        url = "%s%sutm_campain=%s&utm_source=%s&utm_medium=%s" % (url, append, campaign.name, campaign.source_id.name, campaign.medium_id.name)
+        url = "%s%sutm_campain=%s&utm_source=%s&utm_medium=%s" % (url, append, campaign.campaign_id.name, campaign.source_id.name, campaign.medium_id.name)
         return url
+
+    @api.onchange('mass_mailing_campaign_id')
+    def _onchange_mass_mailing_campaign_id(self):
+        if self.mass_mailing_campaign_id:
+            self.campaign_id = self.mass_mailing_campaign_id.campaign_id
+            self.medium_id = self.mass_mailing_campaign_id.medium_id
+            self.source_id = self.mass_mailing_campaign_id.source_id
 
     @api.multi
     def convert_link(self, body):
-        urls = re.findall(URL_REGEX, body)
-        for long_url in urls:
-            if self.mass_mailing_campaign_id:
-                long_url_with_utm = self.add_mail_and_utm_stuff(long_url)
-                body = body.replace(long_url, long_url_with_utm)
+        if body:
+            for long_url in self.find_urls(body):
+                if self.mass_mailing_campaign_id:
+                    long_url_with_utm = self.add_mail_and_utm_stuff(long_url)
+                    body = body.replace(long_url, long_url_with_utm)
         return super(MassMailing, self).convert_link(body)
 

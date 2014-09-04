@@ -657,13 +657,16 @@ class MassMailing(osv.Model):
             self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True
 
+    def find_urls(self, cr, uid, body, context=None):
+        return re.findall(URL_REGEX, body)
+
     def convert_link(self, cr, uid, ids, body, context=None):
         website_alias = self.pool['website.alias']
-        urls = re.findall(URL_REGEX, body)
-        for long_url in urls:
-            shorten_url = website_alias.create_shorten_url(cr, uid, long_url, context=context)
-            if shorten_url:
-                body = body.replace(long_url, shorten_url)
+        if body:
+            for long_url in self.find_urls(cr, uid, body, context=context):
+                shorten_url = website_alias.create_shorten_url(cr, uid, long_url, context=context)
+                if shorten_url:
+                    body = body.replace(long_url, shorten_url)
         return body
 
 class MailMail(models.Model):
@@ -672,8 +675,7 @@ class MailMail(models.Model):
     @api.model
     def send_get_mail_body(self, mail, partner=None):
         """Override to add Statistic_id in shorted urls """
-        ''' JSH Note: --- Test-Required ---Desired result for mails not send by mass_mailing should be unchanged.'''
-        if mail.mailing_id:
+        if mail.mailing_id and mail.body_html:
             urls = re.findall(URL_REGEX, mail.body_html)
             for url in urls:
                 mail.body_html = mail.body_html.replace(url, url + '/m/' + str(mail.statistics_ids.id))
@@ -681,7 +683,6 @@ class MailMail(models.Model):
             return body
         else:
             return mail.body_html
-
 
 class website_alias_click(models.Model):
     _inherit = "website.alias.click"

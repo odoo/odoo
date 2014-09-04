@@ -50,7 +50,7 @@ class website_alias(models.Model):
         return urljoin(base_url, '/r/%(code)s' % {'code': self.create({'url':url}).code,})
 
     @api.model
-    def get_url_from_code(self, code, ip, country_code, stat_id=False):
+    def get_url_from_code(self, code, ip, country_code, stat_id=False, context=None):
         record = self.sudo().search_read([('code', '=', code)], ['url'])
         website_alias_click = self.env['website.alias.click']
         again = website_alias_click.sudo().search_read([('alias_id', '=', record[0]['id']), ('ip', '=', ip)], ['id'])
@@ -59,11 +59,11 @@ class website_alias(models.Model):
             if not again:
                 country_id = self.env['res.country'].sudo().search([('code', '=', country_code)])
                 vals = {
-                        'alias_id':rec.get('id'),
-                        'create_date':datetime.datetime.now().date(),
-                        'ip':ip,
-                        'country_id': country_id and country_id[0] or False,
-                        'mail_stat_id': stat_id
+                    'alias_id':rec.get('id'),
+                    'create_date':datetime.datetime.now().date(),
+                    'ip':ip,
+                    'country_id': country_id and country_id[0] or False,
+                    'mail_stat_id': stat_id
                 }
                 website_alias_click.sudo().create(vals)
             return rec.get('url')

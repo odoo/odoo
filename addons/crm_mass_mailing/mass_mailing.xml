@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_tracking_mass_mailing_form">
+            <field name="name">mail.mass_mailing.inherit.form</field>
+            <field name="model">mail.mass_mailing</field>
+            <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@string='Options']" position="after">
+                    <page string="Tracking">
+                        <group>
+                            <field name="campaign_id" />
+                            <field name="medium_id" />
+                            <field name="source_id" />
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_tracking_mass_mailing_form">
+            <field name="name">mail.mass_mailing.campaign.inherit.form</field>
+            <field name="model">mail.mass_mailing.campaign</field>
+            <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_campaign_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/field[@name='mass_mailing_ids']" position="after">
+                    <strong>Tracking</strong>
+                    <group>
+                        <field name="campaign_id" />
+                        <field name="medium_id" />
+                        <field name="source_id" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
+
