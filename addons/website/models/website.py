@@ -200,7 +200,8 @@ class website(osv.osv):
             page.write({
                 'arch': page.arch.replace(template, page_xmlid),
                 'name': page_name,
-                'page': ispage})
+                'page': ispage,
+                'key': template_module+'.'+page_name})
             imd.create(cr, uid, {
                 'name': page_name,
                 'module': template_module,
