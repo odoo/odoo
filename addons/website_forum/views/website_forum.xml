@@ -963,10 +963,10 @@
 
         <ul class="nav nav-tabs">
             <li class="active">
-                <a href="#questions" data-toggle="tab"><t t-esc="len(questions)"/> Questions</a>
+                <a href="#questions" data-toggle="tab"><t t-esc="count_questions"/> Questions</a>
             </li>
             <li>
-                <a href="#answers" data-toggle="tab"><t t-esc="len(answers)"/> Answers</a>
+                <a href="#answers" data-toggle="tab"><t t-esc="count_answers"/> Answers</a>
             </li>
             <li t-if="uid == user.id">
                 <a href="#favourite_question" data-toggle="tab"><t t-esc="len(favourite)"/> Favourite Questions</a>
@@ -1000,20 +1000,20 @@
             <div class="tab-pane" id="badges">
                 <t t-call="website_forum.user_badges"/>
             </div>
-            <div class="tab-pane" id="favourite_question">
+            <div class="tab-pane" id="favourite_question" t-if="uid == user.id">
                 <div t-foreach="favourite" t-as="question">
                     <t t-call="website_forum.display_post"/>
                 </div>
             </div>
-            <div class="tab-pane" id="followed_question">
+            <div class="tab-pane" id="followed_question" t-if="uid == user.id">
                 <div t-foreach="followed" t-as="question" class="mb16">
                     <t t-call="website_forum.display_post"/>
                 </div>
             </div>
-            <div class="tab-pane" id="votes">
+            <div class="tab-pane" id="votes" t-if="uid == user.id">
                 <t t-call="website_forum.user_votes"/>
             </div>
-            <div class="tab-pane" id="activity">
+            <div class="tab-pane" id="activity" t-if="uid == user.id">
                 <ul class="list-unstyled">
                     <li t-foreach="activities" t-as="activity">
                         <span t-field="activity.date" t-field-options='{"format": "short"}'/>

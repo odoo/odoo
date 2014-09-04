@@ -663,25 +663,19 @@ class account_bank_statement_line(osv.osv):
                     'has_no_partner': not bool(st_line.partner_id.id),
                 }
                 st_line_currency = st_line.currency_id or statement_currency
-                if st_line.currency_id and line.currency_id and line.currency_id.id == st_line.currency_id.id:
-                    if line.amount_residual_currency < 0:
-                        ret_line['debit'] = 0
-                        ret_line['credit'] = -line.amount_residual_currency
-                    else:
-                        ret_line['debit'] = line.amount_residual_currency if line.credit != 0 else 0
-                        ret_line['credit'] = line.amount_residual_currency if line.debit != 0 else 0
+                line_currency = line.currency_id or company_currency
+                if line_currency == st_line_currency and line_currency != company_currency:
+                    ret_line['debit'] = line.credit > 0 and -line.amount_residual_currency or 0.0
+                    ret_line['credit'] = line.debit > 0 and line.amount_residual_currency or 0.0
                     ret_line['amount_currency_str'] = rml_parser.formatLang(line.amount_residual, currency_obj=company_currency)
                 else:
-                    if line.amount_residual < 0:
-                        ret_line['debit'] = 0
-                        ret_line['credit'] = -line.amount_residual
-                    else:
-                        ret_line['debit'] = line.amount_residual if line.credit != 0 else 0
-                        ret_line['credit'] = line.amount_residual if line.debit != 0 else 0
-                    ctx = context.copy()
-                    ctx.update({'date': st_line.date})
-                    ret_line['debit'] = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, ret_line['debit'], context=ctx)
-                    ret_line['credit'] = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, ret_line['credit'], context=ctx)
+                    ret_line['debit'] = line.credit > 0 and -line.amount_residual or 0.0
+                    ret_line['credit'] = line.debit > 0 and line.amount_residual or 0.0
+                    if st_line_currency != company_currency:
+                        ctx = context.copy()
+                        ctx.update({'date': st_line.date})
+                        ret_line['debit'] = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, ret_line['debit'], context=ctx)
+                        ret_line['credit'] = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, ret_line['credit'], context=ctx)
                 ret_line['debit_str'] = rml_parser.formatLang(ret_line['debit'], currency_obj=st_line_currency)
                 ret_line['credit_str'] = rml_parser.formatLang(ret_line['credit'], currency_obj=st_line_currency)
                 ret.append(ret_line)
@@ -708,6 +702,7 @@ class account_bank_statement_line(osv.osv):
             'statement_id': st_line.statement_id.id,
             'debit': currency_diff < 0 and -currency_diff or 0,
             'credit': currency_diff > 0 and currency_diff or 0,
+            'amount_currency': 0.0,
             'date': st_line.date,
             'account_id': account_id
             }
@@ -759,7 +754,7 @@ class account_bank_statement_line(osv.osv):
         aml_obj.create(cr, uid, bank_st_move_vals, context=context)
         # Complete the dicts
         st_line_currency = st_line.currency_id or statement_currency
-        st_line_currency_rate = st_line.currency_id and statement_currency.id == company_currency.id and (st_line.amount_currency / st_line.amount) or False
+        st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or False
         to_create = []
         for mv_line_dict in mv_line_dicts:
             if mv_line_dict.get('is_tax_line'):
@@ -779,6 +774,9 @@ class account_bank_statement_line(osv.osv):
                 if st_line.currency_id and statement_currency.id == company_currency.id and st_line_currency_rate:
                     debit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['debit'] / st_line_currency_rate)
                     credit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['credit'] / st_line_currency_rate)
+                elif st_line.currency_id and st_line_currency_rate:
+                    debit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate, context=context)
+                    credit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['credit'] / st_line_currency_rate, context=context)
                 else:
                     debit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=context)
                     credit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=context)

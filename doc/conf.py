@@ -22,6 +22,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.linkcode',
     'odoodoc',
     'patchqueue'
 ]
@@ -118,6 +119,8 @@ html_static_path = ['_static']
 
 html_style = "odoo.css"
 
+html_add_permalinks = False
+
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
 #html_last_updated_fmt = '%b %d, %Y'
@@ -162,3 +165,21 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/2/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/0.9/', None),
 }
+
+github_user = 'odoo'
+github_project = 'odoo'
+
+def setup(app):
+    app.connect('html-page-context', canonicalize)
+    app.add_config_value('canonical_root', None, 'env')
+    app.add_config_value('canonical_branch', 'master', 'env')
+def canonicalize(app, pagename, templatename, context, doctree):
+    if not app.config.canonical_root:
+        return
+
+    context['canonical'] = "{canonical_url}{canonical_branch}/{canonical_page}".format(
+        canonical_url=app.config.canonical_root,
+        canonical_branch=app.config.canonical_branch,
+        canonical_page=(pagename + '.html').replace('index.html', '')
+                                           .replace('index/', ''),
+    )

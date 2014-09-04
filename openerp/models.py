@@ -246,6 +246,9 @@ class NewId(object):
 IdType = (int, long, basestring, NewId)
 
 
+# maximum number of prefetched records
+PREFETCH_MAX = 200
+
 # special columns automatically created by the ORM
 LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
@@ -3137,6 +3140,9 @@ class BaseModel(object):
         # fetch the records of this model without field_name in their cache
         records = self._in_cache_without(field)
 
+        if len(records) > PREFETCH_MAX:
+            records = records[:PREFETCH_MAX] | self
+
         # by default, simply fetch field
         fnames = {field.name}
 
@@ -3150,7 +3156,9 @@ class BaseModel(object):
             # here we can optimize: prefetch all classic and many2one fields
             fnames = set(fname
                 for fname, fcolumn in self._columns.iteritems()
-                if fcolumn._prefetch)
+                if fcolumn._prefetch
+                if not fcolumn.groups or self.user_has_groups(fcolumn.groups)
+            )
 
         # fetch records with read()
         assert self in records and field.name in fnames

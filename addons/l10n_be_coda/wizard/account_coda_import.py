@@ -308,7 +308,7 @@ class account_coda_import(osv.osv_memory):
                     if line.get('communication', ''):
                         note.append(_('Communication') + ': ' + line['communication'])
                     data = {
-                        'name': structured_com or line['communication'],
+                        'name': structured_com or (line.get('communication', '') != '' and line['communication'] or '/'),
                         'note': "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],

@@ -120,7 +120,7 @@ class _column(object):
 
         # prefetch only if self._classic_write, not self.groups, and not
         # self.deprecated
-        if not self._classic_write or self.groups or self.deprecated:
+        if not self._classic_write or self.deprecated:
             self._prefetch = False
 
     def to_field(self):
@@ -671,17 +671,27 @@ class one2many(_column):
             context = dict(context or {})
             context.update(self._context)
 
-        res = dict((id, []) for id in ids)
-
         comodel = obj.pool[self._obj].browse(cr, user, [], context)
         inverse = self._fields_id
         domain = self._domain(obj) if callable(self._domain) else self._domain
         domain = domain + [(inverse, 'in', ids)]
 
-        for record in comodel.search(domain, limit=self._limit):
-            # Note: record[inverse] can be a record or an integer!
-            assert int(record[inverse]) in res
-            res[int(record[inverse])].append(record.id)
+        records = comodel.search(domain, limit=self._limit)
+        record_ids = map(int, records)
+
+        res = dict((id, []) for id in ids)
+        if record_ids:
+            cr.execute('SELECT id, %(inverse)s \
+                       FROM %(rel)s \
+                       WHERE id in %%s ' % {
+                        'inverse': inverse,
+                        'rel': comodel._table,
+                    }, (tuple(record_ids),))
+            record_value_id = dict(cr.fetchall())
+            # match the result per id, preserving the order
+            for record in records:
+                key = record_value_id[record.id]
+                res[key].append(record.id)
 
         return res
 
