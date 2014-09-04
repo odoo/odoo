@@ -11,4 +11,4 @@ class Website_Url(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         (ip, country_code) = (request.httprequest.remote_addr, request.session.geoip.get('country_code'))
         return werkzeug.utils.redirect(request.registry['website.alias']
-                .get_url_from_code(cr, uid, code, ip, country_code, context=context))
+                .get_url_from_code(cr, uid, code, ip, country_code, context=context), 302)

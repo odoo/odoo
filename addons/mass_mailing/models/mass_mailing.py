@@ -657,6 +657,12 @@ class MassMailing(osv.Model):
             self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True
 
+    def add_mail_and_utm_stuff(self, cr, uid, url, context=None):
+        utm_object = self.mass_mailing_campaign_id if self.mass_mailing_campaign_id else self
+        append =  '?' if url.find('?') == -1 else '&'
+        url = "%s%sutm_campain=%s&utm_source=%s&utm_medium=%s" % (url, append, utm_object.campaign_id.name, utm_object.source_id.name, utm_object.medium_id.name)
+        return url
+
     def find_urls(self, cr, uid, body, context=None):
         return re.findall(URL_REGEX, body)
 
@@ -664,7 +670,8 @@ class MassMailing(osv.Model):
         website_alias = self.pool['website.alias']
         if body:
             for long_url in self.find_urls(cr, uid, body, context=context):
-                shorten_url = website_alias.create_shorten_url(cr, uid, long_url, context=context)
+                long_url_with_utm = add_mail_and_utm_stuff(cr, uid, long_url, context=context)
+                shorten_url = website_alias.create_shorten_url(cr, uid, long_url_with_utm, context=context)
                 if shorten_url:
                     body = body.replace(long_url, shorten_url)
         return body
