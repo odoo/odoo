@@ -381,7 +381,11 @@ class sale_order(osv.osv):
             'company_id': order.company_id.id,
             'user_id': order.user_id and order.user_id.id or False
         }
-
+        ir_values_obj = self.pool['ir.values']
+        user_define_default = ir_values_obj.get_defaults(cr, uid, 'account.invoice', 'type=out_invoice')
+        default_values = dict((v[1],v[2]) for v in user_define_default)
+        invoice_vals.update(default_values)
+        
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
         invoice_vals.update(self._inv_get(cr, uid, order, context=context))
         return invoice_vals

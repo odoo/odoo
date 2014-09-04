@@ -76,6 +76,10 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 'company_id': order.company_id and order.company_id.id or False,
                 'date_invoice': fields.date.today(),
             }
+            ir_values_obj = self.pool['ir.values']
+            user_define_default = ir_values_obj.get_defaults(cr, uid, 'account.invoice', 'type=out_invoice')
+            default_values = dict((v[1],v[2]) for v in user_define_default)
+            inv.update(default_values)
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
             return inv_id
 

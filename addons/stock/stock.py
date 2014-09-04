@@ -1132,6 +1132,10 @@ class stock_picking(osv.osv):
                 inv_type = self._get_invoice_type(picking)
 
             invoice_vals = self._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
+            ir_values_obj = self.pool['ir.values']
+            user_define_default = ir_values_obj.get_defaults(cr, uid, 'account.invoice', 'type=out_invoice')
+            default_values = dict((v[1],v[2]) for v in user_define_default)
+            invoice_vals.update(default_values)
             if group and partner.id in invoices_group:
                 invoice_id = invoices_group[partner.id]
                 invoice = invoice_obj.browse(cr, uid, invoice_id)
