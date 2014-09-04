@@ -2029,6 +2029,13 @@
     <a href="javascript:void(0)"><t t-esc="text"/></a>
 </t>
 <t t-name="StatInfo">
-    <strong><t t-esc="value"/></strong><br/><t t-esc="text"/></t>
+    <strong><t t-esc="value"/></strong><br/><t t-esc="text"/>
+</t>
+<button t-name="toggle_button" type="button"
+    t-att-title="widget.string"
+    style="box-shadow: none; white-space:nowrap;">
+    <img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
+    t-att-alt="widget.string"/>
+</button>
 
 </templates>
