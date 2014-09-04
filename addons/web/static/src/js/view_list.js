@@ -2155,7 +2155,8 @@ instance.web.list.columns = new instance.web.Registry({
     'button': 'instance.web.list.Button',
     'field.many2onebutton': 'instance.web.list.Many2OneButton',
     'field.reference': 'instance.web.list.Reference',
-    'field.many2many': 'instance.web.list.Many2Many'
+    'field.many2many': 'instance.web.list.Many2Many',
+    'button.toggle_button': 'instance.web.list.toggle_button',
 });
 instance.web.list.columns.for_ = function (id, field, node) {
     var description = _.extend({tag: node.tag}, field, node.attrs);
@@ -2394,5 +2395,18 @@ instance.web.list.Reference = instance.web.list.Column.extend({
         return this._super(row_data, options);
     }
 });
+instance.web.list.toggle_button = instance.web.list.Column.extend({
+    format: function (row_data, options) {
+        this._super(row_data, options);
+        var button_tips = JSON.parse(this.options);
+        var fieldname = this.field_name;
+        var has_value = row_data[fieldname] && !!row_data[fieldname].value;
+        this.icon = has_value ? 'gtk-yes' : 'gtk-normal';
+        this.string = has_value ? _t(button_tips ? button_tips['active']: ''): _t(button_tips ? button_tips['inactive']: '');
+        return QWeb.render('toggle_button', {
+            widget: this,
+            prefix: instance.session.prefix,
+        });
+    },
+});
 })();
-// vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
