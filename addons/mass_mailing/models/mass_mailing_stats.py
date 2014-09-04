@@ -109,9 +109,3 @@ class MailMailStats(osv.Model):
         self.write(cr, uid, stat_ids, {'bounced': fields.datetime.now()}, context=context)
         return stat_ids
 
-class website_alias_click(models.Model):
-    _inherit = "website.alias.click"
-
-    mail_stat_id = openerp.fields.Many2one('mail.mail.statistics', string='Mail Statistics',
-            help="It will link the statistics with the click data")
-

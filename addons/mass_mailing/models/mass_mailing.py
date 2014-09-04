@@ -4,13 +4,17 @@ from datetime import datetime
 from dateutil import relativedelta
 import json
 import random
+import re
+import openerp
 
 from openerp import tools
+from openerp import models, api, _
 from openerp.exceptions import Warning
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.osv import osv, fields
 
+URL_REGEX = r'https?://[^\s<>"]+|www\.[^\s<>"]+'
 
 class MassMailingCategory(osv.Model):
     """Model of categories of mass mailing, i.e. marketing, newsletter, ... """
@@ -636,7 +640,7 @@ class MassMailing(osv.Model):
             comp_ctx = dict(context, active_ids=res_ids)
             composer_values = {
                 'author_id': author_id,
-                'body': mailing.body_html,
+                'body': self.convert_link(cr, uid, [mailing.id], mailing.body_html, context=context),
                 'subject': mailing.name,
                 'model': mailing.mailing_model,
                 'email_from': mailing.email_from,
@@ -652,3 +656,65 @@ class MassMailing(osv.Model):
             self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], context=comp_ctx)
             self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True
+
+    def convert_link(self,cr, uid, ids, body, context=None):
+        urls = re.findall(URL_REGEX, body)
+        website_alias = self.pool['website.alias']
+        for long_url in urls:
+            shorten_url = website_alias.create_shorten_url(cr, uid, long_url, context=context)
+            if shorten_url:
+                body = body.replace(long_url, shorten_url)
+        return body
+
+    '''JSH Note: Review from HMO to make it for new API or OLD one.'''
+    """@api.model
+    def add_mail_and_utm_stuff(self, url):
+        campaign = self.mass_mailing_campaign_id
+        append =  '?' if url.find('?') == -1 else '&'
+        url = "%s%sutm_campain=%s&utm_source=%s&utm_medium=%s" % (url, append, campaign.name, campaign.source_id.name, campaign.medium_id.name)
+        return url
+
+    @api.model
+    def convert_link(self, body):
+        urls = re.findall(URL_REGEX, body)
+        website_alias = self.env['website.alias']
+        for long_url in urls:
+            print("the self is : {}".format(self))
+            mass_mailing_campaign_id =  self.browse(cr, uid, id,
+            if self.mass_mailing_campaign_id:
+                print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \
+                        I am in if !!!")
+                long_url_with_utm = self.add_mail_and_utm_stuff(long_url)
+                shorten_url = website_alias.create_shorten_url(long_url_with_utm)
+            else:
+                print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55\
+                        I am in ELSE !")
+                shorten_url = website_alias.create_shorten_url(long_url)
+                print('shorten url {}'.format(shorten_url))
+            if shorten_url:
+                body = body.replace(long_url, shorten_url)
+        return body"""
+
+
+class MailMail(models.Model):
+    _inherit = ['mail.mail']
+
+    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+        """Override to add Statistic_id in shorted urls """
+        ''' JSH Note: --- Test-Required ---Desired result for mails not send by mass_mailing should be unchanged.'''
+        if mail.mailing_id:
+            urls = re.findall(URL_REGEX, mail.body_html)
+            for url in urls:
+                mail.body_html = mail.body_html.replace(url, url + '/m/' + str(mail.statistics_ids.id))
+            body = super(MailMail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
+            return body
+        else:
+            return mail.body_html
+
+
+class website_alias_click(models.Model):
+    _inherit = "website.alias.click"
+
+    mail_stat_id = openerp.fields.Many2one('mail.mail.statistics', string='Mail Statistics',
+        help="It will link the statistics with the click data")
+

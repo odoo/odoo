@@ -41,33 +41,10 @@ class MassMailing(models.Model):
     @api.model
     def convert_link(self, body):
         urls = re.findall(URL_REGEX, body)
-        website_alias = self.env['website.alias']
         for long_url in urls:
             if self.mass_mailing_campaign_id:
                 long_url_with_utm = self.add_mail_and_utm_stuff(long_url)
-                shorten_url = website_alias.create_shorten_url(long_url_with_utm)
-            else:
-                shorten_url = website_alias.create_shorten_url(long_url)
-            if shorten_url:
-                body = body.replace(long_url, shorten_url)
+                body = body.replace(long_url, long_url_with_utm)
         return body
 
-    @api.one
-    def send_mail(self):
-        for mailing in self:
-            self.body_html = self.convert_link(mailing.body_html)
-        return super(MassMailing, self).send_mail()
 
-class MailMail(models.Model):
-    _inherit = ['mail.mail']
-
-    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
-        """ Override to add Statistic_id in shorted urls """
-        if mail.mailing_id.mass_mailing_campaign_id:
-            urls = re.findall(URL_REGEX, mail.body_html)
-            for url in urls:
-                mail.body_html = mail.body_html.replace(url, url + '/m/' + str(mail.statistics_ids.id))
-            body = super(MailMail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
-            return body
-        else:
-            return mail.body_html
