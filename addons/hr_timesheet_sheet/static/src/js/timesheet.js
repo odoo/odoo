@@ -184,10 +184,15 @@ openerp.hr_timesheet_sheet = function(instance) {
             });
         },
         destroy_content: function() {
+            this.options = {}; //Otherwise when paging next record it will pass old count and old week
             if (this.dfm) {
                 this.dfm.destroy();
                 this.dfm = undefined;
             }
+        },
+        destroy: function () {
+            this._super();
+            this.active_widget.destroy();
         },
         is_valid_value: function(value){
             var split_value = value.split(":");
