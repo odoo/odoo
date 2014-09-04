@@ -218,6 +218,8 @@ class stock_partial_picking(osv.osv_memory):
         # We don't need to find which view is required, stock.picking does it.
         done = stock_picking.do_partial(
             cr, uid, [partial.picking_id.id], partial_data, context=context)
+        if done[partial.picking_id.id]['delivered_picking'] == partial.picking_id.id:
+            return {'type': 'ir.actions.act_window_close'}
         return {
             'type': 'ir.actions.act_window',
             'res_model': context.get('active_model', 'stock.picking'),
