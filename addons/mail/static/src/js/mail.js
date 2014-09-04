@@ -1278,6 +1278,7 @@ openerp.mail = function (session) {
         start: function () {
             this._super.apply(this, arguments);
             this.bind_events();
+            return $.when();
         },
 
         /* instantiate the compose message object and insert this on the DOM.

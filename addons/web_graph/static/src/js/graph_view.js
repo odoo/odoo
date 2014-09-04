@@ -31,6 +31,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
             get_domain: function () {},
             get_groupby: function () {},
         };
+
+        this.view_loaded = $.Deferred();
     },
 
     view_loading: function (fields_view_get) {
@@ -72,9 +74,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
         if (self.widget_config.measures.length === 0) {
             self.widget_config.measures.push('__count');
         }
+        this.view_loaded.resolve();
     },
 
     do_search: function (domain, context, group_by) {
+        var self = this;
+        this.view_loaded.done(function () {
+            self._do_search(domain, context, group_by);
+        });
+    },
+
+    _do_search: function (domain, context, group_by) {
         if (this.ignore_do_search) {
             this.ignore_do_search = false;
             return;

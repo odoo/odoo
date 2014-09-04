@@ -4143,14 +4143,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         /**
          * Returns the current active view if any.
          */
-        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
-            this.viewmanager.views[this.viewmanager.active_view] &&
-            this.viewmanager.views[this.viewmanager.active_view].controller) {
-            return {
-                type: this.viewmanager.active_view,
-                controller: this.viewmanager.views[this.viewmanager.active_view].controller
-            };
-        }
+        return (this.viewmanager && this.viewmanager.active_view);
     },
     set_value: function(value_) {
         value_ = value_ || [];
@@ -4242,12 +4235,12 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     save_any_view: function() {
         var view = this.get_active_view();
         if (view) {
-            if (this.viewmanager.active_view === "form") {
+            if (this.viewmanager.active_view.type === "form") {
                 if (view.controller.is_initialized.state() !== 'resolved') {
                     return $.when(false);
                 }
                 return $.when(view.controller.save());
-            } else if (this.viewmanager.active_view === "list") {
+            } else if (this.viewmanager.active_view.type === "list") {
                 return $.when(view.controller.ensure_saved());
             }
         }
@@ -4258,7 +4251,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         if (!view){
             return true;
         }
-        switch (this.viewmanager.active_view) {
+        switch (this.viewmanager.active_view.type) {
         case 'form':
             return _(view.controller.fields).chain()
                 .invoke('is_valid')
@@ -4275,7 +4268,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
     template: 'One2Many.viewmanager',
     init: function(parent, dataset, views, flags) {
         this._super(parent, dataset, views, _.extend({}, flags, {$sidebar: false}));
-        this.registry = this.registry.extend({
+        this.registry = instance.web.views.extend({
             list: 'instance.web.form.One2ManyListView',
             form: 'instance.web.form.One2ManyFormView',
             kanban: 'instance.web.form.One2ManyKanbanView',

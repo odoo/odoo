@@ -252,12 +252,12 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 self.fields_keys = _.unique(self.fields_keys.concat(grouping_fields));
             }
             var grouping = new instance.web.Model(self.dataset.model, context, domain).query(self.fields_keys).group_by(grouping_fields);
-            return self.alive($.when(grouping)).done(function(groups) {
+            return self.alive($.when(grouping)).then(function(groups) {
                 self.remove_no_result();
                 if (groups) {
-                    self.do_process_groups(groups);
+                    return self.do_process_groups(groups);
                 } else {
-                    self.do_process_dataset();
+                    return self.do_process_dataset();
                 }
             });
         });
@@ -266,12 +266,12 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         this.$el.find('table:first').show();
         this.$el.removeClass('oe_kanban_ungrouped').addClass('oe_kanban_grouped');
-        this.add_group_mutex.exec(function() {
+        return this.add_group_mutex.exec(function() {
             self.do_clear_groups();
             self.dataset.ids = [];
             if (!groups.length) {
                 self.no_result();
-                return false;
+                return $.when();
             }
             self.nb_records = 0;
             var remaining = groups.length - 1,
@@ -306,8 +306,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         this.$el.find('table:first').show();
         this.$el.removeClass('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
+        var def = $.Deferred();
         this.add_group_mutex.exec(function() {
-            var def = $.Deferred();
             self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).done(function(records) {
                 var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
@@ -326,8 +326,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             }).done(null, function() {
                 def.reject();
             });
-            return def;
         });
+        return def;
     },
     do_reload: function() {
         this.do_search(this.search_domain, this.search_context, this.search_group_by);
