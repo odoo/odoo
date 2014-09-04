@@ -276,12 +276,16 @@
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='main_grp']" position="inside">
-                    <label for="weight" string="Weight"/>
-                    <div>
-                        <field name="weight" class="oe_inline"/>
-                        <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
-                    </div>
-                    <field name="weight_net" groups="base.group_no_one" class="oe_inline"/>
+                    <group>
+                        <group col="4">
+                            <field name="weight"/>
+                            <field name="weight_uom_id" nolabel="1"/>
+                        </group>
+                        <group/>
+                        <group>
+                            <field name="weight_net" groups="base.group_no_one"/>
+                        </group>
+                    </group>
                 </xpath>
             </field>
         </record>
