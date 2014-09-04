@@ -657,7 +657,7 @@ class MassMailing(osv.Model):
             self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True
 
-    def convert_link(self,cr, uid, ids, body, context=None):
+    def convert_link(self, cr, uid, ids, body, context=None):
         urls = re.findall(URL_REGEX, body)
         website_alias = self.pool['website.alias']
         for long_url in urls:
@@ -679,18 +679,12 @@ class MassMailing(osv.Model):
         urls = re.findall(URL_REGEX, body)
         website_alias = self.env['website.alias']
         for long_url in urls:
-            print("the self is : {}".format(self))
             mass_mailing_campaign_id =  self.browse(cr, uid, id,
             if self.mass_mailing_campaign_id:
-                print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \
-                        I am in if !!!")
                 long_url_with_utm = self.add_mail_and_utm_stuff(long_url)
                 shorten_url = website_alias.create_shorten_url(long_url_with_utm)
             else:
-                print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55\
-                        I am in ELSE !")
                 shorten_url = website_alias.create_shorten_url(long_url)
-                print('shorten url {}'.format(shorten_url))
             if shorten_url:
                 body = body.replace(long_url, shorten_url)
         return body"""
