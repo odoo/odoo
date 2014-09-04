@@ -97,12 +97,11 @@ class stock_move(osv.osv):
     def _get_master_data(self, cr, uid, move, company, context=None):
         ''' returns a tuple (browse_record(res.partner), ID(res.users), ID(res.currency)'''
         currency = company.currency_id.id
-        if move.partner_id:
-            if move.partner_id.property_product_pricelist_purchase and move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal':
-                currency = move.partner_id.property_product_pricelist_purchase.currency_id.id
-            elif move.partner_id.property_product_pricelist and move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal':
-                currency = move.partner_id.property_product_pricelist.currency_id.id
-        return move.picking_id.partner_id, uid, currency
+        partner = move.partner_id or (move.picking_id and move.picking_id.partner_id) or False
+        if partner:
+            if partner.property_product_pricelist and move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal':
+                currency = partner.property_product_pricelist.currency_id.id
+        return partner, uid, currency
 
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
         return self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)

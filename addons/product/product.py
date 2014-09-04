@@ -1211,6 +1211,7 @@ class product_supplierinfo(osv.osv):
         for supplier in partner_pool.browse(cr, uid, supplier_ids, context=context):
             price = product_price
             # Compute price from Purchase pricelist of supplier
+            #FIXME: property_product_pricelist_purchase is defined in purchase
             pricelist_id = supplier.property_product_pricelist_purchase.id
             if pricelist_id:
                 price = pricelist_pool.price_get(cr, uid, [pricelist_id], product_id, product_qty, context=context).setdefault(pricelist_id, 0)

@@ -2016,23 +2016,10 @@ class stock_move(osv.osv):
 
     def attribute_price(self, cr, uid, move, context=None):
         """
-            Attribute price to move, important in multi-company
+            Attribute price to move, important in inter-company moves or receipts with only one partner
         """
-        if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' and not move.price_unit:
-            partner = move.partner_id or (move.picking_id and move.picking_id.partner_id)
-            price = False
-            # If partner given, search price in its purchase pricelist
-            if partner and partner.property_product_pricelist_purchase:
-                pricelist_obj = self.pool.get("product.pricelist")
-                pricelist = partner.property_product_pricelist.id
-                price = pricelist_obj.price_get(cr, uid, [pricelist],
-                                    move.product_id.id, move.product_uom_qty, partner, {
-                                                                                'uom': move.product_uom.id,
-                                                                                'date': move.date,
-                                                                                })[pricelist]
-            if not price:
-                price = move.product_id.standard_price
-            self.write(cr, uid, [move.id], {'price_unit': price})
+        price = move.product_id.standard_price
+        self.write(cr, uid, [move.id], {'price_unit': price})
 
 
     def action_confirm(self, cr, uid, ids, context=None):
