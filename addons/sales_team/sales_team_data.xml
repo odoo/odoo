@@ -4,7 +4,7 @@
         <record model="crm.case.section" id="section_sales_department">
             <field name="name">Direct Sales</field>
             <field name="code">DM</field>
-            <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
+            <field name="message_follower_ids" eval="[(4, ref('base.partner_root'))]"/>
         </record>
     </data>
 </openerp>

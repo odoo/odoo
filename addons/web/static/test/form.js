@@ -19,12 +19,12 @@ openerp.testing.section('compute_domain', {
         var web = {
             'section_id': {value: null},
             'user_id': {value: null},
-            'member_ids': {value: null}
+            'message_follower_ids': {value: null}
         };
 
         var domain = ['|', ['section_id', '=', 42],
                       '|', ['user_id','=',3],
-                           ['member_ids', 'in', [3]]];
+                           ['message_follower_ids', 'in', [4]]];
 
         ok(instance.web.form.compute_domain(domain, _.extend(
             {}, web, {'section_id': {value: 42}})));
@@ -32,7 +32,7 @@ openerp.testing.section('compute_domain', {
             {}, web, {'user_id': {value: 3}})));
 
         ok(instance.web.form.compute_domain(domain, _.extend(
-            {}, web, {'member_ids': {value: 3}})));
+            {}, web, {'message_follower_ids': {value: 4}})));
     });
     test("not", function (instance) {
         var fields = {

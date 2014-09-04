@@ -30,7 +30,7 @@
         <record model="crm.case.section" id="website.salesteam_website_sales">
             <field name="name">Website Sales</field>
             <field name="code">WS</field>
-            <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
+            <field name="message_follower_ids" eval="[(4, ref('base.partner_root'))]"/>
             <field name="use_quotations" eval="False"/>
         </record>
 

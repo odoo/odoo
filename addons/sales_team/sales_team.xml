@@ -41,7 +41,7 @@
                 <kanban class="oe_background_grey">
                     <field name="name"/>
                     <field name="user_id"/>
-                    <field name="member_ids"/>
+                    <field name="message_follower_ids"/>
                     <field name="note"/>
                     <field name="color"/>
                     <templates>
@@ -59,8 +59,8 @@
                                     <h4 class="text-center" name="name"><strong><field name="name"/></strong></h4>
                                     <div class="oe_clear"></div>
                                     <div class="oe_kanban_salesteams_avatars">
-                                        <t t-foreach="record.member_ids.raw_value.slice(0,10)" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                        <t t-foreach="record.message_follower_ids.raw_value.slice(0,10)" t-as="follower">
+                                            <img t-att-src="kanban_image('res.partner', 'image_small', follower)" t-att-data-follower_id="follower"/>
                                         </t>
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@
             <field name="model">crm.case.section</field>
             <field name="arch" type="xml">
                 <search string="Salesteams Search">
-                    <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
+                    <filter name="personal" string="My Salesteams" domain="['|', ('message_is_follower', '=', True), ('user_id', '=', uid)]"/>
                     <field name="name"/>
                     <field name="parent_id"/>
                     <field name="user_id"/>
@@ -135,25 +135,6 @@
                             </group>
                         </group>
                         <notebook colspan="4">
-                            <page string="Team Members">
-                                <field name="member_ids" widget="many2many_kanban">
-                                    <kanban quick_create="false" create="true">
-                                        <field name="name"/>
-                                        <templates>
-                                            <t t-name="kanban-box">
-                                                <div style="position: relative">
-                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                    <div class="oe_module_vignette">
-                                                        <div class="oe_module_desc">
-                                                            <field name="name"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </t>
-                                        </templates>
-                                    </kanban>
-                                </field>
-                            </page>
                             <page string="Notes">
                                 <field name="note"/>
                             </page>
