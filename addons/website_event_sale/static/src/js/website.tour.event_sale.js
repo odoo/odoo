@@ -29,8 +29,21 @@
                 element:   '.btn-primary:contains("Order Now")',
             },
             {
+                title:     "Check the cart",
+                element:   '#top_menu .my_cart_quantity:contains(5)'
+            },
+            {
+                title:     "Check if the cart have 2 order lines and add one VIP ticket",
+                waitFor:   "#cart_products:contains(Standard):contains(VIP)",
+                element:   "#cart_products tr:contains(VIP) .fa-plus",
+            },
+            {
+                title:     "Process Checkout",
+                waitFor:   '#top_menu .my_cart_quantity:contains(6)',
+                element:   '.btn-primary:contains("Process Checkout")'
+            },
+            {
                 title:     "Complete checkout",
-                waitFor:   '#top_menu .my_cart_quantity:contains(5)',
                 element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
                 autoComplete: function (tour) {
                     if ($("input[name='name']").val() === "")
