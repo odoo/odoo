@@ -568,7 +568,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
 
         this._super();
         var $sidebar = this.flags.sidebar ? this.$('.oe_view_manager_sidebar') : undefined,
-            $pager = this.$('.oe_view_manager_pager');
+            $pager = this.$('.oe-view-manager-pager');
 
         this.$breadcrumbs = this.$('.oe-view-title');
         this.$switch_buttons = this.$('.oe-view-manager-switch a');

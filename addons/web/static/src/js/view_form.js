@@ -425,7 +425,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 $el.removeAttr("disabled");
             });
         });
-        this.do_update_pager();
     },
     do_update_pager: function(hide_index) {
         this.$pager.toggle(this.dataset.ids.length > 1);

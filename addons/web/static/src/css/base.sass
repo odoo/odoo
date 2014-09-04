@@ -939,6 +939,10 @@ $sheet-padding: 16px
         overflow: hidden
         border-bottom: 1px solid black
         display: none
+        .oe-right-toolbar
+            float: right
+            > div
+                display: inline-block
         .row
             height: 45px
         .oe-view-title
@@ -952,7 +956,6 @@ $sheet-padding: 16px
             float: right
             padding-top: 5px
         .oe-view-manager-switch
-            float: right
             .oe-vm-switch-kanban:before
                 content: "\f009"
             .oe-vm-switch-list:before
@@ -969,7 +972,8 @@ $sheet-padding: 16px
             float: left
             > div
                 display: none
-
+        .oe_pager_value
+            display: inline-block            
     .oe_application 
         > div    
             > div
@@ -980,151 +984,8 @@ $sheet-padding: 16px
                     left: 0
                     right: 0
                     overflow: auto
-    .oe_view_manager
-        display: table
-        height: inherit
-        width: 100%
-        .oe_view_manager_view_kanban:not(:empty)
-            height: 100%
-        &[data-view-type=kanban]
-            .oe_view_manager_body
-                display: table-row
-
-        table.oe_view_manager_header
-            border-collapse: separate
-            width: 100%
-            table-layout: fixed
-            .oe_header_row
-                //min-height: 26px
-                //line-height: 26px
-                clear: both
-                text-shadow: 0 1px 1px white
-            .oe_header_row:last-child
-                td
-                    padding-top: 0
-            .oe_header_row:first-child
-                td
-                    padding-top: 8px
-            .oe_view_manager_sidebar
-                margin: 0px auto
-                text-align: center
-                .oe_dropdown_arrow:after
-                    opacity: 0.9
-            td
-                line-height: 26px
-            h2
-                font-size: 18px
-                margin: 0
-                float: left
-                line-height: 30px
-                a
-                    color: $link-color
-            .oe_dropdown_menu
-                line-height: normal
-            .oe_button_group
-                display: inline-block
-                border: 1px solid #ababab
-                @include radius(5px)
-                li
-                    float: left
-                    border-right: 1px solid #ababab
-                    &:last-child
-                        border: none
-                a
-                    color: #4c4c4c
-                    &:hover
-                        text-decoration: none
-                .active
-                    background: #999
-                    @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-                    a
-                        color: #fff
-                        text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-            .oe_view_manager_buttons
-                white-space: nowrap
         // }}}
-        // ViewManager.switches {{{
-        .oe_view_manager_switch
-            padding: 0
-            margin: 0 0 0 8px
-            li
-                margin: 0
-                width: 24px
-                height: 24px
-                line-height: 16px
-                padding: 0
-                text-align: center
-                list-style-type: none
-                a
-                    position: relative
-            .oe_vm_switch_list:after, .oe_vm_switch_tree:after
-                padding: 2px
-                content: "i"
-            .oe_vm_switch_form:after
-                content: "m"
-            .oe_vm_switch_graph:after
-                font-family: "mnmliconsRegular" !important
-                font-size: 21px
-                font-weight: 300 !important
-                content: "}"
-                top: -2px
-                position: relative
-            .oe_vm_switch_gantt:after
-                font-family: "mnmliconsRegular" !important
-                font-size: 21px
-                font-weight: 300 !important
-                content: "y"
-                top: -2px
-                position: relative
-            .oe_vm_switch_calendar:after
-                content: "P"
-            .oe_vm_switch_kanban:after
-                content: "k"
-            .oe_vm_switch_diagram:after
-                content: "f"
-        // }}}
-    // List pager {{{
-    .oe_list_pager
-        line-height: 26px
-    .oe_pager_value
-        float: left
-        margin-right: 8px
-    ul.oe_pager_group
-        padding: 0
-        margin: 0
-    .oe_pager_group
-        float: left
-        height: 24px
-        line-height: 24px
-        display: inline-block
-        border: 1px solid #ababab
-        cursor: pointer
-        @include radius(5px)
-        li
-            height: 24px
-            line-height: 24px
-            padding: 0
-            margin: 0
-            list-style-type: none
-            float: left
-            border-right: 1px solid #ababab
-            &:last-child
-                border: none
-        a
-            color: #4c4c4c
-            padding: 0 8px
-            &:hover
-                text-decoration: none
-        .active
-            background: #999
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-            a
-                color: #fff
-                text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-    .oe_list_pager.oe_list_pager_single_page .oe_pager_group
-        display: none
-    // }}}
-    // ViewManager application {{{
+        // ViewManager application {{{
     // .oe_view_manager_current
     //     height: 100%
     //     > .oe_view_manager_header

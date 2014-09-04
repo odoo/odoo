@@ -494,17 +494,18 @@
                     </t>                    
                 </div>
                 <div class="oe-view-manager-sidebar"></div>
-                <div class="oe-view-manager-pager"></div>
 
-                <t t-if="widget.view_order.length > 1">
-                    <div class="oe-view-manager-switch btn-group btn-group-sm">
-                        <t t-foreach="widget.view_order" t-as="view_type">
-                            <a type="button" t-attf-class="btn btn-default fa oe-vm-switch-#{view_type}" t-att-data-view-type="view_type" t-att-title="view_type" t-if="view_type!=='form'">
-                            </a>
-                        </t>
-                    </div>
-                </t>
-
+                <div class="oe-right-toolbar">
+                    <div class="oe-view-manager-pager"></div>
+                    <t t-if="widget.view_order.length > 1">
+                        <div class="oe-view-manager-switch btn-group btn-group-sm">
+                            <t t-foreach="widget.view_order" t-as="view_type">
+                                <a type="button" t-attf-class="btn btn-default fa oe-vm-switch-#{view_type}" t-att-data-view-type="view_type" t-att-title="view_type" t-if="view_type!=='form'">
+                                </a>
+                            </t>
+                        </div>
+                    </t>
+                </div>
             </div>
         </div>
     </div>
@@ -571,29 +572,15 @@
         </table>
     </div>
 </t>
-<t t-name="ViewPager">
+<div t-name="ViewPager">
     <div class="oe_pager_value">
         <t t-raw="0"/>
     </div>
-    <ul class="oe_pager_group">
-        <!--
-        <button class="oe_button oe_button_pager" type="button" data-pager-action="first">
-            <img t-att-src='_s + "/web/static/src/img/pager_first.png"'/>
-        </button>
-        -->
-        <li>
-            <a class="oe_i" type="button" data-pager-action="previous">(</a>
-        </li>
-        <li>
-            <a class="oe_i" type="button" data-pager-action="next">)</a>
-        </li>
-        <!--
-        <button class="oe_button oe_button_pager" type="button" data-pager-action="last">
-            <img t-att-src='_s + "/web/static/src/img/pager_last.png"'/>
-        </button>
-        -->
-    </ul>
-</t>
+    <div class="btn-group btn-group-sm">
+        <a class="fa fa-chevron-left btn btn-default oe-pager-button" type="button" data-pager-action="previous"></a>
+        <a class="fa fa-chevron-right btn btn-default oe-pager-button" type="button" data-pager-action="next"></a>
+    </div>
+</div>
 
 <t t-name="Sidebar">
     <div class="oe_sidebar">
@@ -739,13 +726,8 @@
     </t>
     </div>
 </t>
-<t t-name="ListView.pager">
-    <div class="oe_list_pager" t-att-colspan="widget.columns_count">
-        <t t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
-            <span class="oe_list_pager_state">
-            </span>
-        </t>
-    </div>
+<t t-name="ListView.pager" t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
+    <span class="oe_list_pager_state"></span>
 </t>
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
     <t t-call="ListView.row">
@@ -830,12 +812,8 @@
         </span>
     </t>
 </div>
-<t t-name="FormView.pager">
-    <div class="oe_form_pager">
-        <t t-if="widget.options.pager !== false" t-call="ViewPager">
-            <span class="oe_form_pager_state"></span>
-        </t>
-    </div>
+<t t-name="FormView.pager" t-if="widget.options.pager !== false" t-call="ViewPager">
+    <span class="oe_form_pager_state"></span>
 </t>
 <form t-name="FormView.set_default">
     <t t-set="args" t-value="widget.dialog_options.args"/>
