@@ -31,8 +31,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
             get_domain: function () {},
             get_groupby: function () {},
         };
-
+        this.$buttons = options.$buttons;
         this.view_loaded = $.Deferred();
+    },
+
+    start: function() {
+        var $buttons = instance.web.qweb.render("graph-view-buttons");
+        this.$buttons.html($buttons);
+        return this._super();
     },
 
     view_loading: function (fields_view_get) {
@@ -47,6 +53,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             row_groupby: [],
             col_groupby: [],
             graph_view: this,
+            $buttons: this.$buttons
         };
 
         _.each(arch.children, function (field) {

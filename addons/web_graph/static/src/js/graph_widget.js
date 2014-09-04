@@ -26,12 +26,32 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.graph_view = options.graph_view || null;
         this.pivot_options = options;
         this.title = options.title || 'Data';
+        this.$buttons = options.$buttons;
     },
 
     start: function() {
         var self = this;
         this.table = $('<table>');
         this.$('.graph_main_content').append(this.table);
+
+        var $pivot_button = this.$buttons.find('.oe-pivot-mode');
+        $pivot_button.click(function () {
+            self.set_mode.bind(self)('pivot');
+        });
+        this.$measure_list = this.$buttons.find('.oe-measure-list');
+
+        var $barchart_button = this.$buttons.find('.oe-bar-mode');
+        $barchart_button.click(function () {
+            self.set_mode.bind(self)('bar');
+        });
+        var $line_chart_button = this.$buttons.find('.oe-line-mode');
+        $line_chart_button.click(function () {
+            self.set_mode.bind(self)('line');
+        });
+        var $pie_chart_button = this.$buttons.find('.oe-pie-mode');
+        $pie_chart_button.click(function () {
+            self.set_mode.bind(self)('pie');
+        });
 
         var indexes = {'pivot': 0, 'bar': 1, 'line': 2, 'chart': 3};
         this.$('.graph_mode_selection label').eq(indexes[this.mode]).addClass('active');
@@ -42,7 +62,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         } else {
             this.$('.graph_main_content').addClass('graph_pivot_mode');
         }
-
         // get search view
         var parent = this.getParent();
         while (!(parent instanceof openerp.web.ViewManager)) {
@@ -142,12 +161,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
 
     add_measures_to_options: function() {
-        this.$('.graph_measure_selection').append(
+        this.$measure_list.append(
         _.map(this.measure_list, function (measure) {
             return $('<li>').append($('<a>').attr('data-choice', measure.field)
                                      .attr('href', '#')
                                      .text(measure.string));
         }));
+        this.$measure_list.find('li').click(this.measure_selection.bind(this));
     },
 
     // ----------------------------------------------------------------------
@@ -281,11 +301,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     put_measure_checkmarks: function () {
         var self = this,
-            measures_li = this.$('.graph_measure_selection a');
-        measures_li.removeClass('oe_selected');
+            measures_li = this.$measure_list.find('li');
+        measures_li.removeClass('active');
         _.each(this.measure_list, function (measure, index) {
             if (_.findWhere(self.pivot.measures, measure)) {
-                measures_li.eq(index).addClass('oe_selected');
+                measures_li.eq(index).addClass('active');
             }
         });
 
