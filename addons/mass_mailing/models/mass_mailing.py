@@ -640,7 +640,7 @@ class MassMailing(osv.Model):
             comp_ctx = dict(context, active_ids=res_ids)
             composer_values = {
                 'author_id': author_id,
-                'body': self.convert_link(cr, uid, [mailing.id], mailing.body_html, context=context),
+                'body': self.convert_link(cr, uid, mailing.id, mailing.body_html, context=context),
                 'subject': mailing.name,
                 'model': mailing.mailing_model,
                 'email_from': mailing.email_from,
@@ -658,49 +658,26 @@ class MassMailing(osv.Model):
         return True
 
     def convert_link(self, cr, uid, ids, body, context=None):
-        urls = re.findall(URL_REGEX, body)
         website_alias = self.pool['website.alias']
+        urls = re.findall(URL_REGEX, body)
         for long_url in urls:
             shorten_url = website_alias.create_shorten_url(cr, uid, long_url, context=context)
             if shorten_url:
                 body = body.replace(long_url, shorten_url)
         return body
 
-    '''JSH Note: Review from HMO to make it for new API or OLD one.'''
-    """@api.model
-    def add_mail_and_utm_stuff(self, url):
-        campaign = self.mass_mailing_campaign_id
-        append =  '?' if url.find('?') == -1 else '&'
-        url = "%s%sutm_campain=%s&utm_source=%s&utm_medium=%s" % (url, append, campaign.name, campaign.source_id.name, campaign.medium_id.name)
-        return url
-
-    @api.model
-    def convert_link(self, body):
-        urls = re.findall(URL_REGEX, body)
-        website_alias = self.env['website.alias']
-        for long_url in urls:
-            mass_mailing_campaign_id =  self.browse(cr, uid, id,
-            if self.mass_mailing_campaign_id:
-                long_url_with_utm = self.add_mail_and_utm_stuff(long_url)
-                shorten_url = website_alias.create_shorten_url(long_url_with_utm)
-            else:
-                shorten_url = website_alias.create_shorten_url(long_url)
-            if shorten_url:
-                body = body.replace(long_url, shorten_url)
-        return body"""
-
-
 class MailMail(models.Model):
     _inherit = ['mail.mail']
 
-    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+    @api.model
+    def send_get_mail_body(self, mail, partner=None):
         """Override to add Statistic_id in shorted urls """
         ''' JSH Note: --- Test-Required ---Desired result for mails not send by mass_mailing should be unchanged.'''
         if mail.mailing_id:
             urls = re.findall(URL_REGEX, mail.body_html)
             for url in urls:
                 mail.body_html = mail.body_html.replace(url, url + '/m/' + str(mail.statistics_ids.id))
-            body = super(MailMail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
+            body = super(MailMail, self).send_get_mail_body(mail, partner=partner)
             return body
         else:
             return mail.body_html

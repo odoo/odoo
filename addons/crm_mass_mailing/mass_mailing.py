@@ -38,12 +38,12 @@ class MassMailing(models.Model):
         url = "%s%sutm_campain=%s&utm_source=%s&utm_medium=%s" % (url, append, campaign.name, campaign.source_id.name, campaign.medium_id.name)
         return url
 
-    def convert_link(self, cr, uid, ids, body, context=None):
+    @api.multi
+    def convert_link(self, body):
         urls = re.findall(URL_REGEX, body)
         for long_url in urls:
-            mass_mailing_campaign_id = self.browse(cr, uid, ids, context=context).mass_mailing_campaign_id
-            if mass_mailing_campaign_id:
-                long_url_with_utm = self.add_mail_and_utm_stuff(cr, uid,long_url, context=context)
+            if self.mass_mailing_campaign_id:
+                long_url_with_utm = self.add_mail_and_utm_stuff(long_url)
                 body = body.replace(long_url, long_url_with_utm)
-        return super(MassMailing, self).convert_link(cr, uid, mass_mailing_campaign_id, body, context=context)
+        return super(MassMailing, self).convert_link(body)
 
