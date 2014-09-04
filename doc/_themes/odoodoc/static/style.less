@@ -155,33 +155,6 @@ body {
       display: block;
     }
   }
-
-  > p {
-    margin: 5px 10px 10px;
-    a {
-      font-size: 13px;
-      &:hover {
-        text-decoration: none;
-      }
-
-      &.github {
-        padding-left: 15px;
-        position: relative;
-        &:before {
-          left: 0;
-          top: 1px;
-          content: '';
-          position: absolute;
-          width: 13px;
-          height: 13px;
-          background: url(github-link.png) left bottom / 13px no-repeat;
-        }
-        &:hover:before {
-          background-position: left top;
-        }
-      }
-    }
-  }
 }
 
 /* Side navigation graphical styling */
@@ -192,8 +165,13 @@ body {
 @nav-current-offset: 2px;
 @nav-current: @nav-spacing - @nav-current-offset;
 
+.sphinxsidebar {
+  z-index: 1;
+}
 .sphinxsidebarwrapper {
   width: 100%;
+  font-size: 13px;
+  z-index: 1;
 
   .hidden-xs();
   .hidden-sm();
@@ -206,7 +184,6 @@ body {
   }
 
   .nav > li > a {
-    font-size: 13px;
     font-weight: bold;
     padding-left: @nav-spacing;
   }
@@ -280,6 +257,81 @@ body {
     }
     > .active > a, > .active:hover > a, > .active:focus > a {
       padding-left: @nav-current + 3 * @nav-spacing-increment;
+    }
+  }
+}
+/* version switcher */
+.sphinxsidebarwrapper div.versions {
+  // use padding to set up a big hover target
+  padding: 5px 10px 10px;
+
+  position: relative;
+  display: inline-block;
+  color: @gray-light;
+  cursor: pointer;
+  // "▶" to the right of the current version's name
+  &:after {
+    font-family: "Glyphicons Halflings";
+    content: "\e072";
+    font-size: 80%;
+    // space out a bit from the version name
+    padding-left: 3px;
+  }
+
+  ul {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0 -5px;
+    white-space: nowrap;
+    background-color: fade(@body-bg, 90%);
+
+    position: absolute;
+    top: 0;
+    left: 100%;
+    > li {
+      display: inline-block;
+      margin-left: -1px;
+      &:first { margin-left: 0;}
+      a {
+        color: @gray-light;
+        display: inline-block;
+        padding: 5px;
+        &:hover {
+          text-decoration: none;
+          background-color: fade(@gray, 7%);
+        }
+      }
+    }
+  }
+  &:hover ul {
+    display: block;
+  }
+}
+/* github link for current document */
+.sphinxsidebarwrapper > p {
+  margin: 5px 10px 10px;
+  a {
+    font-size: 13px;
+    &:hover {
+      text-decoration: none;
+    }
+
+    &.github {
+      padding-left: 15px;
+      position: relative;
+      &:before {
+        left: 0;
+        top: 1px;
+        content: '';
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        background: url(github-link.png) left bottom / 13px no-repeat;
+      }
+      &:hover:before {
+        background-position: left top;
+      }
     }
   }
 }

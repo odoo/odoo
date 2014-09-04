@@ -33,6 +33,16 @@
     <div class="sphinxsidebarwrapper">
       {{ toctree(maxdepth=4, collapse=False, includehidden=True,
                  main_navbar=False, titles_only=False) }}
+      {% if versions %}
+        <div class="versions">
+          Documentation version: {{ version }}
+          <ul>
+            {% for name, url in versions %}
+              <li><a href="{{ url }}">{{ name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
       {% if github_link %}
         <p><a href="{{ github_link() }}" class="github">
           Edit on GitHub

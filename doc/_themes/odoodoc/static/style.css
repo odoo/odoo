@@ -6346,34 +6346,14 @@ body {
 .sphinxsidebarwrapper > .nav li.current > .nav {
   display: block;
 }
-.sphinxsidebarwrapper > p {
-  margin: 5px 10px 10px;
-}
-.sphinxsidebarwrapper > p a {
-  font-size: 13px;
-}
-.sphinxsidebarwrapper > p a:hover {
-  text-decoration: none;
-}
-.sphinxsidebarwrapper > p a.github {
-  padding-left: 15px;
-  position: relative;
-}
-.sphinxsidebarwrapper > p a.github:before {
-  left: 0;
-  top: 1px;
-  content: '';
-  position: absolute;
-  width: 13px;
-  height: 13px;
-  background: url(github-link.png) left bottom / 13px no-repeat;
-}
-.sphinxsidebarwrapper > p a.github:hover:before {
-  background-position: left top;
-}
 /* Side navigation graphical styling */
+.sphinxsidebar {
+  z-index: 1;
+}
 .sphinxsidebarwrapper {
   width: 100%;
+  font-size: 13px;
+  z-index: 1;
   /* First level of nav */
   /* All levels of nav */
 }
@@ -6397,7 +6377,6 @@ body {
   margin-bottom: 20px;
 }
 .sphinxsidebarwrapper .nav > li > a {
-  font-size: 13px;
   font-weight: bold;
   padding-left: 20px;
 }
@@ -6475,6 +6454,76 @@ body {
 .sphinxsidebarwrapper .nav .nav .nav .nav > .active:hover > a,
 .sphinxsidebarwrapper .nav .nav .nav .nav > .active:focus > a {
   padding-left: 33px;
+}
+/* version switcher */
+.sphinxsidebarwrapper div.versions {
+  padding: 5px 10px 10px;
+  position: relative;
+  display: inline-block;
+  color: #777777;
+  cursor: pointer;
+}
+.sphinxsidebarwrapper div.versions:after {
+  font-family: "Glyphicons Halflings";
+  content: "\e072";
+  font-size: 80%;
+  padding-left: 3px;
+}
+.sphinxsidebarwrapper div.versions ul {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0 -5px;
+  white-space: nowrap;
+  background-color: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  top: 0;
+  left: 100%;
+}
+.sphinxsidebarwrapper div.versions ul > li {
+  display: inline-block;
+  margin-left: -1px;
+}
+.sphinxsidebarwrapper div.versions ul > li:first {
+  margin-left: 0;
+}
+.sphinxsidebarwrapper div.versions ul > li a {
+  color: #777777;
+  display: inline-block;
+  padding: 5px;
+}
+.sphinxsidebarwrapper div.versions ul > li a:hover {
+  text-decoration: none;
+  background-color: rgba(85, 85, 85, 0.07);
+}
+.sphinxsidebarwrapper div.versions:hover ul {
+  display: block;
+}
+/* github link for current document */
+.sphinxsidebarwrapper > p {
+  margin: 5px 10px 10px;
+}
+.sphinxsidebarwrapper > p a {
+  font-size: 13px;
+}
+.sphinxsidebarwrapper > p a:hover {
+  text-decoration: none;
+}
+.sphinxsidebarwrapper > p a.github {
+  padding-left: 15px;
+  position: relative;
+}
+.sphinxsidebarwrapper > p a.github:before {
+  left: 0;
+  top: 1px;
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: url(github-link.png) left bottom / 13px no-repeat;
+}
+.sphinxsidebarwrapper > p a.github:hover:before {
+  background-position: left top;
 }
 /* Show and affix the side nav when space allows it */
 @media (min-width: 992px) {
