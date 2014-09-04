@@ -2,6 +2,7 @@ import inspect
 import importlib
 import os.path
 from urlparse import urlunsplit
+import sphinx
 
 def setup(app):
     app.add_config_value('github_user', None, 'env')

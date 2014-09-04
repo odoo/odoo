@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys, os
+import sphinx
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -22,10 +23,13 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.linkcode',
     'odoodoc',
     'patchqueue'
 ]
+if sphinx.__version__.split('.') >= ['1', '2']:
+    # linkcode is only available from Sphinx 1.2
+    extensions.insert(0, 'sphinx.ext.linkcode')
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
