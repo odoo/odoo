@@ -101,6 +101,23 @@ body {
       color: white;
     }
   }
+  /* version switcher */
+  div.versions {
+    position: relative;
+    cursor: pointer;
+    font-size: 300%;
+    display: inline-block;
+
+    > a {
+      font-size: 40%;
+      margin: 0.2em;
+      color: #999;
+      font-family: Lato, Arial, sans-serif;
+      &:hover, &:focus {
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 // FIXME: protocol-relative urls for remote but absolute for local (file://)?
@@ -258,54 +275,6 @@ body {
     > .active > a, > .active:hover > a, > .active:focus > a {
       padding-left: @nav-current + 3 * @nav-spacing-increment;
     }
-  }
-}
-/* version switcher */
-.sphinxsidebarwrapper div.versions {
-  // use padding to set up a big hover target
-  padding: 5px 10px 10px;
-
-  position: relative;
-  display: inline-block;
-  color: @gray-light;
-  cursor: pointer;
-  // "▶" to the right of the current version's name
-  &:after {
-    font-family: "Glyphicons Halflings";
-    content: "\e072";
-    font-size: 80%;
-    // space out a bit from the version name
-    padding-left: 3px;
-  }
-
-  ul {
-    display: none;
-    list-style: none;
-    padding: 0;
-    margin: 0 0 0 -5px;
-    white-space: nowrap;
-    background-color: fade(@body-bg, 90%);
-
-    position: absolute;
-    top: 0;
-    left: 100%;
-    > li {
-      display: inline-block;
-      margin-left: -1px;
-      &:first { margin-left: 0;}
-      a {
-        color: @gray-light;
-        display: inline-block;
-        padding: 5px;
-        &:hover {
-          text-decoration: none;
-          background-color: fade(@gray, 7%);
-        }
-      }
-    }
-  }
-  &:hover ul {
-    display: block;
   }
 }
 /* github link for current document */
