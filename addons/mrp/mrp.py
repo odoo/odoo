@@ -324,25 +324,29 @@ class mrp_bom(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
             all_prod.append(bom_line_id.product_id.id)
             
-            if bom_line_id.type != "phantom":
+            quantity = _factor(bom_line_id.product_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding)
+
+            bom2 = None
+            bom_id = self._bom_find(cr, uid, bom_line_id.product_uom.id, product_id=bom_line_id.product_id.id, properties=properties)
+            if bom_id:
+                bom2 = self.browse(cr, uid, bom_id)  
+
+            if bom_line_id.type != "phantom" and (not bom2 or bom2.type != "phantom"):
                 result.append({
                     'name': bom_line_id.product_id.name,
                     'product_id': bom_line_id.product_id.id,
-                    'product_qty': _factor(bom_line_id.product_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding),
+                    'product_qty': quantity,
                     'product_uom': bom_line_id.product_uom.id,
                     'product_uos_qty': bom_line_id.product_uos and bom_line_id.product_uos_qty * factor or False,
                     'product_uos': bom_line_id.product_uos and bom_line_id.product_uos.id or False,
                 })
+            elif bom2:
+                res = self._bom_explode(cr, uid, bom2, bom_line_id.product_id, quantity,
+                    properties=properties, level=level + 10, previous_products=all_prod, master_bom=master_bom)
+                result = result + res[0]
+                result2 = result2 + res[1]
             else:
-                bom_id = self._bom_find(cr, uid, bom_line_id.product_uom.id, product_id=bom_line_id.product_id.id, properties=properties)
-                if bom_id:
-                    bom2 = self.browse(cr, uid, bom_id)  
-                    res = self._bom_explode(cr, uid, bom2, bom_line_id.product_id, factor,
-                        properties=properties, level=level + 10, previous_products=all_prod, master_bom=master_bom)
-                    result = result + res[0]
-                    result2 = result2 + res[1]
-                else:
-                    raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a phantom BoM line but the product "%s" don\'t have any BoM defined.') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
+                raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a phantom BoM line but the product "%s" don\'t have any BoM defined.') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
 
         return result, result2
 
