@@ -97,7 +97,8 @@ class stock_move(osv.osv):
     def _get_master_data(self, cr, uid, move, company, context=None):
         ''' returns a tuple (browse_record(res.partner), ID(res.users), ID(res.currency)'''
         currency = company.currency_id.id
-        partner = move.partner_id or (move.picking_id and move.picking_id.partner_id) or False
+        import pdb; pdb.set_trace()
+        partner = move.picking_id and move.picking_id.partner_id
         if partner:
             if partner.property_product_pricelist and move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal':
                 currency = partner.property_product_pricelist.currency_id.id
@@ -115,12 +116,11 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         if type in ('in_invoice', 'in_refund'):
-            if move_line.partner_id:
+            if move_line.price_unit:
                 return move_line.price_unit
             else:
-                # Take the user company and pricetype
-                # TODO: This intercompany still needed?
-                product = move_line.product_id.with_context(currency_id=move_line.company_id.currency_id.id)
+                # Take the company of the move line
+                product = move_line.product_id.with_context(company_id=move_line.company_id.id)
                 amount_unit = product.price_get('standard_price')[move_line.product_id.id]
                 return amount_unit
         else:
@@ -129,7 +129,7 @@ class stock_move(osv.osv):
                 pricelist_obj = self.pool.get("product.pricelist")
                 pricelist = move_line.partner_id.property_product_pricelist.id
                 price = pricelist_obj.price_get(cr, uid, [pricelist],
-                        product, move_line.product_uom_qty, move_line.partner_id.id, {
+                        move_line.product_id.id, move_line.product_uom_qty, move_line.partner_id.id, {
                             'uom': move_line.product_uom.id,
                             'date': move_line.date,
                             })[pricelist]
@@ -206,7 +206,7 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
           ], string="Invoice Control", required=True,
-        fnct_inv = _set_inv_state,
+        #fnct_inv = _set_inv_state,
         store={
             'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),
             'stock.move': (__get_picking_move, ['picking_id', 'invoice_state'], 10),

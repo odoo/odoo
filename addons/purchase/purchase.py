@@ -672,6 +672,11 @@ class purchase_order(osv.osv):
                     return True
         return False
 
+    def wkf_action_cancel(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'cancel'})
+        self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
+
+
     def action_cancel(self, cr, uid, ids, context=None):
         for purchase in self.browse(cr, uid, ids, context=context):
             for pick in purchase.picking_ids:
