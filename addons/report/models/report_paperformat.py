@@ -145,6 +145,8 @@ class ir_actions_report(osv.Model):
         """
         if context is None:
             context = {}
+        elif 'group_by' in context:
+            del context['group_by']
         try:
             report_name = self.browse(cr, uid, ids[0], context).report_name
             act_window_obj = self.pool.get('ir.actions.act_window')
