@@ -307,29 +307,57 @@ class res_users(osv.Model):
 
     def im_search(self, cr, uid, name, limit=20, context=None):
         """ search users with a name and return its id, name and im_status """
+        result = [];
         # find the employee group
         group_employee = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')[1]
-        # built and execute SQL query. Using ORM is slow for big database, so query sql is required.
-        where_clause = "WHERE U.active = 't' AND U.id != %s "
-        query_params = (group_employee, limit)
+
+        where_clause_base = " U.active = 't' "
+        query_params = ()
         if name:
-            where_clause += " AND P.name ILIKE %s "
-            query_params = ('%'+name+'%',) + query_params
-        query_params = (uid,) + query_params
-        query = ''' SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
-                    FROM res_users U
-                    LEFT JOIN res_partner P ON P.id = U.partner_id
+            where_clause_base += " AND P.name ILIKE %s "
+            query_params = query_params + ('%'+name+'%',)
+
+        # first query to find online employee
+        cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+                FROM im_chat_presence S
+                    JOIN res_users U ON S.user_id = U.id
+                    JOIN res_partner P ON P.id = U.partner_id
+                WHERE   '''+where_clause_base+'''
+                        AND U.id != %s
+                        AND EXISTS (SELECT 1 FROM res_groups_users_rel G WHERE G.gid = %s AND G.uid = U.id)
+                        AND S.status = 'online'
+                ORDER BY P.name
+                LIMIT %s
+        ''', query_params + (uid, group_employee, limit))
+        result = result + cr.dictfetchall()
+
+        # second query to find other online people
+        if(len(result) < limit):
+            cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+                FROM im_chat_presence S
+                    JOIN res_users U ON S.user_id = U.id
+                    JOIN res_partner P ON P.id = U.partner_id
+                WHERE   '''+where_clause_base+'''
+                        AND U.id NOT IN %s
+                        AND S.status = 'online'
+                ORDER BY P.name
+                LIMIT %s
+            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit-len(result)))
+            result = result + cr.dictfetchall()
+
+        # third query to find all other people
+        if(len(result) < limit):
+            cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+                FROM res_users U
                     LEFT JOIN im_chat_presence S ON S.user_id = U.id
-                    ''' +where_clause+ '''
-                    ORDER BY    EXISTS (SELECT 1 FROM res_groups_users_rel G WHERE G.gid = %s AND G.uid = U.id) DESC,
-                        CASE    WHEN S.status = 'online' THEN 1
-                                WHEN S.status = 'away' THEN 2
-                                ELSE 3
-                        END,
-                        P.name ASC
-                    LIMIT %s'''
-        cr.execute(query, query_params)
-        return cr.dictfetchall()
+                    LEFT JOIN res_partner P ON P.id = U.partner_id
+                WHERE   '''+where_clause_base+'''
+                        AND U.id NOT IN %s
+                ORDER BY P.name
+                LIMIT %s
+            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit-len(result)))
+            result = result + cr.dictfetchall()
+        return result
 
 #----------------------------------------------------------
 # Controllers
