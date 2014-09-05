@@ -894,11 +894,14 @@ form: module.record_id""" % (xml_id,)
 
         record = etree.Element('record', attrib=record_attrs)
         record.append(Field(name, name='name'))
+        record.append(Field(full_tpl_id, name='key'))
         record.append(Field("qweb", name='type'))
         record.append(Field(el.get('priority', "16"), name='priority'))
         record.append(Field(el, name="arch", type="xml"))
         if 'inherit_id' in el.attrib:
             record.append(Field(name='inherit_id', ref=el.get('inherit_id')))
+        if 'website_id' in el.attrib:
+            record.append(Field(name='website_id', ref=el.get('website_id')))
         groups = el.attrib.pop('groups', None)
         if groups:
             grp_lst = map(lambda x: "ref('%s')" % x, groups.split(','))
