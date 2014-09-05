@@ -12,6 +12,7 @@
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_buy.js"></script>
+      <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
   </xpath>
 </template>
 
@@ -345,7 +346,6 @@
 
 <template id="product" name="Product">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title" t-value="product.name"/>
       <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
 
@@ -649,7 +649,6 @@
 
 <template id="cart" name="Shopping Cart">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <div id="wrap">
         <div class="container oe_website_sale">
 
@@ -837,7 +836,6 @@
 
 <template id="checkout">
   <t t-call="website.layout">
-        <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
     <t t-set="additional_title">Shop - Checkout</t>
     <div id="wrap">
       <div class="container oe_website_sale">
@@ -1014,7 +1012,6 @@
 
 <template id="payment">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title">Shop - Select Payment Mode</t>
       <div id="wrap">
         <div class="container oe_website_sale">
@@ -1133,7 +1130,6 @@
 
 <template id="confirmation">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title">Shop - Confirmed</t>
       <div id="wrap">
         <div class="container oe_website_sale">
