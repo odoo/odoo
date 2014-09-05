@@ -34,7 +34,7 @@ It is fully integrated with the email gateway so that you can create
 automatically new claims based on incoming emails.
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'depends': ['crm'],
     'data': [
         'crm_claim_view.xml',

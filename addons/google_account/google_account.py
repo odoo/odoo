@@ -92,7 +92,7 @@ class google_service(osv.osv_memory):
             uri = self.get_uri_oauth(a='token')
             data = werkzeug.url_encode(params)
 
-            st, res = self._do_request(cr, uid, uri, params=data, headers=headers, type='POST', preuri='', context=context)
+            st, res, ask_time = self._do_request(cr, uid, uri, params=data, headers=headers, type='POST', preuri='', context=context)
         except urllib2.HTTPError:
             error_msg = "Something went wrong during your token generation. Maybe your Authorization Code is invalid"
             raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
@@ -116,7 +116,7 @@ class google_service(osv.osv_memory):
             uri = self.get_uri_oauth(a='token')
 
             data = werkzeug.url_encode(params)
-            st, res = self._do_request(cr, uid, uri, params=data, headers=headers, type='POST', preuri='', context=context)
+            st, res, ask_time = self._do_request(cr, uid, uri, params=data, headers=headers, type='POST', preuri='', context=context)
         except urllib2.HTTPError, e:
             if e.code == 400:  # invalid grant
                 registry = openerp.modules.registry.RegistryManager.get(request.session.db)
@@ -129,7 +129,8 @@ class google_service(osv.osv_memory):
         return res
 
     def _do_request(self, cr, uid, uri, params={}, headers={}, type='POST', preuri="https://www.googleapis.com", context=None):
-        context = dict(context or {})
+        if context is None:
+            context = {}
 
         """ Return a tuple ('HTTP_CODE', 'HTTP_RESPONSE') """
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri, type, headers, werkzeug.url_encode(params) if type == 'GET' else params))
@@ -155,19 +156,17 @@ class google_service(osv.osv_memory):
                 content = request.read()
                 response = simplejson.loads(content)
 
-            if context.get('ask_time'):
-                try:
-                    date = datetime.strptime(request.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
-                except:
-                    date = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-                context['ask_time'] = date
+            try:
+                ask_time = datetime.strptime(request.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
+            except:
+                ask_time = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         except urllib2.HTTPError, e:
             if e.code in (400, 401, 410):
                 raise e
 
             _logger.exception("Bad google request : %s !" % e.read())
             raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong with your request to google"), context=context)
-        return (status, response)
+        return (status, response, ask_time)
 
     def get_base_url(self, cr, uid, context=None):
         return self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://www.openerp.com?NoBaseUrl', context=context)

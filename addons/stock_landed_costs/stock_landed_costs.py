@@ -51,17 +51,11 @@ class stock_landed_cost(osv.osv):
             cost_to_recompute.append(line.cost_id.id)
         return cost_to_recompute
 
-    def onchange_pickings(self, cr, uid, ids, picking_ids=None, context=None):
-        result = {'valuation_adjustment_lines': []}
-        line_obj = self.pool.get('stock.valuation.adjustment.lines')
+    def get_valuation_lines(self, cr, uid, ids, picking_ids=None, context=None):
         picking_obj = self.pool.get('stock.picking')
         lines = []
-        for cost in self.browse(cr, uid, ids, context=context):
-            line_ids = [line.id for line in cost.valuation_adjustment_lines]
-            line_obj.unlink(cr, uid, line_ids, context=context)
-        picking_ids = picking_ids and picking_ids[0][2] or False
         if not picking_ids:
-            return {'value': result}
+            return lines
 
         for picking in picking_obj.browse(cr, uid, picking_ids):
             for move in picking.move_lines:
@@ -74,10 +68,11 @@ class stock_landed_cost(osv.osv):
                 volume = move.product_id and move.product_id.volume * move.product_qty
                 for quant in move.quant_ids:
                     total_cost += quant.cost
-                vals = dict(product_id=move.product_id.id, move_id=move.id, quantity=move.product_uom_qty, former_cost=total_cost * total_qty, weight=weight, volume=volume, flag='original')
+                vals = dict(product_id=move.product_id.id, move_id=move.id, quantity=move.product_uom_qty, former_cost=total_cost * total_qty, weight=weight, volume=volume)
                 lines.append(vals)
-        result['valuation_adjustment_lines'] = lines
-        return {'value': result}
+        if not lines:
+            raise osv.except_osv(_('Error!'), _('The selected picking does not contain any move that would be impacted by landed costs. Landed costs are only possible for products configured in real time valuation with real price costing method. Please make sure it is the case, or you selected the correct picking'))
+        return lines
 
     _columns = {
         'name': fields.char('Name', track_visibility='always', readonly=True, copy=False),
@@ -104,11 +99,11 @@ class stock_landed_cost(osv.osv):
     }
 
     def _create_accounting_entries(self, cr, uid, line, move_id, context=None):
-        product_obj = self.pool.get('product.product')
+        product_obj = self.pool.get('product.template')
         cost_product = line.cost_line_id and line.cost_line_id.product_id
         if not cost_product:
             return False
-        accounts = product_obj.get_product_accounts(cr, uid, line.product_id.id, context=context)
+        accounts = product_obj.get_product_accounts(cr, uid, line.product_id.product_tmpl_id.id, context=context)
         debit_account_id = accounts['property_stock_valuation_account_id']
         credit_account_id = cost_product.property_account_expense and cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
         if not credit_account_id:
@@ -177,34 +172,33 @@ class stock_landed_cost(osv.osv):
 
     def compute_landed_cost(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('stock.valuation.adjustment.lines')
+        unlink_ids = line_obj.search(cr, uid, [('cost_id', 'in', ids)], context=context)
+        line_obj.unlink(cr, uid, unlink_ids, context=context)
+        towrite_dict = {}
         for cost in self.browse(cr, uid, ids, context=None):
+            if not cost.picking_ids:
+                continue
+            picking_ids = [p.id for p in cost.picking_ids]
             total_qty = 0.0
             total_cost = 0.0
             total_weight = 0.0
             total_volume = 0.0
             total_line = 0.0
-            for line in cost.valuation_adjustment_lines:
-                if line.flag == 'original':
-                    total_qty += line.quantity
-                    total_cost += line.former_cost
-                    total_weight += line.weight
-                    total_volume += line.volume
-                    total_line += 1
-
-        unlink_ids = line_obj.search(cr, uid, [('cost_id', 'in', ids), ('flag', '=', 'duplicate')], context=context)
-        line_obj.unlink(cr, uid, unlink_ids, context=context)
-        for cost in self.browse(cr, uid, ids, context=None):
-            count = 0.0
             for line in cost.cost_lines:
-                count += 1
-                for valuation in cost.valuation_adjustment_lines:
-                    if count == 1:
-                        line_obj.write(cr, uid, valuation.id, {'cost_line_id': line.id}, context=context)
-                        continue
-                    line_obj.copy(cr, uid, valuation.id, default={'cost_line_id': line.id, 'flag': 'duplicate'}, context=context)
-
-        for cost in self.browse(cr, uid, ids, context=None):
-            dict = {}
+                vals = self.get_valuation_lines(cr, uid, [cost.id], picking_ids=picking_ids, context=context)
+                for v in vals:
+                    v.update({'cost_id': cost.id, 'cost_line_id': line.id})
+                    self.pool.get('stock.valuation.adjustment.lines').create(cr, uid, v, context=context)
+                    if line.split_method == 'by_quantity':
+                        total_qty += v.get('quantity', 0.0)
+                    elif line.split_method == 'by_current_cost_price':
+                        total_cost += v.get('former_cost', 0.0)
+                    elif line.split_method == 'by_weight':
+                        total_weight += v.get('weight', 0.0)
+                    elif line.split_method == 'by_volume':
+                        total_volume += v.get('volume', 0.0)
+                    else:
+                        total_line += 1
             for line in cost.cost_lines:
                 for valuation in cost.valuation_adjustment_lines:
                     value = 0.0
@@ -226,13 +220,13 @@ class stock_landed_cost(osv.osv):
                         else:
                             value = (line.price_unit / total_line)
 
-                        if valuation.id not in dict:
-                            dict[valuation.id] = value
+                        if valuation.id not in towrite_dict:
+                            towrite_dict[valuation.id] = value
                         else:
-                            dict[valuation.id] += value
-
-        for key, value in dict.items():
-            line_obj.write(cr, uid, key, {'additional_landed_cost': value}, context=context)
+                            towrite_dict[valuation.id] += value
+        if towrite_dict:
+            for key, value in towrite_dict.items():
+                line_obj.write(cr, uid, key, {'additional_landed_cost': value}, context=context)
         return True
 
 
@@ -297,14 +291,12 @@ class stock_valuation_adjustment_lines(osv.osv):
         'former_cost_per_unit': fields.function(_amount_final, multi='cost', string='Former Cost(Per Unit)', type='float', digits_compute=dp.get_precision('Account'), store=True),
         'additional_landed_cost': fields.float('Additional Landed Cost', digits_compute=dp.get_precision('Product Price')),
         'final_cost': fields.function(_amount_final, multi='cost', string='Final Cost', type='float', digits_compute=dp.get_precision('Account'), store=True),
-        'flag': fields.selection([('original', 'Original'), ('duplicate', 'Duplicate')], 'Flag', readonly=True),
     }
 
     _defaults = {
         'quantity': 1.0,
         'weight': 1.0,
         'volume': 1.0,
-        'flag': 'original',
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

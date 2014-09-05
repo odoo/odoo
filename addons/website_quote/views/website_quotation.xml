@@ -92,7 +92,7 @@
       </section>
   </template>
 
-  <template id="change_quantity" inherit_id="website_quote.pricing" optional="disabled" name="Change Quantity">
+  <template id="change_quantity" inherit_id="website_quote.pricing" active="False" customize_show="True" name="Change Quantity">
       <xpath expr="//div[@id='quote_qty']" position="replace">
           <div class="input-group">
               <span class="input-group-addon hidden-print">
@@ -116,7 +116,7 @@
           <t t-foreach="quotation.message_ids" t-as="message">
               <li class="media" t-if="message.type &lt;&gt; 'comment' or message.subtype_id">
                   <div class="media-body">
-                      <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                      <img class="media-object pull-left" t-attf-src="/website/image/res.partner/{{ message.author_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
                       <div class="media-body">
                           <h5 class="media-heading">
                               <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
@@ -130,11 +130,11 @@
   </template>
 
   <!-- Options:Quotation Chatter: user can reply -->
-  <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments" optional="enabled" inherit_id="website_quote.chatter">
+  <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments" customize_show="True" inherit_id="website_quote.chatter">
       <xpath expr="//h1" position="after">
           <section class="mb32 css_editable_mode_hidden hidden-print">
               <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post" method="POST">
-                  <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
+                  <img class="img pull-left img-rounded" t-attf-src="/website/image/res.partner/{{ user_id.partner_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
                   <div class="pull-left mb32" style="width: 75%%">
                       <textarea rows="4" name="comment" class="form-control" placeholder="Send us a note..."></textarea>
                       <button type="submit" class="btn btn-primary mt8">Send</button>
@@ -167,7 +167,7 @@
             <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
             <t t-raw="head or ''"/>
         </t>
-        <body data-spy="scroll" data-target=".navspy">
+        <body data-spy="scroll" data-target=".navspy" data-offset="50">
             <div class="container">
               <div class="row mt16">
                   <div class="col-md-3">
@@ -388,7 +388,7 @@
   </template>
 
   <!-- Options:Quotation Signature -->
-  <template id="opt_quotation_signature" name="Ask Signature" optional="enabled" inherit_id="website_quote.so_quotation">
+  <template id="opt_quotation_signature" name="Ask Signature" customize_show="True" inherit_id="website_quote.so_quotation">
       <xpath expr="//div[@id='sign-dialog']" position="inside">
         <div class="panel panel-default mt16 mb0" id="drawsign">
             <div class="panel-heading">
@@ -462,7 +462,7 @@
             <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
             <t t-raw="head or ''"/>
         </t>
-        <body data-spy="scroll" data-target=".navspy">
+        <body data-spy="scroll" data-target=".navspy" data-offset="50">
             <div class="container">
                 <div class="row mt16">
                     <div class="col-md-3">
@@ -515,6 +515,21 @@
         </body>
         </t>
   </template>
+
+  <template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
+      <xpath expr="//footer" position="inside">
+          <div class="container mt16 mb8">
+              <div class="pull-right" t-ignore="true" t-if="not editable">
+                  Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
+                  an awesome <a href="http://www.odoo.com/page/crm">Open Source CRM</a>.
+              </div>
+              <div class="pull-left text-muted">
+                  Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+              </div>
+          </div>
+      </xpath>
+  </template>
+
 
 </data>
 </openerp>

@@ -39,7 +39,7 @@ from openerp import tools, api
 from openerp.http import request
 from openerp.modules.module import get_resource_path, get_resource_from_path
 from openerp.osv import fields, osv, orm
-from openerp.tools import config, graph, SKIPPED_ELEMENT_TYPES
+from openerp.tools import config, graph, SKIPPED_ELEMENT_TYPES, SKIPPED_ELEMENTS
 from openerp.tools.convert import _fix_multiple_roots
 from openerp.tools.parse_version import parse_version
 from openerp.tools.safe_eval import safe_eval as eval
@@ -49,7 +49,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath']
+MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-oe-source-id']
 
 def keep_query(*keep_params, **additional_params):
     """
@@ -222,21 +222,15 @@ class view(osv.osv):
   (<xpath/>) are applied, and the result is used as if it were this view's
   actual arch.
 """),
-        'application': fields.selection([
-                ('always', "Always applied"),
-                ('enabled', "Optional, enabled"),
-                ('disabled', "Optional, disabled"),
-            ],
-            required=True, string="Application status",
+        'active': fields.boolean("Active", required=True,
             help="""If this view is inherited,
-* if always, the view always extends its parent
-* if enabled, the view currently extends its parent but can be disabled
-* if disabled, the view currently does not extend its parent but can be enabled
+* if True, the view always extends its parent
+* if False, the view currently does not extend its parent but can be enabled
              """),
     }
     _defaults = {
         'mode': 'primary',
-        'application': 'always',
+        'active': True,
         'priority': 16,
     }
     _order = "priority,name"
@@ -349,18 +343,10 @@ class view(osv.osv):
         return ret
 
     def toggle(self, cr, uid, ids, context=None):
-        """ Switches between enabled and disabled application statuses
+        """ Switches between enabled and disabled statuses
         """
-        for view in self.browse(cr, uid, ids, context=context):
-            if view.application == 'enabled':
-                view.write({'application': 'disabled'})
-            elif view.application == 'disabled':
-                view.write({'application': 'enabled'})
-            else:
-                raise ValueError(_("Can't toggle view %d with application %r") % (
-                    view.id,
-                    view.application,
-                ))
+        for view in self.browse(cr, uid, ids, context=dict(context or {}, active_test=False)):
+            view.write({'active': not view.active})
 
     # default view selection
     def default_view(self, cr, uid, model, view_type, context=None):
@@ -406,7 +392,7 @@ class view(osv.osv):
             ['inherit_id', '=', view_id],
             ['model', '=', model],
             ['mode', '=', 'extension'],
-            ['application', 'in', ['always', 'enabled']],
+            ['active', '=', True],
         ]
         if self.pool._init:
             # Module init currently in progress, only consider views from
@@ -1020,7 +1006,7 @@ class view(osv.osv):
                 return None
             return Translations._get_source(cr, uid, 'website', 'view', lang, text, id_)
 
-        if arch.tag not in ['script']:
+        if type(arch) not in SKIPPED_ELEMENT_TYPES and arch.tag not in SKIPPED_ELEMENTS:
             text = get_trans(arch.text)
             if text:
                 arch.text = arch.text.replace(arch.text.strip(), text)
@@ -1028,7 +1014,7 @@ class view(osv.osv):
             if tail:
                 arch.tail = arch.tail.replace(arch.tail.strip(), tail)
 
-            for attr_name in ('title', 'alt', 'placeholder'):
+            for attr_name in ('title', 'alt', 'label', 'placeholder'):
                 attr = get_trans(arch.get(attr_name))
                 if attr:
                     arch.set(attr_name, attr)

@@ -40,8 +40,8 @@ class analytic_entries_report(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'amount': fields.float('Amount', readonly=True),
-        'unit_amount': fields.float('Quantity', readonly=True),
-        'nbr': fields.integer('#Entries', readonly=True),
+        'unit_amount': fields.integer('Unit Amount', readonly=True),
+        'nbr': fields.integer('# Entries', readonly=True),  # TDE FIXME master: rename into nbr_entries
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'analytic_entries_report')

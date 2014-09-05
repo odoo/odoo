@@ -13,7 +13,7 @@ class account_invoice(osv.Model):
             if invoice.type != 'out_invoice':
                 continue
             # subscribe the partner to the invoice
-            if invoice.partner_id.id not in invoice.message_follower_ids:
+            if invoice.partner_id not in invoice.message_follower_ids:
                 self.message_subscribe(cr, uid, [invoice.id], [invoice.partner_id.id], context=context)
             for line in invoice.invoice_line:
                 if line.product_id.email_template_id:

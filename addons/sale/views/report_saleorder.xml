@@ -31,7 +31,7 @@
                 <span t-field="o.name"/>
             </h2>
 
-            <div class="row mt32 mb32">
+            <div class="row mt32 mb32" id="informations">
                 <div t-if="o.client_order_ref" class="col-xs-3">
                     <strong>Your Reference:</strong>
                     <p t-field="o.client_order_ref"/>
@@ -44,10 +44,6 @@
                 <div t-if="o.user_id.name" class="col-xs-3">
                     <strong>Salesperson:</strong>
                     <p t-field="o.user_id.name"/>
-                </div>
-                <div t-if="o.validity_date and o.state in ['draft','sent']" class="col-xs-3">
-                    <strong>Expiration Date:</strong>
-                    <p t-field="o.validity_date"/>
                 </div>
                 <div t-if="o.payment_term" class="col-xs-3">
                     <strong>Payment Term:</strong>

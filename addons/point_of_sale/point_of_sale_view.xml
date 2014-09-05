@@ -60,6 +60,7 @@
                                 </div>
                                 <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"/>
                             </group>
+                            <div class="oe_clear"/>
                         </page>
                         <page string="Payments">
                             <field name="statement_ids" colspan="4" nolabel="1">
@@ -521,6 +522,13 @@
         <menuitem action="product_pos_category_action" id="menu_product_pos_category" parent="menu_point_of_sale_product" sequence="0" />
         <!-- END -->
 
+        <record id="action_edit_ean" model="ir.actions.act_window">
+            <field name="name">Edit Ean</field>
+            <field name="res_model">pos.ean_wizard</field>
+            <field name="target">new</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
 
         <record id="product_template_form_view" model="ir.ui.view">
             <field name="name">product.template.form.inherit</field>
@@ -537,7 +545,7 @@
                     </group>
                 </group>
                 <field name="ean13" position="after">
-                    <button colspan="2" name="edit_ean" type="object" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
+                    <button colspan="2" name="%(action_edit_ean)d" type="action" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
                 </field>
             </field>
         </record>

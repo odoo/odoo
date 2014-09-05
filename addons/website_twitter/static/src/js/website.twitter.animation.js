@@ -61,7 +61,9 @@
                                      function (hashtag) { return create_link("http://twitter.com/search?q="+hashtag.replace("#",""), hashtag); });
         },
         parse_date: function(tweet) {
-            var d = new Date(tweet.created_at);
+            if (_.isEmpty(tweet.created_at)) return "";
+            var v = tweet.created_at.split(' ');
+            var d = new Date(Date.parse(v[1]+" "+v[2]+", "+v[5]+" "+v[3]+" UTC"));
             return d.toDateString();
         },
         setupMouseEvents: function() {

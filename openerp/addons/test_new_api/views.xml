@@ -1,6 +1,8 @@
 <openerp>
     <data>
-        <menuitem id="menu_main" name="Discussions" sequence="20"/>
+        <menuitem icon="STOCK_PREFERENCES" id="base.menu_tests" name="Tests" sequence="1000000"/>
+
+        <menuitem id="menu_main" name="Discussions" sequence="20" parent="base.menu_tests"/>
 
         <menuitem id="menu_sub" name="Discussions" parent="menu_main" sequence="10"/>
 
