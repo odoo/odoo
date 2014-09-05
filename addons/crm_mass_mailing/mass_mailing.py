@@ -1,3 +1,4 @@
+from urlparse import urlparse, parse_qs
 from openerp import models, fields, api, _
 
 class MassMailingCampaign(models.Model):
@@ -32,6 +33,16 @@ class website_alias(models.Model):
     utm_campaign_id = fields.Many2one('crm.tracking.campaign', string="Campaign")
     utm_source_id = fields.Many2one('crm.tracking.source', string="Source")
     utm_medium_id = fields.Many2one('crm.tracking.medium', string="Channel")
+
+    @api.model
+    def create(self, vals):
+        utm = parse_qs(urlparse(vals['url']).query)
+        if utm and ('utm_campaign' and 'utm_source' and 'utm_medium' in utm):
+            (Crm_camp, Crm_src, Crm_mdm) = (self.env['crm.tracking.campaign'], self.env['crm.tracking.source'], self.env['crm.tracking.medium'])
+            vals['utm_campaign_id'] = Crm_camp.sudo().search_read([('name', '=', utm['utm_campaign'])])[0]['id']
+            vals['utm_source_id'] = Crm_src.sudo().search_read([('name', '=', utm['utm_source'])], ['id'])[0]['id']
+            vals['utm_medium_id'] = Crm_mdm.sudo().search_read([('name', '=', utm['utm_medium'])], ['id'])[0]['id']
+        return super(website_alias, self).create(vals)
 
 class MassMailing(models.Model):
     _name = 'mail.mass_mailing'

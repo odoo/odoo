@@ -2,7 +2,6 @@ $(document).ready( function() {
     $("#btn_shorten_url").click( function() {
         openerp.jsonRpc("/r/new", 'call', {'url' : $("#url").val()})
             .then(function (result) {
-                $("#btn_shorten_url").text("Copy")
                 if (result == false) {
                     //Impliment functionality of coping shorten url to clipboard
                     // create alert-error of bootstrap which is above the url
@@ -11,6 +10,7 @@ $(document).ready( function() {
   <strong>Warning!</strong> Better check yourself, you're not looking too good.
 </div>*/
                 } else {
+                    $("#btn_shorten_url").text("Copy");
                     $("#url").val(result).focus().select();
                 }
             });

@@ -669,7 +669,7 @@ class MassMailing(osv.Model):
                     utm_object = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
                     if utm_object.campaign_id and utm_object.source_id and utm_object.medium_id:
                         append =  '?' if long_url.find('?') == -1 else '&'
-                        long_url_with_utm = "%s%sutm_campain=%s&utm_source=%s&utm_medium=%s" % (long_url, append, utm_object.campaign_id.name, utm_object.source_id.name, utm_object.medium_id.name)
+                        long_url_with_utm = "%s%sutm_campaign=%s&utm_source=%s&utm_medium=%s" % (long_url, append, utm_object.campaign_id.name, utm_object.source_id.name, utm_object.medium_id.name)
                         shorten_url = website_alias.create_shorten_url(cr, uid, long_url_with_utm, context=context)
                     else:
                         shorten_url = website_alias.create_shorten_url(cr, uid, long_url, context=context)
