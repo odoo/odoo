@@ -1498,10 +1498,9 @@ class account_invoice_line(osv.osv):
             result['account_id'] = a
 
         if type in ('out_invoice', 'out_refund'):
-            taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
+            tax_id = self.pool.get('product.product').get_taxes_ids(cr, uid, [res.id], fpos, context=context)
         else:
-            taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
-        tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
+            tax_id = self.pool.get('product.product').get_supplier_taxes_ids(cr, uid, [res.id], fpos, context=context)
 
         if type in ('in_invoice', 'in_refund'):
             result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )

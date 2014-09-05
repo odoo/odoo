@@ -953,20 +953,17 @@ class stock_picking(osv.osv):
         @param type: Type of invoice
         @return: Taxes Ids for the move line
         """
-        if type in ('in_invoice', 'in_refund'):
-            taxes = move_line.product_id.supplier_taxes_id
-        else:
-            taxes = move_line.product_id.taxes_id
 
         if move_line.picking_id and move_line.picking_id.partner_id and move_line.picking_id.partner_id.id:
-            return self.pool.get('account.fiscal.position').map_tax(
-                cr,
-                uid,
-                move_line.picking_id.partner_id.property_account_position,
-                taxes
-            )
+            fpos = move_line.picking_id.partner_id.property_account_position
         else:
-            return map(lambda x: x.id, taxes)
+            fpos = False
+
+        product_obj = self.pool.get('product.product')
+        if type in ('in_invoice', 'in_refund'):
+            return product_obj.get_supplier_taxes_ids(cr, uid, [move_line.product_id.id], fpos)
+        else:
+            return product_obj.get_taxes_ids(cr, uid, [move_line.product_id.id], fpos)
 
     def _get_account_analytic_invoice(self, cr, uid, picking, move_line):
         return False

@@ -72,4 +72,67 @@ class product_template(osv.osv):
 
 product_template()
 
+
+class product_product(osv.osv):
+    _inherit = "product.product"
+
+    def get_taxes_ids(self, cr, uid, ids, fpos, context=None):
+        """
+        @param ids: The product ids list, must contains one element.
+        @param fpos: The fiscal position
+
+        @return: the product taxes id list if there is one on the product,
+        if there is none: return the product category default income tax,
+        apply the fiscal position "fpos" on the returned taxes list.
+        """
+        taxes = self.get_taxes(cr, uid, ids, fpos, context=context)
+        return self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+
+    def get_taxes(self, cr, uid, ids, fpos, context=None):
+        """
+        @param ids: The product ids list, must contains one element.
+        @param fpos: The fiscal position
+
+        @return: The product taxes list if there is one on the product,
+        if there is none: return the product category default income tax
+        """
+        assert len(ids) == 1
+        product = self.pool.get('product.product').browse(cr, uid, ids[0], context=context)
+        taxes = product.taxes_id
+        if not taxes:
+            account = product.property_account_income or product.categ_id.property_account_income_categ
+            account = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account, context=context)
+            taxes = account.tax_ids
+        return taxes
+
+    def get_supplier_taxes_ids(self, cr, uid, ids, fpos, context=None):
+        """
+        @param ids: The product ids list, must contains one element.
+        @param fpos: The fiscal position
+
+        @return: The product supplier taxes id list if there is one on the product,
+        if there is none: return the product category default expense tax,
+        apply the fiscal position "fpos" on the returned taxes list
+        """
+
+        taxes = self.get_supplier_taxes(cr, uid, ids, fpos, context=context)
+        return self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+
+    def get_supplier_taxes(self, cr, uid, ids, fpos, context=None):
+        """
+        @param ids: The product ids list, must contains one element.
+        @param fpos: The fiscal position
+
+        @return: The product supplier taxes list if there is one on the product,
+        if there is none: return the product category default expense tax
+        """
+        assert len(ids) == 1
+        product = self.pool.get('product.product').browse(cr, uid, ids[0], context=context)
+        taxes = product.supplier_taxes_id
+        if not taxes:
+            account = product.property_account_expense or product.categ_id.property_account_expense_categ
+            account = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account, context=context)
+            taxes = account.tax_ids
+        return taxes
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
