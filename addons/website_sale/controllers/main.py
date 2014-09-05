@@ -388,7 +388,7 @@ class website_sale(http.Controller):
         }
         return values
 
-    mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
+    mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id"]
     optional_billing_fields = ["street2", "state_id", "vat"]
     mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id", "zip"]
     optional_shipping_fields = ["state_id"]
