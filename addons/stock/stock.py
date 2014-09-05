@@ -1043,6 +1043,10 @@ class stock_picking(osv.osv):
             'company_id': picking.company_id.id,
             'user_id': uid,
         }
+        if inv_type in ('out_invoice', 'in_refund'):
+            invoice_vals['partner_bank_id'] = picking.company_id.bank_ids and picking.company_id.bank_ids[0].id or False
+        else:
+            invoice_vals['partner_bank_id'] = partner.bank_ids and partner.bank_ids[0].id or False
         cur_id = self.get_currency_id(cr, uid, picking)
         if cur_id:
             invoice_vals['currency_id'] = cur_id

@@ -552,6 +552,7 @@ class purchase_order(osv.osv):
                 'account_id': pay_acc_id,
                 'type': 'in_invoice',
                 'partner_id': order.partner_id.id,
+                'partner_bank_id': order.partner_id.bank_ids and order.partner_id.bank_ids[0].id or False,
                 'currency_id': order.pricelist_id.currency_id.id,
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'invoice_line': [(6, 0, inv_lines)],

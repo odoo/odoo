@@ -379,6 +379,7 @@ class sale_order(osv.osv):
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             'date_invoice': context.get('date_invoice', False),
             'company_id': order.company_id.id,
+            'partner_bank_id': order.company_id.bank_ids and order.company_id.bank_ids[0].id or False,
             'user_id': order.user_id and order.user_id.id or False
         }
 

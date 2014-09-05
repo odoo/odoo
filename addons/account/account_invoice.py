@@ -532,8 +532,10 @@ class account_invoice(osv.osv):
             }
         }
 
-        if type in ('in_invoice', 'in_refund'):
-            result['value']['partner_bank_id'] = bank_id
+        if type in ('out_invoice', 'in_refund'):
+            company = self.pool['res.company'].browse(cr, uid, company_id)
+            bank_id = company.bank_ids and company.bank_ids[0].id or False
+        result['value']['partner_bank_id'] = bank_id
 
         if payment_term != partner_payment_term:
             if partner_payment_term:
