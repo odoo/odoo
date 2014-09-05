@@ -615,7 +615,7 @@ The second inheritance mechanism (delegation) allows to link every record of a
 model to a record in a parent model, and provides transparent access to the
 fields of the parent record.
 
-.. image:: backend/inheritance_methods.png
+.. image:: ../images/inheritance_methods.png
     :align: center
 
 .. seealso::
