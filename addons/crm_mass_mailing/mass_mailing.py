@@ -25,6 +25,14 @@ class MassMailingCampaign(models.Model):
             vals['campaign_id'] = self.env['crm.tracking.campaign'].create({'name': vals.get('name')}).id
         return super(MassMailingCampaign, self).create(vals)
 
+class website_alias(models.Model):
+    _name = "website.alias"
+    _inherit = ['website.alias']
+
+    utm_campaign_id = fields.Many2one('crm.tracking.campaign', string="Campaign")
+    utm_source_id = fields.Many2one('crm.tracking.source', string="Source")
+    utm_medium_id = fields.Many2one('crm.tracking.medium', string="Channel")
+
 class MassMailing(models.Model):
     _name = 'mail.mass_mailing'
     _inherit = ['mail.mass_mailing', 'crm.tracking.mixin']

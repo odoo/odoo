@@ -10,6 +10,7 @@ To shorten URL and To show url click statistics.
     'depends':['website','marketing'],
     'data' : [
         'views/website_url.xml',
+        'views/website_url_template.xml',
         'security/ir.model.access.csv',
     ],
     'qweb': [],

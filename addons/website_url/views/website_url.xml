@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+        <record model="ir.actions.act_window" id="action_view_click_statistics">
+            <field name="name">Statistics of Clicks</field>
+            <field name="res_model">website.alias.click</field>
+            <field name="view_mode">graph</field>
+            <field name="domain">[('alias_id', 'IN', ids)]</field>
+        </record>
+
         <!-- Website alias views -->
         <record id="view_website_alias_form" model="ir.ui.view">
             <field name="name">website.alias.form</field>
@@ -8,15 +16,23 @@
             <field name="arch" type="xml">
                 <form string="Website Alias">
                     <sheet>
+                        <div class="oe_button_box pull-right" name="buttons">
+                            <button type="object" name="action_visit_page"
+                                string="Visit Page"/>
+                            <button type="object" name="action_view_statistics"
+                                string="Clicks">
+                                <field name="count" widget="percentpie"/>
+                            </button>
+                        </div>
                         <group>
                             <field name="url"/>
                             <field name="code" class="oe_read_only" />
-                            <field name="count" class="oe_read_only" />
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
+
         <record id="view_website_alias_tree" model="ir.ui.view">
             <field name="name">website.alias.tree</field>
             <field name="model">website.alias</field>
@@ -28,6 +44,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_website_alias_graph" model="ir.ui.view" >
             <field name="name">website.alias.graph</field>
             <field name="model">website.alias</field>
@@ -38,6 +55,7 @@
                 </graph>
             </field>
         </record>
+
         <!-- Action for website alias-->
         <record model="ir.actions.act_window" id="action_website_alias">
             <field name="name">URL Shortener</field>
@@ -64,6 +82,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_website_alias_click_tree" model="ir.ui.view">
             <field name="name">website.alias.click.tree</field>
             <field name="model">website.alias.click</field>
@@ -87,6 +106,7 @@
                 </graph>
             </field>
         </record>
+
         <!-- Action for website alias click-->
         <record model="ir.actions.act_window" id="action_website_alias_click">
             <field name="name">URL Shortener</field>
@@ -94,6 +114,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
         </record>
+
         <menuitem id="menu_url_shortener_main" name="URL Shortener" parent="base.marketing_menu"/>
         <menuitem id="menu_url_shortener_alias" name="URL Shortener" parent="menu_url_shortener_main" action="action_website_alias"/>
         <menuitem id="menu_url_shortener_click" name="URL Shortener" parent="base.marketing_reporting_menu" action="action_website_alias_click"/>

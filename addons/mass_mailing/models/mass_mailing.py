@@ -640,7 +640,7 @@ class MassMailing(osv.Model):
             comp_ctx = dict(context, active_ids=res_ids)
             composer_values = {
                 'author_id': author_id,
-                'body': self.convert_link(cr, uid, mailing.id, mailing.body_html, context=context),
+                'body': self.convert_link(cr, uid, [mailing.id], context=context)[mailing.id],
                 'subject': mailing.name,
                 'model': mailing.mailing_model,
                 'email_from': mailing.email_from,
@@ -657,24 +657,25 @@ class MassMailing(osv.Model):
             self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True
 
-    def add_mail_and_utm_stuff(self, cr, uid, url, context=None):
-        utm_object = self.mass_mailing_campaign_id if self.mass_mailing_campaign_id else self
-        append =  '?' if url.find('?') == -1 else '&'
-        url = "%s%sutm_campain=%s&utm_source=%s&utm_medium=%s" % (url, append, utm_object.campaign_id.name, utm_object.source_id.name, utm_object.medium_id.name)
-        return url
-
     def find_urls(self, cr, uid, body, context=None):
         return re.findall(URL_REGEX, body)
 
-    def convert_link(self, cr, uid, ids, body, context=None):
+    def convert_link(self, cr, uid, ids, context=None):
         website_alias = self.pool['website.alias']
-        if body:
-            for long_url in self.find_urls(cr, uid, body, context=context):
-                long_url_with_utm = add_mail_and_utm_stuff(cr, uid, long_url, context=context)
-                shorten_url = website_alias.create_shorten_url(cr, uid, long_url_with_utm, context=context)
-                if shorten_url:
-                    body = body.replace(long_url, shorten_url)
-        return body
+        res = {}
+        for mass_mailing in self.browse(cr, uid, ids, context=context):
+            if mass_mailing.body_html:
+                for long_url in self.find_urls(cr, uid, mass_mailing.body_html, context=context):
+                    utm_object = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
+                    if utm_object.campaign_id and utm_object.source_id and utm_object.medium_id:
+                        append =  '?' if long_url.find('?') == -1 else '&'
+                        long_url_with_utm = "%s%sutm_campain=%s&utm_source=%s&utm_medium=%s" % (long_url, append, utm_object.campaign_id.name, utm_object.source_id.name, utm_object.medium_id.name)
+                        shorten_url = website_alias.create_shorten_url(cr, uid, long_url_with_utm, context=context)
+                    else:
+                        shorten_url = website_alias.create_shorten_url(cr, uid, long_url, context=context)
+                    if shorten_url:
+                        res[mass_mailing.id] = mass_mailing.body_html.replace(long_url, shorten_url)
+        return res
 
 class MailMail(models.Model):
     _inherit = ['mail.mail']

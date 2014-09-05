@@ -43,6 +43,22 @@ class website_alias(models.Model):
                     return x + str(id)
         self.code = random_string(self.id)
 
+    @api.multi
+    def action_view_statistics(self):
+        action = self.env['ir.actions.act_window'].for_xml_id('website_url', 'action_view_click_statistics')
+        action['domain'] = [('alias_id', '=', self.id)]
+        return action
+
+
+    @api.multi
+    def action_visit_page(self):
+        return {
+            'name' : _("Visit Webpage"),
+            'type' : 'ir.actions.act_url',
+            'url' : self.url,
+            'target' : 'self',
+        }
+
     @api.model
     def create_shorten_url(self, url):
         if not VALIDATE_URL(url): return False
