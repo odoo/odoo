@@ -19,11 +19,8 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-def status_response(status, substr=False):
-    if substr:
-        return int(str(status)[0])
-    else:
-        return status_response(status, substr=True) == 2
+def status_response(status):
+    return int(str(status)[0]) == 2
 
 
 class Meta(type):
