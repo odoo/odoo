@@ -273,6 +273,7 @@ class res_currency(osv.osv):
 
     def get_format_currencies_js_function(self, cr, uid, context=None):
 <<<<<<< HEAD
+<<<<<<< HEAD
         """ Returns a string that can be used to instanciate a javascript function that formats numbers as currencies.
             That function expects the number as first parameter and the currency id as second parameter. In case of failure it returns undefined."""
         function = ""
@@ -294,30 +295,21 @@ class res_currency(osv.osv):
         company_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
         cr.execute("SELECT id, name, symbol, rounding, position FROM res_currency")
         rows = cr.dictfetchall()
+=======
+        """ Returns a string that can be used to instanciate a javascript function that formats numbers as currencies.
+            That function expects the number as first parameter and the currency id as second parameter. In case of failure it returns undefined."""
+>>>>>>> [WIP] account: reconciliation widgets
         function = ""
-
-        for row in rows:
-            if row['id'] == company_currency_id:
-                company_currency = row
-            # Number of digits from decimal rounding
-            # Warning : will fail miserably if rounding method is not a number of digits (ex : 0.05)
-            digits = math.log10(1/row['rounding'])
+        for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'rounding', 'position'], context=context):
+            digits = int(math.log10(1 / row['rounding']))
             symbol = row['symbol'] or row['name']
 
+            format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69," + str(digits) + "]}, 0.00)"
             if row['position'] == 'after':
-                return_str = "return amount.toFixed(" + str(digits) + ") + '\\xA0" + symbol + "';"
+                return_str = "return " + format_number_str + " + '\\xA0" + symbol + "';"
             else:
-                return_str = "return '" + symbol + "\\xA0' + amount.toFixed(" + str(digits) + ");"
-            function += "if (currency_id === " + str(row['id']) + ") { " + return_str + " }"
-
-        digits = math.log10(1/company_currency['rounding'])
-        symbol = company_currency['symbol'] or company_currency['name']
-        if company_currency['position'] == 'after':
-            return_str = "return amount.toFixed(" + str(digits) + ") + '\\xA0" + symbol + "';"
-        else:
-            return_str = "return '" + symbol + "\\xA0' + amount.toFixed(" + str(digits) + ");"
-        function += "else { " + return_str + " }"
-
+                return_str = "return '" + symbol + "\\xA0' + " + format_number_str + ";"
+            function += "if (arguments[1] === " + str(row['id']) + ") { " + return_str + " }"
         return function
 
 <<<<<<< HEAD

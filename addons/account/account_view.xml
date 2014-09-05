@@ -188,6 +188,7 @@
                         <group>
                             <field name="tax_ids" domain="[('parent_id','=',False)]" widget="many2many_tags"/>
                             <field name="reconcile"/>
+                            <field name="last_reconciliation_date" readonly="1" attrs="{'invisible':['|',('reconcile','=',False),('last_reconciliation_date','=',False)]}"/>
                             <field name="child_consol_ids"
                                 attrs="{'invisible':[('type','!=','consolidation')]}"
                                 widget="many2many_tags"/>

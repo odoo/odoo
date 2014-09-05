@@ -240,6 +240,12 @@ $aestetic_animation_speed: 300ms;
             .toggle_create {
                 @extend .visible_toggle;
             }
+
+            &.no_partner {
+                .toggle_match {
+                    @extend .visible_toggle;
+                }
+            }
         }
 
         &[data-mode="inactive"] {
@@ -511,6 +517,11 @@ $aestetic_animation_speed: 300ms;
 
 .openerp .oe_manual_reconciliation {
     .oe_manual_reconciliation_line {
+        .button_reconcile {
+            float: right;
+            margin-right: $actionColWidth;
+        }
+
         .accounting_view {
             thead {
                 background: none;
@@ -531,6 +542,19 @@ $aestetic_animation_speed: 300ms;
                 .cell_title_account_code {
                     text-align: center;
                 }
+
+                tr:first-child td {
+                    border-bottom: $lightBorder;
+
+                    &.cell_action, &.cell_info_popover {
+                        border-bottom: none;
+                    }
+
+                    &.cell_title_account_code {
+                        border-bottom: 1px solid #000 !important;
+                    }
+                }
+
             }
             
             .filler_line td {
@@ -538,35 +562,13 @@ $aestetic_animation_speed: 300ms;
                 cursor: default !important;
             }
             
-            tbody tr:first-child td {
-                border-top: $lightBorder;
+            tbody.tbody_matched_lines tr:first-child td {
                 padding-top: 4px;
-
-                &.cell_action, &.cell_info_popover {
-                    border-top: none;
-                }
             }
         }
         
         td.cell_due_date {
             padding-left: $mainTableBordersPadding !important;
         }
-
-        .toggle_match {
-            display: none;
-        }
-        
-        /* Bouton entre les 2 tables */
-        .reconcile_button_container {
-            width: 30%;
-            float: right;
-            text-align: center;
-            margin: 5px $actionColWidth 5px 0;
-        }
-
-        > table > tbody > tr:nth-child(1) > td table {
-            margin-bottom: 0 !important;
-        }
-        /* / Bouton entre les 2 tables */
     }
 }
