@@ -106,11 +106,12 @@ class stock_landed_cost(osv.osv):
         accounts = product_obj.get_product_accounts(cr, uid, line.product_id.product_tmpl_id.id, context=context)
         debit_account_id = accounts['property_stock_valuation_account_id']
         credit_account_id = cost_product.property_account_expense and cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
+        already_out_account_id = cost_product.property_account_income and cost_product.property_account_income.id or cost_product.categ_id.property_account_income_categ.id
         if not credit_account_id:
             raise osv.except_osv(_('Error!'), _('Please configure Stock Expense Account for product: %s.') % (cost_product.name))
-        return self._create_account_move_line(cr, uid, line, move_id, credit_account_id, debit_account_id, context=context)
+        return self._create_account_move_line(cr, uid, line, move_id, credit_account_id, debit_account_id, already_out_account_id, context=context)
 
-    def _create_account_move_line(self, cr, uid, line, move_id, credit_account_id, debit_account_id, context=None):
+    def _create_account_move_line(self, cr, uid, line, move_id, credit_account_id, debit_account_id, already_out_account_id, context=None):
         """
         Generate the account.move.line values to track the landed cost.
         """
@@ -131,6 +132,33 @@ class stock_landed_cost(osv.osv):
             'credit': line.additional_landed_cost,
             'account_id': credit_account_id
         }, context=context)
+        
+        #Check if its quants are still in stock and if not create extra move 
+        move_obj = self.pool.get("stock.move")
+        move = move_obj.browse(cr, uid, move_id, context=context)
+        qty = 0
+        for quant in move.quant_ids: 
+            if quant.location_id.usage != 'internal':
+                qty += quant.qty
+        if qty > 0:
+            aml_obj.create(cr, uid, {
+                                     'name': line.name,
+                                     'move_id': move_id,
+                                     'product_id': line.product_id.id,
+                                     'quantity': qty,
+                                     'credit': line.additional_landed_cost * qty / line.quantity,
+                                     'account_id': debit_account_id
+                                     }, context=context)
+            aml_obj.create(cr, uid, {
+                                     'name': line.name,
+                                     'move_id': move_id,
+                                     'product_id': line.product_id.id,
+                                     'quantity': qty,
+                                     'debit': line.additional_landed_cost * qty / line.quantity,
+                                     'account_id': already_out_account_id
+                                     }, context=context)
+        
+        
         return True
 
     def _create_account_move(self, cr, uid, cost, context=None):
