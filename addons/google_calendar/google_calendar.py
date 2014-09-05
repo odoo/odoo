@@ -858,7 +858,7 @@ class google_calendar(osv.AbstractModel):
         return current_user.google_calendar_rtoken is False
 
     def get_calendar_scope(self, RO=False):
-        readonly = RO and '.readonly' or ''
+        readonly = '.readonly' if RO else ''
         return 'https://www.googleapis.com/auth/calendar%s' % (readonly)
 
     def authorize_google_uri(self, cr, uid, from_url='http://www.openerp.com', context=None):
