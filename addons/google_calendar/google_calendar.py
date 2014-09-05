@@ -97,7 +97,6 @@ class SyncEvent(object):
                         tmpSrc = 'OE'
                     assert tmpSrc in ['GG', 'OE']
 
-                    #if self.OP.action == None:
                     if self[tmpSrc].isRecurrence:
                         if self[tmpSrc].status:
                             self.OP = Update(tmpSrc, 'Only need to update, because i\'m active')
@@ -300,7 +299,6 @@ class google_calendar(osv.AbstractModel):
             'fields': 'items,nextPageToken',
             'access_token': token,
             'maxResults': 1000,
-            #'timeMin': self.get_minTime(cr, uid, context=context).strftime("%Y-%m-%dT%H:%M:%S.%fz"),
         }
 
         if lastSync:
@@ -499,18 +497,6 @@ class google_calendar(osv.AbstractModel):
     def synchronize_events(self, cr, uid, ids, lastSync=True, context=None):
         if context is None:
             context = {}
-
-        # def isValidSync(syncToken):
-        #     gs_pool = self.pool['google.service']
-        #     params = {
-        #         'maxResults': 1,
-        #         'fields': 'id',
-        #         'access_token': self.get_token(cr, uid, context),
-        #         'syncToken': syncToken,
-        #     }
-        #     url = "/calendar/v3/calendars/primary/events"
-        #     status, response = gs_pool._do_request(cr, uid, url, params, type='GET', context=context)
-        #     return int(status) != 410
 
         current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
 
