@@ -17,7 +17,7 @@
  #    You should have received a copy of the GNU Affero General Public License
  #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  #
- ############################################################################## 
+ ##############################################################################
  
 from openerp.osv import fields, osv
 from openerp import tools
@@ -26,7 +26,7 @@ class sale_report(osv.osv):
     _inherit = "sale.report"
     _columns = {
         'shipped': fields.boolean('Shipped', readonly=True),
-        'shipped_qty_1': fields.integer('Shipped', readonly=True),
+        'shipped_qty_1': fields.integer('# of Shipped Lines', readonly=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse',readonly=True),
         'state': fields.selection([
             ('draft', 'Quotation'),
@@ -45,4 +45,3 @@ class sale_report(osv.osv):
 
     def _group_by(self):
         return super(sale_report, self)._group_by() + ", s.warehouse_id, s.shipped"
-

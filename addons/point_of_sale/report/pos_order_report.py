@@ -26,10 +26,13 @@ class pos_order_report(osv.osv):
     _name = "report.pos.order"
     _description = "Point of Sale Orders Statistics"
     _auto = False
+    
     _columns = {
         'date': fields.date('Date Order', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
+        'categ_id': fields.many2one('product.category','Internal Category', readonly=True),
         'state': fields.selection([('draft', 'New'), ('paid', 'Closed'), ('done', 'Synchronized'), ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],
                                   'Status'),
         'user_id':fields.many2one('res.users', 'Salesperson', readonly=True),
@@ -42,6 +45,11 @@ class pos_order_report(osv.osv):
         'product_qty':fields.integer('# of Qty', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'delay_validation': fields.integer('Delay Validation'),
+        'invoiced': fields.boolean('Invoiced', readonly=True),
+        'config_id' : fields.many2one('pos.config', 'Point of Sale', readonly=True),
+        'pos_categ_id': fields.many2one('pos.category','Public Category', readonly=True),
+        'stock_location_id': fields.many2one('stock.location', 'Warehouse', readonly=True),
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
     }
     _order = 'date desc'
 
@@ -64,15 +72,27 @@ class pos_order_report(osv.osv):
                     s.location_id as location_id,
                     s.company_id as company_id,
                     s.sale_journal as journal_id,
-                    l.product_id as product_id
+                    l.product_id as product_id,
+                    pt.categ_id,
+                    p.product_tmpl_id,
+                    ps.config_id,
+                    pt.pos_categ_id,
+                    pc.stock_location_id,
+                    s.pricelist_id,
+                    CASE 
+                        WHEN coalesce(s.invoice_id, -1) >= 0 THEN true
+                        ELSE false
+                    END as invoiced
                 from pos_order_line as l
                     left join pos_order s on (s.id=l.order_id)
                     left join product_product p on (l.product_id=p.id)
                     left join product_template pt on (p.product_tmpl_id=pt.id)
                     left join product_uom u on (u.id=pt.uom_id)
+                    left join pos_session ps on (s.session_id=ps.id)
+                    left join pos_config pc on (ps.config_id=pc.id)
                 group by
                     s.date_order, s.partner_id,s.state,
-                    s.user_id,s.location_id,s.company_id,s.sale_journal,l.product_id,s.create_date
+                    s.user_id,s.location_id,s.company_id,s.sale_journal,s.pricelist_id,s.invoice_id,l.product_id,s.create_date,pt.categ_id,pt.pos_categ_id,p.product_tmpl_id,ps.config_id,pc.stock_location_id
                 having
                     sum(l.qty * u.factor) != 0)""")
 

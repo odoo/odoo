@@ -25,7 +25,7 @@
                     <filter icon="terp-dolar" string="Invoiced" domain="[('state','=',('invoiced'))]"/>
                     <filter icon="terp-dolar" string="Not Invoiced" domain="[('state','=',('paid'))]"/>
                     <separator/>
-                    <filter icon="terp-go-year" string="Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="POS ordered created during current year"/>
+                    <filter icon="terp-go-year" string="Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="POS ordered created during current year"/>
                     <separator/>
                     <filter icon="terp-personal" string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
                     <field name="partner_id"/>
