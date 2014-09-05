@@ -25,7 +25,7 @@ class sale_journal_invoice_type(osv.osv):
     _name = 'sale_journal.invoice.type'
     _description = 'Invoice Types'
     _columns = {
-        'name': fields.char('Invoice Type', size=64, required=True),
+        'name': fields.char('Invoice Type', required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the invoice type without removing it."),
         'note': fields.text('Note'),
         'invoicing_method': fields.selection([('simple', 'Non grouped'), ('grouped', 'Grouped')], 'Invoicing method', required=True),

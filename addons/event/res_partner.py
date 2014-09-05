@@ -19,15 +19,12 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp import models, fields
 
 
-class res_partner(osv.osv):
+class res_partner(models.Model):
     _inherit = 'res.partner'
 
-    _columns = {
-        'speaker': fields.boolean('Speaker', help="Check this box if this contact is a speaker."),
-    }
-
+    speaker = fields.Boolean(help="Check this box if this contact is a speaker.")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

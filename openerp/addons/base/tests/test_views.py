@@ -357,6 +357,7 @@ class TestApplyInheritanceSpecs(ViewCase):
                     name="target"),
                 string="Title"))
 
+    @openerp.tools.mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_invalid_position(self):
         spec = Field(
                 Field(name="whoops"),
@@ -367,6 +368,7 @@ class TestApplyInheritanceSpecs(ViewCase):
                                               self.base_arch,
                                               spec, None)
 
+    @openerp.tools.mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_incorrect_version(self):
         # Version ignored on //field elements, so use something else
         arch = E.form(E.element(foo="42"))
@@ -379,6 +381,7 @@ class TestApplyInheritanceSpecs(ViewCase):
                                               arch,
                                               spec, None)
 
+    @openerp.tools.mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_target_not_found(self):
         spec = Field(name="targut")
 
@@ -660,7 +663,7 @@ class test_views(ViewCase):
             name='base view',
             model=model,
             priority=1,
-            arch="""<?xml version="1.0"?>
+            arch_db="""<?xml version="1.0"?>
                         <tree string="view">
                           <field name="url"/>
                         </tree>
@@ -674,7 +677,7 @@ class test_views(ViewCase):
             model=model,
             priority=1,
             inherit_id=vid,
-            arch="""<?xml version="1.0"?>
+            arch_db="""<?xml version="1.0"?>
                         <xpath expr="//field[@name='url']" position="before">
                           <field name="name"/>
                         </xpath>

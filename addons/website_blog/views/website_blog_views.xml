@@ -54,9 +54,11 @@
             <field name="arch" type="xml">
                 <form string="Blog Post">
                     <sheet>
-                        <h1><field name="name" placeholder="Name"/></h1>
-                        <field name="tag_ids" widget="many2many_tags"/>
-                        <field name="subtitle" placeholder="Blog Subtitle"/>
+                        <group>
+                            <field name="name" placeholder="Name"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="subtitle" placeholder="Blog Subtitle"/>
+                        </group>
                         <group>
                             <field name="background_image"/>
                             <field name="blog_id"/>

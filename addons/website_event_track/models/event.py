@@ -86,7 +86,7 @@ class event_track(osv.osv):
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'color': fields.integer('Color Index'),
         'priority': fields.selection([('3','Low'),('2','Medium (*)'),('1','High (**)'),('0','Highest (***)')], 'Priority', required=True),
-        'website_published': fields.boolean('Available in the website'),
+        'website_published': fields.boolean('Available in the website', copy=False),
         'website_url': fields.function(_website_url, string="Website url", type="char"),
         'image': fields.related('speaker_ids', 'image', type='binary', readonly=True)
     }
@@ -120,7 +120,8 @@ class event_track(osv.osv):
 #
 class event_event(osv.osv):
     _inherit = "event.event"
-    def _tz_get(self,cr,uid, context=None):
+
+    def _list_tz(self,cr,uid, context=None):
         # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
         return [(tz,tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 
@@ -140,8 +141,8 @@ class event_event(osv.osv):
 
     _columns = {
         'tag_ids': fields.many2many('event.tag', string='Tags'),
-        'track_ids': fields.one2many('event.track', 'event_id', 'Tracks'),
-        'sponsor_ids': fields.one2many('event.sponsor', 'event_id', 'Sponsorships'),
+        'track_ids': fields.one2many('event.track', 'event_id', 'Tracks', copy=True),
+        'sponsor_ids': fields.one2many('event.sponsor', 'event_id', 'Sponsorships', copy=True),
         'blog_id': fields.many2one('blog.blog', 'Event Blog'),
         'show_track_proposal': fields.boolean('Talks Proposals'),
         'show_tracks': fields.boolean('Multiple Tracks'),
@@ -149,7 +150,7 @@ class event_event(osv.osv):
         'count_tracks': fields.function(_count_tracks, type='integer', string='Tracks'),
         'tracks_tag_ids': fields.function(_get_tracks_tag_ids, type='one2many', relation='event.track.tag', string='Tags of Tracks'),
         'allowed_track_tag_ids': fields.many2many('event.track.tag', string='Accepted Tags', help="List of available tags for track proposals."),
-        'timezone_of_event': fields.selection(_tz_get, 'Event Timezone', size=64),
+        'timezone_of_event': fields.selection(_list_tz, 'Event Timezone', size=64),
     }
 
     _defaults = {

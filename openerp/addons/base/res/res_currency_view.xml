@@ -77,38 +77,5 @@
 
         <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3" groups="base.group_multi_currency"/>
 
-        <!-- 
-            Currency Rate Type
-        -->
-        <record id="view_currency_rate_type_form" model="ir.ui.view">
-            <field name="name">res.currency.rate.type.form</field>
-            <field name="model">res.currency.rate.type</field>
-            <field name="arch" type="xml">
-                <form string="Currency Rate Type">
-                    <group>
-                        <field name="name"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_currency_rate_type_form" model="ir.actions.act_window">
-            <field name="name">Currency Rate Type</field>
-            <field name="res_model">res.currency.rate.type</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <record id="view_currency_rate_type_search" model="ir.ui.view">
-            <field name="name">res.currency.rate.type.search</field>
-            <field name="model">res.currency.rate.type</field>
-            <field name="arch" type="xml">
-                <search string="Currency Rate Type">
-                    <field name="name" string="Name"/>
-                </search>
-            </field>
-        </record>
-
-
     </data>
 </openerp>

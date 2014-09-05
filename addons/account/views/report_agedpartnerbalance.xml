@@ -99,7 +99,7 @@
                         </tr>
                         <tr t-foreach="get_lines_with_out_partner(data['form'])" t-as="not_partner">
                             <td>
-                                <span t-esc="partner['name']"/>
+                                <span t-esc="not_partner['name']"/>
                             </td>
                             <td class="text-right">
                                 <span t-esc="formatLang(not_partner['direction'], currency_obj=res_company.currency_id)"/>

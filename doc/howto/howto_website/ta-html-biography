@@ -1,12 +1,17 @@
 # HG changeset patch
-# Parent 313d7c760558b24461a544063de061d00fdf7059
+# Parent d57af6d92026e45b336308b143a5c227d44de9f7
 
 diff --git a/models/academy.py b/models/academy.py
 --- a/models/academy.py
 +++ b/models/academy.py
-@@ -6,4 +6,5 @@ class TeachingAssistants(orm.Model):
+@@ -1,8 +1,9 @@
+ # -*- coding: utf-8 -*-
+ from openerp.models import Model
+-from openerp.fields import Char
++from openerp.fields import Char, Html
  
-     _columns = {
-         'name': fields.char(),
-+        'biography': fields.html(),
-     }
+ class TeachingAssistants(Model):
+     _name = "academy.tas"
+ 
+     name = Char()
++    biography = Html()

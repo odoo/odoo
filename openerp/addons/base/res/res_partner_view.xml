@@ -31,6 +31,7 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="shortcut"/>
+                        <field name="domain"/>
                     </group>
                 </form>
             </field>
@@ -147,8 +148,8 @@
 
                     <group>
                         <group>
-                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
-                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
+                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
+                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type" groups="base.group_no_one">
                                 <field class="oe_inline"
                                     name="type"/>
                             </div>
@@ -158,8 +159,8 @@
                                 <div class="oe_edit_only">
                                     <field name="use_parent_address" class="oe_inline"
                                            on_change="onchange_address(use_parent_address, parent_id)"
-                                           attrs="{'invisible': [('parent_id','=', False),('use_parent_address','=',False)]}"/>
-                                    <label for="use_parent_address" attrs="{'invisible': [('parent_id','=', False),('use_parent_address','=',False)]}"/>
+                                           attrs="{'invisible': ['|', ('is_company', '=', True),('parent_id', '=', False)]}"/>
+                                    <label for="use_parent_address" attrs="{'invisible': ['|', ('is_company', '=', True), ('parent_id', '=', False)]}"/>
                                 </div>
                                 <button name="open_parent" type="object" string="(edit company address)" class="oe_link oe_edit_only"
                                         attrs="{'invisible': ['|',('parent_id','=', False),('use_parent_address','=',False)]}"/>
@@ -172,7 +173,7 @@
                                 </div>
                                 <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                             </div>
-                            <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
+                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
@@ -182,8 +183,8 @@
                             <field name="fax"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
-                            <field name="title" domain="[('domain', '=', 'contact')]"
-                                options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)]}" />
+                            <field name="title" domain="[('domain','=','contact')]" options='{"no_open": True}' attrs="{'invisible': [('is_company','=',True)]}" context="{'default_domain': 'contact'}"/>
+                            <field name="title" domain="[('domain','=','partner')]" options='{"no_open": True}' attrs="{'invisible': [('is_company','=',False)]}" context="{'default_domain': 'partner'}"/>
                         </group>
                     </group>
 
@@ -272,8 +273,8 @@
                                             <field name="use_parent_address"/><label for="use_parent_address"/>
                                         </div>
                                         <group>
-                                            <label for="type"/>
-                                            <div name="div_type">
+                                            <label for="type" groups="base.group_no_one"/>
+                                            <div name="contact_div_type" groups="base.group_no_one">
                                                 <field class="oe_inline" name="type"/>
                                             </div>
                                             <label for="street" string="Address" attrs="{'invisible': [('use_parent_address','=', True)]}"/>
@@ -311,11 +312,16 @@
                                 <group>
                                     <field name="ref"/>
                                     <field name="lang"/>
-                                    <field name="date"/>
                                 </group>
-                                <group>
+                            </group>
+                            <group>
+                                <group string="Mailing" name="mailing">
                                     <field name="active"/>
                                 </group>
+                            </group>
+                            <group>
+                                <group name="invoicing"/>
+                                <group name="point_of_sale"/>
                             </group>
                         </page>
                     </notebook>
@@ -424,7 +430,7 @@
               <p class="oe_view_nocontent_create">
                 Click to add a contact in your address book.
               </p><p>
-                OpenERP helps you easily track all activities related to
+                Odoo helps you easily track all activities related to
                 a customer; discussions, history of business opportunities,
                 documents, etc.
               </p>
@@ -463,7 +469,7 @@
               <p class="oe_view_nocontent_create">
                 Click to add a contact in your address book.
               </p><p>
-                OpenERP helps you easily track all activities related to
+                Odoo helps you easily track all activities related to
                 a customer: discussions, history of business opportunities,
                 documents, etc.
               </p>
@@ -483,7 +489,7 @@
               <p class="oe_view_nocontent_create">
                 Click to add a contact in your address book.
               </p><p>
-                OpenERP helps you easily track all activities related to
+                Odoo helps you easily track all activities related to
                 a supplier: discussions, history of purchases,
                 documents, etc.
               </p>

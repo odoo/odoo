@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- Top menu item -->
-        <menuitem name="Tools" id="base.menu_tools" sequence="120" groups="base.group_tool_user"/>
-        <menuitem id="next_id_45" name="Recurring Events" parent="base.menu_tools" sequence="4"/>
 
         <!-- Subscription Views -->
         <record id="view_subscription_form" model="ir.ui.view">
@@ -85,7 +82,7 @@
         </record>
 
         <record id="action_subscription_form" model="ir.actions.act_window">
-            <field name="name">Subscriptions</field>
+            <field name="name">Recurring Documents</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">subscription.subscription</field>
             <field name="view_type">form</field>
@@ -93,7 +90,7 @@
             <field name="context">{'search_default_User':1}</field>
             <field name="search_view_id" ref="view_subscription_filter"/>
         </record>
-        <menuitem action="action_subscription_form" id="menu_action_subscription_form" parent="subscription.next_id_45"/>
+        <menuitem action="action_subscription_form" id="menu_action_subscription_form" parent="base.menu_automation"/>
 
         <record id="subscription_subscription_history_tree" model="ir.ui.view">
             <field name="name">subscription.subscription.history.tree</field>
@@ -181,17 +178,14 @@
         </record>
 
         <record id="action_document_form" model="ir.actions.act_window">
-            <field name="name">Document Types</field>
+            <field name="name">Recurring Types</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">subscription.document</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="document_tree"/>
             <field name="search_view_id" ref="view_subscription_document_filter"/>
         </record>
-        <menuitem name="Configuration" parent="base.menu_tools"
-              id="base.menu_lunch_survey_root" sequence="20" groups="base.group_tool_manager"/>
-        <menuitem id="config_recuuring_event" name="Recurring Events" parent="base.menu_lunch_survey_root" sequence="4"/>
-        <menuitem action="action_document_form" id="menu_action_document_form" parent="config_recuuring_event"/>
+        <menuitem id="menu_action_document_form" action="action_document_form" parent="base.menu_automation"/>
 
     </data>
 </openerp>

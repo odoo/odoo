@@ -2,7 +2,7 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
 	<xsl:variable name="signature" select="//corporate-header/user/signature"/>
-	<xsl:variable name="title">Open ERP Report</xsl:variable>
+	<xsl:variable name="title">Odoo Report</xsl:variable>
 	<xsl:variable name="leftMargin">1cm</xsl:variable>
 	<xsl:variable name="rightMargin">1cm</xsl:variable>
 	<xsl:variable name="topMargin">1cm</xsl:variable>

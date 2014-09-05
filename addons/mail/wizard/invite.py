@@ -48,7 +48,7 @@ class invite_wizard(osv.osv_memory):
         return result
 
     _columns = {
-        'res_model': fields.char('Related Document Model', size=128,
+        'res_model': fields.char('Related Document Model',
                         required=True, select=1,
                         help='Model of the followed resource'),
         'res_id': fields.integer('Related Document ID', select=1,

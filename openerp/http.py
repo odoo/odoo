@@ -35,6 +35,7 @@ import werkzeug.wrappers
 import werkzeug.wsgi
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
 
@@ -180,12 +181,18 @@ class WebRequest(object):
     .. attribute:: db
 
         ``str``, the name of the database linked to the current request. Can
-        be ``None`` if the current request uses the ``none`` authentication.
+        be ``None`` if the current request uses the ``none`` authentication
+        in ``web`` module's controllers.
 
     .. attribute:: uid
 
         ``int``, the id of the user related to the current request. Can be
         ``None`` if the current request uses the ``none`` authentication.
+
+    .. attribute:: env
+
+        an :class:`openerp.api.Environment` bound to the current
+        request's ``cr``, ``uid`` and ``context``
     """
     def __init__(self, httprequest):
         self.httprequest = httprequest
@@ -223,7 +230,7 @@ class WebRequest(object):
     @property
     def db(self):
         """
-        The registry to the database linked to this request. Can be ``None``
+        The database linked to this request. Can be ``None``
         if the current request uses the ``none`` authentication.
         """
         return self.session.db if not self.disable_db else None
@@ -239,6 +246,13 @@ class WebRequest(object):
         if not self._cr:
             self._cr = self.registry.cursor()
         return self._cr
+
+    @lazy_property
+    def env(self):
+        """
+        The Environment bound to current request.
+        """
+        return openerp.api.Environment(self.cr, self.uid, self.context)
 
     def __enter__(self):
         _request_stack.push(self)
@@ -270,8 +284,6 @@ class WebRequest(object):
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
         self._failed = exception # prevent tx commit
-        if isinstance(exception, werkzeug.exceptions.HTTPException):
-            return exception
         raise
 
     def _call_function(self, *args, **kwargs):
@@ -537,6 +549,15 @@ class HttpRequest(WebRequest):
         params.update(self.httprequest.files.to_dict())
         params.pop('session_id', None)
         self.params = params
+
+    def _handle_exception(self, exception):
+        """Called within an except block to allow converting exceptions
+           to abitrary responses. Anything returned (except None) will
+           be used as response."""
+        try:
+            return super(HttpRequest, self)._handle_exception(exception)
+        except werkzeug.exceptions.HTTPException, e:
+            return e
 
     def dispatch(self):
         if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
@@ -1124,11 +1145,14 @@ class Root(object):
     """Root WSGI application for the OpenERP Web Client.
     """
     def __init__(self):
+        self._loaded = False
+
+    @lazy_property
+    def session_store(self):
         # Setup http sessions
         path = openerp.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
-        self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
-        self._loaded = False
+        return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
 
     @lazy_property
     def nodb_routing_map(self):
@@ -1259,7 +1283,10 @@ class Root(object):
             request = self.get_request(httprequest)
 
             def _dispatch_nodb():
-                func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
+                try:
+                    func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
+                except werkzeug.exceptions.HTTPException, e:
+                    return request._handle_exception(e)
                 request.set_handler(func, arguments, "none")
                 result = request.dispatch()
                 return result

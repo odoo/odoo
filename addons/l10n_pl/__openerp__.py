@@ -23,25 +23,31 @@
 {
     'name' : 'Poland - Accounting',
     'version' : '1.0',
-    'author' : 'Grzegorz Grzelak (Cirrus)',
-    'website': 'http://www.cirrus.pl',
+    'author' : 'Grzegorz Grzelak (OpenGLOBE)',
+    'website': 'http://www.openglobe.pl',
     'category' : 'Localization/Account Charts',
     'description': """
 This is the module to manage the accounting chart and taxes for Poland in OpenERP.
 ==================================================================================
 
-To jest moduł do tworzenia wzorcowego planu kont i podstawowych ustawień do podatków
-VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów zakładając,
-że wszystkie towary są w obrocie hurtowym.
+To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów podatkowych i
+rejestrów podatkowych. Moduł ustawia też konta do kupna i sprzedaży towarów
+zakładając, że wszystkie towary są w obrocie hurtowym.
+
+Niniejszy moduł jest przeznaczony dla odoo 8.0.
+Wewnętrzny numer wersji OpenGLOBE 1.01
     """,
     'depends' : ['account', 'base_iban', 'base_vat', 'account_chart'],
     'demo' : [],
-    'data' : ['account_tax_code.xml','account_chart.xml',
-              'account_tax.xml','l10n_chart_pl_wizard.xml'
+    'data' : ['account_tax_code.xml',
+              'account_chart.xml',
+              'account_tax.xml',
+              'fiscal_position.xml',
+              'country_pl.xml',
+              'l10n_chart_pl_wizard.xml'
     ],
     'auto_install': False,
     'installable': True,
-    'images': ['images/config_chart_l10n_pl.jpeg','images/l10n_pl_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

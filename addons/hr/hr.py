@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-Today OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -51,7 +51,7 @@ class hr_employee_category(osv.Model):
     _name = "hr.employee.category"
     _description = "Employee Category"
     _columns = {
-        'name': fields.char("Employee Tag", size=64, required=True),
+        'name': fields.char("Employee Tag", required=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('hr.employee.category', 'Parent Employee Tag', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories'),
@@ -94,9 +94,9 @@ class hr_job(osv.Model):
 
     _name = "hr.job"
     _description = "Job Position"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _columns = {
-        'name': fields.char('Job Name', size=128, required=True, select=True),
+        'name': fields.char('Job Name', required=True, select=True),
         'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
@@ -110,8 +110,10 @@ class hr_job(osv.Model):
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             }, type='integer',
             multi='_get_nbr_employees'),
-        'no_of_recruitment': fields.integer('Expected New Employees', help='Number of new employees you expect to recruit.'),
-        'no_of_hired_employee': fields.integer('Hired Employees', help='Number of hired employees for this job position during recruitment phase.'),
+        'no_of_recruitment': fields.integer('Expected New Employees', copy=False,
+                                            help='Number of new employees you expect to recruit.'),
+        'no_of_hired_employee': fields.integer('Hired Employees', copy=False,
+                                               help='Number of hired employees for this job position during recruitment phase.'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
@@ -119,7 +121,7 @@ class hr_job(osv.Model):
         'company_id': fields.many2one('res.company', 'Company'),
         'state': fields.selection([('open', 'Recruitment Closed'), ('recruit', 'Recruitment in Progress')],
                                   string='Status', readonly=True, required=True,
-                                  track_visibility='always',
+                                  track_visibility='always', copy=False,
                                   help="By default 'Closed', set it to 'In Recruitment' if recruitment process is going on for this job position."),
         'write_date': fields.datetime('Update Date', readonly=True),
     }
@@ -151,12 +153,7 @@ class hr_job(osv.Model):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default.update({
-            'employee_ids': [],
-            'no_of_recruitment': 0,
-            'no_of_hired_employee': 0,
-        })
-        if 'name' in default:
+        if 'name' not in default:
             job = self.browse(cr, uid, id, context=context)
             default['name'] = _("%s (copy)") % (job.name)
         return super(hr_job, self).copy(cr, uid, id, default=default, context=context)
@@ -192,20 +189,20 @@ class hr_employee(osv.osv):
         'name_related': fields.related('resource_id', 'name', type='char', string='Name', readonly=True, store=True),
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Date of Birth"),
-        'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
-        'sinid': fields.char('SIN No', size=32, help="Social Insurance Number"),
-        'identification_id': fields.char('Identification No', size=32),
-        'otherid': fields.char('Other Id', size=64),
+        'ssnid': fields.char('SSN No', help='Social Security Number'),
+        'sinid': fields.char('SIN No', help="Social Insurance Number"),
+        'identification_id': fields.char('Identification No'),
+        'otherid': fields.char('Other Id'),
         'gender': fields.selection([('male', 'Male'), ('female', 'Female')], 'Gender'),
         'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'address_id': fields.many2one('res.partner', 'Working Address'),
         'address_home_id': fields.many2one('res.partner', 'Home Address'),
         'bank_account_id': fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
-        'work_phone': fields.char('Work Phone', size=32, readonly=False),
-        'mobile_phone': fields.char('Work Mobile', size=32, readonly=False),
+        'work_phone': fields.char('Work Phone', readonly=False),
+        'mobile_phone': fields.char('Work Mobile', readonly=False),
         'work_email': fields.char('Work Email', size=240),
-        'work_location': fields.char('Office Location', size=32),
+        'work_location': fields.char('Office Location'),
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager'),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Tags'),
@@ -225,14 +222,14 @@ class hr_employee(osv.osv):
                  "resized as a 128x128px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized photo", type="binary", multi="_get_image",
+            string="Small-sized photo", type="binary", multi="_get_image",
             store = {
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the employee. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'passport_id': fields.char('Passport No', size=64),
+        'passport_id': fields.char('Passport No'),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
         'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
@@ -248,13 +245,7 @@ class hr_employee(osv.osv):
         'image': _get_default_image,
         'color': 0,
     }
-    
-    def copy_data(self, cr, uid, ids, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({'child_ids': False})
-        return super(hr_employee, self).copy_data(cr, uid, ids, default, context=context)
-        
+
     def _broadcast_welcome(self, cr, uid, employee_id, context=None):
         """ Broadcast the welcome message to all users in the employee company. """
         employee = self.browse(cr, uid, employee_id, context=context)
@@ -279,17 +270,21 @@ class hr_employee(osv.osv):
         partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, SUPERUSER_ID, user_ids, context=context)))
         self.message_post(
             cr, uid, [employee_id],
-            body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
+            body=_('Welcome to %s! Please help him/her take the first steps with Odoo!') % (employee.name),
             partner_ids=partner_ids,
             subtype='mail.mt_comment', context=context
         )
         return True
 
     def create(self, cr, uid, data, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         if context.get("mail_broadcast"):
             context['mail_create_nolog'] = True
+
+        if data.get('user_id', False) == SUPERUSER_ID and data.get('name',False) == 'Administrator':
+            user_name = self.pool.get('res.users').browse(cr, uid, data.get('user_id'), context=context).name
+            if data['name'] != user_name:
+                data['name'] = user_name
 
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
 
@@ -301,6 +296,7 @@ class hr_employee(osv.osv):
         resource_ids = []
         for employee in self.browse(cr, uid, ids, context=context):
             resource_ids.append(employee.resource_id.id)
+        super(hr_employee, self).unlink(cr, uid, ids, context=context)
         return self.pool.get('resource.resource').unlink(cr, uid, resource_ids, context=context)
 
     def onchange_address_id(self, cr, uid, ids, address, context=None):
@@ -377,19 +373,21 @@ class hr_employee(osv.osv):
 
 
 class hr_department(osv.osv):
+    _name = "hr.department"
+    _description = "HR Department"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _dept_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    _name = "hr.department"
     _columns = {
-        'name': fields.char('Department Name', size=64, required=True),
+        'name': fields.char('Department Name', required=True),
         'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
         'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
         'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),
-        'manager_id': fields.many2one('hr.employee', 'Manager'),
+        'manager_id': fields.many2one('hr.employee', 'Manager', track_visibility='onchange'),
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
         'jobs_ids': fields.one2many('hr.job', 'department_id', 'Jobs'),
         'note': fields.text('Note'),
@@ -429,26 +427,45 @@ class hr_department(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def copy_data(self, cr, uid, ids, default=None, context=None):
-        if default is None:
-            default = {}
-        default['member_ids'] = []
-        return super(hr_department, self).copy_data(cr, uid, ids, default, context=context)
+    def create(self, cr, uid, vals, context=None):
+        # TDE note: auto-subscription of manager done by hand, because currently
+        # the tracking allows to track+subscribe fields linked to a res.user record
+        # An update of the limited behavior should come, but not currently done.
+        manager_id = vals.get("manager_id")
+        new_id = super(hr_department, self).create(cr, uid, vals, context=context)
+        if manager_id:
+            employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=context)
+            if employee.user_id:
+                self.message_subscribe_users(cr, uid, [new_id], user_ids=[employee.user_id.id], context=context)
+        return new_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        # TDE note: auto-subscription of manager done by hand, because currently
+        # the tracking allows to track+subscribe fields linked to a res.user record
+        # An update of the limited behavior should come, but not currently done.
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        manager_id = vals.get("manager_id")
+        if manager_id:
+            employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=context)
+            if employee.user_id:
+                self.message_subscribe_users(cr, uid, [ids], user_ids=[employee.user_id.id], context=context)
+        return super(hr_department, self).write(cr, uid, ids, vals, context=context)
 
 
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
 
-    def copy_data(self, cr, uid, ids, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({'employee_ids': False})
-        return super(res_users, self).copy_data(cr, uid, ids, default, context=context)
-    
-    _columns = {
-        'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
-    }
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        result = super(res_users, self).write(cr, uid, ids, vals, context=context)
+        employee_obj = self.pool.get('hr.employee')
+        if vals.get('name'):
+            for user_id in ids:
+                if user_id == SUPERUSER_ID:
+                    employee_ids = employee_obj.search(cr, uid, [('user_id', '=', user_id)])
+                    employee_obj.write(cr, uid, employee_ids, {'name': vals['name']}, context=context)
+        return result
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

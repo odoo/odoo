@@ -35,7 +35,7 @@ class project_task_type(osv.osv):
     _description = 'Task Stage'
     _order = 'sequence'
     _columns = {
-        'name': fields.char('Stage Name', required=True, size=64, translate=True),
+        'name': fields.char('Stage Name', required=True, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
         'case_default': fields.boolean('Default for New Projects',
@@ -166,14 +166,18 @@ class project(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         alias_ids = []
         mail_alias = self.pool.get('mail.alias')
+        analytic_account_to_delete = set()
         for proj in self.browse(cr, uid, ids, context=context):
             if proj.tasks:
                 raise osv.except_osv(_('Invalid Action!'),
                                      _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
             elif proj.alias_id:
                 alias_ids.append(proj.alias_id.id)
+            if proj.analytic_account_id and not proj.analytic_account_id.line_ids:
+                analytic_account_to_delete.add(proj.analytic_account_id.id)
         res = super(project, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
+        self.pool['account.analytic.account'].unlink(cr, uid, list(analytic_account_to_delete), context=context)
         return res
 
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
@@ -273,7 +277,13 @@ class project(osv.osv):
                     "- Employees Only: employees see all tasks or issues\n"
                     "- Followers Only: employees see only the followed tasks or issues; if portal\n"
                     "   is activated, portal users see the followed tasks or issues."),
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
+        'state': fields.selection([('template', 'Template'),
+                                   ('draft','New'),
+                                   ('open','In Progress'),
+                                   ('cancelled', 'Cancelled'),
+                                   ('pending','Pending'),
+                                   ('close','Closed')],
+                                  'Status', required=True, copy=False),
         'doc_count': fields.function(
             _get_attached_docs, string="Number of documents attached", type='integer'
         )
@@ -332,36 +342,28 @@ class project(osv.osv):
         task_obj = self.pool.get('project.task')
         proj = self.browse(cr, uid, old_project_id, context=context)
         for task in proj.tasks:
-            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
+            # preserve task name and stage, normally altered during copy
+            defaults = {'stage_id': task.stage_id.id,
+                        'name': task.name}
+            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, defaults, context=context)
         self.write(cr, uid, [new_project_id], {'tasks':[(6,0, map_task_id.values())]})
         task_obj.duplicate_task(cr, uid, map_task_id, context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
         if default is None:
             default = {}
-
+        context = dict(context or {})
         context['active_test'] = False
-        default['state'] = 'open'
-        default['line_ids'] = []
-        default['tasks'] = []
-
-        # Don't prepare (expensive) data to copy children (analytic accounts),
-        # they are discarded in analytic.copy(), and handled in duplicate_template() 
-        default['child_ids'] = []
-
         proj = self.browse(cr, uid, id, context=context)
-        if not default.get('name', False):
+        if not default.get('name'):
             default.update(name=_("%s (copy)") % (proj.name))
         res = super(project, self).copy(cr, uid, id, default, context)
         self.map_tasks(cr, uid, id, res, context=context)
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         data_obj = self.pool.get('ir.model.data')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
@@ -533,7 +535,11 @@ def Project():
 
         project_id = super(project, self).create(cr, uid, vals, context=create_context)
         project_rec = self.browse(cr, uid, project_id, context=context)
-        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], {'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}, context)
+        ir_values = self.pool.get('ir.values').get_default( cr, uid, 'project.config.settings', 'generate_project_alias' )
+        values = { 'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}
+        if ir_values:
+            values = dict(values, alias_name=vals['name'])
+        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], values, context=context)
         return project_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -696,29 +702,11 @@ class task(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default = default or {}
-        default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
-        if not default.get('remaining_hours', False):
-            default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
-        default['active'] = True
-        if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name or ''
-            if not context.get('copy',False):
-                new_name = _("%s (copy)") % (default.get('name', ''))
-                default.update({'name':new_name})
+        if not default.get('name'):
+            current = self.browse(cr, uid, id, context=context)       
+            default['name'] = _("%s (copy)") % current.name
         return super(task, self).copy_data(cr, uid, id, default, context)
     
-    def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-        if default is None:
-            default = {}
-        if not context.get('copy', False):
-            stage = self._get_default_stage_id(cr, uid, context=context)
-            if stage:
-                default['stage_id'] = stage
-        return super(task, self).copy(cr, uid, id, default, context)
-
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -741,7 +729,7 @@ class task(osv.osv):
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
-                        domain="[('project_ids', '=', project_id)]"),
+                        domain="[('project_ids', '=', project_id)]", copy=False),
         'categ_ids': fields.many2many('project.category', string='Tags'),
         'kanban_state': fields.selection([('normal', 'In Progress'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
                                          track_visibility='onchange',
@@ -749,13 +737,13 @@ class task(osv.osv):
                                               " * Normal is the default situation\n"
                                               " * Blocked indicates something is preventing the progress of this task\n"
                                               " * Ready for next stage indicates the task is ready to be pulled to the next stage",
-                                         required=False),
+                                         required=False, copy=False),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'write_date': fields.datetime('Last Modification Date', readonly=True, select=True), #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
-        'date_start': fields.datetime('Starting Date',select=True),
-        'date_end': fields.datetime('Ending Date',select=True),
-        'date_deadline': fields.date('Deadline',select=True),
-        'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
+        'date_start': fields.datetime('Starting Date', select=True, copy=False),
+        'date_end': fields.datetime('Ending Date', select=True, copy=False),
+        'date_deadline': fields.date('Deadline', select=True, copy=False),
+        'date_last_stage_update': fields.datetime('Last Stage Update', select=True, copy=False),
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select=True, track_visibility='onchange', change_default=True),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
@@ -888,6 +876,7 @@ class task(osv.osv):
         return res
 
     def get_empty_list_help(self, cr, uid, help, context=None):
+        context = dict(context or {})
         context['empty_list_help_id'] = context.get('default_project_id')
         context['empty_list_help_model'] = 'project.project'
         context['empty_list_help_document_name'] = _("tasks")
@@ -1011,8 +1000,7 @@ class task(osv.osv):
     # ------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         # for default stage
         if vals.get('project_id') and not context.get('default_project_id'):
@@ -1044,7 +1032,7 @@ class task(osv.osv):
             new_stage = vals.get('stage_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
             for t in self.browse(cr, uid, ids, context=context):
-                write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
+                write_vals = vals_reset_kstate if t.stage_id.id != new_stage else vals
                 super(task, self).write(cr, uid, [t.id], write_vals, context=context)
             result = True
         else:
@@ -1099,8 +1087,10 @@ class task(osv.osv):
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
-        return [task.project_id.message_get_reply_to()[0] if task.project_id else False
-                    for task in self.browse(cr, uid, ids, context=context)]
+        tasks = self.browse(cr, SUPERUSER_ID, ids, context=context)
+        project_ids = set([task.project_id.id for task in tasks if task.project_id])
+        aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(project_ids), context=context)
+        return dict((task.id, aliases.get(task.project_id and task.project_id.id or 0, False)) for task in tasks)
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """
@@ -1111,7 +1101,14 @@ class task(osv.osv):
             'planned_hours': 0.0,
         }
         defaults.update(custom_values)
-        return super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        res = super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        email_list = tools.email_split(msg.get('to', '') + ',' + msg.get('cc', ''))
+        new_task = self.browse(cr, uid, res, context=context)
+        if new_task.project_id and new_task.project_id.alias_name:  # check left-part is not already an alias
+            email_list = filter(lambda x: x.split('@')[0] != new_task.project_id.alias_name, email_list)
+        partner_ids = filter(lambda x: x, self._find_partner_from_emails(cr, uid, None, email_list, context=context, check_followers=False))
+        self.message_subscribe(cr, uid, [res], partner_ids, context=context)
+        return res
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override to update the task according to the email. """
@@ -1137,7 +1134,7 @@ class project_work(osv.osv):
     _name = "project.task.work"
     _description = "Project Task Work"
     _columns = {
-        'name': fields.char('Work summary', size=128),
+        'name': fields.char('Work summary'),
         'date': fields.datetime('Date', select="1"),
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select="1"),
         'hours': fields.float('Time Spent'),
@@ -1151,25 +1148,30 @@ class project_work(osv.osv):
     }
 
     _order = "date desc"
-    def create(self, cr, uid, vals, *args, **kwargs):
+    def create(self, cr, uid, vals, context=None):
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
         if 'task_id' in vals:
             cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours',0.0), vals['task_id']))
-        return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
+            self.pool.get('project.task').invalidate_cache(cr, uid, ['remaining_hours'], [vals['task_id']], context=context)
+        return super(project_work,self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
         if 'hours' in vals:
+            task_obj = self.pool.get('project.task')
             for work in self.browse(cr, uid, ids, context=context):
                 cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours',0.0), work.hours, work.task_id.id))
+                task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
+    def unlink(self, cr, uid, ids, context=None):
+        task_obj = self.pool.get('project.task')
         for work in self.browse(cr, uid, ids):
             cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
-        return super(project_work,self).unlink(cr, uid, ids,*args, **kwargs)
+            task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
+        return super(project_work,self).unlink(cr, uid, ids, context=context)
 
 
 class account_analytic_account(osv.osv):
@@ -1230,12 +1232,12 @@ class account_analytic_account(osv.osv):
             self.project_create(cr, uid, account.id, vals_for_project, context=context)
         return super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
-        project_obj = self.pool.get('project.project')
-        analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
-        if analytic_ids:
-            raise osv.except_osv(_('Warning!'), _('Please delete the project linked with this account first.'))
-        return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
+    def unlink(self, cr, uid, ids, context=None):
+        proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
+        has_tasks = self.pool['project.task'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
+        if has_tasks:
+            raise osv.except_osv(_('Warning!'), _('Please remove existing tasks in the project linked to the accounts you want to delete.'))
+        return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if args is None:
@@ -1353,6 +1355,6 @@ class project_category(osv.osv):
     _name = "project.category"
     _description = "Category of project's task, issue, ..."
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

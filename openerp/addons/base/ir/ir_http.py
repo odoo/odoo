@@ -5,9 +5,13 @@ import logging
 import re
 import sys
 
-import werkzeug
+import werkzeug.exceptions
+import werkzeug.routing
+import werkzeug.urls
+import werkzeug.utils
 
 import openerp
+import openerp.exceptions
 from openerp import http
 from openerp.http import request
 from openerp.osv import osv, orm
@@ -59,7 +63,7 @@ class ir_http(osv.AbstractModel):
         request.uid = request.session.uid
         if not request.uid:
             if not request.params.get('noredirect'):
-                query = werkzeug.url_encode({
+                query = werkzeug.urls.url_encode({
                     'redirect': request.httprequest.url,
                 })
                 response = werkzeug.utils.redirect('/web/login?%s' % query)
@@ -76,17 +80,23 @@ class ir_http(osv.AbstractModel):
             request.uid = request.session.uid
 
     def _authenticate(self, auth_method='user'):
-        if request.session.uid:
-            try:
-                request.session.check_security()
-                # what if error in security.check()
-                #   -> res_users.check()
-                #   -> res_users.check_credentials()
-            except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException):
-                # All other exceptions mean undetermined status (e.g. connection pool full),
-                # let them bubble up
-                request.session.logout()
-        getattr(self, "_auth_method_%s" % auth_method)()
+        try:
+            if request.session.uid:
+                try:
+                    request.session.check_security()
+                    # what if error in security.check()
+                    #   -> res_users.check()
+                    #   -> res_users.check_credentials()
+                except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException):
+                    # All other exceptions mean undetermined status (e.g. connection pool full),
+                    # let them bubble up
+                    request.session.logout()
+            getattr(self, "_auth_method_%s" % auth_method)()
+        except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException):
+            raise
+        except Exception:
+            _logger.exception("Exception during request Authentication.")
+            raise openerp.exceptions.AccessDenied()
         return auth_method
 
     def _handle_exception(self, exception):

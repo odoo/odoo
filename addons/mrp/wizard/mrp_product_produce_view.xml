@@ -18,16 +18,16 @@
                         <field name="lot_id" domain="[('product_id', '=', product_id)]"
                                     context="{'default_product_id':product_id}"
                                     attrs="{'required': [('track_production', '=', True), ('mode', '=', 'consume_produce')]}"
-                                    groups="stock.group_tracking_lot"/>
+                                    groups="stock.group_production_lot"/>
                     </group>
                     <group string="To Consume">
-                        <field name="consume_lines">
+                        <field name="consume_lines" nolabel="1">
                             <tree string="Consume Lines" editable="top">
                                 <field name="product_id"/>
                                 <field name="product_qty"/>
                                 <field name="lot_id" domain="[('product_id', '=', product_id)]"
                                     context="{'default_product_id':product_id}"
-                                    groups="stock.group_tracking_lot"/>
+                                    groups="stock.group_production_lot"/>
                             </tree>
                         </field>
                     </group>

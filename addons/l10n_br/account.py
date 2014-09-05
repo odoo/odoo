@@ -21,7 +21,7 @@ import openerp
 from openerp.osv import fields, osv
 
 TAX_CODE_COLUMNS = {
-                    'domain':fields.char('Domain', size=32, 
+                    'domain':fields.char('Domain', 
                                          help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
                     'tax_discount': fields.boolean('Discount this Tax in Prince', 
                                                    help="Mark it for (ICMS, PIS, COFINS and others taxes included)."),

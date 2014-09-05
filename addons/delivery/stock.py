@@ -64,7 +64,7 @@ class stock_picking(osv.osv):
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
                  'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
                  }),
-        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
+        'carrier_tracking_ref': fields.char('Carrier Tracking Ref'),
         'number_of_packages': fields.integer('Number of Packages'),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
     }

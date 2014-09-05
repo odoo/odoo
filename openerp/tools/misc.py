@@ -1131,7 +1131,7 @@ class CountingStream(object):
 
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
-    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-d', '--database', '-u', '--update', '-i', '--init']))
+    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init']))
     assert all(config.parser.has_option(s) for s in strip_args)
     takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
 
@@ -1211,6 +1211,23 @@ def dumpstacks(sig=None, frame=None):
                 code.append(line)
 
     _logger.info("\n".join(code))
+
+class frozendict(dict):
+    """ An implementation of an immutable dictionary. """
+    def __delitem__(self, key):
+        raise NotImplementedError("'__delitem__' not supported on frozendict")
+    def __setitem__(self, key, val):
+        raise NotImplementedError("'__setitem__' not supported on frozendict")
+    def clear(self):
+        raise NotImplementedError("'clear' not supported on frozendict")
+    def pop(self, key, default=None):
+        raise NotImplementedError("'pop' not supported on frozendict")
+    def popitem(self):
+        raise NotImplementedError("'popitem' not supported on frozendict")
+    def setdefault(self, key, default=None):
+        raise NotImplementedError("'setdefault' not supported on frozendict")
+    def update(self, *args, **kwargs):
+        raise NotImplementedError("'update' not supported on frozendict")
 
 @contextmanager
 def ignore(*exc):

@@ -1,10 +1,9 @@
 include Makefile.version
-include Makefile.python
 
 SERVER_DIRECTORY=../server
 FILES_DIRECTORY=files
 
-LAUNCH_PY2EXE=/cygdrive/c/python${PYTHON_VERSION}/python.exe setup.py py2exe
+LAUNCH_PY2EXE=/cygdrive/c/python26/python.exe setup.py py2exe
 
 MAKENSIS_ARGUMENTS=/DVERSION=$(VERSION)
 
@@ -27,7 +26,7 @@ server_clean:
 server: server_clean
 	(cd $(SERVER_DIRECTORY)/win32 && $(LAUNCH_PY2EXE))
 	(cd $(SERVER_DIRECTORY) && $(LAUNCH_PY2EXE))
-	rm -rf `/usr/bin/find ${SERVER_DIRECTORY}/dist/openerp/addons -maxdepth 1 -mindepth 1 -not -name "web_*" -and -not -name "base" -and -not -name "web" -type d | xargs rm -rf`
+#	rm -rf `/usr/bin/find ${SERVER_DIRECTORY}/dist/openerp/addons -maxdepth 1 -mindepth 1 -not -name "web*" -and -not -name "base" -type d | xargs rm -rf`
 	(cd $(SERVER_DIRECTORY) && $(LAUNCH_MAKENSIS))
 	cp $(SERVER_DIRECTORY)/openerp-*.exe $(FILES_DIRECTORY)/openerp-server-setup-$(VERSION).exe
 

@@ -39,6 +39,7 @@ class account_period_close(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: account period close’s ID or list of IDs
          """
+        journal_period_pool = self.pool.get('account.journal.period')
         period_pool = self.pool.get('account.period')
         account_move_obj = self.pool.get('account.move')
 
@@ -52,6 +53,7 @@ class account_period_close(osv.osv_memory):
 
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
+                    self.invalidate_cache(cr, uid, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 

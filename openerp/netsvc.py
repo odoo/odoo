@@ -68,6 +68,8 @@ def LocalService(name):
                 with registry.cursor() as cr:
                     return registry['ir.actions.report.xml']._lookup_report(cr, name[len('report.'):])
 
+path_prefix = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
+
 class PostgreSQLHandler(logging.Handler):
     """ PostgreSQL Loggin Handler will store logs in the database, by default
     the current database, can be set using --log-db=DBNAME
@@ -87,7 +89,8 @@ class PostgreSQLHandler(logging.Handler):
                 msg = "%s\n%s" % (msg, traceback)
             # we do not use record.levelname because it may have been changed by ColoredFormatter.
             levelname = logging.getLevelName(record.levelno)
-            val = ('server', ct_db, record.name, levelname, msg, record.pathname, record.lineno, record.funcName)
+
+            val = ('server', ct_db, record.name, levelname, msg, record.pathname[len(path_prefix)+1:], record.lineno, record.funcName)
             cr.execute("""
                 INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
@@ -116,7 +119,7 @@ class DBFormatter(logging.Formatter):
 
 class ColoredFormatter(DBFormatter):
     def format(self, record):
-        fg_color, bg_color = LEVEL_COLOR_MAPPING[record.levelno]
+        fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         return DBFormatter.format(self, record)
 
@@ -126,6 +129,8 @@ def init_logger():
     if _logger_init:
         return
     _logger_init = True
+
+    logging.addLevelName(25, "INFO")
 
     from tools.translate import resetlocale
     resetlocale()
@@ -180,7 +185,7 @@ def init_logger():
 
     if tools.config['log_db']:
         postgresqlHandler = PostgreSQLHandler()
-        postgresqlHandler.setLevel(logging.WARNING)
+        postgresqlHandler.setLevel(25)
         logging.getLogger().addHandler(postgresqlHandler)
 
     # Configure loggers levels
@@ -212,9 +217,9 @@ PSEUDOCONFIG_MAPPER = {
     'debug': ['openerp:DEBUG'],
     'debug_sql': ['openerp.sql_db:DEBUG'],
     'info': [],
-    'warn': ['openerp:WARNING'],
-    'error': ['openerp:ERROR'],
-    'critical': ['openerp:CRITICAL'],
+    'warn': ['openerp:WARNING', 'werkzeug:WARNING'],
+    'error': ['openerp:ERROR', 'werkzeug:ERROR'],
+    'critical': ['openerp:CRITICAL', 'werkzeug:CRITICAL'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

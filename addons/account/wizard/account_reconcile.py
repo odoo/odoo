@@ -107,7 +107,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         'journal_id': fields.many2one('account.journal','Write-Off Journal', required=True),
         'writeoff_acc_id': fields.many2one('account.account','Write-Off account', required=True),
         'date_p': fields.date('Date'),
-        'comment': fields.char('Comment', size= 64, required=True),
+        'comment': fields.char('Comment', required=True),
         'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
     }
     _defaults = {
@@ -140,6 +140,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
     def trans_rec_reconcile(self, cr, uid, ids, context=None):
+        context = dict(context or {})
         account_move_line_obj = self.pool.get('account.move.line')
         period_obj = self.pool.get('account.period')
         if context is None:

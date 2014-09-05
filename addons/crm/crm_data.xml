@@ -13,18 +13,35 @@
             <field name="state">open</field>
         </record>
 
-        <record model="crm.case.channel" id="crm_case_channel_website">
+
+        <!-- Crm Source -->
+        <record model="crm.tracking.source" id="crm_source_search_engine">
+            <field name="name">Search engine</field>
+        </record>
+        <record model="crm.tracking.source" id="crm_source_mailing">
+            <field name="name">Mailing Partner</field>
+        </record>
+        <record model="crm.tracking.source" id="crm_source_newsletter">
+            <field name="name">Newsletter</field>
+        </record>
+
+        <!-- Crm Medium -->
+        <record model="crm.tracking.medium" id="crm_medium_website">
             <field name="name">Website</field>
         </record>
-        <record model="crm.case.channel" id="crm_case_channel_phone">
+        <record model="crm.tracking.medium" id="crm_medium_phone">
             <field name="name">Phone</field>
         </record>
-        <record model="crm.case.channel" id="crm_case_channel_direct">
+        <record model="crm.tracking.medium" id="crm_medium_direct">
             <field name="name">Direct</field>
         </record>
-        <record model="crm.case.channel" id="crm_case_channel_email">
+        <record model="crm.tracking.medium" id="crm_medium_email">
             <field name="name">Email</field>
         </record>
+        <record model="crm.tracking.medium" id="crm_medium_banner">
+            <field name="name">Banner Ad</field>
+        </record>
+
 
         <record model="crm.case.section" id="sales_team.section_sales_department">
             <field name="use_leads">True</field>

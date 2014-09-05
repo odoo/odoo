@@ -22,11 +22,11 @@ class ir_import(orm.TransientModel):
     _transient_max_hours = 12.0
 
     _columns = {
-        'res_model': fields.char('Model', size=64),
+        'res_model': fields.char('Model'),
         'file': fields.binary(
             'File', help="File to check and/or import, raw binary (not base64)"),
-        'file_name': fields.char('File Name', size=None),
-        'file_type': fields.char('File Type', size=None),
+        'file_name': fields.char('File Name'),
+        'file_type': fields.char('File Type'),
     }
 
     def get_fields(self, cr, uid, model, context=None,
@@ -48,7 +48,7 @@ class ir_import(orm.TransientModel):
 
             .. attribute:: name (str)
 
-                The field's logical (OpenERP) name within the scope of
+                The field's logical (Odoo) name within the scope of
                 its parent.
 
             .. attribute:: string (str)
@@ -74,6 +74,7 @@ class ir_import(orm.TransientModel):
         :param str model: name of the model to get fields form
         :param int landing: depth of recursion into o2m fields
         """
+        model_obj = self.pool[model]
         fields = [{
             'id': 'id',
             'name': 'id',
@@ -81,8 +82,11 @@ class ir_import(orm.TransientModel):
             'required': False,
             'fields': [],
         }]
-        fields_got = self.pool[model].fields_get(cr, uid, context=context)
+        fields_got = model_obj.fields_get(cr, uid, context=context)
+        blacklist = orm.MAGIC_COLUMNS + [model_obj.CONCURRENCY_CHECK_FIELD]
         for name, field in fields_got.iteritems():
+            if name in blacklist:
+                continue
             # an empty string means the field is deprecated, @deprecated must
             # be absent or False to mean not-deprecated
             if field.get('deprecated', False) is not False:

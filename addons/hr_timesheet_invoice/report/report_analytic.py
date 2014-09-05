@@ -30,7 +30,7 @@ class report_analytic_account_close(osv.osv):
     _auto = False
     _columns = {
         'name': fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
-        'state': fields.char('Status', size=32, readonly=True),
+        'state': fields.char('Status', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'quantity_max': fields.float('Max. Quantity', readonly=True),
@@ -66,7 +66,7 @@ class report_account_analytic_line_to_invoice(osv.osv):
     _description = "Analytic lines to invoice report"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', required=False, readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'account_id':fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
         'product_uom_id':fields.many2one('product.uom', 'Unit of Measure', readonly=True),
@@ -74,7 +74,7 @@ class report_account_analytic_line_to_invoice(osv.osv):
         'sale_price': fields.float('Sale price', readonly=True, digits_compute=dp.get_precision('Product Price')),
         'amount': fields.float('Amount', readonly=True, digits_compute=dp.get_precision('Account')),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
     }
     _order = 'name desc, product_id asc, account_id asc'
 

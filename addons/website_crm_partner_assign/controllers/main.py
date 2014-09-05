@@ -1,30 +1,14 @@
 # -*- coding: utf-8 -*-
-import logging
-import re
 import werkzeug
-
-_logger = logging.getLogger(__name__)
-try:
-    import GeoIP
-except ImportError:
-    GeoIP = None
-    _logger.warn("Please install GeoIP python module to use events localisation.")
-
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models.website import slug
+from openerp.addons.website.models.website import slug, unslug
 from openerp.tools.translate import _
 
 
 class WebsiteCrmPartnerAssign(http.Controller):
     _references_per_page = 40
-
-    def _get_current_country_code(self):
-        if not GeoIP:
-            return False
-        GI = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', 0)
-        return GI.country_code_by_addr(request.httprequest.remote_addr)
 
     @http.route([
         '/partners',
@@ -52,7 +36,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
         # group by grade
         grade_domain = list(base_partner_domain)
         if not country and not country_all:
-            country_code = self._get_current_country_code()
+            country_code = request.session['geoip'].get('country_code')
             if country_code:
                 country_ids = country_obj.search(request.cr, request.uid, [('code', '=', country_code)], context=request.context)
                 if country_ids:
@@ -125,7 +109,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             context=request.context)  # todo in trunk: order="grade_id DESC, implemented_count DESC", offset=pager['offset'], limit=self._references_per_page
         partners = partner_obj.browse(request.cr, SUPERUSER_ID, partner_ids, request.context)
         # remove me in trunk
-        partners.sort(key=lambda x: (-1 * (x.grade_id and x.grade_id.id or 0), len(x.implemented_partner_ids)), reverse=True)
+        partners = sorted(partners, key=lambda x: (x.grade_id.sequence if x.grade_id else 0, len([i for i in x.implemented_partner_ids if i.website_published])), reverse=True)
         partners = partners[pager['offset']:pager['offset'] + self._references_per_page]
 
         google_map_partner_ids = ','.join(map(str, [p.id for p in partners]))
@@ -146,7 +130,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, partner_name='', **post):
-        mo = re.search('([-0-9]+)$', str(partner_id))
+        _, partner_id = unslug(partner_id)
         current_grade, current_country = None, None
         grade_id = post.get('grade_id')
         country_id = post.get('country_id')
@@ -158,8 +142,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             country_ids = request.registry['res.country'].exists(request.cr, request.uid, int(country_id), context=request.context)
             if country_ids:
                 current_country = request.registry['res.country'].browse(request.cr, request.uid, country_ids[0], context=request.context)
-        if mo:
-            partner_id = int(mo.group(1))
+        if partner_id:
             partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
             if partner.exists() and partner.website_published:
                 values = {

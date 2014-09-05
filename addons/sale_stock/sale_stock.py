@@ -30,15 +30,6 @@ from openerp import SUPERUSER_ID
 class sale_order(osv.osv):
     _inherit = "sale.order"
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'shipped': False,
-            'picking_ids': []
-        })
-        return super(sale_order, self).copy(cr, uid, id, default, context=context)
-
     def _get_default_warehouse(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', company_id)], context=context)
@@ -168,7 +159,7 @@ class sale_order(osv.osv):
                     raise osv.except_osv(
                         _('Cannot cancel sales order!'),
                         _('You must first cancel all delivery order(s) attached to this sales order.'))
-            stock_obj.signal_button_cancel(cr, uid, [p.id for p in sale.picking_ids])
+            stock_obj.signal_workflow(cr, uid, [p.id for p in sale.picking_ids], 'button_cancel')
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
     def action_wait(self, cr, uid, ids, context=None):
@@ -202,9 +193,6 @@ class sale_order(osv.osv):
                             break
             res = self.write(cr, uid, [order.id], val)
         return True
-
-
-
 
     def has_stockable_products(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
@@ -243,22 +231,6 @@ class sale_order_line(osv.osv):
     _defaults = {
         'product_packaging': False,
     }
-
-    def button_cancel(self, cr, uid, ids, context=None):
-        res = super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)
-        for line in self.browse(cr, uid, ids, context=context):
-            for move_line in line.move_ids:
-                if move_line.state != 'cancel':
-                    raise osv.except_osv(
-                            _('Cannot cancel sales order line!'),
-                            _('You must first cancel stock moves attached to this sales order line.'))
-        return res
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({'move_ids': []})
-        return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
 
     def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
                                    partner_id=False, packaging=False, flag=False, context=None):
@@ -378,17 +350,8 @@ class sale_order_line(osv.osv):
 class stock_move(osv.osv):
     _inherit = 'stock.move'
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        sale_ids = []
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.procurement_id and move.procurement_id.sale_line_id:
-                sale_ids.append(move.procurement_id.sale_line_id.order_id.id)
-        if sale_ids:
-            self.pool.get('sale.order').signal_ship_except(cr, uid, sale_ids)
-        return super(stock_move, self).action_cancel(cr, uid, ids, context=context)
-
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
-        invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
+        invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
         if move.procurement_id and move.procurement_id.sale_line_id:
             sale_line = move.procurement_id.sale_line_id
             self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {

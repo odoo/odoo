@@ -24,23 +24,26 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class product_margin(osv.osv_memory):
     _name = 'product.margin'
     _description = 'Product Margin'
     _columns = {
         'from_date': fields.date('From'),
         'to_date': fields.date('To'),
-        'invoice_state':fields.selection([
-           ('paid','Paid'),
-           ('open_paid','Open and Paid'),
-           ('draft_open_paid','Draft, Open and Paid'),
-        ],'Invoice State', select=True, required=True),
+        'invoice_state': fields.selection([
+            ('paid', 'Paid'),
+            ('open_paid', 'Open and Paid'),
+            ('draft_open_paid', 'Draft, Open and Paid'),
+        ], 'Invoice State', select=True, required=True),
     }
+
     _defaults = {
         'from_date': time.strftime('%Y-01-01'),
         'to_date': time.strftime('%Y-12-31'),
         'invoice_state': "open_paid",
     }
+
     def action_open_window(self, cr, uid, ids, context=None):
         """
             @param cr: the current row, from the database cursor,
@@ -49,36 +52,44 @@ class product_margin(osv.osv_memory):
 
             @return:
         """
-        if context is None:
-            context = {}
-        mod_obj = self.pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'product', 'product_search_form_view')
-        id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
-        cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.graph', 'graph'))
-        view_res3 = cr.fetchone()[0]
-        cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.form.inherit', 'form'))
-        view_res2 = cr.fetchone()[0]
-        cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.tree', 'tree'))
-        view_res = cr.fetchone()[0]
+        context = dict(context or {})
+
+        def ref(module, xml_id):
+            proxy = self.pool.get('ir.model.data')
+            return proxy.get_object_reference(cr, uid, module, xml_id)
+
+        model, search_view_id = ref('product', 'product_search_form_view')
+        model, graph_view_id = ref('product_margin', 'view_product_margin_graph')
+        model, form_view_id = ref('product_margin', 'view_product_margin_form')
+        model, tree_view_id = ref('product_margin', 'view_product_margin_tree')
 
         #get the current product.margin object to obtain the values from it
-        product_margin_obj = self.browse(cr, uid, ids, context=context)[0]
+        records = self.browse(cr, uid, ids, context=context)
+        record = records[0]
 
-        context.update(invoice_state = product_margin_obj.invoice_state)
-        if product_margin_obj.from_date:
-            context.update(date_from = product_margin_obj.from_date)
-        if product_margin_obj.to_date:
-            context.update(date_to = product_margin_obj.to_date)
+        context.update(invoice_state=record.invoice_state)
+
+        if record.from_date:
+            context.update(date_from=record.from_date)
+
+        if record.to_date:
+            context.update(date_to=record.to_date)
+
+        views = [
+            (tree_view_id, 'tree'),
+            (form_view_id, 'form'),
+            (graph_view_id, 'graph')
+        ]
         return {
             'name': _('Product Margins'),
             'context': context,
             'view_type': 'form',
             "view_mode": 'tree,form,graph',
-            'res_model':'product.product',
+            'res_model': 'product.product',
             'type': 'ir.actions.act_window',
-            'views': [(view_res,'tree'), (view_res2,'form'), (view_res3,'graph')],
+            'views': views,
             'view_id': False,
-            'search_view_id': id['res_id']
+            'search_view_id': search_view_id,
         }
 
 

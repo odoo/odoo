@@ -28,7 +28,7 @@ class report_workcenter_load(osv.osv):
     _auto = False
     _log_access = False
     _columns = {
-        'name': fields.char('Week', size=64, required=True),
+        'name': fields.char('Week', required=True),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'cycle': fields.float('Number of Cycles'),
         'hour': fields.float('Number of Hours'),
@@ -61,7 +61,7 @@ class report_mrp_inout(osv.osv):
     _log_access = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.char('Week', size=64, required=True),
+        'date': fields.char('Week', required=True),
         'value': fields.float('Stock value', required=True, digits=(16,2)),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }

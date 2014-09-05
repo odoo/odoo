@@ -16,8 +16,9 @@
         <record model="ir.actions.act_window" id="hr_applicant_resumes">
             <field name="name">Resumes and Letters</field>
             <field name="res_model">ir.attachment</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="document.view_document_file_tree"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="mail.view_document_file_kanban"/>
             <field name="domain">[('res_model','=','hr.applicant')]</field>
             <field name="help" type="html">
             <p>

@@ -71,16 +71,15 @@ diff --git a/models/academy.py b/models/academy.py
 new file mode 100644
 --- /dev/null
 +++ b/models/academy.py
-@@ -0,0 +1,9 @@
+@@ -0,0 +1,8 @@
 +# -*- coding: utf-8 -*-
-+from openerp.osv import orm, fields
++from openerp.models import Model
++from openerp.fields import Char
 +
-+class academy(orm.Model):
++class academy(Model):
 +    _name = "academy.academy"
 +
-+    _columns = {
-+        'name': fields.char(),
-+    }
++    name = Char()
 diff --git a/security/ir.model.access.csv b/security/ir.model.access.csv
 new file mode 100644
 --- /dev/null

@@ -17,7 +17,7 @@
         <field name="name">Partner level?</field>
     </record>
     <record model="crm_profiling.question" id="partner_tiny">
-        <field name="name">OpenERP partner?</field>
+        <field name="name">Odoo partner?</field>
     </record>
 
     <!--
@@ -95,7 +95,7 @@
     -->
 
     <record model="crm.segmentation" id="crm.crm_segmentation0">
-        <field name="name">OpenERP partners</field>
+        <field name="name">Odoo partners</field>
         <field name="answer_yes" eval="[(6,0,[partner_tiny1])]" />
         <field name="categ_id" ref="base.res_partner_category_2"/>
         <field name="profiling_active">True</field>

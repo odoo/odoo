@@ -1,8 +1,9 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2012 TOTAL PC SYSTEMS (<http://www.erpsystems.ro>). All Rights Reserved
+#    @author -  Fekete Mihai <feketemihai@gmail.com>
+#    Copyright (C) 2011 TOTAL PC SYSTEMS (http://www.www.erpsystems.ro). 
+#    Copyright (C) 2009 (<http://www.filsystem.ro>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

@@ -27,6 +27,7 @@ import logging
 import os
 import re
 import sys
+import time
 import unittest
 from os.path import join as opj
 
@@ -42,7 +43,7 @@ MANIFEST = '__openerp__.py'
 _logger = logging.getLogger(__name__)
 
 # addons path as a list
-ad_paths = [tools.config.addons_data_dir]
+ad_paths = []
 hooked = False
 
 # Modules already loaded
@@ -87,6 +88,10 @@ def initialize_sys_path():
     """
     global ad_paths
     global hooked
+
+    dd = tools.config.addons_data_dir
+    if dd not in ad_paths:
+        ad_paths.append(dd)
 
     for ad in tools.config['addons_path'].split(','):
         ad = os.path.abspath(tools.ustr(ad.strip()))
@@ -149,7 +154,7 @@ def get_module_filetree(module, dir='.'):
 
     return tree
 
-def get_module_resource(module, *args):
+def get_resource_path(module, *args):
     """Return the full path of a resource of the given module.
 
     :param module: module name
@@ -158,7 +163,6 @@ def get_module_resource(module, *args):
     :rtype: str
     :return: absolute path to the resource
 
-    TODO name it get_resource_path
     TODO make it available inside on osv object (self.get_resource_path)
     """
     mod_path = get_module_path(module)
@@ -169,6 +173,33 @@ def get_module_resource(module, *args):
         if os.path.exists(resource_path):
             return resource_path
     return False
+
+# backwards compatibility
+get_module_resource = get_resource_path
+
+def get_resource_from_path(path):
+    """Tries to extract the module name and the resource's relative path
+    out of an absolute resource path.
+
+    If operation is successfull, returns a tuple containing the module name, the relative path
+    to the resource using '/' as filesystem seperator[1] and the same relative path using
+    os.path.sep seperators.
+
+    [1] same convention as the resource path declaration in manifests
+
+    :param path: absolute resource path
+
+    :rtype: tuple
+    :return: tuple(module_name, relative_path, os_relative_path) if possible, else None
+    """
+    resource = [path.replace(adpath, '') for adpath in ad_paths if path.startswith(adpath)]
+    if resource:
+        relative = resource[0].split(os.path.sep)
+        if not relative[0]:
+            relative.pop(0)
+        module = relative.pop(0)
+        return (module, '/'.join(relative), os.path.sep.join(relative))
+    return None
 
 def get_module_icon(module):
     iconpath = ['static', 'description', 'icon.png']
@@ -277,7 +308,7 @@ def init_module_models(cr, module_name, obj_list):
     for obj in obj_list:
         obj._auto_end(cr, {'module': module_name})
         cr.commit()
-    todo.sort()
+    todo.sort(key=lambda x: x[0])
     for t in todo:
         t[1](cr, *t[2])
     cr.commit()
@@ -384,11 +415,12 @@ class TestStream(object):
         if self.r.match(s):
             return
         first = True
-        for c in s.split('\n'):
+        level = logging.ERROR if s.startswith(('ERROR', 'FAIL', 'Traceback')) else logging.INFO
+        for c in s.splitlines():
             if not first:
                 c = '` ' + c
             first = False
-            self.logger.info(c)
+            self.logger.log(level, c)
 
 current_test = None
 
@@ -421,14 +453,18 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
     for m in mods:
         tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
         suite = unittest2.TestSuite(itertools.ifilter(position, tests))
-        _logger.info('running %s tests.', m.__name__)
 
-        result = unittest2.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
+        if suite.countTestCases():
+            t0 = time.time()
+            t0_sql = openerp.sql_db.sql_counter
+            _logger.info('%s running tests.', m.__name__)
+            result = unittest2.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
+            if time.time() - t0 > 5:
+                _logger.log(25, "%s tested in %.2fs, %s queries", m.__name__, time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
+            if not result.wasSuccessful():
+                r = False
+                _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))
 
-        if not result.wasSuccessful():
-            r = False
-            _logger.error("Module %s: %d failures, %d errors",
-                          module_name, len(result.failures), len(result.errors))
     current_test = None
     return r
 

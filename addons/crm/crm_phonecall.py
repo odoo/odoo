@@ -54,14 +54,14 @@ class crm_phonecall(osv.osv):
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'date_open': fields.datetime('Opened', readonly=True),
         # phonecall fields
-        'name': fields.char('Call Summary', size=64, required=True),
+        'name': fields.char('Call Summary', required=True),
         'active': fields.boolean('Active', required=False),
         'duration': fields.float('Duration', help='Duration in minutes and seconds.'),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                         domain="['|',('section_id','=',section_id),('section_id','=',False),\
                         ('object_id.model', '=', 'crm.phonecall')]"),
-        'partner_phone': fields.char('Phone', size=32),
-        'partner_mobile': fields.char('Mobile', size=32),
+        'partner_phone': fields.char('Phone'),
+        'partner_mobile': fields.char('Mobile'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
@@ -141,6 +141,7 @@ class crm_phonecall(osv.osv):
                     'partner_phone' : call.partner_phone,
                     'partner_mobile' : call.partner_mobile,
                     'priority': call.priority,
+                    'opportunity_id': call.opportunity_id and call.opportunity_id.id or False,
             }
             new_id = self.create(cr, uid, vals, context=context)
             if action == 'log':

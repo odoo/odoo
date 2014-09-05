@@ -233,7 +233,8 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                 value = value.replace(instance.web._t.database.parameters.thousands_sep, "");
             } while(tmp !== value);
             tmp = Number(value);
-            if (isNaN(tmp))
+            // do not accept not numbers or float values
+            if (isNaN(tmp) || tmp % 1)
                 throw new Error(_.str.sprintf(_t("'%s' is not a correct integer"), value));
             return tmp;
         case 'float':
@@ -270,12 +271,22 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                     value, (date_pattern + ' ' + time_pattern));
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
+            datetime = Date.parseExact(value.toString().replace(/\d+/g, function(m){
+                return m.length === 1 ? "0" + m : m ;
+            }), (date_pattern + ' ' + time_pattern));
+            if (datetime !== null)
+                return instance.web.datetime_to_str(datetime);
             datetime = Date.parse(value);
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
             throw new Error(_.str.sprintf(_t("'%s' is not a correct datetime"), value));
         case 'date':
             var date = Date.parseExact(value, date_pattern);
+            if (date !== null)
+                return instance.web.date_to_str(date);
+            date = Date.parseExact(value.toString().replace(/\d+/g, function(m){
+                return m.length === 1 ? "0" + m : m ;
+            }), date_pattern);
             if (date !== null)
                 return instance.web.date_to_str(date);
             date = Date.parse(value);
@@ -348,6 +359,54 @@ instance.web.round_precision = function(value, precision){
  */
 instance.web.round_decimals = function(value, decimals){
     return instance.web.round_precision(value, Math.pow(10,-decimals));
+};
+
+/**
++ * 
++ * convert python.strftime format into moment.js format
++ * inspired from : https://github.com/uruz/moment-datetime/blob/master/moment-datetime.js
++*/
+instance.web.convert_to_moment_format = function(format){
+    if (!format)
+        return false;
+    var replacements = {
+            'a': 'ddd',
+            'A': 'dddd',
+            'b': 'MMM',
+            'B': 'MMMM',
+            //'c': //%c is defined too vaguely
+            'd': 'DD',
+            //'f': JS have no support for microseconds and moment.js have no support for milliseconds
+            'H': 'HH',
+            'I': 'hh',
+            'j': 'DDDD',
+            'm': 'MM',
+            'M': 'mm',
+            'p': 'A',
+            'S': 'ss',
+            'U': 'ww',//ww is for Sunday-based week
+            'w': 'd',
+            //'W': 'ww',//%W is weeknumber for weeks starting from Monday and it is not implemented in moment.js
+            //'x':
+            //'X': //%x and %X are defined too vaguely to be implemented 
+            'y': 'YY',
+            'Y': 'YYYY',
+            'z': 'ZZ',
+            //'Z': 'z', - moment.js does not support timezone names
+            '%': '%'
+    }
+    var moment_format = '', directive_index = 0, replacement, unformatted;
+    while (format.indexOf('%') !== -1){
+        directive_index = format.indexOf('%') + 1;
+        replacement = replacements[format[directive_index]];
+        unformatted = format.substr(0, directive_index-1);
+        if (unformatted.length){
+                unformatted = '[' + unformatted.replace(/(\[|\])/g, '\\$&') +']';
+        }
+        moment_format += unformatted + (replacement ? replacement : format[directive_index]);
+        format = format.substr(directive_index+1);
+    }
+    return moment_format;
 };
 
 })();

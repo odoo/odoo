@@ -37,7 +37,7 @@ class crm_helpdesk(osv.osv):
 
     _columns = {
             'id': fields.integer('ID', readonly=True),
-            'name': fields.char('Name', size=128, required=True),
+            'name': fields.char('Name', required=True),
             'active': fields.boolean('Active', required=False),
             'date_action_last': fields.datetime('Last Action', readonly=1),
             'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -56,7 +56,7 @@ class crm_helpdesk(osv.osv):
             'date': fields.datetime('Date'),
             'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
             'ref2': fields.reference('Reference 2', selection=openerp.addons.base.res.res_request.referencable_models),
-            'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
+            'channel_id': fields.many2one('crm.tracking.medium', 'Channel', help="Communication channel."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
             'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
@@ -70,7 +70,7 @@ class crm_helpdesk(osv.osv):
                  ('open', 'In Progress'),
                  ('pending', 'Pending'),
                  ('done', 'Closed'),
-                 ('cancel', 'Cancelled')], 'Status', size=16, readonly=True, track_visibility='onchange',
+                 ('cancel', 'Cancelled')], 'Status', readonly=True, track_visibility='onchange',
                                   help='The status is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the status is set to \'Open\'.\
                                   \nWhen the case is over, the status is set to \'Done\'.\

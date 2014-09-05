@@ -30,8 +30,8 @@ class project_task_delegate(osv.osv_memory):
     _description = 'Task Delegate'
 
     _columns = {
-        'name': fields.char('Delegated Title', size=64, required=True, help="New title of the task delegated to the user"),
-        'prefix': fields.char('Your Task Title', size=64, help="Title for your validation task"),
+        'name': fields.char('Delegated Title', required=True, help="New title of the task delegated to the user"),
+        'prefix': fields.char('Your Task Title', help="Title for your validation task"),
         'project_id': fields.many2one('project.project', 'Project', help="User you want to delegate this task to"),
         'user_id': fields.many2one('res.users', 'Assign To', required=True, help="User you want to delegate this task to"),
         'new_task_description': fields.text('New Task Description', help="Reinclude the description of the task in the task of the user"),
@@ -125,7 +125,7 @@ class project_task_delegate(osv.osv_memory):
         action_model, action_id = models_data.get_object_reference(cr, uid, 'project', 'action_view_task')
         view_model, task_view_form_id = models_data.get_object_reference(cr, uid, 'project', 'view_task_form2')
         view_model, task_view_tree_id = models_data.get_object_reference(cr, uid, 'project', 'view_task_tree2')
-        action = self.pool[action_model].read(cr, uid, action_id, context=context)         
+        action = self.pool[action_model].read(cr, uid, [action_id], context=context)[0]
         action['res_id'] = delegated_tasks[task_id]
         action['view_id'] = False
         action['views'] = [(task_view_form_id, 'form'), (task_view_tree_id, 'tree')]

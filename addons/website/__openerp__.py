@@ -21,6 +21,7 @@ OpenERP Website CMS
         'views/themes.xml',
         'views/res_config.xml',
         'views/ir_actions.xml',
+        'views/website_backend_navbar.xml',
     ],
     'demo': [
         'data/demo.xml',

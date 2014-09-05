@@ -40,7 +40,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h3 class="modal-title"><t t-raw="title"/></h3>
                 </div>
-                <div class="modal-body" style="overflow-y: auto;">
+                <div class="modal-body">
                 </div>
             </div>
         </div>
@@ -85,7 +85,7 @@
                     </div>
                 </div>
                 <p class="oe_grey" style="margin: 10px">
-                    Fill in this form to create an OpenERP database. You can
+                    Fill in this form to create an Odoo database. You can
                     create databases for different companies or for different
                     goals (testing, production). Once the database is created,
                     you will be able to install your first application.
@@ -112,7 +112,7 @@
                         <td class="oe_form_group_cell">
                             <span class="oe_form_field oe_form_field_boolean oe_grey" >
                                 <input type="checkbox" name="demo_data" />
-                                Check this box to evaluate OpenERP.
+                                Check this box to evaluate Odoo.
                             </span>
                         </td>
                     </tr>
@@ -294,9 +294,9 @@
     </div>
 </t>
 <t t-name="DatabaseManager.user_menu">
-    <span class="oe_right">
-         <a id="back-to-login" href="#"><span class="oe_topbar_item oe_topbar_name">Back to Login</span></a>
-    </span>
+    <li>
+         <a id="back-to-login" href="#">Back to Login</a>
+    </li>
 </t>
 <t t-name="DatabaseManager.menu">
     <div class="oe_secondary_menu_section">Database Management</div>
@@ -341,52 +341,6 @@
     </form>
 </t>
 
-<t t-name="Menu">
-    <ul class="nav navbar-nav navbar-left" t-if="widget.data">
-        <li t-foreach="widget.data.data.children" t-as="menu">
-            <t t-call="Menu.link"/>
-        </li>
-        <li id="menu_more_container" class="dropdown" style="display: none;">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
-            <ul id="menu_more" class="dropdown-menu"></ul>
-        </li>
-    </ul>
-</t>
-<t t-name="Menu.secondary">
-    <div t-foreach="widget.data.data.children" t-as="menu" style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu.id">
-        <t t-foreach="menu.children" t-as="menu">
-            <div class="oe_secondary_menu_section">
-                <t t-esc="menu.name"/>
-                <!--
-                    Shall the section be still clickable ?
-                    <t t-call="Menu.link"/>
-                -->
-            </div>
-            <t t-call="Menu.secondary.submenu"/>
-        </t>
-    </div>
-</t>
-<t t-name="Menu.secondary.submenu">
-    <ul t-if="menu.children.length" class="oe_secondary_submenu nav nav-pills nav-stacked">
-        <li t-foreach="menu.children" t-as="menu">
-            <t t-call="Menu.link"/>
-            <!--<span class="oe_menu_label">8</span>-->
-            <t t-call="Menu.secondary.submenu"/>
-        </li>
-    </ul>
-</t>
-<t t-name="Menu.link">
-    <a t-attf-href="#menu_id=#{menu.id}&amp;action=#{menu.action ? menu.action.split(',')[1] : ''}"
-        t-att-class="menu.children.length ? 'oe_menu_toggler' : 'oe_menu_leaf'"
-        t-att-data-menu="menu.id"
-        t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
-        t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
-        <span class="oe_menu_text">
-            <t t-esc="menu.name"/>
-        </span>
-    </a>
-</t>
-
 <t t-name="Menu.needaction_counter">
     <div id="menu_counter" class="badge pull-right">
         <t t-if="widget.needaction_counter &gt; 99"> 99+ </t>
@@ -395,7 +349,6 @@
 </t>
 
 <t t-name="UserMenu">
-    <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
@@ -409,7 +362,6 @@
                 <li><a href="#" data-menu="logout">Log out</a></li>
             </ul>
         </li>
-    </ul>
 </t>
 <t t-name="UserMenu.about">
 
@@ -420,7 +372,7 @@
 
       <div class="oe_bottom">
         <p>Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.<br />
-            OpenERP is a trademark of the <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">OpenERP SA Company</a>.</p>
+            Odoo is a trademark of the <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">OpenERP SA Company</a>.</p>
         <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/agpl.html" style="text-decoration: underline;">GNU Affero General Public License</a></p>
         <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
       </div>
@@ -428,40 +380,6 @@
 
 </t>
 
-<t t-name="WebClient">
-    <div class="openerp openerp_webclient_container">
-    <table class="oe_webclient">
-        <tr>
-            <td colspan="2" class="navbar navbar-default navbar-static-top oe_navbar" role="navigation">
-                <div class="oe_menu_placeholder"/>
-                <div class="oe_user_menu_placeholder"/>
-                <div class="oe_systray"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="oe_leftbar" valign="top">
-                <div>
-                    <t t-set="debug" t-value="__debug__ ? '&amp;debug' : ''"/>
-                    <a class="oe_logo" t-attf-href="/web?#{debug}">
-                        <span class="oe_logo_edit">Edit Company data</span>
-                        <img t-att-src='widget.session.url("/web/binary/company_logo")'/>
-                    </a>
-                    <div>
-                        <div>
-                            <div class="oe_secondary_menus_container"/>
-                        </div>
-                    </div>
-                    <div class="oe_footer">
-                        Powered by <a href="http://www.odoo.com" target="_blank"><span>Odoo</span></a>
-                    </div>
-                </div>
-            </td>
-            <td class="oe_application">
-            </td>
-        </tr>
-    </table>
-    </div>
-</t>
 <t t-name="WebClient.timezone_notification">
     <div class="oe_webclient_timezone_notification">
         <p>Your user's preference timezone does not match your browser timezone:</p>
@@ -477,9 +395,9 @@
     </div>
 </t>
 <t t-name="WebClient.timezone_systray">
-    <div class="oe_topbar_item oe_timezone_systray" title="Timezone mismatch">
-        <span class="ui-icon ui-state-error ui-icon-alert"/>
-    </div>
+    <li class="oe_topbar_item oe_timezone_systray" title="Timezone mismatch">
+        <a href="#"><i class="fa fa-exclamation-triangle" style="color:red;"></i></a>
+    </li>
 </t>
 
 <t t-name="EmbedClient">
@@ -547,7 +465,7 @@
 <t t-name="ViewManagerDebug">
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
     <t t-if="view_manager.active_view === 'form'">
-        <option value="perm_read">View Log (perm_read)</option>
+        <option value="get_metadata">View Metadata</option>
         <option value="toggle_layout_outline">Toggle Form Layout Outline</option>
         <option value="set_defaults">Set Defaults</option>
     </t>
@@ -1135,14 +1053,15 @@
 <t t-name="web.datepicker">
     <span>
         <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
-        <input type="text" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
-        <input type="text"
-            t-att-name="widget.name"
-            t-att-placeholder="placeholder"
-            class="oe_datepicker_master"
-        /><img class="oe_input_icon oe_datepicker_trigger" draggable="false"
-               t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
-               title="Select date" width="16" height="16" border="0"/>
+        <div class="oe_datepicker_main input-group">
+            <input type="text"
+                t-att-name="widget.name"
+                t-att-placeholder="placeholder"
+                class="oe_datepicker_master"
+            /><span><img class="oe_input_icon oe_datepicker_trigger datepickerbutton" draggable="false"
+                   t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
+                   title="Select date" width="16" height="16" border="0"/></span>
+        </div>
     </span>
 </t>
 <t t-name="FieldDate">
@@ -1310,15 +1229,16 @@
 <t t-name="FieldBinaryImage">
     <span class="oe_form_field oe_form_field_image" t-att-style="widget.node.attrs.style">
         <div class="oe_form_field_image_controls oe_edit_only">
-            <t t-call="HiddenInputFile">
-                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                Edit 
-            </t>
+            <i class="fa fa-pencil fa-1g pull-left col-md-offset-1 oe_form_binary_file_edit" title="Edit"/>
+            <i class="fa fa-trash-o fa-1g col-md-offset-5 oe_form_binary_file_clear" title="Clear"/>
             <div class="oe_form_binary_progress" style="display: none">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
         </div>
+        <t t-call="HiddenInputFile">
+            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+        </t>
     </span>
 </t>
 <t t-name="FieldBinaryImage-img">
@@ -1446,7 +1366,7 @@
     </div>
 </t>
 <t t-name="WidgetButton">
-    <button type="button" t-att-class="widget.is_stat_button ? 'oe_stat_button btn btn-default' : 'oe_button oe_form_button'"
+    <button type="button" t-att-class="widget.is_stat_button ? 'oe_stat_button btn btn-default' : 'oe_button oe_form_button ' + (widget.node.attrs.class ? widget.node.attrs.class : '')"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
@@ -1734,9 +1654,9 @@
 </div>
 
 
-<div t-name="SearchView.CustomReports" class="oe_searchview_custom oe_searchview_section">
+<div t-name="SearchView.Custom" class="oe_searchview_custom oe_searchview_section">
     <dl class="dl-horizontal">
-        <dt><span class="oe_i">M</span> Custom Reports</dt>
+        <dt><span class="oe_i">M</span> Favorites</dt>
         <dd><ul class="oe_searchview_custom_list"/></dd>
     </dl>
 </div>
@@ -1801,6 +1721,10 @@
     </select>
 </t>
 
+<div t-name="SearchView.autocomplete" class="oe-autocomplete">
+    <ul>
+    </ul>
+</div>
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>
@@ -1845,6 +1769,8 @@
             <button class="oe_button" id="add_field">Add</button>
             <button class="oe_button" id="remove_field">Remove</button>
             <button class="oe_button" id="remove_all_field">Remove All</button>
+            <button class="oe_button" id="move_up">Move Up</button>
+            <button class="oe_button" id="move_down">Move Down</button>
         </td>
         <td class="oe_export_fields_selector_right">
             <select name="fields_list" id="fields_list"
@@ -2038,4 +1964,5 @@
 </t>
 <t t-name="StatInfo">
     <strong><t t-esc="value"/></strong><br/><t t-esc="text"/></t>
+
 </templates>

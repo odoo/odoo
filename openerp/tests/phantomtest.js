@@ -1,14 +1,15 @@
-// Phantomjs openerp helper
+// Phantomjs odoo helper
+// jshint evil: true, loopfunc: true
 
-function waitFor (ready, callback, timeout, timeoutMessageCallback) {
+function waitFor (condition, callback, timeout, timeoutMessageCallback) {
     timeout = timeout || 10000;
-    var start = new Date;
+    var start = new Date();
 
     (function waitLoop() {
-        if(new Date - start > timeout) {
+        if(new Date() - start > timeout) {
             console.log('error', timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms");
             phantom.exit(1);
-        } else if (ready()) {
+        } else if (condition()) {
             callback();
         } else {
             setTimeout(waitLoop, 250);
@@ -44,7 +45,7 @@ function PhantomTest() {
                 }
                 return result.join('');
             }));
-            msg.push('(leaf frame on top)')
+            msg.push('(leaf frame on top)');
         }
         console.log('error', JSON.stringify(msg.join('\n')));
         phantom.exit(1);
@@ -86,9 +87,9 @@ function PhantomTest() {
     };
     setTimeout(function () {
         self.page.evaluate(function () {
-            var message = ("Timeout\nhref: " + window.location.href
-                + "\nreferrer: " + document.referrer
-                + "\n\n" + (document.body && document.body.innerHTML)).replace(/[^a-z0-9\s~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "*");
+            var message = ("Timeout\nhref: " + window.location.href +
+                           "\nreferrer: " + document.referrer +
+                           "\n\n" + (document.body && document.body.innerHTML)).replace(/[^a-z0-9\s~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "*");
             console.log('error', message);
             phantom.exit(1);
         });
@@ -107,15 +108,19 @@ function PhantomTest() {
             url_path = "/login?" + qp.join('&');
         }
         var url = self.origin + url_path;
+        code = code || "true";
+        ready = ready || "true";
         self.page.open(url, function(status) {
             if (status !== 'success') {
                 console.log('error', "failed to load " + url);
                 phantom.exit(1);
             } else {
                 console.log('loaded', url, status);
+                // clear localstorage leftovers
+                self.page.evaluate(function () { localStorage.clear() });
                 // process ready
                 waitFor(function() {
-                    console.log("PhantomTest.run: wait for condition: " + ready);
+                    console.log("PhantomTest.run: wait for condition:", ready);
                     return self.page.evaluate(function (ready) {
                         var r = false;
                         try {

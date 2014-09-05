@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent b96cd22d25cfa9a67f451d091f5c4896997d350d
+# Parent 11a30af5c0c80b15a2bbad562ef3a580ee99fb3b
 
 diff --git a/controllers/academy.py b/controllers/academy.py
 --- a/controllers/academy.py
@@ -10,7 +10,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
      def index(self):
 -        return "Hello, world!"
 +        return """<!doctype html>
-+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
++<link href="/web/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 +<body class="container">
 +    Hello, world!
 +</body>

@@ -2,7 +2,7 @@
   Print the Analytic Budget Report through wizard
 -
   !python {model: account.analytic.account}: |
-    ctx = {'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]}
+    ctx = {'model': 'account.analytic.account','active_ids': [ref('analytic.analytic_root')]}
     from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_budget_analytic',wiz_data={}, context=ctx, our_module='account_budget')
 

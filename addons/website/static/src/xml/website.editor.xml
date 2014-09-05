@@ -1,18 +1,19 @@
 <templates id="template" xml:space="preserve">
-    <t t-extend="website.editorbar">
-        <t t-jquery="#website-top-view" t-operation="after">
-            <div class="navbar-inner" id="website-top-edit">
-                <form class="navbar-form pull-left text-muted">
-                    <button type="button" data-action="save"
-                            class="btn btn-primary">Save</button>
-                    or
-                    <a href="#" data-action="cancel" class="btn btn-link">Discard</a>
-                </form>
-                <ul class="nav navbar-nav pull-right">
+    <t t-name="website.editorbar">
+        <div id="website-top-navbar" class="navbar navbar-inverse navbar-fixed-top hidden-xs" style="display: none;">
+            <div class="navbar-header" id="website-top-edit">
+                <ul class="nav navbar-nav js_editor_placeholder pull-right">
                 </ul>
+                <form class="navbar-form text-muted">
+                    <button type="button" data-action="save"
+                            class="btn btn-primary btn-xs">Save</button>
+                    or
+                    <a href="#" data-action="cancel" class="btn btn-link btn-xs">Discard</a>
+                </form>
             </div>
-        </t>
+        </div>
     </t>
+
     <t t-name="website.editor.dialog">
         <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
@@ -50,7 +51,7 @@
                                id="link-page" type="hidden"/>
                     </li>
                     <li class="list-group-item form-group clearfix">
-                        <div class="pull-right">
+                        <div class="pull-right" style="display: none;">
                             <label>
                                 <input type="checkbox" class="window-new"/>
                                 Open in new window
@@ -58,20 +59,11 @@
                         </div>
                         <h4 class="list-group-item-heading">
                             <label for="link-external" class="control-label">
-                                URL
+                                URL or Email Address
                             </label>
                         </h4>
-                        <input type="text" class="form-control url url-source"
+                        <input type="text" class="form-control url email-address url-source"
                                id="link-external" placeholder="http://openerp.com"/>
-                    </li>
-                    <li class="list-group-item form-group">
-                        <h4 class="list-group-item-heading">
-                            <label for="link-email" class="control-label">
-                                Email Address
-                            </label>
-                        </h4>
-                        <input type="email" class="form-control email-address url-source"
-                               id="link-email" placeholder="you@yourwebsite.com"/>
                     </li>
                 </ul>
                 <div class="form-horizontal">
@@ -80,8 +72,71 @@
                             Link text
                         </label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control"
-                                   id="link-text"/>
+                            <input type="text" class="form-control" id="link-text"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal link-style">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                            Style
+                        </label>
+                        <div class="col-sm-4">
+                            <div class="dropdown" style="line-height: 2em;">
+                                <a data-toggle="dropdown" class="btn btn-default" href="#">Color Style <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li>
+                                        <label class="btn btn-link">Link<input value="" class="link-style" type="radio" name="link-style-type" checked="checked"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-default">Basic<input value="btn-default" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-success">Success<input value="btn-success" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-primary">Primary<input value="btn-primary" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-info">Info<input value="btn-info" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-warning">Warning<input value="btn-warning" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-danger">Danger<input value="btn-danger" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="dropdown" style="line-height: 2em;">
+                                <a data-toggle="dropdown" class="btn btn-default" href="#">Size <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li>
+                                        <label class="btn btn-default btn-xs">Extra Small<input value="btn-xs" class="link-style" type="radio" name="link-style-size"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-default btn-sm">Small<input value="btn-sm" class="link-style" type="radio" name="link-style-size"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-default">Default<input value="" class="link-style" type="radio" name="link-style-size" checked="checked"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-default btn-lg">Large<input value="btn-lg" class="link-style" type="radio" name="link-style-size"/></label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal link-style">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                            Preview
+                        </label>
+                        <div class="col-sm-10" style="line-height: 2em;">
+                            <a id="link-preview" href="#"></a>
                         </div>
                     </div>
                 </div>
@@ -148,7 +203,7 @@
                   class="form-inline">
                 <div class="well">
                     <div class="form-group pull-left">
-                        <input type="file" name="upload" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                        <input type="file" name="upload" accept="image/*" multiple="multiple" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
                         <button type="button" class="btn btn-primary filepicker">Upload an image from your computer</button>
                         <button type="button" class="btn hidden wait" disabled="disabled">Uploading...</button>
                     </div>
@@ -305,7 +360,8 @@
                         class="form-control url pull-left"
                         style="width: 400px;"
                         id="urlvideo"
-                        placeholder="//www.youtube.com/embed/yws1tbgNV7k"/>
+                        placeholder="//www.youtube.com/embed/yws1tbgNV7k"
+                        t-translation="off"/>
                     <button class="btn btn-default">Preview</button>
                 </div>
                 <div class="form-group btn-group">
@@ -315,7 +371,8 @@
                         class="form-control url pull-left"
                         style="width: 400px;"
                         id="embedvideo"
-                        placeholder='&lt;iframe src="//www.youtube.com/embed/yws1tbgNV7k"&gt;&lt;/iframe&gt;'/>
+                        placeholder='&lt;iframe src="//www.youtube.com/embed/yws1tbgNV7k"&gt;&lt;/iframe&gt;'
+                        t-translation="off"/>
                     <button class="btn btn-default">Preview</button>
                 </div>
             </div>

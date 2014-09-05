@@ -36,9 +36,9 @@ class account_voucher(osv.osv):
         return journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
 
     _columns = {
-        'amount_in_word' : fields.char("Amount in Word" , size=128, readonly=True, states={'draft':[('readonly',False)]}),
+        'amount_in_word' : fields.char("Amount in Word", readonly=True, states={'draft':[('readonly',False)]}),
         'allow_check' : fields.related('journal_id', 'allow_check_writing', type='boolean', string='Allow Check Writing'),
-        'number': fields.char('Number', size=32),
+        'number': fields.char('Number'),
     }
 
     def _amount_to_text(self, cr, uid, amount, currency_id, context=None):

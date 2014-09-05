@@ -115,6 +115,7 @@ def record_constructor(loader, node):
 
 def python_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
+    kwargs['first_line'] = node.start_mark.line + 1
     return Python(**kwargs)
 
 def menuitem_constructor(loader, node):

@@ -34,30 +34,26 @@
                             </page>
                             <page string="Advanced" groups="base.group_no_one">
                                 <group>
-                                    <div>
-                                        <group string="Status">
-                                            <field name="auto_delete"/>
-                                            <field name="notification"/>
-                                            <field name="type"/>
-                                            <field name="mail_server_id"/>
-                                            <field name="model"/>
-                                            <field name="res_id"/>
-                                        </group>
-                                    </div>
-                                    <div>
-                                        <group string="Headers">
-                                            <field name="message_id"/>
-                                            <field name="references"/>
-                                        </group>
-                                        <group string="Recipients">
-                                            <field name="partner_ids" widget="many2many_tags"/>
-                                            <field name="notified_partner_ids" widget="many2many_tags"/>
-                                        </group>
-                                    </div>
+                                    <group string="Status">
+                                        <field name="auto_delete"/>
+                                        <field name="notification"/>
+                                        <field name="type"/>
+                                        <field name="mail_server_id"/>
+                                        <field name="model"/>
+                                        <field name="res_id"/>
+                                    </group>
+                                    <group string="Headers">
+                                        <field name="message_id"/>
+                                        <field name="references"/>
+                                        <field name="headers"/>
+                                    </group>
                                 </group>
                             </page>
                             <page string="Attachments">
                                 <field name="attachment_ids"/>
+                            </page>
+                            <page string="Failure Reason" attrs="{'invisible': [('state', '!=', 'exception')]}">
+                                <field name="failure_reason"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -123,7 +119,7 @@
             <field name="res_model">mail.mail</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_outgoing': 1}</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_mail_search"/>
         </record>
 

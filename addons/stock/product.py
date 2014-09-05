@@ -171,13 +171,13 @@ class product_product(osv.osv):
     def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
         res = {}
         for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = str(product.qty_available) +  _(" In Stock")
+            res[product.id] = str(product.qty_available) +  _(" On Hand")
         return res
 
     _columns = {
-        'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
+        'reception_count': fields.function(_stock_move_count, string="Receipt", type='integer', multi='pickings'),
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
-        'qty_in_stock': fields.function(_product_available_text, type='char'),
+        'qty_available_text': fields.function(_product_available_text, type='char'),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
@@ -244,7 +244,7 @@ class product_product(osv.osv):
             if fields:
                 if location_info.usage == 'supplier':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Future Receptions')
+                        res['fields']['virtual_available']['string'] = _('Future Receipts')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Received Qty')
 
@@ -276,6 +276,12 @@ class product_product(osv.osv):
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
+
+
+    def action_view_routes(self, cr, uid, ids, context=None):
+        template_obj = self.pool.get("product.template")
+        templ_ids = list(set([x.product_tmpl_id.id for x in self.browse(cr, uid, ids, context=context)]))
+        return template_obj.action_view_routes(cr, uid, templ_ids, context=context)
 
 class product_template(osv.osv):
     _name = 'product.template'
@@ -317,13 +323,18 @@ class product_template(osv.osv):
             res.append(('product_variant_ids', 'in', ids))
         return res
 
+
+    def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = str(product.qty_available) +  _(" On Hand")
+        return res
+
+
+
     _columns = {
-        'valuation':fields.selection([('manual_periodic', 'Periodical (manual)'),
-            ('real_time','Real Time (automated)'),], 'Inventory Valuation',
-            help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
-                 "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
-            , required=True),
         'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
+        'qty_available_text': fields.function(_product_available_text, type='char'),
         'property_stock_procurement': fields.property(
             type='many2one',
             relation='stock.location',
@@ -370,7 +381,6 @@ class product_template(osv.osv):
 
     _defaults = {
         'sale_delay': 7,
-        'valuation': 'manual_periodic',
     }
 
     def action_view_routes(self, cr, uid, ids, context=None):
@@ -382,11 +392,47 @@ class product_template(osv.osv):
             product_route_ids |= set([r.id for r in product.route_ids])
             product_route_ids |= set([r.id for r in product.categ_id.total_route_ids])
         route_ids = route_obj.search(cr, uid, ['|', ('id', 'in', list(product_route_ids)), ('warehouse_selectable', '=', True)], context=context)
-        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_routes_form')
-        id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result = mod_obj.xmlid_to_res_id(cr, uid, 'stock.action_routes_form', raise_if_not_found=True)
+        result = act_obj.read(cr, uid, [result], context=context)[0]
         result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
         return result
+
+
+    def _get_products(self, cr, uid, ids, context=None):
+        products = []
+        for prodtmpl in self.browse(cr, uid, ids, context=None):
+            products += [x.id for x in prodtmpl.product_variant_ids]
+        return products
+    
+    def _get_act_window_dict(self, cr, uid, name, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+        result = mod_obj.xmlid_to_res_id(cr, uid, name, raise_if_not_found=True)
+        result = act_obj.read(cr, uid, [result], context=context)[0]
+        return result
+    
+    def action_open_quants(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock.product_open_quants', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        result['context'] = "{'search_default_locationgroup': 1, 'search_default_internal_loc': 1}"
+        return result
+    
+    def action_view_orderpoints(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock.product_open_orderpoint', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        result['context'] = "{}"
+        return result
+
+
+    def action_view_stock_moves(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock.act_product_stock_move_open', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        result['context'] = "{}"
+        return result
+
 
 class product_removal_strategy(osv.osv):
     _name = 'product.removal'
@@ -408,7 +454,7 @@ class product_putaway_strategy(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True),
         'method': fields.selection(_get_putaway_options, "Method", required=True),
-        'fixed_location_ids': fields.one2many('stock.fixed.putaway.strat', 'putaway_id', 'Fixed Locations Per Product Category', help="When the method is fixed, this location will be used to store the products"),
+        'fixed_location_ids': fields.one2many('stock.fixed.putaway.strat', 'putaway_id', 'Fixed Locations Per Product Category', help="When the method is fixed, this location will be used to store the products", copy=True),
     }
 
     _defaults = {

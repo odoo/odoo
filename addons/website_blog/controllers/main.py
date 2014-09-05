@@ -187,7 +187,7 @@ class WebsiteBlog(http.Controller):
         )
         pager_begin = (page - 1) * self._post_comment_per_page
         pager_end = page * self._post_comment_per_page
-        blog_post.website_message_ids = blog_post.website_message_ids[pager_begin:pager_end]
+        comments = blog_post.website_message_ids[pager_begin:pager_end]
 
         tag = None
         if tag_id:
@@ -226,6 +226,7 @@ class WebsiteBlog(http.Controller):
             'post_url': post_url,
             'blog_url': blog_url,
             'pager': pager,
+            'comments': comments,
         }
         response = request.website.render("website_blog.blog_post_complete", values)
         response.set_cookie('visited_blogs', ','.join(map(str, visited_ids)))
@@ -243,7 +244,6 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         blog_post = request.registry['blog.post']
         partner_obj = request.registry['res.partner']
-        thread_obj = request.registry['mail.thread']
 
         if uid != request.website.user_id.id:
             partner_ids = [user.partner_id.id]
@@ -341,6 +341,14 @@ class WebsiteBlog(http.Controller):
         if count:
             return ids
         return self._get_discussion_detail(ids, publish, **post)
+
+    @http.route('/blogpost/get_discussions/', type='json', auth="public", website=True)
+    def discussions(self, post_id=0, paths=None, count=False, **post):
+        ret = []
+        for path in paths:
+            result = self.discussion(post_id=post_id, path=path, count=count, **post)
+            ret.append({"path": path, "val": result})
+        return ret
 
     @http.route('/blogpost/change_background', type='json', auth="public", website=True)
     def change_bg(self, post_id=0, image=None, **post):

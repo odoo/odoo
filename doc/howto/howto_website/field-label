@@ -1,14 +1,14 @@
 # HG changeset patch
-# Parent fe4edbcd9e98db81ec6321c58e8ac508a686f45b
-diff -r fe4edbcd9e98 -r 72a099819e5b models/academy.py
---- a/models/academy.py	Mon Apr 14 16:38:10 2014 +0200
-+++ b/models/academy.py	Mon Apr 14 16:59:01 2014 +0200
-@@ -14,6 +14,6 @@ class Lectures(orm.Model):
+# Parent 4b38aba926d27af5f81be1a3b5a482c26522bf38
+
+diff --git a/models/academy.py b/models/academy.py
+--- a/models/academy.py
++++ b/models/academy.py
+@@ -12,5 +12,5 @@ class Lectures(Model):
+     _name = 'academy.lectures'
      _order = 'date ASC'
  
-     _columns = {
--        'name': fields.char(required=True),
--        'date': fields.date(required=True),
-+        'name': fields.char(required=True, string="Name"),
-+        'date': fields.date(required=True, string="Date"),
-     }
+-    name = Char(required=True)
+-    date = Date(required=True)
++    name = Char(required=True, string="Name")
++    date = Date(required=True, string="Date")
