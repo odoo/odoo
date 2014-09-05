@@ -31,11 +31,7 @@
             <field name="model">crm.claim.report</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <filter string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                    <filter string="My Sales Team(s)" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)" groups="base.group_multi_salesteams"/>
-                    <separator/>
-                    <filter string="My Company" context="{'invisible_section': False}" domain="[('company_id.user_ids','=',uid)]" help="My Company"/>
-                    <separator/>
+                    <filter string="My Company" context="{'invisible_section': False}" domain="[('company_id.user_ids','=',uid)]" help="My Company" groups="base.group_multi_company"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="user_id" string="Salesperson"/>
                     <field name="section_id" string="Sales Team" context="{'invisible_section': False}"
@@ -58,7 +54,7 @@
                         <filter string="Category" context="{'group_by':'categ_id'}" />
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator/>
-                        <filter string="Claim Month" context="{'group_by':'claim_date:month'}" help="Month of claim"/>
+                        <filter string="Creation Month" context="{'group_by':'create_date:month'}" help="Month of creation of the claim"/>
                     </group>
                 </search>
             </field>

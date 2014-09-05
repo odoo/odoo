@@ -23,8 +23,6 @@
                 <search string="Event on Registration">
                     <filter string="New" domain="[('event_state','=','draft')]" help="Events which are in New state"/>
                     <filter string="Confirm" domain="[('event_state','=','confirm')]" help="Events which are in confirm state"/>
-                    <separator/>
-                    <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <field name="event_id" string="Event"/>
                     <field name="user_id"/>
                     <group expand="0" string="Extended Filters...">
@@ -33,7 +31,7 @@
                     </group>
                     <newline/>
                     <group expand="1" string="Group By">
-                        <filter string="Participant" context="{'group_by':'name_registration'}" help="Registration contact"/>
+                        <filter string="Attendees" context="{'group_by':'name_registration'}" help="Registration contact"/>
                         <filter string="Event Type" context="{'group_by':'event_type'}"/>
                         <filter string="Event" name="event" context="{'group_by':'event_id', 'max_reg_event_visible':0}"/>
                         <filter string="Event State" context="{'group_by':'event_state'}"/>
@@ -42,8 +40,7 @@
                         <filter string="Event Month" context="{'group_by':'event_date:month'}" help="Event Beginning Date"/>
                     </group>
                     <group expand="0" string="Display">
-                        <filter string="Show Confirmed Registrations" domain="[('event_state','&lt;&gt;','draft')]"
-                              help="Registrations in confirmed or done state" context="{'no_of_draft_invisible':1}"/>
+
                     </group>
                 </search>
             </field>

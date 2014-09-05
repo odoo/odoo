@@ -28,8 +28,6 @@
                     <separator/>
                     <filter name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
                     <separator/>
-                    <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leave Requests"/>
-                    <separator/>
                     <filter string="My Department Leaves" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>

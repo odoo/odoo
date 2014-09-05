@@ -21,7 +21,6 @@
                 <field name="date"/>
                 <field name="date_due"/>
                 <filter string="Draft" domain="[('state','=','draft')]" help = "Draft Vouchers"/>
-                <filter string="Pro-forma" domain="[('state','=','proforma')]" help = "Pro-forma Vouchers"/>
                 <filter string="Posted" name="current" domain="[('state','not in', ('draft','cancel'))]" help = "Validated Vouchers"/>
                 <field name="partner_id"/>
                 <group expand="0" string="Extended Filters...">

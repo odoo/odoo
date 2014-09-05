@@ -58,7 +58,7 @@ class purchase_report(osv.osv):
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
         'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
-        'category_id': fields.many2one('product.category', 'Category', readonly=True)
+        'category_id': fields.many2one('product.category', 'Product Category', readonly=True)
 
     }
     _order = 'date desc, price_total desc'

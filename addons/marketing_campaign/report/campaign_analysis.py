@@ -45,14 +45,14 @@ class campaign_analysis(osv.osv):
         return result
     _columns = {
         'res_id' : fields.integer('Resource', readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
+        'year': fields.char('Execution Year', size=4, readonly=True),
         'month': fields.selection([('01','January'), ('02','February'),
                                      ('03','March'), ('04','April'),('05','May'), ('06','June'),
                                      ('07','July'), ('08','August'), ('09','September'),
                                      ('10','October'), ('11','November'), ('12','December')],
-                                  'Month', readonly=True),
-        'day': fields.char('Day', size=10, readonly=True),
-        'date': fields.date('Date', readonly=True, select=True),
+                                  'Execution Month', readonly=True),
+        'day': fields.char('Execution Day', size=10, readonly=True),
+        'date': fields.date('Execution Date', readonly=True, select=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
                                                                 readonly=True),
         'activity_id': fields.many2one('marketing.campaign.activity', 'Activity',

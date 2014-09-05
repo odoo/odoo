@@ -33,7 +33,7 @@ class crm_opportunity_report(osv.Model):
     _inherit = ["crm.tracking.mixin"]
 
     _columns = {
-        'date_deadline': fields.date('Exp. Closing', readonly=True, help="Expected Closing"),
+        'date_deadline': fields.date('Expected Closing', readonly=True, help="Expected Closing"),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'opening_date': fields.datetime('Assignation Date', readonly=True),
         'date_closed': fields.datetime('Close Date', readonly=True),

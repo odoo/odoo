@@ -43,7 +43,6 @@
                 <filter string="This Year" name="year" domain="[('date_create','&lt;=', time.strftime('%%Y-12-31')),('date_create','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <separator/>
                 <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
-                <filter string="My" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="New" domain="[('stage_id.sequence', '=', 1)]"/>
                 <separator/>
