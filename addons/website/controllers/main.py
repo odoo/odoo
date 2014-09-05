@@ -8,8 +8,6 @@ import xml.etree.ElementTree as ET
 import logging
 import re
 
-from sys import maxint
-
 import werkzeug.utils
 import urllib2
 import werkzeug.wrappers
@@ -17,7 +15,7 @@ from PIL import Image
 
 import openerp
 from openerp.addons.web import http
-from openerp.http import request, Response
+from openerp.http import request, STATIC_CACHE
 
 logger = logging.getLogger(__name__)
 
@@ -397,8 +395,8 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route([
         '/website/image',
-        '/website/image/<model>/<id>/<field>',
-        '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
+        '/website/image/<model>-<id>-<field>',
+        '/website/image/<model>-<id>-<field>-<int:max_width>x<int:max_height>'
         ], auth="public", website=True)
     def website_image(self, model, id, field, max_width=None, max_height=None):
         """ Fetches the requested field and ensures it does not go above
@@ -416,9 +414,12 @@ class Website(openerp.addons.web.controllers.main.Home):
         all cases.
         """
         try:
+            idsha = id.split('_')
+            id = idsha[0]
             response = werkzeug.wrappers.Response()
             return request.registry['website']._image(
-                request.cr, request.uid, model, id, field, response, max_width, max_height)
+                request.cr, request.uid, model, id, field, response, max_width, max_height,
+                cache=STATIC_CACHE if len(idsha) > 1 else None)
         except Exception:
             logger.exception("Cannot render image field %r of record %s[%s] at size(%s,%s)",
                              field, model, id, max_width, max_height)

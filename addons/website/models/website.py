@@ -4,13 +4,13 @@ import contextlib
 import datetime
 import hashlib
 import inspect
-import itertools
 import logging
 import math
 import mimetypes
 import unicodedata
 import os
 import re
+import time
 import urlparse
 
 from PIL import Image
@@ -513,7 +513,7 @@ class website(osv.osv):
             response.data = f.read()
             return response.make_conditional(request.httprequest)
 
-    def _image(self, cr, uid, model, id, field, response, max_width=maxint, max_height=maxint, context=None):
+    def _image(self, cr, uid, model, id, field, response, max_width=maxint, max_height=maxint, cache=None, context=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
 
@@ -565,6 +565,10 @@ class website(osv.osv):
         response.set_etag(hashlib.sha1(record[field]).hexdigest())
         response.make_conditional(request.httprequest)
 
+        if cache:
+            response.cache_control.max_age = cache
+            response.expires = int(time.time() + cache)
+
         # conditional request match
         if response.status_code == 304:
             return response
@@ -592,6 +596,13 @@ class website(osv.osv):
             del response.headers['Content-Length']
 
         return response
+
+    def image_url(self, cr, uid, record, field, size=None, context=None):
+        """Returns a local url that points to the image field of a given browse record."""
+        model = record._name
+        id = '%s_%s' % (record.id, hashlib.sha1(record.write_date).hexdigest()[0:7])
+        size = '' if size is None else '-%s' % size
+        return '/website/image/%s-%s-%s%s' % (model, id, field, size)
 
 
 class website_menu(osv.osv):
@@ -668,11 +679,7 @@ class ir_attachment(osv.osv):
             if attach.url:
                 result[attach.id] = attach.url
             else:
-                result[attach.id] = urlplus('/website/image', {
-                    'model': 'ir.attachment',
-                    'field': 'datas',
-                    'id': attach.id
-                })
+                result[attach.id] = self.pool['website'].image_url(cr, uid, attach, 'datas')
         return result
     def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
         return dict(
