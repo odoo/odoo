@@ -32,7 +32,7 @@
     </t>
 
     <t t-name="reconciliation_line">
-        <table t-att-data-mode="mode">
+        <table>
             <tr>
                 <td>
                     <table class="accounting_view">
@@ -199,7 +199,9 @@
             <td class="cell_action"><span class="toggle_create glyphicon glyphicon-play"></span></td>
             <td class="cell_account_code"><t t-esc="account_code"/></td>
             <td class="cell_due_date"></td>
-            <td class="cell_label">Open balance</td>
+            <td class="cell_label">
+                <t t-if="!has_no_partner">Open balance</t>
+                <t t-if="has_no_partner">Choose counterpart</t></td>
             <td class="cell_debit"><t t-esc="debit"/></td>
             <td class="cell_credit"><t t-esc="credit"/></td>
             <td class="cell_info_popover"></td>

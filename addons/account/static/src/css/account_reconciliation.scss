@@ -206,6 +206,12 @@ $aestetic_animation_speed: 300ms;
             .toggle_create {
                 @extend .visible_toggle;
             }
+
+            &.no_partner {
+                .toggle_match {
+                    @extend .visible_toggle;
+                }
+            }
         }
 
         &[data-mode="inactive"] {
@@ -510,6 +516,10 @@ $aestetic_animation_speed: 300ms;
 
                 &.cell_action, &.cell_info_popover {
                     border-top: none;
+                }
+
+                &.cell_debit, &.cell_credit {
+                    border-top: 1px solid #000 !important;
                 }
             }
         }

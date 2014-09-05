@@ -902,9 +902,10 @@ class account_move_line(osv.osv):
         if partner_id:
             domain.append(('partner_id','=',partner_id))
         aml_ids = self.search(cr, uid, domain, context=context)
+        aml = self.browse(cr, uid, aml_ids, context=context)
         account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
         target_currency = account.currency_id or account.company_currency_id # TODO : m'kay ?
-        return self.prepare_move_lines_for_reconciliation_widget(cr, uid, aml_ids, target_currency=target_currency, context=context)
+        return self.prepare_move_lines_for_reconciliation_widget(cr, uid, aml, target_currency=target_currency, context=context)
 
     def prepare_move_lines_for_reconciliation_widget(self, cr, uid, lines, target_currency=False, target_date=False, context=None):
         """ Returns move lines formatted for the manual/bank reconciliation widget
