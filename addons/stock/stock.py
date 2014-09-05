@@ -2018,8 +2018,9 @@ class stock_move(osv.osv):
         """
             Attribute price to move, important in inter-company moves or receipts with only one partner
         """
-        price = move.product_id.standard_price
-        self.write(cr, uid, [move.id], {'price_unit': price})
+        if not move.price_unit:
+            price = move.product_id.standard_price
+            self.write(cr, uid, [move.id], {'price_unit': price})
 
 
     def action_confirm(self, cr, uid, ids, context=None):
