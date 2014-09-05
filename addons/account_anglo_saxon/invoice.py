@@ -29,6 +29,7 @@ class account_invoice_line(osv.osv):
     def move_line_get(self, cr, uid, invoice_id, context=None):
         res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context=context)
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
+        tax_obj = self.pool.get('account.tax')
         company_currency = inv.company_id.currency_id.id
         def get_price(cr, uid, inv, company_currency,i_line):
             cur_obj = self.pool.get('res.currency')
@@ -122,7 +123,17 @@ class account_invoice_line(osv.osv):
                                     standard_price = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, standard_price, context={'date': inv.date_invoice})
                                 if standard_price != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
                                     price_diff = i_line.price_unit - standard_price
-                                    line.update({'price':standard_price * line['quantity']})
+                                    price = standard_price * line['quantity']
+                                    discounted_price = i_line.price_unit * (1-i_line.discount/100.0)
+                                    if i_line.discount:
+                                        price_diff = discounted_price - standard_price
+                                    for tax in i_line.invoice_line_tax_id:
+                                        if tax.price_include:
+                                            taxes_standard = tax_obj.compute_all(cr, uid, i_line.invoice_line_tax_id, standard_price, i_line.quantity, product=i_line.product_id, partner=i_line.invoice_id.partner_id)
+                                            taxes_new = tax_obj.compute_all(cr, uid, i_line.invoice_line_tax_id, discounted_price, i_line.quantity, product=i_line.product_id, partner=i_line.invoice_id.partner_id)
+                                            price_diff = taxes_new['taxes'][0]['price_unit'] - taxes_standard['taxes'][0]['price_unit'] 
+                                            price = taxes_standard['taxes'][0]['price_unit'] * line['quantity']
+                                    line.update({'price':price})
                                     diff_res.append({
                                         'type':'src',
                                         'name': i_line.name[:64],
