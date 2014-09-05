@@ -123,7 +123,7 @@
       -ms-transition-duration: 300ms;
       -o-transition-duration: 300ms;
       transition-duration: 300ms; }
-    .openerp .oe_reconciliation .oe_reconciliation_line .visible_toggle, .openerp .oe_reconciliation .oe_reconciliation_line[data-mode="match"] .toggle_match, .openerp .oe_reconciliation .oe_reconciliation_line[data-mode="create"] .toggle_create {
+    .openerp .oe_reconciliation .oe_reconciliation_line .visible_toggle, .openerp .oe_reconciliation .oe_reconciliation_line[data-mode="match"] .toggle_match, .openerp .oe_reconciliation .oe_reconciliation_line[data-mode="create"] .toggle_create, .openerp .oe_reconciliation .oe_reconciliation_line[data-mode="create"].no_partner .toggle_match {
       visibility: visible !important;
       -webkit-transform: rotate(90deg);
       -moz-transform: rotate(90deg);
@@ -191,7 +191,7 @@
         color: #555;
         padding-right: 5px; }
     .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view .initial_line > td {
-      border-top: 1px solid #bbbbbb;
+      border-top: 1px solid #bbb;
       padding-top: 4px;
       padding-bottom: 5px;
       background-color: #f0f0f0;
@@ -226,7 +226,7 @@
         font-weight: bold;
         cursor: pointer; }
     .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td.cell_credit {
-      border-left: 1px solid black; }
+      border-left: 1px solid #000; }
     .openerp .oe_reconciliation .oe_reconciliation_line .match {
       padding: 1px; }
       .openerp .oe_reconciliation .oe_reconciliation_line .match .match_controls {
@@ -304,10 +304,12 @@
     height: 23px;
     cursor: default !important; }
   .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view tbody tr:first-child td {
-    border-top: 1px solid #bbbbbb;
+    border-top: 1px solid #bbb;
     padding-top: 4px; }
     .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view tbody tr:first-child td.cell_action, .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view tbody tr:first-child td.cell_info_popover {
       border-top: none; }
+    .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view tbody tr:first-child td.cell_debit, .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view tbody tr:first-child td.cell_credit {
+      border-top: 1px solid #000 !important; }
   .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line td.cell_due_date {
     padding-left: 3px !important; }
   .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .toggle_match {
