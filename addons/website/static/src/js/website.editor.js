@@ -750,6 +750,7 @@
             var def = $.Deferred();
             var editor = this.editor = CKEDITOR.inline(root, self._config());
             editor.on('instanceReady', function () {
+                $("[data-oe-type=selection]").attr("contenteditable",false);
                 editor.setReadOnly(false);
                 // ckeditor set root to editable, disable it (only inner
                 // sections are editable)
@@ -819,6 +820,7 @@
 
         fetch_editables: function (root) {
             return $(root).find('[data-oe-model]')
+                .not('[data-oe-type = "selection"]')
                 .not('link, script')
                 .not('.oe_snippet_editor')
                 .filter(function () {
