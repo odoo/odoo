@@ -6266,6 +6266,9 @@ body {
 /*
  * Main navigation
  */
+.docs-nav {
+  /* version switcher */
+}
 .docs-nav .navbar-brand,
 .docs-nav .navbar-nav > li > a {
   position: relative;
@@ -6303,6 +6306,22 @@ body {
 .docs-nav .navbar-nav > li .dropdown-menu > li.current > a.current {
   background-color: #a24689;
   color: white;
+}
+.docs-nav div.versions {
+  position: relative;
+  cursor: pointer;
+  font-size: 300%;
+  display: inline-block;
+}
+.docs-nav div.versions > a {
+  font-size: 40%;
+  margin: 0.2em;
+  color: #999;
+  font-family: Lato, Arial, sans-serif;
+}
+.docs-nav div.versions > a:hover,
+.docs-nav div.versions > a:focus {
+  text-decoration: none;
 }
 .o_logo {
   display: inline-block;
@@ -6346,34 +6365,14 @@ body {
 .sphinxsidebarwrapper > .nav li.current > .nav {
   display: block;
 }
-.sphinxsidebarwrapper > p {
-  margin: 5px 10px 10px;
-}
-.sphinxsidebarwrapper > p a {
-  font-size: 13px;
-}
-.sphinxsidebarwrapper > p a:hover {
-  text-decoration: none;
-}
-.sphinxsidebarwrapper > p a.github {
-  padding-left: 15px;
-  position: relative;
-}
-.sphinxsidebarwrapper > p a.github:before {
-  left: 0;
-  top: 1px;
-  content: '';
-  position: absolute;
-  width: 13px;
-  height: 13px;
-  background: url(github-link.png) left bottom / 13px no-repeat;
-}
-.sphinxsidebarwrapper > p a.github:hover:before {
-  background-position: left top;
-}
 /* Side navigation graphical styling */
+.sphinxsidebar {
+  z-index: 1;
+}
 .sphinxsidebarwrapper {
   width: 100%;
+  font-size: 13px;
+  z-index: 1;
   /* First level of nav */
   /* All levels of nav */
 }
@@ -6397,7 +6396,6 @@ body {
   margin-bottom: 20px;
 }
 .sphinxsidebarwrapper .nav > li > a {
-  font-size: 13px;
   font-weight: bold;
   padding-left: 20px;
 }
@@ -6475,6 +6473,32 @@ body {
 .sphinxsidebarwrapper .nav .nav .nav .nav > .active:hover > a,
 .sphinxsidebarwrapper .nav .nav .nav .nav > .active:focus > a {
   padding-left: 33px;
+}
+/* github link for current document */
+.sphinxsidebarwrapper > p {
+  margin: 5px 10px 10px;
+}
+.sphinxsidebarwrapper > p a {
+  font-size: 13px;
+}
+.sphinxsidebarwrapper > p a:hover {
+  text-decoration: none;
+}
+.sphinxsidebarwrapper > p a.github {
+  padding-left: 15px;
+  position: relative;
+}
+.sphinxsidebarwrapper > p a.github:before {
+  left: 0;
+  top: 1px;
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: url(github-link.png) left bottom / 13px no-repeat;
+}
+.sphinxsidebarwrapper > p a.github:hover:before {
+  background-position: left top;
 }
 /* Show and affix the side nav when space allows it */
 @media (min-width: 992px) {

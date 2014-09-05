@@ -266,13 +266,13 @@ def test_tgz(o):
         wheezy.system('su postgres -s /bin/bash -c "pg_createcluster --start -e UTF-8 9.1 main"')
         wheezy.system('pip install -r /opt/release/requirements.txt')
         wheezy.system('/usr/local/bin/pip install /opt/release/%s' % wheezy.release)
-        wheezy.system("useradd --system --no-create-home openerp")
-        wheezy.system('su postgres -s /bin/bash -c "createuser -s openerp"')
+        wheezy.system("useradd --system --no-create-home odoo")
+        wheezy.system('su postgres -s /bin/bash -c "createuser -s odoo"')
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
-        wheezy.system('mkdir /var/lib/openerp')
-        wheezy.system('chown openerp:openerp /var/lib/openerp')
-        wheezy.system('su openerp -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany -i base --stop-after-init"')
-        wheezy.system('su openerp -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany &"')
+        wheezy.system('mkdir /var/lib/odoo')
+        wheezy.system('chown odoo:odoo /var/lib/odoo')
+        wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany -i base --stop-after-init"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany &"')
 
 def test_deb(o):
     with docker('debian:stable', o.build_dir, o.pub) as wheezy:
@@ -285,8 +285,8 @@ def test_deb(o):
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
         wheezy.system('/usr/bin/dpkg -i /opt/release/%s' % wheezy.release)
         wheezy.system('/usr/bin/apt-get install -f -y')
-        wheezy.system('su openerp -s /bin/bash -c "odoo.py -c /etc/openerp/openerp-server.conf -d mycompany -i base --stop-after-init"')
-        wheezy.system('su openerp -s /bin/bash -c "odoo.py -c /etc/openerp/openerp-server.conf -d mycompany &"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo.py -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo.py -c /etc/odoo/openerp-server.conf -d mycompany &"')
 
 def test_rpm(o):
     with docker('centos:centos7', o.build_dir, o.pub) as centos7:
@@ -306,8 +306,8 @@ def test_rpm(o):
         centos7.system('export PYTHONPATH=${PYTHONPATH}:/usr/local/lib/python2.7/dist-packages')
         centos7.system('su postgres -c "createdb mycompany"')
         centos7.system('yum install /opt/release/%s -y' % centos7.release)
-        centos7.system('su openerp -s /bin/bash -c "openerp-server -c /etc/openerp/openerp-server.conf -d mycompany -i base --stop-after-init"')
-        centos7.system('su openerp -s /bin/bash -c "openerp-server -c /etc/openerp/openerp-server.conf -d mycompany &"')
+        centos7.system('su odoo -s /bin/bash -c "openerp-server -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
+        centos7.system('su odoo -s /bin/bash -c "openerp-server -c /etc/odoo/openerp-server.conf -d mycompany &"')
 
 def test_exe(o):
     KVMWinTestExe(o, o.vm_winxp_image, o.vm_winxp_ssh_key, o.vm_winxp_login).start()

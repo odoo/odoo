@@ -582,13 +582,18 @@
         openerp.web.UserMenu.include({
             do_update: function(){
                 var self = this;
-                this.update_promise.then(function() {
-                    var im = new openerp.im_chat.InstantMessaging(self);
-                    openerp.im_chat.single = im;
-                    im.appendTo(openerp.client.$el);
-                    var button = new openerp.im_chat.ImTopButton(this);
-                    button.on("clicked", im, im.switch_display);
-                    button.appendTo(window.$('.oe_systray'));
+                var Users = new openerp.web.Model('res.users');
+                Users.call('has_group', ['base.group_user']).done(function(is_employee) {
+                    if (is_employee) {
+                        self.update_promise.then(function() {
+                            var im = new openerp.im_chat.InstantMessaging(self);
+                            openerp.im_chat.single = im;
+                            im.appendTo(openerp.client.$el);
+                            var button = new openerp.im_chat.ImTopButton(this);
+                            button.on("clicked", im, im.switch_display);
+                            button.appendTo(window.$('.oe_systray'));
+                        });
+                    }
                 });
                 return this._super.apply(this, arguments);
             },

@@ -101,6 +101,23 @@ body {
       color: white;
     }
   }
+  /* version switcher */
+  div.versions {
+    position: relative;
+    cursor: pointer;
+    font-size: 300%;
+    display: inline-block;
+
+    > a {
+      font-size: 40%;
+      margin: 0.2em;
+      color: #999;
+      font-family: Lato, Arial, sans-serif;
+      &:hover, &:focus {
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 // FIXME: protocol-relative urls for remote but absolute for local (file://)?
@@ -155,33 +172,6 @@ body {
       display: block;
     }
   }
-
-  > p {
-    margin: 5px 10px 10px;
-    a {
-      font-size: 13px;
-      &:hover {
-        text-decoration: none;
-      }
-
-      &.github {
-        padding-left: 15px;
-        position: relative;
-        &:before {
-          left: 0;
-          top: 1px;
-          content: '';
-          position: absolute;
-          width: 13px;
-          height: 13px;
-          background: url(github-link.png) left bottom / 13px no-repeat;
-        }
-        &:hover:before {
-          background-position: left top;
-        }
-      }
-    }
-  }
 }
 
 /* Side navigation graphical styling */
@@ -192,8 +182,13 @@ body {
 @nav-current-offset: 2px;
 @nav-current: @nav-spacing - @nav-current-offset;
 
+.sphinxsidebar {
+  z-index: 1;
+}
 .sphinxsidebarwrapper {
   width: 100%;
+  font-size: 13px;
+  z-index: 1;
 
   .hidden-xs();
   .hidden-sm();
@@ -206,7 +201,6 @@ body {
   }
 
   .nav > li > a {
-    font-size: 13px;
     font-weight: bold;
     padding-left: @nav-spacing;
   }
@@ -280,6 +274,33 @@ body {
     }
     > .active > a, > .active:hover > a, > .active:focus > a {
       padding-left: @nav-current + 3 * @nav-spacing-increment;
+    }
+  }
+}
+/* github link for current document */
+.sphinxsidebarwrapper > p {
+  margin: 5px 10px 10px;
+  a {
+    font-size: 13px;
+    &:hover {
+      text-decoration: none;
+    }
+
+    &.github {
+      padding-left: 15px;
+      position: relative;
+      &:before {
+        left: 0;
+        top: 1px;
+        content: '';
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        background: url(github-link.png) left bottom / 13px no-repeat;
+      }
+      &:hover:before {
+        background-position: left top;
+      }
     }
   }
 }

@@ -251,27 +251,33 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
             server.write({'date': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)})
         return True
 
-    def cron_update(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if not context.get('fetchmail_cron_running'):
-            # Enabled/Disable cron based on the number of 'done' server of type pop or imap
-            ids = self.search(cr, uid, [('state','=','done'),('type','in',['pop','imap'])])
-            try:
-                cron_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fetchmail', 'ir_cron_mail_gateway_action')[1]
-                self.pool.get('ir.cron').write(cr, 1, [cron_id], {'active': bool(ids)})
-            except ValueError:
-                # Nevermind if default cron cannot be found
-                pass
+    def _update_cron(self, cr, uid, context=None):
+        if context and context.get('fetchmail_cron_running'):
+            return
+
+        try:
+            cron = self.pool['ir.model.data'].get_object(
+                cr, uid, 'fetchmail', 'ir_cron_mail_gateway_action', context=context)
+        except ValueError:
+            # Nevermind if default cron cannot be found
+            return
+
+        # Enabled/Disable cron based on the number of 'done' server of type pop or imap
+        cron.toggle(model=self._name, domain=[('state','=','done'), ('type','in',['pop','imap'])])
 
     def create(self, cr, uid, values, context=None):
         res = super(fetchmail_server, self).create(cr, uid, values, context=context)
-        self.cron_update(cr, uid, context=context)
+        self._update_cron(cr, uid, context=context)
         return res
 
     def write(self, cr, uid, ids, values, context=None):
         res = super(fetchmail_server, self).write(cr, uid, ids, values, context=context)
-        self.cron_update(cr, uid, context=context)
+        self._update_cron(cr, uid, context=context)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(fetchmail_server, self).unlink(cr, uid, ids, context=context)
+        self._update_cron(cr, uid, context=context)
         return res
 
 class mail_mail(osv.osv):

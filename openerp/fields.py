@@ -280,6 +280,7 @@ class Field(object):
     inverse = None              # inverse(recs) inverses field on recs
     search = None               # search(recs, operator, value) searches on self
     related = None              # sequence of field names, for related fields
+    related_sudo = True         # whether related fields should be read as admin
     company_dependent = False   # whether `self` is company-dependent (property field)
     default = None              # default value
 
@@ -427,13 +428,16 @@ class Field(object):
 
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
-        for record, sudo_record in zip(records, records.sudo()):
-            # bypass access rights check when traversing the related path
-            value = sudo_record if record.id else record
-            # traverse the intermediate fields, and keep at most one record
+        # when related_sudo, bypass access rights checks when reading values
+        others = records.sudo() if self.related_sudo else records
+        for record, other in zip(records, others):
+            if not record.id:
+                # draft record, do not switch to another environment
+                other = record
+            # traverse the intermediate fields; follow the first record at each step
             for name in self.related[:-1]:
-                value = value[name][:1]
-            record[self.name] = value[self.related[-1]]
+                other = other[name][:1]
+            record[self.name] = other[self.related[-1]]
 
     def _inverse_related(self, records):
         """ Inverse the related field `self` on `records`. """

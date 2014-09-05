@@ -58,6 +58,18 @@
       <a href="http://odoo.com" class="o_logo navbar-brand">
         <span class="o_logo_main">odoo</span><span class="o_logo_app">doc</span>
       </a>
+      {% if versions %}
+        <div class="versions navbar-brand">
+          <a class="dropdown-toggle" data-toggle="dropdown">
+            {{ version }} <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            {% for name, url in versions %}
+              <li><a href="{{ url }}">{{ name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
     </div>
     <nav class="collapse navbar-collapse navbar-main" role="navigation">
       {{ toctree(titles_only=True, maxdepth=2, includehidden=True, collapse=False) }}
