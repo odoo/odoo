@@ -10,6 +10,9 @@
 
 <template id="head" inherit_id="website.assets_frontend" name="Mail Group Snippet">
     <xpath expr="/t" position="inside">
+        <link rel="stylesheet" href="/website_mail_group/static/src/css/website_mail_group.css"/>
+        <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.js"/>
+
         <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.snippet.js"></script>
     </xpath>
 </template>
@@ -60,10 +63,6 @@
 
 <template id="group_messages" name="Message Threads">
     <t t-call="website.layout">
-        <t t-set="head">
-            <link rel='stylesheet' href="/website_mail_group/static/src/css/website_mail_group.css"/>
-            <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.js"/>
-        </t>
         <section class="container">
             <div class="mt8">
                 <ol class="breadcrumb pull-left">
@@ -123,10 +122,6 @@
 
 <template id="group_message">
     <t t-call="website.layout">
-        <t t-set="head">
-            <link rel='stylesheet' href="/website_mail_group/static/src/css/website_mail_group.css"/>
-            <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.js"/>
-        </t>
         <section class="container">
             <div class="row mt8">
                 <ol class="breadcrumb pull-left">
