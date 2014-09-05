@@ -303,7 +303,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         "click .oe_timesheet_switch": "do_switch_mode",
         "click .oe_copy_accounts a": "copy_accounts",
         "click .oe_timer": "timer",
-        "click .oe_timesheet_edit_description" : "addDescription",
     },
     init: function (parent, options) {
         var self = this;
@@ -358,6 +357,10 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
                                 $(this).val(self.sum_box(account, true));
                             }
                         }
+                    });
+                    self.get_description_box(account[0].account_id, day_count).change(function(e) {
+                        account[0].name = $(this).val();
+                        self.parent.sync();
                     });
                 } else {
                     self.parent.get_box(account[0].account_id, day_count).html(self.sum_box(account, true));
@@ -458,6 +461,9 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
     },
     get_super_total: function() {
         return this.$('.oe_header_total');
+    },
+    get_description_box: function(account_id, day_count) {
+        return this.$('.oe_edit_input[data-account="' + account_id + '"][data-day-count="' + day_count + '"]');
     },
     sum_box: function(account, show_value_in_hour) {
         var line_total = 0;
@@ -572,20 +578,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
             last_activites = groupby_date[latest_activity_date];
         }
         return last_activites;
-    },
-    addDescription: function(e) {
-        var self=this;
-        var count = this.get('count');
-        var day_count = this.$(e.target).attr("data-day-count") || this.$(e.srcElement).attr("data-day-count"); //No need, count and day_count always be same
-        var account_id = this.$(e.target).attr("data-account");
-        var $input = this.$('.oe_edit_input[data-account="' + account_id + '"][data-day-count="' + day_count + '"]');
-        this.$(".oe_edit_input").hide();
-        var account = self.days[count].account_group[account_id];
-        $input.val(account[0].name).show();
-        $input.change(function() {
-            account[0].name = $(this).val();
-            self.parent.sync();
-        });
     },
     start_interval: function(){
         var self = this;

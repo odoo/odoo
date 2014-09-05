@@ -18,8 +18,8 @@
                         <a class="btn btn-primary active oe_timesheet_switch oe_timesheet_white" t-attf-data-mode="week"><span class="fa fa-th-list"/> Week</a>
                     </div>
                 </div>
-                <div class="oe_timesheet_weekly_body row">
-                    <table class="table table-hover table-responsive panel panel-default">
+                <div class="oe_timesheet_weekly_body row panel panel-default">
+                    <table class="table table-hover table-responsive">
                         <thead class="panel-heading">
                             <tr><td t-att-colspan="widget.dates.length+2" style="padding: 5px; border: none;"></td></tr>
                             <tr>
@@ -86,7 +86,7 @@
                                                 <span class="fa fa-plus" /> Add Line
                                             </a>
                                         </div>
-                                        <p class="text-primary">Total</p>
+                                        <p class="text-primary oe_timesheet_weekly_daytotal">Total</p>
                                     </div>
                                 </td>
                                 <t t-set="day_count" t-value="0"/>
@@ -144,10 +144,18 @@
                                     <t t-if="!_.isEmpty(days.account_group)">
                                         <t t-foreach="days.account_group" t-as="data">
                                             <tr>
-                                                <td class="oe_timesheet_daily_account oe_timesheet_goto">
+                                                <td class="oe_timesheet_daily_account oe_timesheet_goto col-xs-6 col-md-6">
                                                     <a href="javascript:void(0)" t-att-data-id="JSON.stringify(days.account_group[data][0].account_id)" >
                                                         <t t-esc="widget.account_names[days.account_group[data][0].account_id]"></t>
                                                     </a>
+                                                </td>
+                                                <td t-if="!widget.get('effective_readonly')" class="col-xs-2 col-md-2">
+                                                    <input class="form-control oe_edit_input" t-att-data-account="data" t-att-data-day-count="day_count" t-att-value="days.account_group[data][0].name"/>
+                                                </td>
+                                                <td t-if="widget.get('effective_readonly')" class="col-xs-2 col-md-2">
+                                                    <div width="100%" style="overflow-x: hidden; max-width: 100px;">
+                                                        <span t-att-data-account="data" t-att-data-day-count="day_count"><t t-esc="days.account_group[data][0].name"></t></span>
+                                                    </div>
                                                 </td>
                                                 <td t-if="!widget.get('effective_readonly')" class="col-xs-2">
                                                     <t t-if="days.account_group[data][0].date_start">
@@ -162,12 +170,6 @@
                                                 <td t-if="widget.get('effective_readonly')">
                                                     <h4 class="oe_timesheet_box" t-att-data-account="days.account_group[data][0].account_id"
                                                     t-att-data-day-count="day_count"></h4>
-                                                </td>
-                                                <td t-if="!widget.get('effective_readonly')">
-                                                    <span class="btn btn-default btn-gt fa fa-pencil oe_timesheet_edit_description" title="edit description" t-att-data-account="data" t-att-data-day-count="day_count" />
-                                                </td>
-                                                <td class="col-xs-2">
-                                                    <input class="form-control oe_edit_input oe_hide" t-att-data-account="data" t-att-data-day-count="day_count" />
                                                 </td>
                                                 <td>
                                                     <t t-set="timer_title" t-value="days.account_group[data][0].date_start and 'Stop Timesheet' or 'Start Timesheet'"/>
@@ -198,14 +200,18 @@
                                             </td>
                                         </tr>
                                     </thead>
+                                </table>
+                            </div>
+                            <div class="panel-footer">
+                                <table class="oe_timesheet_daily_footer">
                                     <tr>
                                         <td colspan="6" class="oe_timesheet_add_row oe_hide">
                                             <a t-att-colspan="widget.days.length + 2" class="btn btn-primary btn-sm oe_timesheet_white">Add</a>
                                         </td>
                                     </tr>
                                     <tr class="oe_timesheet_daily_footer">
-                                        <td t-if="widget.get('effective_readonly')"/>
-                                        <td t-if="!widget.get('effective_readonly')" class="oe_timesheet_daily_adding">
+                                        <td t-if="widget.get('effective_readonly')" class="col-xs-7 col-md-7"/>
+                                        <td t-if="!widget.get('effective_readonly')" class="col-xs-7 col-md-7 oe_timesheet_daily_adding">
                                             <a class="btn btn-primary btn-sm oe_timesheet_white">
                                                 <span class="fa fa-plus" /> Add Line
                                             </a>
@@ -215,7 +221,7 @@
                                                 <span class="oe_daily_total" t-att-data-day-total="widget.get('count')" />
                                             </h4>
                                         </td>
-                                        <td colspan="2" /><t t-if="!widget.get('effective_readonly')"><td colspan="2" /></t>
+                                        <td colspan="2" class="col-xs-3 col-md-3"/><t t-if="!widget.get('effective_readonly')"><td colspan="2" /></t>
                                     </tr>
                                 </table>
                             </div>

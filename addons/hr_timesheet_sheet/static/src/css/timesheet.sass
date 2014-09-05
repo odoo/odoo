@@ -29,6 +29,8 @@
     .oe_timesheet_weekly_adding
       display: table-cell
       text-align: left
+    .oe_timesheet_weekly_daytotal
+      float: right
   .oe_timesheet_weekly_day
     border: 1px solid
     border-color: #CCC
@@ -46,6 +48,7 @@
       border-top-right-radius: 4px
       border-bottom-right-radius: 4px
       vertical-align: middle
+      opacity: 0.65
   .oe_timesheet_add_row .oe_form_field_many2one
     display: inline-block
     width: 200px
@@ -81,15 +84,20 @@
       display: none
     .oe_timesheet_box
       text-align: right
-    .oe_timesheet_daily_footer h4
-      text-align: right
-      color: #428bca
-    .oe_timer .oe_timer_clock
-      bottom: 0
-      right: 0px
-      left: initial
-      line-height: initial
-      width: initial
+    .oe_timesheet_daily_footer
+      width: 100%
+      max-width: 100%
+      h4
+        text-align: right
+        color: #428bca
+    .oe_timer
+      float: right !important 
+      .oe_timer_clock
+        bottom: 0
+        right: 0px
+        left: initial
+        line-height: initial
+        width: initial
     .oe_timesheet_daily_delete
       float: right
       padding-top: 5px
