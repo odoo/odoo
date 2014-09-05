@@ -58,7 +58,8 @@ class purchase_report(osv.osv):
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
         'nbr': fields.integer('# of Lines', readonly=True),
-        'category_id': fields.many2one('product.category', 'Category', readonly=True)
+        'category_id': fields.many2one('product.category', 'Product Category', readonly=True),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True)
 
     }
     _order = 'date desc, price_total desc'
@@ -80,6 +81,7 @@ class purchase_report(osv.osv):
                     s.create_uid as user_id,
                     s.company_id as company_id,
                     l.product_id,
+                    p.product_tmpl_id,
                     t.categ_id as category_id,
                     t.uom_id as product_uom,
                     s.location_id as location_id,
@@ -113,6 +115,7 @@ class purchase_report(osv.osv):
                     s.validator,
                     s.dest_address_id,
                     l.product_id,
+                    p.product_tmpl_id,
                     t.categ_id,
                     s.date_order,
                     s.state,

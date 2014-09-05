@@ -40,6 +40,7 @@ class sale_report(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'delay': fields.float('Commitment Delay', digits=(16,2), readonly=True),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'nbr': fields.integer('# of Lines', readonly=True),
         'state': fields.selection([
@@ -53,6 +54,8 @@ class sale_report(osv.osv):
             ], 'Order Status', readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'invoiced': fields.boolean('Paid', readonly=True),
+        'nbr_paid': fields.integer('# of Paid Lines', readonly=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
     _order = 'date desc'
@@ -75,14 +78,17 @@ class sale_report(osv.osv):
                     t.categ_id as categ_id,
                     s.pricelist_id as pricelist_id,
                     s.project_id as analytic_account_id,
-                    s.section_id as section_id
+                    s.section_id as section_id,
+                    p.product_tmpl_id,
+                    l.invoiced::integer as nbr_paid,
+                    l.invoiced
         """
         return select_str
 
     def _from(self):
         from_str = """
                 sale_order_line l
-                      join sale_order s on (l.order_id=s.id) 
+                      join sale_order s on (l.order_id=s.id)
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
@@ -104,7 +110,9 @@ class sale_report(osv.osv):
                     s.state,
                     s.pricelist_id,
                     s.project_id,
-                    s.section_id
+                    s.section_id,
+                    p.product_tmpl_id,
+                    l.invoiced
         """
         return group_by_str
 
