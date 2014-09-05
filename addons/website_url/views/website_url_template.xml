@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="assets_website_url">
+            <script type="text/javascript" src="/website_url/static/src/js/website_url.js"/>
+        </template>
+
+        <template id="create_shorten_url">
+            <div class="container jumbotron">
+                <input id='url' type="text" size="100" name="url" required="True" placeholder="Enter URL to shorten"/>
+                <button class="btn btn-primary" id="btn_shorten_url" data-copy="false">Shorten</button>
+            </div>
+        </template>
+
+        <template id="page_shorten_url">
+            <t t-call="website.layout">
+                <t t-set="head">
+                    <t t-call-assets="website_url.assets_website_url"/>
+                </t>
+                <t t-call="website_url.create_shorten_url"/>
+            </t>
+        </template>
+
+    </data>
+</openerp>
+
