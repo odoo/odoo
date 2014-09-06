@@ -2,14 +2,13 @@
     'name': 'Website Sale Digital - Sell digital products',
     'version': '0.0.1',
     'description': """
-Sell data product through attachments
+Sell digital product using attachments to virtual products
 """,
     'author': 'OpenERP S.A.',
     'depends': [
+        'document',
         'website_sale',
     ],
-    'website': 'http://apps.openerp.com',
-    'active': False,
     'installable': True,
     'data': [
         'views/website_sale_digital.xml',
