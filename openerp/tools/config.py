@@ -62,9 +62,15 @@ DEFAULT_LOG_HANDLER = [':INFO']
 
 def _get_default_datadir():
     home = os.path.expanduser('~')
-    func = appdirs.user_data_dir if os.path.exists(home) else appdirs.site_data_dir
+    if os.path.exists(home):
+        func = appdirs.user_data_dir
+    else:
+        if sys.platform in ['win32', 'darwin']:
+            func = appdirs.site_data_dir
+        else:
+            func = lambda **kwarg: "/var/lib/%s" % kwarg['appname'].lower()
     # No "version" kwarg as session and filestore paths are shared against series
-    return func(appname='Odoo', appauthor=release.author)
+    return func(appname=release.product_name, appauthor=release.author)
 
 class configmanager(object):
     def __init__(self, fname=None):

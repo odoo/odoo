@@ -14,6 +14,12 @@
 <!doctype html>
 {%- endblock -%}
 
+{%- block extrahead -%}
+  {%- if canonical -%}
+    <link rel="canonical" href="{{ canonical }}"/>
+  {%- endif -%}
+{%- endblock -%}
+
 {%- block content -%}
   <div class="document-super">
     {{ super() }}
@@ -25,8 +31,13 @@
 {%- block document -%}
   <div class="sphinxsidebar">
     <div class="sphinxsidebarwrapper">
-      {# bootstrapify nav #}
-      {{ toc|replace("<ul>", '<ul class="nav">') }}
+      {{ toctree(maxdepth=4, collapse=False, includehidden=True,
+                 main_navbar=False, titles_only=False) }}
+      {% if github_link %}
+        <p><a href="{{ github_link() }}" class="github">
+          Edit on GitHub
+        </a></p>
+      {% endif %}
     </div>
   </div>
   {{ super() }}
@@ -47,6 +58,18 @@
       <a href="http://odoo.com" class="o_logo navbar-brand">
         <span class="o_logo_main">odoo</span><span class="o_logo_app">doc</span>
       </a>
+      {% if versions %}
+        <div class="versions navbar-brand">
+          <a class="dropdown-toggle" data-toggle="dropdown">
+            {{ version }} <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            {% for name, url in versions %}
+              <li><a href="{{ url }}">{{ name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
     </div>
     <nav class="collapse navbar-collapse navbar-main" role="navigation">
       {{ toctree(titles_only=True, maxdepth=2, includehidden=True, collapse=False) }}

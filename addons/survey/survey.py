@@ -397,6 +397,7 @@ class survey_survey(osv.Model):
                 result_summary.update({'average': round(sum(all_inputs) / len(all_inputs), 2),
                                        'max': round(max(all_inputs), 2),
                                        'min': round(min(all_inputs), 2),
+                                       'sum': sum(all_inputs),
                                        'most_comman': Counter(all_inputs).most_common(5)})
         return result_summary
 

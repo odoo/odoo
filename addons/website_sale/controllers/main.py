@@ -359,14 +359,15 @@ class website_sale(http.Controller):
         shipping_ids = []
         checkout = {}
         if not data:
+            print request.uid, request.website.user_id.id
             if request.uid != request.website.user_id.id:
                 checkout.update( self.checkout_parse("billing", partner) )
                 shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=context)
             else:
                 order = request.website.sale_get_order(force_create=1, context=context)
                 if order.partner_id:
-                    domain = [("active", "=", False), ("partner_id", "=", order.partner_id.id)]
-                    user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=context)
+                    domain = [("partner_id", "=", order.partner_id.id)]
+                    user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=dict(context or {}, active_test=False))
                     if not user_ids or request.website.user_id.id not in user_ids:
                         checkout.update( self.checkout_parse("billing", order.partner_id) )
         else:
