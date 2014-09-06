@@ -917,7 +917,7 @@ class ir_model_data(osv.osv):
             if record.exists():
                 return record
             if raise_if_not_found:
-                raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xml_id))
+                raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xmlid))
         return None
 
     # OLD API

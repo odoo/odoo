@@ -82,7 +82,7 @@ class stock_move(osv.osv):
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
-
+    
     def _get_to_invoice(self, cr, uid, ids, name, args, context=None):
         res = {}
         for picking in self.browse(cr, uid, ids, context=context):

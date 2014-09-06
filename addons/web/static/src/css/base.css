@@ -8,6 +8,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: "EntypoRegular";
   src: url("/web/static/src/font/entypo-webfont.eot") format("eot");
@@ -974,42 +975,82 @@
 .openerp .oe_secondary_submenu .oe_secondary_submenu li {
   margin-left: 20px;
 }
-.openerp .oe_about {
-  background-color: white;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=);
-  -moz-border-radius: 0 0 2px 2px;
-  -webkit-border-radius: 0 0 2px 2px;
-  border-radius: 0 0 2px 2px;
+.openerp .oe_about .label {
+  background-color: #a24689;
 }
 .openerp .oe_about a {
-  color: #7c7bad;
+  color: #a24689;
 }
-.openerp .oe_about a:hover {
-  text-decoration: underline;
+.openerp .oe_about .user-details {
+  position: relative;
+  padding: 0;
+  margin-bottom: 275px;
 }
-.openerp .oe_about a:focus {
-  outline: none;
+.openerp .oe_about .user-details .user-image {
+  width: 100%;
+  text-align: center;
 }
-.openerp .oe_about .oe_logo {
-  margin-left: -6px;
+.openerp .oe_about .user-details .user-info-block {
+  width: 100%;
+  position: absolute;
+  top: 55px;
+  padding-top: 35px;
 }
-.openerp .oe_about .oe_bottom {
-  text-shadow: 0 1px 1px #999999;
-  background-color: #8a0e0e;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#b41616), to(#600606));
-  background-image: -webkit-linear-gradient(top, #b41616, #600606);
-  background-image: -moz-linear-gradient(top, #b41616, #600606);
-  background-image: -ms-linear-gradient(top, #b41616, #600606);
-  background-image: -o-linear-gradient(top, #b41616, #600606);
-  background-image: linear-gradient(to bottom, #b41616, #600606);
-  color: #eeeeee;
-  padding: 0 16px;
-  -moz-border-radius: 0 0 2px 2px;
-  -webkit-border-radius: 0 0 2px 2px;
-  border-radius: 0 0 2px 2px;
+.openerp .oe_about .user-details .user-info-block .user-heading {
+  text-align: center;
+  margin: 10px 0 0;
 }
-.openerp .oe_about .oe_bottom a {
-  color: #eeeeee;
+.openerp .oe_about .user-details .user-info-block .navigation {
+  float: left;
+  width: auto;
+  padding: 0;
+  margin-left: 25%;
+  list-style: none;
+  border: 1px solid #a24689;
+}
+.openerp .oe_about .user-details .user-info-block .navigation li {
+  float: left;
+}
+.openerp .oe_about .user-details .user-info-block .navigation li a {
+  padding: 20px 30px;
+  float: left;
+}
+.openerp .oe_about .user-details .user-info-block .navigation li.active a {
+  background: #a24689;
+  color: white;
+}
+.openerp .oe_about .user-details .user-info-block .user-body {
+  text-align: center;
+}
+.openerp .oe_about .user-details .user-info-block .user-body .tab-content > div {
+  float: left;
+  width: 100%;
+}
+.openerp .oe_about a.oe_activate_debug_mode {
+  color: white !important;
+  font-size: 100%;
+}
+.openerp .oe_about #social i {
+  margin: 10px;
+}
+.openerp .oe_about #social i:hover {
+  -webkit-transform: scale(1.3);
+  -moz-transform: scale(1.3);
+  -ms-transform: scale(1.3);
+  -o-transform: scale(1.3);
+  transform: scale(1.3);
+}
+.openerp .oe_about #social .social-fb:hover {
+  color: #3b5998;
+}
+.openerp .oe_about #social .social-tw:hover {
+  color: #4099ff;
+}
+.openerp .oe_about #social .social-gp:hover {
+  color: #d34836;
+}
+.openerp .oe_about #social .social-lk:hover {
+  color: #007bb6;
 }
 .openerp a.oe_form_uri:hover {
   text-decoration: underline;
@@ -2996,6 +3037,7 @@
     top: 0px;
   }
 }
+
 .kitten-mode-activated {
   background-size: cover;
   background-attachment: fixed;
@@ -3383,4 +3425,10 @@ div.tour-backdrop {
 
 body {
   overflow: auto;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .oe_secondary_menus_container {
+    position: static !important;
+  }
 }

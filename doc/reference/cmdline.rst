@@ -17,13 +17,11 @@ Running the server
 
 .. option:: -i <modules>, --init=<modules>
 
-    comma-separated list of modules to :ref:`install
-    <reference/module/lifecycle/install>` before running the server.
+    comma-separated list of modules to install before running the server.
 
 .. option:: -u <modules>, --update=<modules>
 
-    comma-separated list of modules to :ref:`update
-    <reference/module/lifecycle/update>` before running the server.
+    comma-separated list of modules to update before running the server.
 
 .. option:: --addons-path <directories>
 

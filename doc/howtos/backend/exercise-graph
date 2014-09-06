@@ -1,10 +1,10 @@
 # HG changeset patch
 # Parent a6fe4d3923db1f8f5dff2c39a711a814b0a0f549
 
-Index: doc-backend/openacademy/models.py
+Index: addons/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/models.py	2014-08-24 12:19:27.701389167 +0200
-+++ doc-backend/openacademy/models.py	2014-08-24 12:19:27.697389167 +0200
+--- addons.orig/openacademy/models.py	2014-08-28 14:21:55.039015659 +0200
++++ addons/openacademy/models.py	2014-08-28 14:21:55.031015659 +0200
 @@ -62,6 +62,9 @@
      hours = fields.Float(string="Duration in hours",
                           compute='_get_hours', inverse='_set_hours')
@@ -15,7 +15,7 @@ Index: doc-backend/openacademy/models.py
      @api.one
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-@@ -117,6 +120,11 @@
+@@ -121,6 +124,11 @@
          self.duration = self.hours / 24
  
      @api.one
@@ -27,11 +27,11 @@ Index: doc-backend/openacademy/models.py
      @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
          if self.instructor_id and self.instructor_id in self.attendee_ids:
-Index: doc-backend/openacademy/views/openacademy.xml
+Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-24 12:19:27.701389167 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:19:27.697389167 +0200
-@@ -150,11 +150,22 @@
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:21:55.039015659 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-28 14:21:55.031015659 +0200
+@@ -158,11 +158,22 @@
              </field>
          </record>
  

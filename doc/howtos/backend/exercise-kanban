@@ -1,10 +1,10 @@
 # HG changeset patch
 # Parent 8d66f7620781558d4520f97e4cebc14ed180683e
 
-Index: doc-backend/openacademy/models.py
+Index: addons/openacademy/models.py
 ===================================================================
---- doc-backend.orig/openacademy/models.py	2014-08-24 12:20:07.801390095 +0200
-+++ doc-backend/openacademy/models.py	2014-08-24 12:20:07.793390095 +0200
+--- addons.orig/openacademy/models.py	2014-08-28 14:21:58.627015606 +0200
++++ addons/openacademy/models.py	2014-08-28 14:21:58.623015606 +0200
 @@ -47,6 +47,7 @@
      duration = fields.Float(digits=(6, 2), help="Duration in days")
      seats = fields.Integer(string="Number of seats")
@@ -13,11 +13,11 @@ Index: doc-backend/openacademy/models.py
  
      instructor_id = fields.Many2one('res.partner', string="Instructor",
          domain=['|', ('instructor', '=', True),
-Index: doc-backend/openacademy/views/openacademy.xml
+Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- doc-backend.orig/openacademy/views/openacademy.xml	2014-08-24 12:20:07.801390095 +0200
-+++ doc-backend/openacademy/views/openacademy.xml	2014-08-24 12:20:07.793390095 +0200
-@@ -161,11 +161,57 @@
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:21:58.627015606 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-28 14:21:58.623015606 +0200
+@@ -169,11 +169,57 @@
              </field>
          </record>
  

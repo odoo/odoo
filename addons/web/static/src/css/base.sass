@@ -846,26 +846,64 @@ $sheet-padding: 16px
             margin-left: 20px
     // }}}
     // About openerp {{{
+    $link-color-odoo: #a24689
     .oe_about
-        background-color: white
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
-        @include radius(0 0 2px 2px)
+        .label
+            background-color: $link-color-odoo
         a
-            color: $link-color
-            &:hover
-                text-decoration: underline
-            &:focus
-                outline: none
-        .oe_logo
-            margin-left: -6px
-        .oe_bottom
-            text-shadow: 0 1px 1px #999999
-            @include vertical-gradient(#b41616, #600606)
-            color: #eee
-            padding: 0 16px
-            @include radius(0 0 2px 2px)
-            a
-                color: #eee
+            color: $link-color-odoo
+
+        .user-details
+            position: relative
+            padding: 0
+            margin-bottom: 275px
+            .user-image
+                width: 100%
+                text-align: center
+            .user-info-block
+                width: 100%
+                position: absolute
+                top: 55px
+                padding-top: 35px
+                .user-heading
+                    text-align: center
+                    margin: 10px 0 0
+                .navigation
+                    float: left
+                    width: auto
+                    padding: 0
+                    margin-left: 25%
+                    list-style: none
+                    border: 1px solid $link-color-odoo
+                    li
+                        float: left
+                        a
+                            padding: 20px 30px
+                            float: left
+                        &.active a
+                            background: $link-color-odoo
+                            color: #fff
+                .user-body
+                    text-align: center
+                    .tab-content > div
+                        float: left
+                        width: 100%
+        a.oe_activate_debug_mode
+            color: white !important
+            font-size: 100%
+        #social
+            i
+                margin: 10px
+                &:hover
+                    @include transform(scale(1.3))
+            .social-fb:hover
+                color: #3B5998
+            .social-tw:hover
+                color: #4099FF
+            .social-gp:hover
+                color: #d34836
+            .social-lk:hover
+                color: #007bb6
     // }}}
     // ActionManager {{{
     a.oe_form_uri:hover
@@ -1660,8 +1698,8 @@ $sheet-padding: 16px
         font-size: 20px
         margin: 15px 0px 10px 0px
         color: $section-title-color
-    .oe_horizontal_separator:empty
-        height: 5px
+        &:empty
+            height: 5px
     .oe_vertical_separator
         border-left: 1px solid #666
         padding: 0 4px 0 4px
@@ -2763,5 +2801,13 @@ div.tour-backdrop
 
 body
     overflow: auto
+
+// hack to make IE11 work
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) 
+    .oe_secondary_menus_container 
+        position: static !important
+
+
+
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

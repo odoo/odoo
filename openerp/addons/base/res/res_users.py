@@ -188,6 +188,11 @@ class res_users(osv.osv):
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
     }
 
+    # overridden inherited fields to bypass access rights, in case you have
+    # access to the user but not its corresponding partner
+    name = openerp.fields.Char(related='partner_id.name')
+    email = openerp.fields.Char(related='partner_id.email')
+
     def on_change_login(self, cr, uid, ids, login, context=None):
         if login and tools.single_email_re.match(login):
             return {'value': {'email': login}}

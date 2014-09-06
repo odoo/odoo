@@ -272,6 +272,8 @@ class sale_order_option(osv.osv):
     }
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
+        if not product:
+            return vals
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
         vals.update({
             'price_unit': product_obj.list_price,

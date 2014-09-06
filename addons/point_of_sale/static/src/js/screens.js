@@ -583,7 +583,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         init: function(parent, options){
             this._super(parent, options);
-            this.partner_cache = new module.DomCache();
         },
 
         show_leftpane: false,
@@ -608,8 +607,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 self.pos_widget.screen_selector.back();
             });
 
-            var partners = this.pos.db.get_partners_sorted();
+            var partners = this.pos.db.get_partners_sorted(1000);
             this.render_list(partners);
+            
+            this.pos.load_new_partners().then(function(){ 
+                // will only get called if new partners were reloaded.
+                self.render_list(self.pos.db.get_partners_sorted(1000));
+            });
 
             if( this.old_client ){
                 this.display_client_details('show',this.old_client,0);
@@ -650,7 +654,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         clear_search: function(){
-            var customers = this.pos.db.get_partners_sorted();
+            var customers = this.pos.db.get_partners_sorted(1000);
             this.render_list(customers);
             this.$('.searchbox input')[0].value = '';
             this.$('.searchbox input').focus();
@@ -660,19 +664,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             contents.innerHTML = "";
             for(var i = 0, len = Math.min(partners.length,1000); i < len; i++){
                 var partner    = partners[i];
-                var clientline = this.partner_cache.get_node(partner.id);
-                if(!clientline){
-                    var clientline_html = QWeb.render('ClientLine',{widget: this, partner:partners[i]});
-                    var clientline = document.createElement('tbody');
-                    clientline.innerHTML = clientline_html;
-                    clientline = clientline.childNodes[1];
-                    this.partner_cache.cache_node(partner.id,clientline);
-                }
+                var clientline_html = QWeb.render('ClientLine',{widget: this, partner:partners[i]});
+                var clientline = document.createElement('tbody');
+                clientline.innerHTML = clientline_html;
+                clientline = clientline.childNodes[1];
+
                 if( partners === this.new_client ){
                     clientline.classList.add('highlight');
                 }else{
                     clientline.classList.remove('highlight');
                 }
+
                 contents.appendChild(clientline);
             }
         },

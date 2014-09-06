@@ -224,7 +224,7 @@
     </t>
 </template>
 
-<template id="job_countries" inherit_id="website_hr_recruitment.index" optional="disabled" name="Filter by Countries">
+<template id="job_countries" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Countries">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
             <li t-att-class=" '' if country_id else 'active' "><a t-attf-href="/jobs#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }">All Countries</a></li>
@@ -243,7 +243,7 @@
     </xpath>
 </template>
 
-<template id="job_departments" inherit_id="website_hr_recruitment.index" optional="disabled" name="Filter by Departments">
+<template id="job_departments" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Departments">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
             <li t-att-class=" '' if department_id else 'active' "><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/office/%s' % office_id if office_id else '' }">All Departments</a></li>
@@ -262,7 +262,7 @@
     </xpath>
 </template>
 
-<template id="job_offices" inherit_id="website_hr_recruitment.index" optional="disabled" name="Filter by Offices">
+<template id="job_offices" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Offices">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
             <li t-att-class=" '' if office_id else 'active' "><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }">All Offices</a></li>

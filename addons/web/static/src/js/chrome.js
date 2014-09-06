@@ -1078,6 +1078,9 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                     scope: 'userinfo',
                 };
                 instance.web.redirect('https://accounts.odoo.com/oauth2/auth?'+$.param(params));
+            }).fail(function(result, ev){
+                ev.preventDefault();
+                instance.web.redirect('https://accounts.openerp.com/web');
             });
         }
     },

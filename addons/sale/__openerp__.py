@@ -57,7 +57,7 @@ The Dashboard for the Sales Manager will include
 * Monthly Turnover (Graph)
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/crm',
     'images': ['images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
     'depends': ['sales_team','account_voucher', 'procurement', 'report'],
     'data': [

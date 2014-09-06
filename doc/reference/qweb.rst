@@ -28,6 +28,8 @@ Python
 Bundles
 -------
 
+.. _reference/qweb/javascript:
+
 Javascript
 ==========
 

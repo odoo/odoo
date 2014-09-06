@@ -30,6 +30,7 @@ Accounting Data for Belgian Payroll Rules.
     """,
 
     'auto_install': True,
+    'website': 'https://www.odoo.com/page/accounting',
     'demo': [],
     'data':[
         'l10n_be_wizard.yml',
