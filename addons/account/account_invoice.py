@@ -558,7 +558,7 @@ class account_invoice(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         if not date_invoice:
-            date_invoice = time.strftime('%Y-%m-%d')
+            date_invoice = fields.date.context_today(self, cr, uid)
         if not payment_term_id:
             inv = self.browse(cr, uid, ids[0])
             #To make sure the invoice due date should contain due date which is entered by user when there is no payment term defined
@@ -845,7 +845,7 @@ class account_invoice(osv.osv):
         cur_obj = self.pool.get('res.currency')
         for i in invoice_move_lines:
             if inv.currency_id.id != company_currency:
-                context.update({'date': inv.date_invoice or time.strftime('%Y-%m-%d')})
+                context.update({'date': inv.date_invoice or fields.date.context_today(self, cr, uid, context=context)})
                 i['currency_id'] = inv.currency_id.id
                 i['amount_currency'] = i['price']
                 i['price'] = cur_obj.compute(cr, uid, inv.currency_id.id,
@@ -917,7 +917,8 @@ class account_invoice(osv.osv):
             ctx = context.copy()
             ctx.update({'lang': inv.partner_id.lang})
             if not inv.date_invoice:
-                self.write(cr, uid, [inv.id], {'date_invoice': fields.date.context_today(self,cr,uid,context=context)}, context=ctx)
+                self.write(cr, uid, [inv.id], {'date_invoice': fields.date.context_today(self, cr, uid, context=context)}, context=ctx)
+                inv.refresh()
             company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
             # create the analytical lines
             # one move line per invoice line
@@ -927,9 +928,7 @@ class account_invoice(osv.osv):
             self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
 
             # I disabled the check_total feature
-            group_check_total_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'group_supplier_inv_check_total')[1]
-            group_check_total = self.pool.get('res.groups').browse(cr, uid, group_check_total_id, context=context)
-            if group_check_total and uid in [x.id for x in group_check_total.users]:
+            if self.pool['res.users'].has_group(cr, uid, 'account.group_supplier_inv_check_total'):
                 if (inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0)):
                     raise osv.except_osv(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
@@ -1013,11 +1012,9 @@ class account_invoice(osv.osv):
                     'ref': ref
             })
 
-            date = inv.date_invoice or time.strftime('%Y-%m-%d')
-
             part = self.pool.get("res.partner")._find_accounting_partner(inv.partner_id)
 
-            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part.id, date, context=ctx)),iml)
+            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part.id, inv.date_invoice, context=ctx)),iml)
 
             line = self.group_lines(cr, uid, iml, line, inv)
 
@@ -1033,7 +1030,7 @@ class account_invoice(osv.osv):
                 'ref': inv.reference and inv.reference or inv.name,
                 'line_id': line,
                 'journal_id': journal_id,
-                'date': date,
+                'date': inv.date_invoice,
                 'narration': inv.comment,
                 'company_id': inv.company_id.id,
             }
@@ -1248,7 +1245,7 @@ class account_invoice(osv.osv):
             refund_journal_ids = obj_journal.search(cr, uid, [('type','=','sale_refund')], context=context)
 
         if not date:
-            date = time.strftime('%Y-%m-%d')
+            date = fields.date.context_today(self, cr, uid, context=context)
         invoice_data.update({
             'type': type_dict[invoice['type']],
             'date_invoice': date,
@@ -1687,7 +1684,7 @@ class account_invoice_tax(osv.osv):
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
-            base = cur_obj.compute(cr, uid, currency_id, company_currency, base*factor, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+            base = cur_obj.compute(cr, uid, currency_id, company_currency, base*factor, context={'date': date_invoice or fields.date.context_today(self, cr, uid)}, round=False)
         return {'value': {'base_amount':base}}
 
     def amount_change(self, cr, uid, ids, amount, currency_id=False, company_id=False, date_invoice=False):
@@ -1700,7 +1697,7 @@ class account_invoice_tax(osv.osv):
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
-            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount*factor, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount*factor, context={'date': date_invoice or fields.date.context_today(self, cr, uid)}, round=False)
         return {'value': {'tax_amount': amount}}
 
     _order = 'sequence'
@@ -1729,15 +1726,15 @@ class account_invoice_tax(osv.osv):
                 if inv.type in ('out_invoice','in_invoice'):
                     val['base_code_id'] = tax['base_code_id']
                     val['tax_code_id'] = tax['tax_code_id']
-                    val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
-                    val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['tax_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+                    val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['base_sign'], context={'date': inv.date_invoice or fields.date.context_today(self, cr, uid, context=context)}, round=False)
+                    val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['tax_sign'], context={'date': inv.date_invoice or fields.date.context_today(self, cr, uid, context=context)}, round=False)
                     val['account_id'] = tax['account_collected_id'] or line.account_id.id
                     val['account_analytic_id'] = tax['account_analytic_collected_id']
                 else:
                     val['base_code_id'] = tax['ref_base_code_id']
                     val['tax_code_id'] = tax['ref_tax_code_id']
-                    val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['ref_base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
-                    val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['ref_tax_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+                    val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['ref_base_sign'], context={'date': inv.date_invoice or fields.date.context_today(self, cr, uid, context=context)}, round=False)
+                    val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['ref_tax_sign'], context={'date': inv.date_invoice or fields.date.context_today(self, cr, uid, context=context)}, round=False)
                     val['account_id'] = tax['account_paid_id'] or line.account_id.id
                     val['account_analytic_id'] = tax['account_analytic_paid_id']
 

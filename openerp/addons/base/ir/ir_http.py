@@ -58,12 +58,6 @@ class ir_http(osv.AbstractModel):
     def _auth_method_user(self):
         request.uid = request.session.uid
         if not request.uid:
-            if not request.params.get('noredirect'):
-                query = werkzeug.url_encode({
-                    'redirect': request.httprequest.url,
-                })
-                response = werkzeug.utils.redirect('/web/login?%s' % query)
-                werkzeug.exceptions.abort(response)
             raise http.SessionExpiredException("Session expired")
 
     def _auth_method_none(self):
@@ -97,7 +91,10 @@ class ir_http(osv.AbstractModel):
 
     def _handle_exception(self, exception):
         # If handle_exception returns something different than None, it will be used as a response
-        return request._handle_exception(exception)
+        try:
+            return request._handle_exception(exception)
+        except openerp.exceptions.AccessDenied:
+            return werkzeug.exceptions.Forbidden()
 
     def _dispatch(self):
         # locate the controller method
@@ -110,11 +107,8 @@ class ir_http(osv.AbstractModel):
         # check authentication level
         try:
             auth_method = self._authenticate(func.routing["auth"])
-        except Exception:
-            # force a Forbidden exception with the original traceback
-            return self._handle_exception(
-                convert_exception_to(
-                    werkzeug.exceptions.Forbidden))
+        except Exception as e:
+            return self._handle_exception(e)
 
         processing = self._postprocess_args(arguments, rule)
         if processing:

@@ -542,6 +542,12 @@ class HttpRequest(WebRequest):
            be used as response."""
         try:
             return super(HttpRequest, self)._handle_exception(exception)
+        except SessionExpiredException:
+            if not request.params.get('noredirect'):
+                query = werkzeug.urls.url_encode({
+                    'redirect': request.httprequest.url,
+                })
+                return werkzeug.utils.redirect('/web/login?%s' % query)
         except werkzeug.exceptions.HTTPException, e:
             return e
 

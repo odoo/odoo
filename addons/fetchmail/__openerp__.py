@@ -56,8 +56,8 @@ For more specific needs, you may also assign custom-defined actions
     """,
     'website': 'http://www.openerp.com',
     'data': [
-        'fetchmail_view.xml',
         'fetchmail_data.xml',
+        'fetchmail_view.xml',
         'security/ir.model.access.csv',
         'fetchmail_installer_view.xml'
     ],
