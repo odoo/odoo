@@ -9,6 +9,7 @@ from openerp import tools
 from openerp.exceptions import Warning
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp.tools import ustr
 from openerp.osv import osv, fields
 
 
@@ -29,6 +30,7 @@ class MassMailingContact(osv.Model):
     be able to deal with large contact list to email without bloating the partner
     base."""
     _name = 'mail.mass_mailing.contact'
+    _inherit = 'mail.thread'
     _description = 'Mass Mailing Contact'
     _order = 'email'
     _rec_name = 'email'
@@ -271,7 +273,7 @@ class MassMailing(osv.Model):
         """
         date_begin = date_begin.date()
         section_result = [{'value': 0,
-                           'tooltip': (date_begin + relativedelta.relativedelta(days=i)).strftime('%d %B %Y'),
+                           'tooltip': ustr((date_begin + relativedelta.relativedelta(days=i)).strftime('%d %B %Y')),
                            } for i in range(0, self._period_number)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
         field_col_info = obj._all_columns.get(groupby_field.split(':')[0])
@@ -302,7 +304,7 @@ class MassMailing(osv.Model):
         return res
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
-        """ Compute statistics of the mass mailing campaign """
+        """ Compute statistics of the mass mailing """
         results = {}
         cr.execute("""
             SELECT
@@ -311,9 +313,9 @@ class MassMailing(osv.Model):
                 COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
                 COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null THEN 1 ELSE null END) AS scheduled,
                 COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is not null THEN 1 ELSE null END) AS failed,
-                COUNT(CASE WHEN s.id is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
+                COUNT(CASE WHEN s.sent is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
                 COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
-                COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied ,
+                COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied,
                 COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced
             FROM
                 mail_mail_statistics s
@@ -328,7 +330,6 @@ class MassMailing(osv.Model):
         for row in cr.dictfetchall():
             results[row.pop('mailing_id')] = row
             total = row['total'] or 1
-            row['delivered'] = row['sent'] - row['bounced']
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
@@ -601,7 +602,7 @@ class MassMailing(osv.Model):
                 'composition_mode': 'mass_mail',
                 'mass_mailing_id': mailing.id,
                 'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
-                'same_thread': mailing.reply_to_mode == 'thread',
+                'no_auto_thread': mailing.reply_to_mode != 'thread',
             }
             if mailing.reply_to_mode == 'email':
                 composer_values['reply_to'] = mailing.reply_to

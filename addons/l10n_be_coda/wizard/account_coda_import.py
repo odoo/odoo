@@ -42,6 +42,7 @@ class account_bank_statement_import(osv.TransientModel):
             context = {}
         recordlist = unicode(base64.decodestring(codafile), 'windows-1252', 'strict').split('\n')
         statements = []
+        globalisation_comm = {}
         for line in recordlist:
             if not line:
                 pass
@@ -52,7 +53,6 @@ class account_bank_statement_import(osv.TransientModel):
                 statement['version'] = line[127]
                 if statement['version'] not in ['1', '2']:
                     raise osv.except_osv(_('Error') + ' R001', _('CODA V%s statements are not supported, please contact your bank') % statement['version'])
-                statement['globalisation_stack'] = []
                 statement['lines'] = []
                 statement['date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[5:11]), '%d%m%y'))
                 statement['separateApplication'] = rmspaces(line[83:88])
@@ -137,16 +137,11 @@ class account_bank_statement_import(osv.TransientModel):
                     statementLine['entryDate'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[115:121]), '%d%m%y'))
                     statementLine['type'] = 'normal'
                     statementLine['globalisation'] = int(line[124])
-                    if len(statement['globalisation_stack']) > 0 and statementLine['communication'] != '':
-                        statementLine['communication'] = "\n".join([statement['globalisation_stack'][-1]['communication'], statementLine['communication']])
                     if statementLine['globalisation'] > 0:
-                        if len(statement['globalisation_stack']) > 0 and statement['globalisation_stack'][-1]['globalisation'] == statementLine['globalisation']:
-                            # Destack
-                            statement['globalisation_stack'].pop()
-                        else:
-                            #Stack
-                            statementLine['type'] = 'globalisation'
-                            statement['globalisation_stack'].append(statementLine)
+                        statementLine['type'] = 'globalisation'
+                        globalisation_comm[statementLine['ref_move']] = statementLine['communication']
+                    if not statementLine.get('communication'):
+                        statementLine['communication'] = globalisation_comm.get(statementLine['ref_move'], '')
                     statement['lines'].append(statementLine)
                 elif line[1] == '2':
                     if statement['lines'][-1]['ref'][0:4] != line[2:6]:
@@ -273,23 +268,23 @@ class account_bank_statement_import(osv.TransientModel):
 
                     if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
-                    line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
-                    structured_com = ""
+                    structured_com = False
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
                         structured_com = line['communication']
                     bank_account_id = False
                     partner_id = False
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
                         bank_account_id, partner_id = self._detect_partner(cr, uid, str(line['counterpartyNumber']), identifying_field='acc_number', context=context)
-                    if 'communication' in line and line['communication'] != '':
+                    if line.get('communication', ''):
                         note.append(_('Communication') + ': ' + line['communication'])
                     line_data = {
-                        'name': line['name'],
+                        'name': structured_com or (line.get('communication', '') != '' and line['communication'] or '/'),
                         'note': "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
                         'partner_id': partner_id,
-                        'ref': structured_com,
+                        'partner_name': line['counterpartyName'],
+                        'ref': line['ref'],
                         'sequence': line['sequence'],
                         'bank_account_id': bank_account_id,
                     }
@@ -298,7 +293,6 @@ class account_bank_statement_import(osv.TransientModel):
                 statement_data.update({'coda_note': statement['coda_note']})
             statement_data.update({'journal_id': journal_id, 'line_ids': statement_line})
         return [statement_data]
-
 
 def rmspaces(s):
     return " ".join(s.split())

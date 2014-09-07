@@ -250,6 +250,14 @@ class QWeb(orm.AbstractModel):
         generated_attributes = ""
         t_render = None
         template_attributes = {}
+
+        debugger = element.get('t-debug')
+        if debugger is not None:
+            if openerp.tools.config['dev_mode']:
+                __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
+            else:
+                _logger.warning("@t-debug in template '%s' is only available in --dev mode" % qwebcontext['__template__'])
+
         for (attribute_name, attribute_value) in element.attrib.iteritems():
             attribute_name = str(attribute_name)
             if attribute_name == "groups":
@@ -280,9 +288,6 @@ class QWeb(orm.AbstractModel):
             else:
                 generated_attributes += ' %s="%s"' % (attribute_name, escape(attribute_value))
 
-        if 'debug' in template_attributes:
-            debugger = template_attributes.get('debug', 'pdb')
-            __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
         if t_render:
             result = self._render_tag[t_render](self, element, template_attributes, generated_attributes, qwebcontext)
         else:
@@ -353,7 +358,7 @@ class QWeb(orm.AbstractModel):
 
     def render_tag_esc(self, element, template_attributes, generated_attributes, qwebcontext):
         options = json.loads(template_attributes.get('esc-options') or '{}')
-        widget = self.get_widget_for(options.get('widget', ''))
+        widget = self.get_widget_for(options.get('widget'))
         inner = widget.format(template_attributes['esc'], options, qwebcontext)
         return self.render_element(element, template_attributes, generated_attributes, qwebcontext, inner)
 
@@ -462,7 +467,8 @@ class QWeb(orm.AbstractModel):
         return self.pool.get('ir.qweb.field.' + field_type, self.pool['ir.qweb.field'])
 
     def get_widget_for(self, widget):
-        return self.pool.get('ir.qweb.widget.' + widget, self.pool['ir.qweb.widget'])
+        widget_model = ('ir.qweb.widget.' + widget) if widget else 'ir.qweb.widget'
+        return self.pool.get(widget_model) or self.pool['ir.qweb.widget']
 
     def get_attr_bool(self, attr, default=False):
         if attr:
@@ -691,7 +697,7 @@ class SelectionConverter(osv.AbstractModel):
         value = record[field_name]
         if not value: return ''
         selection = dict(fields.selection.reify(
-            cr, uid, record._model, column))
+            cr, uid, record._model, column, context=context))
         return self.value_to_html(
             cr, uid, selection[value], column, options=options)
 

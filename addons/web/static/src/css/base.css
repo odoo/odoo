@@ -549,14 +549,6 @@
   padding-top: 8px;
   margin-right: 4px !important;
 }
-.openerp .btn-group.kanban_state .dropdown-menu {
-  min-width: 100%;
-  padding-right: 10px !important;
-}
-.openerp .btn-group.kanban_state .dropdown-menu li a, .openerp .btn-group.kanban_state .dropdown-menu li a:hover, .openerp .btn-group.kanban_state .dropdown-menu li a:focus {
-  padding-left: 5px;
-  padding-right: 0px;
-}
 .openerp .btn-group.kanban_state a {
   color: #333333;
 }
@@ -1273,6 +1265,9 @@
 }
 .openerp .oe_view_manager_inline > .oe_view_manager_header, .openerp .oe_view_manager_inlineview > .oe_view_manager_header {
   display: none;
+}
+.openerp .oe_popup_form {
+  display: table;
 }
 .openerp .oe_popup_form .oe_formview .oe_form_pager {
   display: none !important;
@@ -3389,4 +3384,10 @@ div.tour-backdrop {
 
 body {
   overflow: auto;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .oe_secondary_menus_container {
+    position: static !important;
+  }
 }

@@ -27,7 +27,7 @@
     'category': 'Human Resources',
     'sequence': 27,
     'summary': 'Holidays, Allocation and Leave Requests',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/employees',
     'description': """
 Manage leaves and allocation requests
 =====================================

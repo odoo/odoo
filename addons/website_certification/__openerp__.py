@@ -22,6 +22,7 @@
 {
     'name': 'Certified People',
     'category': 'Website',
+    'website': 'https://www.odoo.com/page/website-builder',
     'summary': 'Display your network of certified people on your website',
     'version': '1.0',
     'author': 'OpenERP S.A.',

@@ -190,6 +190,14 @@ class stock_picking(osv.osv):
         invoice_obj = self.pool.get('account.invoice')
         return invoice_obj.create(cr, uid, vals, context=context)
 
+    def _get_partner_to_invoice(self, cr, uid, picking, context=None):
+        """ Gets the partner that will be invoiced
+            Note that this function is inherited in the sale and purchase modules
+            @param picking: object of the picking for which we are selecting the partner to invoice
+            @return: object of the partner to invoice
+        """
+        return picking.partner_id and picking.partner_id.id
+        
     def action_invoice_create(self, cr, uid, ids, journal_id, group=False, type='out_invoice', context=None):
         """ Creates invoice based on the invoice state selected for picking.
         @param journal_id: Id of journal
@@ -200,7 +208,12 @@ class stock_picking(osv.osv):
         context = context or {}
         todo = {}
         for picking in self.browse(cr, uid, ids, context=context):
-            key = group and picking.id or True
+            partner = self._get_partner_to_invoice(cr, uid, picking, context)
+            #grouping is based on the invoiced partner
+            if group:
+                key = partner
+            else:
+                key = picking.id
             for move in picking.move_lines:
                 if move.invoice_state == '2binvoiced':
                     if (move.state != 'cancel') and not move.scrapped:
@@ -208,7 +221,7 @@ class stock_picking(osv.osv):
                         todo[key].append(move)
         invoices = []
         for moves in todo.values():
-            invoices = self._invoice_create_line(cr, uid, moves, journal_id, type, context=context)
+            invoices += self._invoice_create_line(cr, uid, moves, journal_id, type, context=context)
         return invoices
 
     def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, origin, context=None):

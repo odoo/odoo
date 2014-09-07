@@ -92,12 +92,13 @@
 
         <!-- Pre loaded images -->
 
-        <record model="ir.attachment">
+        <!-- base64-encoded on ir.attachment, to allow to load image with the xmlid -->
+        <record id="website.business_conference" model="ir.attachment">
             <field name="name">business_conference</field>
             <field name="datas_fname">business_conference.jpg</field>
             <field name="res_model">ir.ui.view</field>
-            <field name="type">url</field>
-            <field name="url">/website/static/src/img/library/business_conference.jpg</field>
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="website/static/src/img/library/business_conference.jpg"/>
         </record>
 
         <record model="ir.attachment">

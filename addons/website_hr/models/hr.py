@@ -14,4 +14,4 @@ class hr(osv.osv):
     }
 
     def img(self, cr, uid, ids, field='image_small', context=None):
-        return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
+        return "/website/image/%s/%s/%s" % (self._name, ids[0], field)

@@ -222,7 +222,7 @@
                         </group>
                         <group>
                             <field name="date_order"/>
-                            <field name="origin" attr="{'invisible': [('origin','=',False)]}"/>
+                            <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code','=','incoming')]" widget="selection" context="{'special_shortened_wh_name': True}" groups="stock.group_locations"/>
                             <field name="related_location_id" invisible="1"/>
@@ -587,7 +587,7 @@
             <field name="arch" type="xml">
                 <div name="options" position="inside">
                     <div>
-                        <field name="purchase_ok" attrs="{'readonly': [('is_product_variant', '=', False)]}"/>
+                        <field name="purchase_ok"/>
                         <label for="purchase_ok"/>
                     </div>
                 </div>
@@ -633,10 +633,11 @@
             <field name="name">product.template.purchase.button.inherit</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button class="oe_inline oe_stat_button" name="action_view_purchases" type="object" 
-                       groups="purchase.group_purchase_user" icon="fa-shopping-cart">
+                       icon="fa-shopping-cart">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>
                 </xpath>
@@ -647,10 +648,11 @@
             <field name="name">product.product.purchase.button.inherit</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
-                       groups="purchase.group_purchase_user" icon="fa-shopping-cart">
+                       icon="fa-shopping-cart">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>
                 </xpath>

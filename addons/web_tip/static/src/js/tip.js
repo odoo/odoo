@@ -159,6 +159,16 @@
 
             if (trigger_tip) {
                 self.$element = $(highlight_selector).first();
+                if (self.$element.height() === 0 || self.$element.width() === 0) {
+                    var $images = self.$element.find('img');
+                    if ($images.length > 0) {
+                        $images.first().load(function() {
+                            self.add_tip(tip);
+                        });
+                    }
+                    return def.reject();
+                }
+
                 var _top = self.$element.offset().top -5;
                 var _left = self.$element.offset().left -5;
                 var _width = self.$element.outerWidth() + 10;

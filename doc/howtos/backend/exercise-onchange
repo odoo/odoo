@@ -1,0 +1,28 @@
+# HG changeset patch
+# Parent 8d5573b704b2867788dd6895503f1871c2976a29
+
+Index: addons/openacademy/models.py
+===================================================================
+--- addons.orig/openacademy/models.py	2014-08-26 17:26:05.687783287 +0200
++++ addons/openacademy/models.py	2014-08-26 17:26:05.679783287 +0200
+@@ -39,3 +39,20 @@
+             self.taken_seats = 0.0
+         else:
+             self.taken_seats = 100.0 * len(self.attendee_ids) / self.seats
++
++    @api.onchange('seats', 'attendee_ids')
++    def _verify_valid_seats(self):
++        if self.seats < 0:
++            return {
++                'warning': {
++                    'title': "Incorrect 'seats' value",
++                    'message': "The number of available seats may not be negative",
++                },
++            }
++        if self.seats < len(self.attendee_ids):
++            return {
++                'warning': {
++                    'title': "Too many attendees",
++                    'message': "Increase seats or remove excess attendees",
++                },
++            }

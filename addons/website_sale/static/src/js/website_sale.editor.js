@@ -39,7 +39,7 @@
                         var $ul = self.$el.find('ul[name="style"]');
                         for (var k in data) {
                             $ul.append(
-                                $('<li data-style="'+data[k]['id']+'" data-check_class="'+data[k]['html_class']+'"/>')
+                                $('<li data-style="'+data[k]['id']+'" data-toggle_class="'+data[k]['html_class']+'"/>')
                                     .append( $('<a/>').text(data[k]['name']) ));
                         }
                     });

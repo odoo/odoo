@@ -12,6 +12,7 @@ import werkzeug.utils
 
 import openerp
 import openerp.exceptions
+import openerp.models
 from openerp import http
 from openerp.http import request
 from openerp.osv import osv, orm
@@ -138,12 +139,12 @@ class ir_http(osv.AbstractModel):
 
     def _postprocess_args(self, arguments, rule):
         """ post process arg to set uid on browse records """
-        for arg in arguments.itervalues():
+        for name, arg in arguments.items():
             if isinstance(arg, orm.browse_record) and arg._uid is UID_PLACEHOLDER:
-                arg._uid = request.uid
+                arguments[name] = arg.sudo(request.uid)
                 try:
-                    arg[arg._rec_name]
-                except KeyError:
+                    arg.exists()
+                except openerp.models.MissingError:
                     return self._handle_exception(werkzeug.exceptions.NotFound())
 
     def routing_map(self):

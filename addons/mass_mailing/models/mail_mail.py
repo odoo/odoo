@@ -45,7 +45,7 @@ class MailMail(osv.Model):
         # TDE note: should be after 'all values computed', to have values (FIXME after merging other branch holding create refactoring)
         mail_id = super(MailMail, self).create(cr, uid, values, context=context)
         if values.get('statistics_ids'):
-            mail = self.browse(cr, SUPERUSER_ID, mail_id)
+            mail = self.browse(cr, SUPERUSER_ID, mail_id, context=context)
             for stat in mail.statistics_ids:
                 self.pool['mail.mail.statistics'].write(cr, uid, [stat.id], {'message_id': mail.message_id}, context=context)
         return mail_id

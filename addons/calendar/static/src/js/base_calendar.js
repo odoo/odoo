@@ -97,7 +97,7 @@ function reload_favorite_list(result) {
                     name: "partner_id",
                     type: "many2one",
                     options: '{"no_open": True}',
-                    placeholder: _t("Select Favorite Calendar"),
+                    placeholder: _t("Add Favorite Calendar"),
                 },
             });
             this.ir_model_m2o.insertAfter($('div.oe_calendar_filter'));

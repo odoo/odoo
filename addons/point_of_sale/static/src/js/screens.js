@@ -344,9 +344,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             $('body').append('<audio src="/point_of_sale/static/src/sounds/error.wav" autoplay="true"></audio>');
 
-            if( text && (text.message || text.comment) ){
-                this.$('.message').text(text.message);
-                this.$('.comment').text(text.comment);
+            if( text ) {
+                if ( text.message || text.comment ) {
+                    this.$('.message').text(text.message);
+                    this.$('.comment').text(text.comment);
+                } else {
+                    this.$('.message').text(_t('Error'));
+                    this.$('.comment').html(text);
+                }
             }
 
             this.pos.barcode_reader.save_callbacks();
@@ -476,7 +481,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         get_product_name: function(){
             var product = this.get_product();
-            return (product ? product.name : undefined) || 'Unnamed Product';
+            return (product ? product.display_name : undefined) || 'Unnamed Product';
         },
         get_product_price: function(){
             var product = this.get_product();
@@ -592,8 +597,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 self.pos_widget.screen_selector.back();
             });
 
-            var partners = this.pos.db.get_partners_sorted();
+            var partners = this.pos.db.get_partners_sorted(1000);
             this.render_list(partners);
+            
+            this.pos.load_new_partners().then(function(){ 
+                // will only get called if new partners were reloaded.
+                self.render_list(self.pos.db.get_partners_sorted(1000));
+            });
 
             if( this.old_client ){
                 this.display_client_details('show',this.old_client,0);
@@ -634,19 +644,19 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         clear_search: function(){
-            var customers = this.pos.db.get_partners_sorted();
+            var customers = this.pos.db.get_partners_sorted(1000);
             this.render_list(customers);
             this.$('.searchbox input')[0].value = '';
             this.$('.searchbox input').focus();
         },
         render_list: function(partners){
             var contents = this.$el[0].querySelector('.client-list-contents');
-            contents.innerHtml = "";
-            for(var i = 0, len = partners.length; i < len; i++){
+            contents.innerHTML = "";
+            for(var i = 0, len = Math.min(partners.length,1000); i < len; i++){
                 var partner    = partners[i];
                 var clientline = this.partner_cache.get_node(partner.id);
                 if(!clientline){
-                    var clientline_html = QWeb.render('ClientLine',{partner:partners[i]});
+                    var clientline_html = QWeb.render('ClientLine',{widget: this, partner:partners[i]});
                     var clientline = document.createElement('tbody');
                     clientline.innerHTML = clientline_html;
                     clientline = clientline.childNodes[1];
