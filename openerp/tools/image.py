@@ -88,19 +88,32 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         return base64_source
 
     if image.size != size:
-        # create a thumbnail: will resize and keep ratios, then sharpen for better looking result
-        image.thumbnail(size, Image.ANTIALIAS)
-        sharpener = ImageEnhance.Sharpness(image.convert('RGBA'))
-        resized_image = sharpener.enhance(2.0)
-        # create a transparent image for background and paste the image on it
-        image = Image.new('RGBA', size, (255, 255, 255, 0))
-        image.paste(resized_image, ((size[0] - resized_image.size[0]) / 2, (size[1] - resized_image.size[1]) / 2))
+        image = image_resize_and_sharpen(image, size)
     if image.mode not in ["1", "L", "P", "RGB", "RGBA"]:
         image = image.convert("RGB")
 
     background_stream = StringIO.StringIO()
     image.save(background_stream, filetype)
     return background_stream.getvalue().encode(encoding)
+
+def image_resize_and_sharpen(image, size, factor=2.0):
+    """
+        Create a thumbnail by resizing while keeping ratio.
+        A sharpen filter is applied for a better looking result.
+
+        :param image: PIL.Image.Image()
+        :param size: 2-tuple(width, height)
+        :param factor: Sharpen factor (default: 2.0)
+    """
+    if image.mode != 'RGBA':
+        image = image.convert('RGBA')
+    image.thumbnail(size, Image.ANTIALIAS)
+    sharpener = ImageEnhance.Sharpness(image)
+    resized_image = sharpener.enhance(factor)
+    # create a transparent image for background and paste the image on it
+    image = Image.new('RGBA', size, (255, 255, 255, 0))
+    image.paste(resized_image, ((size[0] - resized_image.size[0]) / 2, (size[1] - resized_image.size[1]) / 2))
+    return image
 
 def image_resize_image_big(base64_source, size=(1204, 1024), encoding='base64', filetype=None, avoid_if_small=True):
     """ Wrapper on image_resize_image, to resize images larger than the standard
