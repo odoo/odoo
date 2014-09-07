@@ -1,1 +1,2 @@
-import controllers  # NOQA
+import controllers
+import product

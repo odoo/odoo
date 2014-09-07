@@ -12,6 +12,7 @@ Sell digital product using attachments to virtual products
     'installable': True,
     'data': [
         'views/website_sale_digital.xml',
+        'views/website_sale_digital_view.xml',
     ],
     'demo': [
     ],

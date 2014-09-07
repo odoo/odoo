@@ -13,14 +13,14 @@ class website_sale_digital(website_sale):
 
     @http.route([
         '/shop/confirmation',
-    ], type='http', auth="user", website=True)
+    ], type='http', auth="public", website=True)
     def display_attachments(self, **post):
         r = super(website_sale_digital, self).payment_confirmation(**post)
         return r
 
     @http.route([
         '/shop/attachment',
-    ], auth='user')
+    ], auth='public')
     def download_attachment(self, attachment_id):
         res = request.env(user=SU)['ir.attachment'].search_read([('id', '=', int(attachment_id))], ["name", "datas", "file_type"])
         if res:
@@ -28,7 +28,7 @@ class website_sale_digital(website_sale):
         else:
             raise NotFound()
 
-        # TODO: Check if the user has bought the associated product before handing him the attachment
+        # TODO: Check if the user has bought the associated product before handing him the attachment and the product is digital
         data = base64.standard_b64decode(res["datas"])
         headers = [
             ('Content-Type', res['file_type']),
@@ -39,15 +39,9 @@ class website_sale_digital(website_sale):
 
     @http.route([
         '/website_sale_digital/downloads',
-    ], type='http', auth='user', website=True)
+    ], type='http', auth='public', website=True)
     def get_downloads(self):
-        user = request.env['res.users'].browse(request.uid)
-        partner = user.partner_id
-
-        purchased_products = request.env['sale.order.line'].search_read(
-            domain = ['&', ('order_id.partner_id', '=', partner.id), ('state', '=', 'confirmed')],#, ('product_id.data','=' true)])
-            fields = ['product_id'],
-        )
+        purchased_products = self._get_purchased_digital_products_from_uid(request.uid)
 
         products_ids = []
         names = {}
@@ -87,3 +81,12 @@ class website_sale_digital(website_sale):
             'names': names,
             'attachments': attachments
         })
+
+    def _get_purchased_digital_products_from_uid(self, uid):
+        user = request.env['res.users'].browse(uid)
+        partner = user.partner_id
+
+        return request.env(user=SU)['sale.order.line'].search_read(
+            domain = [('order_id.partner_id', '=', partner.id), ('state', '=', 'confirmed'), ('product_id.product_tmpl_id.digital_content','=', True)],
+            fields = ['product_id'],
+        )
