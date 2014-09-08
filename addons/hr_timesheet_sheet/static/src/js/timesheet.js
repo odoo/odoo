@@ -99,7 +99,9 @@ openerp.hr_timesheet_sheet = function(instance) {
             // don't render anything until we have date_to and date_from
             if (!self.get("date_to") || !self.get("date_from"))
                 return;
+            this.donot_destroy_options = true;
             this.destroy_content();
+            this.donot_destroy_options = false;
             // it's important to use those vars to avoid race conditions
             var dates;
             var accounts;
@@ -184,7 +186,9 @@ openerp.hr_timesheet_sheet = function(instance) {
             });
         },
         destroy_content: function() {
-            this.options = {}; //Otherwise when paging next record it will pass old count and old week
+            if (!this.donot_destroy_options) {
+                this.options = {}; //Otherwise when paging next record it will pass old count and old week
+            }
             if (this.dfm) {
                 this.dfm.destroy();
                 this.dfm = undefined;
