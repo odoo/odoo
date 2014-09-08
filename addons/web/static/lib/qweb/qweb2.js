@@ -609,12 +609,12 @@ QWeb2.Element = (function() {
                 s && r.push(_this.engine.tools.js_escape(s));
             }
 
-            var re = /#{(.*?)}/g, start = 0, r = [], m;
+            var re = /(?:#{(.+?)}|{{(.+?)}})/g, start = 0, r = [], m;
             while (m = re.exec(s)) {
                 // extract literal string between previous and current match
                 append_literal(s.slice(start, re.lastIndex - m[0].length));
                 // extract matched expression
-                r.push('(' + this.format_expression(m[1]) + ')');
+                r.push('(' + this.format_expression(m[2] || m[1]) + ')');
                 // update position of new matching
                 start = re.lastIndex;
             }

@@ -25,4 +25,17 @@
     <t t-name="format-multiple">
         <div t-attf-foo="a #{value1} is #{value2} of #{value3} ]"/>
     </t>
+
+    <t t-name="format2-literal">
+        <div t-attf-foo="bar"/>
+    </t>
+    <t t-name="format2-value">
+        <div t-attf-foo="b{{value}}r"/>
+    </t>
+    <t t-name="format2-expression">
+        <div t-attf-foo="{{value + 37}}"/>
+    </t>
+    <t t-name="format2-multiple">
+        <div t-attf-foo="a {{value1}} is {{value2}} of {{value3}} ]"/>
+    </t>
 </templates>

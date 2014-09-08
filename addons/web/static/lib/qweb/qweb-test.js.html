@@ -165,6 +165,23 @@
                     '<div foo="a 0 is 1 of 2 ]"></div>',
                     "each format string should be evaluated independently");
             });
+            QUnit.test('Fixed name, jinja-formatted', function (assert) {
+                assert.equal(render('format2-literal', {}), '<div foo="bar"></div>',
+                    "Literal format");
+                assert.equal(render('format2-value', {value:'a'}), '<div foo="bar"></div>',
+                    "Valued format");
+                assert.equal(
+                    render('format2-expression', {value: 5}),
+                    '<div foo="42"></div>',
+                    "Format strings are evaluated expressions");
+                assert.equal(render('format2-multiple', {
+                        value1: 0,
+                        value2: 1,
+                        value3: 2,
+                    }),
+                    '<div foo="a 0 is 1 of 2 ]"></div>',
+                    "each format string should be evaluated independently");
+            });
 
             QUnit.module("Template calling (including)", {
                 setup: function () {
