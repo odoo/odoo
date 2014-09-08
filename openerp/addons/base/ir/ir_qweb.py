@@ -265,12 +265,6 @@ class QWeb(orm.AbstractModel):
                 uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
                 can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
                 if not can_see:
-                    if qwebcontext.get('editable') and not qwebcontext.get('editable_no_editor'):
-                        errmsg = _("Editor disabled because some content can not be seen by a user who does not belong to the groups %s")
-                        raise openerp.http.Retry(
-                            _("User does not belong to groups %s") % attribute_value, {
-                                'editable_no_editor': errmsg % attribute_value
-                            })
                     return ''
 
             attribute_value = attribute_value.encode("utf8")
@@ -313,7 +307,7 @@ class QWeb(orm.AbstractModel):
             for current_node in element.iterchildren(tag=etree.Element):
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
-                except (QWebException, openerp.http.Retry):
+                except QWebException:
                     raise
                 except Exception:
                     template = qwebcontext.get('__template__')
@@ -1153,7 +1147,7 @@ class AssetsBundle(object):
         content = None
         domain = [('url', '=', '/web/%s/%s/%s' % (type, self.xmlid, self.version))]
         bundle = self.registry['ir.attachment'].search_read(self.cr, self.uid, domain, ['datas'], context=self.context)
-        if bundle:
+        if bundle and bundle[0]['datas']:
             content = bundle[0]['datas'].decode('base64')
         return content
 
