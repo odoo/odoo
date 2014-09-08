@@ -503,6 +503,19 @@ $aestetic_animation_speed: 300ms;
                 .cell_title_account_code {
                     text-align: center;
                 }
+
+                tr:first-child td {
+                    border-bottom: $lightBorder;
+
+                    &.cell_action, &.cell_info_popover {
+                        border-bottom: none;
+                    }
+
+                    &.cell_title_account_code {
+                        border-bottom: 1px solid #000 !important;
+                    }
+                }
+
             }
             
             .filler_line td {
@@ -511,16 +524,7 @@ $aestetic_animation_speed: 300ms;
             }
             
             tbody.tbody_matched_lines tr:first-child td {
-                border-top: $lightBorder;
                 padding-top: 4px;
-
-                &.cell_action, &.cell_info_popover {
-                    border-top: none;
-                }
-
-                &.cell_debit, &.cell_credit {
-                    border-top: 1px solid #000 !important;
-                }
             }
         }
         

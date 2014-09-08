@@ -603,7 +603,11 @@ openerp.account = function (instance) {
             var slice_start = self.get("pager_index") * self.max_move_lines_displayed;
             var slice_end = (self.get("pager_index")+1) * self.max_move_lines_displayed;
             _( _.filter(self.mv_lines_deselected, function(o){
-                    return o.name.indexOf(self.filter) !== -1 || o.ref.indexOf(self.filter) !== -1 })
+                    var floatFromFilter = false;
+                    try { floatFromFilter = instance.web.parse_value(self.filter, {type: 'float'}); } catch(e){}
+                    return o.name.indexOf(self.filter) !== -1
+                    || (o.ref && o.ref.indexOf(self.filter) !== -1)
+                    || (isFinite(floatFromFilter) && (o.debit === floatFromFilter || o.credit === floatFromFilter) )})
                 .slice(slice_start, slice_end)).each(function(line){
                 var $line = $(QWeb.render("reconciliation_move_line", {line: line, selected: false}));
                 self.bindPopoverTo($line.find(".line_info_button"));
@@ -798,7 +802,7 @@ openerp.account = function (instance) {
                 // Format amounts
                 $.each(line_created_being_edited, function(index, val) {
                     if (val.amount)
-                        line_created_being_edited[index].amount_str = self.formatCurrencies(Math.abs(val.amount), val.currency_id);
+                        line_created_being_edited[index].amount_str = self.formatCurrencies(Math.abs(val.amount), self.currency_id);
                 });
                 self.set("line_created_being_edited", line_created_being_edited);
                 self.createdLinesChanged(); // TODO For some reason, previous line doesn't trigger change handler
@@ -1506,8 +1510,8 @@ openerp.account = function (instance) {
                     self.$(".button_ok").attr("disabled", "disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = false;
-                    var debit = (balance > 0 ? self.formatCurrencies(balance, self.st_line.currency_id) : "");
-                    var credit = (balance < 0 ? self.formatCurrencies(-1*balance, self.st_line.currency_id) : "");
+                    var debit = (balance > 0 ? self.formatCurrencies(balance, self.currency_id) : "");
+                    var credit = (balance < 0 ? self.formatCurrencies(-1*balance, self.currency_id) : "");
                     var $line = $(QWeb.render("reconciliation_line_open_balance", {
                         debit: debit,
                         credit: credit,
@@ -1525,8 +1529,8 @@ openerp.account = function (instance) {
             } else {
                 self.$(".button_ok").removeClass("oe_highlight");
                 self.$(".button_ok").text("Keep open");
-                var debit = (balance > 0 ? self.formatCurrencies(balance, self.st_line.currency_id) : "");
-                var credit = (balance < 0 ? self.formatCurrencies(-1*balance, self.st_line.currency_id) : "");
+                var debit = (balance > 0 ? self.formatCurrencies(balance, self.currency_id) : "");
+                var credit = (balance < 0 ? self.formatCurrencies(-1*balance, self.currency_id) : "");
                 var $line = $(QWeb.render("reconciliation_line_open_balance", {
                     debit: debit,
                     credit: credit,
@@ -1579,10 +1583,10 @@ openerp.account = function (instance) {
             line.initial_amount = line.debit !== 0 ? line.debit : -1 * line.credit;
             if (balance < 0) {
                 line.debit += balance;
-                line.amount_str = self.formatCurrencies(line.debit, self.st_line.currency_id);
+                line.amount_str = self.formatCurrencies(line.debit, self.currency_id);
             } else {
                 line.credit -= balance;
-                line.amount_str = self.formatCurrencies(line.credit, self.st_line.currency_id);
+                line.amount_str = self.formatCurrencies(line.credit, self.currency_id);
             }
             line.propose_partial_reconcile = false;
             line.partial_reconcile = true;
@@ -1605,10 +1609,10 @@ openerp.account = function (instance) {
             var self = this;
             if (line.initial_amount > 0) {
                 line.debit = line.initial_amount;
-                line.amount_str = self.formatCurrencies(line.debit, self.st_line.currency_id);
+                line.amount_str = self.formatCurrencies(line.debit, self.currency_id);
             } else {
                 line.credit = -1 * line.initial_amount;
-                line.amount_str = self.formatCurrencies(line.credit, self.st_line.currency_id);
+                line.amount_str = self.formatCurrencies(line.credit, self.currency_id);
             }
             line.propose_partial_reconcile = true;
             line.partial_reconcile = false;
@@ -2016,7 +2020,7 @@ openerp.account = function (instance) {
             // Make sure there's at least one (empty) line in the accounting view so the T appears
             // Should be done in CSS with sth like elt:empty:before { content: "HTML"; }
             // Unfortunately, "Generated content does not alter the document tree"
-            if (this.$(".tbody_matched_lines > *").length === 0)
+            if (this.$(".tbody_matched_lines > *").length + this.$(".tbody_created_lines > *").length === 0)
                 this.$(".tbody_matched_lines").append('<tr class="filler_line"><td class="cell_action"></td><td class="cell_due_date"></td><td class="cell_label"></td><td class="cell_debit"></td><td class="cell_credit"></td><td class="cell_info_popover"></td></tr>');
         },
 
