@@ -214,7 +214,7 @@
                     </script>
                 </t>
 
-                <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation">
+                <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation" groups="base.group_user,base.group_portal">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                             <span class="icon-bar"></span>
@@ -230,7 +230,7 @@
                     <table class="oe_webclient">
                         <tr>
                             <td class="oe_leftbar" valign="top">
-                                <div>
+                                <div groups="base.group_user,base.group_portal">
                                     <t t-call="web.menu_secondary"/>
                                 </div>
                             </td>
