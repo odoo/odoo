@@ -601,24 +601,26 @@ QWeb2.Element = (function() {
             return r;
         },
         string_interpolation : function(s) {
+            var _this = this;
             if (!s) {
               return "''";
             }
-            var regex = /^{(.*)}(.*)/,
-                src = s.split(/#/),
-                r = [];
-            for (var i = 0, ilen = src.length; i < ilen; i++) {
-                var val = src[i],
-                    m = val.match(regex);
-                if (m) {
-                    r.push("(" + this.format_expression(m[1]) + ")");
-                    if (m[2]) {
-                        r.push(this.engine.tools.js_escape(m[2]));
-                    }
-                } else if (!(i === 0 && val === '')) {
-                    r.push(this.engine.tools.js_escape((i === 0 ? '' : '#') + val));
-                }
+            function append_literal(s) {
+                s && r.push(_this.engine.tools.js_escape(s));
             }
+
+            var re = /#{(.*?)}/g, start = 0, r = [], m;
+            while (m = re.exec(s)) {
+                // extract literal string between previous and current match
+                append_literal(s.slice(start, re.lastIndex - m[0].length));
+                // extract matched expression
+                r.push('(' + this.format_expression(m[1]) + ')');
+                // update position of new matching
+                start = re.lastIndex;
+            }
+            // remaining text after last expression
+            append_literal(s.slice(start));
+
             return r.join(' + ');
         },
         indent : function() {
