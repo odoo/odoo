@@ -9,6 +9,19 @@
     <t t-name="esc-toescape">
         <t t-esc="ok"/>
     </t>
+    <!-- formatted esc -->
+    <t t-name="escf-literal">
+        <t t-escf="ok"/>
+    </t>
+    <t t-name="escf-variable">
+        <t t-escf="{{ ok }}"/>
+    </t>
+    <t t-name="escf-toescape">
+        <t t-escf="{{ ok }}"/>
+    </t>
+    <t t-name="escf-mix">
+        <t t-escf="[{{ ok }}]"/>
+    </t>
 
     <!-- raw, evaluates and returns @t-raw directly (no escaping) -->
     <t t-name="raw-literal">
@@ -19,5 +32,15 @@
     </t>
     <t t-name="raw-notescaped">
         <t t-raw="ok"/>
+    </t>
+    <!-- formatted raw -->
+    <t t-name="rawf-literal">
+        <t t-rawf="ok"/>
+    </t>
+    <t t-name="rawf-variable">
+        <t t-rawf="{{ ok }}"/>
+    </t>
+    <t t-name="rawf-notescaped">
+        <t t-rawf="{{ ok }}"/>
     </t>
 </templates>

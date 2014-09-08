@@ -28,7 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var QWeb2 = {
     expressions_cache: {},
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
-    ACTIONS_PRECEDENCE: 'foreach,if,call,set,esc,raw,js,debug,log'.split(','),
+    ACTIONS_PRECEDENCE: 'foreach,if,call,set,escf,esc,rawf,raw,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
         'and': '&&',
         'or': '||',
@@ -739,10 +739,20 @@ QWeb2.Element = (function() {
             }
         },
         compile_action_esc : function(value) {
-            this.top("r.push(context.engine.tools.html_escape(" + (this.format_expression(value)) + "));");
+            this.top("r.push(context.engine.tools.html_escape("
+                    + this.format_expression(value)
+                    + "));");
+        },
+        compile_action_escf : function (value) {
+            this.top("r.push(context.engine.tools.html_escape("
+                    + this.string_interpolation(value)
+                    + '));');
         },
         compile_action_raw : function(value) {
             this.top("r.push(" + (this.format_expression(value)) + ");");
+        },
+        compile_action_rawf: function (value) {
+            this.top('r.push(' + this.string_interpolation(value) + ');');
         },
         compile_action_js : function(value) {
             this.top("(function(" + value + ") {");

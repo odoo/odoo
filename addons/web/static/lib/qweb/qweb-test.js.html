@@ -35,10 +35,21 @@
                 assert.equal(render('esc-variable', {ok: 'ok'}), "ok", "Render a string variable");
                 assert.equal(render('esc-toescape', {ok: '<ok>'}), "&lt;ok&gt;", "Render a string with data to escape");
             });
+            QUnit.test("Formatted escaped output", function (assert) {
+                assert.equal(render('escf-literal', {}), "ok", "Render a literal string");
+                assert.equal(render('escf-variable', {ok: 'ok'}), "ok", "Render a string variable");
+                assert.equal(render('escf-toescape', {ok: '<ok>'}), "&lt;ok&gt;", "Render a string with data to escape");
+                assert.equal(render('escf-mix', {ok: 'ok'}), "[ok]", "Render a string with additions around the format");
+            });
             QUnit.test("Basic unescaped output", function (assert) {
                 assert.equal(render('raw-literal', {}), "ok", "Render a literal string");
                 assert.equal(render('raw-variable', {ok: 'ok'}), "ok", "Render a string variable");
                 assert.equal(render('raw-notescaped', {ok: '<ok>'}), "<ok>", "Render a string with data not escaped");
+            });
+            QUnit.test("Formatted unescaped output", function (assert) {
+                assert.equal(render('rawf-literal', {}), "ok", "Render a literal string");
+                assert.equal(render('rawf-variable', {ok: 'ok'}), "ok", "Render a string variable");
+                assert.equal(render('rawf-notescaped', {ok: '<ok>'}), "<ok>", "Render a string with data not escaped");
             });
 
             QUnit.module("Context-setting tests", {
