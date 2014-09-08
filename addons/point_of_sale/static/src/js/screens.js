@@ -134,6 +134,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         set_default_screen: function(){
             this.set_current_screen(this.default_screen);
         },
+        change_default_screen: function(screen){ 
+            this.default_screen = screen;
+        },
     });
 
     module.ScreenWidget = module.PosBaseWidget.extend({

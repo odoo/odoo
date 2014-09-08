@@ -8,4 +8,6 @@ openerp.pos_restaurant = function(instance){
 
     openerp_restaurant_printbill(instance,module);
 
+    openerp_restaurant_floors(instance,module);
+
 };

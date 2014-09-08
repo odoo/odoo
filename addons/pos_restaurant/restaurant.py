@@ -28,6 +28,33 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+class restaurant_floor(osv.osv):
+    _name = 'restaurant.floor'
+    _columns = {
+        'name':             fields.char('Floor Name', size=32, required=True, help='An internal identification of the restaurant floor'),
+        'pos_config_id':    fields.many2one('pos.config','Point of Sale'),
+        'background_image': fields.binary('Background Image', help='A background image used to display a floor layout in the point of sale interface'),  
+        'table_ids':        fields.one2many('restaurant.table','floor_id','Tables', help='The list of tables in this floor'),
+    }
+
+class restaurant_table(osv.osv):
+    _name = 'restaurant.table'
+    _columns = {
+        'name':         fields.char('Table Name', size=32, required=True, help='An internal identification of a table'),
+        'floor_id':     fields.many2one('restaurant.floor','Floor'),
+        'shape':        fields.selection([('square','Square'),('round','Round')],'Shape', required=True),
+        'position_h':   fields.integer('Horizontal Position', help="The table's horizontal position from the left side to the table's center, in percentage of the floor's width"),
+        'position_v':   fields.integer('Vertical Position', help="The table's vertical position from the top to the table's center, in percentage of the floor's height"),
+        'width':        fields.integer('Width', help="The table's width in percentage of the floor's width"),
+        'height':       fields.integer('Height', help="The table's height in percentage of the floor's height"),
+        'color':        fields.char('Color', size=32, help="The table's color"),
+    }
+    _defaults = {
+        'shape': 'square',
+        'height': 10,
+        'width':  10,
+    }
+
 class restaurant_printer(osv.osv):
     _name = 'restaurant.printer'
 
@@ -46,6 +73,7 @@ class pos_config(osv.osv):
     _columns = {
         'iface_splitbill': fields.boolean('Bill Splitting', help='Enables Bill Splitting in the Point of Sale'),
         'iface_printbill': fields.boolean('Bill Printing', help='Allows to print the Bill before payment'),
+        'floor_ids':       fields.one2many('restaurant.floor','pos_config_id','Restaurant Floors', help='The restaurant floors served by this point of sale'),
         'printer_ids':     fields.many2many('restaurant.printer','pos_config_printer_rel', 'config_id','printer_id',string='Order Printers'),
     }
     _defaults = {

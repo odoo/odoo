@@ -1,2 +1,56 @@
 /* --- Restaurant Specific CSS --- */
 
+.screen .screen-content-flexbox {
+    margin:     0px auto;
+    max-width:  1024px;
+    text-align: left;
+    height:     100%;
+    overflow:   hidden;
+    position:   relative;
+    display:    flex;
+    flex-flow:  column nowrap;
+}
+
+/* ------ FLOOR SELECTOR ------- */
+
+.floor-selector { 
+    line-height: 48px;
+    font-size: 18px;
+    border-bottom: solid 1px rgb(196,196,196);
+    display: flex;
+    text-align: center;
+    width: 100%;
+}
+.floor-selector .button {
+    cursor: pointer;
+    border-left: dashed 1px rgb(196,196,196);
+    flex: 1;
+}
+.floor-selector .button:first-child {
+    border-left: none;
+}
+.floor-selector .button.active {
+    background: rgb(210, 231, 210);
+}
+
+/* ------ FLOOR MAP ------- */
+
+.floor-map {
+    flex: 1;
+    position: relative;
+    width: auto;
+    margin: 8px;
+    border-radius: 3px;
+    background: rgba(0,0,0,0.1);
+}
+.floor-map .table{
+    position: absolute;
+    text-align: center;
+    font-size: 18px;
+    color: white;
+    background: rgb(53, 211, 116);
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+
