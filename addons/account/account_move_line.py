@@ -820,10 +820,6 @@ class account_move_line(osv.osv):
         allowed_ids = set(self.pool.get('account.account').search(cr, uid, [('id', 'in', ids)], context=context))
         part_acc_rows = [row for row in part_acc_rows if row['account_id'] in allowed_ids]
 
-        # Fetch account move lines
-        for row in part_acc_rows:
-            row['move_lines'] = self.get_move_lines_for_manual_reconciliation(cr, uid, account_id=row['account_id'], partner_id=row['partner_id'], context=context)
-
         # Fetch data for the other reconciliable accounts
         cr.execute(
             """SELECT to_char(last_reconciliation_date, 'YYYY-MM-DD') AS last_reconciliation_date, account_id, account_name, account_code FROM (
@@ -882,10 +878,6 @@ class account_move_line(osv.osv):
         ids = [x['account_id'] for x in other_acc_rows]
         allowed_ids = set(self.pool.get('account.account').search(cr, uid, [('id', 'in', ids)], context=context))
         other_acc_rows = [row for row in other_acc_rows if row['account_id'] in allowed_ids]
-
-        # Fetch account move lines
-        for row in other_acc_rows:
-            row['move_lines'] = self.get_move_lines_for_manual_reconciliation(cr, uid, account_id=row['account_id'], context=context)
 
         # Fetch other data
         for row in part_acc_rows+other_acc_rows:
