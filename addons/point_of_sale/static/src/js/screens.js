@@ -590,6 +590,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             });
 
             var search_timeout = null;
+
+            if(this.pos.config.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
+                this.pos_widget.onscreen_keyboard.connect(this.$('.searchbox input'));
+            }
+
             this.$('.searchbox input').on('keyup',function(event){
                 clearTimeout(search_timeout);
 
