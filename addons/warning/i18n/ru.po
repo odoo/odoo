@@ -1,61 +1,25 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* warning
+# Russian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-25 12:52+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:18+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:58+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: warning
-#: model:ir.model,name:warning.model_purchase_order_line
-#: field:product.product,purchase_line_warn:0
-msgid "Purchase Order Line"
-msgstr "Позиция заказа на закупку"
-
-#. module: warning
-#: model:ir.model,name:warning.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "Поступающие грузы"
-
-#. module: warning
-#: field:product.product,purchase_line_warn_msg:0
-msgid "Message for Purchase Order Line"
-msgstr "Сообщение о покупке позиции в заказе"
-
-#. module: warning
-#: model:ir.model,name:warning.model_stock_picking
-msgid "Picking List"
-msgstr "Комплектовочный лист"
-
-#. module: warning
-#: view:product.product:0
-msgid "Warning when Purchasing this Product"
-msgstr "Предупреждение при покупке этого товара"
-
-#. module: warning
-#: model:ir.model,name:warning.model_product_product
-msgid "Product"
-msgstr "ТМЦ"
-
-#. module: warning
-#: view:product.product:0
-#: view:res.partner:0
-msgid "Warnings"
-msgstr "Предупреждения"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -64,13 +28,44 @@ msgid "Blocking Message"
 msgstr "Блокирующее сообщение"
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Invoice"
-msgstr "Предупреждение при выставлении счета"
+#: model:ir.model,name:warning.model_account_invoice
+#: field:res.partner,invoice_warn:0
+msgid "Invoice"
+msgstr "Счет"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Сообщение при выставлении счета"
+
+#. module: warning
+#: field:res.partner,purchase_warn_msg:0
+msgid "Message for Purchase Order"
+msgstr "Сообщение для Заказа на Закупку"
+
+#. module: warning
+#: field:product.template,purchase_line_warn_msg:0
+msgid "Message for Purchase Order Line"
+msgstr "Сообщение о покупке позиции в заказе"
+
+#. module: warning
+#: field:res.partner,sale_warn_msg:0
+msgid "Message for Sales Order"
+msgstr "Сообщение по заказу продаж"
+
+#. module: warning
+#: field:product.template,sale_line_warn_msg:0
+msgid "Message for Sales Order Line"
+msgstr "Сообщение по позиции заказа продаж"
+
+#. module: warning
+#: field:res.partner,picking_warn_msg:0
+msgid "Message for Stock Picking"
+msgstr "Сообщение для комплектования запасов"
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -79,20 +74,19 @@ msgid "No Message"
 msgstr "Не предупреждать"
 
 #. module: warning
-#: model:ir.model,name:warning.model_account_invoice
-#: field:res.partner,invoice_warn:0
-msgid "Invoice"
-msgstr "Счет"
+#: model:ir.model,name:warning.model_res_partner
+msgid "Partner"
+msgstr "Контрагент"
 
 #. module: warning
-#: view:product.product:0
-msgid "Warning when Selling this Product"
-msgstr "Предупреждение при продаже этого товара"
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Picking List"
+msgstr "Комплектовочный лист"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Комплектование запасов"
+#: model:ir.model,name:warning.model_product_template
+msgid "Product Template"
+msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
@@ -101,14 +95,27 @@ msgid "Purchase Order"
 msgstr "Заказ на закупку"
 
 #. module: warning
-#: field:res.partner,purchase_warn_msg:0
-msgid "Message for Purchase Order"
-msgstr "Сообщение для Заказа на Закупку"
+#: model:ir.model,name:warning.model_purchase_order_line
+#: field:product.template,purchase_line_warn:0
+msgid "Purchase Order Line"
+msgstr "Позиция заказа на закупку"
 
 #. module: warning
-#: code:addons/warning/warning.py:32
-#: help:product.product,purchase_line_warn:0
-#: help:product.product,sale_line_warn:0
+#: model:ir.model,name:warning.model_sale_order
+#: field:res.partner,sale_warn:0
+msgid "Sales Order"
+msgstr "Заказ на продажу"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+#: field:product.template,sale_line_warn:0
+msgid "Sales Order Line"
+msgstr "Позиция заказа на продажу"
+
+#. module: warning
+#: code:addons/warning/warning.py:31
+#: help:product.template,purchase_line_warn:0
+#: help:product.template,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
 #: help:res.partner,picking_warn:0
 #: help:res.partner,purchase_warn:0
@@ -124,64 +131,13 @@ msgstr ""
 "процесс. Текст сообщения должен быть записан в следующее поле."
 
 #. module: warning
-#: code:addons/warning/warning.py:67
-#: code:addons/warning/warning.py:96
-#: code:addons/warning/warning.py:130
-#: code:addons/warning/warning.py:162
-#: code:addons/warning/warning.py:192
-#: code:addons/warning/warning.py:218
-#: code:addons/warning/warning.py:266
-#: code:addons/warning/warning.py:299
-#, python-format
-msgid "Alert for %s !"
-msgstr "Сигнал о %s !"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Комплектование запасов"
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Sales Order"
-msgstr "Предупреждение по заказу продаж"
-
-#. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Сообщение при выставлении счета"
-
-#. module: warning
-#: field:res.partner,sale_warn_msg:0
-msgid "Message for Sales Order"
-msgstr "Сообщение по заказу продаж"
-
-#. module: warning
-#: view:res.partner:0
-msgid "Warning on the Picking"
-msgstr "Предупреждение по комплектованию"
-
-#. module: warning
-#: view:res.partner:0
-msgid "Warning on the Purchase Order"
-msgstr "Предупреждение при заказе на закупку"
-
-#. module: warning
-#: code:addons/warning/warning.py:68
-#: code:addons/warning/warning.py:97
-#: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:193
-#: code:addons/warning/warning.py:219
-#: code:addons/warning/warning.py:267
-#: code:addons/warning/warning.py:300
-#, python-format
-msgid "Warning for %s"
-msgstr "Предупреждение для %s"
-
-#. module: warning
-#: field:product.product,sale_line_warn_msg:0
-msgid "Message for Sales Order Line"
-msgstr "Сообщение по позиции заказа продаж"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -190,76 +146,48 @@ msgid "Warning"
 msgstr "Внимание"
 
 #. module: warning
-#: field:res.partner,picking_warn_msg:0
-msgid "Message for Stock Picking"
-msgstr "Сообщение для комплектования запасов"
+#: code:addons/warning/warning.py:64
+#: code:addons/warning/warning.py:92
+#: code:addons/warning/warning.py:128
+#: code:addons/warning/warning.py:160
+#: code:addons/warning/warning.py:209
+#: code:addons/warning/warning.py:241
+#, python-format
+msgid "Warning for %s"
+msgstr "Предупреждение для %s"
 
 #. module: warning
-#: model:ir.model,name:warning.model_res_partner
-msgid "Partner"
-msgstr "Контрагент"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Invoice"
+msgstr "Предупреждение при выставлении счета"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
-#: field:res.partner,sale_warn:0
-msgid "Sales Order"
-msgstr "Заказ на продажу"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Picking"
+msgstr "Предупреждение по комплектованию"
 
 #. module: warning
-#: model:ir.model,name:warning.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "Заказы на доставку"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Purchase Order"
+msgstr "Предупреждение при заказе на закупку"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order_line
-#: field:product.product,sale_line_warn:0
-msgid "Sales Order Line"
-msgstr "Позиция заказа на продажу"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Sales Order"
+msgstr "Предупреждение по заказу продаж"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Неправильный XML для просмотра архитектуры!"
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+msgid "Warning when Purchasing this Product"
+msgstr "Предупреждение при покупке этого товара"
 
-#~ msgid "Message for Sale Order Line"
-#~ msgstr "Сообщение о продаже позиции в заказе"
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+msgid "Warning when Selling this Product"
+msgstr "Предупреждение при продаже этого товара"
 
-#~ msgid "Message for Sale Order"
-#~ msgstr "Сообщение для заказа на продажу"
-
-#~ msgid "Sale Order Line"
-#~ msgstr "Позиция заказа на продажу"
-
-#~ msgid "Sale Order"
-#~ msgstr "Заказ на продажу"
-
-#~ msgid "Module for Warnings form onchange Event"
-#~ msgstr "Модуль для предупреждений при внесении изменении"
-
-#~ msgid "Module for Warnings form onchange Event."
-#~ msgstr "Модуль для предупреждений при внесении изменении"
-
-#~ msgid "Warning on the Sale Order"
-#~ msgstr "Предупреждение при заказе на продажу"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Ошибка! Вы не можете создать рекурсивно связанных участников."
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Номер заказа должен быть уникальным!"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Ошибка: Неверный штрих-код"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Ошибка! Вы не можете создавать рекурсивные ссылки на участников."
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Ссылка должна быть уникальна для каждой компании!"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Ссылка на заказ должны быть уникальной для каждой компании!"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Номер счета должен быть уникальным для компании!"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Неверна структурная связь BBA!"
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warnings"
+msgstr "Предупреждения"

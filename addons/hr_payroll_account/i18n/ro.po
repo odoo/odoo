@@ -1,40 +1,27 @@
 # Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-01-06 15:09+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:14+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_credit:0
-msgid "Credit Account"
-msgstr "Cont de Credit"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:104
-#, python-format
-msgid "Payslip of %s"
-msgstr "Fluturas de salariu al %s"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr ""
-"Registrul de Cheltuieli \"%s\" nu a configurat corect Contul de Credit!"
+#: view:hr.contract:hr_payroll_account.hr_contract_form_inherit
+#: view:hr.salary.rule:hr_payroll_account.hr_salary_rule_form_inherit
+msgid "Accounting"
+msgstr "Contabilitate"
 
 #. module: hr_payroll_account
 #: field:hr.payslip,move_id:0
@@ -42,22 +29,49 @@ msgid "Accounting Entry"
 msgstr "Inregistrare Contabila"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
+#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/hr_payroll_account.py:168
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr ""
-"Registrul de cheltuieli \"%s\" nu a configurat corect Contul de Debit!"
+msgid "Adjustment Entry"
+msgstr "Ajustare Inregistrare"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_tax_id:0
-msgid "Tax Code"
-msgstr "Cod taxa"
+#: field:hr.contract,analytic_account_id:0
+#: field:hr.salary.rule,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Cont Analitic"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
+#, python-format
+msgid "Configuration Error!"
+msgstr "Eroare de configurare!"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Contract"
+msgstr "Contract"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_credit:0
+msgid "Credit Account"
+msgstr "Cont de Credit"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_debit:0
+msgid "Debit Account"
+msgstr "Cont de Debit"
 
 #. module: hr_payroll_account
 #: field:hr.payslip,period_id:0
 msgid "Force Period"
 msgstr "Impune perioada"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Generati fluturasii de salariu pentru toti angajatii selectati"
 
 #. module: hr_payroll_account
 #: help:hr.payslip,period_id:0
@@ -67,20 +81,9 @@ msgstr ""
 "de salariu)."
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contract
-msgid "Contract"
-msgstr "Contract"
-
-#. module: hr_payroll_account
-#: field:hr.contract,analytic_account_id:0
-#: field:hr.salary.rule,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Cont Analitic"
-
-#. module: hr_payroll_account
-#: field:hr.salary.rule,account_debit:0
-msgid "Debit Account"
-msgstr "Cont de Debit"
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Fluturas de salariu"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
@@ -88,39 +91,10 @@ msgid "Payslip Batches"
 msgstr "Fluturas loturi"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
-msgid "Generate payslips for all selected employees"
-msgstr "Generati fluturasii de salariu pentru toti angajatii selectati"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
+#: code:addons/hr_payroll_account/hr_payroll_account.py:97
 #, python-format
-msgid "Configuration Error!"
-msgstr "Eroare de configurare!"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "ru.regula.salarizare"
-
-#. module: hr_payroll_account
-#: view:hr.contract:0
-#: view:hr.salary.rule:0
-msgid "Accounting"
-msgstr "Contabilitate"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip
-msgid "Pay Slip"
-msgstr "Fluturas de salariu"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:159
-#: code:addons/hr_payroll_account/hr_payroll_account.py:175
-#, python-format
-msgid "Adjustment Entry"
-msgstr "Ajustare Inregistrare"
+msgid "Payslip of %s"
+msgstr "Fluturas de salariu al %s"
 
 #. module: hr_payroll_account
 #: field:hr.contract,journal_id:0
@@ -129,171 +103,23 @@ msgstr "Ajustare Inregistrare"
 msgid "Salary Journal"
 msgstr "Registru Salarii"
 
-#~ msgid "Expense Journal"
-#~ msgstr "Jurnal de cheltuieli"
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_tax_id:0
+msgid "Tax Code"
+msgstr "Cod taxa"
 
-#~ msgid "Analytic Account for Salary Analysis"
-#~ msgstr "Cont Analitic pentru Analiza Salariului"
-
-#~ msgid "Employee"
-#~ msgstr "Angajat"
-
-#~ msgid "Bank Journal"
-#~ msgstr "Jurnal bancă"
-
-#~ msgid "Contribution Register Line"
-#~ msgstr "Linie registru contributii"
-
-#~ msgid "Contribution Register"
-#~ msgstr "Registru contributii"
-
-#~ msgid "Accounting Lines"
-#~ msgstr "Linii contabilitate"
-
-#~ msgid "Period"
-#~ msgstr "Perioadă"
-
-#~ msgid "Expense account when Salary Expense will be recorded"
-#~ msgstr ""
-#~ "Contul de cheltuieli unde vor fi inregistrate Cheltuielile de salarizare"
-
-#~ msgid "Accounting Informations"
-#~ msgstr "Informatii contabile"
-
-#~ msgid "Description"
-#~ msgstr "Descriere"
-
-#~ msgid "Account Move Link to Pay Slip"
-#~ msgstr "Miscarea contului legată de Fluturasul de salariu"
-
-#~ msgid "Other Informations"
-#~ msgstr "Alte informatii"
-
-#~ msgid "Salary Account"
-#~ msgstr "Cont de salariu"
-
-#~ msgid "Payroll Register"
-#~ msgstr "Registru de salarizare"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
 #, python-format
-#~ msgid "Please Confirm all Expense Invoice appear for Reimbursement"
-#~ msgstr ""
-#~ "Vă rugăm să confirmati toate facturile de cheltuieli pentru Rambursare"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr ""
+"Registrul de Cheltuieli \"%s\" nu a configurat corect Contul de Credit!"
 
-#~ msgid "Bank Account"
-#~ msgstr "Cont bancar"
-
-#~ msgid "Account"
-#~ msgstr "Cont"
-
-#~ msgid "Human Resource Payroll Accounting"
-#~ msgstr "Contabilitate Salarizare Resurse Umane"
-
-#~ msgid "Payment Lines"
-#~ msgstr "Linii de plată"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
 #, python-format
-#~ msgid "Please define fiscal year for perticular contract"
-#~ msgstr "Vă rugăm să definiti anul fiscal pentru contractul anume"
-
-#~ msgid "Account Lines"
-#~ msgstr "Linii de cont"
-
-#~ msgid "Name"
-#~ msgstr "Nume"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Eroare ! Nu puteti crea Ierarhii recursive ale Angajatilor."
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Eroare ! Nu puteti selecta un departament la care angajatul este managerul."
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Avertisment !"
-
-#~ msgid "Accounting vouchers"
-#~ msgstr "Bonuri de contabilitate"
-
-#~ msgid "Payslip Line"
-#~ msgstr "Linie fluturas de salariu"
-
-#~ msgid "Expense Entries"
-#~ msgstr "Inregistrări Cheltuieli"
-
-#~ msgid ""
-#~ "Generic Payroll system Integrated with Accountings\n"
-#~ "    * Expense Encoding\n"
-#~ "    * Payment Encoding\n"
-#~ "    * Company Contribution Management\n"
-#~ "    "
-#~ msgstr ""
-#~ "Sistem general de salarizare integrat cu Contabilitatea\n"
-#~ "    * Codare Cheltuieli\n"
-#~ "    * Codare Plăti\n"
-#~ "    * Managementul Contributiei Companiei\n"
-#~ "    "
-
-#~ msgid "Accounting Vouchers"
-#~ msgstr "Bonuri de contabilitate"
-
-#~ msgid "Bank Advice Note"
-#~ msgstr "Nota instiintare banca"
-
-#~ msgid "Employee Payable Account"
-#~ msgstr "Cont plăti angajat"
-
-#~ msgid "Sequence"
-#~ msgstr "Secvență"
-
-#~ msgid "Leave Type"
-#~ msgstr "Tipul concediului"
-
-#~ msgid "General Account"
-#~ msgstr "Cont General"
-
-#~ msgid "Employee Account"
-#~ msgstr "Cont angajat"
-
-#~ msgid "Total By Employee"
-#~ msgstr "Total pe angajat"
-
-#, python-format
-#~ msgid "Fiscal Year is not defined for slip date %s"
-#~ msgstr "Anul fiscal nu este definit pentru data fluturasului de salar %s"
-
-#, python-format
-#~ msgid "Please Configure Partners Receivable Account!!"
-#~ msgstr "Vă rugăm să configurati Contul de incasări Parteneri!!"
-
-#~ msgid "Accounting Details"
-#~ msgstr "Detalii contabilitate"
-
-#~ msgid "Salary Structure"
-#~ msgstr "Structura salariului"
-
-#~ msgid "Total By Company"
-#~ msgstr "Total pe companie"
-
-#, python-format
-#~ msgid "Please Configure Partners Payable Account!!"
-#~ msgstr "Vă rugăm să configurati Contul de incasări al Partenerilor!"
-
-#~ msgid "Year"
-#~ msgstr "An"
-
-#, python-format
-#~ msgid "Period is not defined for slip date %s"
-#~ msgstr "Perioada nu este definită pentru data fluturasului de salar %s"
-
-#~ msgid "Payslip 'Date From' must be before 'Date To'."
-#~ msgstr ""
-#~ "'Data de la' de pe fluturasul de salariu trebuie sa fie inainte de 'Data "
-#~ "pana la'"
-
-#~ msgid "Error! contract start-date must be lower then contract end-date."
-#~ msgstr ""
-#~ "Eroare! data de inceput a contractului trebuie sa fie sub data de sfarsit a "
-#~ "contractului."
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr ""
+"Registrul de cheltuieli \"%s\" nu a configurat corect Contul de Debit!"

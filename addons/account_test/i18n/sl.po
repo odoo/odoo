@@ -1,242 +1,21 @@
 # Slovenian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-05 17:52+0000\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:52+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: account_test
-#: view:accounting.assert.test:0
-msgid ""
-"Code should always set a variable named `result` with the result of your "
-"test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was "
-"succesful. Otherwise it will\n"
-"try to translate and print what is inside `result`.\n"
-"\n"
-"If the result of your test is a dictionary, you can set a variable named "
-"`column_order` to choose in\n"
-"what order you want to print `result`'s content.\n"
-"\n"
-"Should you need them, you can also use the following variables into your "
-"code:\n"
-"    * cr: cursor to the database\n"
-"    * uid: ID of the current user\n"
-"\n"
-"In any ways, the code must be legal python statements with correct "
-"indentation (if needed).\n"
-"\n"
-"Example: \n"
-"    sql = '''SELECT id, name, ref, date\n"
-"             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
-"          '''\n"
-"    cr.execute(sql)\n"
-"    result = cr.dictfetchall()"
-msgstr ""
-"Code should always set a variable named `result` with the result of your "
-"test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was "
-"succesful. Otherwise it will\n"
-"try to translate and print what is inside `result`.\n"
-"\n"
-"If the result of your test is a dictionary, you can set a variable named "
-"`column_order` to choose in\n"
-"what order you want to print `result`'s content.\n"
-"\n"
-"Should you need them, you can also use the following variables into your "
-"code:\n"
-"    * cr: cursor to the database\n"
-"    * uid: ID of the current user\n"
-"\n"
-"In any ways, the code must be legal python statements with correct "
-"indentation (if needed).\n"
-"\n"
-"Example: \n"
-"    sql = '''SELECT id, name, ref, date\n"
-"             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
-"          '''\n"
-"    cr.execute(sql)\n"
-"    result = cr.dictfetchall()"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_02
-msgid "Test 2: Opening a fiscal year"
-msgstr "Test 2: Otvoritev poslovnega leta"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_05
-msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
-"Payable and Receivable Accounts"
-msgstr "Preveri račune in vknjižbe v saldakontih"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_03
-msgid ""
-"Check if movement lines are balanced and have the same date and period"
-msgstr "Preveri če so vknjižbe usklajene in imajo isto obdobje in datum."
-
-#. module: account_test
-#: field:accounting.assert.test,name:0
-msgid "Test Name"
-msgstr "Ime testa"
-
-#. module: account_test
-#: report:account.test.assert.print:0
-msgid "Accouting tests on"
-msgstr "Testi na"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_01
-msgid "Test 1: General balance"
-msgstr "Test 1: Stanja"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_06
-msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr "Preveri da če plačani računi niso v statusu 'Odprto'"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_05_2
-msgid ""
-"Check that reconciled account moves, that define Payable and Receivable "
-"accounts, are belonging to reconciled invoices"
-msgstr "Preveri vknjižbe v saldakontih in račune."
-
-#. module: account_test
-#: view:accounting.assert.test:0
-msgid "Tests"
-msgstr "Preizkusi"
-
-#. module: account_test
-#: field:accounting.assert.test,desc:0
-msgid "Test Description"
-msgstr "Opis preizkusa"
-
-#. module: account_test
-#: view:accounting.assert.test:0
-msgid "Description"
-msgstr "Opis"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_06_1
-msgid "Check that there's no move for any account with « View » account type"
-msgstr "Preveri da ni nobene vknjižbe na kontih vrste « Pogled »"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_08
-msgid "Test 9 : Accounts and partners on account moves"
-msgstr "Test 9 : Konti in partnerji"
-
-#. module: account_test
-#: model:ir.actions.act_window,name:account_test.action_accounting_assert
-#: model:ir.actions.report.xml,name:account_test.account_assert_test_report
-#: model:ir.ui.menu,name:account_test.menu_action_license
-msgid "Accounting Tests"
-msgstr "Računovodski testi"
-
-#. module: account_test
-#: code:addons/account_test/report/account_test_report.py:74
-#, python-format
-msgid "The test was passed successfully"
-msgstr "Test uspešno opravljen"
-
-#. module: account_test
-#: field:accounting.assert.test,active:0
-msgid "Active"
-msgstr "Aktivno"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_06
-msgid "Test 6 : Invoices status"
-msgstr "Test 6 : Status računov"
-
-#. module: account_test
-#: model:ir.model,name:account_test.model_accounting_assert_test
-msgid "accounting.assert.test"
-msgstr "accounting.assert.test"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_05
-msgid ""
-"Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr "Test 5.1 : Postavke saldakontov in računi"
-
-#. module: account_test
-#: field:accounting.assert.test,code_exec:0
-msgid "Python code"
-msgstr "Python koda"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_07
-msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of "
-"statement lines"
-msgstr ""
-"Preveri da je na bančnih izpiskih Končni saldo=Začetni saldo+vsota postavk"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_07
-msgid "Test 8 : Closing balance on bank statements"
-msgstr "Test 1 : Zaključno stanje na bančnih izpiskih"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_03
-msgid "Test 3: Movement lines"
-msgstr "Test 3: Vknjižbe"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_05_2
-msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr "Test 5.2 : Računi in konti terjatev in obveznosti"
-
-#. module: account_test
-#: view:accounting.assert.test:0
-msgid "Expression"
-msgstr "Izraz"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_04
-msgid "Test 4: Totally reconciled mouvements"
-msgstr "Test 4: Popolnoma usklajene vknjižbe"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_04
-msgid "Check if the totally reconciled movements are balanced"
-msgstr "Preveri če so usklajene vknjižbe uravnovešene"
-
-#. module: account_test
-#: field:accounting.assert.test,sequence:0
-msgid "Sequence"
-msgstr "Zaporedje"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_02
-msgid ""
-"Check if the balance of the new opened fiscal year matches with last year's "
-"balance"
-msgstr "Preveri če je otvoritveno stanje enako končnemu za prejšnje leto"
-
-#. module: account_test
-#: view:accounting.assert.test:0
-msgid "Python Code"
-msgstr "Python koda"
+"X-Launchpad-Export-Date: 2014-08-15 06:52+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -252,9 +31,47 @@ msgstr ""
 "            "
 
 #. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_01
-msgid "Check the balance: Debit sum = Credit sum"
-msgstr "Preveri saldo : Kredit=Debit"
+#: model:ir.actions.act_window,name:account_test.action_accounting_assert
+#: model:ir.actions.report.xml,name:account_test.account_assert_test_report
+#: model:ir.ui.menu,name:account_test.menu_action_license
+msgid "Accounting Tests"
+msgstr "Računovodski testi"
+
+#. module: account_test
+#: view:website:account_test.report_accounttest
+msgid "Accouting tests on"
+msgstr "Testi na"
+
+#. module: account_test
+#: field:accounting.assert.test,active:0
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_03
+msgid ""
+"Check if movement lines are balanced and have the same date and period"
+msgstr "Preveri če so vknjižbe usklajene in imajo isto obdobje in datum."
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_02
+msgid ""
+"Check if the balance of the new opened fiscal year matches with last year's "
+"balance"
+msgstr "Preveri če je otvoritveno stanje enako končnemu za prejšnje leto"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_04
+msgid "Check if the totally reconciled movements are balanced"
+msgstr "Preveri če so usklajene vknjižbe uravnovešene"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_07
+msgid ""
+"Check on bank statement that the Closing Balance = Starting Balance + sum of "
+"statement lines"
+msgstr ""
+"Preveri da je na bančnih izpiskih Končni saldo=Začetni saldo+vsota postavk"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
@@ -263,11 +80,226 @@ msgstr ""
 "Preveri če so glavni konti in partnerji na  kontih nastavljen na \"Aktivno\""
 
 #. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_06
+msgid "Check that paid/reconciled invoices are not in 'Open' state"
+msgstr "Preveri da če plačani računi niso v statusu 'Odprto'"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05_2
+msgid ""
+"Check that reconciled account moves, that define Payable and Receivable "
+"accounts, are belonging to reconciled invoices"
+msgstr "Preveri vknjižbe v saldakontih in račune."
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05
+msgid ""
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
+"Payable and Receivable Accounts"
+msgstr "Preveri račune in vknjižbe v saldakontih"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_06_1
+msgid "Check that there's no move for any account with « View » account type"
+msgstr "Preveri da ni nobene vknjižbe na kontih vrste « Pogled »"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_01
+msgid "Check the balance: Debit sum = Credit sum"
+msgstr "Preveri saldo : Kredit=Debit"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Code Help"
+msgstr "Pomoč"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid ""
+"Code should always set a variable named `result` with the result of your "
+"test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was "
+"succesful. Otherwise it will\n"
+"try to translate and print what is inside `result`.\n"
+"\n"
+"If the result of your test is a dictionary, you can set a variable named "
+"`column_order` to choose in\n"
+"what order you want to print `result`'s content.\n"
+"\n"
+"Should you need them, you can also use the following variables into your "
+"code:\n"
+"    * cr: cursor to the database\n"
+"    * uid: ID of the current user\n"
+"\n"
+"In any ways, the code must be legal python statements with correct "
+"indentation (if needed).\n"
+"\n"
+"Example: \n"
+"    sql = '''SELECT id, name, ref, date\n"
+"             FROM account_move_line \n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
+"= 'view')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    result = cr.dictfetchall()"
+msgstr ""
+"Code should always set a variable named `result` with the result of your "
+"test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was "
+"succesful. Otherwise it will\n"
+"try to translate and print what is inside `result`.\n"
+"\n"
+"If the result of your test is a dictionary, you can set a variable named "
+"`column_order` to choose in\n"
+"what order you want to print `result`'s content.\n"
+"\n"
+"Should you need them, you can also use the following variables into your "
+"code:\n"
+"    * cr: cursor to the database\n"
+"    * uid: ID of the current user\n"
+"\n"
+"In any ways, the code must be legal python statements with correct "
+"indentation (if needed).\n"
+"\n"
+"Example: \n"
+"    sql = '''SELECT id, name, ref, date\n"
+"             FROM account_move_line \n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
+"= 'view')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    result = cr.dictfetchall()"
+
+#. module: account_test
+#: field:accounting.assert.test,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_test
+#: field:accounting.assert.test,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Description"
+msgstr "Opis"
+
+#. module: account_test
+#: view:website:account_test.report_accounttest
+msgid "Description:"
+msgstr ""
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Expression"
+msgstr "Izraz"
+
+#. module: account_test
+#: field:accounting.assert.test,id:0
+#: field:report.account_test.report_accounttest,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_test
+#: field:accounting.assert.test,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_test
+#: field:accounting.assert.test,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_test
+#: view:website:account_test.report_accounttest
+msgid "Name:"
+msgstr ""
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Python Code"
+msgstr "Python koda"
+
+#. module: account_test
+#: field:accounting.assert.test,code_exec:0
+msgid "Python code"
+msgstr "Python koda"
+
+#. module: account_test
+#: field:accounting.assert.test,sequence:0
+msgid "Sequence"
+msgstr "Zaporedje"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_01
+msgid "Test 1: General balance"
+msgstr "Test 1: Stanja"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_02
+msgid "Test 2: Opening a fiscal year"
+msgstr "Test 2: Otvoritev poslovnega leta"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_03
+msgid "Test 3: Movement lines"
+msgstr "Test 3: Vknjižbe"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_04
+msgid "Test 4: Totally reconciled mouvements"
+msgstr "Test 4: Popolnoma usklajene vknjižbe"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05
+msgid ""
+"Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
+msgstr "Test 5.1 : Postavke saldakontov in računi"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05_2
+msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
+msgstr "Test 5.2 : Računi in konti terjatev in obveznosti"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_06
+msgid "Test 6 : Invoices status"
+msgstr "Test 6 : Status računov"
+
+#. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06_1
 msgid "Test 7: « View  » account type"
 msgstr "Test 7: « Pogled  » vrsta konta"
 
 #. module: account_test
-#: view:accounting.assert.test:0
-msgid "Code Help"
-msgstr "Pomoč"
+#: model:accounting.assert.test,name:account_test.account_test_07
+msgid "Test 8 : Closing balance on bank statements"
+msgstr "Test 1 : Zaključno stanje na bančnih izpiskih"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_08
+msgid "Test 9 : Accounts and partners on account moves"
+msgstr "Test 9 : Konti in partnerji"
+
+#. module: account_test
+#: field:accounting.assert.test,desc:0
+msgid "Test Description"
+msgstr "Opis preizkusa"
+
+#. module: account_test
+#: field:accounting.assert.test,name:0
+msgid "Test Name"
+msgstr "Ime testa"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+#: view:accounting.assert.test:account_test.account_assert_tree
+msgid "Tests"
+msgstr "Preizkusi"
+
+#. module: account_test
+#: code:addons/account_test/report/account_test_report.py:78
+#, python-format
+msgid "The test was passed successfully"
+msgstr "Test uspešno opravljen"

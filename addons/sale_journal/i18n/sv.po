@@ -1,53 +1,51 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_journal
+# Swedish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.14\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2010-11-23 09:34+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Notering"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Aktiva"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr "Faktureringstyp"
-
-#. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
 msgstr ""
-"Denna faktureringstyp kommer att användas som standard för att fakturera det "
-"aktuella företaget."
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Kundorder och inköp"
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Fakturering"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr "Skapa fakturor baserat på valda alternativ."
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "Inkommande leveranser"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Grupperad"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
+msgstr ""
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -58,19 +56,15 @@ msgstr ""
 "Om aktuellt fält är falskt, kan du gömma fakturatyp utan att ta bort den."
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "Anteckningar"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Fakturametod"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Plocklista"
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Fakturatyp"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -78,16 +72,6 @@ msgstr "Plocklista"
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "Fakturatyper"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "Ogrupperad"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Grupperad"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -101,28 +85,44 @@ msgstr ""
 "kunders vardagliga behov: daglig, varje onsdag, månatlig etc."
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
-msgstr "Skapa fakturor baserat på valda alternativ."
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
+msgstr "Fakturering"
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Fakturatyp"
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "Faktureringstyp"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Aktiva"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Fakturametod"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "Ogrupperad"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Notering"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "Anteckningar"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -130,185 +130,24 @@ msgid "Partner"
 msgstr "Företag"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Plocklista"
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "Kundorder och inköp"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr "Kundorder"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "Leveransorder"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
-
-#~ msgid "Reporting"
-#~ msgstr "Rapportering"
-
-#~ msgid "Sale Stats"
-#~ msgstr "Försäljningsstatistik"
-
-#~ msgid "Sale Journal"
-#~ msgstr "Faktureringsjournal"
-
-#~ msgid "to be invoiced"
-#~ msgstr "skall faktureras"
-
-#~ msgid "Monthly sales"
-#~ msgstr "Försäljning per månad"
-
-#~ msgid "Set to Draft"
-#~ msgstr "Sätt till preliminär"
-
-#~ msgid "waiting"
-#~ msgstr "väntar"
-
-#~ msgid "Journal date"
-#~ msgstr "Journaldatum"
-
-#~ msgid "My open journals"
-#~ msgstr "Mina öppna journaler"
-
-#~ msgid "# of Lines"
-#~ msgstr "antal rader"
-
-#~ msgid "done"
-#~ msgstr "klar"
-
-#~ msgid "Average Price"
-#~ msgstr "Snittpris"
-
-#~ msgid "State"
-#~ msgstr "Delstat"
-
-#~ msgid "Total Price"
-#~ msgstr "Totalt belopp"
-
-#~ msgid "All Months"
-#~ msgstr "Alla månader"
-
-#~ msgid "Sales Orders by Journal"
-#~ msgstr "Kundorder per journal"
-
-#~ msgid "Open journals"
-#~ msgstr "Öppna journaler"
-
-#~ msgid "None"
-#~ msgstr "Ingen"
-
-#~ msgid "In progress"
-#~ msgstr "Pågående"
-
-#~ msgid "Sales by journal (this month)"
-#~ msgstr "Försäljning per journal (denna månad)"
-
-#~ msgid "Draft"
-#~ msgstr "Preliminär"
-
-#~ msgid "Validation date"
-#~ msgstr "Valideringsdatum"
-
-#~ msgid "Month"
-#~ msgstr "Månad"
-
-#~ msgid "Invoice state"
-#~ msgstr "Fakturastatus"
-
-#~ msgid "cancel"
-#~ msgstr "avbryt"
-
-#~ msgid "Order State"
-#~ msgstr "Kundorderstatus"
-
-#~ msgid "Code"
-#~ msgstr "Kod"
-
-#~ msgid "draft"
-#~ msgstr "preliminär"
-
-#~ msgid "Draft sales"
-#~ msgstr "Preliminär kundorder"
-
-#~ msgid "Quotation"
-#~ msgstr "Offert"
-
-#~ msgid "Sales Journals"
-#~ msgstr "Kundorderjournaler"
-
-#~ msgid "Creation date"
-#~ msgstr "Skapad datum"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "Fakturametod"
-
-#~ msgid "Responsible"
-#~ msgstr "Ansvarig"
-
-#~ msgid "Open"
-#~ msgstr "Öppna"
-
-#~ msgid "Sales"
-#~ msgstr "Kundorder"
-
-#~ msgid "Open Journal"
-#~ msgstr "Öppna journal"
-
-#~ msgid "Done"
-#~ msgstr "Klar"
-
-#~ msgid "Journal Stats"
-#~ msgstr "Journalstatus"
-
-#~ msgid "Cancel"
-#~ msgstr "Avbryt"
-
-#~ msgid "Journal"
-#~ msgstr "Journal"
-
-#~ msgid "invoiced"
-#~ msgstr "fakturerad"
-
-#~ msgid "My Open Journals"
-#~ msgstr "Mina öppna journaler"
-
-#~ msgid "confirmed"
-#~ msgstr "godkänd"
-
-#~ msgid "Quantities"
-#~ msgstr "Antal"
-
-#~ msgid "States"
-#~ msgstr "Stater"
-
-#~ msgid "Invoicing Methods"
-#~ msgstr "Fakturametoder"
-
-#~ msgid "Sales by Journal"
-#~ msgstr "Kundorder per journal"
-
-#~ msgid "This Month"
-#~ msgstr "Denna månad"
-
-#~ msgid "Journal Information"
-#~ msgstr "Journalinformation"
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "Managing sales and deliveries by journal"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Orderreferensen måste vara unik per bolag!"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Fel ! Du kan inte ansluta medlemmar rekursivt"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Referensen måste vara unik per bolag!"
-
-#~ msgid ""
-#~ "This invoicing type will be used, by default, for invoicing the current "
-#~ "partner."
-#~ msgstr ""
-#~ "Denna fakturatyp kommer användas som standard för fakturering av aktuellt "
-#~ "företag."
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
+msgstr ""
+"Denna faktureringstyp kommer att användas som standard för att fakturera det "
+"aktuella företaget."

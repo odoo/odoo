@@ -1,60 +1,61 @@
 # Greek translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-12-20 14:30+0000\n"
-"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:25+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: marketing
-#: model:ir.model,name:marketing.model_marketing_config_settings
-msgid "marketing.config.settings"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Apply"
 msgstr ""
 
 #. module: marketing
-#: help:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid ""
-"Installs demo data like leads, campaigns and segments for Marketing "
-"Campaigns.\n"
-"                This installs the module marketing_campaign_crm_demo."
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Cancel"
 msgstr ""
 
 #. module: marketing
 #: model:ir.actions.act_window,name:marketing.action_marketing_configuration
-#: view:marketing.config.settings:0
+#: view:marketing.config.settings:marketing.view_marketing_configuration
 msgid "Configure Marketing"
 msgstr ""
 
 #. module: marketing
-#: view:crm.lead:0
-#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
-msgid "Marketing"
-msgstr "Μάρκετινγκ"
-
-#. module: marketing
-#: field:marketing.config.settings,module_marketing_campaign:0
-msgid "Marketing campaigns"
+#: field:marketing.config.settings,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "or"
+#: field:marketing.config.settings,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Campaigns"
+#: field:marketing.config.settings,id:0
+msgid "ID"
+msgstr ""
+
+#. module: marketing
+#: field:marketing.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: marketing
+#: field:marketing.config.settings,write_date:0
+msgid "Last Updated on"
 msgstr ""
 
 #. module: marketing
@@ -63,98 +64,47 @@ msgid "Manager"
 msgstr ""
 
 #. module: marketing
-#: model:res.groups,name:marketing.group_marketing_user
-msgid "User"
+#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
+msgid "Marketing"
+msgstr "Μάρκετινγκ"
+
+#. module: marketing
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Marketing Campaigns"
+msgstr "Εκστρατεία Μάρκετινγκ"
+
+#. module: marketing
+#: field:marketing.config.settings,module_marketing_campaign:0
+msgid "Marketing campaigns"
 msgstr ""
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Campaigns Settings"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+#: field:marketing.config.settings,module_mass_mailing:0
+msgid "Mass Mailing"
 msgstr ""
 
 #. module: marketing
-#: field:marketing.config.settings,module_crm_profiling:0
-msgid "Track customer profile to focus your campaigns"
-msgstr ""
-
-#. module: marketing
-#: view:marketing.config.settings:0
-msgid "Cancel"
-msgstr ""
-
-#. module: marketing
-#: view:marketing.config.settings:0
-msgid "Apply"
+#: help:marketing.config.settings,module_mass_mailing:0
+msgid ""
+"Provide a way to perform mass mailings.\n"
+"-This installs the module mass_mailing."
 msgstr ""
 
 #. module: marketing
 #: help:marketing.config.settings,module_marketing_campaign:0
 msgid ""
-"Provides leads automation through marketing campaigns.\n"
-"                Campaigns can in fact be defined on any resource, not just "
-"CRM leads.\n"
-"                This installs the module marketing_campaign."
+"Provides leads automation through marketing campaigns. Campaigns can in fact "
+"be defined on any resource, not just CRM leads.\n"
+"-This installs the module marketing_campaign."
 msgstr ""
 
 #. module: marketing
-#: help:marketing.config.settings,module_crm_profiling:0
-msgid ""
-"Allows users to perform segmentation within partners.\n"
-"                This installs the module crm_profiling."
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Settings"
 msgstr ""
 
 #. module: marketing
-#: field:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid "Demo data for marketing campaigns"
+#: model:res.groups,name:marketing.group_marketing_user
+msgid "User"
 msgstr ""
-
-#~ msgid "Configure Your Marketing Application"
-#~ msgstr "Παραμετροποιήστε την Εφαρμογή Μάρκετινγκ"
-
-#~ msgid "Image"
-#~ msgstr "Εικόνα"
-
-#~ msgid "title"
-#~ msgstr "τίτλος"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Πρόοδος Παραμετροποίησης"
-
-#~ msgid "Marketing Applications Configuration"
-#~ msgstr "Παραμετροποίηση Εφαρμογών Μάρκετινγκ"
-
-#~ msgid "Configure"
-#~ msgstr "Παραμετροποίηση"
-
-#~ msgid "Marketing Application Configuration"
-#~ msgstr "Παραμετροποίηση Εφαρμογής Μάρκετινγκ"
-
-#~ msgid "Marketing Campaigns"
-#~ msgstr "Εκστρατεία Μάρκετινγκ"
-
-#~ msgid "Profiling Tools"
-#~ msgstr "Εργαλεία δημιουργίας Προφίλ"
-
-#~ msgid ""
-#~ "OpenERP provides Addons to better manage your sales and marketing processes. "
-#~ "Select the ones you would be interested in."
-#~ msgstr ""
-#~ "Το OpenERP σας παρέχει Πρόσθετα για να διαχειριστήτε καλύτερα τις "
-#~ "διαδικασίες πώλησης και μάρκετινγκ. Επιλέξτε αυτά που σας ενδιαφέρουν."
-
-#~ msgid ""
-#~ "Helps you to manage marketing campaigns and automate actions and "
-#~ "communication steps."
-#~ msgstr ""
-#~ "Σας βοηθά να διαχειριστείτε τις εκστρατείες μάρκετινγκ και να "
-#~ "αυτοματοποιήσετε δράσεις και βήματα επικοινωνίας."
-
-#~ msgid "Menu for Marketing"
-#~ msgstr "Μενού για Μάρκετινγκ"
-
-#~ msgid ""
-#~ "Helps you to design templates of emails and integrate them in your different "
-#~ "processes."
-#~ msgstr ""
-#~ "Σας βοηθά να σχεδιάσετε πρότυπα emails και να τα ενσωματώσετε σε διάφορες "
-#~ "διαδικασίες σας."

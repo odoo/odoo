@@ -1,21 +1,57 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* mrp_subproduct
+# Spanish (Costa Rica) translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-02-17 20:45+0000\n"
-"Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish (Costa Rica) <es_CR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:19+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"Language: \n"
+"X-Launchpad-Export-Date: 2014-08-15 07:29+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Lista de material"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,bom_id:0
+msgid "BoM"
+msgstr "Lista de materiales (LdM)"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
+msgid "Byproduct"
+msgstr ""
+
+#. module: mrp_byproduct
+#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view
+#: field:mrp.bom,sub_products:0
+msgid "Byproducts"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_change_production_qty
+msgid "Change Quantity of Products"
+msgstr ""
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: mrp_byproduct
 #: help:mrp.subproduct,subproduct_type:0
@@ -30,13 +66,23 @@ msgid ""
 msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_id:0
-msgid "Product"
-msgstr "Producto"
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Fixed"
+msgstr "Fijo"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_uom:0
-msgid "Product Unit of Measure"
+#: field:mrp.subproduct,id:0
+msgid "ID"
+msgstr ""
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,write_date:0
+msgid "Last Updated on"
 msgstr ""
 
 #. module: mrp_byproduct
@@ -45,25 +91,9 @@ msgid "Manufacturing Order"
 msgstr "Orden fabricación"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_change_production_qty
-msgid "Change Quantity of Products"
-msgstr ""
-
-#. module: mrp_byproduct
-#: view:mrp.bom:0
-#: field:mrp.bom,sub_products:0
-msgid "Byproducts"
-msgstr ""
-
-#. module: mrp_byproduct
-#: field:mrp.subproduct,subproduct_type:0
-msgid "Quantity Type"
-msgstr "Tipo de cantidad"
-
-#. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_bom
-msgid "Bill of Material"
-msgstr "Lista de material"
+#: field:mrp.subproduct,product_id:0
+msgid "Product"
+msgstr "Producto"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_qty:0
@@ -71,25 +101,14 @@ msgid "Product Qty"
 msgstr "Cantidad producto"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
-#, python-format
-msgid "Warning"
+#: field:mrp.subproduct,product_uom:0
+msgid "Product Unit of Measure"
 msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,bom_id:0
-msgid "BoM"
-msgstr "Lista de materiales (LdM)"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "Variable"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Fijo"
+#: field:mrp.subproduct,subproduct_type:0
+msgid "Quantity Type"
+msgstr "Tipo de cantidad"
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:63
@@ -100,6 +119,12 @@ msgid ""
 msgstr ""
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
-msgid "Byproduct"
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Variable"
+msgstr "Variable"
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#, python-format
+msgid "Warning"
 msgstr ""

@@ -1,68 +1,32 @@
 # Croatian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-12-08 15:33+0000\n"
-"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:44+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:52+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
+#: model:ir.model,name:account_sequence.model_account_move
+msgid "Account Entry"
+msgstr "Temeljnica"
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "Postave brojčanih serija"
-
-#. module: account_sequence
-#: help:account.move,internal_sequence_number:0
-#: help:account.move.line,internal_sequence_number:0
-msgid "Internal Sequence Number"
-msgstr "Interni broj"
-
-#. module: account_sequence
-#: help:account.sequence.installer,number_next:0
-msgid "Next number of this sequence"
-msgstr "Slijedeći broj ove brojčane serije"
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_next:0
-msgid "Next Number"
-msgstr "Sljedeći broj"
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_increment:0
-msgid "Increment Number"
-msgstr "Povećati za broj"
-
-#. module: account_sequence
-#: help:account.sequence.installer,number_increment:0
-msgid "The next number of the sequence will be incremented by this number"
-msgstr "Korak uvećanja brojača. 1 će uvećavati brojač za jedan, 10 za 10."
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure Your Account Sequence Application"
-msgstr "Postavite vaše brojčane serije"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure"
-msgstr "Postavke"
-
-#. module: account_sequence
-#: help:account.sequence.installer,suffix:0
-msgid "Suffix value of the record for the sequence"
-msgstr "Sufiks (poslije brojača) za ovu brojčanu seriju"
 
 #. module: account_sequence
 #: field:account.sequence.installer,company_id:0
@@ -70,14 +34,34 @@ msgid "Company"
 msgstr "Organizacija"
 
 #. module: account_sequence
-#: field:account.sequence.installer,padding:0
-msgid "Number padding"
-msgstr "Dopunjavanje na duljinu"
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure"
+msgstr "Postavke"
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_move_line
-msgid "Journal Items"
-msgstr "Stavke glavne knjige"
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure Your Account Sequence Application"
+msgstr "Postavite vaše brojčane serije"
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_increment:0
+msgid "Increment Number"
+msgstr "Povećati za broj"
 
 #. module: account_sequence
 #: field:account.move,internal_sequence_number:0
@@ -86,11 +70,35 @@ msgid "Internal Number"
 msgstr "Interni broj"
 
 #. module: account_sequence
-#: help:account.sequence.installer,padding:0
-msgid ""
-"OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
-"get the required padding size."
-msgstr "Potreban broj vodećih \"0\" će se automatski dodati."
+#: field:account.journal,internal_sequence_id:0
+msgid "Internal Sequence"
+msgstr "Interna brojčana serija"
+
+#. module: account_sequence
+#: help:account.move,internal_sequence_number:0
+#: help:account.move.line,internal_sequence_number:0
+msgid "Internal Sequence Number"
+msgstr "Interni broj"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_journal
+msgid "Journal"
+msgstr "Dnevnik"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move_line
+msgid "Journal Items"
+msgstr "Stavke glavne knjige"
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: account_sequence
 #: field:account.sequence.installer,name:0
@@ -98,9 +106,31 @@ msgid "Name"
 msgstr "Naziv"
 
 #. module: account_sequence
-#: field:account.journal,internal_sequence_id:0
-msgid "Internal Sequence"
-msgstr "Interna brojčana serija"
+#: field:account.sequence.installer,number_next:0
+msgid "Next Number"
+msgstr "Sljedeći broj"
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_next:0
+msgid "Next number of this sequence"
+msgstr "Slijedeći broj ove brojčane serije"
+
+#. module: account_sequence
+#: field:account.sequence.installer,padding:0
+msgid "Number padding"
+msgstr "Dopunjavanje na duljinu"
+
+#. module: account_sequence
+#: help:account.sequence.installer,padding:0
+msgid ""
+"Odoo will automatically adds some '0' on the left of the 'Next Number' to "
+"get the required padding size."
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,prefix:0
+msgid "Prefix"
+msgstr "Prefiks"
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -108,24 +138,19 @@ msgid "Prefix value of the record for the sequence"
 msgstr "Prefiks za brojčanu seriju"
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_move
-msgid "Account Entry"
-msgstr "Temeljnica"
-
-#. module: account_sequence
 #: field:account.sequence.installer,suffix:0
 msgid "Suffix"
 msgstr "Sufiks"
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "title"
-msgstr "naslov"
+#: help:account.sequence.installer,suffix:0
+msgid "Suffix value of the record for the sequence"
+msgstr "Sufiks (poslije brojača) za ovu brojčanu seriju"
 
 #. module: account_sequence
-#: field:account.sequence.installer,prefix:0
-msgid "Prefix"
-msgstr "Prefiks"
+#: help:account.sequence.installer,number_increment:0
+msgid "The next number of the sequence will be incremented by this number"
+msgstr "Korak uvećanja brojača. 1 će uvećavati brojač za jedan, 10 za 10."
 
 #. module: account_sequence
 #: help:account.journal,internal_sequence_id:0
@@ -135,42 +160,11 @@ msgid ""
 msgstr ""
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_sequence_installer
-msgid "account.sequence.installer"
-msgstr ""
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_journal
-msgid "Journal"
-msgstr "Dnevnik"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 msgid "You can enhance the Account Sequence Application by installing ."
 msgstr ""
 
-#~ msgid "Configuration Progress"
-#~ msgstr "Napredak konfiguracije"
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "Ne možete kreirati stavke prometa za zatvoreni račun."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Pogrešna dugovna ili potražna vrijednost upisane stavke!"
-
-#~ msgid "Image"
-#~ msgstr "Slika"
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Ne može se knjižiti na sintetički konto."
-
-#~ msgid "The name of the journal must be unique per company !"
-#~ msgstr "Naziv dnevnika mora biti jedinstven za jednu organizaciju!"
-
-#~ msgid "The code of the journal must be unique per company !"
-#~ msgstr "Šifra dnevnika mora biti jedinstvena (za organizaciju) !"
-
-#~ msgid ""
-#~ "You cannot create entries on different periods/journals in the same move"
-#~ msgstr ""
-#~ "Sva knjiženja na jednoj temeljnici moraju imati isti period i dnevnik."
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "title"
+msgstr "naslov"
