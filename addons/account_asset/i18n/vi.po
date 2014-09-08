@@ -1,643 +1,30 @@
-# Vietnamese translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* account_asset
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2011-07-20 07:54+0000\n"
-"Last-Translator: OpenBMS JSC <Unknown>\n"
-"Language-Team: Vietnamese <vi@li.org>\n"
+"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-08 02:27+0000\n"
+"PO-Revision-Date: 2014-09-08 09:52+0700\n"
+"Last-Translator: Leo Tran <leo.tran@tvtmarine.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:46+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Generator: Poedit 1.5.4\n"
+"Language: Vietnam\n"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Assets in draft and open states"
-msgstr ""
+#: field:account.asset.asset,entry_count:0
+msgid "# Asset Entries"
+msgstr "# Bút toán tài sản"
 
 #. module: account_asset
-#: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0
-#: field:asset.modify,method_end:0
-msgid "Ending date"
-msgstr "Ngày kết thúc"
-
-#. module: account_asset
-#: field:account.asset.asset,value_residual:0
-msgid "Residual Value"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.category,account_expense_depreciation_id:0
-msgid "Depr. Expense Account"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Group By..."
-msgstr ""
-
-#. module: account_asset
-#: field:asset.asset.report,gross_value:0
-msgid "Gross Amount"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0
-#: field:account.move.line,asset_id:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,asset_id:0
-#: model:ir.model,name:account_asset.model_account_asset_asset
-msgid "Asset"
-msgstr "Tài sản"
-
-#. module: account_asset
-#: help:account.asset.asset,prorata:0
-#: help:account.asset.category,prorata:0
-msgid ""
-"Indicates that the first depreciation entry for this asset have to be done "
-"from the purchase date instead of the first January"
-msgstr ""
-
-#. module: account_asset
-#: selection:account.asset.asset,method:0
-#: selection:account.asset.category,method:0
-msgid "Linear"
-msgstr "Tuyến tính"
-
-#. module: account_asset
-#: field:account.asset.asset,company_id:0
-#: field:account.asset.category,company_id:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,company_id:0
-msgid "Company"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.modify:0
-msgid "Modify"
-msgstr ""
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
-#: selection:asset.asset.report,state:0
-msgid "Running"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Draft"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.asset.report:0
-#: model:ir.actions.act_window,name:account_asset.action_asset_asset_report
-#: model:ir.model,name:account_asset.model_asset_asset_report
-#: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
-msgid "Assets Analysis"
-msgstr ""
-
-#. module: account_asset
-#: field:asset.modify,name:0
-msgid "Reason"
-msgstr "Lý do"
-
-#. module: account_asset
-#: field:account.asset.asset,method_progress_factor:0
-#: field:account.asset.category,method_progress_factor:0
-msgid "Degressive Factor"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
-msgid "Asset Categories"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,account_move_line_ids:0
-#: field:account.move.line,entry_ids:0
-#: model:ir.actions.act_window,name:account_asset.act_entries_open
-msgid "Entries"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,depreciation_line_ids:0
-msgid "Depreciation Lines"
-msgstr ""
-
-#. module: account_asset
-#: help:account.asset.asset,salvage_value:0
-msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr ""
-
-#. module: account_asset
-#: help:account.asset.asset,method_period:0
-msgid "The amount of time between two depreciations, in months"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,depreciation_date:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_date:0
-msgid "Depreciation Date"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.asset.asset:0
-msgid "Error ! You cannot create recursive assets."
-msgstr ""
-
-#. module: account_asset
-#: field:asset.asset.report,posted_value:0
-msgid "Posted Amount"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.asset.report:0
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
-#: model:ir.ui.menu,name:account_asset.menu_finance_assets
-#: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
-msgid "Assets"
-msgstr "Tài sản"
-
-#. module: account_asset
-#: field:account.asset.category,account_depreciation_id:0
-msgid "Depreciation Account"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:account.asset.category:0
-#: view:account.asset.history:0
-#: view:asset.modify:0
-#: field:asset.modify,note:0
-msgid "Notes"
-msgstr "Các ghi chú"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,move_id:0
-msgid "Depreciation Entry"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,method_period:0
-msgid "Number of Months in a Period"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Assets in draft state"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,method_end:0
-#: selection:account.asset.asset,method_time:0
-#: selection:account.asset.category,method_time:0
-#: selection:account.asset.history,method_time:0
-msgid "Ending Date"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,code:0
-msgid "Reference"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Account Asset"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
-#: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
-msgid "Compute Assets"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.category,method_period:0
-#: field:account.asset.history,method_period:0
-#: field:asset.modify,method_period:0
-msgid "Period Length"
-msgstr ""
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
-#: selection:asset.asset.report,state:0
-msgid "Draft"
-msgstr "Dự thảo"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Date of asset purchase"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Change Duration"
-msgstr ""
-
-#. module: account_asset
-#: help:account.asset.asset,method_number:0
-#: help:account.asset.category,method_number:0
-#: help:account.asset.history,method_number:0
-msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Analytic Information"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.category,account_analytic_id:0
-msgid "Analytic account"
-msgstr "Tài khoản phân tích"
-
-#. module: account_asset
-#: field:account.asset.asset,method:0
-#: field:account.asset.category,method:0
-msgid "Computation Method"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.asset.asset:0
-msgid ""
-"Prorata temporis can be applied only for time method \"number of "
-"depreciations\"."
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,remaining_value:0
-msgid "Next Period Depreciation"
-msgstr ""
-
-#. module: account_asset
-#: help:account.asset.history,method_period:0
-msgid "Time in month between two depreciations"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.modify:0
-#: model:ir.actions.act_window,name:account_asset.action_asset_modify
-#: model:ir.model,name:account_asset.model_asset_modify
-msgid "Modify Asset"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,salvage_value:0
-msgid "Salvage Value"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,category_id:0
-#: view:account.asset.category:0
-#: field:account.invoice.line,asset_category_id:0
-#: view:asset.asset.report:0
-msgid "Asset Category"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Assets in closed state"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,parent_id:0
-msgid "Parent Asset"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.history:0
-#: model:ir.model,name:account_asset.model_account_asset_history
-msgid "Asset history"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Search Asset Category"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.modify:0
-msgid "months"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_invoice_line
-msgid "Invoice Line"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Depreciation Board"
-msgstr ""
-
-#. module: account_asset
-#: field:asset.asset.report,unposted_value:0
-msgid "Unposted Amount"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,method_time:0
-#: field:account.asset.category,method_time:0
-#: field:account.asset.history,method_time:0
-msgid "Time Method"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
-msgid "or"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,note:0
-#: field:account.asset.category,note:0
-#: field:account.asset.history,note:0
-msgid "Note"
-msgstr "Chú thích"
-
-#. module: account_asset
-#: help:account.asset.history,method_time:0
-msgid ""
-"The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-
-#. module: account_asset
-#: help:account.asset.asset,method_time:0
-#: help:account.asset.category,method_time:0
-msgid ""
-"Choose the method to use to compute the dates and number of depreciation "
-"lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the "
-"time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Assets in running state"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Closed"
-msgstr ""
-
-#. module: account_asset
-#: help:account.asset.asset,state:0
-msgid ""
-"When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,state:0
-#: field:asset.asset.report,state:0
-msgid "Status"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,partner_id:0
-#: field:asset.asset.report,partner_id:0
-msgid "Partner"
-msgstr "Đối tác"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Posted depreciation lines"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,child_ids:0
-msgid "Children Assets"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Date of depreciation"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.history,user_id:0
-msgid "User"
-msgstr "Người sử dụng"
-
-#. module: account_asset
-#: field:account.asset.category,account_asset_id:0
-msgid "Asset Account"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Extended Filters..."
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.history:0
-msgid "Asset History"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
-msgid "asset.depreciation.confirmation.wizard"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,active:0
-msgid "Active"
-msgstr "Hoạt động"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,parent_state:0
-msgid "State of Asset"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,name:0
-msgid "Depreciation Name"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,history_ids:0
-msgid "History"
-msgstr "Lịch sử"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr ""
-
-#. module: account_asset
-#: field:asset.depreciation.confirmation.wizard,period_id:0
-msgid "Period"
-msgstr "Chu kỳ"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "General"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,prorata:0
-#: field:account.asset.category,prorata:0
-msgid "Prorata Temporis"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_invoice
-msgid "Invoice"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Close"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
-msgid "Cancel"
-msgstr "Hủy bỏ"
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: selection:asset.asset.report,state:0
-msgid "Close"
-msgstr "Ðóng"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_move_line
-msgid "Journal Items"
-msgstr ""
-
-#. module: account_asset
-#: view:asset.modify:0
-msgid "Asset Durations to Modify"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,purchase_date:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,purchase_date:0
-msgid "Purchase Date"
-msgstr ""
-
-#. module: account_asset
-#: selection:account.asset.asset,method:0
-#: selection:account.asset.category,method:0
-msgid "Degressive"
-msgstr ""
-
-#. module: account_asset
-#: help:asset.depreciation.confirmation.wizard,period_id:0
-msgid ""
-"Choose the period for which you want to automatically post the depreciation "
-"lines of running assets"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Current"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Method"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,amount:0
-msgid "Current Depreciation"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,name:0
-msgid "Asset Name"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.category,open_asset:0
-msgid "Skip Draft State"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Dates"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,currency_id:0
-msgid "Currency"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.category,journal_id:0
-msgid "Journal"
-msgstr "Sổ nhật ký"
-
-#. module: account_asset
-#: field:account.asset.history,name:0
-msgid "History name"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,depreciated_value:0
-msgid "Amount Already Depreciated"
-msgstr ""
-
-#. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
-msgid ""
-"Choose the method to use to compute the amount of depreciation lines.\n"
-"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,move_check:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,move_check:0
-msgid "Posted"
-msgstr ""
+msgstr "# Chi tiết khấu hau"
 
 #. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
@@ -651,16 +38,159 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"            Từ báo cáo này, Bạn cso thể có một cái nhìn tổng quát trên tất "
+"cả các khấu hao.\n"
+"            Một công cụ tìm kiếm cũng có thể được sử dụng để cá nhân hóa các "
+"báo cáo Tài sản của bạn,\n"
+"            phù hợp với nhu cầu quản trị của bạn\n"
+"          </p>\n"
+"        "
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_value:0
-msgid "Gross Value"
-msgstr ""
+#: view:account.asset.asset:0
+msgid "Account Asset"
+msgstr "Tài sản"
 
 #. module: account_asset
-#: field:account.asset.category,name:0
-msgid "Name"
-msgstr ""
+#: field:account.asset.asset,active:0
+msgid "Active"
+msgstr "Hoạt động"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Add an internal note here..."
+msgstr "Thêm một ghi chú nội bộ tại đây..."
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,depreciated_value:0
+msgid "Amount Already Depreciated"
+msgstr "Tổng giá trị đã khấu hao"
+
+#. module: account_asset
+#: field:asset.asset.report,depreciation_value:0
+msgid "Amount of Depreciation Lines"
+msgstr "Tổng giá tị của chi tiết khấu hao"
+
+#. module: account_asset
+#: view:account.asset.category:0
+msgid "Analytic Information"
+msgstr "Thông tin quản trị"
+
+#. module: account_asset
+#: field:account.asset.category,account_analytic_id:0
+msgid "Analytic account"
+msgstr "Tài khoản quản trị"
+
+#. module: account_asset
+#: view:account.asset.asset:0 field:account.asset.depreciation.line,asset_id:0
+#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
+#: view:asset.asset.report:0 field:asset.asset.report,asset_id:0
+#: model:ir.model,name:account_asset.model_account_asset_asset
+msgid "Asset"
+msgstr "Tài sản"
+
+#. module: account_asset
+#: field:account.asset.category,account_asset_id:0
+msgid "Asset Account"
+msgstr "Tài khoản Nguyên giá"
+
+#. module: account_asset
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
+msgid "Asset Categories"
+msgstr "Nhóm tài sản"
+
+#. module: account_asset
+#: field:account.asset.asset,category_id:0 view:account.asset.category:0
+#: field:account.invoice.line,asset_category_id:0 view:asset.asset.report:0
+msgid "Asset Category"
+msgstr "Nhóm tài sản"
+
+#. module: account_asset
+#: view:asset.modify:0
+msgid "Asset Durations to Modify"
+msgstr "Khoảng thời gian tài sản để chỉnh sửa"
+
+#. module: account_asset
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
+msgid "Asset Hierarchy"
+msgstr "Phân cấp Tài sản"
+
+#. module: account_asset
+#: view:account.asset.history:0
+msgid "Asset History"
+msgstr "Lịch sử Tài sản"
+
+#. module: account_asset
+#: field:account.asset.asset,name:0
+msgid "Asset Name"
+msgstr "Tên tài sản"
+
+#. module: account_asset
+#: view:account.asset.category:0 field:asset.asset.report,asset_category_id:0
+#: model:ir.model,name:account_asset.model_account_asset_category
+msgid "Asset category"
+msgstr "Nhóm tài sản"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_asset_depreciation_line
+msgid "Asset depreciation line"
+msgstr "Chi tiết khấu hao tài sản"
+
+#. module: account_asset
+#: view:account.asset.history:0
+#: model:ir.model,name:account_asset.model_account_asset_history
+msgid "Asset history"
+msgstr "Lịch sử Tài sản"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
+#: model:ir.ui.menu,name:account_asset.menu_finance_assets
+#: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
+msgid "Assets"
+msgstr "Tài sản"
+
+#. module: account_asset
+#: view:asset.asset.report:0
+#: model:ir.actions.act_window,name:account_asset.action_asset_asset_report
+#: model:ir.model,name:account_asset.model_asset_asset_report
+#: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
+msgid "Assets Analysis"
+msgstr "Phân tích Tài sản"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Assets in closed state"
+msgstr "Tài sản trong tình trạng đóng"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Assets in draft and open states"
+msgstr "Tài sản trọng tình trạng dự thảo và mở"
+
+#. module: account_asset
+#: view:asset.asset.report:0
+msgid "Assets in draft state"
+msgstr "Tài sản trong tình trạng dự thảo"
+
+#. module: account_asset
+#: view:asset.asset.report:0
+msgid "Assets in running state"
+msgstr "Tài sản trong tình trạng đang chạy"
+
+#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
+msgid "Cancel"
+msgstr "Hủy bỏ"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Change Duration"
+msgstr "Thay đổi khoản thời gian"
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -668,50 +198,348 @@ msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
 msgstr ""
+"Đánh dấu nếu bạn muốn tự động xác nhận các tài sản của nhóm này khi được tạo "
+"bởi hóa đơn."
 
 #. module: account_asset
-#: field:asset.asset.report,name:0
-msgid "Year"
+#: field:account.asset.asset,child_ids:0
+msgid "Children Assets"
+msgstr "Tài sản con"
+
+#. module: account_asset
+#: help:account.asset.asset,method:0 help:account.asset.category,method:0
+msgid ""
+"Choose the method to use to compute the amount of depreciation lines.\n"
+"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
+"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
 msgstr ""
+"Lựa chọn phương thức để tính giá trị khấu hao.\n"
+"  * Đường thẳng: Được tính toán dựa trên: Nguyên giá / Số lần tính khấu hao\n"
+"  * Lũy kế: Được tính toán dựa trên: Giá trị còn lại * Hệ số lũy kế"
 
 #. module: account_asset
-#: model:ir.model,name:account_asset.model_account_asset_depreciation_line
-msgid "Asset depreciation line"
+#: help:account.asset.asset,method_time:0
+#: help:account.asset.category,method_time:0
+msgid ""
+"Choose the method to use to compute the dates and number of depreciation "
+"lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the "
+"time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
 msgstr ""
+"Lựa chọn phương pháp tính ngày và số lần khấu hao.\n"
+"  * Số lần khấu hao: Cố định số lần khấu hao và thời gian giữa 2 lần khấu "
+"hao.\n"
+"  * Ngày kết thúc: Lựa chọn thời gian giữa 2 lần khấu hao và ngày khấu hao "
+"không vượt quá Ngày kết thúc."
 
 #. module: account_asset
-#: view:account.asset.category:0
-#: field:asset.asset.report,asset_category_id:0
-#: model:ir.model,name:account_asset.model_account_asset_category
-msgid "Asset category"
+#: help:asset.depreciation.confirmation.wizard,period_id:0
+msgid ""
+"Choose the period for which you want to automatically post the depreciation "
+"lines of running assets"
 msgstr ""
+"Lựa chọn kỳ kế toán mà bạn muốn tự động vào sổ bút toán khấu hao của các tài "
+"sản đang tính khấu hao"
 
 #. module: account_asset
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_value:0
-msgid "Amount of Depreciation Lines"
-msgstr ""
+#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
+msgid "Close"
+msgstr "Ðóng"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:50
+#: view:account.asset.asset:0
+msgid "Closed"
+msgstr "Đã đóng"
+
+#. module: account_asset
+#: field:account.asset.asset,company_id:0
+#: field:account.asset.category,company_id:0 view:asset.asset.report:0
+#: field:asset.asset.report,company_id:0
+msgid "Company"
+msgstr "Công ty"
+
+#. module: account_asset
+#: field:account.asset.asset,method:0 field:account.asset.category,method:0
+msgid "Computation Method"
+msgstr "Phương pháp tính toán"
+
+#. module: account_asset
+#: view:account.asset.asset:0 view:asset.depreciation.confirmation.wizard:0
+msgid "Compute"
+msgstr "Tính toán"
+
+#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr "Tính toán tài sản"
+
+#. module: account_asset
+#: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
+#: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
+msgid "Compute Assets"
+msgstr "Tính toán tài sản"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Confirm Asset"
+msgstr "Xác nhận Tài sản"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Create Move"
+msgstr "Tạo phát sinh"
+
+#. module: account_asset
+#: code:addons/account_asset/wizard/wizard_asset_compute.py:49
 #, python-format
 msgid "Created Asset Moves"
-msgstr ""
+msgstr "Tạo phát sinh tài khoản"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,sequence:0
-msgid "Sequence"
-msgstr "Trình tự"
+#: field:account.asset.asset,currency_id:0
+msgid "Currency"
+msgstr "Tiền tệ"
 
 #. module: account_asset
-#: help:account.asset.category,method_period:0
-msgid "State here the time between 2 depreciations, in months"
-msgstr ""
+#: view:account.asset.asset:0
+msgid "Current"
+msgstr "Hiện tại"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,amount:0
+msgid "Current Depreciation"
+msgstr "Khấu hao hiện tại"
 
 #. module: account_asset
 #: field:account.asset.history,date:0
 msgid "Date"
 msgstr "Ngày"
+
+#. module: account_asset
+#: view:asset.asset.report:0
+msgid "Date of asset purchase"
+msgstr "Ngày mua tài sản"
+
+#. module: account_asset
+#: view:asset.asset.report:0
+msgid "Date of depreciation"
+msgstr "Ngày khấu hao"
+
+#. module: account_asset
+#: selection:account.asset.asset,method:0
+#: selection:account.asset.category,method:0
+msgid "Degressive"
+msgstr "Lũy kế"
+
+#. module: account_asset
+#: field:account.asset.asset,method_progress_factor:0
+#: field:account.asset.category,method_progress_factor:0
+msgid "Degressive Factor"
+msgstr "Hệ số lũy kế"
+
+#. module: account_asset
+#: field:account.asset.category,account_expense_depreciation_id:0
+msgid "Depr. Expense Account"
+msgstr "Tài khoản chi phí khấu hao"
+
+#. module: account_asset
+#: field:account.asset.category,account_depreciation_id:0
+msgid "Depreciation Account"
+msgstr "Tài khoản khấu hao"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Depreciation Board"
+msgstr "Bảng điều khiên khấu hao"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,depreciation_date:0
+#: field:asset.asset.report,depreciation_date:0
+msgid "Depreciation Date"
+msgstr "Ngày khấu hao"
+
+#. module: account_asset
+#: view:account.asset.category:0
+msgid "Depreciation Dates"
+msgstr "Ngày khấu hao"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,move_id:0
+msgid "Depreciation Entry"
+msgstr "Bút toán khấu hao"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+#: field:account.asset.asset,depreciation_line_ids:0
+msgid "Depreciation Lines"
+msgstr "Chi tiết khấu hao"
+
+#. module: account_asset
+#: view:account.asset.category:0
+msgid "Depreciation Method"
+msgstr "Phương pháp khấu hao"
+
+#. module: account_asset
+#: view:asset.asset.report:0
+msgid "Depreciation Month"
+msgstr "Tháng khấu hao"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,name:0
+msgid "Depreciation Name"
+msgstr "Tên khấu hao"
+
+#. module: account_asset
+#: selection:account.asset.asset,state:0 view:asset.asset.report:0
+#: selection:asset.asset.report,state:0
+msgid "Draft"
+msgstr "Dự thảo"
+
+#. module: account_asset
+#: field:account.asset.asset,method_end:0
+#: selection:account.asset.asset,method_time:0
+#: selection:account.asset.category,method_time:0
+#: selection:account.asset.history,method_time:0
+msgid "Ending Date"
+msgstr "Ngày kết thúc"
+
+#. module: account_asset
+#: field:account.asset.category,method_end:0
+#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
+msgid "Ending date"
+msgstr "Ngày kết thúc"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+#: field:account.asset.asset,account_move_line_ids:0
+#: field:account.move.line,entry_ids:0
+#: model:ir.actions.act_window,name:account_asset.act_entries_open
+msgid "Entries"
+msgstr "Bút toán"
+
+#. module: account_asset
+#: constraint:account.asset.asset:0
+msgid "Error ! You cannot create recursive assets."
+msgstr "Lỗi ! Bạn không thể tạo tài sản đệ quy."
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:81
+#, python-format
+msgid "Error!"
+msgstr "Lỗi!"
+
+#. module: account_asset
+#: view:asset.asset.report:0
+msgid "Extended Filters..."
+msgstr "Bộ lọc mở rộng..."
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "General"
+msgstr "General"
+
+#. module: account_asset
+#: field:asset.asset.report,gross_value:0
+msgid "Gross Amount"
+msgstr "Tổng nguyên giá"
+
+#. module: account_asset
+#: field:account.asset.asset,purchase_value:0
+msgid "Gross Value"
+msgstr "Giá trị nguyên giá"
+
+#. module: account_asset
+#: view:asset.asset.report:0
+msgid "Group By..."
+msgstr "Nhóm theo..."
+
+#. module: account_asset
+#: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
+msgid "History"
+msgstr "Lịch sử"
+
+#. module: account_asset
+#: field:account.asset.history,name:0
+msgid "History name"
+msgstr "Tên lịch sử"
+
+#. module: account_asset
+#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
+msgid ""
+"Indicates that the first depreciation entry for this asset have to be done "
+"from the purchase date instead of the first January"
+msgstr ""
+"Chỉ ra rằng bút toán khấu hao đầu tiên cho tài sản này phải được thực hiện "
+"từ ngày mua thay vì ngày đầu tiên của tháng 1"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_invoice
+msgid "Invoice"
+msgstr "Hóa đơn"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Chi tiết hóa đơn"
+
+#. module: account_asset
+#: help:account.asset.asset,salvage_value:0
+msgid "It is the amount you plan to have that you cannot depreciate."
+msgstr "It is the amount you plan to have that you cannot depreciate."
+
+#. module: account_asset
+#: field:account.asset.category,journal_id:0
+msgid "Journal"
+msgstr "Sổ nhật ký"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:361
+#: model:ir.model,name:account_asset.model_account_move_line
+#, python-format
+msgid "Journal Items"
+msgstr "Phát sinh"
+
+#. module: account_asset
+#: selection:account.asset.asset,method:0
+#: selection:account.asset.category,method:0
+msgid "Linear"
+msgstr "Đường thẳng"
+
+#. module: account_asset
+#: view:asset.modify:0
+msgid "Modify"
+msgstr "Chỉnh sửa"
+
+#. module: account_asset
+#: view:asset.modify:0
+#: model:ir.actions.act_window,name:account_asset.action_asset_modify
+#: model:ir.model,name:account_asset.model_asset_modify
+msgid "Modify Asset"
+msgstr "Chỉnh sửa Tài sản"
+
+#. module: account_asset
+#: field:account.asset.category,name:0
+msgid "Name"
+msgstr "Tên"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,remaining_value:0
+msgid "Next Period Depreciation"
+msgstr "Kỳ khấu hao tiếp theo"
+
+#. module: account_asset
+#: field:account.asset.asset,note:0 field:account.asset.category,note:0
+#: field:account.asset.history,note:0
+msgid "Note"
+msgstr "Ghi chú"
+
+#. module: account_asset
+#: view:account.asset.asset:0 view:account.asset.category:0
+#: view:account.asset.history:0 view:asset.modify:0 field:asset.modify,note:0
+msgid "Notes"
+msgstr "Ghi chú"
 
 #. module: account_asset
 #: field:account.asset.asset,method_number:0
@@ -722,77 +550,228 @@ msgstr "Ngày"
 #: selection:account.asset.history,method_time:0
 #: field:asset.modify,method_number:0
 msgid "Number of Depreciations"
+msgstr "Số lần khấu hao"
+
+#. module: account_asset
+#: field:account.asset.asset,method_period:0
+msgid "Number of Months in a Period"
+msgstr "Số tháng trong kỳ kế toán"
+
+#. module: account_asset
+#: field:account.asset.asset,parent_id:0
+msgid "Parent Asset"
+msgstr "Tài sản cha"
+
+#. module: account_asset
+#: field:account.asset.asset,partner_id:0
+#: field:asset.asset.report,partner_id:0
+msgid "Partner"
+msgstr "Đối tác"
+
+#. module: account_asset
+#: field:asset.depreciation.confirmation.wizard,period_id:0
+msgid "Period"
+msgstr "Chu kỳ"
+
+#. module: account_asset
+#: field:account.asset.category,method_period:0
+#: field:account.asset.history,method_period:0
+#: field:asset.modify,method_period:0
+msgid "Period Length"
+msgstr "Độ lớn chu kỳ"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,move_check:0
+#: view:asset.asset.report:0 field:asset.asset.report,move_check:0
+msgid "Posted"
+msgstr "Đã vào sổ"
+
+#. module: account_asset
+#: field:asset.asset.report,posted_value:0
+msgid "Posted Amount"
+msgstr "Giá trị đã vào sổ"
+
+#. module: account_asset
+#: view:asset.asset.report:0
+msgid "Posted depreciation lines"
+msgstr "Chi tiết khấu hao đã vào sổ"
+
+#. module: account_asset
+#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
+msgid "Prorata Temporis"
+msgstr "Prorata Temporis"
+
+#. module: account_asset
+#: constraint:account.asset.asset:0
+msgid ""
+"Prorata temporis can be applied only for time method \"number of "
+"depreciations\"."
 msgstr ""
+"Prorata temporis can be applied only for time method \"number of "
+"depreciations\"."
+
+#. module: account_asset
+#: field:account.asset.asset,purchase_date:0
+#: field:asset.asset.report,purchase_date:0
+msgid "Purchase Date"
+msgstr "Ngày mua"
+
+#. module: account_asset
+#: view:asset.asset.report:0
+msgid "Purchase Month"
+msgstr "Tháng mua"
+
+#. module: account_asset
+#: field:asset.modify,name:0
+msgid "Reason"
+msgstr "Lý do"
+
+#. module: account_asset
+#: field:account.asset.asset,code:0
+msgid "Reference"
+msgstr "Tham chiếu"
+
+#. module: account_asset
+#: field:account.asset.asset,value_residual:0
+msgid "Residual Value"
+msgstr "Giá trị còn lại"
+
+#. module: account_asset
+#: selection:account.asset.asset,state:0 view:asset.asset.report:0
+#: selection:asset.asset.report,state:0
+msgid "Running"
+msgstr "Đang tính khấu hao"
+
+#. module: account_asset
+#: field:account.asset.asset,salvage_value:0
+msgid "Salvage Value"
+msgstr "Salvage Value"
+
+#. module: account_asset
+#: view:account.asset.category:0
+msgid "Search Asset Category"
+msgstr "Tìm kiếm Nhóm tài sản"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,sequence:0
+msgid "Sequence"
+msgstr "Trình tự"
 
 #. module: account_asset
 #: view:account.asset.asset:0
-msgid "Create Move"
-msgstr ""
+msgid "Set to Close"
+msgstr "Đóng tài sản"
 
 #. module: account_asset
 #: view:account.asset.asset:0
-msgid "Confirm Asset"
-msgstr ""
+msgid "Set to Draft"
+msgstr "Thiết lập về dự thảo"
 
 #. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
-msgid "Asset Hierarchy"
-msgstr "Phân cấp Tài sản"
+#: field:account.asset.category,open_asset:0
+msgid "Skip Draft State"
+msgstr "Bỏ qua trạng thái dự thảo"
 
-#~ msgid "Change duration"
-#~ msgstr "Thay đổi thời gian"
+#. module: account_asset
+#: help:account.asset.category,method_period:0
+msgid "State here the time between 2 depreciations, in months"
+msgstr "State here the time between 2 depreciations, in months"
 
-#~ msgid "Asset Value"
-#~ msgstr "Giá trị Tài sản"
+#. module: account_asset
+#: field:account.asset.depreciation.line,parent_state:0
+msgid "State of Asset"
+msgstr "State of Asset"
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."
+#. module: account_asset
+#: field:account.asset.asset,state:0 field:asset.asset.report,state:0
+msgid "Status"
+msgstr "Trạng thái"
 
-#~ msgid "Methods"
-#~ msgstr "Phương pháp"
+#. module: account_asset
+#: help:account.asset.asset,method_period:0
+msgid "The amount of time between two depreciations, in months"
+msgstr "Tổng giá trị của thời gian giữa hai lần khấu hao, tính theo tháng"
 
-#~ msgid "State"
-#~ msgstr "Trạng thái"
+#. module: account_asset
+#: help:account.asset.history,method_time:0
+msgid ""
+"The method to use to compute the dates and number of depreciation lines.\n"
+"Number of Depreciations: Fix the number of depreciation lines and the time "
+"between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
+msgstr ""
+"Phương pháp sử dụng để tính ngày và số lần khấu hao.\n"
+"Số lần khấu hao: Cố định số lần khấu hao và thời gian giữa 2 lần khấu hao.\n"
+"Ngày kết thúc: Lựa chọn thời gian giữa 2 lần khấu hao và ngày khấu hao không "
+"vượt quá ngày kết thúc."
 
-#~ msgid "Other information"
-#~ msgstr "Thông tin khác"
+#. module: account_asset
+#: help:account.asset.asset,method_number:0
+#: help:account.asset.category,method_number:0
+#: help:account.asset.history,method_number:0
+msgid "The number of depreciations needed to depreciate your asset"
+msgstr "Số lần khấu hao cần thiết để khấu hao tài sản"
 
-#~ msgid "Date created"
-#~ msgstr "Ngày tạo"
+#. module: account_asset
+#: field:account.asset.asset,method_time:0
+#: field:account.asset.category,method_time:0
+#: field:account.asset.history,method_time:0
+msgid "Time Method"
+msgstr "Phương pháp thời gian"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML không hợp lệ với Kiến trúc Xem!"
+#. module: account_asset
+#: help:account.asset.history,method_period:0
+msgid "Time in month between two depreciations"
+msgstr "Thời gian trong tháng giữa hai lần khấu hao"
 
-#~ msgid "Normal"
-#~ msgstr "Thông thường"
+#. module: account_asset
+#: field:asset.asset.report,unposted_value:0
+msgid "Unposted Amount"
+msgstr "Giá trị chưa vào sổ"
 
-#~ msgid "Method"
-#~ msgstr "Phương pháp"
+#. module: account_asset
+#: field:account.asset.history,user_id:0
+msgid "User"
+msgstr "Người dùng"
 
-#~ msgid "Localisation"
-#~ msgstr "Bản địa hóa"
+#. module: account_asset
+#: help:account.asset.asset,state:0
+msgid ""
+"When an asset is created, the status is 'Draft'.\n"
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
+msgstr ""
+"Khi một tài sản được tạo, trạng thái của nó là 'Dự thảo'.\n"
+"Nếu tài sản được xác nhận, trạng thái sẽ chuyển sang 'Đang tính khấu hao', "
+"và chi tiết khấu hao có thể được ghi nhận vào hệ thống kế toán.\n"
+"Bạn có thể đóng tài sản thủ công khi hết khấu hao. Nếu khấu hao cuối cùng "
+"được vào sổ, tài sản tự động chuyển thành 'Đã đóng'."
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Tên đối tượng phải bắt đầu bằng x_ và không bao gồm bất kỳ ký tự đặc biệt "
-#~ "nào!"
+#. module: account_asset
+#: field:asset.asset.report,name:0
+msgid "Year"
+msgstr "Năm"
 
-#~ msgid "Open"
-#~ msgstr "Mở"
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:81
+#, python-format
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr "Bạn không thể xóa một tài sản bao gồm khấu hao đã vào sổ."
 
-#~ msgid "Depreciation"
-#~ msgstr "Khấu hao"
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
+msgid "asset.depreciation.confirmation.wizard"
+msgstr "asset.depreciation.confirmation.wizard"
 
-#~ msgid "Total value"
-#~ msgstr "Tổng giá trị"
+#. module: account_asset
+#: view:asset.modify:0
+msgid "months"
+msgstr "tháng"
 
-#~ msgid "Indirect"
-#~ msgstr "Gián tiếp"
-
-#~ msgid "Direct"
-#~ msgstr "Trực tiếp"
-
-#~ msgid "Open Assets"
-#~ msgstr "Mở Tài sản"
+#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
+msgid "or"
+msgstr "hoặc"
