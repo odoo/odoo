@@ -248,7 +248,6 @@ QWeb2.Engine = (function() {
                     }
                     self.add_template(xDoc, callback);
                 });
-                template = this.load_xml(template, callback);
             }
             var ec = (template.documentElement && template.documentElement.childNodes) || template.childNodes || [];
             for (var i = 0; i < ec.length; i++) {

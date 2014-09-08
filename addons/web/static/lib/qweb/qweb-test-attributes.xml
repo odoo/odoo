@@ -19,4 +19,10 @@
     <t t-name="format-value">
         <div t-attf-foo="b#{value}r"/>
     </t>
+    <t t-name="format-expression">
+        <div t-attf-foo="#{value + 37}"/>
+    </t>
+    <t t-name="format-multiple">
+        <div t-attf-foo="a #{value1} is #{value2} of #{value3} ]"/>
+    </t>
 </templates>
