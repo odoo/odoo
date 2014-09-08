@@ -367,7 +367,7 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
     add_dashboard: function(){
         var self = this;
         if (! this.view.view_manager.action || ! this.$el.find("select").val()) {
-            this.do_warn("Can't find dashboard action");
+            this.do_warn(_t("Can't find dashboard action"));
             return;
         }
         var data = this.view.build_search_data();
@@ -399,10 +399,10 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
             name: this.$el.find("input").val()
         }).done(function(r) {
             if (r === false) {
-                self.do_warn("Could not add filter to dashboard");
+                self.do_warn(_t("Could not add filter to dashboard"));
             } else {
                 self.$el.toggleClass('oe_opened');
-                self.do_notify("Filter added to dashboard", '');
+                self.do_notify(_t("Filter added to dashboard"), '');
             }
         });
     },

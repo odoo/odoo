@@ -6,11 +6,6 @@
 
 <!-- Layout and generic templates -->
 
-<template id="website.theme" name="Theme">
-    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
-    <link rel="stylesheet" href='/website/static/src/css/website.css' t-ignore="true"/>
-</template>
-
 <template id="website.assets_frontend" name="Website assets">
     <t t-call="website.theme"/>
 
@@ -94,6 +89,17 @@
             <t t-call-assets="website.assets_frontend"/>
 
             <t t-raw="head or ''" name='layout_head'/>
+            <t t-if="website and website.google_analytics_key">
+                <script>
+                    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                    })(window,document,'script','//www.google-analytics.com/analytics.js','_gaw');
+
+                    _gaw('create',_.str.trim('<t t-esc="website.google_analytics_key"/>'));
+                    _gaw('send','pageview');
+                </script>
+            </t>
         </head>
         <body>
             <div id="wrapwrap">
@@ -118,7 +124,7 @@
                                     <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
-                                                <span t-esc="user_id.name"/>
+                                                <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') or user_id.name"/>
                                                 <span class="caret"></span>
                                             </b>
                                         </a>
@@ -141,8 +147,8 @@
                     </div>
                     <div class="container mt16 mb8">
                         <div class="pull-right" t-ignore="true" t-if="not editable">
-                            Create a <a href="https://www.odoo.com/page/website-builder">free website</a> with
-                            <a class="label label-danger" href="https://www.odoo.com/">Odoo</a>
+                            Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
+                            <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
                         </div>
                         <div class="pull-left text-muted">
                             Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
@@ -150,17 +156,6 @@
                     </div>
                 </footer>
             </div>
-            <t t-if="website and website.google_analytics_key">
-                <script>
-                    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-                    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-                    e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-                    e.src='//www.google-analytics.com/analytics.js';
-                    r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-                    ga('create',_.str.trim('<t t-esc="website.google_analytics_key"/>'));
-                    ga('send','pageview');
-                </script>
-            </t>
         </body>
     </html>
 </template>
@@ -215,6 +210,7 @@
     <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
 
 </template>
 
@@ -239,7 +235,7 @@
 
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer_container']" position="replace">
-        <div class="oe_structure">
+        <div class="oe_structure" id="footer">
             <section data-snippet-id='three-columns' class="mt16 mb16">
                 <div class="container">
                     <div class="row">
@@ -269,7 +265,7 @@
 </template>
 
 <template id="footer_default" inherit_id="website.footer_custom" optional="enabled" name="Automatic Footer">
-    <xpath expr="//div[@class='oe_structure']" position="replace">
+    <xpath expr="//div[@id='footer']" position="replace">
         <div class="container hidden-print">
             <div class="row">
                 <div class="col-md-3">
@@ -507,7 +503,7 @@
                         <t t-if="'expression' in qweb_exception.qweb">and evaluating the following expression: <code t-esc="qweb_exception.qweb['expression']"/></t>
                     </p>
                     <t t-if="'node' in qweb_exception.qweb">
-                        <pre id="exception_node" t-esc="qweb_exception.qweb['node'].toxml()"/>
+                        <pre id="exception_node" t-esc="qweb_exception.pretty_xml()"/>
                     </t>
                 </div>
             </div>
@@ -696,13 +692,13 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="sitemap_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <t t-raw="content"/>
 </urlset>
 </template>
 
 <template id="sitemap_index_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<sitemapindex t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap t-foreach="pages" t-as="page">
     <loc><t t-esc="url_root"/>sitemap-<t t-esc="page"/>.xml</loc>
   </sitemap>

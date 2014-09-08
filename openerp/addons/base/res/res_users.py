@@ -126,6 +126,7 @@ class res_groups(osv.osv):
                         _('The name of the group can not start with "-"'))
         res = super(res_groups, self).write(cr, uid, ids, vals, context=context)
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
+        self.pool['res.users'].has_group.clear_cache(self.pool['res.users'])
         return res
 
 class res_users(osv.osv):
@@ -225,8 +226,14 @@ class res_users(osv.osv):
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
             uid2 = uid
-        user = self.pool['res.users'].browse(cr, uid, uid2, context)
-        return user.company_id.id
+        # Use read() to compute default company, and pass load=_classic_write to
+        # avoid useless name_get() calls. This will avoid prefetching fields
+        # while computing default values for new db columns, as the
+        # db backend may not be fully initialized yet.
+        user_data = self.pool['res.users'].read(cr, uid, uid2, ['company_id'],
+                                                context=context, load='_classic_write')
+        comp_id = user_data['company_id']
+        return comp_id or False
 
     def _get_companies(self, cr, uid, context=None):
         c = self._get_company(cr, uid, context)
@@ -326,11 +333,12 @@ class res_users(osv.osv):
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
         self.context_get.clear_cache(self)
+        self.has_group.clear_cache(self)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         if 1 in ids:
-            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)'))
+            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         db = cr.dbname
         if db in self._uid_cache:
             for id in ids:
@@ -508,6 +516,7 @@ class res_users(osv.osv):
             'target': 'new',
         }
 
+    @tools.ormcache(skiparg=2)
     def has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
 

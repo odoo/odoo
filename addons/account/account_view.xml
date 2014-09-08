@@ -100,24 +100,22 @@
                         <button name="action_draft" states="done" string="Re-Open Period" type="object" groups="account.group_account_manager"/>
                         <field name="state" widget="statusbar" nolabel="1"/>
                     </header>
-                    <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="fiscalyear_id" widget="selection"/>
-                                <label for="date_start" string="Duration"/>
-                                <div>
-                                    <field name="date_start" class="oe_inline" nolabel="1"/> -
-                                    <field name="date_stop" nolabel="1" class="oe_inline"/>
-                                </div>
-                            </group>
-                            <group>
-                                <field name="code"/>
-                                <field name="special"/>
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
+                            <field name="name"/>
+                            <field name="fiscalyear_id" widget="selection"/>
+                            <label for="date_start" string="Duration"/>
+                            <div>
+                                <field name="date_start" class="oe_inline" nolabel="1"/> -
+                                <field name="date_stop" nolabel="1" class="oe_inline"/>
+                            </div>
                         </group>
-                    </sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="special"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -584,7 +582,7 @@
                     <h1><field name="name"/></h1>
                     <group>
                         <group>
-                            <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
+                            <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" attrs="{'readonly': [('move_line_ids', '!=', [])]}" widget="selection"/>
                             <label for="date" string="Date / Period"/>
                             <div>
                                 <field name="date" on_change="onchange_date(date, company_id)" class="oe_inline"/>
@@ -650,7 +648,7 @@
                 occurring over a given period of time on a bank account. You
                 should receive this periodicaly from your bank.
               </p><p>
-                OpenERP allows you to reconcile a statement line directly with
+                Odoo allows you to reconcile a statement line directly with
                 the related sale or puchase invoices.
               </p>
             </field>
@@ -702,9 +700,9 @@
                         </div>
                         <group>
                             <group>
-                                <field name="account_id"/>
+                                <field name="account_id" domain="[('type', 'not in', ['view', 'closed', 'consolidation'])]"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id"/>
+                                <field name="tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
                             </group>
                             <group>
                                 <field name="label"/>
@@ -920,7 +918,7 @@
                 Click to define a new tax code.
               </p><p>
                 Depending on the country, a tax code is usually a cell to fill
-                in your legal tax statement. OpenERP allows you to define the
+                in your legal tax statement. Odoo allows you to define the
                 tax structure and each tax computation will be registered in
                 one or several tax code.
               </p>
@@ -1269,8 +1267,8 @@
                 Select the period and the journal you want to fill.
               </p><p>
                 This view can be used by accountants in order to quickly record
-                entries in OpenERP. If you want to record a supplier invoice,
-                start by recording the line of the expense account. OpenERP
+                entries in Odoo. If you want to record a supplier invoice,
+                start by recording the line of the expense account. Odoo
                 will propose to you automatically the Tax related to this
                 account and the counterpart "Account Payable".
               </p>
@@ -1506,7 +1504,7 @@
                 A journal entry consists of several journal items, each of
                 which is either a debit or a credit transaction.
               </p><p>
-                OpenERP automatically creates one journal entry per accounting
+                Odoo automatically creates one journal entry per accounting
                 document: invoice, refund, supplier payment, bank statements,
                 etc. So, you should record journal entries manually only/mainly
                 for miscellaneous operations.
@@ -1925,7 +1923,7 @@
             <field name="arch" type="xml">
                 <search string="Search Account Templates">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account Template"/>
-                    <filter icon="terp-sale" string="Receivale Accounts" domain="[('type','=','receivable')]"/>
+                    <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
                     <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                     <field name="parent_id"/>
                     <field name="user_type"/>

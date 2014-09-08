@@ -669,7 +669,7 @@ class account_account(osv.osv):
 
     # For legal reason (forbiden to modify journal entries which belongs to a closed fy or period), Forbid to modify
     # the code of an account if journal entries have been already posted on this account. This cannot be simply 
-    # 'configurable' since it can lead to a lack of confidence in OpenERP and this is what we want to change.
+    # 'configurable' since it can lead to a lack of confidence in Odoo and this is what we want to change.
     def _check_allow_code_change(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('account.move.line')
         for account in self.browse(cr, uid, ids, context=context):
@@ -738,6 +738,7 @@ class account_journal(osv.osv):
         'loss_account_id' : fields.many2one('account.account', 'Loss Account'),
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
         'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
+        'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
     }
 
     _defaults = {
@@ -1753,6 +1754,7 @@ class account_tax_code(osv.osv):
     _name = 'account.tax.code'
     _description = 'Tax Code'
     _rec_name = 'code'
+    _order = 'sequence, code'
     _columns = {
         'name': fields.char('Tax Case Name', required=True, translate=True),
         'code': fields.char('Case Code', size=64),
@@ -2487,7 +2489,7 @@ class account_account_template(osv.osv):
             ('other','Regular'),
             ('closed','Closed'),
             ], 'Internal Type', required=True,help="This type is used to differentiate types with "\
-            "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
+            "special effects in Odoo: view can not have entries, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
@@ -2653,7 +2655,7 @@ class account_tax_code_template(osv.osv):
 
     _name = 'account.tax.code.template'
     _description = 'Tax Code Template'
-    _order = 'code'
+    _order = 'sequence, code'
     _rec_name = 'code'
     _columns = {
         'name': fields.char('Tax Case Name', required=True),
@@ -2663,6 +2665,11 @@ class account_tax_code_template(osv.osv):
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),
         'sign': fields.float('Sign For Parent', required=True),
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any tax related to this tax Code to appear on invoices."),
+        'sequence': fields.integer(
+            'Sequence', help=(
+                "Determine the display order in the report 'Accounting "
+                "\ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
+            ),
     }
 
     _defaults = {
@@ -2695,6 +2702,7 @@ class account_tax_code_template(osv.osv):
                 'parent_id': tax_code_template.parent_id and ((tax_code_template.parent_id.id in tax_code_template_ref) and tax_code_template_ref[tax_code_template.parent_id.id]) or False,
                 'company_id': company_id,
                 'sign': tax_code_template.sign,
+                'sequence': tax_code_template.sequence,
             }
             #check if this tax code already exists
             rec_list = obj_tax_code.search(cr, uid, [('name', '=', vals['name']),('code', '=', vals['code']),('company_id', '=', vals['company_id'])], context=context)

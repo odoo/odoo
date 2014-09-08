@@ -494,7 +494,7 @@ class ir_actions_server(osv.osv):
         'model_name': fields.related('model_id', 'model', type='char',
                                      string='Model Name', readonly=True),
         'menu_ir_values_id': fields.many2one('ir.values', 'More Menu entry', readonly=True,
-                                             help='More menu entry.'),
+                                             help='More menu entry.', copy=False),
         # Client Action
         'action_id': fields.many2one('ir.actions.actions', 'Client Action',
                                      help="Select the client action that has to be executed."),

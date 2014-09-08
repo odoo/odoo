@@ -6,3 +6,6 @@ class res_partner_grade(osv.osv):
     _columns = {
         'website_published': fields.boolean('Published On Website', copy=False),
     }
+    _defaults = {
+          'website_published': True,
+    }

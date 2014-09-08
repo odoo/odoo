@@ -54,7 +54,7 @@
     name: Bank Journal(EUR)
     code: BEUR
     type: bank
-    analytic_journal_id: account.sit
+    analytic_journal_id: analytic.sit
     sequence_id: account.sequence_bank_journal
     default_debit_account_id: account.cash
     default_credit_account_id: account.cash
@@ -66,7 +66,7 @@
     name: Bank Journal(USD)
     code: BUSD
     type: bank
-    analytic_journal_id: account.sit
+    analytic_journal_id: analytic.sit
     sequence_id: account.sequence_bank_journal
     default_debit_account_id: account_cash_usd_id
     default_credit_account_id: account_cash_usd_id
@@ -99,12 +99,13 @@
   I check that first invoice move is correct for debtor account(debit - credit == 150)
 -
   !python {model: account.invoice}: |
+    from openerp.tools import float_compare
     invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan"))
     assert invoice_id.move_id, "Move not created for open invoice"
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (move_line.debit - move_line.credit == 150.00), "Invoice move is incorrect for debtors account"
+    assert (float_compare(move_line.debit - move_line.credit, 150.00, precision_digits=2) == 0), "Invoice move is incorrect for debtors account"
 -
   I create the second invoice on 1st February for 100 USD
 -
@@ -132,12 +133,13 @@
   I check that second invoice move is correct for debtor account (debit - credit == 80)
 -
   !python {model: account.invoice}: |
+    from openerp.tools import float_compare
     invoice_id = self.browse(cr, uid, ref("account_second_invoice_feb"))
     assert invoice_id.move_id, "Move not created for open invoice"
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (move_line.debit - move_line.credit == 80), "Invoice move is incorrect for debtors account"
+    assert (float_compare(move_line.debit - move_line.credit, 80, precision_digits=2) == 0), "Invoice move is incorrect for debtors account"
 -
   I set the context that will be used for the encoding of all the vouchers of this file
 -
@@ -163,13 +165,14 @@
   I fill amounts 130 for the invoice of 200$ and 70 for the invoice of 100$
 -
   !python {model: account.voucher}: |
+    from openerp.tools import float_compare
     import time
     from openerp import netsvc
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_1_case2a'))
     data = []
     for item in voucher_id.line_cr_ids:
-        if item.amount_unreconciled == 150.00:
+        if float_compare(item.amount_unreconciled, 150.00, precision_digits=2) == 0:
             data += [(item.id, 130.0)]
         else:
             data += [(item.id, 70.0)]
@@ -197,20 +200,22 @@
   I check the residual amount of Invoice1, should be 55.56 in residual currency and 20 in amount_residual
 -
   !python {model: account.invoice}: |
+    from openerp.tools import float_compare
     invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan"))
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (move_line.amount_residual_currency == 55.56 and move_line.amount_residual == 20) , "Residual amount is not correct for first Invoice. Got %s USD (%s EUR)" %(move_line.amount_residual_currency, move_line.amount_residual)
+    assert (float_compare(move_line.amount_residual_currency, 55.56, precision_digits=2) == 0 and float_compare(move_line.amount_residual, 20, precision_digits=2) == 0) , "Residual amount is not correct for first Invoice. Got %s USD (%s EUR)" %(move_line.amount_residual_currency, move_line.amount_residual)
 -
   I check the residual amuont of Invoice2, should be 22.22 in residual currency and 10 in amount_residual
 -
    !python {model: account.invoice}: |
+    from openerp.tools import float_compare
     invoice_id = self.browse(cr, uid, ref("account_second_invoice_feb"))
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (move_line.amount_residual_currency == 22.22 and move_line.amount_residual == 10) , "Residual amount is not correct for second Invoice"
+    assert (float_compare(move_line.amount_residual_currency, 22.22, precision_digits=2) == 0 and float_compare(move_line.amount_residual, 10, precision_digits=2) == 0) , "Residual amount is not correct for second Invoice"
 -
   I create the second voucher of payment with values 80 USD, journal USD
 -
@@ -233,11 +238,12 @@
   !python {model: account.voucher}: |
     import time
     from openerp import netsvc
+    from openerp.tools import float_compare
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_2_case2a'))
     data = []
     for item in voucher_id.line_cr_ids:
-        if item.amount_unreconciled == 55.56:
+        if float_compare(item.amount_unreconciled, 55.56, precision_digits=2) == 0:
             data += [(item.id, 55.56)]
         else:
             data += [(item.id, 22.22)]
@@ -248,9 +254,10 @@
   I check that writeoff amount computed is 2.22
 -
   !python {model: account.voucher}: |
+    from openerp.tools import float_compare
     voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (round(voucher_id.writeoff_amount, 2) == 2.22), "Writeoff amount is not 2.22$"
+    assert (float_compare(round(voucher_id.writeoff_amount, 2), 2.22, precision_digits=2) == 0), "Writeoff amount is not 2.22$"
 -
   I confirm the voucher
 -
@@ -275,44 +282,47 @@
   I check that my writeoff is correct. 2.11 in credit and 2.22 in amount_currency
 -
   !python {model: account.voucher}: |
+    from openerp.tools import float_compare
     voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
     reconcile_a = reconcile_b = False
     for move_line in move_line_obj.browse(cr, uid, move_lines):
-        if move_line.amount_currency == -22.22:
+        if float_compare(move_line.amount_currency, -22.22, precision_digits=2) == 0:
             assert move_line.reconcile_id.id, "The invoice of 200$ is not fully reconciled"
             reconcile_b = move_line.reconcile_id.id
-        elif move_line.amount_currency == -55.56:
+        elif float_compare(move_line.amount_currency, -55.56, precision_digits=2) == 0:
             assert move_line.reconcile_id.id, "The invoice of 100$ is not fully reconciled"
             reconcile_a = move_line.reconcile_id.id
     for move_line in move_line_obj.browse(cr, uid, move_lines):
-        if move_line.amount_currency == -55.56:
-            assert move_line.credit == 52.78, "Debtor account has wrong entry."
-        elif move_line.amount_currency == -22.22:
-            assert move_line.credit == 21.11, "Debtor account has wrong entry."
-        elif move_line.credit == 11.11 and move_line.account_id.reconcile:
-            assert move_line.amount_currency == 0.00 and move_line.reconcile_id.id == reconcile_b, "Incorrect Currency Difference."
-        elif move_line.credit == 32.78 and move_line.account_id.reconcile:
-            assert move_line.amount_currency == 0.00 and move_line.reconcile_id.id == reconcile_a, "Incorrect Currency Difference."
-        elif move_line.amount_currency == 2.22:
-            assert move_line.credit == 2.11, "Writeoff amount is wrong."
+        if float_compare(move_line.amount_currency, -55.56, precision_digits=2) == 0:
+            assert float_compare(move_line.credit, 52.78, precision_digits=2) == 0, "Debtor account has wrong entry."
+        elif float_compare(move_line.amount_currency, -22.22, precision_digits=2) == 0:
+            assert float_compare(move_line.credit, 21.11, precision_digits=2) == 0, "Debtor account has wrong entry."
+        elif float_compare(move_line.credit, 11.11, precision_digits=2) == 0 and move_line.account_id.reconcile:
+            assert float_compare(move_line.amount_currency, 0.00, precision_digits=2) == 0 and move_line.reconcile_id.id == reconcile_b, "Incorrect Currency Difference."
+        elif float_compare(move_line.credit, 32.78, precision_digits=2) == 0 and move_line.account_id.reconcile:
+            assert float_compare(move_line.amount_currency, 0.00, precision_digits=2) == 0 and move_line.reconcile_id.id == reconcile_a, "Incorrect Currency Difference."
+        elif float_compare(move_line.amount_currency, 2.22, precision_digits=2) == 0:
+            assert float_compare(move_line.credit, 2.11, precision_digits=2) == 0, "Writeoff amount is wrong."
 -
   I check the residual amount of invoice 1, should be 0 in residual currency and 0 in amount_residual and paid
 -
   !python {model: account.invoice}: |
+    from openerp.tools import float_compare
     invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan"))
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (move_line.amount_residual_currency == 0.0 and move_line.amount_residual == 0.0 and invoice_id.state == 'paid') , "Residual amount is not correct for first Invoice"
+    assert (float_compare(move_line.amount_residual_currency, 0.0, precision_digits=2) == 0 and float_compare(move_line.amount_residual, 0.0, precision_digits=2) == 0 and invoice_id.state == 'paid') , "Residual amount is not correct for first Invoice"
 -    
   I check the residual amuont of invoice 2, should be 0 in residual currency and 0 in amount_residual and paid
 -
    !python {model: account.invoice}: |
+    from openerp.tools import float_compare
     invoice_id = self.browse(cr, uid, ref("account_second_invoice_feb"))
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (move_line.amount_residual_currency == 0.0 and move_line.amount_residual == 0.0 and invoice_id.state == 'paid') , "Residual amount is not correct for second Invoice"
+    assert (float_compare(move_line.amount_residual_currency, 0.0, precision_digits=2) == 0 and float_compare(move_line.amount_residual, 0.0, precision_digits=2) == 0 and invoice_id.state == 'paid') , "Residual amount is not correct for second Invoice"

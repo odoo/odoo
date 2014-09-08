@@ -897,7 +897,7 @@ BUG2 = """
               <th nowrap="" valign="BASELINE" align="RIGHT">Répondre
 
                 à&nbsp;: </th>
-              <td><a class="moz-txt-link-abbreviated" href="mailto:catchall@openerp.my.openerp.com">catchall@openerp.my.openerp.com</a></td>
+              <td><a class="moz-txt-link-abbreviated" href="mailto:catchall@mail.odoo.com">catchall@mail.odoo.com</a></td>
             </tr>
             <tr>
               <th nowrap="" valign="BASELINE" align="RIGHT">Pour&nbsp;:

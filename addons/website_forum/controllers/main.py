@@ -62,7 +62,7 @@ class WebsiteForum(http.Controller):
         forum_id = request.registry['forum.forum'].create(request.cr, request.uid, {
             'name': forum_name,
         }, context=request.context)
-        return request.redirect("/forum/%s" % slug(forum_id))
+        return request.redirect("/forum/%s" % forum_id)
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
     def notification_read(self, **kwargs):
@@ -529,7 +529,7 @@ class WebsiteForum(http.Controller):
             'website': kwargs.get('website'),
             'email': kwargs.get('email'),
             'city': kwargs.get('city'),
-            'country_id': int(kwargs.get('country')),
+            'country_id': int(kwargs.get('country')) if kwargs.get('country') else False,
             'website_description': kwargs.get('description'),
         }, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), user.id))

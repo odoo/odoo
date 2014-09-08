@@ -39,7 +39,7 @@
     name: Bank Journal Test(USD)
     code: BEUSD
     type: bank
-    analytic_journal_id: account.sit
+    analytic_journal_id: analytic.sit
     sequence_id: account.sequence_bank_journal
     default_debit_account_id: account_eur_usd_id
     default_credit_account_id: account_eur_usd_id
@@ -102,10 +102,11 @@
   I fill amount 1400 for the invoice of 1400$
 -
   !python {model: account.voucher}: |
+    from openerp.tools import float_compare
     data = []
     voucher = self.browse(cr, uid, ref('account_voucher_eur_usd_case'))
     for item in voucher.line_cr_ids:
-        if item.amount_unreconciled == 1400:
+        if float_compare(item.amount_unreconciled, 1400, precision_digits=2) == 0:
             data += [(item.id, 1400)]
     assert data, "Credit line not found"
     for line_id, amount in data:
@@ -115,8 +116,9 @@
   I check that writeoff amount computed is -50.0
 -
   !python {model: account.voucher}: |
+    from openerp.tools import float_compare
     voucher = self.browse(cr, uid, ref('account_voucher_eur_usd_case'))
-    assert (voucher.writeoff_amount == -50.0), "Writeoff amount is not -50.0"
+    assert (float_compare(voucher.writeoff_amount, -50.0, precision_digits=2) == 0), "Writeoff amount is not -50.0"
 -
   I confirm the voucher
 -
@@ -148,14 +150,15 @@
   I check that my bank account is correct. 964.29 debit and 1350 amount_currency
 -
   !python {model: account.voucher}: |
+    from openerp.tools import float_compare
     voucher = self.browse(cr, uid, ref('account_voucher_eur_usd_case'))
     for move_line in voucher.move_ids:
-        if move_line.amount_currency == 1350:
-            assert move_line.debit == 964.29,"debtor account is not correct"
-        if move_line.amount_currency == 50:
-            assert move_line.debit == 35.71,"write off bank account is not correct"
-        if move_line.amount_currency == 0.0:
-            assert move_line.credit == 1000,"total reconcile is not correct of invoice"
+        if float_compare(move_line.amount_currency, 1350, precision_digits=2) == 0:
+            assert float_compare(move_line.debit, 964.29, precision_digits=2) == 0,"debtor account is not correct"
+        if float_compare(move_line.amount_currency, 50, precision_digits=2) == 0:
+            assert float_compare(move_line.debit, 35.71, precision_digits=2) == 0,"write off bank account is not correct"
+        if float_compare(move_line.amount_currency, 0.0, precision_digits=2) == 0:
+            assert float_compare(move_line.credit, 1000, precision_digits=2) == 0,"total reconcile is not correct of invoice"
 -
   I check that the move of payment in invoice is valid
 -
@@ -167,10 +170,9 @@
   I check the residual amount of invoice should be 0 in residual currency and 0 in amount_residual and paid
 -
   !python {model: account.invoice}: |
+    from openerp.tools import float_compare
     invoice_id = self.browse(cr, uid, ref("account_invoice_eur_usd"))
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert move_line.amount_residual_currency == 0.0, "Residual amount is not correct for Invoice"
-    assert move_line.amount_residual == 0.0, "Residual amount is not correct for Invoice"
-    assert invoice_id.state == 'paid', "Invoice is not paid"
+    assert (float_compare(move_line.amount_residual_currency, 0.0, precision_digits=2) == 0 and float_compare(move_line.amount_residual, 0.0, precision_digits=2) == 0 and invoice_id.state == 'paid') , "Residual amount is not correct for Invoice"

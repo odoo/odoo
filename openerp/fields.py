@@ -366,9 +366,17 @@ class Field(object):
         else:
             self._setup_regular(env)
 
-        # put invalidation/recomputation triggers on dependencies
+        # put invalidation/recomputation triggers on field dependencies
+        model = env[self.model_name]
         for path in self.depends:
-            self._setup_dependency([], env[self.model_name], path.split('.'))
+            self._setup_dependency([], model, path.split('.'))
+
+        # put invalidation triggers on model dependencies
+        for dep_model_name, field_names in model._depends.iteritems():
+            dep_model = env[dep_model_name]
+            for field_name in field_names:
+                field = dep_model._fields[field_name]
+                field._triggers.add((self, None))
 
     #
     # Setup of related fields
@@ -596,18 +604,25 @@ class Field(object):
         """ return the null value for this field in the given environment """
         return False
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         """ convert `value` to the cache level in `env`; `value` may come from
             an assignment, or have the format of methods :meth:`BaseModel.read`
             or :meth:`BaseModel.write`
+
+            :param bool validate: when True, field-specific validation of
+                `value` will be performed
         """
         return value
 
     def convert_to_read(self, value, use_name_get=True):
         """ convert `value` from the cache to a value as returned by method
             :meth:`BaseModel.read`
+
+            :param bool use_name_get: when True, value's diplay name will
+                be computed using :meth:`BaseModel.name_get`, if relevant
+                for the field
         """
-        return value
+        return False if value is None else value
 
     def convert_to_write(self, value, target=None, fnames=None):
         """ convert `value` from the cache to a valid value for method
@@ -745,7 +760,7 @@ class Field(object):
                             try:
                                 values = target._convert_to_cache({
                                     f.name: source[f.name] for f in self.computed_fields
-                                })
+                                }, validate=False)
                             except MissingError as e:
                                 values = FailedValue(e)
                             target._cache.update(values)
@@ -800,7 +815,7 @@ class Field(object):
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
         for field, path in self._triggers:
-            if field.store:
+            if path and field.store:
                 # don't move this line to function top, see log
                 env = records.env(user=SUPERUSER_ID, context={'active_test': False})
                 target = env[field.model_name].search([(path, 'in', records.ids)])
@@ -824,27 +839,24 @@ class Field(object):
             computed = target.browse(env.computed[field])
             if path == 'id':
                 target = records - computed
+            elif path:
+                target = (target.browse(env.cache[field]) - computed).filtered(
+                    lambda rec: rec._mapped_cache(path) & records
+                )
             else:
-                for record in target.browse(env.cache[field]) - computed:
-                    if record._mapped_cache(path) & records:
-                        target += record
+                target = target.browse(env.cache[field]) - computed
+
             if target:
                 spec.append((field, target._ids))
 
         return spec
 
 
-class Any(Field):
-    """ Field for arbitrary Python values. """
-    # Warning: no storage is defined for this type of field!
-    type = 'any'
-
-
 class Boolean(Field):
     """ Boolean field. """
     type = 'boolean'
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         return bool(value)
 
     def convert_to_export(self, value, env):
@@ -857,7 +869,7 @@ class Integer(Field):
     """ Integer field. """
     type = 'integer'
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         return int(value or 0)
 
     def convert_to_read(self, value, use_name_get=True):
@@ -897,7 +909,7 @@ class Float(Field):
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
         if self.digits:
             return float_round(float(value or 0.0), precision_digits=self.digits[1])
@@ -931,7 +943,7 @@ class Char(_String):
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         return bool(value) and ustr(value)[:self.size]
 
 
@@ -945,7 +957,7 @@ class Text(_String):
     """
     type = 'text'
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         return bool(value) and ustr(value)
 
 
@@ -953,7 +965,7 @@ class Html(_String):
     """ Html field. """
     type = 'html'
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         return bool(value) and html_sanitize(value)
 
 
@@ -1002,7 +1014,7 @@ class Date(Field):
         """ Convert a :class:`date` value into the format expected by the ORM. """
         return value.strftime(DATE_FORMAT)
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         if not value:
             return False
         if isinstance(value, basestring):
@@ -1067,7 +1079,7 @@ class Datetime(Field):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
         return value.strftime(DATETIME_FORMAT)
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         if not value:
             return False
         if isinstance(value, basestring):
@@ -1147,7 +1159,9 @@ class Selection(Field):
             selection = selection(env[self.model_name])
         return [value for value, _ in selection]
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
+        if not validate:
+            return value or False
         if value in self.get_values(env):
             return value
         elif not value:
@@ -1185,9 +1199,10 @@ class Reference(Selection):
 
     _column_size = property(attrgetter('size'))
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         if isinstance(value, BaseModel):
-            if value._name in self.get_values(env) and len(value) <= 1:
+            if ((not validate or value._name in self.get_values(env))
+                    and len(value) <= 1):
                 return value.with_env(env) or False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
@@ -1282,7 +1297,7 @@ class Many2one(_Relational):
         """ Update the cached value of `self` for `records` with `value`. """
         records._cache[self] = value
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         if isinstance(value, (NoneType, int)):
             return env[self.comodel_name].browse(value)
         if isinstance(value, BaseModel):
@@ -1335,7 +1350,7 @@ class _RelationalMulti(_Relational):
         for record in records:
             record._cache[self] = record[self.name] | value
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, env, validate=True):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name:
                 return value.with_env(env)
@@ -1541,6 +1556,9 @@ class Id(Field):
     """ Special case for field 'id'. """
     store = True
     readonly = True
+
+    def __init__(self, string=None, **kwargs):
+        super(Id, self).__init__(type='integer', string=string, **kwargs)
 
     def to_column(self):
         return fields.integer('ID')

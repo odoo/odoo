@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-Today OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -94,7 +94,7 @@ class hr_job(osv.Model):
 
     _name = "hr.job"
     _description = "Job Position"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', required=True, select=True),
         'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
@@ -270,7 +270,7 @@ class hr_employee(osv.osv):
         partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, SUPERUSER_ID, user_ids, context=context)))
         self.message_post(
             cr, uid, [employee_id],
-            body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
+            body=_('Welcome to %s! Please help him/her take the first steps with Odoo!') % (employee.name),
             partner_ids=partner_ids,
             subtype='mail.mt_comment', context=context
         )
@@ -280,6 +280,11 @@ class hr_employee(osv.osv):
         context = dict(context or {})
         if context.get("mail_broadcast"):
             context['mail_create_nolog'] = True
+
+        if data.get('user_id', False) == SUPERUSER_ID and data.get('name',False) == 'Administrator':
+            user_name = self.pool.get('res.users').browse(cr, uid, data.get('user_id'), context=context).name
+            if data['name'] != user_name:
+                data['name'] = user_name
 
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
 
@@ -291,6 +296,7 @@ class hr_employee(osv.osv):
         resource_ids = []
         for employee in self.browse(cr, uid, ids, context=context):
             resource_ids.append(employee.resource_id.id)
+        super(hr_employee, self).unlink(cr, uid, ids, context=context)
         return self.pool.get('resource.resource').unlink(cr, uid, resource_ids, context=context)
 
     def onchange_address_id(self, cr, uid, ids, address, context=None):
@@ -367,19 +373,21 @@ class hr_employee(osv.osv):
 
 
 class hr_department(osv.osv):
+    _name = "hr.department"
+    _description = "HR Department"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _dept_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    _name = "hr.department"
     _columns = {
         'name': fields.char('Department Name', required=True),
         'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
         'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
         'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),
-        'manager_id': fields.many2one('hr.employee', 'Manager'),
+        'manager_id': fields.many2one('hr.employee', 'Manager', track_visibility='onchange'),
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
         'jobs_ids': fields.one2many('hr.job', 'department_id', 'Jobs'),
         'note': fields.text('Note'),
@@ -419,13 +427,43 @@ class hr_department(osv.osv):
             res.append((record['id'], name))
         return res
 
+    def create(self, cr, uid, vals, context=None):
+        # TDE note: auto-subscription of manager done by hand, because currently
+        # the tracking allows to track+subscribe fields linked to a res.user record
+        # An update of the limited behavior should come, but not currently done.
+        manager_id = vals.get("manager_id")
+        new_id = super(hr_department, self).create(cr, uid, vals, context=context)
+        if manager_id:
+            employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=context)
+            if employee.user_id:
+                self.message_subscribe_users(cr, uid, [new_id], user_ids=[employee.user_id.id], context=context)
+        return new_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        # TDE note: auto-subscription of manager done by hand, because currently
+        # the tracking allows to track+subscribe fields linked to a res.user record
+        # An update of the limited behavior should come, but not currently done.
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        manager_id = vals.get("manager_id")
+        if manager_id:
+            employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=context)
+            if employee.user_id:
+                self.message_subscribe_users(cr, uid, [ids], user_ids=[employee.user_id.id], context=context)
+        return super(hr_department, self).write(cr, uid, ids, vals, context=context)
+
 
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
-    _columns = {
-        'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
-    }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        result = super(res_users, self).write(cr, uid, ids, vals, context=context)
+        employee_obj = self.pool.get('hr.employee')
+        if vals.get('name'):
+            for user_id in ids:
+                if user_id == SUPERUSER_ID:
+                    employee_ids = employee_obj.search(cr, uid, [('user_id', '=', user_id)])
+                    employee_obj.write(cr, uid, employee_ids, {'name': vals['name']}, context=context)
+        return result
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

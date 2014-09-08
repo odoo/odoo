@@ -20,8 +20,10 @@
 #
 ##############################################################################
 
+from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 
 class purchase_requisition(osv.osv):
@@ -134,7 +136,7 @@ class purchase_requisition(osv.osv):
         picking_type_in = self.pool.get("purchase.order")._get_picking_in(cr, uid, context=context)
         return {
             'origin': requisition.name,
-            'date_order': requisition.date_end or fields.date.context_today(self, cr, uid, context=context),
+            'date_order': requisition.date_end or fields.datetime.now(),
             'partner_id': supplier.id,
             'pricelist_id': supplier_pricelist,
             'location_id': requisition.picking_type_id.default_location_dest_id.id,
@@ -146,11 +148,15 @@ class purchase_requisition(osv.osv):
         }
 
     def _prepare_purchase_order_line(self, cr, uid, requisition, requisition_line, purchase_id, supplier, context=None):
+        if context is None:
+            context = {}
         po_line_obj = self.pool.get('purchase.order.line')
         product_uom = self.pool.get('product.uom')
         product = requisition_line.product_id
         default_uom_po_id = product.uom_po_id.id
-        date_order = requisition.ordering_date or fields.date.context_today(self, cr, uid, context=context)
+        ctx = context.copy()
+        ctx['tz'] = requisition.user_id.tz
+        date_order = requisition.ordering_date and fields.date.date_to_datetime(self, cr, uid, requisition.ordering_date, context=ctx) or fields.datetime.now()
         qty = product_uom._compute_qty(cr, uid, requisition_line.product_uom_id.id, requisition_line.product_qty, default_uom_po_id)
         supplier_pricelist = supplier.property_product_pricelist_purchase and supplier.property_product_pricelist_purchase.id or False
         vals = po_line_obj.onchange_product_id(

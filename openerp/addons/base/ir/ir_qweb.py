@@ -40,6 +40,10 @@ class QWebException(Exception):
     def __init__(self, message, **kw):
         Exception.__init__(self, message)
         self.qweb = dict(kw)
+    def pretty_xml(self):
+        if 'node' not in self.qweb:
+            return ''
+        return etree.tostring(self.qweb['node'], pretty_print=True)
 
 class QWebTemplateNotFound(QWebException):
     pass
@@ -285,7 +289,7 @@ class QWeb(orm.AbstractModel):
             result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
 
         if element.tail:
-            result += element.tail
+            result += element.tail.encode('utf-8')
 
         if isinstance(result, unicode):
             return result.encode('utf-8')
@@ -298,9 +302,9 @@ class QWeb(orm.AbstractModel):
         # qwebcontext: values
         # inner: optional innerXml
         if inner:
-            g_inner = inner
+            g_inner = inner.encode('utf-8') if isinstance(inner, unicode) else inner
         else:
-            g_inner = [] if element.text is None else [element.text]
+            g_inner = [] if element.text is None else [element.text.encode('utf-8')]
             for current_node in element.iterchildren(tag=etree.Element):
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
@@ -664,7 +668,7 @@ class DateTimeConverter(osv.AbstractModel):
 
         if options and options.get('hide_seconds'):
             pattern = pattern.replace(":ss", "").replace(":s", "")
-        
+
         return babel.dates.format_datetime(value, format=pattern, locale=locale)
 
 class TextConverter(osv.AbstractModel):
@@ -779,7 +783,7 @@ class MonetaryConverter(osv.AbstractModel):
 
         lang_code = context.get('lang') or 'en_US'
         lang = self.pool['res.lang']
-        formatted_amount = lang.format(cr, uid, [lang_code], 
+        formatted_amount = lang.format(cr, uid, [lang_code],
             fmt, Currency.round(cr, uid, display_currency, from_amount),
             grouping=True, monetary=True)
 
@@ -879,11 +883,11 @@ class Contact(orm.AbstractModel):
 
         id = getattr(record, field_name).id
         field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
-        value = field_browse.display_name
+        value = field_browse.name_get()[0][1]
 
         val = {
             'name': value.split("\n")[0],
-            'address': escape("\n".join(value.split("\n")[1:])),
+            'address': escape("\n".join(value.split("\n")[1:])).strip(),
             'phone': field_browse.phone,
             'mobile': field_browse.mobile,
             'fax': field_browse.fax,
@@ -1001,18 +1005,9 @@ class AssetNotFound(AssetError):
     pass
 
 class AssetsBundle(object):
-    # Sass installation:
-    #
-    #       sudo gem install sass compass bootstrap-sass
-    #
-    # If the following error is encountered:
-    #       'ERROR: Cannot load compass.'
-    # Use this:
-    #       sudo gem install compass --pre
-    cmd_sass = ['sass', '--stdin', '-t', 'compressed', '--unix-newlines', '--compass', '-r', 'bootstrap-sass']
     cache = openerp.tools.lru.LRU(32)
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
-    rx_sass_import = re.compile("""(@import\s?['"]([^'"]+)['"])""")
+    rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
     def __init__(self, xmlid, debug=False, cr=None, uid=None, context=None, registry=None):
@@ -1044,12 +1039,16 @@ class AssetsBundle(object):
                 media = el.get('media')
                 if el.tag == 'style':
                     if atype == 'text/sass' or src.endswith('.sass'):
-                        self.stylesheets.append(SassAsset(self, inline=el.text, media=media))
+                        self.stylesheets.append(SassStylesheetAsset(self, inline=el.text, media=media))
+                    elif atype == 'text/less' or src.endswith('.less'):
+                        self.stylesheets.append(LessStylesheetAsset(self, inline=el.text, media=media))
                     else:
                         self.stylesheets.append(StylesheetAsset(self, inline=el.text, media=media))
                 elif el.tag == 'link' and el.get('rel') == 'stylesheet' and self.can_aggregate(href):
                     if href.endswith('.sass') or atype == 'text/sass':
-                        self.stylesheets.append(SassAsset(self, url=href, media=media))
+                        self.stylesheets.append(SassStylesheetAsset(self, url=href, media=media))
+                    elif href.endswith('.less') or atype == 'text/less':
+                        self.stylesheets.append(LessStylesheetAsset(self, url=href, media=media))
                     else:
                         self.stylesheets.append(StylesheetAsset(self, url=href, media=media))
                 elif el.tag == 'script' and not src:
@@ -1074,7 +1073,11 @@ class AssetsBundle(object):
         response = []
         if debug:
             if css and self.stylesheets:
-                self.compile_sass()
+                compiled = self.preprocess_css()
+                self.recompose_css(compiled)
+                if self.css_errors:
+                    msg = '\n'.join(self.css_errors)
+                    self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
                 for style in self.stylesheets:
                     response.append(style.to_html())
             if js:
@@ -1120,17 +1123,17 @@ class AssetsBundle(object):
         return self.cache[key][1]
 
     def css(self):
+        """Generate css content from given bundle"""
         key = 'css_%s' % self.xmlid
         if key in self.cache and self.cache[key][0] != self.version:
             # Invalidate cache on version mismach
             self.cache.pop(key)
         if key not in self.cache:
-            self.compile_sass()
-            content = '\n'.join(asset.minify() for asset in self.stylesheets)
+            content = self.preprocess_css()
 
             if self.css_errors:
                 msg = '\n'.join(self.css_errors)
-                content += self.css_message(msg.replace('\n', '\\A '))
+                content += self.css_message(msg)
 
             # move up all @import rules to the top
             matches = []
@@ -1149,6 +1152,8 @@ class AssetsBundle(object):
         return self.cache[key][1]
 
     def css_message(self, message):
+        # '\A' == css content carriage return
+        message = message.replace('\n', '\\A ').replace('"', '\\"')
         return """
             body:before {
                 background: #ffc;
@@ -1158,57 +1163,82 @@ class AssetsBundle(object):
                 white-space: pre;
                 content: "%s";
             }
-        """ % message.replace('"', '\\"')
+        """ % message
 
-    def compile_sass(self):
+    def preprocess_css(self):
         """
-            Checks if the bundle contains any sass content, then compiles it to css.
-            Css compilation is done at the bundle level and not in the assets
-            because they are potentially interdependant.
+            Checks if the bundle contains any sass/less content, then compiles it to css.
+            Returns the bundle's flat css.
         """
-        sass = [asset for asset in self.stylesheets if isinstance(asset, SassAsset)]
-        if not sass:
-            return
-        source = '\n'.join([asset.get_source() for asset in sass])
+        sass = [asset for asset in self.stylesheets if isinstance(asset, SassStylesheetAsset)]
+        if sass:
+            cmd = sass[0].get_command()
+            source = '\n'.join([asset.get_source() for asset in sass])
+            compiled = self.compile_css(cmd, source)
+            self.recompose_css(compiled)
 
-        # move up all @import rules to the top and exclude file imports
+        less = [asset for asset in self.stylesheets if isinstance(asset, LessStylesheetAsset)]
+        if less:
+            cmd = less[0].get_command()
+            source = ''
+            for asset in self.stylesheets:
+                if isinstance(asset, LessStylesheetAsset):
+                    source += asset.get_source()
+                else:
+                    source += asset.content
+            compiled = self.compile_css(cmd, source)
+            return compiled
+
+        return '\n'.join(asset.minify() for asset in self.stylesheets)
+
+    def compile_css(self, cmd, source):
+        """Sanitizes @import rules, remove duplicates @import rules, then compile"""
         imports = []
-        def push(matchobj):
+        def sanitize(matchobj):
             ref = matchobj.group(2)
-            line = '@import "%s"' % ref
+            line = '@import "%s"%s' % (ref, matchobj.group(3))
             if '.' not in ref and line not in imports and not ref.startswith(('.', '/', '~')):
                 imports.append(line)
+                return line
+            msg = "Local import '%s' is forbidden for security reasons." % ref
+            _logger.warning(msg)
+            self.css_errors.append(msg)
             return ''
-        source = re.sub(self.rx_sass_import, push, source)
-        imports.append(source)
-        source = u'\n'.join(imports)
+        source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
         try:
-            compiler = Popen(self.cmd_sass, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            compiler = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         except Exception:
-            msg = "Could not find 'sass' program needed to compile sass/scss files"
+            msg = "Could not execute command %r" % cmd[0]
             _logger.error(msg)
             self.css_errors.append(msg)
-            return
+            return ''
         result = compiler.communicate(input=source.encode('utf-8'))
         if compiler.returncode:
-            error = self.get_sass_error(''.join(result), source=source)
+            error = self.get_preprocessor_error(''.join(result), source=source)
             _logger.warning(error)
             self.css_errors.append(error)
-            return
+            return ''
         compiled = result[0].strip().decode('utf8')
+        return compiled
+
+    def recompose_css(self, compiled):
+        """Flattenize StylesheetAsset's content from compiled source"""
         fragments = self.rx_css_split.split(compiled)[1:]
         while fragments:
             asset_id = fragments.pop(0)
-            asset = next(asset for asset in sass if asset.id == asset_id)
+            asset = next(asset for asset in self.stylesheets if asset.id == asset_id)
             asset._content = fragments.pop(0)
 
-    def get_sass_error(self, stderr, source=None):
-        # TODO: try to find out which asset the error belongs to
+    def get_preprocessor_error(self, stderr, source=None):
+        """Improve and remove sensitive information from sass/less compilator error messages"""
         error = stderr.split('Load paths')[0].replace('  Use --trace for backtrace.', '')
+        if 'Cannot load compass' in error:
+            error += "Maybe you should install the compass gem using this extra argument:\n\n" \
+                     "    $ sudo gem install compass --pre\n"
         error += "This error occured while compiling the bundle '%s' containing:" % self.xmlid
         for asset in self.stylesheets:
-            if isinstance(asset, SassAsset):
+            if isinstance(asset, PreprocessedCSS):
                 error += '\n    - %s' % (asset.url if asset.url else '<inline sass>')
         return error
 
@@ -1338,22 +1368,26 @@ class StylesheetAsset(WebAsset):
             content = super(StylesheetAsset, self)._fetch_content()
             web_dir = os.path.dirname(self.url)
 
-            content = self.rx_import.sub(
-                r"""@import \1%s/""" % (web_dir,),
-                content,
-            )
+            if self.rx_import:
+                content = self.rx_import.sub(
+                    r"""@import \1%s/""" % (web_dir,),
+                    content,
+                )
 
-            content = self.rx_url.sub(
-                r"url(\1%s/" % (web_dir,),
-                content,
-            )
+            if self.rx_url:
+                content = self.rx_url.sub(
+                    r"url(\1%s/" % (web_dir,),
+                    content,
+                )
 
-            # remove charset declarations, we only support utf-8
-            content = self.rx_charset.sub('', content)
+            if self.rx_charset:
+                # remove charset declarations, we only support utf-8
+                content = self.rx_charset.sub('', content)
+
+            return content
         except AssetError, e:
             self.bundle.css_errors.append(e.message)
             return ''
-        return content
 
     def minify(self):
         # remove existing sourcemaps, make no sense after re-mini
@@ -1373,11 +1407,9 @@ class StylesheetAsset(WebAsset):
         else:
             return '<style type="text/css"%s>%s</style>' % (media, self.with_header())
 
-class SassAsset(StylesheetAsset):
+class PreprocessedCSS(StylesheetAsset):
     html_url = '%s.css'
-    rx_indent = re.compile(r'^( +|\t+)', re.M)
-    indent = None
-    reindent = '    '
+    rx_import = None
 
     def minify(self):
         return self.with_header()
@@ -1399,12 +1431,25 @@ class SassAsset(StylesheetAsset):
                     name=url,
                     url=url,
                 ), context=self.context)
-        return super(SassAsset, self).to_html()
+        return super(PreprocessedCSS, self).to_html()
+
+    def get_source(self):
+        content = self.inline or self._fetch_content()
+        return "/*! %s */\n%s" % (self.id, content)
+
+    def get_command(self):
+        raise NotImplementedError
+
+class SassStylesheetAsset(PreprocessedCSS):
+    rx_indent = re.compile(r'^( +|\t+)', re.M)
+    indent = None
+    reindent = '    '
 
     def get_source(self):
         content = textwrap.dedent(self.inline or self._fetch_content())
 
         def fix_indent(m):
+            # Indentation normalization
             ind = m.group()
             if self.indent is None:
                 self.indent = ind
@@ -1418,6 +1463,16 @@ class SassAsset(StylesheetAsset):
         except StopIteration:
             pass
         return "/*! %s */\n%s" % (self.id, content)
+
+    def get_command(self):
+        return ['sass', '--stdin', '-t', 'compressed', '--unix-newlines', '--compass',
+               '-r', 'bootstrap-sass']
+
+class LessStylesheetAsset(PreprocessedCSS):
+    def get_command(self):
+        webpath = openerp.http.addons_manifest['web']['addons_path']
+        lesspath = os.path.join(webpath, 'web', 'static', 'lib', 'bootstrap', 'less')
+        return ['lessc', '-', '--clean-css', '--no-js', '--no-color', '--include-path=%s' % lesspath]
 
 def rjsmin(script):
     """ Minify js with a clever regex.

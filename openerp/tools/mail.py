@@ -498,6 +498,8 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = re.sub('<br\s*/?>', '\n', html)
     html = re.sub('<.*?>', ' ', html)
     html = html.replace(' ' * 2, ' ')
+    html = html.replace('&gt;', '>')
+    html = html.replace('&lt;', '<')
 
     # strip all lines
     html = '\n'.join([x.strip() for x in html.splitlines()])

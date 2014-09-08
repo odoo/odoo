@@ -583,7 +583,7 @@ class account_move_line(osv.osv):
     def _check_no_view(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
-            if l.account_id.type == 'view':
+            if l.account_id.type in ('view', 'consolidation'):
                 return False
         return True
 
@@ -635,7 +635,7 @@ class account_move_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_no_view, 'You cannot create journal items on an account of type view.', ['account_id']),
+        (_check_no_view, 'You cannot create journal items on an account of type view or consolidation.', ['account_id']),
         (_check_no_closed, 'You cannot create journal items on closed account.', ['account_id']),
         (_check_company_id, 'Account and Period must belong to the same company.', ['company_id']),
         (_check_date, 'The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal.', ['date']),
@@ -1038,6 +1038,8 @@ class account_move_line(osv.osv):
         all_moves = list(set(all_moves) - set(move_ids))
         if unlink_ids:
             if opening_reconciliation:
+                raise osv.except_osv(_('Warning!'),
+                    _('Opening Entries have already been generated.  Please run "Cancel Closing Entries" wizard to cancel those entries and then run this wizard.'))
                 obj_move_rec.write(cr, uid, unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(cr, uid, unlink_ids)
             if len(all_moves) >= 2:
@@ -1230,35 +1232,43 @@ class account_move_line(osv.osv):
         if vals.get('account_tax_id', False):
             tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])
             total = vals['debit'] - vals['credit']
-            if journal.type in ('purchase_refund', 'sale_refund'):
+            base_code = 'base_code_id'
+            tax_code = 'tax_code_id'
+            account_id = 'account_collected_id'
+            base_sign = 'base_sign'
+            tax_sign = 'tax_sign'
+            if journal.type in ('purchase_refund', 'sale_refund') or (journal.type in ('cash', 'bank') and total < 0):
                 base_code = 'ref_base_code_id'
                 tax_code = 'ref_tax_code_id'
                 account_id = 'account_paid_id'
                 base_sign = 'ref_base_sign'
                 tax_sign = 'ref_tax_sign'
-            else:
-                base_code = 'base_code_id'
-                tax_code = 'tax_code_id'
-                account_id = 'account_collected_id'
-                base_sign = 'base_sign'
-                tax_sign = 'tax_sign'
             tmp_cnt = 0
-            for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00, force_excluded=True).get('taxes'):
+            for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00, force_excluded=False).get('taxes'):
                 #create the base movement
                 if tmp_cnt == 0:
                     if tax[base_code]:
                         tmp_cnt += 1
-                        self.write(cr, uid,[result], {
+                        if tax_id.price_include:
+                            total = tax['price_unit']
+                        newvals = {
                             'tax_code_id': tax[base_code],
-                            'tax_amount': tax[base_sign] * abs(total)
-                        })
+                            'tax_amount': tax[base_sign] * abs(total),
+                        }
+                        if tax_id.price_include:
+                            if tax['price_unit'] < 0:
+                                newvals['credit'] = abs(tax['price_unit'])
+                            else:
+                                newvals['debit'] = tax['price_unit']
+                        self.write(cr, uid, [result], newvals, context=context)
                 else:
                     data = {
                         'move_id': vals['move_id'],
                         'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
                         'date': vals['date'],
-                        'partner_id': vals.get('partner_id',False),
-                        'ref': vals.get('ref',False),
+                        'partner_id': vals.get('partner_id', False),
+                        'ref': vals.get('ref', False),
+                        'statement_id': vals.get('statement_id', False),
                         'account_tax_id': False,
                         'tax_code_id': tax[base_code],
                         'tax_amount': tax[base_sign] * abs(total),
@@ -1275,6 +1285,7 @@ class account_move_line(osv.osv):
                     'date': vals['date'],
                     'partner_id': vals.get('partner_id',False),
                     'ref': vals.get('ref',False),
+                    'statement_id': vals.get('statement_id', False),
                     'account_tax_id': False,
                     'tax_code_id': tax[tax_code],
                     'tax_amount': tax[tax_sign] * abs(tax['amount']),

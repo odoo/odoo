@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 try:
     import evdev
 except ImportError:
-    _logger.error('OpenERP module hw_scanner depends on the evdev python module')
+    _logger.error('Odoo module hw_scanner depends on the evdev python module')
     evdev = None
 
 

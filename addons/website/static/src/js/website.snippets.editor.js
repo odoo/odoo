@@ -942,6 +942,48 @@
         }
     });
 
+    website.snippet.options.colorpicker = website.snippet.Option.extend({
+        start: function () {
+            var self = this;
+            var res = this._super();
+
+            this.$el.find('li').append( openerp.qweb.render('website.colorpicker') );
+
+            var classes = [];
+            this.$el.find("table.colorpicker td > *").map(function () {
+                var $color = $(this);
+                var color = $color.attr("class");
+                if (self.$target.hasClass(color)) {
+                    self.color = color;
+                    $color.parent().addClass("selected");
+                }
+                classes.push(color);
+            });
+            this.classes = classes.join(" ");
+
+            this.bind_events();
+            return res;
+        },
+        bind_events: function () {
+            var self = this;
+            var $td = this.$el.find("table.colorpicker td");
+            var $colors = $td.children();
+            $colors
+                .mouseenter(function () {
+                    self.$target.removeClass(self.classes).addClass($(this).attr("class"));
+                })
+                .mouseleave(function () {
+                    self.$target.removeClass(self.classes)
+                        .addClass($td.filter(".selected").children().attr("class"));
+                })
+                .click(function () {
+                    $td.removeClass("selected");
+                    $(this).parent().addClass("selected");
+                });
+        }
+    });
+
+
     website.snippet.options.slider = website.snippet.Option.extend({
         unique_id: function () {
             var id = 0;
@@ -975,12 +1017,10 @@
         },
         clean_for_save: function () {
             this._super();
-            $(".carousel").find(".item").removeClass("next prev left right active");
-            this.$indicators.find('li').removeClass('active');
-            this.$indicators.find('li:first').addClass('active');
-            if(!this.$target.find(".item.active").length) {
-                this.$target.find(".item:first").addClass("active");
-            }
+            this.$target.find(".item").removeClass("next prev left right active")
+                .first().addClass("active");
+            this.$indicators.find('li').removeClass('active')
+                .first().addClass("active");
         },
         start : function () {
             var self = this;

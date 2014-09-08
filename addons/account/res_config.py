@@ -42,7 +42,7 @@ class account_config_settings(osv.osv_memory):
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
             string='Default company currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
-            string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the OpenERP portal."),
+            string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the Odoo portal."),
         'company_footer': fields.related('company_id', 'rml_footer', type='text', readonly=True,
             string='Bank accounts footer preview', help="Bank accounts as printed in the footer of each printed document"),
 
@@ -108,6 +108,12 @@ class account_config_settings(osv.osv_memory):
         'module_product_email_template': fields.boolean('Send products tools and information at the invoice confirmation',
             help='With this module, link your products to a template to send complete information and tools to your customer.\n'
                  'For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.'),
+        'module_account_bank_statement_import_ofx': fields.boolean('Import of Bank Statements in .OFX Format',
+            help='Get your bank statements from you bank and import them in Odoo in .OFX format.\n'
+                '-that installs the module account_bank_statement_import.'),
+        'module_account_bank_statement_import_qif': fields.boolean('Import of Bank Statements in .QIF Format.',
+            help='Get your bank statements from you bank and import them in Odoo in .QIF format.\n'
+                '-that installs the module account_bank_statement_import_qif.'),
         'group_proforma_invoices': fields.boolean('Allow pro-forma invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),

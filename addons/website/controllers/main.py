@@ -40,8 +40,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url=='/')):
                     return request.redirect(first_menu.url)
                 if first_menu.url.startswith('/page/'):
-                    page = first_menu.url[6:]
-
+                    return request.registry['ir.http'].reroute(first_menu.url)
         return self.page(page)
 
     @http.route(website=True, auth="public")
@@ -157,31 +156,6 @@ class Website(openerp.addons.web.controllers.main.Home):
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
 
-    @http.route('/website/theme_change', type='http', auth="user", website=True)
-    def theme_change(self, theme_id=False, **kwargs):
-        imd = request.registry['ir.model.data']
-        Views = request.registry['ir.ui.view']
-
-        _, theme_template_id = imd.get_object_reference(
-            request.cr, request.uid, 'website', 'theme')
-        views = Views.search(request.cr, request.uid, [
-            ('inherit_id', '=', theme_template_id),
-            ('application', '=', 'enabled'),
-        ], context=request.context)
-        Views.write(request.cr, request.uid, views, {
-            'application': 'disabled',
-        }, context=request.context)
-
-        if theme_id:
-            module, xml_id = theme_id.split('.')
-            _, view_id = imd.get_object_reference(
-                request.cr, request.uid, module, xml_id)
-            Views.write(request.cr, request.uid, [view_id], {
-                'application': 'enabled'
-            }, context=request.context)
-
-        return request.render('website.themes', {'theme_changed': True})
-
     @http.route(['/website/snippets'], type='json', auth="public", website=True)
     def snippets(self):
         return request.website._render('website.snippets')
@@ -192,21 +166,27 @@ class Website(openerp.addons.web.controllers.main.Home):
         modules_to_update = []
         for temp_id in templates:
             view = request.registry['ir.ui.view'].browse(request.cr, request.uid, int(temp_id), context=request.context)
+            if view.page:
+                continue
             view.model_data_id.write({
                 'noupdate': False
             })
             if view.model_data_id.module not in modules_to_update:
                 modules_to_update.append(view.model_data_id.module)
-        module_obj = request.registry['ir.module.module']
-        module_ids = module_obj.search(request.cr, request.uid, [('name', 'in', modules_to_update)], context=request.context)
-        module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
+
+        if modules_to_update:
+            module_obj = request.registry['ir.module.module']
+            module_ids = module_obj.search(request.cr, request.uid, [('name', 'in', modules_to_update)], context=request.context)
+            if module_ids:
+                module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
         return request.redirect(redirect)
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, xml_id, full=False):
+    def customize_template_get(self, xml_id, full=False, bundles=False):
         """ Lists the templates customizing ``xml_id``. By default, only
         returns optional templates (which can be toggled on and off), if
         ``full=True`` returns all templates customizing ``xml_id``
+        ``bundles=True`` returns also the asset bundles
         """
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(
@@ -217,7 +197,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         user_groups = set(user.groups_id)
 
         views = request.registry["ir.ui.view"]\
-            ._views_get(request.cr, request.uid, xml_id, context=request.context)
+            ._views_get(request.cr, request.uid, xml_id, bundles=bundles, context=request.context)
         done = set()
         result = []
         for v in views:
@@ -348,6 +328,63 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         obj = _object.browse(request.cr, request.uid, _id)
         return bool(obj.website_published)
+
+    #------------------------------------------------------
+    # Themes
+    #------------------------------------------------------
+
+    def get_view_ids(self, xml_ids):
+        ids = []
+        imd = request.registry['ir.model.data']
+        for xml_id in xml_ids:
+            if "." in xml_id:
+                xml = xml_id.split(".")
+                view_model, id = imd.get_object_reference(request.cr, request.uid, xml[0], xml[1])
+            else:
+                id = int(xml_id)
+            ids.append(id)
+        return ids
+
+    @http.route(['/website/theme_customize_get'], type='json', auth="public", website=True)
+    def theme_customize_get(self, xml_ids):
+        view = request.registry["ir.ui.view"]
+        enable = []
+        disable = []
+        ids = self.get_view_ids(xml_ids)
+        for v in view.browse(request.cr, request.uid, ids, context=request.context):
+            if v.application != "disabled":
+                enable.append(v.xml_id)
+            else:
+                disable.append(v.xml_id)
+        return [enable, disable]
+
+    @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
+    def theme_customize(self, enable, disable):
+        """ enable or Disable lists of ``xml_id`` of the inherit templates
+        """
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        view = pool["ir.ui.view"]
+
+        def set_application(ids, application):
+            write_ids = []
+            for v in view.browse(cr, uid, self.get_view_ids(ids), context=context):
+                if v.application == 'always':
+                    continue
+                if v.application != application:
+                    write_ids.append(v.id)
+
+            if write_ids:
+                view.write(cr, uid, write_ids, {'application': application})
+
+        set_application(disable, 'disabled')
+        set_application(enable, 'enabled')
+
+        return True
+
+    @http.route(['/website/theme_customize_reload'], type='http', auth="public", website=True)
+    def theme_customize_reload(self, href, enable, disable):
+        self.theme_customize(enable and enable.split(",") or [],disable and disable.split(",") or [])
+        return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true"))
 
     #------------------------------------------------------
     # Helpers

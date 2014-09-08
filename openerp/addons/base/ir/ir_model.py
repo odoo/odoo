@@ -132,10 +132,15 @@ class ir_model(osv.osv):
         ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
     ]
 
-    def _search_display_name(self, operator, value):
-        # overridden to allow searching both on model name (model field) and
-        # model description (name field)
-        return ['|', ('model', operator, value), ('name', operator, value)]
+    # overridden to allow searching both on model name (model field)
+    # and model description (name field)
+    def _name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
+        if args is None:
+            args = []
+        domain = args + ['|', ('model', operator, name), ('name', operator, name)]
+        return self.name_get(cr, name_get_uid or uid,
+                             super(ir_model, self).search(cr, uid, domain, limit=limit, context=context),
+                             context=context)
 
     def _drop_table(self, cr, uid, ids, context=None):
         for model in self.browse(cr, uid, ids, context):
@@ -145,7 +150,7 @@ class ir_model(osv.osv):
             if result and result[0] == 'v':
                 cr.execute('DROP view %s' % (model_pool._table,))
             elif result and result[0] == 'r':
-                cr.execute('DROP TABLE %s' % (model_pool._table,))
+                cr.execute('DROP TABLE %s CASCADE' % (model_pool._table,))
         return True
 
     def unlink(self, cr, user, ids, context=None):
@@ -187,19 +192,24 @@ class ir_model(osv.osv):
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
             self.instanciate(cr, user, vals['model'], context)
+            model = self.pool[vals['model']]
+            model._prepare_setup_fields(cr, SUPERUSER_ID)
+            model._setup_fields(cr, SUPERUSER_ID)
             ctx = dict(context,
                 field_name=vals['name'],
                 field_state='manual',
                 select=vals.get('select_level', '0'),
                 update_custom_fields=True)
-            self.pool[vals['model']]._auto_init(cr, ctx)
-            self.pool[vals['model']]._auto_end(cr, ctx) # actually create FKs!
+            model._auto_init(cr, ctx)
+            model._auto_end(cr, ctx) # actually create FKs!
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
     def instanciate(self, cr, user, model, context=None):
         class x_custom_model(osv.osv):
             _custom = True
+        if isinstance(model, unicode):
+            model = model.encode('utf-8')
         x_custom_model._name = model
         x_custom_model._module = False
         a = x_custom_model._build_model(self.pool, cr)
@@ -307,6 +317,14 @@ class ir_model_fields(osv.osv):
             if column_name and (result and result[0] == 'r'):
                 cr.execute('ALTER table "%s" DROP column "%s" cascade' % (model._table, field.name))
             model._columns.pop(field.name, None)
+
+            # remove m2m relation table for custom fields
+            # we consider the m2m relation is only one way as it's not possible
+            # to specify the relation table in the interface for custom fields
+            # TODO master: maybe use ir.model.relations for custom fields
+            if field.state == 'manual' and field.ttype == 'many2many':
+                rel_name = self.pool[field.model]._all_columns[field.name].column._rel
+                cr.execute('DROP table "%s"' % (rel_name))
         return True
 
     def unlink(self, cr, user, ids, context=None):
@@ -346,17 +364,21 @@ class ir_model_fields(osv.osv):
                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
             if vals['model'] in self.pool:
+                model = self.pool[vals['model']]
                 if vals['model'].startswith('x_') and vals['name'] == 'x_name':
-                    self.pool[vals['model']]._rec_name = 'x_name'
-                self.pool[vals['model']].__init__(self.pool, cr)
+                    model._rec_name = 'x_name'
+                model.__init__(self.pool, cr)
+                model._prepare_setup_fields(cr, SUPERUSER_ID)
+                model._setup_fields(cr, SUPERUSER_ID)
+
                 #Added context to _auto_init for special treatment to custom field for select_level
                 ctx = dict(context,
                     field_name=vals['name'],
                     field_state='manual',
                     select=vals.get('select_level', '0'),
                     update_custom_fields=True)
-                self.pool[vals['model']]._auto_init(cr, ctx)
-                self.pool[vals['model']]._auto_end(cr, ctx) # actually create FKs!
+                model._auto_init(cr, ctx)
+                model._auto_end(cr, ctx) # actually create FKs!
                 openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
 
         return res
@@ -789,20 +811,19 @@ class ir_model_data(osv.osv):
     """
     _name = 'ir.model.data'
     _order = 'module,model,name'
-    def _display_name_get(self, cr, uid, ids, prop, unknow_none, context=None):
+    def name_get(self, cr, uid, ids, context=None):
         result = {}
-        result2 = {}
+        result2 = []
         for res in self.browse(cr, uid, ids, context=context):
             if res.id:
                 result.setdefault(res.model, {})
                 result[res.model][res.res_id] = res.id
-            result2[res.id] = False
 
         for model in result:
             try:
                 r = dict(self.pool[model].name_get(cr, uid, result[model].keys(), context=context))
                 for key,val in result[model].items():
-                    result2[val] = r.get(key, False)
+                    result2.append((val, r.get(key, False)))
             except:
                 # some object have no valid name_get implemented, we accept this
                 pass
@@ -819,7 +840,6 @@ class ir_model_data(osv.osv):
                             help="External Key/Identifier that can be used for "
                                  "data integration with third-party systems"),
         'complete_name': fields.function(_complete_name_get, type='char', string='Complete ID'),
-        'display_name': fields.function(_display_name_get, type='char', string='Record Name'),
         'model': fields.char('Model Name', required=True, select=1),
         'module': fields.char('Module', required=True, select=1),
         'res_id': fields.integer('Record ID', select=1,

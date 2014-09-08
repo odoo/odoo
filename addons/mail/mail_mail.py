@@ -30,6 +30,7 @@ from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+import openerp.tools as tools
 
 _logger = logging.getLogger(__name__)
 
@@ -60,6 +61,7 @@ class mail_mail(osv.Model):
         'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
         'headers': fields.text('Headers', copy=False),
+        'failure_reason': fields.text('Failure Reason', help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.", readonly=1),
         # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
         # and during unlink() we will not cascade delete the parent and its attachments
         'notification': fields.boolean('Is Notification',
@@ -296,7 +298,7 @@ class mail_mail(osv.Model):
                     mail.write({'state': 'sent', 'message_id': res})
                     mail_sent = True
                 else:
-                    mail.write({'state': 'exception'})
+                    mail.write({'state': 'exception', 'failure_reason': _('Error without exception. Probably due do sending an email without computed recipients.')})
                     mail_sent = False
 
                 # /!\ can't use mail.state here, as mail.refresh() will cause an error
@@ -312,8 +314,9 @@ class mail_mail(osv.Model):
                                   mail.id, mail.message_id)
                 raise
             except Exception as e:
-                _logger.exception('failed sending mail.mail %s', mail.id)
-                mail.write({'state': 'exception'})
+                failure_reason = tools.ustr(e)
+                _logger.exception('failed sending mail (id: %s) due to %s', mail.id, failure_reason)
+                mail.write({'state': 'exception', 'failure_reason': failure_reason})
                 self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=False)
                 if raise_exception:
                     if isinstance(e, AssertionError):

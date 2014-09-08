@@ -145,7 +145,7 @@ class account_invoice(models.Model):
             else:
                 self.residual = new_value
         # prevent the residual amount on the invoice to be less than 0
-        self.residual = max(self.residual, 0.0)            
+        self.residual = max(self.residual, 0.0)
 
     @api.one
     @api.depends(
@@ -379,7 +379,7 @@ class account_invoice(models.Model):
         assert len(self) == 1, 'This option should only be used for a single id at a time.'
         template = self.env.ref('account.email_template_edi_invoice', False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        ctx = dict(self._context,
+        ctx = dict(
             default_model='account.invoice',
             default_res_id=self.id,
             default_use_template=bool(template),
@@ -712,7 +712,7 @@ class account_invoice(models.Model):
             for tax in self.tax_line:
                 if tax.manual:
                     continue
-                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id, tax.account_analytic_id.id)
+                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
                 tax_key.append(key)
                 if key not in compute_taxes:
                     raise except_orm(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
@@ -793,7 +793,10 @@ class account_invoice(models.Model):
                 continue
 
             ctx = dict(self._context, lang=inv.partner_id.lang)
-            date_invoice = inv.date_invoice or fields.Date.context_today(self)
+
+            if not inv.date_invoice:
+                inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
+            date_invoice = inv.date_invoice
 
             company_currency = inv.company_id.currency_id
             # create the analytical lines, one move line per invoice line
@@ -906,7 +909,6 @@ class account_invoice(models.Model):
             move = account_move.with_context(ctx).create(move_vals)
             # make the invoice point to that move
             vals = {
-                'date_invoice': date_invoice,
                 'move_id': move.id,
                 'period_id': period.id,
                 'move_name': move.name,
@@ -1005,15 +1007,18 @@ class account_invoice(models.Model):
         #TODO: implement messages system
         return True
 
-    @api.one
-    def _compute_display_name(self):
+    @api.multi
+    def name_get(self):
         TYPES = {
             'out_invoice': _('Invoice'),
             'in_invoice': _('Supplier Invoice'),
             'out_refund': _('Refund'),
             'in_refund': _('Supplier Refund'),
         }
-        self.display_name = "%s %s" % (self.number or TYPES[self.type], self.name or '')
+        result = []
+        for inv in self:
+            result.append((inv.id, "%s %s" % (inv.number or TYPES[inv.type], inv.name or '')))
+        return result
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -1549,7 +1554,15 @@ class account_invoice_tax(models.Model):
                     val['account_id'] = tax['account_paid_id'] or line.account_id.id
                     val['account_analytic_id'] = tax['account_analytic_paid_id']
 
-                key = (val['tax_code_id'], val['base_code_id'], val['account_id'], val['account_analytic_id'])
+                # If the taxes generate moves on the same financial account as the invoice line
+                # and no default analytic account is defined at the tax level, propagate the
+                # analytic account from the invoice line to the tax line. This is necessary
+                # in situations were (part of) the taxes cannot be reclaimed,
+                # to ensure the tax move is allocated to the proper analytic account.
+                if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
+                    val['account_analytic_id'] = line.account_analytic_id.id
+
+                key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
                 if not key in tax_grouped:
                     tax_grouped[key] = val
                 else:
@@ -1619,8 +1632,8 @@ class mail_compose_message(models.Model):
                 context.get('default_res_id') and context.get('mark_invoice_as_sent'):
             invoice = self.env['account.invoice'].browse(context['default_res_id'])
             invoice = invoice.with_context(mail_post_autofollow=True)
-            self.write({'sent': True})
-            self.message_post(body=_("Invoice sent"))
+            invoice.write({'sent': True})
+            invoice.message_post(body=_("Invoice sent"))
         return super(mail_compose_message, self).send_mail()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

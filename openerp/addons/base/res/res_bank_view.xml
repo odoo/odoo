@@ -7,7 +7,6 @@
             <field name="model">res.bank</field>
             <field name="arch" type="xml">
                 <form string="Bank">
-                  <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="bic"/>
@@ -33,7 +32,6 @@
                             <field name="active"/>
                         </group>
                     </group>
-                  </sheet>
                 </form>
             </field>
         </record>
@@ -167,7 +165,7 @@
                 You can reorder bank accounts from the list view.
               </p>
               <p>
-                If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.
+                If you use the accounting application of Odoo, journals and accounts will be created automatically based on these data.
               </p>  
             </field>
         </record>

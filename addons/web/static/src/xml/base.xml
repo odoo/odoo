@@ -40,7 +40,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h3 class="modal-title"><t t-raw="title"/></h3>
                 </div>
-                <div class="modal-body" style="overflow-y: auto;">
+                <div class="modal-body">
                 </div>
             </div>
         </div>
@@ -85,7 +85,7 @@
                     </div>
                 </div>
                 <p class="oe_grey" style="margin: 10px">
-                    Fill in this form to create an OpenERP database. You can
+                    Fill in this form to create an Odoo database. You can
                     create databases for different companies or for different
                     goals (testing, production). Once the database is created,
                     you will be able to install your first application.
@@ -112,7 +112,7 @@
                         <td class="oe_form_group_cell">
                             <span class="oe_form_field oe_form_field_boolean oe_grey" >
                                 <input type="checkbox" name="demo_data" />
-                                Check this box to evaluate OpenERP.
+                                Check this box to evaluate Odoo.
                             </span>
                         </td>
                     </tr>
@@ -372,7 +372,7 @@
 
       <div class="oe_bottom">
         <p>Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.<br />
-            OpenERP is a trademark of the <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">OpenERP SA Company</a>.</p>
+            Odoo is a trademark of the <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">OpenERP SA Company</a>.</p>
         <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/agpl.html" style="text-decoration: underline;">GNU Affero General Public License</a></p>
         <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
       </div>
@@ -1768,6 +1768,8 @@
             <button class="oe_button" id="add_field">Add</button>
             <button class="oe_button" id="remove_field">Remove</button>
             <button class="oe_button" id="remove_all_field">Remove All</button>
+            <button class="oe_button" id="move_up">Move Up</button>
+            <button class="oe_button" id="move_down">Move Down</button>
         </td>
         <td class="oe_export_fields_selector_right">
             <select name="fields_list" id="fields_list"

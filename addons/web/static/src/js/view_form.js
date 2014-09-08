@@ -302,6 +302,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 opacity: '1',
                 filter: 'alpha(opacity = 100)'
             });
+            instance.web.bus.trigger('form_view_shown', self);
         });
     },
     do_hide: function () {
@@ -701,10 +702,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.trigger("save", result);
             self.reload().then(function() {
                 self.to_view_mode();
-                var parent = self.ViewManager.ActionManager.getParent();
-                if(parent){
-                    parent.menu.do_reload_needaction();
+                var menu = instance.webclient.menu;
+                if (menu) {
+                    menu.do_reload_needaction();
                 }
+                instance.web.bus.trigger('form_view_saved', self);
             });
         }).always(function(){
             $(e.target).attr("disabled", false);
@@ -1835,7 +1837,6 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         trigger = trigger || this.$el;
         options = _.extend({
                 delay: { show: 500, hide: 0 },
-                trigger: 'hover',
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {

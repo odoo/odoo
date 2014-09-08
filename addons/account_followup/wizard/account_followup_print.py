@@ -42,6 +42,14 @@ class account_followup_stat_by_partner(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
 
+    _depends = {
+        'account.move.line': [
+            'account_id', 'company_id', 'credit', 'date', 'debit',
+            'followup_date', 'followup_line_id', 'partner_id', 'reconcile_id',
+        ],
+        'account.account': ['active', 'type'],
+    }
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_followup_stat_by_partner')
         # Here we don't have other choice but to create a virtual ID based on the concatenation

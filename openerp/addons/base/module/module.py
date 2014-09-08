@@ -177,8 +177,13 @@ class module(osv.osv):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
                     res[module.id] = lxml.html.tostring(html)
             else:
-                overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
-                output = publish_string(source=module.description, settings_overrides=overrides, writer=MyWriter())
+                overrides = {
+                    'embed_stylesheet': False,
+                    'doctitle_xform': False,
+                    'output_encoding': 'unicode',
+                    'xml_declaration': False,
+                }
+                output = publish_string(source=module.description or '', settings_overrides=overrides, writer=MyWriter())
                 res[module.id] = output
         return res
 
@@ -586,6 +591,19 @@ class module(osv.osv):
             'icon': terp.get('icon', False),
             'summary': terp.get('summary', ''),
         }
+
+
+    def create(self, cr, uid, vals, context=None):
+        new_id = super(module, self).create(cr, uid, vals, context=context)
+        module_metadata = {
+            'name': 'module_%s' % vals['name'],
+            'model': 'ir.module.module',
+            'module': 'base',
+            'res_id': new_id,
+            'noupdate': True,
+        }
+        self.pool['ir.model.data'].create(cr, uid, module_metadata)
+        return new_id
 
     # update the list of available packages
     def update_list(self, cr, uid, context=None):

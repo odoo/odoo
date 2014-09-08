@@ -75,7 +75,7 @@ var Tour = {
         if (!tour) {
             return Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
         }
-        console.log("Tour '"+tour_id+"' Begin from run method");
+        Tour.log("Tour '"+tour_id+"' Begin from run method", true);
         var state = Tour.getState();
         if (state) {
              if (state.mode === "test") {
@@ -311,7 +311,7 @@ var Tour = {
                 "step_id": 0
             };
             window.location.hash = "";
-            console.log("Tour '"+state.id+"' Begin from url hash");
+            Tour.log("Tour '"+state.id+"' Begin from url hash");
             Tour.saveState(state.id, state.mode, state.step_id, 0);
         }
         if (!state.id) {
@@ -321,22 +321,31 @@ var Tour = {
         state.step = state.tour && state.tour.steps[state.step_id === -1 ? 0 : state.step_id];
         return state;
     },
+    log: function (message, add_user) {
+        if (add_user) {
+            var user = $(".navbar .dropdown:has(>.js_usermenu) a:first, .navbar .oe_topbar_name").text();
+            if (!user && $('a[href*="/login"]')) user = 'Public User';
+            message += " (" + (user||"").replace(/^\s*|\s*$/g, '') + ")";
+        }
+        console.log(message);
+    },
+    logError: function (step, message, all) {
+        var state = Tour.getState();
+        message += '\ntour: ' + state.id
+            + (step ? '\nstep: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
+            + (all ? '\nhref: ' + window.location.href : '' )
+            + (all ? '\nreferrer: ' + document.referrer : '' )
+            + (step ? '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) : '' )
+            + (step ? '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size()) : '' )
+            + (step ? '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' );
+            + (all ? "\nlocalStorage: " + JSON.stringify(localStorage) : '' )
+            + (all ? '\n\n' + $("body").html() : '' );
+        Tour.log(message, true);
+    },
     error: function (step, message) {
         var state = Tour.getState();
-        message += '\n tour: ' + state.id
-            + (step ? '\n step: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
-            + '\n href: ' + window.location.href
-            + '\n referrer: ' + document.referrer
-            + (step ? '\n element: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) : '' )
-            + (step ? '\n waitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size()) : '' )
-            + (step ? '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' )
-            + "\n localStorage: " + JSON.stringify(localStorage)
-            + '\n\n' + $("body").html();
-        Tour.reset();
-        if (state.mode === "test") {
-            console.log(message);
-            Tour.endTour();
-        }
+        Tour.logError(step, "Error: " + message, true);
+        Tour.endTour();
     },
     lists: function () {
         var tour_ids = [];
@@ -366,7 +375,7 @@ var Tour = {
         clearTimeout(Tour.timer);
         clearTimeout(Tour.testtimer);
         Tour.closePopover();
-        console.log("Tour reset");
+        Tour.log("Tour reset");
     },
     running: function () {
         var state = Tour.getState();
@@ -376,7 +385,7 @@ var Tour = {
                 Tour.load_template().then(Tour.running);
                 return;
             }
-            console.log("Tour '"+state.id+"' is running");
+            Tour.log("Tour '"+state.id+"' is running", true);
             Tour.registerSteps(state.tour, state.mode);
             Tour.nextStep();
         } else {
@@ -384,7 +393,7 @@ var Tour = {
                 return Tour.error(state.step, "Tour '"+state.id+"' undefined");
             }
             Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
-            console.log("Tour '"+state.id+"' wait for running (tour undefined)");
+            Tour.log("Tour '"+state.id+"' wait for running (tour undefined)");
             setTimeout(Tour.running, Tour.retryRunningDelay);
         }
     },
@@ -398,7 +407,7 @@ var Tour = {
         var state = Tour.getState();
         var time = new Date().getTime();
         var timer;
-        var next = state.tour.steps[state.step.id+1];
+        var next = state.step.next ? Tour.search_step(state.step.next) : state.tour.steps[state.step.id+1];
         var overlaps = state.mode === "test" ? Tour.errorDelay : 0;
 
         window.onbeforeunload = function () {
@@ -413,19 +422,64 @@ var Tour = {
 
             clearTimeout(Tour.timer);
             if (Tour.check(next)) {
+
                 clearTimeout(Tour.currentTimer);
                 // use an other timeout for cke dom loading
                 Tour.saveState(state.id, state.mode, state.step.id, 0);
                 setTimeout(function () {
+                    if (state.step.onend && Tour._goto(state.step.onend())) return;
                     Tour.nextStep(next);
                 }, Tour.defaultDelay);
+                return;
+
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
+
                 Tour.timer = setTimeout(checkNext, Tour.defaultDelay);
+                return;
+
+            } else if(next.onerror) {
+                
+                Tour.logError(next, "Error: Can't reach the next step (call next step onerror)", false);
+                var id = next.onerror();
+                if (id) {
+                    if (Tour._goto(id)) return;
+                    if (id === true) {
+                        Tour.nextStep(next);
+                        return;
+                    }
+                }
+
+            }
+            
+            Tour.error(next, "Can't reach the next step");
+            return;
+
+        }
+        setTimeout(checkNext, 0);
+    },
+    search_step: function (id_or_title) {
+        var state = Tour.getState();
+        if (id_or_title !== undefined) {
+            if (isNaN(id_or_title)) {
+                for (var k=0; k<state.tour.steps.length; k++) {
+                    if (state.tour.steps[k].title === id_or_title || state.tour.steps[k]._title === id_or_title) {
+                        return state.tour.steps[k];
+                    }
+                }
             } else {
-                return Tour.error(next, "Can't reach the next step");
+                return state.tour.steps[id_or_title];
             }
         }
-        checkNext();
+        return undefined;
+    },
+    _goto: function (id_or_title) {
+        var state = Tour.getState();
+        if (!state) return true;
+        if (id_or_title === undefined) return false;
+        var step = Tour.search_step(id_or_title);
+        Tour.saveState(state.id, state.mode, step.id, 0);
+        Tour.nextStep(Tour.getState().step);
+        return true;
     },
     nextStep: function (step) {
         var state = Tour.getState();
@@ -435,7 +489,7 @@ var Tour = {
         }
 
         step = step || state.step;
-        var next = state.tour.steps[step.id+1];
+        var next = state.step.next ? Tour.search_step(state.step.next) : state.tour.steps[step.id+1];
 
         if (state.mode === "test" && state.number > 3) {
             return Tour.error(next, "Cycling. Can't reach the next step");
@@ -443,44 +497,41 @@ var Tour = {
         
         Tour.saveState(state.id, state.mode, step.id, state.number);
 
-        if (step.id !== state.step_id) {
-            console.log("Tour '"+state.id+"' Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
+        if (state.number === 1) {
+            Tour.log("Tour '"+state.id+"' Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
         }
 
         Tour.autoTogglePopover(true);
 
-        if (step.onload) {
-            step.onload();
+        // onload a step you can fallback to an other step
+        if (step.onload && Tour._goto(step.onload())) {
+            return;
         }
 
-        if (next) {
+        if (state.mode === "test") {
             setTimeout(function () {
-                if (Tour.getState()) {
+                Tour.autoNextStep(state.tour, step);
+                if (next && Tour.getState()) {
                     Tour.waitNextStep();
                 }
-                if (state.mode === "test") {
-                    setTimeout(function(){
-                        Tour.autoNextStep(state.tour, step);
-                    }, Tour.defaultDelay);
-                }
-            }, next.wait || 0);
-        } else {
-            setTimeout(function(){
-                Tour.autoNextStep(state.tour, step);
-            }, Tour.defaultDelay);
+            }, step.wait || Tour.defaultDelay);
+        } else if (next) {
+            setTimeout(Tour.waitNextStep, next.wait || 0);
+        }
+        if (!next) {
             Tour.endTour();
         }
     },
     endTour: function () {
         var state = Tour.getState();
-        var test = state.step.id >= state.tour.steps.length-1;
+        var test = state.step && state.step.id >= state.tour.steps.length-1;
         Tour.reset();
         if (test) {
-            console.log("Tour '"+state.id+"' finish: ok");
-            console.log('ok');
+            Tour.log("Tour '"+state.id+"' finish: ok");
+            Tour.log('ok');
         } else {
-            console.log("Tour '"+state.id+"' finish: error");
-            console.log('error');
+            Tour.log("Tour '"+state.id+"' finish: error");
+            Tour.log('error');
         }
     },
     autoNextStep: function (tour, step) {
@@ -539,7 +590,7 @@ var Tour = {
             
             }
         }
-        Tour.testtimer = setTimeout(autoStep, 100);
+        Tour.testtimer = setTimeout(autoStep, 0);
     },
     autoDragAndDropSnippet: function (selector) {
         var $thumbnail = $(selector).first();
