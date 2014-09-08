@@ -23,9 +23,11 @@ class Website_Url(http.Controller):
     def shorten_url(self, **post):
         return request.website.render("website_url.page_shorten_url", {})
 
-    @http.route(['/r<string:code>+'] , type='http', auth="user", website=True)
+    @http.route(['/r/<string:code>+'] , type='http', auth="user", website=True)
     def statistics_shorten_url(self, code, **post):
+        cr, uid, context = request.cr, request.uid, request.context
         # JSH Todo: Find way to redirect user. to statistics of the
         # perticular url code
-        return request.website.render("website_url.page_shorten_url", {})
+        action_id = request.registry['ir.actions.act_window'].for_xml_id(cr, uid, 'website_url', 'action_view_click_statistics', context=context)['id']
+        return werkzeug.utils.redirect("/web#view_type=graph&model=website.alias.click&action=%d" % (action_id), 302)
 

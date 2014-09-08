@@ -7,9 +7,15 @@
         </template>
 
         <template id="create_shorten_url">
-            <div class="container jumbotron">
-                <input id='url' type="text" size="100" name="url" required="True" placeholder="Enter URL to shorten"/>
-                <button class="btn btn-primary" id="btn_shorten_url" data-copy="false">Shorten</button>
+            <div class="container-fluid jumbotron">
+                <div class="row">
+                    <div class="col-lg-6 col-lg-offset-2">
+                        <h3>
+                            <input id="url" type="text" size="50" required="True" placeholder="Enter the URL to shorten"/>
+                        </h3>
+                        <button class="btn btn-primary" id="btn_shorten_url">Shorten</button>
+                    </div>
+                </div>
             </div>
         </template>
 

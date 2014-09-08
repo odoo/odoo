@@ -45,10 +45,10 @@ class website_alias(models.Model):
 
     @api.multi
     def action_view_statistics(self):
+        print("The view is called!!!!!!!!!!!!!!!!")
         action = self.env['ir.actions.act_window'].for_xml_id('website_url', 'action_view_click_statistics')
         action['domain'] = [('alias_id', '=', self.id)]
         return action
-
 
     @api.multi
     def action_visit_page(self):
