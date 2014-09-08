@@ -227,10 +227,20 @@ class base_action_rule(osv.osv):
                 updated = True
         return updated
 
+    def _update_cron(self, cr, uid, context=None):
+        try:
+            cron = self.pool['ir.model.data'].get_object(
+                cr, uid, 'base_action_rule', 'ir_cron_crm_action', context=context)
+        except ValueError:
+            return False
+
+        return cron.toggle(model=self._name, domain=[('kind', '=', 'on_time')])
+
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
         if self._register_hook(cr, [res_id]):
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
+        self._update_cron(cr, uid, context=context)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -239,7 +249,13 @@ class base_action_rule(osv.osv):
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
         if self._register_hook(cr, ids):
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
+        self._update_cron(cr, uid, context=context)
         return True
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(base_action_rule, self).unlink(cr, uid, ids, context=context)
+        self._update_cron(cr, uid, context=context)
+        return res
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
         data = {'model': False, 'filter_pre_id': False, 'filter_id': False}
