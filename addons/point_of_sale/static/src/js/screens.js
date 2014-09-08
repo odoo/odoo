@@ -1067,6 +1067,21 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 return;
             }
 
+            // The exact amount must be paid if there is no cash payment method defined.
+            if (Math.abs(currentOrder.getTotalTaxIncluded() - currentOrder.getPaidTotal()) > 0.00001) {
+                var cash = false;
+                for (var i = 0; i < this.pos.cashregisters.length; i++) {
+                    cash = cash || (this.pos.cashregisters[i].journal.type === 'cash');
+                }
+                if (!cash) {
+                    this.pos_widget.screen_selector.show_popup('error',{
+                        message: _t('Cannot return change without a cash payment method'),
+                        comment: _t('There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration'),
+                    });
+                    return;
+                }
+            }
+
             if(    this.pos.config.iface_cashdrawer 
                 && this.pos.get('selectedOrder').get('paymentLines').find( function(pl){ 
                            return pl.cashregister.journal.type === 'cash'; 
