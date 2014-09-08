@@ -24,6 +24,55 @@ from openerp.tools.sql import drop_view_if_exists
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 
+class account_invoice(osv.osv):
+    _inherit = "account.invoice"
+    _columns = {
+        'incoterm_id': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
+        'intrastat_transaction_id': fields.many2one('report.intrastat.transaction', 'Intrastat type of transaction', help="Intrastat nature of transaction"),
+        'transport_mode_id': fields.many2one('report.intrastat.transport_mode', 'Intrastat transport mode'),
+        'intrastat_country_id': fields.many2one('res.country', 'Intrastat country', help='Intrastat country, delivery for sales, origin for purchases', domain=[('intrastat','=',True)]),
+    }
+
+
+class intrastat_regions(osv.osv):
+    _name = 'report.intrastat.regions'
+    _columns = {
+        'code': fields.char('Code', required=True),
+        'country_id': fields.many2one('res.country', 'Country'),
+        'name': fields.char('Name', translate=True),
+        'description': fields.char('Description'),
+    }
+
+    _sql_constraints = [
+        ('report_intrastat_regioncodeunique','UNIQUE (code, country_id)','Code must be unique per country.'),
+    ]
+
+
+class intrastat_transaction(osv.osv):
+    _name = 'report.intrastat.transaction'
+    _rec_name = 'code'
+    _columns = {
+        'code': fields.char('Code', required=True),
+        'description': fields.text('Description'),
+    }
+
+    _sql_constraints = [
+        ('report_intrastat_trcodeunique','UNIQUE (code)','Code must be unique.'),
+    ]
+
+
+class intrastat_transport_mode(osv.osv):
+    _name = 'report.intrastat.transport_mode'
+    _columns = {
+        'code': fields.char('Code', required=True),
+        'name': fields.char('Description'),
+    }
+
+    _sql_constraints = [
+        ('report_intrastat_trmodecodeunique','UNIQUE (code)','Code must be unique.'),
+    ]
+
+
 class res_country(osv.osv):
     _name = 'res.country'
     _inherit = 'res.country'
@@ -41,9 +90,35 @@ class report_intrastat_code(osv.osv):
     _description = "Intrastat code"
     _columns = {
         'name': fields.char('Intrastat Code'),
-        'description': fields.char('Description'),
+        'description': fields.text('Description', translate=True),
     }
 
+
+class product_category(osv.osv):
+    _name = "product.category"
+    _inherit = "product.category"
+
+    _columns = {
+        'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code'),
+    }
+
+    def get_intrastat_recursively(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            lstids = [ids,]
+        else:
+            lstids = ids
+        res=[]
+        categories = self.browse(cr, uid, lstids, context=context)
+        for category in categories:
+            if category.intrastat_id:
+                res.append(category.intrastat_id.id)
+            elif category.parent_id:
+                res.append(self.get_intrastat_recursively(cr, uid, category.parent_id.id, context=context))
+            else:
+                res.append(None)
+        if isinstance(ids, (int, long)):
+            return res[0]
+        return res
 
 
 class product_template(osv.osv):
@@ -54,6 +129,68 @@ class product_template(osv.osv):
     }
 
 
+class product_product(osv.osv):
+    _name = "product.product"
+    _inherit = "product.product"
+
+    def get_intrastat_recursively(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            lstids = [ids,]
+        else:
+            lstids = ids
+
+        res=[]
+        products = self.browse(cr, uid, lstids, context=context)
+        for product in products:
+            if product.intrastat_id:
+                res.append(product.intrastat_id.id)
+            elif product.categ_id:
+                res.append(self.pool['product.category'].get_intrastat_recursively(cr, uid, product.categ_id.id, context=context))
+            else:
+                res.append(None)
+        if isinstance(ids, (int, long)):
+            return res[0]
+        return res
+
+
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'region_id': fields.many2one('report.intrastat.regions', 'Intrastat region'),
+        'transport_mode_id': fields.many2one('report.intrastat.transport_mode', 'Default transport mode'),
+        'incoterm_id': fields.many2one('stock.incoterms', 'Default incoterm for intrastat', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
+    }
+
+
+class stock_warehouse(osv.osv):
+    _inherit = "stock.warehouse"
+    _columns = {
+        'region_id': fields.many2one('report.intrastat.regions', 'Intratstat region'),
+    }
+
+    def get_regionid_from_locationid(self, cr, uid, locationid, context=None):
+        location_mod = self.pool['stock.location']
+
+        location_id = locationid
+        toret = None
+        stopsearching = False
+
+        while not stopsearching:
+            warehouse_ids = self.search(cr, uid, [('lot_stock_id','=',location_id)])
+            if warehouse_ids and warehouse_ids[0]:
+                stopsearching = True
+                toret = self.browse(cr, uid, warehouse_ids[0], context=context).region_id.id
+            else:
+                loc = location_mod.browse(cr, uid, location_id, context=context)
+                if loc and loc.location_id:
+                    location_id = loc.location_id
+                else:
+                    #no more parent
+                    stopsearching = True
+
+        return toret
+
+            
 class report_intrastat(osv.osv):
     _name = "report.intrastat"
     _description = "Intrastat report"

@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.odoo.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,33 +20,24 @@
 ##############################################################################
 
 {
-    'name': 'Intrastat Reporting',
+    'name': 'Belgian Intrastat Declaration',
     'version': '1.0',
-    'category': 'Accounting & Finance',
+    'category': 'Reporting',
     'description': """
-A module that adds intrastat reports.
-=====================================
-
-This module gives the details of the goods traded between the countries of
-European Union.""",
+Generates Intrastat XML report for declaration
+Based on invoices.
+    """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base', 'product', 'sale_stock', 'purchase'],
+    'depends': ['report_intrastat', 'base_action_rule', 'l10n_be','account_accountant'],
     'data': [
-        'security/groups.xml',
-        'security/ir.model.access.csv',
-        'report_intrastat_view.xml',
-        'intrastat_report.xml',
-        'data/country.xml',
-        'data/transaction.codes.xml',
-        'data/transport.modes.xml',
-        'views/report_intrastatinvoice.xml'
+        'data/regions.xml',
+        'data/report.intrastat.code.xml',
+        'wizard/l10n_be_intrastat_declaration_xml_view.xml',
     ],
     'demo': [],
-    'test': ['test/report_intrastat_report.yml'],
+    'test': [],
     'installable': True,
     'auto_install': False,
-    'images': ['images/country_intrastat_code.jpeg','images/intrastat_code.jpeg'],
+    'images': [],
+    'css': [],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
