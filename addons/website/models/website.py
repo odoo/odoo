@@ -25,7 +25,7 @@ except ImportError:
 
 import openerp
 from openerp.osv import orm, osv, fields
-from openerp.tools import html_escape as escape, ustr, image_resize_and_sharpen
+from openerp.tools import html_escape as escape, ustr, image_resize_and_sharpen, image_save_for_web
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request
 
@@ -588,16 +588,9 @@ class website(osv.osv):
         if w < max_w and h < max_h:
             response.data = data
         else:
-            image_format = image.format
             size = (max_w, max_h)
             image = image_resize_and_sharpen(image, size)
-
-            if image_format == 'PNG':
-                image.convert('P').save(response.stream, optimize=True, format='PNG')
-            elif image.format == 'JPEG':
-                image.save(response.stream, quality=80, optimize=True, format='JPG')
-            else:
-                image.save(response.stream, format=image_format)
+            image_save_for_web(image, response.stream)
             # invalidate content-length computed by make_conditional as
             # writing to response.stream does not do it (as of werkzeug 0.9.3)
             del response.headers['Content-Length']

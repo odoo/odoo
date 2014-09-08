@@ -115,6 +115,28 @@ def image_resize_and_sharpen(image, size, factor=2.0):
     image.paste(resized_image, ((size[0] - resized_image.size[0]) / 2, (size[1] - resized_image.size[1]) / 2))
     return image
 
+def image_save_for_web(image, fp=None):
+    """
+        Save image optimized for web usage.
+
+        :param image: PIL.Image.Image()
+        :param fp: File name or file object. If not specified, a bytestring is returned.
+    """
+    opt = dict(format=image.format)
+    if image.format == 'PNG':
+        opt.update(optimize=True)
+        if image.mode != 'P':
+            # Floyd Steinberg dithering by default
+            image = image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
+    elif image.format == 'JPEG':
+        opt.update(optimize=True, quality=80)
+    if fp:
+        image.save(fp, **opt)
+    else:
+        img = StringIO.StringIO()
+        image.save(img, **opt)
+        return img.getvalue()
+
 def image_resize_image_big(base64_source, size=(1204, 1024), encoding='base64', filetype=None, avoid_if_small=True):
     """ Wrapper on image_resize_image, to resize images larger than the standard
         'big' image size: 1024x1024px.
