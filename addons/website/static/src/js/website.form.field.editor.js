@@ -6,30 +6,23 @@
 	var ValidOption = false;
 	website.add_template_file('/website/static/src/xml/website.form.editor.wizard.template.xml');
 	
+
+	
     website.snippet.options.editFormField = website.snippet.Option.extend({
-    	switch_help: function(wizard) {
-    		return function() {
-    			if(wizard.find('.form-field-helped').is(':checked')) {
-    				wizard.find('#formFieldEditor-help').prop('disabled',false);
-    			}
-    			else {
-    				wizard.find('#formFieldEditor-help').prop('disabled',true);
-    			}
-    		};
-    	},
+  
     	
     	//////////////////////////////////////
     	//----------------------------------//
     	// 		Subwidgets					//
     	//----------------------------------//
-    	// Sub widgets for improve wizards 	//
+    	// Sub widgets to improve wizards 	//
     	//----------------------------------//
     	//////////////////////////////////////
     	
     	//------------------------------//
     	//		Option Editor			//
     	//------------------------------//
-    	// Manage a editable table 		//
+    	// Manage an editable table 	//
     	// With events to edit options	//
     	// for one2many and many2many	//
     	// fields						//
@@ -157,6 +150,7 @@
     			var last = self.table.find('.last');
     			var parent = last.parent();
     			
+    			console.log(tb_line);
     			last.remove();
     			
     			tb_line.find('.form-editor-add').remove();
@@ -167,9 +161,13 @@
     				elem = $(elem);
   
 	    			var option = get(elem);
-	    			if(elem.is(':last-child')) tb_append = tb_last.clone();
+	    			if(elem.next().length == 0) {
+	    				tb_append = tb_last.clone();
+	    				console.log('last');
+	    			}
+	    			
 	    			else tb_append = tb_line.clone();
-	    				
+	    		
 	    			tb_append.find('.option-label').html(option.label).on('keydown', self.tabEvent());
 			    	tb_append.find('.option-value').html(option.value).on('keydown', self.tabEvent());
 			    		
@@ -199,9 +197,22 @@
     		var self = this;
     		wizard.find('.form-field-placeholder')		.val(self.$target.find('.form-control').prop('placeholder'));		// Load placeholder on wizard
     	},
-    	checkboxLoadData: function(wizard) {
+    	inputfileLoadData: function(wizard) {
+    		wizard.find('.form-field-placeholder')		.val(this.$target.find('.form-control').prop('placeholder'));
+    		wizard.find('.form-button-label')			.val(this.$target.find('.browse-label').html());
+    		wizard.find('.form-field-multiple')			.prop('checked',this.$target.find('input[type=file]').attr('multiple') == "multiple");
+    		console.log('multiple_detected', this.$target.find('input[type=file]').attr('multiple') == "multiple");
+    	},
+    	searchLoadData: function(wizard) {
     		var self = this;
-    		wizard.find('.form-field-option')		.val(self.$target.find('.option').html());		// Load checkbox option on wizard
+    		
+    		wizard.find('.form-field-multiple').prop('checked',self.$target.find('.form-control').attr('data-multiple') == "multiple");
+    		
+    		self.optionEditor.enable(	wizard.find('table'),
+    									self.$target.find('.wrap-options'),
+    									function (elem) {
+    										return {label : elem.html(), value : elem.val()};
+    									});
     	},
     	selectLoadData: function(wizard) {
     		var self = this;
@@ -212,9 +223,9 @@
     									self.$target.find('.wrap-options'),
     									function (elem) {
     										return {label : elem.html(), value : elem.val()};
-    									});   		
+    									});
     	},
-    	multiCheckboxLoadData: function(wizard) {
+    	checkboxLoadData: function(wizard) {
     		var self = this;
     		
     		wizard.find('.form-field-inline').prop('checked',self.$target.find('.wrap-options label').hasClass('checkbox-inline'));
@@ -242,7 +253,6 @@
     		wizard.find('.form-field-label')			.val(self.$target.find('label').html());								// Load label on wizard
 			wizard.find('.form-field-placeholder')		.val(self.$target.find('.form-control').prop('placeholder'));			// Load placeholder on wizard
    			wizard.find('.form-field-help')				.val(self.$target.find('.help-block').html());							// Load help text on wizard
-   			wizard.find('.form-field-helped')			.prop('checked',!self.$target.find('.help-block').hasClass("hidden"));	// Check help option on wizard if enabled
    			wizard.find('.form-field-required')			.prop('checked',self.$target.find('.form-control').prop('required'));	// Check required option on wizard if enabled
             wizard.find('.form-select-field')			.val(self.$target.find('.form-control').attr('data-field'));			// Load action on wizard
     	},
@@ -260,6 +270,24 @@
     			self.$target.find('.form-control').prop('placeholder',wizard.find('.form-field-placeholder').val());
     		};
     	},
+    	inputfileValidate: function(wizard) {
+    		var self = this;
+    		return function() {
+    			var multiple = wizard.find('.form-field-multiple').is(':checked') ? 'multiple': false;
+    			self.$target.find('.form-control').prop('placeholder',wizard.find('.form-field-placeholder').val());
+    			self.$target.find('.browse-label').html(wizard.find('.form-button-label').val());
+    			self.$target.find('input[type=file]').attr('multiple',multiple);
+    		};
+    	},
+    	searchValidate: function(wizard) {
+    		var self = this;
+    		var optionsSelector = self.$target.find('.wrap-options');
+    		return function() {
+    			var multiple = wizard.find('.form-field-multiple').is(':checked') ? 'multiple': false;
+    			self.$target.find('.form-control').attr('data-multiple',multiple);
+    			self.optionEditor.addOptions(optionsSelector,'search',{id_label:''})();
+    		};
+    	},
     	selectValidate: function(wizard) {
      		var self = this;
     		var optionsSelector = self.$target.find('.wrap-options');
@@ -270,7 +298,7 @@
     			self.optionEditor.addOptions(optionsSelector,'select',{id_label:''})();
     		};
     	},
-    	multiCheckboxValidate: function (wizard) {
+    	checkboxValidate: function (wizard) {
     		var self = this;
     		var optionsSelector = self.$target.find('.wrap-options');
     		var i = 0;
@@ -304,12 +332,6 @@
     		};
     												
     	},
-    	checkboxValidate: function(wizard) {
-    		var self = this;
-    		return function() {
-    			self.$target.find('.option').html(wizard.find('.form-field-option').val());
-    		};
-    	},
     	inputValidate: function(wizard) {
     		var self = this;
     		
@@ -320,8 +342,8 @@
     			var append_exist 	= (self.$target.find('.append').length > 0) ;
     			var prepend_exist	= (self.$target.find('.prepend').length > 0) ;
     			
-    			var append_check	= (wizard.find('.form-field-append-check').is(':checked'));
-    			var prepend_check	= (wizard.find('.form-field-prepend-check').is(':checked'));
+    			var append_check	= (append_t.length > 0);
+    			var prepend_check	= (prepend_t.length > 0);
     			// Remove or add Append or Prepend text to the input
     			
  				self.$target.find('.form-control').prop('placeholder',wizard.find('.form-field-placeholder').val());
@@ -351,9 +373,10 @@
     	},
     	defaultValidate: function (wizard) {
     		var self = this;
-    		var name;
+    		var name,help;
     		var field_name; // custom or variable name from model
     		var required;
+    		
     	
     		return function () {
     			if(wizard.find('.form-field-label').val().length > 0) {
@@ -363,17 +386,26 @@
 	    			// get name/id from label for custom or from field_name;
 	    			name 		= (field_name  == 'custom') ? $.trim(wizard.find('.form-field-label').val()) : field_name;
 	    			required 	= (wizard.find('.form-field-required').is(':checked')) ? true:false;
+	    			help		= wizard.find('.form-field-help').val();
+	    			
+	    			
 	    			if(!wizard.find('.form-field-helped').is(':checked')) {
 						self.$target.find('.help-block').addClass("hidden");
 					}
 					else {
 						self.$target.find('.help-block').removeClass("hidden");
 					}
+					
 	    			self.$target.find('.form-control').attr('data-field',field_name);	
 	    			self.$target.find('.form-control').attr('id',name); 
 	    			self.$target.find('.form-control').attr('name',name); 
 	    			self.$target.find('.form-control').prop('required',required);
-	    			self.$target.find('.help-block').html(wizard.find('.form-field-help').val());
+	    			
+	    			if(help.length > 0) {
+	    				if(self.$target.find('.help-block').length) 	self.$target.find('.help-block').html(help);	
+	    				else 											self.$target.find('.form-control').parent().append('<p class="help-block">'+help+'</p>');	
+	    			}
+	    			else self.$target.find('.help-block').remove();
 	    			
     				self.$target.find('.control-label').html(wizard.find('.form-field-label').val());
     				$('#oe_snippets').removeClass('hidden');
@@ -396,6 +428,7 @@
             var self 	= this;
             var fieldWizardTemplate;
             var type = this.$target.attr('data-form');
+            
             //try to load specific wizard option
             console.log(type);
             try {
@@ -435,7 +468,6 @@
 			
 			var DefFormPopUp = $.Deferred();
 			
-			wizard.find('#formFieldEditor-helped').on('change',self.switch_help(wizard));
 			wizard.on('hide.bs.modal',self.confirm(DefFormPopUp));
 			wizard.find('.validate').on('click',self.validate(wizard));
 
@@ -444,9 +476,11 @@
         drop_and_build_snippet: function() {
             var self = this;
             this._super();
-            this.on_prompt().fail(function () {
-                self.editor.on_remove();
-            });
+            if(!this.$target.hasClass('form-init')){
+	            this.on_prompt().fail(function () {
+	                self.editor.on_remove();
+	            });
+	          }
         },
         start : function () {
             var self = this;

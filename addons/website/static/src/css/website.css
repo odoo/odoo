@@ -5,6 +5,28 @@
  * stuff must go to the editor.css
  *
  */
+.form-control .form-input-search, .form-control .text-wrap, .form-control .text-core{
+	width: 100% !important;
+	height: 100% !important;
+	border: none;
+	font-size: 14px !important;
+	margin:0px !important;
+	
+	overflow-x: ellipsis;
+	overflow-y: visible;
+	
+	
+}
+
+.form-control .form-input-search {
+	position: relative;
+	top:1px;
+}
+
+input[type=text] {
+	overflow:hidden;
+   	text-overflow:ellipsis;
+}
 
 .form-editor-add {
 	display:table-row;
@@ -36,6 +58,29 @@
 .tb-actions {
 	width:24px;
 }
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  background: red;
+  cursor: inherit;
+  display: block;
+}
+input[readonly] {
+  background-color: white !important;
+  cursor: text !important;
+}
+
 
 /* ----- GENERIC LAYOUTING HELPERS ---- */
 /* Vertical Spacing */

@@ -10,7 +10,7 @@
             var Animation = website.snippet.animationRegistry[k];
             var selector = "";
             if (Animation.prototype.selector) {
-                if (selector != "") selector += ", " 
+                if (selector != "") selector += ", ";
                 selector += Animation.prototype.selector;
             }
             if ($target) {

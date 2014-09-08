@@ -146,7 +146,7 @@
 											</p>
 											<p>
 												<b>Great stories are for everyone even when only written for
-													just one person</b>. If you try to write with a wide general
+												just one person</b>. If you try to write with a wide general
 												audience in mind, your story will ring false and be bland.
 												No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.
 											</p>
@@ -275,37 +275,45 @@
 							<section class="oe_snippet_body editForm">
 								<div class="container">
 									<form action="/crm/contactus" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
-										<div class="form-group row">
-											<label class="col-md-3 col-sm-4 control-label" for="contact_name">Your Name</label>
+										<div class="form-group form-field form-init" data-form="input">
+											<label for="name" class="col-md-3 col-sm-4 control-label">Your Name</label>
 											<div class="col-md-7 col-sm-8">
-												<input type="text" class="form-control" name="contact_name" required="True" />
+												<div class="wrap-unwrap">
+													<input type="text" class="form-control" name="name" placeholder="" />
+												</div>
 											</div>
 										</div>
-										<div class="form-group row">
-											<label class="col-md-3 col-sm-4 control-label" for="phone">Phone Number</label>
+										<div class="form-group form-field form-init" data-form="input">
+											<label for="phone" class="col-md-3 col-sm-4 control-label">Phone Number</label>
 											<div class="col-md-7 col-sm-8">
-												<input type="text" class="form-control" name="phone" placeholder="e.g. (+32).81.81.37.00" />
+												<div class="wrap-unwrap">
+													<input type="text" class="form-control" name="phone" placeholder="e.g. (+32).81.81.37.00" />
+												</div>
 											</div>
 										</div>
-										<div class="form-group row">
-											<label class="col-md-3 col-sm-4 control-label" for="email_from">Email</label>
+										<div class="form-group form-field form-init" data-form="input">
+											<label for="email" class="col-md-3 col-sm-4 control-label">Email</label>
 											<div class="col-md-7 col-sm-8">
-												<input type="email" class="form-control" name="email_from" required="True" />
+												<div class="wrap-unwrap">
+													<input type="text" class="form-control" name="email" placeholder="" />
+												</div>
 											</div>
 										</div>
-										<div class="form-group row">
-											<label class="col-md-3 col-sm-4 control-label" for="name">Subject</label>
+										<div class="form-group form-field form-init" data-form="input">
+											<label for="subject" class="col-md-3 col-sm-4 control-label">Subject</label>
 											<div class="col-md-7 col-sm-8">
-												<input type="text" class="form-control" name="name" />
+												<div class="wrap-unwrap">
+													<input type="text" class="form-control" name="email" placeholder="" />
+												</div>
 											</div>
 										</div>
-										<div class="form-group row">
-											<label class="col-md-3 col-sm-4 control-label" for="description">Your Question</label>
+										<div class="form-group form-field form-init" data-form="textarea">
+											<label for="" class="col-md-3 col-sm-4 control-label">Your Question</label>
 											<div class="col-md-7 col-sm-8">
 												<textarea  class="form-control" name="description" style="min-height: 120px" required="True"></textarea>
 											</div>
 										</div>
-										<div class="form-group row">
+										<div class="form-group">
 											<div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
 												<button class="btn btn-primary btn-lg">Send</button>
 											</div>
@@ -848,24 +856,6 @@
 								<span class="oe_snippet_thumbnail_title">Checkbox</span>
 							</div>
 							<div class="form-group oe_snippet_body form-field" data-form="checkbox">
-								<label class="col-md-3 col-sm-4 control-label">Label</label>
-								<div class="col-md-7 col-sm-8">
-									<div class="checkbox">
-										<label>
-										<input type="checkbox" />
-										<span class="option">checkbox option</span>
-										</label>
-									</div>
-									<p class="help-block">Help exemple.</p>
-								</div>
-							</div>
-						</div>
-						<div>
-							<div class="oe_snippet_thumbnail">
-								<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
-								<span class="oe_snippet_thumbnail_title">Multi-Checkbox</span>
-							</div>
-							<div class="form-group oe_snippet_body form-field" data-form="multiCheckbox">
 								<label for="checkbox" class="col-md-3 col-sm-4 control-label">Label</label>
 								<div class="col-md-7 col-sm-8">
 									<div class="wrap-options">
@@ -942,6 +932,46 @@
 							</div>
 						</div>
 						
+						<div>
+							<div class="oe_snippet_thumbnail">
+								<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+								<span class="oe_snippet_thumbnail_title">Search</span>
+							</div>
+							<div class="form-group oe_snippet_body form-field form-field-search" data-form="search">
+								<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
+								<div class="col-md-7 col-sm-8">
+									<div class="form-control"><textarea class="form-input-search" name="" rows="1"></textarea></div>
+									<p class="help-block">Help exemple.</p>
+									<datalist id="data-list" class="wrap-options">
+										<option value="0">Option 0</option>
+										<option value="1">Option 1</option>
+										<option value="2">Option 2</option>
+									</datalist>
+								</div>
+							</div>
+						</div>
+						
+						<div>
+							<div class="oe_snippet_thumbnail">
+								<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+								<span class="oe_snippet_thumbnail_title">Input File</span>
+							</div>
+							<div class="form-group oe_snippet_body form-field input-file" data-form="inputfile">
+								<label for="select" class="col-md-3 col-sm-4 control-label">Label</label>
+								<div class="col-md-7 col-sm-8">
+									 <div class="input-group">
+                						<span class="input-group-btn">
+                    						<span class="btn btn-primary btn-file">
+                        						<span class="browse-label">Browse</span><input type="file" multiple="true" />
+                    						</span>
+                						</span>
+                						<input type="text" class="form-control" placeholder="no file" readonly="true" />
+            						</div>
+            						<p class="help-block">Select a file.</p>
+								</div>
+							</div>
+						</div>
+											
 					</div>
 					<div id="snippet_options" class="hidden">
 
@@ -1082,6 +1112,7 @@
 					</ul>
 				</li>
 			</div>
+				 
 			<div data-snippet-option-id='carousel'
 			data-selector=".carousel">
 				<li class="divider"></li>

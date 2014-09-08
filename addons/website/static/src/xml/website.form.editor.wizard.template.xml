@@ -34,12 +34,7 @@
 							<div class="form-group">
 								<label for="formFieldEditor-help" class="col-md-3 col-sm-4 control-label">Help :</label>
 								<div class="col-md-9 col-sm-8">
-									<div class="input-group">
-										<span class="input-group-addon">
-											<input type="checkbox"  class="form-field-helped" id="formFieldEditor-helped" />
-										</span>
-										<input type="text" class="form-control form-field-help" id="formFieldEditor-help" />
-									</div>
+									<input type="text" class="form-control form-field-help" id="formFieldEditor-help" />
 								</div>
 							</div>
 							<div class="form-group">
@@ -71,18 +66,15 @@
 				</div>
 				
 				<div class="form-group">
-					<label for="formFieldEditor-ap-pre-pend" class="col-md-3 col-sm-4 control-label">Constants :</label>
+					<label for="formFieldEditor-ap-pre-pend" class="col-md-3 col-sm-4 control-label">Prefix :</label>
 					<div class="col-md-9 col-sm-8">
-						<div class="input-group">
-							<span class="input-group-addon">
-								<input type="checkbox"  class="form-field-prepend-check" id="formFieldEditor-prepend-check" />
-								<input type="text"  class="form-field-prepend" id="formFieldEditor-prepend" />
-							</span>
-							<span class="input-group-addon">
-								<input type="text"  class="form-field-append" id="formFieldEditor-append" />
-								<input type="checkbox"  class="form-field-append-check" id="formFieldEditor-append-check" />
-							</span>
-						</div>
+						<input type="text"  class="form-control form-field-prepend" id="formFieldEditor-prepend" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="formFieldEditor-ap-pre-pend" class="col-md-3 col-sm-4 control-label">Sufix :</label>
+					<div class="col-md-9 col-sm-8">
+						<input type="text"  class="form-control form-field-append" id="formFieldEditor-append" />
 					</div>
 				</div>
 				
@@ -113,8 +105,8 @@
 		</div>
 	</t>
 	
-		<!-- MODAL MULTI-CHECKBOX WIZARD ADD-ON FORM FOR FORM EDITOR -->
-	<t t-name="website.form.editor.wizard.template.multiCheckbox">
+		<!-- MODAL CHECKBOX WIZARD ADD-ON FORM FOR FORM EDITOR -->
+	<t t-name="website.form.editor.wizard.template.checkbox">
 		<div>
 			<div class="form-group">
 				<label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
@@ -200,13 +192,71 @@
 			</div>
 		</div>
 	</t>
-	
+	<!-- MODAL SEARCH WIZARD ADD-ON FORM FOR FORM EDITOR -->
+	<t t-name="website.form.editor.wizard.template.search">
+		
+			<div>
+				<div class="form-group">
+					<label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
+					<div class="col-md-9 col-sm-8">
+						<input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
+					<div class="col-md-9 col-sm-8 form-editor-table">
+						<table class="table table-condensed">
+							<tr>
+								<th>Option</th>
+								<th>Value</th>
+								<th class="tb-actions"></th>
+							</tr>
+							<tr class="last">
+								<td contenteditable="true" class="option-label">New Option Label</td>
+								<td contenteditable="true" class="option-value">New Option Value</td>
+								<td><input type="button" class="btn btn-default form-editor-add" value="+" /></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Multiple :</label>
+					<div class="col-md-9 col-sm-8">
+						<input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
+					</div>
+				</div>
+			</div>
+	</t>
+	<!-- MODAL UPLOAD WIZARD ADD-ON FORM FOR FORM EDITOR -->
+	<t t-name="website.form.editor.wizard.template.inputfile">
+		<div>
+			<div class="form-group">
+				<label for="formFieldEditor-button-label" class="col-md-3 col-sm-4 control-label">Button label :</label>
+				<div class="col-md-9 col-sm-8">
+					<input type="text" class="form-control form-button-label" id="formFieldEditor-button-label" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
+				<div class="col-md-9 col-sm-8">
+					<input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Multiple :</label>
+				<div class="col-md-9 col-sm-8">
+					<input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
+				</div>
+			</div>
+		</div>
+	</t>
+		
 	<!-- OPTION TEMPLATE FOR CHECKBOX -->
 	<t t-name="website.form.editor.template.option.checkbox">
 		<div>
 			<div class="checkbox">
 				<label t-att-for="id">
-					<input type="checkbox" t-att-id="id" t-att-name="id" t-att-value="value" />
+					<input type="checkbox" t-att-id="id" t-att-name="id_label" t-att-value="value" />
 					<span class="option"><t t-raw="label" /></span>
 				</label>
 			</div>
@@ -217,7 +267,7 @@
 		<div>
 			<div class="radio">
 				<label t-att-for="id">
-					<input type="radio" t-att-id="id" t-att-name="id" t-att-value="value" />
+					<input type="radio" t-att-id="id" t-att-name="id_label" t-att-value="value" />
 					<span class="option"><t t-raw="label" /></span>
 				</label>
 			</div>
@@ -228,7 +278,11 @@
 	<t t-name="website.form.editor.template.option.select">
 			<option t-att-value="value"><t t-raw="label" /></option>
 	</t>		
-
 	
+		<!-- OPTION TEMPLATE FOR SEARCH -->
+	<t t-name="website.form.editor.template.option.search">
+			<option t-att-value="value"><t t-raw="label" /></option>
+	</t>	
+
 
 </templates>
