@@ -193,26 +193,6 @@
             <field name="context">{'state':'posted'}</field>
             <field name="search_view_id" ref="view_voucher_filter"/>
         </record>
-        
-        <!-- res.config form view -->
-        <record model="ir.ui.view" id="view_account_settings_currency_xchange_form">
-            <field name="name">account.config.settings.inherit</field>
-            <field name="inherit_id" ref="account.view_account_config_settings"/>
-            <field name="model">account.config.settings</field>
-            <field name="priority">20</field>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='group_multi_currency']" position="after">
-                    <group attrs="{'invisible': [('group_multi_currency', '&lt;&gt;', True)]}" col="2">
-                        <group>
-                            <field name="income_currency_exchange_account_id"/>
-                            <field name="expense_currency_exchange_account_id"/>
-                        </group>
-                        <group>
-                        </group>
-                    </group>
-                </xpath>
-            </field>
-        </record>
 
     </data>
     <data noupdate="1">

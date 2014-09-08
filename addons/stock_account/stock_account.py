@@ -164,8 +164,8 @@ class stock_quant(osv.osv):
         :returns: journal_id, source account, destination account, valuation account
         :raise: osv.except_osv() is any mandatory account or journal is not defined.
         """
-        product_obj = self.pool.get('product.product')
-        accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
+        product_obj = self.pool.get('product.template')
+        accounts = product_obj.get_product_accounts(cr, uid, move.product_id.product_tmpl_id.id, context)
         if move.location_id.valuation_out_account_id:
             acc_src = move.location_id.valuation_out_account_id.id
         else:

@@ -22,12 +22,12 @@
 import time
 from datetime import datetime
 
-
 from openerp import workflow
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp import tools
+from openerp.report import report_sxw
 import openerp
 
 class account_move_line(osv.osv):
@@ -751,6 +751,74 @@ class account_move_line(osv.osv):
                 return []
             args.append(('partner_id', '=', partner[0]))
         return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
+
+    def prepare_move_lines_for_reconciliation_widget(self, cr, uid, lines, target_currency=False, target_date=False, context=None):
+        """ Returns move lines formatted for the manual/bank reconciliation widget
+
+            :param target_currency: curreny you want the move line debit/credit converted into
+            :param target_date: date to use for the monetary conversion
+        """
+        if not lines:
+            return []
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        currency_obj = self.pool.get('res.currency')
+        company_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
+        rml_parser = report_sxw.rml_parse(cr, uid, 'reconciliation_widget_aml', context=context)
+        reconcile_partial_ids = []  # for a partial reconciliation, take only one line
+        ret = []
+
+        for line in lines:
+            if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
+                continue
+            if line.reconcile_partial_id:
+                reconcile_partial_ids.append(line.reconcile_partial_id.id)
+
+            ret_line = {
+                'id': line.id,
+                'name': line.move_id.name,
+                'ref': line.move_id.ref,
+                'account_code': line.account_id.code,
+                'account_name': line.account_id.name,
+                'account_type': line.account_id.type,
+                'date_maturity': line.date_maturity,
+                'date': line.date,
+                'period_name': line.period_id.name,
+                'journal_name': line.journal_id.name,
+                'partner_id': line.partner_id.id,
+                'partner_name': line.partner_id.name,
+            }
+
+            # Get right debit / credit:
+            line_currency = line.currency_id or company_currency
+            amount_currency_str = ""
+            if line.currency_id and line.amount_currency:
+                amount_currency_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
+            if target_currency and line_currency == target_currency and target_currency != company_currency:
+                debit = line.debit > 0 and line.amount_residual_currency or 0.0
+                credit = line.credit > 0 and line.amount_residual_currency or 0.0
+                amount_currency_str = rml_parser.formatLang(line.amount_residual, currency_obj=company_currency)
+                amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
+            else:
+                debit = line.debit > 0 and line.amount_residual or 0.0
+                credit = line.credit > 0 and line.amount_residual or 0.0
+                amount_str = rml_parser.formatLang(debit or credit, currency_obj=company_currency)
+                if target_currency and target_currency != company_currency:
+                    amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
+                    ctx = context.copy()
+                    if target_date:
+                        ctx.update({'date': target_date})
+                    debit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, debit, context=ctx)
+                    credit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, credit, context=ctx)
+                    amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
+
+            ret_line['credit'] = credit
+            ret_line['debit'] = debit
+            ret_line['amount_str'] = amount_str
+            ret_line['amount_currency_str'] = amount_currency_str
+            ret.append(ret_line)
+        return ret
 
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(

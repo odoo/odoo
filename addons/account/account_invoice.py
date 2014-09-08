@@ -645,10 +645,6 @@ class account_invoice(models.Model):
                 invoice.check_total = invoice.amount_total
         return True
 
-    @staticmethod
-    def _convert_ref(ref):
-        return (ref or '').replace('/','')
-
     @api.multi
     def _get_analytic_lines(self):
         """ Return a list of dict for creating analytic lines for self[0] """
@@ -661,7 +657,7 @@ class account_invoice(models.Model):
                 if self.type in ('in_invoice', 'in_refund'):
                     ref = self.reference
                 else:
-                    ref = self._convert_ref(self.number)
+                    ref = self.number
                 if not self.journal_id.analytic_journal_id:
                     raise except_orm(_('No Analytic Journal!'),
                         _("You have to define an analytic journal on the '%s' journal!") % (self.journal_id.name,))
@@ -827,7 +823,7 @@ class account_invoice(models.Model):
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
             else:
-                ref = self._convert_ref(inv.number)
+                ref = inv.number
 
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
@@ -955,11 +951,11 @@ class account_invoice(models.Model):
 
             if inv.type in ('in_invoice', 'in_refund'):
                 if not inv.reference:
-                    ref = self._convert_ref(inv.number)
+                    ref = inv.number
                 else:
                     ref = inv.reference
             else:
-                ref = self._convert_ref(inv.number)
+                ref = inv.number
 
             self._cr.execute(""" UPDATE account_move SET ref=%s
                            WHERE id=%s AND (ref IS NULL OR ref = '')""",
@@ -1131,7 +1127,7 @@ class account_invoice(models.Model):
         if self.type in ('in_invoice', 'in_refund'):
             ref = self.reference
         else:
-            ref = self._convert_ref(self.number)
+            ref = self.number
         partner = self.partner_id._find_accounting_partner(self.partner_id)
         name = name or self.invoice_line.name or self.number
         # Pay attention to the sign for both debit/credit AND amount_currency

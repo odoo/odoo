@@ -103,6 +103,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.fields_order = [];
         this.datarecord = {};
         this._onchange_specs = {};
+        this.onchanges_defs = [];
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.fields_registry = instance.web.form.widgets;
@@ -507,7 +508,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 def = self.alive(new instance.web.Model(self.dataset.model).call(
                     "onchange", [ids, values, trigger_field_name, onchange_specs, context]));
             }
-            return def.then(function(response) {
+            var onchange_def = def.then(function(response) {
                 if (widget && widget.field['change_default']) {
                     var fieldname = widget.name;
                     var value_;
@@ -543,6 +544,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }).then(function(response) {
                 return self.on_processed_onchange(response);
             });
+            this.onchanges_defs.push(onchange_def);
+            return onchange_def;
         } catch(e) {
             console.error(e);
             instance.webclient.crashmanager.show_message(e);
@@ -642,6 +645,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * if the current record is not yet saved. It will then stay in create mode.
      */
     to_edit_mode: function() {
+        this.onchanges_defs = [];
         this._actualize_mode("edit");
     },
     /**
@@ -790,12 +794,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         var save_obj = {prepend_on_create: prepend_on_create, ret: null};
         this.save_list.push(save_obj);
-        return this._process_operations().then(function() {
-            if (save_obj.error)
-                return $.Deferred().reject();
-            return $.when.apply($, save_obj.ret);
-        }).done(function() {
-            self.$el.removeClass('oe_form_dirty');
+        return $.when.apply($, self.onchanges_defs).then(function(){
+            return self._process_operations().then(function() {
+                if (save_obj.error)
+                    return $.Deferred().reject();
+                return $.when.apply($, save_obj.ret);
+            }).done(function() {
+                self.$el.removeClass('oe_form_dirty');
+            });
         });
     },
     _process_save: function(save_obj) {
@@ -3631,7 +3637,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
                 self.floating = false;
             }
-            if (used && self.get("value") === false && ! self.no_ed && (self.options.no_create === false || self.options.no_create === undefined)) {
+            if (used && self.get("value") === false && ! self.no_ed && ! (self.options && (self.options.no_create || self.options.no_quick_create))) {
                 self.ed_def.reject();
                 self.uned_def.reject();
                 self.ed_def = $.Deferred();

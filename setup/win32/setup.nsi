@@ -26,6 +26,7 @@
 
 # TODO: Avoid to uninstall the database
 # TODO: We can update the server or the clients without to uninstall the all-in-one
+# TODO: Add startmenu handling (link to localhost + uninstall)
 
 !include 'MUI2.nsh'
 !include 'FileFunc.nsh'
@@ -139,9 +140,8 @@ Var HWNDPostgreSQLPassword
 
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
-!define POSTGRESQL_EXE "${STATIC_PATH}\postgresql-8.3-int.msi"
-
-!define OPENERP_SERVER_SETUP 'openerp-server-setup-${VERSION}.exe'
+!define POSTGRESQL_EXE_FILENAME "postgresql-9.3.5-1-windows.exe"
+!define POSTGRESQL_EXE "${STATIC_PATH}\${POSTGRESQL_EXE_FILENAME}"
 
 !define MUI_ABORTWARNING
 !define MUI_ICON "${PIXMAPS_PATH}\openerp-icon.ico"
@@ -220,33 +220,46 @@ LangString Profile_AllInOne ${LANG_FRENCH} "All In One"
 LangString Profile_Server ${LANG_FRENCH} "Seulement le serveur"
 LangString TITLE_OpenERP_Server ${LANG_FRENCH} "Serveur OpenERP"
 LangString TITLE_PostgreSQL ${LANG_FRENCH} "Installation du serveur de base de donn?es PostgreSQL"
-LangString DESC_FinishPageText ${LANG_FRENCH} "Lancer OpenERP"
+LangString DESC_FinishPageText ${LANG_FRENCH} "Démarrer OpenERP"
 
 InstType $(Profile_AllInOne)
 InstType $(Profile_Server)
 
 Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     SectionIn 1 2
-    SetOutPath "$TEMP"
-    File "files\${OPENERP_SERVER_SETUP}"
-    ExecWait '"$TEMP\${OPENERP_SERVER_SETUP}" /S /D=$INSTDIR\Server'
+
+    # TODO: install in a temp dir before
+
+    SetOutPath "$INSTDIR\server"
+    File /r "..\..\dist\*"
+
+    SetOutPath "$INSTDIR\service"
+    File /r "dist\*"
+    File "start.bat"
+    File "stop.bat"
 
 # If there is a previous install of the OpenERP Server, keep the login/password from the config file
-    WriteIniStr "$INSTDIR\Server\server\openerp-server.conf" "options" "db_host" $TextPostgreSQLHostname
-    WriteIniStr "$INSTDIR\Server\server\openerp-server.conf" "options" "db_user" $TextPostgreSQLUsername
-    WriteIniStr "$INSTDIR\Server\server\openerp-server.conf" "options" "db_password" $TextPostgreSQLPassword
-    WriteIniStr "$INSTDIR\Server\server\openerp-server.conf" "options" "db_port" $TextPostgreSQLPort
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_host" $TextPostgreSQLHostname
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_user" $TextPostgreSQLUsername
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_password" $TextPostgreSQLPassword
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_port" $TextPostgreSQLPort
+    # Fix the addons path
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "addons_path" "$INSTDIR\server\openerp\addons"
 
-    # if we've going to install postgresql force it's path,
+    # if we're going to install postgresql force it's path,
     # otherwise we consider it's always done and/or correctly tune by users
     ${If} $HasPostgreSQL == 0
-        WriteIniStr "$INSTDIR\Server\server\openerp-server.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
+        WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
     ${EndIf}
 
-    nsExec::Exec "net stop openerp-server-7.0"
+    nsExec::Exec '"$INSTDIR\server\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\server\openerp-server.log" -s'
+    nsExec::Exec '"$INSTDIR\service\win32_service.exe" -auto -install'
+
+    # TODO: don't hardcode the service name
+    nsExec::Exec "net stop openerp-server-8.0"
     sleep 2
 
-    nsExec::Exec "net start openerp-server-7.0"
+    nsExec::Exec "net start openerp-server-8.0"
     sleep 2
 
 SectionEnd
@@ -256,7 +269,7 @@ Section $(TITLE_PostgreSQL) SectionPostgreSQL
     SetOutPath '$TEMP'
     nsExec::Exec 'net user openpgsvc /delete'
 
-    File "postgresql-9.2.2-1-windows.exe"
+    File ${POSTGRESQL_EXE}
 
     ReadRegStr $0 HKLM "System\CurrentControlSet\Control\ComputerName\ActiveComputerName" "ComputerName"
     StrCmp $0 "" win9x
@@ -265,7 +278,7 @@ Section $(TITLE_PostgreSQL) SectionPostgreSQL
         ReadRegStr $0 HKLM "System\CurrentControlSet\Control\ComputerName\ComputerName" "ComputerName"
     done:
     Rmdir /r "$INSTDIR\PostgreSQL"
-    ExecWait '"$TEMP\postgresql-9.2.2-1-windows.exe" \
+    ExecWait '"$TEMP\${POSTGRESQL_EXE_FILENAME}" \
         --mode unattended \
         --prefix "$INSTDIR\PostgreSQL" \
         --datadir "$INSTDIR\PostgreSQL\data" \
@@ -304,6 +317,10 @@ Section "Uninstall"
     Pop $R0
     ReadRegStr $0 HKLM "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     ExecWait '"$0" /S'
+
+    nsExec::Exec "net stop openerp-server-8.0"
+    nsExec::Exec "sc delete openerp-server-8.0"
+    sleep 2
 
     Rmdir /r "$INSTDIR\server"
     Rmdir /r "$INSTDIR\service"
