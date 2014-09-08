@@ -281,7 +281,7 @@ class crm_lead(format_address, osv.osv):
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, context=c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[0][0],
         'color': 0,
         'date_last_stage_update': fields.datetime.now,
     }
