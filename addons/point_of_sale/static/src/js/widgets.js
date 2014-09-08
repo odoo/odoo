@@ -1231,8 +1231,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
 
             function close(){
-                return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(function(res) {
-                    window.location = '/web#action=' + res[0]['res_id'];
+                self.pos.push_order().then(function(){
+                    return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(function(res) {
+                        window.location = '/web#action=' + res[0]['res_id'];
+                    });
                 });
             }
 
@@ -1241,10 +1243,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             if(draft_order){
                 if (confirm(_t("Pending orders will be lost.\nAre you sure you want to leave this session?"))) {
-                    return close();
+                    close();
                 }
             }else{
-                return close();
+                close();
             }
         },
         destroy: function() {
