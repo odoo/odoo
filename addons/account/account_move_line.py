@@ -822,7 +822,7 @@ class account_move_line(osv.osv):
 
         # Fetch account move lines
         for row in part_acc_rows:
-            row['move_lines'] = self.get_move_lines_for_manual_reconciliation_by_account_and_parter(cr, uid, row['account_id'], row['partner_id'], context=context)
+            row['move_lines'] = self.get_move_lines_for_manual_reconciliation(cr, uid, account_id=row['account_id'], partner_id=row['partner_id'], context=context)
 
         # Fetch data for the other reconciliable accounts
         cr.execute(
@@ -885,27 +885,69 @@ class account_move_line(osv.osv):
 
         # Fetch account move lines
         for row in other_acc_rows:
-            row['move_lines'] = self.get_move_lines_for_manual_reconciliation_by_account_and_parter(cr, uid, row['account_id'], context=context)
+            row['move_lines'] = self.get_move_lines_for_manual_reconciliation(cr, uid, account_id=row['account_id'], context=context)
 
         # Fetch other data
         for row in part_acc_rows+other_acc_rows:
-            account = self.pool.get('account.account').browse(cr, uid, row['account_id'], context=context) # TODO : code dupliqué dans get_move_lines_for_manual_reconciliation_by_account_and_parter
+            account = self.pool.get('account.account').browse(cr, uid, row['account_id'], context=context)
             row['currency_id'] = account.currency_id.id or account.company_currency_id.id
 
         return [part_acc_rows, other_acc_rows]
     
-    def get_move_lines_for_manual_reconciliation_by_account_and_parter(self, cr, uid, account_id, partner_id=False, context=None):
+    def get_move_lines_for_manual_reconciliation(self, cr, uid, account_id, partner_id=False, excluded_ids=None, str=False, offset=0, limit=None, count=False, context=None):
         """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
-        if context is None:
-            context = {}
-        domain = [('account_id','=',account_id), ('reconcile_id','=',False), ('state','!=','draft')]
+        # Complete domain
+        additional_domain = [('account_id','=',account_id)]
         if partner_id:
-            domain.append(('partner_id','=',partner_id))
-        aml_ids = self.search(cr, uid, domain, context=context)
-        aml = self.browse(cr, uid, aml_ids, context=context)
-        account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
-        target_currency = account.currency_id or account.company_currency_id # TODO : m'kay ?
-        return self.prepare_move_lines_for_reconciliation_widget(cr, uid, aml, target_currency=target_currency, context=context)
+            additional_domain.append(('partner_id','=',partner_id))
+
+        # Fetch lines or lines number
+        res = self.get_move_lines_for_reconciliation(cr, uid, excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count, additional_domain=additional_domain, context=context)
+        if count:
+            return res
+        else:
+            account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
+            target_currency = account.currency_id or account.company_currency_id
+            return self.prepare_move_lines_for_reconciliation_widget(cr, uid, res, target_currency=target_currency, context=context)
+
+    def get_move_lines_for_reconciliation(self, cr, uid, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, context=None):
+        """ Find the move lines that could be used in a reconciliation. If count is true, only returns the number of lines.
+
+            :param st_line: the browse record of the statement line
+            :param integers list excluded_ids: ids of move lines that should not be fetched
+            :param boolean count: just return the number of records
+            :param tuples list additional_domain: additional domain restrictions
+        """
+        if additional_domain is None:
+            additional_domain = []
+
+        # Complete domain
+        domain = additional_domain + [('reconcile_id', '=', False),('state', '=', 'valid')]
+        if excluded_ids:
+            domain.append(('id', 'not in', excluded_ids))
+        if str:
+            domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
+
+        # Get move lines
+        line_ids = self.search(cr, uid, domain, offset=offset, limit=limit, order="date_maturity asc, id asc", context=context)
+        lines = self.browse(cr, uid, line_ids, context=context)
+        
+        # In case of a partial reconciliation, only consider one line 
+        reconcile_partial_ids = []
+        filtered_lines = []
+        for line in lines:
+            if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
+                continue
+            filtered_lines.append(line)
+            if line.reconcile_partial_id:
+                reconcile_partial_ids.append(line.reconcile_partial_id.id)
+        lines = filtered_lines
+
+        # Return count or lines
+        if count:
+            return len(lines)
+        else:
+            return lines
 
     def prepare_move_lines_for_reconciliation_widget(self, cr, uid, lines, target_currency=False, target_date=False, context=None):
         """ Returns move lines formatted for the manual/bank reconciliation widget
@@ -921,15 +963,9 @@ class account_move_line(osv.osv):
         currency_obj = self.pool.get('res.currency')
         company_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
         rml_parser = report_sxw.rml_parse(cr, uid, 'reconciliation_widget_aml', context=context)
-        reconcile_partial_ids = []  # for a partial reconciliation, take only one line
         ret = []
 
         for line in lines:
-            if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
-                continue
-            if line.reconcile_partial_id:
-                reconcile_partial_ids.append(line.reconcile_partial_id.id)
-
             ret_line = {
                 'id': line.id,
                 'name': line.move_id.name,
@@ -1014,7 +1050,7 @@ class account_move_line(osv.osv):
             new_aml_id = self.create(cr, uid, mv_line_dict, context=context)
             new_mv_lines_ids.append(new_aml_id)
 
-        self.reconcile_partial(cr, uid, mv_line_ids + new_mv_lines_ids, context=context)
+        self.reconcile_partial(cr, uid, mv_line_ids + new_mv_lines_ids, type='manual', context=context)
     
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
