@@ -15,7 +15,7 @@ class website_sale_digital(website_sale):
     @http.route([
         '/shop/confirmation',
     ], type='http', auth="public", website=True)
-    def display_attachments(self, **post):
+    def payment_confirmation(self, **post):
         response = super(website_sale_digital, self).payment_confirmation(**post)
         order_lines = response.qcontext['order'].order_line
         digital_content = map(lambda x: x.product_id.digital_content, order_lines)
@@ -67,7 +67,7 @@ class website_sale_digital(website_sale):
     @http.route([
         downloads_page,
     ], type='http', auth='public', website=True)
-    def get_downloads(self):
+    def display_attachments(self):
         purchased_products = self._get_purchased_digital_products(request.uid)
 
         products = []
@@ -81,6 +81,7 @@ class website_sale_digital(website_sale):
             p_obj = P.browse(p_id)
             if p_obj in products:
                 continue
+
             # Search for product attachments
             template = p_obj.product_tmpl_id
             att = A.search_read(
