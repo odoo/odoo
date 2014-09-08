@@ -97,7 +97,6 @@ class stock_move(osv.osv):
     def _get_master_data(self, cr, uid, move, company, context=None):
         ''' returns a tuple (browse_record(res.partner), ID(res.users), ID(res.currency)'''
         currency = company.currency_id.id
-        import pdb; pdb.set_trace()
         partner = move.picking_id and move.picking_id.partner_id
         if partner:
             if partner.property_product_pricelist and move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal':
@@ -193,11 +192,6 @@ class stock_picking(osv.osv):
                 res.append(move.picking_id.id)
         return res
 
-    def _set_inv_state(self, cr, uid, picking_id, name, value, arg, context=None):
-        pick = self.browse(cr, uid, picking_id, context=context)
-        moves = [x.id for x in pick.move_lines]
-        move_obj= self.pool.get("stock.move")
-        move_obj.write(cr, uid, moves, {'invoice_state': pick.invoice_state})
 
 
     _columns = {
@@ -206,7 +200,6 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
           ], string="Invoice Control", required=True,
-        #fnct_inv = _set_inv_state,
         store={
             'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),
             'stock.move': (__get_picking_move, ['picking_id', 'invoice_state'], 10),

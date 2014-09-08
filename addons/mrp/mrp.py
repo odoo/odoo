@@ -1065,16 +1065,32 @@ class mrp_production(osv.osv):
 
 
 
+
     def _create_previous_move(self, cr, uid, move_id, product, source_location_id, dest_location_id, context=None):
         '''
         When the routing gives a different location than the raw material location of the production order, 
         we should create an extra move from the raw material location to the location of the routing, which 
-        precedes the consumption line (chained)
+        precedes the consumption line (chained).  The picking type depends on the warehouse in which this happens
+        and the type of locations. 
         '''
-        
+        loc_obj = self.pool.get("stock.location")
         stock_move = self.pool.get('stock.move')
         type_obj = self.pool.get('stock.picking.type')
-        types = type_obj.search(cr, uid, [('code','=','outgoing')], context=context)
+        # Need to search for a picking type
+        src_loc = loc_obj.browse(cr, uid, source_location_id, context=context)
+        dest_loc = loc_obj.browse(cr, uid, dest_location_id, context=context)
+        code = 'internal'
+        check_loc = dest_loc
+        if src_loc.usage == 'internal' and dest_loc.usage != 'internal':
+            code = 'outgoing'
+            check_loc = src_loc
+        if src_loc.usage != 'internal' and dest_loc.usage == 'internal':
+            code = 'incoming'
+        wh = loc_obj.get_warehouse(cr, uid, check_loc, context=context)
+        domain = [('code','=', code)]
+        if wh: 
+            domain += [('warehouse_id', '=', wh)]
+        types = type_obj.search(cr, uid, domain, context=context)
         move = stock_move.copy(cr, uid, move_id, default = {
             'location_id': source_location_id,
             'location_dest_id': dest_location_id,

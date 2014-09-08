@@ -189,6 +189,16 @@ class stock_location(osv.osv):
         return self._default_removal_strategy(cr, uid, context=context)
 
 
+    def get_warehouse(self, cr, uid, location, context=None):
+        """
+            Returns warehouse id of warehouse that contains location
+            :param location: browse record (stock.location)
+        """
+        wh_obj = self.pool.get("stock.warehouse")
+        whs = wh_obj.search(cr, uid, [('view_location_id.parent_left', '<=', location.parent_left), 
+                                ('view_location_id.parent_right', '>=', location.parent_left)], context=context)
+        return whs and whs[0] or False
+
 #----------------------------------------------------------
 # Routes
 #----------------------------------------------------------
@@ -3459,6 +3469,7 @@ class stock_warehouse(osv.osv):
             'view_type': 'form',
             'limit': 20
         }
+
 
 class stock_location_path(osv.osv):
     _name = "stock.location.path"
