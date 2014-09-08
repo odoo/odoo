@@ -16,6 +16,7 @@ from PIL import Image
 import openerp
 from openerp.addons.web import http
 from openerp.http import request, STATIC_CACHE
+from openerp.tools import image_save_for_web
 
 logger = logging.getLogger(__name__)
 
@@ -314,7 +315,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return True
 
     @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
-    def attach(self, func, upload=None, url=None):
+    def attach(self, func, upload=None, url=None, disable_optimization=None):
         Attachments = request.registry['ir.attachment']
 
         website_url = message = None
@@ -336,6 +337,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                     raise ValueError(
                         u"Image size excessive, uploaded images must be smaller "
                         u"than 42 million pixel")
+
+                if not disable_optimization and image.format in ('PNG', 'JPEG'):
+                    image_data = image_save_for_web(image)
 
                 attachment_id = Attachments.create(request.cr, request.uid, {
                     'name': upload.filename,
