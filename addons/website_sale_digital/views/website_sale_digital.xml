@@ -4,7 +4,6 @@
 
 <template id="product_attachments" name="Product Attachments" inherit_id="website_sale.confirmation">
     <xpath expr="//div[@class='oe_website_sale_tx_status']" position="after">
-        <!-- TODO: if not confirmed: "available soon" -->
         <div> Your product will soon be available for download.</div>
         <div style="margin-left: 50px;">
             <a href="/shop/downloads">
@@ -46,17 +45,17 @@
     <t t-foreach="products" t-as="p">
         <div class="media row">
             <div class="col-md-1 mt8" style="text-align:center">
-                <a href="#"> <!-- TODO: Link to product -->
-                    <img t-att-src="'/website/image?model=product.product&amp;field=image&amp;id='+str(p)" style="max-width: 64px; max-height: 64px;"/>
+                <a t-att-href="'/shop/product/' + str(p.product_tmpl_id.id)">
+                    <img t-att-src="'/website/image?model=product.product&amp;field=image&amp;id='+str(p.id)" style="max-width: 64px; max-height: 64px;"/>
                 </a>
             </div>
             <div class="media-body col-md-10">
                 <!-- <h4 class="media-heading">Media heading</h4> -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><t t-esc="names[p]"/></h3> <!-- TODO: Link to product -->
+                        <h3 class="panel-title"><t t-esc="names[p.id]"/></h3> <!-- TODO: Link to product -->
                     </div>
-                    <t t-foreach="attachments[p]" t-as="a">
+                    <t t-foreach="attachments[p.id]" t-as="a">
                         <div class="panel-body">
                             <t t-esc="a['name']"/>
                             <span class="pull-right">

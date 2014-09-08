@@ -25,7 +25,6 @@ class website_sale_digital(website_sale):
         '/shop/attachment',
     ], auth='public')
     def download_attachment(self, attachment_id):
-        from pprint import pprint; pprint(request.session)
         # Check if this is a valid attachment id
         attachment = request.env(user=SU)['ir.attachment'].search_read([('id', '=', int(attachment_id))], ["name", "datas", "file_type", "res_model", "res_id"])
         if attachment:
@@ -67,7 +66,8 @@ class website_sale_digital(website_sale):
     def get_downloads(self):
         purchased_products = self._get_purchased_digital_products(request.uid)
 
-        products_ids = []
+        products = []
+        template_ids = []
         names = {}
         attachments = {}
         A = request.env['ir.attachment']
@@ -75,12 +75,11 @@ class website_sale_digital(website_sale):
         for product in purchased_products:
             # Ignore duplicate products
             p_id = product['product_id'][0]
-            if p_id in products_ids:
-                continue
-
-            # Search for product attachments
-            p_name = product['product_id'][1]
             p_obj = P.browse(p_id)
+            if p_obj in products:
+                continue
+            p_name = product['product_id'][1]
+            # Search for product attachments
             template = p_obj.product_tmpl_id
             att = A.search_read(
                 domain = ['|', '&', ('res_model', '=', 'product.product'), ('res_id', '=', p_id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', template.id)],
@@ -92,7 +91,7 @@ class website_sale_digital(website_sale):
                 continue
 
             # Store values for QWeb
-            products_ids.append(p_id)
+            products.append(p_obj)
             attributes = p_obj.attribute_value_ids
             if attributes:
                 names[p_id] = template.name + ' (' + ', '.join([a.name for a in attributes]) + ')'
@@ -101,7 +100,7 @@ class website_sale_digital(website_sale):
             attachments[p_id] = att
 
         return request.website.render('website_sale_digital.downloads', {
-            'products': products_ids,
+            'products': products,
             'names': names,
             'attachments': attachments,
         })
@@ -119,7 +118,7 @@ class website_sale_digital(website_sale):
 
         # Hack for public user last session
         last_purchase = sale_orders.search_read(
-            domain = [('order_id', '=', request.session['sale_last_order_id'])],
+            domain = [('order_id', '=', request.session['sale_last_order_id']), ('state', '=', 'confirmed'), ('product_id.product_tmpl_id.digital_content','=', True)],
             fields = fields,
         )
 
