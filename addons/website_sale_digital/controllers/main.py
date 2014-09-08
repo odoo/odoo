@@ -119,9 +119,11 @@ class website_sale_digital(website_sale):
         )
 
         # Hack for public user last session
-        last_purchase = sale_orders.search_read(
-            domain=[('order_id', '=', request.session['sale_last_order_id']), ('state', '=', 'confirmed'), ('product_id.product_tmpl_id.digital_content', '=', True)],
-            fields=fields,
-        )
+        if 'sale_last_order_id' in request.session:
+            last_purchase = sale_orders.search_read(
+                domain=[('order_id', '=', request.session['sale_last_order_id']), ('state', '=', 'confirmed'), ('product_id.product_tmpl_id.digital_content', '=', True)],
+                fields=fields,
+            )
+            purchases = purchases + last_purchase
 
-        return purchases + last_purchase
+        return purchases

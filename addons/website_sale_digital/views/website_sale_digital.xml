@@ -55,7 +55,11 @@
                 <!-- <h4 class="media-heading">Media heading</h4> -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><t t-esc="names[p.id]"/></h3> <!-- TODO: Link to product -->
+                        <h3 class="panel-title">
+                            <a t-att-href="'/shop/product/' + str(p.product_tmpl_id.id)">
+                                <t t-esc="names[p.id]"/>
+                            </a>
+                        </h3> <!-- TODO: Link to product -->
                     </div>
                     <t t-foreach="attachments[p.id]" t-as="a">
                         <div class="panel-body">
