@@ -5,8 +5,6 @@ from openerp import SUPERUSER_ID as SU
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website_sale.controllers.main import website_sale
-from itertools import groupby
-from werkzeug.exceptions import NotFound
 from werkzeug.utils import redirect
 
 
@@ -18,15 +16,21 @@ class website_sale_digital(website_sale):
         '/shop/confirmation',
     ], type='http', auth="public", website=True)
     def display_attachments(self, **post):
-        r = super(website_sale_digital, self).payment_confirmation(**post)
-        return r
+        response = super(website_sale_digital, self).payment_confirmation(**post)
+        order_lines = response.qcontext['order'].order_line
+        digital_content = map(lambda x: x.product_id.digital_content, order_lines)
+        response.qcontext.update(digital=any(digital_content))
+        return response
 
     @http.route([
         '/shop/attachment',
     ], auth='public')
     def download_attachment(self, attachment_id):
         # Check if this is a valid attachment id
-        attachment = request.env(user=SU)['ir.attachment'].search_read([('id', '=', int(attachment_id))], ["name", "datas", "file_type", "res_model", "res_id"])
+        attachment = request.env(user=SU)['ir.attachment'].search_read(
+            [('id', '=', int(attachment_id))],
+            ["name", "datas", "file_type", "res_model", "res_id"]
+        )
         if attachment:
             attachment = attachment[0]
         else:
@@ -67,7 +71,6 @@ class website_sale_digital(website_sale):
         purchased_products = self._get_purchased_digital_products(request.uid)
 
         products = []
-        template_ids = []
         names = {}
         attachments = {}
         A = request.env['ir.attachment']
@@ -78,12 +81,11 @@ class website_sale_digital(website_sale):
             p_obj = P.browse(p_id)
             if p_obj in products:
                 continue
-            p_name = product['product_id'][1]
             # Search for product attachments
             template = p_obj.product_tmpl_id
             att = A.search_read(
-                domain = ['|', '&', ('res_model', '=', 'product.product'), ('res_id', '=', p_id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', template.id)],
-                fields = ['name'],
+                domain=['|', '&', ('res_model', '=', 'product.product'), ('res_id', '=', p_id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', template.id)],
+                fields=['name'],
             )
 
             # Ignore products with no attachments
@@ -112,14 +114,14 @@ class website_sale_digital(website_sale):
         fields = ['product_id']
 
         purchases = sale_orders.search_read(
-            domain = [('order_id.partner_id', '=', partner.id), ('state', '=', 'confirmed'), ('product_id.product_tmpl_id.digital_content','=', True)],
-            fields = fields,
+            domain=[('order_id.partner_id', '=', partner.id), ('state', '=', 'confirmed'), ('product_id.product_tmpl_id.digital_content', '=', True)],
+            fields=fields,
         )
 
         # Hack for public user last session
         last_purchase = sale_orders.search_read(
-            domain = [('order_id', '=', request.session['sale_last_order_id']), ('state', '=', 'confirmed'), ('product_id.product_tmpl_id.digital_content','=', True)],
-            fields = fields,
+            domain=[('order_id', '=', request.session['sale_last_order_id']), ('state', '=', 'confirmed'), ('product_id.product_tmpl_id.digital_content', '=', True)],
+            fields=fields,
         )
 
         return purchases + last_purchase

@@ -4,14 +4,16 @@
 
 <template id="product_attachments" name="Product Attachments" inherit_id="website_sale.confirmation">
     <xpath expr="//div[@class='oe_website_sale_tx_status']" position="after">
-        <div> Your product will soon be available for download.</div>
-        <div style="margin-left: 50px;">
-            <a href="/shop/downloads">
-                <button class="btn btn-primary btn-sm">
-                    <i class="fa fa-arrow-right"></i> Go to the Downloads page
-                </button>
-            </a>
-        </div>
+        <t t-if="digital">
+            <div> Your order contains downloadable content, it will soon be available for download.</div>
+            <div style="margin-left: 50px;">
+                <a href="/shop/downloads">
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fa fa-arrow-right"></i> Go to the Downloads page
+                    </button>
+                </a>
+            </div>
+        </t>
     </xpath>
 </template>
 
