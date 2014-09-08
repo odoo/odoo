@@ -927,6 +927,12 @@ class account_move_line(osv.osv):
             domain.append(('id', 'not in', excluded_ids))
         if str:
             domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
+            # TODO : store fields amount_residual and amount_residual_currency ? Or add a search function ?
+            try:
+                amount = float(str)
+                # domain += ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
+            except:
+                pass
 
         # Get move lines
         line_ids = self.search(cr, uid, domain, offset=offset, limit=limit, order="date_maturity asc, id asc", context=context)
