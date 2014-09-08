@@ -28,7 +28,6 @@
                     <field name="categ_ids"/>
                     <field name="partner_id"/>
                     <field name="project_id"/>
-                    <field name="reviewer_id"/>
                     <field name="user_id"/>
                     <field name="stage_id"/>
                     <filter string="My Tasks" domain="[('user_id','=',uid)]"/>
@@ -395,9 +394,6 @@
                         <group>
                             <field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id"
-                                options='{"no_open": True}'
-                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
-                            <field name="reviewer_id"
                                 options='{"no_open": True}'
                                 context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
                             <field name="planned_hours" widget="float_time"

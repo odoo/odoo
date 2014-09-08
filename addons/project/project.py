@@ -774,7 +774,6 @@ class task(osv.osv):
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
-        'reviewer_id': fields.many2one('res.users', 'Reviewer', select=True, track_visibility='onchange'),
         'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
         'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
@@ -794,7 +793,6 @@ class task(osv.osv):
         'progress': 0,
         'sequence': 10,
         'active': True,
-        'reviewer_id': lambda obj, cr, uid, ctx=None: uid,
         'user_id': lambda obj, cr, uid, ctx=None: uid,
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=ctx),
         'partner_id': lambda self, cr, uid, ctx=None: self._get_default_partner(cr, uid, context=ctx),
@@ -1083,11 +1081,6 @@ class task(osv.osv):
     # ---------------------------------------------------
     # Mail gateway
     # ---------------------------------------------------
-
-    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=None, context=None):
-        if auto_follow_fields is None:
-            auto_follow_fields = ['user_id', 'reviewer_id']
-        return super(task, self)._message_get_auto_subscribe_fields(cr, uid, updated_fields, auto_follow_fields, context=context)
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
