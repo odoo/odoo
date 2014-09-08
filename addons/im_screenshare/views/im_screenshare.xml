@@ -3,7 +3,16 @@
 -->
 <openerp>
     <data>
+
+        <!-- Required code to include the button on the WebClient and the Conversation header. This code is only for the backend. -->
         <template id="assets_backend" name="im_screenshare assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/im_screenshare/static/src/js/im_screenshare_backend.js"></script>
+            </xpath>
+        </template>
+
+        <!-- Put the libraries and Screenshare code in the common assets to load them with the Website without create a dependency. This code is good enough to start the recording/sharing from the website, if the cookie is created. This will be loaded frontend and backend. -->
+        <template id="assets_common" name="im_screenshare assets" inherit_id="web.assets_common">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/im_screenshare/static/src/css/im_screenshare.css"/>
 
@@ -17,7 +26,6 @@
                 <script type="text/javascript" src="/im_screenshare/static/src/js/im_screenshare.js"></script>
             </xpath>
         </template>
-
 
         <!-- Template for the external player page -->
         <template id="player_page" name="IM Screensharing Player Page">
