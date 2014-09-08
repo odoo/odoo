@@ -1,131 +1,232 @@
-# Vietnamese translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# Phong Nguyen <phong.nguyen_thanh@yahoo.com>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* account_analytic_analysis
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2011-01-13 22:52+0000\n"
-"Last-Translator: OpenBMS JSC <Unknown>\n"
-"Language-Team: Vietnamese <vi@li.org>\n"
+"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-06 02:48+0000\n"
+"PO-Revision-Date: 2014-09-08 08:33+0700\n"
+"Last-Translator: Leo Tran <leo.tran@tvtmarine.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:58+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Generator: Poedit 1.5.4\n"
+"Language: Vietnam\n"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "No order to invoice, create"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Group By..."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "To Invoice"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Remaining"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts in progress"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_invoiced_date:0
+#: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
 msgid ""
-"If invoice from the costs, this is the date of the latest work or cost that "
-"have been invoiced."
+"\n"
+"Hello ${object.name},\n"
+"\n"
+"% macro account_table(values):\n"
+"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
+"    <tr>\n"
+"        <th>Customer</th>\n"
+"        <th>Contract</th>\n"
+"        <th>Dates</th>\n"
+"        <th>Prepaid Units</th>\n"
+"        <th>Contact</th>\n"
+"    </tr>\n"
+"    % for partner, accounts in values:\n"
+"        % for account in accounts:\n"
+"        <tr>\n"
+"            <td>${partner.name}</td>\n"
+"            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}"
+"&id=${account.id}&view_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or "
+"'???'}</td>\n"
+"            <td>\n"
+"            % if account.quantity_max != 0.0:\n"
+"                ${account.remaining_hours}/${account.quantity_max} units\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${account.partner_id.phone or ''}, ${account.partner_id."
+"email or ''}</td>\n"
+"        </tr>\n"
+"        % endfor\n"
+"    % endfor\n"
+"</table>\n"
+"% endmacro \n"
+"\n"
+"% if \"new\" in ctx[\"data\"]:\n"
+"    <h2>The following contracts just expired: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"old\" in ctx[\"data\"]:\n"
+"    <h2>The following expired contracts are still not processed: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"future\" in ctx[\"data\"]:\n"
+"    <h2>The following contracts will expire in less than one month: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"<p>\n"
+"    You can check all contracts to be renewed using the menu:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Sales / Invoicing / Contracts to Renew</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Thanks,\n"
+"</p>\n"
+"\n"
+"<pre>\n"
+"-- \n"
+"OpenERP Automatic Email\n"
+"</pre>\n"
+"\n"
+"            "
 msgstr ""
+"\n"
+"Xin chào ${object.name},\n"
+"\n"
+"% macro account_table(values):\n"
+"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
+"    <tr>\n"
+"        <th>Khách hàng</th>\n"
+"        <th>Hợp đồng</th>\n"
+"        <th>Ngày</th>\n"
+"        <th>Trả trước</th>\n"
+"        <th>Liên hệ</th>\n"
+"    </tr>\n"
+"    % for partner, accounts in values:\n"
+"        % for account in accounts:\n"
+"        <tr>\n"
+"            <td>${partner.name}</td>\n"
+"            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}"
+"&id=${account.id}&view_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} đến ${account.date and account.date or "
+"'???'}</td>\n"
+"            <td>\n"
+"            % if account.quantity_max != 0.0:\n"
+"                ${account.remaining_hours}/${account.quantity_max} units\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${account.partner_id.phone or ''}, ${account.partner_id."
+"email or ''}</td>\n"
+"        </tr>\n"
+"        % endfor\n"
+"    % endfor\n"
+"</table>\n"
+"% endmacro \n"
+"\n"
+"% if \"new\" in ctx[\"data\"]:\n"
+"    <h2>The following contracts just expired: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"old\" in ctx[\"data\"]:\n"
+"    <h2>The following expired contracts are still not processed: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"future\" in ctx[\"data\"]:\n"
+"    <h2>The following contracts will expire in less than one month: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"<p>\n"
+"    You can check all contracts to be renewed using the menu:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Sales / Invoicing / Contracts to Renew</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Thanks,\n"
+"</p>\n"
+"\n"
+"<pre>\n"
+"-- \n"
+"OpenERP Automatic Email\n"
+"</pre>\n"
+"\n"
+"            "
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,last_worked_date:0
-msgid "Date of Last Cost/Work"
+#: help:account.analytic.account,toinvoice_total:0
+msgid " Sum of everything that could be invoiced for this contract."
 msgstr ""
+"Tổng của tất cả các hạng mục có thể được xuất hóa đơn cho hợp đồng này."
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,ca_to_invoice:0
-msgid "Uninvoiced Amount"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
+#: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
 msgid ""
-"When invoicing on timesheet, OpenERP uses the\n"
-"                            pricelist of the contract which uses the price\n"
-"                            defined on the product related to each employee "
-"to\n"
-"                            define the customer invoice price rate."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Click here to create a template of contract.\n"
+"                </p><p>\n"
+"                    Templates are used to prefigure contract/project that \n"
+"                    can be selected by the salespeople to quickly configure "
+"the\n"
+"                    terms and conditions of the contract.\n"
+"                </p>\n"
+"            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Nhấp chuột để tạo mới một mẫu hợp đồng.\n"
+"                </p><p>\n"
+"                    Mẫu được sử dụng đẻ cấu hình sẵn hợp đồng/dự án mà được "
+"chọn bởi \n"
+"                    nhân viên bán hàng để nhanh chóng cấu hình các điều "
+"khoản và điều kiện của một hợp đồng\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "⇒ Invoice"
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Click to create a new contract.\n"
+"                </p><p>\n"
+"                    Use contracts to follow tasks, issues, timesheets or "
+"invoicing based on\n"
+"                    work done, expenses and/or sales orders. OpenERP will "
+"automatically manage\n"
+"                    the alerts for the renewal of the contracts to the right "
+"salesperson.\n"
+"                </p>\n"
+"            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Nhấp chuột để tạo hợp đồng mới.\n"
+"                </p><p>\n"
+"                    Sử dụng hợp đồng để theo dõi tác vụ, phát sinh, chấm "
+"công hoặc xuất hóa đơn\n"
+"                    dựa trên công việc đã làm, chi phí và/hoặc hợp đồng bán "
+"hàng. Hệ thống tự động quán lý\n"
+"                    thông báo cho việc gia hạn hợp đồng tới nhân viên bán "
+"hàng phù hợp.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,ca_invoiced:0
-msgid "Invoiced Amount"
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that can be converted into a "
+"sales\n"
+"                order.\n"
+"              </p><p>\n"
+"                Use sale orders to track everything that should be invoiced\n"
+"                at a fix price on a contract.\n"
+"              </p>\n"
+"            "
 msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,last_worked_invoiced_date:0
-msgid "Date of Last Invoiced Cost"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,fix_price_to_invoice:0
-msgid "Sum of quotations for this contract."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,ca_invoiced:0
-msgid "Total customer invoiced amount for this account."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,timesheet_ca_invoiced:0
-msgid "Sum of timesheet lines invoiced for this contract."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:464
-#, python-format
-msgid "Sales Order Lines of %s"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,revenue_per_hour:0
-msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account_analytic_analysis.summary.month,account_id:0
-#: field:account_analytic_analysis.summary.user,account_id:0
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
-msgid "Analytic Account"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Partner"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts that are not assigned to an account manager."
-msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nhấp chuột để tạo một báo giá mà có thể được chuyển thành "
+"một đơn hàng\n"
+"              </p><p>\n"
+"                Sử dụng đơn hàng để theo dõi tất cả những gì có thể được "
+"xuất hóa đơn\n"
+"                với giá cố định trên một hợp đồng.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -145,322 +246,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End Date"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Account Manager"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,remaining_hours_to_invoice:0
-msgid "Computed using the formula: Maximum Time - Total Invoiced Time"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Expected"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,theorical_margin:0
-msgid "Computed using the formula: Theoretical Revenue - Total Costs"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_invoiced:0
-msgid "Invoiced Time"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,fix_price_to_invoice:0
-#: field:account.analytic.account,remaining_hours:0
-#: field:account.analytic.account,remaining_hours_to_invoice:0
-#: field:account.analytic.account,timesheet_ca_invoiced:0
-msgid "Remaining Time"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid ""
-"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
-"'normal','template'])]}"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,remaining_hours:0
-msgid "Computed using the formula: Maximum Time - Total Worked Time"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,hours_quantity:0
-msgid ""
-"Number of time you spent on the analytic account (from timesheet). It "
-"computes quantities on all journal of type 'general'."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Nothing to invoice, create"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:res.groups,name:account_analytic_analysis.group_template_required
-msgid "Mandatory use of templates in contracts"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,hours_quantity:0
-msgid "Total Worked Time"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin:0
-msgid "Real Margin"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
-msgid "Hours summary by month"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,real_margin_rate:0
-msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "or view"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Customer Contracts"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Parent"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,month_ids:0
-#: field:account_analytic_analysis.summary.month,month:0
-msgid "Month"
-msgstr "Tháng"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
-msgid "Time & Materials to Invoice"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
-msgid "Contracts"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Start Date"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Invoiced"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid ""
-"The contracts to be renewed because the deadline is passed or the working "
-"hours are higher than the allocated hours"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending contracts to renew with your customer"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Timesheets"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,is_overdue_quantity:0
-msgid "Overdue Quantity"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Status"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_theorical:0
-msgid "Theoretical Revenue"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "To Renew"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid ""
-"A contract in OpenERP is an analytic account having a partner set on it."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
-msgid "Sales Orders"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_invoice_date:0
-msgid "If invoice from the costs, this is the date of the latest invoiced."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,ca_theorical:0
-msgid ""
-"Based on the costs you had on the project, what would have been the revenue "
-"if all these costs have been invoiced at the normal sale price provided by "
-"the pricelist."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,user_ids:0
-#: field:account_analytic_analysis.summary.user,user:0
-msgid "User"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
-msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                    Click here to create a template of contract.\n"
-"                </p><p>\n"
-"                    Templates are used to prefigure contract/project that \n"
-"                    can be selected by the salespeople to quickly configure "
-"the\n"
-"                    terms and conditions of the contract.\n"
-"                </p>\n"
+"                Nhấp chuột để định nghĩa một hợp đồng mới.\n"
+"              </p><p>\n"
+"                Bạn sẽ tìm thấy những hợp đồng cần gia hạn\n"
+"              </p><p>\n"
+"                Hệ thống tự động thiết lập hợp đồng cần gia hạn trong một "
+"trạng thái đang chờ giải quyết\n"
+"                Sau quá trình đàm phán, nhân viên bán hàng phải đóng hoặc "
+"gia hạn các hợp đồng đang chờ giải quyết\n"
+"              </p>\n"
 "            "
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
-msgid "Hours Summary by User"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contract"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:sale.config.settings,group_template_required:0
-msgid ""
-"Allows you to set the template field as required when creating an analytic "
-"account or a contract."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_invoiced:0
-msgid ""
-"Number of time (hours/days) that can be invoiced plus those that already "
-"have been invoiced."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,revenue_per_hour:0
-msgid "Revenue per Time (real)"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Click to create a new contract.\n"
-"                </p><p>\n"
-"                    Use contracts to follow tasks, issues, timesheets or "
-"invoicing based on\n"
-"                    work done, expenses and/or sales orders. OpenERP will "
-"automatically manage\n"
-"                    the alerts for the renewal of the contracts to the right "
-"salesperson.\n"
-"                </p>\n"
-"            "
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,toinvoice_total:0
-msgid "Total to Invoice"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Sale Orders"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Open"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,invoiced_total:0
-msgid "Total Invoiced"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,remaining_ca:0
-msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr ""
-"Được tính toán theo công thức: Giá trị hóa đơn tối đa - Số lượng hóa đơn"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,last_invoice_date:0
-msgid "Last Invoice Date"
-msgstr "Ngày lập hóa đơn gần nhất"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Units Remaining"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -475,21 +271,225 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_non_invoiced:0
-msgid "Uninvoiced Time"
-msgstr ""
+"<p>\n"
+"                Bạn sẽ tìm thấy bảng chấm công và hợp đồng mua hàng mà bạn "
+"đã thực hiện\n"
+"                cho các hợp đồng mà có thể xuất lại hóa đơn cho khách hàng. "
+"Nếu bạn muốn\n"
+"                ghi nhận các hoạt động trên hóa đơn, bạn phải sử dụng trình "
+"đơn chấm công\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Invoicing"
-msgstr ""
+msgid "Account Analytic Lines"
+msgstr "Account Analytic Lines"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,total_cost:0
-msgid "Total Costs"
+#: view:account.analytic.account:0
+msgid "Account Manager"
+msgstr "Quản lý tài khoản"
+
+#. module: account_analytic_analysis
+#: help:sale.config.settings,group_template_required:0
+msgid ""
+"Allows you to set the template field as required when creating an analytic "
+"account or a contract."
 msgstr ""
+"Cho phép bạn thiết lập mẫu trường yêu cầu khi tạo một tài khoản quản trị "
+"hoặc hợp đồng."
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,analytic_account_id:0
+#: field:account_analytic_analysis.summary.month,account_id:0
+#: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Tài khoản quản trị"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,ca_theorical:0
+msgid ""
+"Based on the costs you had on the project, what would have been the revenue "
+"if all these costs have been invoiced at the normal sale price provided by "
+"the pricelist."
+msgstr ""
+"Dựa trên chi phí đã có trên dự án, doanh thu dự kiến nếu tất cả chi phí này "
+"được xuất hóa đơn theo giá bán được cung cấp bởi bảng giá"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Cancelled"
+msgstr "Hủy bỏ"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Cancelled contracts"
+msgstr "Hợp đồng đã hủy"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Closed"
+msgstr "Đã đóng"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Closed contracts"
+msgstr "Hợp đồng đã đóng"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,remaining_hours_to_invoice:0
+msgid ""
+"Computed using the formula: Expected on timesheets - Total invoiced on "
+"timesheets"
+msgstr ""
+"Được tính toán với công thức: Dự kiến trên bảng chấm công - Tổng hóa đơn đã "
+"xuất trên bảng chấm công"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,real_margin:0
+msgid "Computed using the formula: Invoiced Amount - Total Costs."
+msgstr ""
+"Được tính toán với công thức: Tổng tiền đã xuất hóa đơn - tổng chi phí."
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,revenue_per_hour:0
+msgid "Computed using the formula: Invoiced Amount / Total Time"
+msgstr ""
+"Được tính toán với công thức: Tổng tiền đã xuất hóa đơn / Tổng thời gian"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,remaining_ca:0
+msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
+msgstr "Được tính toán với công thức: Giá trị hóa đơn tối đa - Giá trị đã xuất"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,remaining_hours:0
+msgid "Computed using the formula: Maximum Time - Total Worked Time"
+msgstr "Được tính toán với công thức: Thời gian tối đa - Tổng thời gian đã làm"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,theorical_margin:0
+msgid "Computed using the formula: Theoretical Revenue - Total Costs"
+msgstr ""
+"Được tính toán với công thức: Doanh thu dự kiến lý thuyết - Tổng chi phí"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,real_margin_rate:0
+msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
+msgstr ""
+"Được tính toán với công thức: (Lợi nhuận thực tế / Tổng chi phí) * 100."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contract"
+msgstr "Hợp đồng"
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
+msgid "Contract Template"
+msgstr "Mẫu hợp đồng"
+
+#. module: account_analytic_analysis
+#: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
+msgid "Contract expiration reminder ${user.company_id.name}"
+msgstr "Nhắc nhở hết hạn hợp đồng ${user.company_id.name}"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
+msgstr "Hợp đồng"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts assigned to a customer."
+msgstr "Hợp đồng được gán tới một khách hàng."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts in progress (open, draft)"
+msgstr "Hợp đồng đang xử lý (mở, dự thảo)"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts not assigned"
+msgstr "Hợp đồng chưa được gán"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts that are not assigned to an account manager."
+msgstr "Hợp đồng chưa được gán tới một người quản lý tài khoản."
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
+msgid "Contracts to Renew"
+msgstr "Hợp đồng cần gia hạn"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Customer Contracts"
+msgstr "Hợp đồng khách hàng"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,last_worked_date:0
+msgid "Date of Last Cost/Work"
+msgstr "Ngày Chi phí/Công việc gần nhất"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,last_worked_invoiced_date:0
+msgid "Date of Last Invoiced Cost"
+msgstr "Ngày chi phí được xuất hóa đơn gần nhất"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,recurring_next_date:0
+msgid "Date of Next Invoice"
+msgstr "Ngày xuất hóa đơn tiếp theo"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,last_worked_date:0
+msgid "Date of the latest work done on this account."
+msgstr "Ngày công việc hoàn thành gần nhất trên tài khoản này."
+
+#. module: account_analytic_analysis
+#: selection:account.analytic.account,recurring_rule_type:0
+msgid "Day(s)"
+msgstr "Ngày"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,name:0
+msgid "Description"
+msgstr "Miêu tả"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "End Month"
+msgstr "Tháng kết thúc"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "End date is in the next month"
+msgstr "Ngày kết thúc của tháng tiếp theo"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "End date passed or prepaid unit consumed"
+msgstr "End date passed or prepaid unit consumed"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
+#, python-format
+msgid "Error!"
+msgstr "Lỗi!"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_qtt_est:0
+msgid "Estimation of Hours to Invoice"
+msgstr "Số giờ ước tính để xuất hóa đơn"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_total:0
@@ -498,85 +498,49 @@ msgid ""
 "remaining subtotals which, in turn, are computed as the maximum between "
 "'(Estimation - Invoiced)' and 'To Invoice' amounts"
 msgstr ""
+"Dự kiến doanh thu còn lại cho hợp đồng này. Được tính toán như là tổng của "
+"tổng phụ còn lại, lần lượt được tính như là giá trị lớn nhất giữa 'Dự kiến - "
+"Đã xuất hóa đơn' và 'Chờ xuất hóa đơn'"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
-msgid "Contracts to Renew"
-msgstr ""
+#: view:account.analytic.account:0
+msgid "Expected"
+msgstr "Dự kiến"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,toinvoice_total:0
-msgid " Sum of everything that could be invoiced for this contract."
-msgstr ""
+#: view:account.analytic.account:0
+msgid "Expired or consumed"
+msgstr "Hết hạn hoặc đã tiêu thụ"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,theorical_margin:0
-msgid "Theoretical Margin"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,remaining_total:0
-msgid "Total Remaining"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,real_margin:0
-msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_est:0
-msgid "Estimation of Hours to Invoice"
-msgstr ""
+#: view:account.analytic.account:0
+msgid "Expiring soon"
+msgstr "Săp hết hạn"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr ""
+msgstr "Giá cố định"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_date:0
-msgid "Date of the latest work done on this account."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:sale.config.settings,group_template_required:0
-msgid "Mandatory use of templates."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
-msgid "Contract Template"
-msgstr ""
+#: field:account.analytic.account,recurring_invoices:0
+msgid "Generate recurring invoices automatically"
+msgstr "Tự động tạo hóa đơn định kỳ"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Units Done"
-msgstr ""
+msgid "Group By..."
+msgstr "Nhóm theo..."
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,total_cost:0
-msgid ""
-"Total of costs for this account. It includes real costs (from invoices) and "
-"indirect costs, like time spent on timesheets."
-msgstr ""
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
+msgid "Hours Summary by User"
+msgstr "Tóm tắt giờ theo người dùng"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,est_total:0
-msgid "Total Estimation"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,remaining_ca:0
-msgid "Remaining Revenue"
-msgstr ""
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
+msgid "Hours summary by month"
+msgstr "Tóm tắt giờ theo tháng"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -584,64 +548,472 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
+"Nếu hóa đơn từ tài khoản quản trị, tổng số còn lại bạn có thể xuất hóa đơn "
+"cho khách hàng dựa trên tổng chi phí."
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,last_invoice_date:0
+msgid "If invoice from the costs, this is the date of the latest invoiced."
+msgstr "Nếu hóa đơn từ chi phí, đây là ngày của hóa đơn gần nhất đã xuất."
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,last_worked_invoiced_date:0
+msgid ""
+"If invoice from the costs, this is the date of the latest work or cost that "
+"have been invoiced."
+msgstr ""
+"Nếu hóa đơn từ chi phí, đây là ngày của công việc hoặc chi phí gần nhất đã "
+"được xuất."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "In Progress"
+msgstr "Đang xử lý"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,recurring_invoice_line_ids:0
+msgid "Invoice Lines"
+msgstr "Chi tiết hóa đơn"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,recurring_rule_type:0
+msgid "Invoice automatically repeat at specified interval"
+msgstr "Invoice automatically repeat at specified interval"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Invoiced"
+msgstr "Đã xuất hóa đơn"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_invoiced:0
+msgid "Invoiced Amount"
+msgstr "Tổng tiền đã xuất"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_qtt_invoiced:0
+msgid "Invoiced Time"
+msgstr "Thời gian đã xuất hóa đơn"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Invoicing"
+msgstr "Xuất hóa đơn"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,last_invoice_date:0
+msgid "Last Invoice Date"
+msgstr "Ngày lập hóa đơn gần nhất"
+
+#. module: account_analytic_analysis
+#: model:res.groups,name:account_analytic_analysis.group_template_required
+msgid "Mandatory use of templates in contracts"
+msgstr "Bắt buộc sử dụng bản mẫu trong hợp đồng"
+
+#. module: account_analytic_analysis
+#: field:sale.config.settings,group_template_required:0
+msgid "Mandatory use of templates."
+msgstr "Bắt buộc sử dụng mẫu."
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,month_ids:0
+#: field:account_analytic_analysis.summary.month,month:0
+msgid "Month"
+msgstr "Tháng"
+
+#. module: account_analytic_analysis
+#: selection:account.analytic.account,recurring_rule_type:0
+msgid "Month(s)"
+msgstr "Tháng"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:671
+#, python-format
+msgid "No Customer Defined!"
+msgstr "Không có khách hàng được định nghĩa!"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "No order to invoice, create"
+msgstr "No order to invoice, create"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Nothing to invoice, create"
+msgstr "Không có gì để xuất hóa đơn, tạo mới"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
+"Số thời gian (giờ/ngày) (từ sổ nhật ký có loại 'tổng quát') mà có thể được "
+"xuất hóa đơn nếu bạn xuất hóa đơn dựa trên tài khoản quản trị."
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_qtt_invoiced:0
+msgid ""
+"Number of time (hours/days) that can be invoiced plus those that already "
+"have been invoiced."
+msgstr ""
+"Số thời gian (giờ/ngày) mà có thể được xuất hóa đơn cộng với thời gian đã "
+"xuất."
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_quantity:0
+msgid ""
+"Number of time you spent on the analytic account (from timesheet). It "
+"computes quantities on all journal of type 'general'."
+msgstr ""
+"Số thời gian bạn sử dụng trên một tài khoản quản trị (từ bảng chấm công). Nó "
+"tính toán số lượng trên tất cả sổ nhật ký có loại 'tổng quát'."
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,invoice_on_timesheets:0
+msgid "On Timesheets"
+msgstr "Trên bảng chấm công"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,is_overdue_quantity:0
+msgid "Overdue Quantity"
+msgstr "Số lượng quá hạn"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Parent"
+msgstr "Parent"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Partner"
+msgstr "Đối tác"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending contracts"
+msgstr "Hợp đồng chờ"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:677
+#, python-format
+msgid "Please define a sale journal for the company \"%s\"."
+msgstr "Vui lòng định nghĩa sổ nhật ký bán hàng cho công ty \"%s\"."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pricelist"
+msgstr "Bảng giá"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,product_id:0
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,quantity:0
+msgid "Quantity"
+msgstr "Số lượng"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,real_margin:0
+msgid "Real Margin"
+msgstr "Lợi nhuận thực tế"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "Tỷ lệ lợi nhuận thực tế (%)"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,recurring_rule_type:0
+msgid "Recurrency"
+msgstr "Recurrency"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Recurring Invoices"
+msgstr "Hóa đơn định kỳ"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Remaining"
+msgstr "Còn lại"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,remaining_ca:0
+msgid "Remaining Revenue"
+msgstr "Doanh thu dự kiến còn lại"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,fix_price_to_invoice:0
+#: field:account.analytic.account,remaining_hours:0
+#: field:account.analytic.account,remaining_hours_to_invoice:0
+#: field:account.analytic.account,timesheet_ca_invoiced:0
+msgid "Remaining Time"
+msgstr "Thời gian còn lại"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,recurring_interval:0
+msgid "Repeat Every"
+msgstr "Repeat Every"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,recurring_interval:0
+msgid "Repeat every (Days/Week/Month/Year)"
+msgstr "Repeat every (Days/Week/Month/Year)"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,revenue_per_hour:0
+msgid "Revenue per Time (real)"
+msgstr "Doanh thu dự kiến theo thời gian (thực tế)"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:544
+#, python-format
+msgid "Sales Order Lines to Invoice of %s"
+msgstr "Sales Order Lines to Invoice of %s"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
+msgid "Sales Orders"
+msgstr "Đơn hàng"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Start Month"
+msgstr "Tháng bắt đầu"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,price_subtotal:0
+msgid "Sub Total"
+msgstr "Tổng phụ"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,fix_price_to_invoice:0
+msgid "Sum of quotations for this contract."
+msgstr "Tổng báo giá cho hợp đồng này."
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,timesheet_ca_invoiced:0
+msgid "Sum of timesheet lines invoiced for this contract."
+msgstr "Tổng thời gian làm việc đã được xuất hóa đơn cho hợp đồng này."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Template"
+msgstr "Mẫu"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,theorical_margin:0
+msgid "Theoretical Margin"
+msgstr "Lợi nhuận lý thuyết"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_theorical:0
+msgid "Theoretical Revenue"
+msgstr "Doanh thu dự kiến trên lý thuyết"
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
+msgid "Time & Materials to Invoice"
+msgstr "Thời gian & Vật tư để xuất hóa đơn"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Timesheets"
+msgstr "Chấm công"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:654
+#, python-format
+msgid "Timesheets to Invoice of %s"
+msgstr "Chấm công để xuất hóa đơn của %s"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "To Invoice"
+msgstr "Để xuất hóa đơn"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "To Renew"
+msgstr "Để hạn"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Total"
+msgstr "Tổng"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,total_cost:0
+msgid "Total Costs"
+msgstr "Tổng chi phí"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,est_total:0
+msgid "Total Estimation"
+msgstr "Tổng dự kiến"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,invoiced_total:0
+msgid "Total Invoiced"
+msgstr "Tổng xuất hóa đơn"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,remaining_total:0
+msgid "Total Remaining"
+msgstr "Tổng còn lại"
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
+msgstr "Tổng thời gian"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_quantity:0
+msgid "Total Worked Time"
+msgstr "Tổng thời gian đã làm việc"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,ca_invoiced:0
+msgid "Total customer invoiced amount for this account."
+msgstr "Tổng hóa đơn khách hàng cho tài khoản này"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,total_cost:0
+msgid ""
+"Total of costs for this account. It includes real costs (from invoices) and "
+"indirect costs, like time spent on timesheets."
 msgstr ""
+"Tổng chi phí cho tài khoản này. Nó bao gồm chi phí thực tế (từ các hóa đơn) "
+"và chi phí gián tiếp, như là thời gian sử dụng trên bảng chấm công."
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,toinvoice_total:0
+msgid "Total to Invoice"
+msgstr "Tổng để xuất hóa đơn"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_to_invoice:0
+msgid "Uninvoiced Amount"
+msgstr "Tổng chưa xuất hóa đơn"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_qtt_non_invoiced:0
+msgid "Uninvoiced Time"
+msgstr "Thời gian chưa xuất hóa đơn"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,price_unit:0
+msgid "Unit Price"
+msgstr "Đơn giá"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,uom_id:0
+msgid "Unit of Measure"
+msgstr "Đơn vị tính"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Consumed"
+msgstr "Đơn vị tiêu thụ"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Remaining"
+msgstr "Đơn vị còn lại"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,user_ids:0
+#: field:account_analytic_analysis.summary.user,user:0
+msgid "User"
+msgstr "Người dùng"
+
+#. module: account_analytic_analysis
+#: selection:account.analytic.account,recurring_rule_type:0
+msgid "Week(s)"
+msgstr "Tuần"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid ""
+"When reinvoicing costs, OpenERP uses the\n"
+"                            pricelist of the contract which uses the price\n"
+"                            defined on the product related (e.g timesheet \n"
+"                            products are defined on each employee)."
+msgstr ""
+"Khi xuất lại hóa đơn chi phí, Hệ thống sử dụng bảng giá\n"
+"                            của hợp đồng mà sử dụng giá đã định nghĩa trên "
+"sản phẩm tương ứng."
+
+#. module: account_analytic_analysis
+#: selection:account.analytic.account,recurring_rule_type:0
+msgid "Year(s)"
+msgstr "Năm"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:671
+#, python-format
+msgid "You must first select a Customer for Contract %s!"
+msgstr "Trước tiên bạn phải chọn một Khách hàng cho Hợp đồng %s!"
+
+#. module: account_analytic_analysis
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_invoice_line
+msgid "account.analytic.invoice.line"
+msgstr "account.analytic.invoice.line"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "or view"
+msgstr "or view"
+
+#. module: account_analytic_analysis
+#: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "sale.config.settings"
 
 #. module: account_analytic_analysis
 #: model:res.groups,comment:account_analytic_analysis.group_template_required
 msgid ""
 "the field template of the analytic accounts and contracts will be required."
 msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,invoice_on_timesheets:0
-msgid "On Timesheets"
-msgstr ""
+"the field template of the analytic accounts and contracts will be required."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Total"
+msgid ""
+"{'required': [('type','=','contract'),'|','|',('fix_price_invoices','=',"
+"True), ('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', "
+"True)]}"
 msgstr ""
+"{'required': [('type','=','contract'),'|','|',('fix_price_invoices','=',"
+"True), ('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', "
+"True)]}"
 
-#~ msgid ""
-#~ "Number of hours that can be invoiced plus those that already have been "
-#~ "invoiced."
-#~ msgstr "Số giờ mà có thể làm hóa cộng với số giờ đã được làm hóa đơn"
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
+msgstr ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
 
-#~ msgid "My Current Accounts"
-#~ msgstr "Tài khoản hiện tại của tôi"
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "⇒ Invoice"
+msgstr "⇒ Hóa đơn"
 
-#~ msgid "Date of the last invoice created for this analytic account."
-#~ msgstr "Ngày của hóa đơn mới nhất được tạo cho tài khoản kế toán này."
-
-#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-#~ msgstr "Được tính toán theo công thức: Số lượng lớn nhất - Tổng thời gian"
-
-#~ msgid "Hours summary by user"
-#~ msgstr "Giờ được tổng kết bởi người dùng"
-
-#~ msgid "Theorical Revenue"
-#~ msgstr "Thu nhập theo lý thuyết"
-
-#~ msgid "All Analytic Accounts"
-#~ msgstr "Tất cả tài khoản kế toán"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."
-
-#, python-format
-#~ msgid "AccessError"
-#~ msgstr "Lỗi truy cập"
-
-#~ msgid "Theorical Margin"
-#~ msgstr "Lợi nhuận biên lý thuyết"
-
-#~ msgid "report_account_analytic"
-#~ msgstr "report_account_analytic"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML không hợp lệ cho Kiến trúc Xem!"
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "⇒ create invoices"
+msgstr "⇒ Tạo hóa đơn"
