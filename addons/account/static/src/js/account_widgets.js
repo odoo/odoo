@@ -1341,7 +1341,6 @@ openerp.account = function (instance) {
                 self.is_valid = true;
                 self.is_consistent = true;
                 self.filter = "";
-                self.propositions_lines = [];
                 self.set("balance", undefined, {silent: true});
                 self.set("mode", undefined, {silent: true});
                 self.set("pager_index", 0, {silent: true});
@@ -1914,7 +1913,6 @@ openerp.account = function (instance) {
         prepareReconciliationData: function(data) {
             var self = this;
             data.displayed = false;
-            _.each(data.move_lines, function(o){ self.decorateMoveLine(o) });
         },
 
         childValidated: function(child) {
@@ -1933,7 +1931,7 @@ openerp.account = function (instance) {
             "click .accounting_view thead": "headerClickHandler",
             "click .filler_line": "fillerLineClickHandler",
             "click .line_open_balance": "lineOpenBalanceClickHandler",
-            "click .button_reconcile": "persistAndDestroy",
+            "click .button_reconcile": "buttonReconcileClickHandler",
         }, instance.web.account.abstractReconciliationLine.prototype.events),
     
         init: function(parent, context) {
@@ -1942,7 +1940,6 @@ openerp.account = function (instance) {
             this.model_aml = this.getParent().model_aml;
             this.data = context.data;
             this.currency_id = context.data.currency_id;
-            this.propositions_lines = context.data.move_lines;
         },
 
         render: function() {
@@ -1956,9 +1953,7 @@ openerp.account = function (instance) {
             self.createFormWidgets();
             self.updateBalance();
             self.updateAccountingViewMatchedLines();
-            this.set("mv_lines", this.propositions_lines);
             self.set("mode", "match");
-
         },
 
         /* Properties handlers */
@@ -1973,7 +1968,7 @@ openerp.account = function (instance) {
 
             // If we're displaying all remaining move lines and there's not at least a debit and a credit,
             // consider that the reconciliation is done
-            if (self.get("mv_lines").length === self.move_lines_num && self.filter === '') {
+            if (self.get("mv_lines").length === self.total_move_lines_num && self.get("mv_lines_selected").length === 0 && self.filter === '') {
                 var mkay, mmkay = false;
                 var lines = self.get("mv_lines").concat(self.mv_lines_deselected);
                 for (var i=0; i<lines.length; i++) {
@@ -2010,6 +2005,13 @@ openerp.account = function (instance) {
             } else {
                 this.set("mode", "create");
             }
+        },
+
+        buttonReconcileClickHandler: function() {
+            if (this.persist_action === "reconcile")
+                this.processReconciliation();
+            else if (this.persist_action === "leave_open")
+                this.markAsReconciled();
         },
 
 
@@ -2076,24 +2078,32 @@ openerp.account = function (instance) {
                 });
         },
 
-        makeRPCForPersisting: function() {
+        processReconciliation: function() {
             var self = this;
-            if (self.persist_action === "reconcile") {
-                // Process reconciliation
-                var mv_line_ids = _.collect(self.get("mv_lines_selected"), function(o){ return o.id });
-                var new_mv_line_dicts = _.collect(self.getCreatedLines(), function(o){ return self.prepareCreatedMoveLineForPersisting(o) });
-                return self.model_aml.call("process_reconciliation", [mv_line_ids, new_mv_line_dicts]);
-            } else if (self.persist_action === "leave_open") {
-                // Mark as reconciled
-                if (this.data.account_type === "partner") {
-                    var id = this.data.partner_id;
-                    var model = "res.partner";
-                } else if (this.data.account_type === "other") {
-                    var id = this.data.account_id;
-                    var model = "account.account";
-                }
-                return new instance.web.Model(model).call("mark_as_reconciled", [[id]]);
-            }
+            var mv_line_ids = _.collect(self.get("mv_lines_selected"), function(o){ return o.id });
+            var new_mv_line_dicts = _.collect(self.getCreatedLines(), function(o){ return self.prepareCreatedMoveLineForPersisting(o) });
+            return self.model_aml.call("process_reconciliation", [mv_line_ids, new_mv_line_dicts]).then(function() {
+                self.set("mv_lines_selected", []);
+                self.set("created_lines", []);
+                self.set("line_created_being_edited", [{'id': 0}], {silent: true});
+            });
         },
+
+        markAsReconciled: function() {
+            var self = this;
+            var id, model;
+            if (this.data.account_type === "partner") {
+                id = this.data.partner_id;
+                model = "res.partner";
+            } else if (this.data.account_type === "other") {
+                id = this.data.account_id;
+                model = "account.account";
+            }
+            new instance.web.Model(model).call("mark_as_reconciled", [[id]]).then(function() {
+                self.persistAndDestroy();
+            });
+        },
+
+        makeRPCForPersisting: function() {},
     });
 };
