@@ -134,7 +134,6 @@
         },
         start_record: function(mode, extra_cookie_data){
             var self = this;
-            console.log("sTART", this.is_screen_already_recording());
             this.mode = mode;
             if(this.is_screen_already_recording()){
                 alert(_t("You are already sharing or recording your screen."));
@@ -331,6 +330,10 @@
                         node.appendChild(document.createElement('BASE'));
                         node.firstChild.href = self.base;
                         return node;
+                    }
+                    // SVG Graph : add the NameSpace on each elem of the svg, otherwise they are not displayed.
+                    if(['svg', 'g', 'rect', 'circle', 'text', 'line', 'path', 'tspan'].indexOf(tagName) > -1){
+                        return document.createElementNS("http://www.w3.org/2000/svg", tagName);
                     }
                 }
             });
