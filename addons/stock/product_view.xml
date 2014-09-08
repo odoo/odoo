@@ -10,9 +10,10 @@
                 <tree position="attributes">
                     <attribute name="colors">{'red':virtual_available&lt;0, 'blue':virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete'), 'black':virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')}</attribute>
                 </tree>
-                <tree position="inside">
-                    <field name="virtual_available" invisible="1"/>
-                </tree>
+                <field name="price" position="after">
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                </field>
             </field>
         </record>
 
@@ -24,9 +25,10 @@
                 <tree position="attributes">
                     <attribute name="colors">{'red':virtual_available&lt;0, 'blue':virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete'), 'black':virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')}</attribute>
                 </tree>
-                <tree position="inside">
-                    <field name="virtual_available" invisible="1"/>
-                </tree>
+                <field name="uom_id" position="after">
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                </field>
             </field>
         </record>
 
@@ -246,6 +248,22 @@
                    <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
                 </xpath>
             </field>
+        </record>
+        
+        
+        <act_window
+            context="{'location': active_id}"
+            domain="[('type','&lt;&gt;','service')]"
+            id="act_product_location_open"
+            name="Products"
+            res_model="product.product"
+            src_model="stock.location"/>
+
+        <record id="ir_act_product_location_open" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">stock.location</field>
+            <field name="name">Products</field>
+            <field eval="'ir.actions.act_window,%d'%act_product_location_open" name="value"/>
         </record>
     </data>
 </openerp>
