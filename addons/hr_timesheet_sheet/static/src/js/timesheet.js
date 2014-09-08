@@ -274,7 +274,8 @@ openerp.hr_timesheet_sheet = function(instance) {
         },
         do_switch_mode: function (event) {
             this.destroy_content();
-            this.mode = $(event.target).data("mode");
+            var $target = $(event.target).is("span") ? $(event.target).parent() : $(event.target);
+            this.mode = $target.data("mode");
             this.display_data();
         },
         get_box: function(account, day_count) {
