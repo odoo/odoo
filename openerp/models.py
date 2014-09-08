@@ -1236,11 +1236,11 @@ class BaseModel(object):
             # dbid
             if '.id' in record:
                 try:
-                    dbid = int(record['.id'])
+                    dbid = int(record['.id']) or False
                 except ValueError:
                     # in case of overridden id column
                     dbid = record['.id']
-                if not self.search(cr, uid, [('id', '=', dbid)], context=context):
+                if dbid and not self.search(cr, uid, [('id', '=', dbid)], context=context):
                     log(dict(extras,
                         type='error',
                         record=stream.index,
