@@ -122,13 +122,13 @@ class hr_job(osv.Model):
         'state': fields.selection([('open', 'Recruitment Closed'), ('recruit', 'Recruitment in Progress')],
                                   string='Status', readonly=True, required=True,
                                   track_visibility='always', copy=False,
-                                  help="By default 'Closed', set it to 'In Recruitment' if recruitment process is going on for this job position."),
+                                  help="Set whether the recruitment process is open or closed for this job position."),
         'write_date': fields.datetime('Update Date', readonly=True),
     }
 
     _defaults = {
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=ctx),
-        'state': 'open',
+        'state': 'recruit',
     }
 
     _sql_constraints = [
