@@ -615,7 +615,7 @@ The second inheritance mechanism (delegation) allows to link every record of a
 model to a record in a parent model, and provides transparent access to the
 fields of the parent record.
 
-.. image:: backend/inheritance_methods.png
+.. image:: ../images/inheritance_methods.png
     :align: center
 
 .. seealso::
@@ -1752,7 +1752,7 @@ JSON-RPC Library
 ----------------
 
 The following example is a Python program that interacts with an Odoo server
-with the libraries ``urllib2`` and ``json``::
+with the standard Python libraries ``urllib2`` and ``json``::
 
     import json
     import random
@@ -1787,6 +1787,31 @@ with the libraries ``urllib2`` and ``json``::
         'inventor_id': uid,
     }
     idea_id = call(url, "object", "execute", DB, uid, PASS, 'idea.idea', 'create', args)
+
+Here is the same program, using the library
+`jsonrpclib <https://pypi.python.org/pypi/jsonrpclib>`::
+
+    import jsonrpclib
+
+    # server proxy object
+    url = "http://%s:%s/jsonrpc" % (HOST, PORT)
+    server = jsonrpclib.Server(url)
+
+    # log in the given database
+    uid = server.call(service="common", method="login", args=[DB, USER, PASS])
+
+    # helper function for invoking model methods
+    def invoke(model, method, *args):
+        args = [DB, uid, PASS, model, method] + list(args)
+        return server.call(service="object", method="execute", args=args)
+
+    # create a new idea
+    args = {
+        'name' : 'Another idea',
+        'description' : 'This is another idea of mine',
+        'inventor_id': uid,
+    }
+    idea_id = invoke('idea.idea', 'create', args)
 
 Examples can be easily adapted from XML-RPC to JSON-RPC.
 

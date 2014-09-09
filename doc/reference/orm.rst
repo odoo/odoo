@@ -34,6 +34,8 @@ Model
         * If :attr:`._name` is unset, name of a single model to extend
           in-place
 
+        See :ref:`reference/orm/inheritance`.
+
     .. attribute:: _order
 
         Ordering field when searching without an ordering specified (default:
@@ -139,6 +141,8 @@ Model
     .. automethod:: add_default_value
     .. automethod:: name_get
     .. automethod:: name_create
+
+    .. _reference/orm/model/automatic:
 
     .. rubric:: Automatic fields
 
@@ -296,6 +300,110 @@ Relational fields
 
 .. autoclass:: openerp.fields.Reference
     :show-inheritance:
+
+.. _reference/orm/inheritance:
+
+Inheritance and extension
+=========================
+
+Odoo provides three different mechanisms to extend models in a modular way:
+
+* creating a new model from an existing one, adding new information to the
+  copy but leaving the original module as-is
+* extending models defined in other modules in-place, replacing the previous
+  version
+* delegating some of the model's fields to records it contains
+
+.. image:: ../images/inheritance_methods.png
+    :align: center
+
+Classical inheritance
+---------------------
+
+When using the :attr:`~openerp.models.Model._inherit` and
+:attr:`~openerp.models.Model._name` attributes together, Odoo creates a new
+model using the existing one (provided via
+:attr:`~openerp.models.Model._inherit`) as a base. The new model gets all the
+fields, methods and meta-information (defaults & al) from its base.
+
+.. literalinclude:: ../../openerp/addons/test_documentation_examples/inheritance.py
+    :language: python
+    :lines: 5-
+
+and using them:
+
+.. literalinclude:: ../../openerp/addons/test_documentation_examples/tests/test_inheritance.py
+    :language: python
+    :lines: 8,12,9,19
+
+will yield:
+
+.. literalinclude:: ../../openerp/addons/test_documentation_examples/tests/test_inheritance.py
+    :language: text
+    :lines: 15,22
+
+the second model has inherited from the first model's ``check`` method and its
+``name`` field, but overridden the ``call`` method, as when using standard
+:ref:`Python inheritance <python:tut-inheritance>`.
+
+Extension
+---------
+
+When using :attr:`~openerp.models.Model._inherit` but leaving out
+:attr:`~openerp.models.Model._name`, the new model replaces the existing one,
+essentially extending it in-place. This is useful to add new fields or methods
+to existing models (created in other modules), or to customize or reconfigure
+them (e.g. to change their default sort order):
+
+.. literalinclude:: ../../openerp/addons/test_documentation_examples/extension.py
+    :language: python
+    :lines: 5-
+
+.. literalinclude:: ../../openerp/addons/test_documentation_examples/tests/test_extension.py
+    :language: python
+    :lines: 8,13
+
+will yield:
+
+.. literalinclude:: ../../openerp/addons/test_documentation_examples/tests/test_extension.py
+    :language: text
+    :lines: 11
+
+.. note:: it will also yield the various :ref:`automatic fields
+          <reference/orm/model/automatic>` unless they've been disabled
+
+Delegation
+----------
+
+The third inheritance mechanism provides more flexibility (it can be altered
+at runtime) but less power: using the :attr:`~openerp.models.Model._inherits`
+a model *delegates* the lookup of any field not found on the current model
+to "children" models. The delegation is performed via
+:class:`~openerp.fields.Reference` fields automatically set up on the parent
+model:
+
+.. literalinclude:: ../../openerp/addons/test_documentation_examples/delegation.py
+    :language: python
+    :lines: 5-
+
+.. literalinclude:: ../../openerp/addons/test_documentation_examples/tests/test_delegation.py
+    :language: python
+    :lines: 9-12,21,26
+
+will result in:
+
+.. literalinclude:: ../../openerp/addons/test_documentation_examples/tests/test_delegation.py
+    :language: text
+    :lines: 23,28
+
+and it's possible to write directly on the delegated field:
+
+.. literalinclude:: ../../openerp/addons/test_documentation_examples/tests/test_delegation.py
+    :language: python
+    :lines: 47
+
+.. warning:: when using delegation inheritance, methods are *not* inherited,
+             only fields
 
 .. _reference/orm/domains:
 
