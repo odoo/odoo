@@ -4,7 +4,7 @@
     var website = openerp.website;
     var _t = openerp._t;
 	var ValidOption = false;
-	website.add_template_file('/website/static/src/xml/website.form.editor.wizard.template.xml');
+	website.add_template_file('/website_form_builder/static/src/xml/website.form.editor.wizard.template.xml');
 	
 
 	

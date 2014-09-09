@@ -227,6 +227,34 @@
 				</div>
 			</xpath>
 		</template>
+		<template id="contactus_form_options" name="Contact Form Options" inherit_id="website.snippets">
+			<xpath expr="//div[@id='snippet_effect']" position="after">
+				<div 	data-snippet-option-id='editForm'
+						data-selector=".editForm"
+						data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
+				>
+					<li class="divider"></li>
+					<li><a href="#" class="button js_action_form_list">Change Form Parameters</a></li>
+					<li><a href="#" class="button js_add_form_field">Add Field</a></li>
+				</div>
+						
+				<div data-snippet-option-id='input'
+					data-selector=".form-group"
+					data-selector-siblings=".form-group"
+					data-selector-children="form"></div>
+				
+				<div data-snippet-option-id='editFormField'
+					data-selector=".form-field"
+					data-selector-siblings=".form-field"
+				>
+				<li class="divider"></li>
+				<li>
+					<a href="#" class="button js_action_form_list">Change Field Parameters</a>
+				</li>
+			</div>
+			</xpath>
+		</template>
+			
 	</data>
 </openerp>
 
