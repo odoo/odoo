@@ -194,6 +194,8 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (options.height === 'auto' && options.max_height) {
             this.$el.css({ 'max-height': options.max_height, 'overflow-y': 'auto' });
         }
+        var self = this;
+        this.$el.on('dialogclose', function() { self.close(); });
         this.dialog_inited = true;
         var res = this.start();
         return res;
@@ -202,9 +204,11 @@ instance.web.Dialog = instance.web.Widget.extend({
         Closes the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
     */
     close: function(reason) {
-        if (this.dialog_inited && this.$el.is(":data(dialog)")) {
+        if (this.dialog_inited) {
             this.trigger("closing", reason);
-            this.$el.dialog('close');
+            if (this.$el.is(":data(dialog)")) {     // may have been destroyed by closing signal
+                this.$el.dialog('close');
+            }
         }
     },
     _closing: function() {
