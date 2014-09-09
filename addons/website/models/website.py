@@ -195,7 +195,7 @@ class website(osv.osv):
             # new page
             _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
             website_id = context.get('website_id')
-            key = 'website.%s' % page_name
+            key = template_module+'.'+page_name
             page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': key}, context=context)
             page = view.browse(cr, uid, page_id, context=context)
             page.write({
