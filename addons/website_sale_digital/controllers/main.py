@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import util
+from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+from openerp.addons.website.controllers.main import Website
 from openerp.addons.website_sale.controllers.main import website_sale
 from werkzeug.utils import redirect
 
@@ -38,7 +41,7 @@ class website_sale_digital(website_sale):
         # Check if the user has bought the associated product
         res_model = attachment['res_model']
         res_id = attachment['res_id']
-        purchased_products = self._get_purchased_digital_products(request.uid)
+        purchased_products = util.get_digital_purchases(request.uid)
         product_ids = map(lambda x: x['product_id'][0], purchased_products)
 
         if res_model == 'product.template':
@@ -67,7 +70,7 @@ class website_sale_digital(website_sale):
         downloads_page,
     ], type='http', auth='public', website=True)
     def display_attachments(self):
-        purchased_products = self._get_purchased_digital_products(request.uid)
+        purchased_products = util.get_digital_purchases(request.uid)
 
         # Superuser to be able to see product that are not published anymore, I bought the
         # right to download these products, even if they are not website_published anymore.
@@ -109,23 +112,22 @@ class website_sale_digital(website_sale):
             'attachments': attachments,
         })
 
-    def _get_purchased_digital_products(self, uid):
-        user = request.env['res.users'].browse(uid)
-        partner = user.partner_id
-        sale_orders = request.env['sale.order.line'].sudo()
-        fields = ['product_id']
 
-        purchases = sale_orders.search_read(
-            domain=[('order_id.partner_id', '=', partner.id), ('state', '=', 'confirmed'), ('product_id.product_tmpl_id.digital_content', '=', True)],
-            fields=fields,
-        )
+class Website_Unpublished_Images_Server(Website):
 
-        # Hack for public user last session
-        if 'sale_last_order_id' in request.session:
-            last_purchase = sale_orders.search_read(
-                domain=[('order_id', '=', request.session['sale_last_order_id']), ('state', '=', 'confirmed'), ('product_id.product_tmpl_id.digital_content', '=', True)],
-                fields=fields,
-            )
-            purchases = purchases + last_purchase
+    @http.route([
+        '/website/image/<model>/<p_id>/<field>',
+        '/website/image/<model>/<p_id>/<field>/<int:max_width>x<int:max_height>'
+    ], auth="public", website=True)
+    def website_image(self, model, p_id, field, max_width=None, max_height=None):
+        """ Allows to display images for products with website_published=False
+            Gives admin access to images if the user has bought the product.
+        """
+        if model in ['product.product', 'product.template']:
+            # Confirm = False to display images in cart
+            purchased_products = util.get_digital_purchases(request.uid, confirmed=False)
+            product_ids = map(lambda x: x['product_id'][0], purchased_products)
+            if int(p_id) in product_ids:
+                request.uid = SUPERUSER_ID
 
-        return purchases
+        return super(Website_Unpublished_Images_Server, self).website_image(model, p_id, field, max_width, max_height)
