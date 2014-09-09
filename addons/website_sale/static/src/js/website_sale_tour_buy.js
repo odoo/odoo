@@ -69,7 +69,7 @@
                     if ($("input[name='name']").val() === "")
                         $("input[name='name']").val("website_sale-test-shoptest");
                     if ($("input[name='email']").val() === "")
-                        $("input[name='email']").val("website_sale_test_shoptest@websitesaletest.optenerp.com");
+                        $("input[name='email']").val("website_sale_test_shoptest@websitesaletest.odoo.com");
                     $("input[name='phone']").val("123");
                     $("input[name='street']").val("123");
                     $("input[name='city']").val("123");
