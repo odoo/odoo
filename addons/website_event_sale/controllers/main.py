@@ -72,6 +72,8 @@ class website_event(website_event):
             _values = order_line_obj.product_id_change(
                 request.cr, SUPERUSER_ID, [], pricelist_id, ticket.product_id.id,
                 partner_id=partner_id, context=request.context)['value']
+            if 'tax_id' in _values:
+                _values['tax_id'] = [(6, 0, _values['tax_id'])]
             _values.update(values)
 
             order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, _values, context=request.context)
