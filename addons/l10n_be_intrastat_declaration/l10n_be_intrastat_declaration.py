@@ -60,3 +60,9 @@ class sale_order(osv.osv):
             #It comes from invoicing adress
             invoice['intrastat_country_id'] = saleorder.partner_invoice_id.country_id.id
         return invoice
+
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'kbo': fields.char('KBO Number', help="KBO number for BNB identification."),
+    }

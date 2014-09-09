@@ -33,6 +33,7 @@ Based on invoices.
         'data/regions.xml',
         'data/report.intrastat.code.xml',
         'wizard/l10n_be_intrastat_declaration_xml_view.xml',
+        'l10n_be_intrastat_declaration_view.xml',
     ],
     'demo': [],
     'test': [],

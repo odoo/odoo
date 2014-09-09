@@ -99,11 +99,9 @@ class xml_decl(osv.TransientModel):
         company = decl_datas.tax_code_id.company_id
         if not (company.partner_id and company.partner_id.country_id and company.partner_id.country_id.id):
             raise osv.except_osv(_('Insufficient Data!'), _('No Country associated with your company.'))
-        vat_no = company.partner_id.vat
-        if not vat_no:
-            raise osv.except_osv(_('Insufficient Data!'), _('No VAT number associated with your company.'))
-        vat_no = vat_no.replace(' ','').upper()
-        vat = vat_no[2:]
+        kbo = company.kbo
+        if not kbo:
+            raise osv.except_osv(_('Insufficient Data!'), _('No KBO number associated with your company.'))
         if len(decl_datas.month) != 2:
             decl_datas.month = "0%s" % decl_datas.month
         if int(decl_datas.month)<1 or int(decl_datas.month)>12:
@@ -118,7 +116,7 @@ class xml_decl(osv.TransientModel):
         #Add Administration elements
         admin = ET.SubElement(decl, 'Administration')
         fromtag = ET.SubElement(admin, 'From')
-        fromtag.text = vat
+        fromtag.text = kbo
         fromtag.set('declarerType', 'KBO')
         ET.SubElement(admin, 'To').text = "NBB"
         ET.SubElement(admin, 'Domain').text = "SXX"
@@ -175,6 +173,7 @@ class xml_decl(osv.TransientModel):
             decl.set('code', 'EX%sS' % declcode)
         else:
             decl.set('code', 'EX%sE' % declcode)
+        decl.set('date', '%s-%s' % (decl_datas.year, decl_datas.month))
         datas = ET.SubElement(decl, 'Data')
         if not extendedmode:
             datas.set('form', 'EXF%sS' % declcode)
@@ -308,13 +307,13 @@ class xml_decl(osv.TransientModel):
             self._set_Dim(item, 'EXCNT', unicode(linekey.EXCNT))
             self._set_Dim(item, 'EXTTA', unicode(linekey.EXTTA))
             self._set_Dim(item, 'EXREG', unicode(linekey.EXREG))
-            self._set_Dim(item, 'EXGO', unicode(linekey.EXGO))
+            self._set_Dim(item, 'EXTGO', unicode(linekey.EXGO))
             if extendedmode:
                 self._set_Dim(item, 'EXTPC', unicode(linekey.EXTPC))
                 self._set_Dim(item, 'EXDELTRM', unicode(linekey.EXDELTRM))
-            self._set_Dim(item, 'EXTXVAL', unicode(amounts[0]))
-            self._set_Dim(item, 'EXWEIGHT', unicode(amounts[1]))
-            self._set_Dim(item, 'EXUNITS', unicode(amounts[2]))
+            self._set_Dim(item, 'EXTXVAL', unicode(round(amounts[0],0)).replace(".",","))
+            self._set_Dim(item, 'EXWEIGHT', unicode(round(amounts[1],0)).replace(".",","))
+            self._set_Dim(item, 'EXUNITS', unicode(round(amounts[2],0)).replace(".",","))
 
         if numlgn == 0:
             #no datas
