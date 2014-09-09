@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import base64
-from openerp import SUPERUSER_ID as SU
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website_sale.controllers.main import website_sale
@@ -102,8 +101,6 @@ class website_sale_digital(website_sale):
                 names[p_id] = template.name + ' (' + ', '.join([a.name for a in attributes]) + ')'
             else:
                 names[p_id] = template.name
-            if not p_obj.website_published:
-                names[p_id] += ' (Discontinued)'
             attachments[p_id] = att
 
         return request.website.render('website_sale_digital.downloads', {
@@ -130,5 +127,5 @@ class website_sale_digital(website_sale):
                 fields=fields,
             )
             purchases = purchases + last_purchase
-  
+
         return purchases
