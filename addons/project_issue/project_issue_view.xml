@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-        <menuitem  id="menu_project_confi" name="Issues" parent="base.menu_definitions" sequence="2"/>
 
         <record model="ir.ui.view" id="project_issue_version_search_view">
             <field name="name">Issue Version</field>
@@ -39,7 +38,8 @@
               </p>
             </field>
         </record>
-        <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" groups="base.group_no_one"/>
+
+        <menuitem  action="project_issue_version_action" id="menu_project_confi" name="Issues Versions" parent="base.menu_definitions" sequence="2"/>
 
 
         <record model="ir.ui.view" id="project_issue_form_view">

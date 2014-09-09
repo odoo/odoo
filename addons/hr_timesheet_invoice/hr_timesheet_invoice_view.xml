@@ -157,7 +157,7 @@
             </field>
         </record>
         <record id="action_hr_timesheet_invoice_factor_form" model="ir.actions.act_window">
-            <field name="name">Types of Invoicing</field>
+            <field name="name">Invoicing Types</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr_timesheet_invoice.factor</field>
             <field name="view_type">form</field>
@@ -178,7 +178,7 @@
         <menuitem
             action="action_hr_timesheet_invoice_factor_form"
             id="hr_timesheet_invoice_factor_view"
-            parent="account.menu_configuration_misc" sequence="25" groups="base.group_no_one"/>
+            parent="account.menu_analytic_accounting" sequence="99" groups="base.group_no_one"/>
 
     </data>
 </openerp>

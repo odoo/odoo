@@ -7,9 +7,14 @@
             id="menu_hr_root"
             groups="base.group_hr_manager,base.group_hr_user,base.group_user"
             sequence="90"/>
-        <menuitem id="menu_hr_reporting" parent="base.menu_reporting" name="Human Resources" sequence="40" />
+        <menuitem id="menu_hr_reporting" parent="base.menu_reporting" name="Human Resources" sequence="60" />
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_user" sequence="50"/>
+        <menuitem id="menu_hr_configuration_employees" name="Employees" parent="hr.menu_hr_configuration" groups="base.group_hr_user" sequence="1"/>
+        <menuitem id="menu_hr_configuration_recruitment" name="Recruitment" parent="hr.menu_hr_configuration" groups="base.group_hr_user" sequence="2"/>
+        <menuitem id="menu_hr_configuration_timesheets_attendances" name="Timesheets &amp; Attendances" parent="hr.menu_hr_configuration" groups="base.group_hr_user" sequence="3"/>
+        <menuitem id="menu_hr_configuration_expenses" name="Expenses" parent="hr.menu_hr_configuration" groups="base.group_hr_manager" sequence="4"/>
+
         <menuitem id="menu_hr_reporting_timesheet" name="Reports"
             parent="menu_hr_reporting" sequence="6"/>
 
@@ -319,7 +324,7 @@
         </record>
 
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form"
-            parent="hr.menu_hr_configuration" sequence="1" groups="base.group_no_one,base.group_hr_manager"/>
+            parent="hr.menu_hr_configuration_employees" sequence="1" groups="base.group_no_one,base.group_hr_manager"/>
 
         <record id="hr_employee_normal_action_tree" model="ir.actions.act_window">
             <field name="name">Employees</field>
@@ -500,7 +505,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="hr.menu_hr_configuration" sequence="5" groups="base.group_hr_manager,base.group_hr_user"/>
+        <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="hr.menu_hr_configuration_employees" sequence="2" groups="base.group_hr_manager,base.group_hr_user"/>
 
     </data>
 </openerp>
