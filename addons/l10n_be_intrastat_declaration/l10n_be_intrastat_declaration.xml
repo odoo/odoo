@@ -99,6 +99,7 @@
                     <field name="region_id" attrs="{'required': [('country_id', '=', %(base.be)d )]}" domain="[('country_id','=',country_id)]"/>
                     <field name="transport_mode_id" groups="l10n_be_intrastat_declaration.intrastat_extended"/>
                     <field name="incoterm_id" groups="l10n_be_intrastat_declaration.intrastat_extended"/>
+                    <field name="kbo" attrs="{'required': [('country_id', '=', %(base.be)d )],'invisible': [('country_id', '!=', %(base.be)d )]}"/>
                 </xpath>
             </field>
         </record>

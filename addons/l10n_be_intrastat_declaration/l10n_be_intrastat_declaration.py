@@ -152,6 +152,7 @@ class res_company(osv.osv):
         'region_id': fields.many2one('l10n_be_intrastat_declaration.regions', 'Intrastat region'),
         'transport_mode_id': fields.many2one('l10n_be_intrastat_declaration.transport_mode', 'Default transport mode'),
         'incoterm_id': fields.many2one('stock.incoterms', 'Default incoterm for intrastat', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
+        'kbo': fields.char('KBO Number', help="KBO number for BNB identification."),
     }
 
 
