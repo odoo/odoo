@@ -48,6 +48,7 @@ class sale_quote_line(osv.osv):
     _name = "sale.quote.line"
     _description = "Quotation Template Lines"
     _columns = {
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale quote lines."),
         'quote_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', required=True, ondelete='cascade', select=True),
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
@@ -57,9 +58,11 @@ class sale_quote_line(osv.osv):
         'product_uom_qty': fields.float('Quantity', required=True, digits_compute= dp.get_precision('Product UoS')),
         'product_uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
     }
+    _order = 'sequence, id'
     _defaults = {
         'product_uom_qty': 1,
         'discount': 0.0,
+        'sequence': 10,
     }
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
