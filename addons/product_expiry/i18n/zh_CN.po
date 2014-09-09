@@ -1,96 +1,31 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-11-19 10:35+0000\n"
-"Last-Translator: Guipo Hao <hrlpool@sohu.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:26+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:39+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
-msgstr "Ham"
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "警告日期"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_lait_product_template
-msgid "Cow milk"
-msgstr "牛奶"
-
-#. module: product_expiry
-#: field:product.product,life_time:0
-msgid "Product Life Time"
-msgstr "产品生命周期"
-
-#. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid ""
-"This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
-msgstr "此序列号所含商品将在该日从库存移除。"
-
-#. module: product_expiry
-#: help:product.product,removal_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr "此处表明当新序列号生成时，商品需要提前多少天从库存移除。"
-
-#. module: product_expiry
-#: field:product.product,use_time:0
-msgid "Product Use Time"
-msgstr "产品使用时间"
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_product
-msgid "Product"
-msgstr "产品"
-
-#. module: product_expiry
-#: help:product.product,use_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr "此处表明当新序列号生成时，商品变质前（未变危险）的天数。"
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product Removal Time"
-msgstr "产品移除时间"
-
-#. module: product_expiry
-#: help:stock.production.lot,alert_date:0
-msgid ""
-"This is the date on which an alert should be notified about the goods with "
-"this Serial Number."
-msgstr "此处表明该序列号所指商品需要提醒管理员的日期。"
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_production_lot
-msgid "Serial Number"
-msgstr "序列号"
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr "此处表明当新序列号生成时，商品生成提醒前的天数。"
-
-#. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-msgid "Removal Date"
-msgstr "移除日期"
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "此日期前食用"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_pain_product_template
@@ -98,7 +33,13 @@ msgid "Bread"
 msgstr "面包"
 
 #. module: product_expiry
-#: view:product.product:0
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "牛奶"
+
+#. module: product_expiry
+#: view:product.template:product_expiry.view_product_form_expiry
+#: view:stock.production.lot:product_expiry.view_move_form_expiry
 msgid "Dates"
 msgstr "日期"
 
@@ -108,36 +49,62 @@ msgid "End of Life Date"
 msgstr "报废日期"
 
 #. module: product_expiry
-#: field:stock.production.lot,use_date:0
-msgid "Best before Date"
-msgstr "此日期前食用"
-
-#. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camenbert"
-msgstr "法式奶油蛋糕"
-
-#. module: product_expiry
-#: help:product.product,life_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
+msgid "French cheese Camembert"
 msgstr ""
-"此处表明当新序列号生成时，商品变危险以至于不能使用前的天数。When a new a Serial Number is issued, this is "
-"the number of days before the goods may become dangerous and must not be "
-"consumed."
 
 #. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
-msgstr "警告日期"
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Ham"
 
 #. module: product_expiry
-#: help:stock.production.lot,use_date:0
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,alert_time:0
+msgid "Product Alert Time"
+msgstr "产品提醒时间"
+
+#. module: product_expiry
+#: field:product.template,life_time:0
+msgid "Product Life Time"
+msgstr "产品生命周期"
+
+#. module: product_expiry
+#: field:product.template,removal_time:0
+msgid "Product Removal Time"
+msgstr "产品移除时间"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,use_time:0
+msgid "Product Use Time"
+msgstr "产品使用时间"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr ""
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+#: field:stock.quant,removal_date:0
+msgid "Removal Date"
+msgstr "移除日期"
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
 msgid ""
-"This is the date on which the goods with this Serial Number start "
-"deteriorating, without being dangerous yet."
-msgstr "此处表明该序列号的商品开始变质的日期（未变危险）。"
+"This is the date on which an alert should be notified about the goods with "
+"this Serial Number."
+msgstr "此处表明该序列号所指商品需要提醒管理员的日期。"
 
 #. module: product_expiry
 #: help:stock.production.lot,life_date:0
@@ -147,69 +114,46 @@ msgid ""
 msgstr "此处表明该序列号的商品变得危险的日期，此时该商品不能使用。"
 
 #. module: product_expiry
-#: field:product.product,alert_time:0
-msgid "Product Alert Time"
-msgstr "产品提醒时间"
+#: help:stock.production.lot,removal_date:0
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock."
+msgstr "此序列号所含商品将在该日从库存移除。"
 
-#~ msgid "Production lot"
-#~ msgstr "生产批次"
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
+msgstr "此处表明该序列号的商品开始变质的日期（未变危险）。"
 
-#~ msgid ""
-#~ "The date on which the lot starts deteriorating without becoming dangerous."
-#~ msgstr "此日期这个批次的产品开始变质但不危险"
+#. module: product_expiry
+#: help:product.template,alert_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr "此处表明当新序列号生成时，商品生成提醒前的天数。"
 
-#~ msgid "Products date of expiry"
-#~ msgstr "产品过期日期"
+#. module: product_expiry
+#: help:product.template,life_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+"此处表明当新序列号生成时，商品变危险以至于不能使用前的天数。When a new a Serial Number is issued, this is "
+"the number of days before the goods may become dangerous and must not be "
+"consumed."
 
-#~ msgid ""
-#~ "The combination of serial number and internal reference must be unique !"
-#~ msgstr "序列号和内部单号的组合必须是唯一."
+#. module: product_expiry
+#: help:product.template,removal_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr "此处表明当新序列号生成时，商品需要提前多少天从库存移除。"
 
-#~ msgid "The date on which the lot should be removed."
-#~ msgstr "此日期该批次产品应移除"
-
-#~ msgid "LTR"
-#~ msgstr "升"
-
-#~ msgid ""
-#~ "Track different dates on products and production lots:\n"
-#~ " - end of life\n"
-#~ " - best before date\n"
-#~ " - removal date\n"
-#~ " - alert date\n"
-#~ "Used, for example, in food industries."
-#~ msgstr ""
-#~ "跟踪产品或批次的多个日期：\n"
-#~ "- 报废日期\n"
-#~ "- 在此日期前食用\n"
-#~ "- 移除日期\n"
-#~ "- 警告日期"
-
-#~ msgid ""
-#~ "The number of days after which an alert should be notified about the "
-#~ "production lot."
-#~ msgstr "这里输入一个天数，在这些天以后应该对该批次产品发出警告信息"
-
-#~ msgid ""
-#~ "The date on which the lot may become dangerous and should not be consumed."
-#~ msgstr "此日期这个批次的产品已经危险了不能消费"
-
-#~ msgid ""
-#~ "The number of days before a production lot may become dangerous and should "
-#~ "not be consumed."
-#~ msgstr "这个批次的产品已经危险不能食用之前的天数"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "错误：无效的(EAN)条码"
-
-#~ msgid "The number of days before a production lot should be removed."
-#~ msgstr "这个批次产品被移除前的天数"
-
-#~ msgid ""
-#~ "The number of days before a production lot starts deteriorating without "
-#~ "becoming dangerous."
-#~ msgstr "此批次产品开始变质但无害之前的天数"
-
-#~ msgid ""
-#~ "The date on which an alert should be notified about the production lot."
-#~ msgstr "此日期这个批次的产品需要一个提醒"
+#. module: product_expiry
+#: help:product.template,use_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr "此处表明当新序列号生成时，商品变质前（未变危险）的天数。"

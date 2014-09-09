@@ -223,7 +223,7 @@ function reload_favorite_list(result) {
             }
         },
         open_invitation_form : function(invitation){
-            this.$el.html(QWeb.render('invitation_view', {'invitation': JSON.parse(invitation)}));
+            $('.oe_application').html(QWeb.render('invitation_view', {'invitation': JSON.parse(invitation)}));
         },
         redirect_meeting_view : function(db, action, meeting_id, view){
             var self = this;

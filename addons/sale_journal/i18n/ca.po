@@ -1,51 +1,50 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_journal
+# Catalan translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2009-11-17 10:39+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Nota"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Actiu"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Vendes & Compres"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Facturació"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Agrupat"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
 msgstr ""
 
 #. module: sale_journal
@@ -58,19 +57,15 @@ msgstr ""
 "eliminar-ho."
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "Notes"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Mètode de facturació"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Albarà"
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Tipus de factura"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -78,16 +73,6 @@ msgstr "Albarà"
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "Tipus de factura"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "No agrupat"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Agrupat"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -102,28 +87,44 @@ msgstr ""
 "dimecres, mensual, etc."
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
+msgstr "Facturació"
+
+#. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
 msgstr ""
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Tipus de factura"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Mètode de facturació"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Actiu"
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "No agrupat"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Nota"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "Notes"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -131,324 +132,22 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Albarà"
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "Vendes & Compres"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr "Comanda de venda"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
 msgstr ""
-
-#~ msgid "Monthly sales"
-#~ msgstr "Vendes mensuals"
-
-#~ msgid "assigned"
-#~ msgstr "Assignat"
-
-#~ msgid "Waiting Schedule"
-#~ msgstr "Esperant data planificada"
-
-#~ msgid "to be invoiced"
-#~ msgstr "Per ser facturat"
-
-#~ msgid "Sale Journal"
-#~ msgstr "Diari de vendes"
-
-#~ msgid "Sale Stats"
-#~ msgstr "Estadístiques de vendes"
-
-#~ msgid "waiting"
-#~ msgstr "En espera"
-
-#~ msgid "Set to Draft"
-#~ msgstr "Canvia a esborrany"
-
-#~ msgid "Journal date"
-#~ msgstr "Data del diari"
-
-#~ msgid "My open journals"
-#~ msgstr "Els meus diaris oberts"
-
-#~ msgid "# of Lines"
-#~ msgstr "# de línies"
-
-#~ msgid "All Open Journals"
-#~ msgstr "Tots els diaris oberts"
-
-#~ msgid "done"
-#~ msgstr "realitzat"
-
-#~ msgid "Average Price"
-#~ msgstr "Preu mig"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "﻿XML invàlid per a la definició de la vista!"
-
-#~ msgid "State"
-#~ msgstr "Estat"
-
-#~ msgid "All Months"
-#~ msgstr "Tots els mesos"
-
-#~ msgid "Total Price"
-#~ msgstr "Preu total"
-
-#~ msgid "Reporting"
-#~ msgstr "Informe"
-
-#~ msgid "My open packing journals"
-#~ msgstr "Els meus diaris d'albarans oberts"
-
-#~ msgid "Sales Orders by Journal"
-#~ msgstr "Comandes de vendes per diari"
-
-#~ msgid "Open journals"
-#~ msgstr "Obre diaris"
-
-#~ msgid "None"
-#~ msgstr "Cap"
-
-#~ msgid "Sales by journal (this month)"
-#~ msgstr "Vendes per diari (aquest mes)"
-
-#~ msgid "Manual in progress"
-#~ msgstr "Manual en procés"
-
-#~ msgid "In progress"
-#~ msgstr "En procés"
-
-#~ msgid "Month"
-#~ msgstr "Mes"
-
-#~ msgid "Invoice state"
-#~ msgstr "Estat de la factura"
-
-#~ msgid "Order State"
-#~ msgstr "Estat de la comanda"
-
-#~ msgid "Shipping Exception"
-#~ msgstr "Excepció d'enviament"
-
-#~ msgid "Draft"
-#~ msgstr "Esborrany"
-
-#~ msgid "cancel"
-#~ msgstr "Cancel·lat"
-
-#~ msgid "Invoice Exception"
-#~ msgstr "Excepció de factura"
-
-#~ msgid "Validation date"
-#~ msgstr "Data de validació"
-
-#~ msgid "draft"
-#~ msgstr "Esborrany"
-
-#~ msgid "Draft sales"
-#~ msgstr "Esborrany de vendes"
-
-#~ msgid "Quotation"
-#~ msgstr "Pressupost"
-
-#~ msgid "Sales Journals"
-#~ msgstr "Diari de vendes"
-
-#~ msgid "sale_journal.invoice.type.tree"
-#~ msgstr "diari_venda.factura.tipus.arbre"
-
-#~ msgid "Confirm Sales"
-#~ msgstr "Confirma les vendes"
-
-#~ msgid "Creation date"
-#~ msgstr "Data creació"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "Mètode de facturació"
-
-#~ msgid "Code"
-#~ msgstr "Codi"
-
-#~ msgid "Open Journal"
-#~ msgstr "Obre diari"
-
-#~ msgid "Sales"
-#~ msgstr "Vendes"
-
-#~ msgid "Packing Journal"
-#~ msgstr "Diari d'albarans"
-
-#~ msgid "Done"
-#~ msgstr "Realitzat"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancel·la"
-
-#~ msgid "Journal Stats"
-#~ msgstr "Estadístiques de diaris"
-
-#~ msgid "Open"
-#~ msgstr "Obert"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-#~ "especial!"
-
-#~ msgid "Responsible"
-#~ msgstr "Responsable"
-
-#~ msgid "My Open Journals"
-#~ msgstr "Els meus diaris oberts"
-
-#~ msgid "Cancel Sales"
-#~ msgstr "Cancel·la vendes"
-
-#~ msgid "invoiced"
-#~ msgstr "Facturat"
-
-#~ msgid "confirmed"
-#~ msgstr "Confirmat"
-
-#~ msgid "Packing lists by Journal"
-#~ msgstr "Llistes d'albarans per diari"
-
-#~ msgid "Quantities"
-#~ msgstr "Quantitats"
-
-#~ msgid "Journal"
-#~ msgstr "Diari"
-
-#~ msgid "This Month"
-#~ msgstr "Aquest mes"
-
-#~ msgid "Sales by Journal"
-#~ msgstr "Vendes per diari"
-
-#~ msgid "Invoicing Methods"
-#~ msgstr "Mètodes de facturació"
-
-#~ msgid "Journal Information"
-#~ msgstr "Informació del diari"
-
-#~ msgid "States"
-#~ msgstr "Estats"
-
-#~ msgid "Close Journal"
-#~ msgstr "Tanca diari"
-
-#~ msgid "Approved sales"
-#~ msgstr "Vendes aprovades"
-
-#~ msgid "Cancel Packing"
-#~ msgstr "Cancel·la albarà"
-
-#~ msgid "Confirmed packing"
-#~ msgstr "Albarà confirmat"
-
-#~ msgid "The type of journal used for sales and packing."
-#~ msgstr "Tipus de diari utilitzat per a vendes i albarans."
-
-#~ msgid "Packing journals"
-#~ msgstr "Diaris d'albarans"
-
-#~ msgid "Packing"
-#~ msgstr "Albarà"
-
-#~ msgid "Packing by journal"
-#~ msgstr "Albarans per diari"
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "Gestiona vendes i lliuraments per diari"
-
-#~ msgid "Packing Journals"
-#~ msgstr "Diaris d'albarans"
-
-#~ msgid "Packing by Invoice Method"
-#~ msgstr "Albarans per mètode de facturació"
-
-#~ msgid "Assigned packing"
-#~ msgstr "Albarà assignat"
-
-#~ msgid "Statistics on packing to invoice"
-#~ msgstr "Estadístiques d'albarans a facturar"
-
-#~ msgid "Packing to invoice"
-#~ msgstr "Albarans a facturar"
-
-#~ msgid "Packing by journals"
-#~ msgstr "Albarans per diari"
-
-#~ msgid "Packing by invoice method"
-#~ msgstr "Albarans per mètode de facturació"
-
-#~ msgid "Packing to Invoice"
-#~ msgstr "Albarans a facturar"
-
-#~ msgid "Packing by Journal"
-#~ msgstr "Albarans per diari"
-
-#~ msgid "Stats on packing by invoice method"
-#~ msgstr "Estadístiques d'albarans per mètode de facturació"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de model no vàlid en la definició de l'acció."
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Error! No podeu crear membres associats recursius."
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "La referència de la comanda ha de ser única!"
-
-#~ msgid "The type of journal used for sales and picking."
-#~ msgstr "El tipus de diari utilitzat per a vendes i albarans."
-
-#~ msgid ""
-#~ "\n"
-#~ "    The sales journal modules allows you to categorise your\n"
-#~ "    sales and deliveries (picking lists) between different journals.\n"
-#~ "    This module is very helpful for bigger companies that\n"
-#~ "    works by departments.\n"
-#~ "\n"
-#~ "    You can use journal for different purposes, some examples:\n"
-#~ "    * isolate sales of different departments\n"
-#~ "    * journals for deliveries by truck or by UPS\n"
-#~ "\n"
-#~ "    Journals have a responsible and evolves between different status:\n"
-#~ "    * draft, open, cancel, done.\n"
-#~ "\n"
-#~ "    Batch operations can be processed on the different journals to\n"
-#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
-#~ "\n"
-#~ "    It also supports batch invoicing methods that can be configured by\n"
-#~ "    partners and sales orders, examples:\n"
-#~ "    * daily invoicing,\n"
-#~ "    * monthly invoicing, ...\n"
-#~ "\n"
-#~ "    Some statistics by journals are provided.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    El mòdul de diari de vendes us permet categoritzar les vostres vendes\n"
-#~ "i lliuraments (albarans) en diferents diaris.\n"
-#~ "Aquest mòdul és molt útil per a companyies grans que\n"
-#~ "treballen per departaments.\n"
-#~ "\n"
-#~ "Podeu utilitzar els diaris per a diferents propòsits, alguns exemples:\n"
-#~ "* aïllar vendes de diferents departaments\n"
-#~ "* diaris per a lliuraments segons camió o companyia d'enviament\n"
-#~ "\n"
-#~ "Els diaris tenen un responsable i evolucionen entre diferents estats:\n"
-#~ "* esborrany, obert, cancel·lat, fet.\n"
-#~ "\n"
-#~ "Es poden processar operacions en lot en els diferents diaris\n"
-#~ "per confirmar totes les vendes alhora, per validar o facturar albarans, ...\n"
-#~ "\n"
-#~ "També suporta mètodes de facturació en lot que poden ser configurats\n"
-#~ "segons empresa o comandes de venda, exemples:\n"
-#~ "* facturació diària,\n"
-#~ "* facturació mensual, ...\n"
-#~ "\n"
-#~ "Es proporcionen algunes estadístiques per diari.\n"
-#~ "    "

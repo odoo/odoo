@@ -1,96 +1,31 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Spanish (Ecuador) translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2011-01-13 04:43+0000\n"
-"Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish (Ecuador) <es_EC@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:26+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:39+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
-msgstr "Jamón"
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "Fecha de alerta"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_lait_product_template
-msgid "Cow milk"
-msgstr "Leche de vaca"
-
-#. module: product_expiry
-#: field:product.product,life_time:0
-msgid "Product Life Time"
-msgstr "Tiempo de vida producto"
-
-#. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid ""
-"This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
-msgstr ""
-
-#. module: product_expiry
-#: help:product.product,removal_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-
-#. module: product_expiry
-#: field:product.product,use_time:0
-msgid "Product Use Time"
-msgstr "Tiempo de uso producto"
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_product
-msgid "Product"
-msgstr "Producto"
-
-#. module: product_expiry
-#: help:product.product,use_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product Removal Time"
-msgstr "Tiempo eliminación producto"
-
-#. module: product_expiry
-#: help:stock.production.lot,alert_date:0
-msgid ""
-"This is the date on which an alert should be notified about the goods with "
-"this Serial Number."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_production_lot
-msgid "Serial Number"
-msgstr ""
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-
-#. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-msgid "Removal Date"
-msgstr "Fecha de eliminación"
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "Fecha caducidad"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_pain_product_template
@@ -98,7 +33,13 @@ msgid "Bread"
 msgstr "Pan"
 
 #. module: product_expiry
-#: view:product.product:0
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "Leche de vaca"
+
+#. module: product_expiry
+#: view:product.template:product_expiry.view_product_form_expiry
+#: view:stock.production.lot:product_expiry.view_move_form_expiry
 msgid "Dates"
 msgstr "Fechas"
 
@@ -108,32 +49,61 @@ msgid "End of Life Date"
 msgstr "Fecha de fin de vida"
 
 #. module: product_expiry
-#: field:stock.production.lot,use_date:0
-msgid "Best before Date"
-msgstr "Fecha caducidad"
-
-#. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camenbert"
-msgstr "Queso Camembert francés"
-
-#. module: product_expiry
-#: help:product.product,life_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
+msgid "French cheese Camembert"
 msgstr ""
 
 #. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
-msgstr "Fecha de alerta"
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Jamón"
 
 #. module: product_expiry
-#: help:stock.production.lot,use_date:0
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,alert_time:0
+msgid "Product Alert Time"
+msgstr "Tiempo de alerta producto"
+
+#. module: product_expiry
+#: field:product.template,life_time:0
+msgid "Product Life Time"
+msgstr "Tiempo de vida producto"
+
+#. module: product_expiry
+#: field:product.template,removal_time:0
+msgid "Product Removal Time"
+msgstr "Tiempo eliminación producto"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,use_time:0
+msgid "Product Use Time"
+msgstr "Tiempo de uso producto"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr ""
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+#: field:stock.quant,removal_date:0
+msgid "Removal Date"
+msgstr "Fecha de eliminación"
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
 msgid ""
-"This is the date on which the goods with this Serial Number start "
-"deteriorating, without being dangerous yet."
+"This is the date on which an alert should be notified about the goods with "
+"this Serial Number."
 msgstr ""
 
 #. module: product_expiry
@@ -144,118 +114,43 @@ msgid ""
 msgstr ""
 
 #. module: product_expiry
-#: field:product.product,alert_time:0
-msgid "Product Alert Time"
-msgstr "Tiempo de alerta producto"
+#: help:stock.production.lot,removal_date:0
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock."
+msgstr ""
 
-#~ msgid "Product lifetime"
-#~ msgstr "Ciclo de vida producto"
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
+msgstr ""
 
-#~ msgid "Products date of expiry"
-#~ msgstr "Fecha de caducidad de productos"
+#. module: product_expiry
+#: help:product.template,alert_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr ""
 
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Error: La UdM por defecto y la UdM de compra deben estar en la misma "
-#~ "categoría."
+#. module: product_expiry
+#: help:product.template,life_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML no válido para la definición de la vista!"
+#. module: product_expiry
+#: help:product.template,removal_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
 
-#~ msgid "The date the lot may become dangerous and should not be consumed."
-#~ msgstr ""
-#~ "Fecha en la que el producto puede llegar a ser peligroso y no debería ser "
-#~ "consumido."
-
-#~ msgid ""
-#~ "Track different dates on products and production lots:\n"
-#~ " - end of life\n"
-#~ " - best before date\n"
-#~ " - removal date\n"
-#~ " - alert date\n"
-#~ "Used, for example, in food industries."
-#~ msgstr ""
-#~ "Gestionar diferentes fechas en productos y lotes de producción:\n"
-#~ " - fin de vida\n"
-#~ " - fecha de caducidad\n"
-#~ " - fecha de retirada\n"
-#~ " - fecha de alerta\n"
-#~ "Usados, por ejemplo, en la industria alimentaria."
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Error: La UdV debe estar en una categoría diferente que la UdM."
-
-#~ msgid "The date the lot starts deteriorating without becoming dangerous."
-#~ msgstr ""
-#~ "Fecha en la que el producto empieza a deteriorarse sin llegar a ser "
-#~ "peligroso."
-
-#~ msgid "The number of days before a production lot should be removed."
-#~ msgstr "Número de días antes de que un lote de producción deba ser retirado."
-
-#~ msgid "Product usetime"
-#~ msgstr "Tiempo de uso producto"
-
-#~ msgid "Product removal time"
-#~ msgstr "Fecha eliminación producto"
-
-#~ msgid ""
-#~ "The number of days before a production lot starts deteriorating without "
-#~ "becoming dangerous."
-#~ msgstr ""
-#~ "Número de días antes de que un producto empieza a deteriorarse sin llegar a "
-#~ "ser peligroso."
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Error: Código EAN erróneo"
-
-#~ msgid ""
-#~ "The number of days before a production lot may become dangerous and should "
-#~ "not be consumed."
-#~ msgstr ""
-#~ "Número de días antes de que un producto pueda llegar a ser peligroso y no "
-#~ "debe ser consumido."
-
-#~ msgid "The date the lot should be removed."
-#~ msgstr "Fecha en la que el producto debería ser eliminado."
-
-#~ msgid "Product alert time"
-#~ msgstr "Fecha alerta producto"
-
-#~ msgid "Production lot"
-#~ msgstr "Lote de producción"
-
-#~ msgid ""
-#~ "The date on which the lot starts deteriorating without becoming dangerous."
-#~ msgstr "La fecha en que el lote empieza a deteriorarse sin ser peligroso."
-
-#~ msgid "The date on which the lot should be removed."
-#~ msgstr "La fecha en que el lote debería ser eliminado."
-
-#~ msgid ""
-#~ "The number of days after which an alert should be notified about the "
-#~ "production lot."
-#~ msgstr ""
-#~ "El número de días después de lo cuales debería notificarse una alerta sobre "
-#~ "el lote de producción."
-
-#~ msgid ""
-#~ "The date on which the lot may become dangerous and should not be consumed."
-#~ msgstr ""
-#~ "La fecha en que el lote puede empezar a ser peligroso y no debería ser "
-#~ "consumido."
-
-#~ msgid ""
-#~ "The combination of serial number and internal reference must be unique !"
-#~ msgstr ""
-#~ "La combinación del número de serie y la referencia interna debe ser unica !"
-
-#~ msgid "LTR"
-#~ msgstr "LTR"
-
-#~ msgid ""
-#~ "The date on which an alert should be notified about the production lot."
-#~ msgstr ""
-#~ "La fecha en la que debería notificarse una alerta sobre el lote de "
-#~ "producción."
+#. module: product_expiry
+#: help:product.template,use_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""

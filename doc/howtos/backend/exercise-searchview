@@ -3,21 +3,22 @@
 
 Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-26 17:26:11.107783207 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-26 17:26:11.099783207 +0200
-@@ -33,7 +33,10 @@
-             <field name="name">course.search</field>
-             <field name="model">openacademy.course</field>
-             <field name="arch" type="xml">
--                <search>
-+                <search string="Session Search">
-+                    <filter string="My Courses" name="my_courses"
-+                            domain="[('responsible_id', '=', uid)]"
-+                            help="My own sessions"/>
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:01:45.299033618 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-28 14:18:58.847018275 +0200
+@@ -36,6 +36,12 @@
+                 <search>
                      <field name="name"/>
                      <field name="description"/>
++                    <filter name="my_courses" string="My Courses"
++                            domain="[('responsible_id', '=', uid)]"/>
++                    <group string="Group By">
++                        <filter name="by_responsible" string="Responsible"
++                                context="{'group_by': 'responsible_id'}"/>
++                    </group>
                  </search>
-@@ -62,6 +65,7 @@
+             </field>
+         </record>
+@@ -62,6 +68,7 @@
              <field name="res_model">openacademy.course</field>
              <field name="view_type">form</field>
              <field name="view_mode">tree,form</field>

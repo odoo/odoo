@@ -1,7 +1,7 @@
 Index: addons/openacademy/models.py
 ===================================================================
---- addons.orig/openacademy/models.py	2014-08-26 17:26:19.919783076 +0200
-+++ addons/openacademy/models.py	2014-08-26 17:26:19.915783076 +0200
+--- addons.orig/openacademy/models.py	2014-08-28 14:02:42.203032773 +0200
++++ addons/openacademy/models.py	2014-08-28 14:06:54.871029022 +0200
 @@ -1,7 +1,7 @@
  # -*- coding: utf-8 -*-
  
@@ -11,6 +11,21 @@ Index: addons/openacademy/models.py
  
  class Course(models.Model):
      _name = 'openacademy.course'
+@@ -19,11 +19,11 @@
+         default = dict(default or {})
+ 
+         copied_count = self.search_count(
+-            [('name', '=like', u"Copy of {}%".format(self.name))])
++            [('name', '=like', _(u"Copy of {}%").format(self.name))])
+         if not copied_count:
+-            new_name = u"Copy of {}".format(self.name)
++            new_name = _(u"Copy of {}").format(self.name)
+         else:
+-            new_name = u"Copy of {} ({})".format(self.name, copied_count)
++            new_name = _(u"Copy of {} ({})").format(self.name, copied_count)
+ 
+         default['name'] = new_name
+         return super(Course, self).copy(default)
 @@ -97,15 +97,15 @@
          if self.seats < 0:
              return {
@@ -31,7 +46,7 @@ Index: addons/openacademy/models.py
                  },
              }
  
-@@ -147,4 +147,4 @@
+@@ -151,4 +151,4 @@
      @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
          if self.instructor_id and self.instructor_id in self.attendee_ids:

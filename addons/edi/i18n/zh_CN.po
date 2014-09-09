@@ -1,42 +1,27 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-28 07:46+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:47+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:67
+#: code:addons/edi/models/edi.py:46
 #, python-format
-msgid "Reason:"
-msgstr "原因："
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:60
-#, python-format
-msgid "The document has been successfully imported!"
-msgstr "这个单据已经被成功导入！"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:65
-#, python-format
-msgid "Sorry, the document could not be imported."
-msgstr "对不起，这个单据不能导入！"
+msgid "'%s' is an invalid external ID"
+msgstr "%s是个无效的外部ID"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
@@ -50,31 +35,26 @@ msgstr "货币"
 
 #. module: edi
 #. openerp-web
-#: code:addons/edi/static/src/js/edi.js:71
+#: code:addons/edi/static/src/js/edi.js:61
 #, python-format
 msgid "Document Import Notification"
 msgstr "单据导入通知"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:130
-#, python-format
-msgid "Missing application."
-msgstr "找不到的应用。"
+#: model:ir.model,name:edi.model_edi_edi
+msgid "EDI Subsystem"
+msgstr "EDI 子系统"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:131
-#, python-format
-msgid ""
-"The document you are trying to import requires the OpenERP `%s` application. "
-"You can install it by connecting as the administrator and opening the "
-"configuration assistant."
-msgstr "你要导入的单据需要OpenERP的 %s 模块。你可以用管理员用户安装并打开配置向导。"
+#: field:edi.edi,id:0
+msgid "ID"
+msgstr ""
 
 #. module: edi
-#: code:addons/edi/models/edi.py:47
+#: code:addons/edi/models/edi.py:129
 #, python-format
-msgid "'%s' is an invalid external ID"
-msgstr "%s是个无效的外部ID"
+msgid "Missing Application."
+msgstr ""
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_partner
@@ -82,215 +62,31 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: edi
-#: model:ir.model,name:edi.model_edi_edi
-msgid "EDI Subsystem"
-msgstr "EDI 子系统"
-
-#~ msgid "The currency code must be unique per company!"
-#~ msgstr "每个公司的货币代码必须唯一"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "公司名称必须唯一！"
-
-#~ msgid "Partner Addresses"
-#~ msgstr "业务伙伴地址"
-
-#~ msgid "EDI token"
-#~ msgstr "EDI令牌"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "错误，您不能创建循环引用的会员用户"
-
-#~ msgid "EDI Tokens must be unique!"
-#~ msgstr "EDI令牌必须唯一"
-
-#~ msgid "Unique identifier for retrieving an EDI document."
-#~ msgstr "接收EDI文件的唯一标识符"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "错误！您不能创建循环的公司。"
-
-#~ msgid "Import it into an existing OpenERP instance"
-#~ msgstr "导入已存在的OpenERP实例"
-
-#~ msgid "Import this document"
-#~ msgstr "导入这个文件"
-
-#~ msgid "View/Print"
-#~ msgstr "查看/打印"
-
-#~ msgid "EDI document content"
-#~ msgstr "EDI文档内容"
-
-#~ msgid "EDI Document"
-#~ msgstr "EDI文档"
-
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:57
 #, python-format
-#~ msgid "Missing Application"
-#~ msgstr "不存在此功能"
+msgid "Reason:"
+msgstr "原因："
 
-#~ msgid "Document"
-#~ msgstr "文件"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:55
+#, python-format
+msgid "Sorry, the document could not be imported."
+msgstr "对不起，这个单据不能导入！"
 
-#~ msgid "Create my new OpenERP instance"
-#~ msgstr "创建我的新OpenERP实例"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:50
+#, python-format
+msgid "The document has been successfully imported!"
+msgstr "这个单据已经被成功导入！"
 
-#~ msgid "Import it into a new OpenERP Online instance"
-#~ msgstr "导入到一个新的在线OpenERP实例"
-
-#~ msgid "Import"
-#~ msgstr "导入"
-
-#~ msgid "OpenERP instance address:"
-#~ msgstr "OpenERP实例地址："
-
-#~ msgid ""
-#~ "OpenERP's Electronic Data Interchange documents are based on a generic and "
-#~ "language\n"
-#~ "                            independent"
-#~ msgstr "OpenERP的电子数据交换文档基于标准且语言独立"
-
-#~ msgid "Import into another application"
-#~ msgstr "导入其他应用程序"
-
-#~ msgid "JSON"
-#~ msgstr "JSON"
-
-#~ msgid ""
-#~ "serialization of the document's attribute.\n"
-#~ "                            It is usually very quick and straightforward to "
-#~ "create a small plug-in for your preferred\n"
-#~ "                            application that will be capable of importing "
-#~ "any OpenERP EDI document.\n"
-#~ "                            You can find out more details about how to do "
-#~ "this and what the content of OpenERP EDI documents\n"
-#~ "                            is like in the"
-#~ msgstr ""
-#~ "文档属性的序列化。\n"
-#~ "一般来说在你喜欢的应用程序上新建一个小插件用于导入OpenERP的EDI文档是很简单直接的。你可以在下面找到更多细节信息以及OpenERP的EDI文件有哪"
-#~ "些内容："
-
-#~ msgid "OpenERP documentation"
-#~ msgstr "OpenERP文档"
-
-#~ msgid "To get started immediately,"
-#~ msgstr "要马上开始，"
-
-#~ msgid "Description"
-#~ msgstr "描述"
-
-#~ msgid "Invoice"
-#~ msgstr "发票"
-
-#~ msgid "Date"
-#~ msgstr "日期"
-
-#~ msgid "Product Description"
-#~ msgstr "产品描述"
-
-#~ msgid "Your Reference"
-#~ msgstr "您的单号"
-
-#~ msgid "see is all it takes to use this EDI document in Python"
-#~ msgstr "看到的是所有要在这个Python EDI文件中使用的"
-
-#~ msgid "You can download the raw EDI document here:"
-#~ msgstr "你可以在这里下载这个EDI文件："
-
-#~ msgid "Download"
-#~ msgstr "下载"
-
-#~ msgid "Powered by"
-#~ msgstr "选择自由，选择"
-
-#~ msgid "OpenERP"
-#~ msgstr "OpenERP"
-
-#~ msgid "Quantity"
-#~ msgstr "数量"
-
-#~ msgid "Discount"
-#~ msgstr "折扣"
-
-#~ msgid "Unit Price"
-#~ msgstr "单价"
-
-#~ msgid "Net Total:"
-#~ msgstr "不含税合计:"
-
-#~ msgid "Price"
-#~ msgstr "价格"
-
-#~ msgid "Taxes:"
-#~ msgstr "税:"
-
-#~ msgid "Amount"
-#~ msgstr "金额"
-
-#~ msgid "Tax"
-#~ msgstr "税"
-
-#~ msgid "Base Amount"
-#~ msgstr "基准额"
-
-#~ msgid "Total:"
-#~ msgstr "合计:"
-
-#~ msgid "to"
-#~ msgstr "到"
-
-#~ msgid "Order"
-#~ msgstr "订单"
-
-#~ msgid "Paypal"
-#~ msgstr "Paypal"
-
-#~ msgid "on the transfer:"
-#~ msgstr "转账单号："
-
-#~ msgid ""
-#~ "(postal address on the invoice header)\n"
-#~ "                     using one of the following bank accounts. Be sure to "
-#~ "mention the invoice\n"
-#~ "                     reference"
-#~ msgstr ""
-#~ "（发票抬头的邮寄地址）\n"
-#~ "用以下任意一个银行账号。注意标明发票编号。"
-
-#~ msgid "Please transfer"
-#~ msgstr "请转账"
-
-#~ msgid ""
-#~ "You may directly pay this invoice online via Paypal's secure payment gateway:"
-#~ msgstr "你可以用Paypal安全支付网关直接在线支付这张发票"
-
-#~ msgid "Bank Wire Transfer"
-#~ msgstr "网络银行转账"
-
-#~ msgid "Pay Online"
-#~ msgstr "在线付款"
-
-#~ msgid "Notes:"
-#~ msgstr "备注："
-
-#~ msgid "Discount(%)"
-#~ msgstr "折扣（%）"
-
-#~ msgid "Salesman"
-#~ msgstr "销售员"
-
-#~ msgid ""
-#~ "(postal address on the order header)\n"
-#~ "                     using one of the following bank accounts. Be sure to "
-#~ "mention the document\n"
-#~ "                     reference"
-#~ msgstr ""
-#~ "（订单抬头上的邮寄地址）\n"
-#~ "请使用以下任意一个银行账号。请标明订单编号。"
-
-#~ msgid ""
-#~ "You may directly pay this order online via Paypal's secure payment gateway:"
-#~ msgstr "你可以用Paypal安全支付网关直接在线支付这个订单"
-
-#~ msgid "Payment terms"
-#~ msgstr "付款条件"
+#. module: edi
+#: code:addons/edi/models/edi.py:130
+#, python-format
+msgid ""
+"The document you are trying to import requires the Odoo `%s` application. "
+"You can install it by connecting as the administrator and opening the "
+"configuration assistant."
+msgstr ""

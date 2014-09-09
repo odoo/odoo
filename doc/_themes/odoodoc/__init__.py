@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from . import html_domain
+from . import github
 # add Odoo style to pygments
 from . import odoo_pygments
 
@@ -8,6 +9,7 @@ sphinx_monkeypatch.patch()
 
 def setup(app):
     html_domain.setup(app)
+    github.setup(app)
 
     app.add_directive('exercise', Exercise)
     app.add_node(exercise, html=(

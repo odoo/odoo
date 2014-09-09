@@ -59,7 +59,6 @@
     <html t-att-lang="lang and lang.replace('_', '-')"
           t-att-data-website-id="website.id if editable and website else None"
           t-att-data-editable="'1' if editable else None"
-          t-att-data-editable-no-editor="editable_no_editor or None"
           t-att-data-translatable="'1' if translatable else None"
           t-att-data-view-xmlid="xmlid if editable else None"
           t-att-data-main-object="repr(main_object) if editable else None"
@@ -100,7 +99,7 @@
                     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-                    ga('create',_.str.trim('<t t-esc="website.google_analytics_key"/>'));
+                    ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
                     ga('send','pageview');
                 </script>
             </t>
@@ -169,7 +168,7 @@
     </xpath>
 </template>
 
-<template id="layout_logo_show" inherit_id="website.layout" optional="enabled" name="Show Logo">
+<template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
             <img src="/logo.png"/>
@@ -230,7 +229,7 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" optional="enabled" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
+<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
     <xpath expr="//ul[@id='top_menu']" position="inside">
         <li class="divider"/>
         <li>
@@ -272,7 +271,7 @@
     </xpath>
 </template>
 
-<template id="footer_default" inherit_id="website.footer_custom" optional="enabled" name="Automatic Footer">
+<template id="footer_default" inherit_id="website.footer_custom" customize_show="True" name="Automatic Footer">
     <xpath expr="//div[@id='footer']" position="replace">
         <div class="container hidden-print">
             <div class="row">
@@ -439,7 +438,7 @@
 
 <!-- Error and special pages -->
 
-<template id="info" name="Odoo Information" optional="enabled">
+<template id="info" name="Odoo Information">
     <t t-call="website.layout">
       <div id="wrap">
         <div class="oe_structure">

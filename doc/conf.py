@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys, os
+import sphinx
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -18,7 +19,17 @@ needs_sphinx = '1.1'
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.todo', 'sphinx.ext.autodoc', 'odoodoc', 'patchqueue']
+extensions = [
+    'sphinx.ext.todo',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
+    'odoodoc',
+    'patchqueue'
+]
+if sphinx.__version__.split('.') >= ['1', '2']:
+    # linkcode is only available from Sphinx 1.2
+    extensions.insert(0, 'sphinx.ext.linkcode')
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -112,6 +123,8 @@ html_static_path = ['_static']
 
 html_style = "odoo.css"
 
+html_add_permalinks = False
+
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
 #html_last_updated_fmt = '%b %d, %Y'
@@ -151,4 +164,53 @@ html_sidebars = {
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
 #html_use_opensearch = ''
+
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/2/', None),
+    'werkzeug': ('http://werkzeug.pocoo.org/docs/0.9/', None),
+}
+
+github_user = 'odoo'
+github_project = 'odoo'
+
+def setup(app):
+    app.connect('html-page-context', canonicalize)
+    app.add_config_value('canonical_root', None, 'env')
+    app.add_config_value('canonical_branch', 'master', 'env')
+
+    app.connect('html-page-context', versionize)
+    app.add_config_value('versions', '', 'env')
+
+def canonicalize(app, pagename, templatename, context, doctree):
+    """ Adds a 'canonical' URL for the current document in the rendering
+    context. Requires the ``canonical_root`` setting being set. The canonical
+    branch is ``master`` but can be overridden using ``canonical_branch``.
+    """
+    if not app.config.canonical_root:
+        return
+
+    context['canonical'] = _build_url(
+        app.config.canonical_root, app.config.canonical_branch, pagename)
+
+def versionize(app, pagename, templatename, context, doctree):
+    """ Adds a version switcher below the menu, requires ``canonical_root``
+    and ``versions`` (an ordered, space-separated lists of all possible
+    versions).
+    """
+    if not (app.config.canonical_root and app.config.versions):
+        return
+
+    context['versions'] = [
+        (vs, _build_url(app.config.canonical_root, vs, pagename))
+        for vs in app.config.versions.split(',')
+        if vs != app.config.version
+    ]
+
+def _build_url(root, branch, pagename):
+    return "{canonical_url}{canonical_branch}/{canonical_page}".format(
+        canonical_url=root,
+        canonical_branch=branch,
+        canonical_page=(pagename + '.html').replace('index.html', '')
+                                           .replace('index/', ''),
+    )
 

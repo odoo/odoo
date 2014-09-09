@@ -615,7 +615,7 @@ The second inheritance mechanism (delegation) allows to link every record of a
 model to a record in a parent model, and provides transparent access to the
 fields of the parent record.
 
-.. image:: backend/inheritance_methods.png
+.. image:: ../images/inheritance_methods.png
     :align: center
 
 .. seealso::
@@ -922,7 +922,7 @@ Model constraints
 
 Odoo provides two ways to set up automatically verified invariants:
 :func:`Python constraints <openerp.api.constrains>` and
-:attr:`SQL constaints <openerp.models.Model._sql_constraints>`.
+:attr:`SQL constraints <openerp.models.Model._sql_constraints>`.
 
 A Python constraint is defined as a method decorated with
 :func:`~openerp.api.constrains`, and invoked on a recordset. The decorator
@@ -1064,21 +1064,35 @@ field (to define the label for each calendar event)
 Search views
 ------------
 
-Search view fields can take custom operators or :ref:`reference/orm/domains`
-for more flexible matching of results.
+Search view ``<field>`` elements can have a ``@filter_domain`` that overrides
+the domain generated for searching on the given field. In the given domain,
+``self`` represents the value entered by the user. In the example below, it is
+used to search on both fields ``name`` and ``description``.
 
-Search views can also contain *filters* which act as toggles for predefined
-searches (defined using :ref:`reference/orm/domains`):
+Search views can also contain ``<filter>`` elements, which act as toggles for
+predefined searches. Filters must have one of the following attributes:
+
+``domain``
+    add the given domain to the current search
+``context``
+    add some context to the current search; use the key ``group_by`` to group
+    results on the given field name
 
 .. code-block:: xml
 
     <search string="Ideas">
-        <filter name="my_ideas" domain="[('inventor_id','=',uid)]"
-                string="My Ideas" icon="terp-partner"/>
         <field name="name"/>
-        <field name="description"/>
+        <field name="description" string="Name and description"
+               filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]"/>
         <field name="inventor_id"/>
         <field name="country_id" widget="selection"/>
+
+        <filter name="my_ideas" string="My Ideas"
+                domain="[('inventor_id', '=', uid)]"/>
+        <group string="Group By">
+            <filter name="group_by_inventor" string="Inventor"
+                    context="{'group_by': 'inventor'}"/>
+        </group>
     </search>
 
 To use a non-default search view in an action, it should be linked using the
@@ -1092,8 +1106,9 @@ default and behave as booleans (they can only be enabled by default).
 
 .. exercise:: Search views
 
-    Add a button to filter the courses for which the current user is the
-    responsible in the course search view. Make it selected by default.
+    #. Add a button to filter the courses for which the current user is the
+       responsible in the course search view. Make it selected by default.
+    #. Add a button to group courses by responsible user.
 
     .. only:: solutions
 
@@ -1247,6 +1262,13 @@ graphical tools. Workflows, activities (nodes or actions) and transitions
 (conditions) are declared as XML records, as usual. The tokens that navigate
 in workflows are called workitems.
 
+.. warning::
+
+    A workflow associated with a model is only created when the
+    model's records are created. Thus there is no workflow instance
+    associated with session instances created before the workflow's
+    definition
+
 .. exercise:: Workflow
 
     Replace the ad-hoc *Session* workflow by a real workflow. Transform the
@@ -1256,13 +1278,6 @@ in workflows are called workitems.
     .. only:: solutions
 
         .. patch::
-
-        .. warning::
-
-            A workflow associated with a model is only created when the
-            model's records are created. Thus there is no workflow instance
-            associated with session instances created before the workflow's
-            definition
 
         .. tip::
 
@@ -1544,8 +1559,8 @@ for editing and merging PO/POT files.
            dedicated PO-file editor e.g. POEdit_ and translate the missing
            terms
 
-        #. Add ``from openerp import _`` to ``course.py`` and
-           mark missing strings as translatable
+        #. In ``models.py``, add an import statement for the function
+           ``openerp._`` and mark missing strings as translatable
 
         #. Repeat steps 3-6
 
@@ -1667,15 +1682,13 @@ XML-RPC Library
 ---------------
 
 The following example is a Python program that interacts with an Odoo
-server with the library xmlrpclib.
-
-::
+server with the library ``xmlrpclib``::
 
    import xmlrpclib
 
    root = 'http://%s:%d/xmlrpc/' % (HOST, PORT)
 
-   uid = xmlrpclib.ServerProxy(root + 'common').login(db, username, password)
+   uid = xmlrpclib.ServerProxy(root + 'common').login(DB, USER, PASS)
    print "Logged in as %s (uid: %d)" % (USER, uid)
 
    # Create a new idea
@@ -1685,7 +1698,7 @@ server with the library xmlrpclib.
        'description' : 'This is another idea of mine',
        'inventor_id': uid,
    }
-   idea_id = sock.execute(db, uid, password, 'idea.idea', 'create', args)
+   idea_id = sock.execute(DB, uid, PASS, 'idea.idea', 'create', args)
 
 .. exercise:: Add a new service to the client
 
@@ -1735,8 +1748,77 @@ server with the library xmlrpclib.
                 'course_id' : course_id,
             })
 
-.. note:: there are also a number of high-level APIs in various languages to
-          access Odoo systems without *explicitly* going through XML-RPC e.g.
+JSON-RPC Library
+----------------
+
+The following example is a Python program that interacts with an Odoo server
+with the standard Python libraries ``urllib2`` and ``json``::
+
+    import json
+    import random
+    import urllib2
+
+    def json_rpc(url, method, params):
+        data = {
+            "jsonrpc": "2.0",
+            "method": method,
+            "params": params,
+            "id": random.randint(0, 1000000000),
+        }
+        req = urllib2.Request(url=url, data=json.dumps(data), headers={
+            "Content-Type":"application/json",
+        })
+        reply = json.load(urllib2.urlopen(req))
+        if reply.get("error"):
+            raise Exception(reply["error"])
+        return reply["result"]
+
+    def call(url, service, method, *args):
+        return json_rpc(url, "call", {"service": service, "method": method, "args": args})
+
+    # log in the given database
+    url = "http://%s:%s/jsonrpc" % (HOST, PORT)
+    uid = call(url, "common", "login", DB, USER, PASS)
+
+    # create a new idea
+    args = {
+        'name' : 'Another idea',
+        'description' : 'This is another idea of mine',
+        'inventor_id': uid,
+    }
+    idea_id = call(url, "object", "execute", DB, uid, PASS, 'idea.idea', 'create', args)
+
+Here is the same program, using the library
+`jsonrpclib <https://pypi.python.org/pypi/jsonrpclib>`::
+
+    import jsonrpclib
+
+    # server proxy object
+    url = "http://%s:%s/jsonrpc" % (HOST, PORT)
+    server = jsonrpclib.Server(url)
+
+    # log in the given database
+    uid = server.call(service="common", method="login", args=[DB, USER, PASS])
+
+    # helper function for invoking model methods
+    def invoke(model, method, *args):
+        args = [DB, uid, PASS, model, method] + list(args)
+        return server.call(service="object", method="execute", args=args)
+
+    # create a new idea
+    args = {
+        'name' : 'Another idea',
+        'description' : 'This is another idea of mine',
+        'inventor_id': uid,
+    }
+    idea_id = invoke('idea.idea', 'create', args)
+
+Examples can be easily adapted from XML-RPC to JSON-RPC.
+
+.. note::
+
+    There are a number of high-level APIs in various languages to access Odoo
+    systems without *explicitly* going through XML-RPC or JSON-RPC, such as:
 
     * https://github.com/akretion/ooor
     * https://github.com/syleam/openobject-library

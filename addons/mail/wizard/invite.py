@@ -91,6 +91,7 @@ class invite_wizard(osv.osv_memory):
                 mail_id = mail_mail.create(cr, uid, {
                     'model': wizard.res_model,
                     'res_id': wizard.res_id,
+                    'record_name': document.name_get()[0][1],
                     'email_from': self.pool['mail.message']._get_default_from(cr, uid, context=context),
                     'reply_to': self.pool['mail.message']._get_default_from(cr, uid, context=context),
                     'subject': _('Invitation to follow %s: %s') % (model_name, document.name_get()[0][1]),

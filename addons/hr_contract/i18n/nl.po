@@ -1,87 +1,26 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_contract
+# Dutch translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-02-19 12:41+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-15 17:12+0000\n"
+"Last-Translator: Mario Gielissen (Openworx) <Unknown>\n"
+"Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:05+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-16 06:55+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Salaris"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Information"
-msgstr "Informatie"
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_start:0
-msgid "Trial Start Date"
-msgstr "Startdatum proeftijd"
-
-#. module: hr_contract
-#: field:hr.employee,vehicle:0
-msgid "Company Vehicle"
-msgstr "Auto v/d zaak"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Group By..."
-msgstr "Groepeer op..."
-
-#. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr "Afdeling"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,employee_id:0
-#: model:ir.model,name:hr_contract.model_hr_employee
-msgid "Employee"
-msgstr "Werknemer"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
-msgstr "Contract zoeken"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-#: field:hr.employee,contract_ids:0
-#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
-msgid "Contracts"
-msgstr "Contracten"
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of Children"
-msgstr "Aantal kinderen"
-
-#. module: hr_contract
-#: help:hr.employee,contract_id:0
-msgid "Latest contract of the employee"
-msgstr "Laatste contract van werknemer"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Job"
-msgstr "Baan"
+#: model:ir.model,name:hr_contract.model_base_action_rule
+msgid "Action Rules"
+msgstr "Actie regels"
 
 #. module: hr_contract
 #: field:hr.contract,advantages:0
@@ -89,9 +28,45 @@ msgid "Advantages"
 msgstr "Beloning"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Work Permit"
-msgstr "Werkvergunning"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Advantages..."
+msgstr "Secundaire arbeidsvoorwaarden..."
+
+#. module: hr_contract
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr "Basissalaris van de werknemer"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle:0
+msgid "Company Vehicle"
+msgstr "Auto v/d zaak"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: field:hr.employee,contract_id:0
+#: model:ir.model,name:hr_contract.model_hr_contract
+#: model:ir.ui.menu,name:hr_contract.next_id_56
+msgid "Contract"
+msgstr "Contract"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: field:hr.contract,name:0
+msgid "Contract Reference"
+msgstr "Contractreferentie"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,type_id:0
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_form
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_tree
+#: field:hr.contract.type,name:0
+#: model:ir.model,name:hr_contract.model_hr_contract_type
+msgid "Contract Type"
+msgstr "Contractsoort"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
@@ -100,9 +75,45 @@ msgid "Contract Types"
 msgstr "Contractsoorten"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Exam"
-msgstr "Medisch examen"
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: view:hr.contract:hr_contract.hr_contract_view_tree
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: field:hr.employee,contract_ids:0
+#: field:hr.employee,contracts_count:0
+#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
+msgid "Contracts"
+msgstr "Contracten"
+
+#. module: hr_contract
+#: field:hr.contract,create_uid:0
+#: field:hr.contract.type,create_uid:0
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: hr_contract
+#: field:hr.contract,create_date:0
+#: field:hr.contract.type,create_date:0
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: hr_contract
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "Afdeling"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Duration"
+msgstr "Duur"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,employee_id:0
+#: model:ir.model,name:hr_contract.model_hr_employee
+msgid "Employee"
+msgstr "Werknemer"
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -110,85 +121,14 @@ msgid "End Date"
 msgstr "Einddatum"
 
 #. module: hr_contract
-#: help:hr.contract,wage:0
-msgid "Basic Salary of the employee"
-msgstr "Basissalaris van de werknemer"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,name:0
-msgid "Contract Reference"
-msgstr "Contractreferentie"
-
-#. module: hr_contract
-#: help:hr.employee,vehicle_distance:0
-msgid "In kilometers"
-msgstr "In kilometers"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,notes:0
-msgid "Notes"
-msgstr "Opmerkingen"
-
-#. module: hr_contract
-#: field:hr.contract,permit_no:0
-msgid "Work Permit No"
-msgstr "Werkvergunning nr."
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-#: field:hr.employee,contract_id:0
-#: model:ir.model,name:hr_contract.model_hr_contract
-#: model:ir.ui.menu,name:hr_contract.next_id_56
-msgid "Contract"
-msgstr "Contract"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,type_id:0
-#: view:hr.contract.type:0
-#: field:hr.contract.type,name:0
-#: model:ir.model,name:hr_contract.model_hr_contract_type
-msgid "Contract Type"
-msgstr "Contractsoort"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr "Werktijden"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Salary and Advantages"
-msgstr "Salaris en secundaire voorwaarden"
-
-#. module: hr_contract
-#: field:hr.contract,job_id:0
-msgid "Job Title"
-msgstr "Functietitel"
-
-#. module: hr_contract
 #: constraint:hr.contract:0
 msgid "Error! Contract start-date must be less than contract end-date."
 msgstr "Fout! Contract startdatum moet voor de einddatum liggen."
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Is a Manager"
-msgstr "Is een manager"
-
-#. module: hr_contract
-#: field:hr.contract,date_start:0
-msgid "Start Date"
-msgstr "Startdatum"
-
-#. module: hr_contract
-#: field:hr.contract,visa_no:0
-msgid "Visa No"
-msgstr "Visum nr."
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Group By"
+msgstr "Groepeer op"
 
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
@@ -196,24 +136,57 @@ msgid "Home-Work Dist."
 msgstr "Reisafstand woon-werkverkeer"
 
 #. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "Geboorteplaats"
+#: field:hr.contract,id:0
+#: field:hr.contract.type,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Trial Period Duration"
-msgstr "Duur proeftijd"
+#: help:hr.employee,vehicle_distance:0
+msgid "In kilometers"
+msgstr "In kilometers"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Duration"
-msgstr "Duur"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Information"
+msgstr "Informatie"
 
 #. module: hr_contract
-#: field:hr.contract,visa_expire:0
-msgid "Visa Expire Date"
-msgstr "Visum vervaldatum"
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "Is een manager"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Job"
+msgstr "Baan"
+
+#. module: hr_contract
+#: field:hr.contract,job_id:0
+msgid "Job Title"
+msgstr "Functietitel"
+
+#. module: hr_contract
+#: field:hr.contract,write_uid:0
+#: field:hr.contract.type,write_uid:0
+msgid "Last Updated by"
+msgstr "Laatste bijgewerkt door"
+
+#. module: hr_contract
+#: field:hr.contract,write_date:0
+#: field:hr.contract.type,write_date:0
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: hr_contract
+#: help:hr.employee,contract_id:0
+msgid "Latest contract of the employee"
+msgstr "Laatste contract van werknemer"
+
+#. module: hr_contract
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+msgid "Medical Exam"
+msgstr "Medisch examen"
 
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
@@ -221,202 +194,93 @@ msgid "Medical Examination Date"
 msgstr "Datum medische keuring"
 
 #. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: field:hr.contract,notes:0
+msgid "Notes"
+msgstr "Opmerkingen"
+
+#. module: hr_contract
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "Aantal kinderen"
+
+#. module: hr_contract
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "Geboorteplaats"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Salary and Advantages"
+msgstr "Salaris en secundaire voorwaarden"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Search Contract"
+msgstr "Contract zoeken"
+
+#. module: hr_contract
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+msgid "Search Contract Type"
+msgstr "Contractsoort zoeken"
+
+#. module: hr_contract
+#: field:hr.contract,date_start:0
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: hr_contract
 #: field:hr.contract,trial_date_end:0
 msgid "Trial End Date"
 msgstr "Einddatum proeftijd"
 
 #. module: hr_contract
-#: view:hr.contract.type:0
-msgid "Search Contract Type"
-msgstr "Contractsoort zoeken"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Trial Period Duration"
+msgstr "Duur proeftijd"
 
-#~ msgid "Number of children"
-#~ msgstr "Aantal kinderen"
+#. module: hr_contract
+#: field:hr.contract,trial_date_start:0
+msgid "Trial Start Date"
+msgstr "Startdatum proeftijd"
 
-#~ msgid "Net"
-#~ msgstr "Netto"
+#. module: hr_contract
+#: field:base.action.rule,trg_date_resource_field_id:0
+msgid "Use employee work schedule"
+msgstr "Gebruik medewerker werkplanning"
 
-#~ msgid "Function"
-#~ msgstr "Functie"
+#. module: hr_contract
+#: help:base.action.rule,trg_date_resource_field_id:0
+msgid "Use the user's working schedule."
+msgstr "Gebruik de medewerker zijn werkplanning"
 
-#~ msgid "Miscelleanous"
-#~ msgstr "Diversen"
+#. module: hr_contract
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr "Visum vervaldatum"
 
-#~ msgid "Period Name"
-#~ msgstr "Periodenaam"
+#. module: hr_contract
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
+msgstr "Visum nr."
 
-#~ msgid "Medical examination date"
-#~ msgstr "Datum medisch onderzoek"
+#. module: hr_contract
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Salaris"
 
-#~ msgid "Salary"
-#~ msgstr "Salaris"
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Work Permit"
+msgstr "Werkvergunning"
 
-#~ msgid "Remuneration"
-#~ msgstr "Vergoeding"
+#. module: hr_contract
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
+msgstr "Werkvergunning nr."
 
-#~ msgid "Factor for hour cost"
-#~ msgstr "Factor voor uurkosten"
-
-#~ msgid "Generalities"
-#~ msgstr "Algemeenheden"
-
-#~ msgid "Gross"
-#~ msgstr "Bruto"
-
-#~ msgid "Hourly cost computation"
-#~ msgstr "Berekening uurkosten"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
-
-#~ msgid "Hours in the period"
-#~ msgstr "Uren in de periode"
-
-#~ msgid "Marital Status"
-#~ msgstr "Burgerlijke staat"
-
-#~ msgid "Employee Marital Status"
-#~ msgstr "Burgelijke staat werknemer"
-
-#~ msgid "Working hours per day"
-#~ msgstr "Werkuren per dag"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor weergave!"
-
-#~ msgid "Manager"
-#~ msgstr "Manager"
-
-#~ msgid "Wage Types"
-#~ msgstr "Soorten lonen"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#~ msgid "Type"
-#~ msgstr "Soort"
-
-#~ msgid "Wage Period"
-#~ msgstr "Loonperiode"
-
-#~ msgid "Wage period"
-#~ msgstr "Loonperiode"
-
-#~ msgid "Contract Wage Type"
-#~ msgstr "Soort loon contract"
-
-#~ msgid "Contract Name"
-#~ msgstr "Naam contract"
-
-#~ msgid "AUDIENS Number"
-#~ msgstr "BSN nummer"
-
-#~ msgid "Status Description"
-#~ msgstr "Omschrijving status"
-
-#~ msgid "Contract Duration"
-#~ msgstr "Contractduur"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "Overig"
-
-#~ msgid "Medical Examination"
-#~ msgstr "Medische keuring"
-
-#~ msgid "Trial Period"
-#~ msgstr "Proeftijd"
-
-#~ msgid "Basic"
-#~ msgstr "Basis"
-
-#~ msgid "Current"
-#~ msgstr "Actueel"
-
-#~ msgid "Human Resources Contracts"
-#~ msgstr "Personeel contracten"
-
-#~ msgid "Passport"
-#~ msgstr "Paspoort"
-
-#~ msgid "Valid for"
-#~ msgstr "Geldig voor"
-
-#~ msgid "Deductions"
-#~ msgstr "Inhoudingen"
-
-#~ msgid "Search Wage Type"
-#~ msgstr "Loonsoort zoeken"
-
-#~ msgid "Wage Type"
-#~ msgstr "Loonsoort"
-
-#~ msgid "Search Wage Period"
-#~ msgstr "Loonperiode zoeken"
-
-#~ msgid "Home-Work Distance"
-#~ msgstr "Woon-werk afstand"
-
-#~ msgid "Job Info"
-#~ msgstr "Baan informatie"
-
-#~ msgid "Overpassed"
-#~ msgstr "Overschreden"
-
-#~ msgid "Personal Info"
-#~ msgstr "Persoonlijke informatie"
-
-#~ msgid "Wage Type Name"
-#~ msgstr "Loonsoortnaam"
-
-#~ msgid "Period"
-#~ msgstr "Periode"
-
-#~ msgid ""
-#~ "This field is used by the timesheet system to compute the price of an hour "
-#~ "of work wased on the contract of the employee"
-#~ msgstr ""
-#~ "Dit veld word gebruikt door het urenstaat-systeem om de prijs te berekenen "
-#~ "voor een uur werk gebaseerd op het contract met de medewerker."
-
-#~ msgid "Main Data"
-#~ msgstr "Hoofdgegevens"
-
-#~ msgid "Allowances"
-#~ msgstr "Toelages"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Fout ! U kunt geen afdeling selecteren waarvan de medewerker de beheerder is."
-
-#~ msgid "Error! contract start-date must be lower then contract end-date."
-#~ msgstr "Fout! startdatum contract moet vóór einddatum contract liggen."
-
-#~ msgid ""
-#~ "\n"
-#~ "    Add all information on the employee form to manage contracts:\n"
-#~ "    * Marital status,\n"
-#~ "    * Security number,\n"
-#~ "    * Place of birth, birth date, ...\n"
-#~ "    You can assign several contracts per employee.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Voegt alle informatie toe aan het medewerker formulier om contracten te "
-#~ "beheren:\n"
-#~ "    * Burgelijke staat,\n"
-#~ "    * Sofi nummer,\n"
-#~ "    * Geboorteplaats en -datum, ...\n"
-#~ "    U kunt verschillende contracten toewijzen per medewerker.\n"
-#~ "    "
-
-#~ msgid "Contracts whose end date already passed"
-#~ msgstr "Contracten waarvan de einddatum is verstreken"
-
-#~ msgid "Contracts in progress"
-#~ msgstr "Contracten in behandeling"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Fout ! U kunt geen recursieve werknemershiërarchie aanmaken."
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "Werktijden"

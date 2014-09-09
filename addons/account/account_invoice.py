@@ -488,7 +488,7 @@ class account_invoice(models.Model):
     @api.multi
     def onchange_payment_term_date_invoice(self, payment_term_id, date_invoice):
         if not date_invoice:
-            date_invoice = fields.Date.today()
+            date_invoice = fields.Date.context_today(self)
         if not payment_term_id:
             # To make sure the invoice due date should contain due date which is
             # entered by user when there is no payment term defined
@@ -645,10 +645,6 @@ class account_invoice(models.Model):
                 invoice.check_total = invoice.amount_total
         return True
 
-    @staticmethod
-    def _convert_ref(ref):
-        return (ref or '').replace('/','')
-
     @api.multi
     def _get_analytic_lines(self):
         """ Return a list of dict for creating analytic lines for self[0] """
@@ -661,7 +657,7 @@ class account_invoice(models.Model):
                 if self.type in ('in_invoice', 'in_refund'):
                     ref = self.reference
                 else:
-                    ref = self._convert_ref(self.number)
+                    ref = self.number
                 if not self.journal_id.analytic_journal_id:
                     raise except_orm(_('No Analytic Journal!'),
                         _("You have to define an analytic journal on the '%s' journal!") % (self.journal_id.name,))
@@ -729,7 +725,7 @@ class account_invoice(models.Model):
         total_currency = 0
         for line in invoice_move_lines:
             if self.currency_id != company_currency:
-                currency = self.currency_id.with_context(date=self.date_invoice or fields.Date.today())
+                currency = self.currency_id.with_context(date=self.date_invoice or fields.Date.context_today(self))
                 line['currency_id'] = currency.id
                 line['amount_currency'] = line['price']
                 line['price'] = currency.compute(line['price'], company_currency)
@@ -806,8 +802,7 @@ class account_invoice(models.Model):
             inv.check_tax_lines(compute_taxes)
 
             # I disabled the check_total feature
-            group_check_total = self.env.ref('account.group_supplier_inv_check_total')
-            if self.env.user in group_check_total.users:
+            if self.env['res.users'].has_group('account.group_supplier_inv_check_total'):
                 if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
                     raise except_orm(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
@@ -828,7 +823,7 @@ class account_invoice(models.Model):
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
             else:
-                ref = self._convert_ref(inv.number)
+                ref = inv.number
 
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
@@ -892,7 +887,7 @@ class account_invoice(models.Model):
                 'ref': inv.reference or inv.name,
                 'line_id': line,
                 'journal_id': journal.id,
-                'date': date,
+                'date': inv.date_invoice,
                 'narration': inv.comment,
                 'company_id': inv.company_id.id,
             }
@@ -956,11 +951,11 @@ class account_invoice(models.Model):
 
             if inv.type in ('in_invoice', 'in_refund'):
                 if not inv.reference:
-                    ref = self._convert_ref(inv.number)
+                    ref = inv.number
                 else:
                     ref = inv.reference
             else:
-                ref = self._convert_ref(inv.number)
+                ref = inv.number
 
             self._cr.execute(""" UPDATE account_move SET ref=%s
                            WHERE id=%s AND (ref IS NULL OR ref = '')""",
@@ -1088,7 +1083,7 @@ class account_invoice(models.Model):
         values['journal_id'] = journal.id
 
         values['type'] = TYPE2REFUND[invoice['type']]
-        values['date_invoice'] = date or fields.Date.today()
+        values['date_invoice'] = date or fields.Date.context_today(invoice)
         values['state'] = 'draft'
         values['number'] = False
 
@@ -1118,7 +1113,7 @@ class account_invoice(models.Model):
         SIGN = {'out_invoice': -1, 'in_invoice': 1, 'out_refund': 1, 'in_refund': -1}
         direction = SIGN[self.type]
         # take the chosen date
-        date = self._context.get('date_p') or fields.Date.today()
+        date = self._context.get('date_p') or fields.Date.context_today(self)
 
         # Take the amount in currency and the currency of the payment
         if self._context.get('amount_currency') and self._context.get('currency_id'):
@@ -1132,7 +1127,7 @@ class account_invoice(models.Model):
         if self.type in ('in_invoice', 'in_refund'):
             ref = self.reference
         else:
-            ref = self._convert_ref(self.number)
+            ref = self.number
         partner = self.partner_id._find_accounting_partner(self.partner_id)
         name = name or self.invoice_line.name or self.number
         # Pay attention to the sign for both debit/credit AND amount_currency
@@ -1506,7 +1501,7 @@ class account_invoice_tax(models.Model):
         company = self.env['res.company'].browse(company_id)
         if currency_id and company.currency_id:
             currency = self.env['res.currency'].browse(currency_id)
-            currency = currency.with_context(date=date_invoice or fields.Date.today())
+            currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
             base = currency.compute(base * factor, company.currency_id, round=False)
         return {'value': {'base_amount': base}}
 
@@ -1516,14 +1511,14 @@ class account_invoice_tax(models.Model):
         company = self.env['res.company'].browse(company_id)
         if currency_id and company.currency_id:
             currency = self.env['res.currency'].browse(currency_id)
-            currency = currency.with_context(date=date_invoice or fields.Date.today())
+            currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
             amount = currency.compute(amount * factor, company.currency_id, round=False)
         return {'value': {'tax_amount': amount}}
 
     @api.v8
     def compute(self, invoice):
         tax_grouped = {}
-        currency = invoice.currency_id.with_context(date=invoice.date_invoice or fields.Date.today())
+        currency = invoice.currency_id.with_context(date=invoice.date_invoice or fields.Date.context_today(invoice))
         company_currency = invoice.company_id.currency_id
         for line in invoice.invoice_line:
             taxes = line.invoice_line_tax_id.compute_all(
