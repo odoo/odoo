@@ -171,7 +171,8 @@
                                                     <h4 class="oe_timesheet_box" t-att-data-account="days.account_group[data][0].account_id"
                                                     t-att-data-day-count="day_count"></h4>
                                                 </td>
-                                                <td class="col-xs-2 col-md-2">
+                                                <td t-if="widget.get('effective_readonly')" class="col-xs-2 col-md-2"></td>
+                                                <td t-if="!widget.get('effective_readonly')" class="col-xs-2 col-md-2">
                                                     <t t-set="timer_title" t-value="days.account_group[data][0].date_start and 'Stop Timesheet' or 'Start Timesheet'"/>
                                                     <span class="btn btn-default btn-xs oe_timer" t-att-data-account="data" t-att-data-day-count="day_count" t-att-title="timer_title">
                                                         <span class="fa-stack fa-lg">
