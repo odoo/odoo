@@ -37,7 +37,6 @@ Javascript
     widget
     rpc
     async
-    qweb
     client_action
     testing
 

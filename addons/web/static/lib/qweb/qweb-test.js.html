@@ -15,286 +15,52 @@
         function render(template, context) {
             return trim(QWeb.render(template, context)).toLowerCase();
         }
+
+        /**
+         * Loads the template file, and executes all the test template in a
+         * qunit module $title
+         */
+        function test(title, template) {
+            QUnit.module(title, {
+                setup: function () {
+                    var self = this;
+                    this.qweb = new QWeb2.Engine();
+                    QUnit.stop();
+                    this.qweb.add_template(template, function (_, doc) {
+                        self.doc = doc;
+                        QUnit.start();
+                    })
+                }
+            });
+            QUnit.test('autotest', function (assert) {
+                var templates = this.qweb.templates;
+                for (var template in templates) {
+                    if (!templates.hasOwnProperty(template)) { continue; }
+                    // ignore templates whose name starts with _, they're
+                    // helpers/internal
+                    if (/^_/.test(template)) { continue; }
+
+                    var params = this.doc.querySelector('params#' + template);
+                    var args = params ? JSON.parse(params.textContent) : {};
+
+                    var results = this.doc.querySelector('result#' + template);
+                    assert.equal(
+                        trim(this.qweb.render(template, args)),
+                        trim(results.textContent),
+                        template);
+                }
+            });
+        }
         $(document).ready(function() {
-            QUnit.module("Basic output tests", {
-                setup: function () {
-                    QUnit.stop();
-                    QWeb.add_template('qweb-test-output.xml', function () {
-                        QUnit.start();
-                    });
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
+            test("Output", 'qweb-test-output.xml');
+            test("Context-setting", 'qweb-test-set.xml');
+            test("Conditionals", 'qweb-test-conditionals.xml');
+            test("Attributes manipulation", 'qweb-test-attributes.xml');
+            test("Template calling (to the faraway pages)",
+                 'qweb-test-call.xml');
+            test("Foreach", 'qweb-test-foreach.xml');
 
-            QUnit.test("Basic escaped output", function (assert) {
-                assert.equal(render('esc-literal', {}), "ok", "Render a literal string");
-                assert.equal(render('esc-variable', {ok: 'ok'}), "ok", "Render a string variable");
-                assert.equal(render('esc-toescape', {ok: '<ok>'}), "&lt;ok&gt;", "Render a string with data to escape");
-            });
-            QUnit.test("Formatted escaped output", function (assert) {
-                assert.equal(render('escf-literal', {}), "ok", "Render a literal string");
-                assert.equal(render('escf-variable', {ok: 'ok'}), "ok", "Render a string variable");
-                assert.equal(render('escf-toescape', {ok: '<ok>'}), "&lt;ok&gt;", "Render a string with data to escape");
-                assert.equal(render('escf-mix', {ok: 'ok'}), "[ok]", "Render a string with additions around the format");
-            });
-            QUnit.test("Basic unescaped output", function (assert) {
-                assert.equal(render('raw-literal', {}), "ok", "Render a literal string");
-                assert.equal(render('raw-variable', {ok: 'ok'}), "ok", "Render a string variable");
-                assert.equal(render('raw-notescaped', {ok: '<ok>'}), "<ok>", "Render a string with data not escaped");
-            });
-            QUnit.test("Formatted unescaped output", function (assert) {
-                assert.equal(render('rawf-literal', {}), "ok", "Render a literal string");
-                assert.equal(render('rawf-variable', {ok: 'ok'}), "ok", "Render a string variable");
-                assert.equal(render('rawf-notescaped', {ok: '<ok>'}), "<ok>", "Render a string with data not escaped");
-            });
-
-            QUnit.module("Context-setting tests", {
-                setup: function () {
-                    QUnit.stop();
-                    QWeb.add_template('qweb-test-set.xml', function () {
-                        QUnit.start();
-                    });
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-            QUnit.test("Set literal value", function (assert) {
-                assert.equal(render('set-from-attribute-literal', {}), "ok",
-                        "Set a literal value via @t-value");
-                assert.equal(render('set-from-body-literal', {}), "ok",
-                        "Set a literal value via @t-set body");
-            });
-            QUnit.test("Set value looked up from context", function (assert) {
-                assert.equal(render('set-from-attribute-lookup', {value: 'ok'}), "ok",
-                        "Set a value looked up in context via @t-value");
-                assert.equal(render('set-from-body-lookup', {value: 'ok'}), 'ok',
-                        "Set a value looked up in context via @t-set body and @t-esc");
-            });
-
-            QUnit.module("Conditionals", {
-                setup: function () {
-                    QUnit.stop();
-                    QWeb.add_template('qweb-test-conditionals.xml', function () {
-                        QUnit.start();
-                    });
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-            QUnit.test('Basic (single boolean) conditionals', function (assert) {
-                assert.equal(render('literal-conditional', {}), 'ok',
-                    "Test on a literal value");
-                assert.equal(render('boolean-value-conditional', {value: true}), 'ok',
-                    "Test on a truthy variable value");
-                assert.equal(render('boolean-value-conditional-false', {value: false}), '',
-                    "Test on a falsy variable value");
-            });
-            QUnit.test('Boolean expressions in conditionals', function (assert) {
-                assert.equal(render('negify', {}), 'ok',
-                    "Negative");
-                assert.equal(render('equality', {}), 'ok',
-                    "Equality");
-                assert.equal(render('difference', {}), 'ok',
-                    "Difference");
-                assert.equal(render('and', {}), 'ok',
-                    "Boolean and");
-                assert.equal(render('and-js', {}), 'ok',
-                    "Boolean and via manually escaped JS operator");
-                assert.equal(render('or', {}), 'ok',
-                    "Boolean or");
-                assert.equal(render('or-js', {}), 'ok',
-                    "Boolean or using JS operator");
-            });
-            QUnit.test('Comparison boolean tests in conditionals', function (assert) {
-                assert.equal(render('greater', {}), 'ok',
-                    "Greater");
-                assert.equal(render('greater-js', {}), 'ok',
-                    "Greater, JS operator");
-                assert.equal(render('lower', {}), 'ok',
-                    "Lower");
-                assert.equal(render('lower-js', {}), 'ok',
-                    "Lower, JS operator");
-                assert.equal(render('greater-or-equal', {}), 'ok',
-                    "Greater or Equal");
-                assert.equal(render('greater-or-equal-js', {}), 'ok',
-                    "Greater or Equal, JS operator");
-                assert.equal(render('lower-or-equal', {}), 'ok',
-                    "Lower or Equal");
-                assert.equal(render('lower-or-equal-js', {}), 'ok',
-                    "Lower or Equal, JS operator");
-            });
-
-            QUnit.module("Attributes manipulation", {
-                setup: function () {
-                    QUnit.stop();
-                    QWeb.add_template('qweb-test-attributes.xml', function () {
-                        QUnit.start();
-                    });
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-            QUnit.test('Fixed-name attributes', function (assert) {
-                assert.equal(render('fixed-literal', {}), '<div foo="bar"></div>',
-                    "Fixed name and literal attribute value");
-                assert.equal(render('fixed-variable', {value: 'ok'}), '<div foo="ok"></div>',
-                    "Fixed name and variable attribute value");
-            });
-            QUnit.test('Tuple-based attributes', function (assert) {
-                assert.equal(render('tuple-literal', {}), '<div foo="bar"></div>',
-                    "Tuple-based literal attributes");
-                assert.equal(render('tuple-variable', {att: ['foo', 'bar']}), '<div foo="bar"></div>',
-                    "Tuple-based variable attributes");
-            });
-            QUnit.test('Fixed name, formatted value attributes', function (assert) {
-                assert.equal(render('format-literal', {}), '<div foo="bar"></div>',
-                    "Literal format");
-                assert.equal(render('format-value', {value:'a'}), '<div foo="bar"></div>',
-                    "Valued format");
-                assert.equal(
-                    render('format-expression', {value: 5}),
-                    '<div foo="42"></div>',
-                    "Format strings are evaluated expressions");
-                assert.equal(render('format-multiple', {
-                        value1: 0,
-                        value2: 1,
-                        value3: 2,
-                    }),
-                    '<div foo="a 0 is 1 of 2 ]"></div>',
-                    "each format string should be evaluated independently");
-            });
-            QUnit.test('Fixed name, jinja-formatted', function (assert) {
-                assert.equal(render('format2-literal', {}), '<div foo="bar"></div>',
-                    "Literal format");
-                assert.equal(render('format2-value', {value:'a'}), '<div foo="bar"></div>',
-                    "Valued format");
-                assert.equal(
-                    render('format2-expression', {value: 5}),
-                    '<div foo="42"></div>',
-                    "Format strings are evaluated expressions");
-                assert.equal(render('format2-multiple', {
-                        value1: 0,
-                        value2: 1,
-                        value3: 2,
-                    }),
-                    '<div foo="a 0 is 1 of 2 ]"></div>',
-                    "each format string should be evaluated independently");
-            });
-
-            QUnit.module("Template calling (including)", {
-                setup: function () {
-                    QUnit.stop();
-                    QWeb.add_template('qweb-test-call.xml', function () {
-                        QUnit.start();
-                    });
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-            QUnit.test('Trivial call invocation', function (assert) {
-                assert.equal(render('basic-caller', {}), 'ok',
-                    "Direct call of a second template");
-            });
-            QUnit.test('Call invocation with body', function (assert) {
-                assert.equal(render('with-unused-body', {}), 'ok',
-                    "Call of a second template with body unused");
-                assert.equal(render('with-unused-setbody', {}), 'ok',
-                    "Call of a second template with body directives unused");
-            });
-            QUnit.test('Call invocation with body (used by callee)', function (assert) {
-                assert.equal(render('with-used-body', {}), 'ok',
-                    "Call of a second template with body used");
-            });
-            QUnit.test('Call invocation with parameters set (in body)', function (assert) {
-                assert.equal(render('with-used-setbody', {}), 'ok',
-                    "Call of a second template with parameters");
-            });
-            QUnit.test('Call invocation in-context (via import)', function (assert) {
-                assert.equal(render('in-context-import', {}), 'ok',
-                    "Call with t-import (calls in current context)");
-            });
-
-            QUnit.module("Foreach", {
-                setup: function () {
-                    QUnit.stop();
-                    QWeb.add_template('qweb-test-foreach.xml', function () {
-                        QUnit.start();
-                    });
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-            var seq = [4,3,2,1,0];
-            QUnit.test('Basic foreach repetition', function (assert) {
-                assert.equal(QWeb.render('repetition-text-content', {seq:seq}), '*****',
-                    "Repetition of text content via foreach");
-                assert.equal(QWeb.render('repetition-dom-content', {seq:seq}).toLowerCase(), '<b></b><b></b><b></b><b></b><b></b>',
-                    "Repetition of node content via foreach");
-                assert.equal(QWeb.render('repetition-self', {seq:seq}).toLowerCase(), '<b></b><b></b><b></b><b></b><b></b>',
-                    "A node with a foreach repeats itself");
-            });
-            QUnit.test("Foreach scope content", function (assert) {
-                assert.equal(QWeb.render('scope-self', {seq:seq}), '43210',
-                    "each value of the sequence is available via the sequence name");
-                assert.equal(QWeb.render('scope-value', {seq:seq}), '43210',
-                    "each value of the sequence is also via the _value");
-                assert.equal(QWeb.render('scope-index', {seq:seq}), '01234',
-                    "the current 0-based index is available via _index");
-                assert.equal(QWeb.render('scope-first', {seq:seq}), 'true false false false false ',
-                    "_first says whether the current item is the first of the sequence");
-                assert.equal(QWeb.render('scope-last', {seq:seq}), 'false false false false true ',
-                    "_last says whether the current item is the last of the sequence");
-                assert.equal(QWeb.render('scope-parity', {seq:seq}), 'even odd even odd even ',
-                    "the parity (odd/even) of the current row is available via _parity");
-                assert.equal(QWeb.render('scope-size', {seq:seq}), '5 5 5 5 5 ',
-                    "the total length of the sequence is available through _size");
-            });
-            QUnit.test('Name aliasing via t-as', function (assert) {
-                assert.equal(QWeb.render('aliasing', {seq:seq}), '43210',
-                    "the inner value can be re-bound via t-as");
-                assert.equal(QWeb.render('loopvars-aliasing', {seq:seq}), 'even odd even odd even ',
-                    "inner loop variables should be rebound as well");
-            });
-
-            QUnit.module("Template inheritance tests", {
-                setup: function () {
-                    QUnit.stop();
-                    QWeb.add_template('qweb-test-extend.xml', function () {
-                        QUnit.start();
-                    });
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-
-            QUnit.test("jQuery extend", function (assert) {
-                assert.equal(render('jquery-extend', {}), '<hr/><ul class="main"><li>1</li><li>2</li><li>3</li></ul><footer><b>[[end]]</b></footer>',
-                        "Extend template with jQuery");
-                assert.equal(render('jquery-extend-clone', {}), '<ul><li>one</li><li>[[cloned template]]</li></ul>',
-                        "Clone template");
-            });
+            test('Template inheritance', 'qweb-test-extend.xml');
         });
     </script>
 

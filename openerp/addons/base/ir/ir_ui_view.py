@@ -894,7 +894,7 @@ class view(osv.osv):
             e.set('data-oe-xpath', node_path)
         if not e.get('data-oe-model'): return
 
-        if set(('t-esc', 't-escf', 't-raw', 't-rawf')).intersection(e.attrib):
+        if {'t-esc', 't-raw'}.intersection(e.attrib):
             # nodes which fully generate their content and have no reason to
             # be branded because they can not sensibly be edited
             self._pop_view_branding(e)

@@ -28,7 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var QWeb2 = {
     expressions_cache: {},
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
-    ACTIONS_PRECEDENCE: 'foreach,if,call,set,escf,esc,rawf,raw,js,debug,log'.split(','),
+    ACTIONS_PRECEDENCE: 'foreach,if,call,set,esc,raw,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
         'and': '&&',
         'or': '||',
@@ -139,22 +139,11 @@ var QWeb2 = {
             if (callback) {
                 new_dict['__content__'] = callback(context, new_dict);
             }
-            var r = context.engine._render(template, new_dict);
-            if (_import) {
-                if (_import === '*') {
-                    this.extend(old_dict, new_dict, ['__caller__', '__template__']);
-                } else {
-                    _import = _import.split(',');
-                    for (var i = 0, ilen = _import.length; i < ilen; i++) {
-                        var v = _import[i];
-                        old_dict[v] = new_dict[v];
-                    }
-                }
-            }
-            return r;
+            return context.engine._render(template, new_dict);
         },
         foreach: function(context, enu, as, old_dict, callback) {
             if (enu != null) {
+                var index, jlen, cur;
                 var size, new_dict = this.extend({}, old_dict);
                 new_dict[as + "_all"] = enu;
                 var as_value = as + "_value",
@@ -164,13 +153,13 @@ var QWeb2 = {
                     as_parity = as + "_parity";
                 if (size = enu.length) {
                     new_dict[as + "_size"] = size;
-                    for (var j = 0, jlen = enu.length; j < jlen; j++) {
-                        var cur = enu[j];
+                    for (index = 0, jlen = enu.length; index < jlen; index++) {
+                        cur = enu[index];
                         new_dict[as_value] = cur;
-                        new_dict[as_index] = j;
-                        new_dict[as_first] = j === 0;
-                        new_dict[as_last] = j + 1 === size;
-                        new_dict[as_parity] = (j % 2 == 1 ? 'odd' : 'even');
+                        new_dict[as_index] = index;
+                        new_dict[as_first] = index === 0;
+                        new_dict[as_last] = index + 1 === size;
+                        new_dict[as_parity] = (index % 2 == 1 ? 'odd' : 'even');
                         if (cur.constructor === Object) {
                             this.extend(new_dict, cur);
                         }
@@ -184,14 +173,14 @@ var QWeb2 = {
                     }
                     this.foreach(context, _enu, as, old_dict, callback);
                 } else {
-                    var index = 0;
+                    index = 0;
                     for (var k in enu) {
                         if (enu.hasOwnProperty(k)) {
-                            var v = enu[k];
-                            new_dict[as_value] = v;
+                            cur = enu[k];
+                            new_dict[as_value] = cur;
                             new_dict[as_index] = index;
                             new_dict[as_first] = index === 0;
-                            new_dict[as_parity] = (j % 2 == 1 ? 'odd' : 'even');
+                            new_dict[as_parity] = (index % 2 == 1 ? 'odd' : 'even');
                             new_dict[as] = k;
                             callback(context, new_dict);
                             index += 1;
@@ -704,11 +693,10 @@ QWeb2.Element = (function() {
             this.indent();
         },
         compile_action_call : function(value) {
-            var _import = this.actions['import'] || '';
             if (this.children.length === 0) {
-                return this.top("r.push(context.engine.tools.call(context, " + (this.engine.tools.js_escape(value)) + ", dict, " + (this.engine.tools.js_escape(_import)) + "));");
+                return this.top("r.push(context.engine.tools.call(context, " + (this.engine.tools.js_escape(value)) + ", dict));");
             } else {
-                this.top("r.push(context.engine.tools.call(context, " + (this.engine.tools.js_escape(value)) + ", dict, " + (this.engine.tools.js_escape(_import)) + ", function(context, dict) {");
+                this.top("r.push(context.engine.tools.call(context, " + (this.engine.tools.js_escape(value)) + ", dict, null, function(context, dict) {");
                 this.bottom("}));");
                 this.indent();
                 this.top("var r = [];");
@@ -743,16 +731,8 @@ QWeb2.Element = (function() {
                     + this.format_expression(value)
                     + "));");
         },
-        compile_action_escf : function (value) {
-            this.top("r.push(context.engine.tools.html_escape("
-                    + this.string_interpolation(value)
-                    + '));');
-        },
         compile_action_raw : function(value) {
             this.top("r.push(" + (this.format_expression(value)) + ");");
-        },
-        compile_action_rawf: function (value) {
-            this.top('r.push(' + this.string_interpolation(value) + ');');
         },
         compile_action_js : function(value) {
             this.top("(function(" + value + ") {");
