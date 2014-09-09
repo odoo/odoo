@@ -99,6 +99,10 @@ class document_file(osv.osv):
             parents.setdefault(attach_parent, []).append(attach_id)
         parent_ids = parents.keys()
 
+        # If prent_ids are irrelevant
+        if parent_ids == [None]:
+            return len(ids) if count else ids
+
         # filter parents
         visible_parent_ids = self.pool.get('document.directory').search(cr, uid, [('id', 'in', list(parent_ids))])
 
