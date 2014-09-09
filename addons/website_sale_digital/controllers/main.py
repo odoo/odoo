@@ -27,7 +27,7 @@ class website_sale_digital(website_sale):
     ], auth='public')
     def download_attachment(self, attachment_id):
         # Check if this is a valid attachment id
-        attachment = request.env(user=SU)['ir.attachment'].search_read(
+        attachment = request.env['ir.attachment'].sudo().search_read(
             [('id', '=', int(attachment_id))],
             ["name", "datas", "file_type", "res_model", "res_id"]
         )
@@ -70,11 +70,13 @@ class website_sale_digital(website_sale):
     def display_attachments(self):
         purchased_products = self._get_purchased_digital_products(request.uid)
 
+        # Superuser to be able to see product that are not published anymore, I bought the
+        # right to download these products, even if they are not website_published anymore.
+        A = request.env['ir.attachment'].sudo()
+        P = request.env['product.product'].sudo()
         products = []
         names = {}
         attachments = {}
-        A = request.env['ir.attachment']
-        P = request.env['product.product']
         for product in purchased_products:
             # Ignore duplicate products
             p_id = product['product_id'][0]
@@ -85,7 +87,7 @@ class website_sale_digital(website_sale):
             # Search for product attachments
             template = p_obj.product_tmpl_id
             att = A.search_read(
-                domain=['|', '&', ('res_model', '=', 'product.product'), ('res_id', '=', p_id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', template.id)],
+                domain=['|', '&', ('res_model', '=', p_obj._name), ('res_id', '=', p_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id)],
                 fields=['name'],
             )
 
@@ -93,13 +95,15 @@ class website_sale_digital(website_sale):
             if not att:
                 continue
 
-            # Store values for QWeb
+            # I want template_name (comma, separated, attributes), but not the product code like [A252]
             products.append(p_obj)
             attributes = p_obj.attribute_value_ids
             if attributes:
                 names[p_id] = template.name + ' (' + ', '.join([a.name for a in attributes]) + ')'
             else:
                 names[p_id] = template.name
+            if not p_obj.website_published:
+                names[p_id] += ' (Discontinued)'
             attachments[p_id] = att
 
         return request.website.render('website_sale_digital.downloads', {
@@ -111,7 +115,7 @@ class website_sale_digital(website_sale):
     def _get_purchased_digital_products(self, uid):
         user = request.env['res.users'].browse(uid)
         partner = user.partner_id
-        sale_orders = request.env(user=SU)['sale.order.line']
+        sale_orders = request.env['sale.order.line'].sudo()
         fields = ['product_id']
 
         purchases = sale_orders.search_read(
@@ -126,5 +130,5 @@ class website_sale_digital(website_sale):
                 fields=fields,
             )
             purchases = purchases + last_purchase
-
+  
         return purchases
