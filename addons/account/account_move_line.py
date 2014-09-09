@@ -1023,7 +1023,6 @@ class account_move_line(osv.osv):
         company_id = account.company_id.id
         company_currency_id = account.company_id.currency_id.id
         account_currency_id = account.currency_id or company_currency_id
-        journal_id = 18 # TODO : journal dans le create form ?
 
         # Create new move lines
         new_mv_lines_ids = []
@@ -1034,10 +1033,12 @@ class account_move_line(osv.osv):
                 if field not in mv_line_dict:
                     mv_line_dict[field] = 0.0
 
+            journal_id = mv_line_dict['journal_id']
             move_vals = am_obj.account_move_prepare(cr, uid, journal_id, context=context)
             move_id = am_obj.create(cr, uid, move_vals, context=context)
 
             mv_line_dict['move_id'] = move_id
+            mv_line_dict['period_id'] = move_vals['period_id']
             mv_line_dict['journal_id'] = journal_id
             mv_line_dict['company_id'] = company_id
             if account_currency_id != company_currency_id:
