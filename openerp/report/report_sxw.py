@@ -504,7 +504,7 @@ class report_sxw(report_rml, preprocess.report):
                                 _('Error!'),
                                 _('Could not create saved report attachment'),
                             )
-                        raise e
+                        raise
                 results.append(result)
             if results:
                 if results[0][1]=='pdf':
