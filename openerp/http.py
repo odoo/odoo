@@ -1278,7 +1278,7 @@ class Root(object):
         # deduce type of request
         if httprequest.args.get('jsonp'):
             return JsonRequest(httprequest)
-        if httprequest.mimetype == "application/json":
+        if httprequest.mimetype in ("application/json", "application/json-rpc"):
             return JsonRequest(httprequest)
         else:
             return HttpRequest(httprequest)
