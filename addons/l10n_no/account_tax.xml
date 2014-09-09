@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="1">
+<record id="tax1" model="account.tax.template">
+	<field name="chart_template_id" ref="no_chart_template"/>
+	<field name="name">Utgående 25% mva</field>
+	<field name="amount">0.250000</field>
+	<field name="type">percent</field>
+	<field name="base_sign">1</field>
+	<field name="tax_sign">1</field>
+	<field name="ref_base_sign">-1</field>	
+	<field name="ref_tax_sign">-1</field>
+	<field name="account_collected_id" ref="chart2701"/>
+	<field name="account_paid_id" ref="chart2701"/>
+	<field name="base_code_id" ref="vat_code_base_due_high"/> <!-- Grunnlag for utgående avgift, høy sats -->
+	<field name="tax_code_id" ref="vat_code_payable_high"/> <!-- Beregnet utgående avgift, høy sats -->
+	<field name="ref_base_code_id" ref="vat_code_base_due_high"/> <!-- Samme for kreditnotater -->
+	<field name="ref_tax_code_id" ref="vat_code_payable_high"/>
+</record>
+<record id="tax2" model="account.tax.template">
+	<field name="chart_template_id" ref="no_chart_template"/>
+	<field name="name">Utgående 14% mva</field>
+	<field name="amount">0.140000</field>
+	<field name="type">percent</field>
+	<field name="base_sign">1</field>
+	<field name="tax_sign">1</field>
+	<field name="ref_base_sign">-1</field>	
+	<field name="ref_tax_sign">-1</field>	
+	<field name="account_collected_id" ref="chart2703"/>
+	<field name="account_paid_id" ref="chart2703"/>
+	<field name="base_code_id" ref="vat_code_base_due_medium"/>
+	<field name="tax_code_id" ref="vat_code_payable_medium"/>
+	<field name="ref_base_code_id" ref="vat_code_base_due_medium"/>
+	<field name="ref_tax_code_id" ref="vat_code_payable_medium"/>
+</record>
+<record id="tax3" model="account.tax.template">
+	<field name="chart_template_id" ref="no_chart_template"/>
+	<field name="name">Utgående 8% mva</field>
+	<field name="amount">0.080000</field>
+	<field name="type">percent</field>
+	<field name="base_sign">1</field>
+	<field name="tax_sign">1</field>
+	<field name="ref_base_sign">-1</field>	
+	<field name="ref_tax_sign">-1</field>	
+	<field name="account_collected_id" ref="chart2704"/>
+	<field name="account_paid_id" ref="chart2704"/>
+	<field name="base_code_id" ref="vat_code_base_due_low"/>
+	<field name="tax_code_id" ref="vat_code_payable_low"/>
+	<field name="ref_base_code_id" ref="vat_code_base_due_low"/>
+	<field name="ref_tax_code_id" ref="vat_code_payable_low"/>
+</record>
+<record id="tax4" model="account.tax.template">
+	<field name="chart_template_id" ref="no_chart_template"/>
+	<field name="name">Inngående 25% mva</field>
+	<field name="amount">0.250000</field>
+	<field name="type">percent</field>
+	<field name="base_sign">-1</field>
+	<field name="tax_sign">-1</field>
+	<field name="ref_base_sign">1</field>	
+	<field name="ref_tax_sign">1</field>	
+	<field name="account_collected_id" ref="chart2711"/>
+	<field name="account_paid_id" ref="chart2711"/>
+	<field name="base_code_id" ref="vat_code_receivable_net_high"/> <!-- Grunnlag for inngående avgift høy sats -->
+	<field name="tax_code_id" ref="vat_code_due_tva_high"/> <!-- Beregnet inngående avgift, høy sats -->
+	<field name="ref_base_code_id" ref="vat_code_receivable_net_high"/>
+	<field name="ref_tax_code_id" ref="vat_code_due_tva_high"/>
+</record>
+<record id="tax5" model="account.tax.template">
+	<field name="chart_template_id" ref="no_chart_template"/>
+	<field name="name">Inngående 14% mva</field>
+	<field name="amount">0.140000</field>
+	<field name="type">percent</field>
+	<field name="base_sign">-1</field>
+	<field name="tax_sign">-1</field>
+	<field name="ref_base_sign">1</field>	
+	<field name="ref_tax_sign">1</field>	
+	<field name="account_collected_id" ref="chart2713"/>
+	<field name="account_paid_id" ref="chart2713"/>
+	<field name="base_code_id" ref="vat_code_receivable_net_medium"/>
+	<field name="tax_code_id" ref="vat_code_due_tva_medium"/>
+	<field name="ref_base_code_id" ref="vat_code_receivable_net_medium"/>
+	<field name="ref_tax_code_id" ref="vat_code_due_tva_medium"/>
+</record>
+<record id="tax6" model="account.tax.template">
+	<field name="chart_template_id" ref="no_chart_template"/>
+	<field name="name">Inngående 8% mva</field>
+	<field name="amount">0.080000</field>
+	<field name="type">percent</field>
+	<field name="base_sign">-1</field>
+	<field name="tax_sign">-1</field>
+	<field name="ref_base_sign">1</field>	
+	<field name="ref_tax_sign">1</field>	
+	<field name="account_collected_id" ref="chart2714"/>
+	<field name="account_paid_id" ref="chart2714"/>
+	<field name="base_code_id" ref="vat_code_receivable_net_low"/>
+	<field name="tax_code_id" ref="vat_code_due_tva_low"/>
+	<field name="ref_base_code_id" ref="vat_code_receivable_net_low"/>
+	<field name="ref_tax_code_id" ref="vat_code_due_tva_low"/>
+</record>
+</data>
+</openerp>

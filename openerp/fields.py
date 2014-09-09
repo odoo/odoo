@@ -1548,8 +1548,12 @@ class One2many(_RelationalMulti):
         if self.inverse_name:
             # link self to its inverse field and vice-versa
             invf = env[self.comodel_name]._fields[self.inverse_name]
-            self.inverse_fields.append(invf)
-            invf.inverse_fields.append(self)
+            # In some rare cases, a `One2many` field can link to `Int` field
+            # (res_model/res_id pattern). Only inverse the field if this is
+            # a `Many2one` field.
+            if isinstance(invf, Many2one):
+                self.inverse_fields.append(invf)
+                invf.inverse_fields.append(self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 

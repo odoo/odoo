@@ -1,52 +1,21 @@
-# translation of analytic-user-function-es.po to Galego
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* analytic_user_function
+# Galician translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
-# Frco. Javier Rial Rodríguez <fjrial@cesga.es>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: analytic-user-function-es\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-02-11 13:07+0000\n"
-"Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
-"Language-Team: Galego <g11n@mancomun.org>\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:15+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_account_analytic_line
-msgid "Analytic Line"
-msgstr ""
-
-#. module: analytic_user_function
-#: view:account.analytic.account:0
-msgid "Invoice Price Rate per User"
-msgstr ""
-
-#. module: analytic_user_function
-#: field:analytic.user.funct.grid,product_id:0
-msgid "Service"
-msgstr ""
-
-#. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Price per User"
-msgstr ""
-
-#. module: analytic_user_function
-#: field:analytic.user.funct.grid,price:0
-msgid "Price"
-msgstr ""
-
-#. module: analytic_user_function
-#: help:analytic.user.funct.grid,price:0
-msgid "Price per hour for this user."
-msgstr ""
+"X-Launchpad-Export-Date: 2014-08-15 06:54+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,account_id:0
@@ -55,24 +24,22 @@ msgid "Analytic Account"
 msgstr "Conta analítica"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:106
-#: code:addons/analytic_user_function/analytic_user_function.py:135
-#, python-format
-msgid "Error!"
+#: model:ir.model,name:analytic_user_function.model_account_analytic_line
+msgid "Analytic Line"
 msgstr ""
 
 #. module: analytic_user_function
-#: view:analytic.user.funct.grid:0
-msgid "Invoicing Data"
+#: field:analytic.user.funct.grid,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: analytic_user_function
-#: field:account.analytic.account,user_product_ids:0
-msgid "Users/Products Rel."
-msgstr "Rel. Usuarios/Produtos"
+#: field:analytic.user.funct.grid,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
 msgid ""
 "Define a specific service (e.g. Senior Consultant)\n"
 "                            and price for some users to use these data "
@@ -82,26 +49,42 @@ msgid ""
 msgstr ""
 
 #. module: analytic_user_function
-#: field:analytic.user.funct.grid,uom_id:0
-msgid "Unit of Measure"
+#: code:addons/analytic_user_function/analytic_user_function.py:108
+#: code:addons/analytic_user_function/analytic_user_function.py:137
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:107
-#: code:addons/analytic_user_function/analytic_user_function.py:136
-#, python-format
-msgid "There is no expense account define for this product: \"%s\" (id:%d)"
-msgstr "Non hai conta de gastos definida pra este produto: \"%s\" (id:%d)"
+#: field:analytic.user.funct.grid,id:0
+msgid "ID"
+msgstr ""
 
 #. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Liña de parte de horas"
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid "Invoice Price Rate per User"
+msgstr ""
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_form
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_tree
+msgid "Invoicing Data"
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
 msgid ""
-"OpenERP will recursively search on parent accounts\n"
+"Odoo will recursively search on parent accounts\n"
 "                            to check if specific conditions are defined for "
 "a\n"
 "                            specific user. This allows to set invoicing\n"
@@ -109,67 +92,48 @@ msgid ""
 msgstr ""
 
 #. module: analytic_user_function
+#: field:analytic.user.funct.grid,price:0
+msgid "Price"
+msgstr ""
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Price per User"
+msgstr ""
+
+#. module: analytic_user_function
+#: help:analytic.user.funct.grid,price:0
+msgid "Price per hour for this user."
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,product_id:0
+msgid "Service"
+msgstr ""
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:109
+#: code:addons/analytic_user_function/analytic_user_function.py:138
+#, python-format
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Liña de parte de horas"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,uom_id:0
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: analytic_user_function
 #: field:analytic.user.funct.grid,user_id:0
 msgid "User"
 msgstr "Usuario"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML non válido para a definición da vista!"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "¡O nome do obxecto debe comezar con x_ y e non conter ningún carácter "
-#~ "especial!"
-
-#~ msgid "Relation table between users and products on a analytic account"
-#~ msgstr "Táboa de relación entre usuarios e produtos nunha conta analítica"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "    This module allows you to define what is the default function of a "
-#~ "specific user on a given account. This is mostly used when a user encodes "
-#~ "his timesheet: the values are retrieved and the fields are auto-filled... "
-#~ "but the possibility to change these values is still available.\n"
-#~ "\n"
-#~ "    Obviously if no data has been recorded for the current account, the "
-#~ "default value is given as usual by the employee data so that this module is "
-#~ "perfectly compatible with older configurations.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "    Este módulo permítelle definir cal é a función por defecto dun usuario "
-#~ "específico nunha conta dada. Isto é usado maiormente cando un usuario "
-#~ "codifica o seu parte de horas: os valores son recuperados e os campos son "
-#~ "auto-enchidos... pero a posibilidade para cambiar estes valores está ainda "
-#~ "dispoñible.\n"
-#~ "\n"
-#~ "    Obviamente se ningún dato foi gardado para a conta actual, o valor por "
-#~ "defecto está dado como de costume polos datos do empregado así que este "
-#~ "módulo é perfectamente compatible con configuracións máis antigas.\n"
-#~ "\n"
-#~ "    "
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "¡Erro!"
-
-#~ msgid "User's Product for this Analytic Account"
-#~ msgstr "Produto do usuario para esta Conta Analítica"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "¡Erro! Non pode crear contas analíticas recorrentes."
-
-#~ msgid "Analytic User Function"
-#~ msgstr "Función Analítica de Usuario"
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr "¡Erro! A divisa ten que sela mesma ca da compañía seleccionada"
-
-#~ msgid "Product"
-#~ msgstr "Producto"
+#. module: analytic_user_function
+#: field:account.analytic.account,user_product_ids:0
+msgid "Users/Products Rel."
+msgstr "Rel. Usuarios/Produtos"
