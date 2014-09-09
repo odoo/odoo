@@ -99,7 +99,8 @@ class stock_move(osv.osv):
         currency = company.currency_id.id
         partner = move.picking_id and move.picking_id.partner_id
         if partner:
-            if partner.property_product_pricelist and move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal':
+            code = self.get_code_from_locs(cr, uid, move, context=context)
+            if partner.property_product_pricelist and code == 'outgoing':
                 currency = partner.property_product_pricelist.currency_id.id
         return partner, uid, currency
 
@@ -115,13 +116,7 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         if type in ('in_invoice', 'in_refund'):
-            if move_line.price_unit:
-                return move_line.price_unit
-            else:
-                # Take the company of the move line
-                product = move_line.product_id.with_context(company_id=move_line.company_id.id)
-                amount_unit = product.price_get('standard_price')[move_line.product_id.id]
-                return amount_unit
+            return move_line.price_unit
         else:
             # If partner given, search price in its sale pricelist
             if move_line.partner_id and move_line.partner_id.property_product_pricelist:
@@ -192,7 +187,11 @@ class stock_picking(osv.osv):
                 res.append(move.picking_id.id)
         return res
 
-
+    def _set_inv_state(self, cr, uid, picking_id, name, value, arg, context=None):
+        pick = self.browse(cr, uid, picking_id, context=context)
+        moves = [x.id for x in pick.move_lines]
+        move_obj= self.pool.get("stock.move")
+        move_obj.write(cr, uid, moves, {'invoice_state': pick.invoice_state})
 
     _columns = {
         'invoice_state': fields.function(__get_invoice_state, type='selection', selection=[
@@ -200,6 +199,7 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
           ], string="Invoice Control", required=True,
+        fnct_inv = _set_inv_state,
         store={
             'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),
             'stock.move': (__get_picking_move, ['picking_id', 'invoice_state'], 10),

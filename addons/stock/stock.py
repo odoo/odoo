@@ -2032,7 +2032,6 @@ class stock_move(osv.osv):
             price = move.product_id.standard_price
             self.write(cr, uid, [move.id], {'price_unit': price})
 
-
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms stock move or put it in waiting if it's linked to another move.
         @return: List of ids.
@@ -2441,6 +2440,21 @@ class stock_move(osv.osv):
         #returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and
         #thus the result of action_confirm should always be a list of 1 element length)
         return self.action_confirm(cr, uid, [new_move], context=context)[0]
+
+
+    def get_code_from_locs(self, cr, uid, move, context=None):
+        """
+        Returns the code the picking type should have.  This can easily be used
+        to check if a move is internal or not
+        """
+        code = 'internal'
+        src_loc = move.location_id
+        dest_loc = move.location_dest_id
+        if src_loc.usage == 'internal' and dest_loc.usage != 'internal':
+            code = 'outgoing'
+        if src_loc.usage != 'internal' and dest_loc.usage == 'internal':
+            code = 'incoming'
+        return code
 
 
 class stock_inventory(osv.osv):
@@ -3531,7 +3545,6 @@ class stock_location_path(osv.osv):
                 'push_rule_id': rule.id,
                 'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
             }
-        
 
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')

@@ -84,8 +84,10 @@
                     <separator/>
                     <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
                     <filter name="virtual_stock_available" string="Forecast Available Products" domain="[('virtual_available','&gt;',0)]"/>
-                    <filter name="real_stock_negative" string="Exhausted Stock" domain="[('qty_available','&lt;=',0)]"/>
-                    <filter name="virtual_stock_negative" string="Forecast Exhausted Stock" domain="[('virtual_available','&lt;=',0)]"/>
+                    <filter name="real_stock_exhausted" string="Exhausted Stock" domain="[('qty_available','&lt;=',0)]"/>
+                    <filter name="virtual_stock_exhausted" string="Forecast Exhausted Stock" domain="[('virtual_available','&lt;=',0)]"/>
+                    <filter name="real_stock_negative" string="Negative Stock" domain="[('qty_available','&lt;',0)]"/>
+                    <filter name="virtual_stock_negative" string="Forecast Negative Stock" domain="[('virtual_available','&lt;',0)]"/>
                 </field>
                 <filter name="consumable" position="before">
                    <filter string="Products" icon="terp-accessories-archiver" domain="[('type','=','product')]" help="Stockable products"/>
@@ -248,22 +250,6 @@
                    <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
                 </xpath>
             </field>
-        </record>
-        
-        
-        <act_window
-            context="{'location': active_id}"
-            domain="[('type','&lt;&gt;','service')]"
-            id="act_product_location_open"
-            name="Products"
-            res_model="product.product"
-            src_model="stock.location"/>
-
-        <record id="ir_act_product_location_open" model="ir.values">
-            <field name="key2">tree_but_open</field>
-            <field name="model">stock.location</field>
-            <field name="name">Products</field>
-            <field eval="'ir.actions.act_window,%d'%act_product_location_open" name="value"/>
         </record>
     </data>
 </openerp>

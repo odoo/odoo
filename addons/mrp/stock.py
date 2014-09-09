@@ -73,7 +73,7 @@ class StockMove(osv.osv):
         if bis:
             factor = move.product_qty
             bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis[0], context=context)
-            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [])
+            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [], context=context)
             
             state = 'confirmed'
             if move.state == 'assigned':
