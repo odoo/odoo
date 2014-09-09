@@ -82,7 +82,7 @@ class crm_tracking_mixin(osv.AbstractModel):
     def tracking_get_values(self, cr, uid, vals, context=None):
         for key, field in self.tracking_fields():
             column = self._all_columns[field].column
-            value = vals.get(field) or (request and request.session.get(key))  # params.get should be always in session by the dispatch from ir_http
+            value = vals.get(field) or (request and request.httprequest.cookies.get(key))  # params.get should be always in session by the dispatch from ir_http
             if column._type in ['many2one'] and isinstance(value, basestring):  # if we receive a string for a many2one, we search / create the id
                 if value:
                     Model = self.pool[column._obj]
