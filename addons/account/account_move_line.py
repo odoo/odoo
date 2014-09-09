@@ -1009,7 +1009,7 @@ class account_move_line(osv.osv):
             ret.append(ret_line)
         return ret
 
-    # TODO : WIP, probably wrong
+    # TODO : WIP
     def process_reconciliation(self, cr, uid, mv_line_ids, new_mv_line_dicts, context=None):
         """ Create new move lines from new_mv_line_dicts (if not empty) then call reconcile_partial on mv_line_ids and new move lines"""
         if context is None:
