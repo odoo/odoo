@@ -179,7 +179,7 @@ class product_template(osv.Model):
             return self.set_sequence_bottom(cr, uid, ids, context=context)
 
     def img(self, cr, uid, ids, field='image_small', context=None):
-        return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
+        return "/website/image/%s/%s/%s" % (self._name, ids[0], field)
 
 class product_product(osv.Model):
     _inherit = "product.product"
@@ -196,7 +196,7 @@ class product_product(osv.Model):
 
     def img(self, cr, uid, ids, field='image_small', context=None):
         temp_id = self.browse(cr, uid, ids[0], context=context).product_tmpl_id.id
-        return "/website/image?model=product.template&field=%s&id=%s" % (field, temp_id)
+        return "/website/image/product.template/%s/%s" % (temp_id, field)
 
 class product_attribute(osv.Model):
     _inherit = "product.attribute"

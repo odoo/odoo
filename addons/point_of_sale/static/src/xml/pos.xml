@@ -574,55 +574,6 @@
         </receipt>
     </t>
 
-    <t t-name="ChooseReceiptPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-receipt">
-                <p class="message">Welcome <t t-esc="widget.get_client_name()" /><br /> Choose your type of receipt:</p>
-                <div class = "button big-left receipt">
-                    Ticket
-                </div>
-                <div class = "button big-right invoice">
-                    Invoice
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ErrorSessionPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-nosession">
-                <p class="message">Sorry, we could not create a session for this user.</p>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ErrorNoClientPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-noclient">
-                <p class="message">An anonymous order cannot be invoiced</p>
-                <div class="footer">
-                    <div class="button">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ErrorInvoiceTransferPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-invoice">
-                <p class="message">The Order could not be sent to the server for invoicing. Invoices cannot be generated
-                    in offline mode. Please check your internet connection and try again.</p>
-                <div class="footer">
-                    <div class="button">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-error">
@@ -656,7 +607,7 @@
             <div class="popup popup-barcode">
                 <p class="message">Unknown Barcode
                     <br />
-                    <span class='barcode'></span>
+                    <span class='barcode'><t t-esc="widget.barcode" /></span>
                 </p>
                 <p class="comment">
                     The Point of Sale could not find any product, client, employee

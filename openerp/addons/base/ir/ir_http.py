@@ -12,6 +12,7 @@ import werkzeug.utils
 
 import openerp
 import openerp.exceptions
+import openerp.models
 from openerp import http
 from openerp.http import request
 from openerp.osv import osv, orm
@@ -62,12 +63,6 @@ class ir_http(osv.AbstractModel):
     def _auth_method_user(self):
         request.uid = request.session.uid
         if not request.uid:
-            if not request.params.get('noredirect'):
-                query = werkzeug.urls.url_encode({
-                    'redirect': request.httprequest.url,
-                })
-                response = werkzeug.utils.redirect('/web/login?%s' % query)
-                werkzeug.exceptions.abort(response)
             raise http.SessionExpiredException("Session expired")
 
     def _auth_method_none(self):
@@ -101,7 +96,10 @@ class ir_http(osv.AbstractModel):
 
     def _handle_exception(self, exception):
         # If handle_exception returns something different than None, it will be used as a response
-        return request._handle_exception(exception)
+        try:
+            return request._handle_exception(exception)
+        except openerp.exceptions.AccessDenied:
+            return werkzeug.exceptions.Forbidden()
 
     def _dispatch(self):
         # locate the controller method
@@ -114,11 +112,8 @@ class ir_http(osv.AbstractModel):
         # check authentication level
         try:
             auth_method = self._authenticate(func.routing["auth"])
-        except Exception:
-            # force a Forbidden exception with the original traceback
-            return self._handle_exception(
-                convert_exception_to(
-                    werkzeug.exceptions.Forbidden))
+        except Exception as e:
+            return self._handle_exception(e)
 
         processing = self._postprocess_args(arguments, rule)
         if processing:
@@ -138,12 +133,12 @@ class ir_http(osv.AbstractModel):
 
     def _postprocess_args(self, arguments, rule):
         """ post process arg to set uid on browse records """
-        for arg in arguments.itervalues():
+        for name, arg in arguments.items():
             if isinstance(arg, orm.browse_record) and arg._uid is UID_PLACEHOLDER:
-                arg._uid = request.uid
+                arguments[name] = arg.sudo(request.uid)
                 try:
-                    arg[arg._rec_name]
-                except KeyError:
+                    arg.exists()
+                except openerp.models.MissingError:
                     return self._handle_exception(werkzeug.exceptions.NotFound())
 
     def routing_map(self):

@@ -21,6 +21,7 @@
 
 import re
 import time
+import math
 
 from openerp import api, fields as fields2
 from openerp import tools
@@ -270,6 +271,22 @@ class res_currency(osv.osv):
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
+    def get_format_currencies_js_function(self, cr, uid, context=None):
+        """ Returns a string that can be used to instanciate a javascript function that formats numbers as currencies.
+            That function expects the number as first parameter and the currency id as second parameter. In case of failure it returns undefined."""
+        function = ""
+        for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'rounding', 'position'], context=context):
+            digits = int(math.log10(1 / row['rounding']))
+            symbol = row['symbol'] or row['name']
+
+            format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69," + str(digits) + "]}, 0.00)"
+            if row['position'] == 'after':
+                return_str = "return " + format_number_str + " + '\\xA0" + symbol + "';"
+            else:
+                return_str = "return '" + symbol + "\\xA0' + " + format_number_str + ";"
+            function += "if (arguments[1] === " + str(row['id']) + ") { " + return_str + " }"
+        return function
+
 class res_currency_rate(osv.osv):
     _name = "res.currency.rate"
     _description = "Currency Rate"
@@ -285,4 +302,3 @@ class res_currency_rate(osv.osv):
     _order = "name desc"
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

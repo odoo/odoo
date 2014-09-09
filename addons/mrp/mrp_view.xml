@@ -349,7 +349,6 @@
                         <group>
                             <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
                             <field name="product_id"/>
-                            <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_tmpl_id, product_uom)" groups="product.group_uom"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
                                 <field name="product_qty" class="oe_inline" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
@@ -758,7 +757,6 @@
                                             <field name="product_uom_qty"/>
                                             <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="state" invisible="1"/>
-                                            <!--TODO: should have a partial picking here-->
                                         </tree>
                                     </field>
                                 </group>
@@ -1049,14 +1047,15 @@
             <field name="name">product.template.procurement</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
                 <div name="buttons" position="inside">
                     <button class="oe_inline oe_stat_button" name="%(template_open_bom)d" type="action"
-                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_inline oe_stat_button" name="action_view_mos" type="object" 
-                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
                     </button>
                 </div>
@@ -1067,14 +1066,15 @@
             <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
                 <div name="buttons" position="inside">
                     <button class="oe_inline oe_stat_button" name="action_view_bom" type="object" 
-                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_inline oe_stat_button" name="%(act_product_mrp_production)d" type="action" 
-                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
                     </button>
                 </div>
