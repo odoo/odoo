@@ -14,7 +14,6 @@
             parent="stock.menu_stock_product" sequence="0" groups="base.group_no_one"/>
         <menuitem action="product.product_template_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="group_stock_manager"/>
-        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="40" groups="base.group_no_one"/>
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="2"/>
         <menuitem
             id="menu_product_in_config_stock" name="Products"
@@ -609,9 +608,10 @@
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="location_dest_id"/>
+                    <field name="partner_id"/>
                     <field name="date"/>
                     <field name="min_date" invisible="1"/>
                     <field name="origin"/>
@@ -634,9 +634,7 @@
                     <button name="action_confirm" states="draft" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_assign" states="confirmed,partially_available" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="force_assign" states="confirmed,waiting,partially_available" string="Force Availability" type="object" groups="base.group_user"/>
-                    <button name="do_transfer" states="assigned" string="Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('pack_operation_exist', '=', True)]}"/>
-                    <button name="do_partial_open_barcode" string="Enter Transfer Details" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','not in',('assigned', 'partially_available'))]}"/>
-                    <button name="open_barcode_interface" string="Open Barcode interface" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}"/>
+                    <button name="do_enter_transfer_details" states="assigned,partially_available" string="Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
                     <button name="do_print_picking" string="Print Picking List" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '=', 'outgoing'), ('state', '!=', 'assigned')]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
                     <button name="action_cancel" states="assigned,confirmed,partially_available,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
@@ -645,6 +643,8 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box">
+                        <button name="do_partial_open_barcode" groups="stock.group_stock_user" type="object" class="oe_stock_scan_button" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','not in',('assigned', 'partially_available'))]}"><img src="/stock/static/src/img/scan.png" class="oe_stock_scan_image oe_stock_scan_image_btn"/></button>
+                        <button name="open_barcode_interface" groups="stock.group_stock_user" type="object" class="oe_stock_scan_button" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}"><img src="/stock/static/src/img/scan.png" class="oe_stock_scan_image oe_stock_scan_image_btn"/></button>
                     </div>
                     <h1>
                         <field name="name" class="oe_inline" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
@@ -673,20 +673,24 @@
                             <field name="pack_operation_exist" invisible="1"/>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
-                        <page string="Operations Done" attrs="{'invisible': ['|', ('state','!=','done'), ('pack_operation_ids','=',[])]}">
+                        <page string="Operations" attrs="{'invisible': ['|', ('state','!=','done'), ('pack_operation_ids','=',[])]}">
                             <field name="pack_operation_ids">
-                                <tree editable="top">   
-                                    <field name="location_id"/>
+                                <tree editable="top">
+                                    <field name="package_id" groups="stock.group_tracking_lot"/>
                                     <field name="product_id"/>
                                     <field name="product_uom_id" groups="product.group_uom"/>
                                     <field name="lot_id" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
-                                    <field name="package_id" groups="stock.group_tracking_lot"/>
+                                    <field name="picking_id" invisible="1"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
                                     <field name="product_qty" attrs="{'required': [('product_id', '!=', False)]}"/>
+                                    <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                                 </tree>
                             </field>
+                            <p class="oe_grey" groups="stock.group_tracking_lot">
+                            If there is no product but a source package, this means the source package was moved entirely.  If there is a product and a source package, the product was taken from the source package.  
+                            </p>
                         </page>
                         <page string="Additional Info">
                             <group string="General Informations">
@@ -728,7 +732,7 @@
                     <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                     <separator/>
-                    <filter name="late" string="Late" domain="[('min_date','&lt;', time.strftime('%%Y-%%m-%%d'))]" help="Pickings that are late on scheduled time"/>
+                    <filter name="late" string="Late" domain="[('min_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S'))]" help="Pickings that are late on scheduled time"/>
                     <separator/>
                     <filter name="backorder" string="Backorders" domain="[('backorder_id','&lt;&gt;', False)]" help="Remaining parts of picking partially processed"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
@@ -921,13 +925,15 @@
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                        states="draft,waiting,confirmed,assigned"/>
+                        states="draft,waiting,confirmed,assigned"
+                        groups="stock.group_stock_user"/>
                     <field name="location_id" groups="stock.group_locations"/>
                     <field name="location_dest_id" groups="stock.group_locations"/>
                     <field name="date" groups="base.group_no_one"/>
                     <field name="date_expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward" help="Done"/>
+                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" 
+                            groups="stock.group_stock_user" icon="gtk-go-forward" help="Done"/>
                 </tree>
             </field>
         </record>
@@ -950,7 +956,7 @@
                        string="Scrap Products" type="action"
                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                        states="draft,waiting,confirmed,assigned"
-                       groups="base.group_user"/>
+                       groups="stock.group_stock_user"/>
                     <field name="scrapped" invisible="1"/>
                     <field name="availability" invisible="1"/>
                     <field name="reserved_availability" invisible="1"/>
@@ -1177,10 +1183,11 @@
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                        states="draft,waiting,confirmed,assigned"/>
+                        states="draft,waiting,confirmed,assigned"
+                        groups="stock.group_stock_user"/>
                     <field name="state"/>
                     <button name="action_done" states="draft,assigned,confirmed"
-                        icon="gtk-go-forward" type="object"
+                        icon="gtk-go-forward" type="object" groups="stock.group_stock_user"
                         class="oe_highlight" help="Done"/>
                 </tree>
             </field>
@@ -1257,7 +1264,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="1"/>
+        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_stock_configuration" sequence="40"/>
 
 
          <record id="view_pickingtype_filter" model="ir.ui.view">
@@ -1338,7 +1345,7 @@
                                     <h4 class="text-center"><strong><field name="complete_name"/></strong></h4>
                                     <div class="oe_right">
                                         <a name="open_barcode_interface" type="object">
-                                            <img src="/stock/static/src/img/scan.png" 
+                                            <img src="/stock/static/src/img/scan.png"
                                                 alt="Click to launch the barcode interface"
                                                 class="oe_stock_scan_image" title="Click to launch the barcode interface"/>
                                         </a>
@@ -1582,7 +1589,7 @@
                 <xpath expr="//group[@name='propagation_group']" position="before">
                     <group attrs="{'invisible': [('action', '!=', 'move')]}" string="Moving Options">
                         <field name="procure_method" groups="stock.group_adv_location"/>
-                        <field name="location_src_id" attrs="{'required': [('action', '=', 'move')]}"/>
+                        <field name="location_src_id" attrs="{'required': [('action', '=', 'move')]}"  domain="[('usage','!=','view')]" />
                         <field name="partner_address_id" groups="stock.group_adv_location" context="{'show_address': 1}" options="{'always_reload': 1}"/>
                         <label for="delay" string="Delay"  groups="stock.group_adv_location"/>
                         <div groups="stock.group_adv_location">
@@ -1911,7 +1918,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="%(do_view_pickings)d" string="Pickings" type="action"/>
-                </xpath>        
+                </xpath>
             </field>
         </record>
         

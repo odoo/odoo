@@ -170,8 +170,13 @@ class website_sale(http.Controller):
 
         product_obj = pool.get('product.template')
 
+        url = "/shop"
         product_count = product_obj.search_count(cr, uid, domain, context=context)
-        pager = request.website.pager(url="/shop", total=product_count, page=page, step=PPG, scope=7, url_args=post)
+        if search:
+            post["search"] = search
+        if category:
+            url = "/shop/category/%s" % slug(category)
+        pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
         product_ids = product_obj.search(cr, uid, domain, limit=PPG+10, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
         products = product_obj.browse(cr, uid, product_ids, context=context)
 
@@ -354,14 +359,15 @@ class website_sale(http.Controller):
         shipping_ids = []
         checkout = {}
         if not data:
+            print request.uid, request.website.user_id.id
             if request.uid != request.website.user_id.id:
                 checkout.update( self.checkout_parse("billing", partner) )
                 shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=context)
             else:
                 order = request.website.sale_get_order(force_create=1, context=context)
                 if order.partner_id:
-                    domain = [("active", "=", False), ("partner_id", "=", order.partner_id.id)]
-                    user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=context)
+                    domain = [("partner_id", "=", order.partner_id.id)]
+                    user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=dict(context or {}, active_test=False))
                     if not user_ids or request.website.user_id.id not in user_ids:
                         checkout.update( self.checkout_parse("billing", order.partner_id) )
         else:
@@ -612,7 +618,7 @@ class website_sale(http.Controller):
         # else:
         acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
         values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
-        render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
+        render_ctx = dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now'))
         for acquirer in values['acquirers']:
             acquirer.button = payment_obj.render(
                 cr, SUPERUSER_ID, acquirer.id,

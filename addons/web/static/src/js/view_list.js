@@ -167,7 +167,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @returns {String} CSS style declaration
      */
     style_for: function (record) {
-        var style= '';
+        var len, style= '';
 
         var context = _.extend({}, record.attributes, {
             uid: this.session.uid,

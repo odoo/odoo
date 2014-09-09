@@ -785,7 +785,7 @@ class stock_picking(osv.osv):
                  store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
                  store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
-        'date': fields.datetime('Commitment Date', help="Date promised for the completion of the transfer order, usually set the time of the order and revised later on.", select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, track_visibility='onchange'),
+        'date': fields.datetime('Creation Date', help="Creation Date, usually the time of the order", select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, track_visibility='onchange'),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=True),
         'quant_reserved_exist': fields.function(_get_quant_reserved_exist, type='boolean', string='Quant already reserved ?', help='technical field used to know if there is already at least one quant reserved on moves of a given picking'),
@@ -1269,6 +1269,7 @@ class stock_picking(osv.osv):
             move_obj.action_confirm(cr, uid, moves, context=context)
         return moves
 
+
     def rereserve_quants(self, cr, uid, picking, move_ids=[], context=None):
         """ Unreserve quants then try to reassign quants."""
         stock_move_obj = self.pool.get('stock.move')
@@ -1278,6 +1279,21 @@ class stock_picking(osv.osv):
         else:
             stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
             stock_move_obj.action_assign(cr, uid, move_ids, context=context)
+
+    @api.cr_uid_ids_context
+    def do_enter_transfer_details(self, cr, uid, picking, context=None):
+        if not context:
+            context = {}
+
+        context.update({
+            'active_model': self._name,
+            'active_ids': picking,
+            'active_id': len(picking) and picking[0] or False
+        })
+
+        created_id = self.pool['stock.transfer_details'].create(cr, uid, {'picking_id': len(picking) and picking[0] or False}, context)
+        return self.pool['stock.transfer_details'].wizard_view(cr, uid, created_id, context)
+
 
     @api.cr_uid_ids_context
     def do_transfer(self, cr, uid, picking_ids, context=None):
@@ -1298,10 +1314,10 @@ class stock_picking(osv.osv):
                 todo_move_ids = []
                 if not all_op_processed:
                     todo_move_ids += self._create_extra_moves(cr, uid, picking, context=context)
-                    
+
                 picking.refresh()
                 #split move lines eventually
-                
+
                 toassign_move_ids = []
                 for move in picking.move_lines:
                     remaining_qty = move.remaining_qty
@@ -1318,8 +1334,9 @@ class stock_picking(osv.osv):
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
-                if (need_rereserve or not all_op_processed) and not picking.location_id.usage in ("supplier", "production", "inventory"):
-                    self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
+                if need_rereserve or not all_op_processed: 
+                    if not picking.location_id.usage in ("supplier", "production", "inventory"):
+                        self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
                     self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
                 if todo_move_ids and not context.get('do_only_split'):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
@@ -2379,7 +2396,6 @@ class stock_move(osv.osv):
         defaults = {
             'product_uom_qty': uom_qty,
             'product_uos_qty': uos_qty,
-            'state': move.state,
             'procure_method': 'make_to_stock',
             'restrict_lot_id': restrict_lot_id,
             'restrict_partner_id': restrict_partner_id,
@@ -2398,7 +2414,7 @@ class stock_move(osv.osv):
             'product_uos_qty': move.product_uos_qty - uos_qty,
         }, context=ctx)
 
-        if move.move_dest_id and move.propagate:
+        if move.move_dest_id and move.propagate and move.move_dest_id.state not in ('done', 'cancel'):
             new_move_prop = self.split(cr, uid, move.move_dest_id, qty, context=context)
             self.write(cr, uid, [new_move], {'move_dest_id': new_move_prop}, context=context)
         #returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and
@@ -3620,7 +3636,7 @@ class stock_package(osv.osv):
 
     def action_print(self, cr, uid, ids, context=None):
         context = dict(context or {}, active_ids=ids)
-        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_package_barcode', context=context)
+        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_package_barcode_small', context=context)
     
     
     def unpack(self, cr, uid, ids, context=None):
@@ -3749,9 +3765,9 @@ class stock_pack_operation(osv.osv):
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'qty_done': fields.float('Quantity Processed', digits_compute=dp.get_precision('Product Unit of Measure')),
-        'package_id': fields.many2one('stock.quant.package', 'Package'),  # 2
+        'package_id': fields.many2one('stock.quant.package', 'Source Package'),  # 2
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'),
-        'result_package_id': fields.many2one('stock.quant.package', 'Container Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade'),
+        'result_package_id': fields.many2one('stock.quant.package', 'Destination Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade'),
         'date': fields.datetime('Date', required=True),
         'owner_id': fields.many2one('res.partner', 'Owner', help="Owner of the quants"),
         #'update_cost': fields.boolean('Need cost update'),
@@ -3759,8 +3775,8 @@ class stock_pack_operation(osv.osv):
         'currency': fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
         'linked_move_operation_ids': fields.one2many('stock.move.operation.link', 'operation_id', string='Linked Moves', readonly=True, help='Moves impacted by this operation for the computation of the remaining quantities'),
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Qty'),
-        'location_id': fields.many2one('stock.location', 'Location From', required=True),
-        'location_dest_id': fields.many2one('stock.location', 'Location To', required=True),
+        'location_id': fields.many2one('stock.location', 'Source Location', required=True),
+        'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True),
         'processed': fields.selection([('true','Yes'), ('false','No')],'Has been processed?', required=True),
     }
 
@@ -3975,13 +3991,16 @@ class stock_warehouse_orderpoint(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type', '=', 'product')]),
         'product_uom': fields.related('product_id', 'uom_id', type='many2one', relation='product.uom', string='Product Unit of Measure', readonly=True, required=True),
         'product_min_qty': fields.float('Minimum Quantity', required=True,
+            digits_compute=dp.get_precision('Product Unit of Measure'),
             help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "\
             "a procurement to bring the forecasted quantity to the Max Quantity."),
         'product_max_qty': fields.float('Maximum Quantity', required=True,
+            digits_compute=dp.get_precision('Product Unit of Measure'),
             help="When the virtual stock goes below the Min Quantity, Odoo generates "\
             "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity."),
-        'qty_multiple': fields.integer('Qty Multiple', required=True,
-            help="The procurement quantity will be rounded up to this multiple."),
+        'qty_multiple': fields.float('Qty Multiple', required=True,
+            digits_compute=dp.get_precision('Product Unit of Measure'),
+            help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.  "),
         'procurement_ids': fields.one2many('procurement.order', 'orderpoint_id', 'Created Procurements'),
         'group_id': fields.many2one('procurement.group', 'Procurement Group', help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by procurement rules will be grouped into one big picking.", copy=False),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -3995,7 +4014,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=context)
     }
     _sql_constraints = [
-        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),
+        ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
     _constraints = [
         (_check_product_uom, 'You have to select a product unit of measure in the same category than the default unit of measure of the product', ['product_id', 'product_uom']),

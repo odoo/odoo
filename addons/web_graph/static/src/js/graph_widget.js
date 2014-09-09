@@ -153,41 +153,49 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // ----------------------------------------------------------------------
     // Configuration methods
     // ----------------------------------------------------------------------
-    set: function (domain, row_groupby, col_groupby) {
+    set: function (domain, row_groupby, col_groupby, measures_groupby) {
         if (!this.pivot) {
             this.pivot_options.domain = domain;
             this.pivot_options.row_groupby = row_groupby;
             this.pivot_options.col_groupby = col_groupby;
+            this.pivot_options.measures_groupby = measures_groupby;
             return;
         }
         var row_gbs = this.create_field_values(row_groupby),
             col_gbs = this.create_field_values(col_groupby),
+            measures_gbs = this.create_field_values(measures_groupby),
             dom_changed = !_.isEqual(this.pivot.domain, domain),
             row_gb_changed = !_.isEqual(row_gbs, this.pivot.rows.groupby),
             col_gb_changed = !_.isEqual(col_gbs, this.pivot.cols.groupby),
+            measures_gb_changed = !_.isEqual(measures_gbs, this.pivot.measures),
             row_reduced = is_strict_beginning_of(row_gbs, this.pivot.rows.groupby),
-            col_reduced = is_strict_beginning_of(col_gbs, this.pivot.cols.groupby);
+            col_reduced = is_strict_beginning_of(col_gbs, this.pivot.cols.groupby),
+            measures_reduced = is_strict_beginning_of(measures_gbs, this.pivot.measures);
 
-        if (!dom_changed && row_reduced && !col_gb_changed) {
+        if (!dom_changed && row_reduced && !col_gb_changed && !measures_gb_changed) {
             this.pivot.fold_with_depth(this.pivot.rows, row_gbs.length);
             this.display_data();
             return;
         }
-        if (!dom_changed && col_reduced && !row_gb_changed) {
+        if (!dom_changed && col_reduced && !row_gb_changed && !measures_gb_changed) {
             this.pivot.fold_with_depth(this.pivot.cols, col_gbs.length);
             this.display_data();
             return;
         }
 
-        if (!dom_changed && col_reduced && row_reduced) {
+        if (!dom_changed && col_reduced && row_reduced && !measures_gb_changed) {
             this.pivot.fold_with_depth(this.pivot.rows, row_gbs.length);
             this.pivot.fold_with_depth(this.pivot.cols, col_gbs.length);
             this.display_data();
             return;
         }
 
-        if (dom_changed || row_gb_changed || col_gb_changed) {
-            this.pivot.set(domain, row_gbs, col_gbs).then(this.proxy('display_data'));
+        if (dom_changed || row_gb_changed || col_gb_changed || measures_gb_changed) {
+            this.pivot.set(domain, row_gbs, col_gbs, measures_gbs).then(this.proxy('display_data'));
+        }
+
+        if (measures_gb_changed) {
+            this.put_measure_checkmarks();
         }
     },
 
@@ -233,6 +241,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     get_col_groupbys: function () {
         return _.pluck(this.pivot.cols.groupby, 'field');
+    },
+
+    get_current_measures: function () {
+        return _.pluck(this.pivot.measures, 'field');
     },
 
     // ----------------------------------------------------------------------
@@ -340,12 +352,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         }
         this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
         $(event.target).after(this.dropdown);
-        this.dropdown.css({position:'absolute',
-                           left:event.originalEvent.layerX,
-                           top:event.originalEvent.layerY});
-        this.$('.field-selection').next('.dropdown-menu').first().toggle();
-        
-        
+        this.dropdown.css({
+            position:'absolute',
+            left:event.originalEvent.layerX,
+        });
+        this.$('.field-selection').next('.dropdown-menu').first().toggle();        
     },
 
     field_selection: function (event) {
@@ -627,7 +638,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
     
     draw_measure_row: function (measure_row) {
-        if (this.pivot.measures.length === 1) { return; }
         var $row = $('<tr>').append('<th>');
         _.each(measure_row, function (cell) {
             var $cell = $('<th>').addClass('measure_row').text(cell.text);

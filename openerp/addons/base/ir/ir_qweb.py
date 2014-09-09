@@ -257,12 +257,6 @@ class QWeb(orm.AbstractModel):
                 uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
                 can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
                 if not can_see:
-                    if qwebcontext.get('editable') and not qwebcontext.get('editable_no_editor'):
-                        errmsg = _("Editor disabled because some content can not be seen by a user who does not belong to the groups %s")
-                        raise openerp.http.Retry(
-                            _("User does not belong to groups %s") % attribute_value, {
-                                'editable_no_editor': errmsg % attribute_value
-                            })
                     return ''
 
             attribute_value = attribute_value.encode("utf8")
@@ -308,7 +302,7 @@ class QWeb(orm.AbstractModel):
             for current_node in element.iterchildren(tag=etree.Element):
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
-                except (QWebException, openerp.http.Retry):
+                except QWebException:
                     raise
                 except Exception:
                     template = qwebcontext.get('__template__')
@@ -692,7 +686,7 @@ class SelectionConverter(osv.AbstractModel):
         value = record[field_name]
         if not value: return ''
         selection = dict(fields.selection.reify(
-            cr, uid, record._model, column))
+            cr, uid, record._model, column, context=context))
         return self.value_to_html(
             cr, uid, selection[value], column, options=options)
 
@@ -1015,7 +1009,6 @@ class AssetsBundle(object):
     # Use this:
     #       sudo gem install compass --pre
     cmd_sass = ['sass', '--stdin', '-t', 'compressed', '--unix-newlines', '--compass', '-r', 'bootstrap-sass']
-    cache = openerp.tools.lru.LRU(32)
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
     rx_sass_import = re.compile("""(@import\s?['"]([^'"]+)['"])""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
@@ -1115,21 +1108,15 @@ class AssetsBundle(object):
         return hashlib.sha1(check).hexdigest()
 
     def js(self):
-        key = 'js_%s' % self.xmlid
-        if key in self.cache and self.cache[key][0] != self.version:
-            # Invalidate cache on version mismach
-            self.cache.pop(key)
-        if key not in self.cache:
-            content =';\n'.join(asset.minify() for asset in self.javascripts)
-            self.cache[key] = (self.version, content)
-        return self.cache[key][1]
+        content = self.get_cache('js')
+        if content is None:
+            content = ';\n'.join(asset.minify() for asset in self.javascripts)
+            self.set_cache('js', content)
+        return content
 
     def css(self):
-        key = 'css_%s' % self.xmlid
-        if key in self.cache and self.cache[key][0] != self.version:
-            # Invalidate cache on version mismach
-            self.cache.pop(key)
-        if key not in self.cache:
+        content = self.get_cache('css')
+        if content is None:
             self.compile_sass()
             content = '\n'.join(asset.minify() for asset in self.stylesheets)
 
@@ -1149,9 +1136,32 @@ class AssetsBundle(object):
             content = u'\n'.join(matches)
             if self.css_errors:
                 return content
-            self.cache[key] = (self.version, content)
+            self.set_cache('css', content)
 
-        return self.cache[key][1]
+        return content
+
+    def get_cache(self, type):
+        content = None
+        domain = [('url', '=', '/web/%s/%s/%s' % (type, self.xmlid, self.version))]
+        bundle = self.registry['ir.attachment'].search_read(self.cr, self.uid, domain, ['datas'], context=self.context)
+        if bundle and bundle[0]['datas']:
+            content = bundle[0]['datas'].decode('base64')
+        return content
+
+    def set_cache(self, type, content):
+        ira = self.registry['ir.attachment']
+        url_prefix = '/web/%s/%s/' % (type, self.xmlid)
+        # Invalidate previous caches
+        oids = ira.search(self.cr, self.uid, [('url', '=like', url_prefix + '%')], context=self.context)
+        if oids:
+            ira.unlink(self.cr, openerp.SUPERUSER_ID, oids, context=self.context)
+        url = url_prefix + self.version
+        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+                    datas=content.encode('utf8').encode('base64'),
+                    type='binary',
+                    name=url,
+                    url=url,
+                ), context=self.context)
 
     def css_message(self, message):
         return """

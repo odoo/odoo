@@ -410,15 +410,36 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var widget = executor.widget();
         if (executor.action.target === 'new') {
+            var pre_dialog = this.dialog;
+            if (pre_dialog){
+                // prevent previous dialog to consider itself closed,
+                // right now, as we're opening a new one (prevents
+                // reload of original form view)
+                pre_dialog.off('closing', null, pre_dialog.on_close);
+            }
             if (this.dialog_widget && !this.dialog_widget.isDestroyed()) {
                 this.dialog_widget.destroy();
             }
+            // explicitly passing a closing action to dialog_stop() prevents
+            // it from reloading the original form view
             this.dialog_stop(executor.action);
             this.dialog = new instance.web.Dialog(this, {
                 title: executor.action.name,
                 dialogClass: executor.klass,
             });
-            this.dialog.on("closing", null, options.on_close);
+
+            // chain on_close triggers with previous dialog, if any
+            this.dialog.on_close = function(){
+                options.on_close.apply(null, arguments);
+                if (pre_dialog && pre_dialog.on_close){
+                    // no parameter passed to on_close as this will
+                    // only be called when the last dialog is truly
+                    // closing, and *should* trigger a reload of the
+                    // underlying form view (see comments above)
+                    pre_dialog.on_close();
+                }
+            };
+            this.dialog.on("closing", null, this.dialog.on_close);
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
                     $buttons: this.dialog.$buttons,
@@ -431,6 +452,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog.open();
             return initialized;
         } else  {
+            // explicitly passing a closing action to dialog_stop() prevents
+            // it from reloading the original form view - we're opening a
+            // completely new action anyway
             this.dialog_stop(executor.action);
             this.inner_action = executor.action;
             this.inner_widget = widget;
@@ -1447,12 +1471,12 @@ instance.web.View = instance.web.Widget.extend({
         if (action_data.special === 'cancel') {
             return handler({"type":"ir.actions.act_window_close"});
         } else if (action_data.type=="object") {
-            var args = [[record_id]], additional_args = [];
+            var args = [[record_id]];
             if (action_data.args) {
                 try {
                     // Warning: quotes and double quotes problem due to json and xml clash
                     // Maybe we should force escaping in xml or do a better parse of the args array
-                    additional_args = JSON.parse(action_data.args.replace(/'/g, '"'));
+                    var additional_args = JSON.parse(action_data.args.replace(/'/g, '"'));
                     args = args.concat(additional_args);
                 } catch(e) {
                     console.error("Could not JSON.parse arguments", action_data.args);

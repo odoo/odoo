@@ -1,87 +1,25 @@
 # Korean translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2009-09-08 14:33+0000\n"
-"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:06+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:11+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "임금"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Information"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_start:0
-msgid "Trial Start Date"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,vehicle:0
-msgid "Company Vehicle"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Group By..."
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,employee_id:0
-#: model:ir.model,name:hr_contract.model_hr_employee
-msgid "Employee"
-msgstr "직원"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-#: field:hr.employee,contract_ids:0
-#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
-msgid "Contracts"
-msgstr "계약"
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of Children"
-msgstr ""
-
-#. module: hr_contract
-#: help:hr.employee,contract_id:0
-msgid "Latest contract of the employee"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Job"
+#: model:ir.model,name:hr_contract.model_base_action_rule
+msgid "Action Rules"
 msgstr ""
 
 #. module: hr_contract
@@ -90,9 +28,45 @@ msgid "Advantages"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Work Permit"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Advantages..."
 msgstr ""
+
+#. module: hr_contract
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.employee,vehicle:0
+msgid "Company Vehicle"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: field:hr.employee,contract_id:0
+#: model:ir.model,name:hr_contract.model_hr_contract
+#: model:ir.ui.menu,name:hr_contract.next_id_56
+msgid "Contract"
+msgstr "계약"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: field:hr.contract,name:0
+msgid "Contract Reference"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,type_id:0
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_form
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_tree
+#: field:hr.contract.type,name:0
+#: model:ir.model,name:hr_contract.model_hr_contract_type
+msgid "Contract Type"
+msgstr "계약 타입"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
@@ -101,9 +75,45 @@ msgid "Contract Types"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Exam"
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: view:hr.contract:hr_contract.hr_contract_view_tree
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: field:hr.employee,contract_ids:0
+#: field:hr.employee,contracts_count:0
+#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
+msgid "Contracts"
+msgstr "계약"
+
+#. module: hr_contract
+#: field:hr.contract,create_uid:0
+#: field:hr.contract.type,create_uid:0
+msgid "Created by"
 msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,create_date:0
+#: field:hr.contract.type,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Duration"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,employee_id:0
+#: model:ir.model,name:hr_contract.model_hr_employee
+msgid "Employee"
+msgstr "직원"
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -111,84 +121,13 @@ msgid "End Date"
 msgstr "종료 날짜"
 
 #. module: hr_contract
-#: help:hr.contract,wage:0
-msgid "Basic Salary of the employee"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,name:0
-msgid "Contract Reference"
-msgstr ""
-
-#. module: hr_contract
-#: help:hr.employee,vehicle_distance:0
-msgid "In kilometers"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,notes:0
-msgid "Notes"
-msgstr "노트"
-
-#. module: hr_contract
-#: field:hr.contract,permit_no:0
-msgid "Work Permit No"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-#: field:hr.employee,contract_id:0
-#: model:ir.model,name:hr_contract.model_hr_contract
-#: model:ir.ui.menu,name:hr_contract.next_id_56
-msgid "Contract"
-msgstr "계약"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,type_id:0
-#: view:hr.contract.type:0
-#: field:hr.contract.type,name:0
-#: model:ir.model,name:hr_contract.model_hr_contract_type
-msgid "Contract Type"
-msgstr "계약 타입"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Salary and Advantages"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,job_id:0
-msgid "Job Title"
-msgstr ""
-
-#. module: hr_contract
 #: constraint:hr.contract:0
 msgid "Error! Contract start-date must be less than contract end-date."
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Is a Manager"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,date_start:0
-msgid "Start Date"
-msgstr "시작 날짜"
-
-#. module: hr_contract
-#: field:hr.contract,visa_no:0
-msgid "Visa No"
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Group By"
 msgstr ""
 
 #. module: hr_contract
@@ -197,23 +136,56 @@ msgid "Home-Work Dist."
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "출생지"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Trial Period Duration"
+#: field:hr.contract,id:0
+#: field:hr.contract.type,id:0
+msgid "ID"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Duration"
+#: help:hr.employee,vehicle_distance:0
+msgid "In kilometers"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,visa_expire:0
-msgid "Visa Expire Date"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Information"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Job"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,job_id:0
+msgid "Job Title"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,write_uid:0
+#: field:hr.contract.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,write_date:0
+#: field:hr.contract.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_contract
+#: help:hr.employee,contract_id:0
+msgid "Latest contract of the employee"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+msgid "Medical Exam"
 msgstr ""
 
 #. module: hr_contract
@@ -222,97 +194,93 @@ msgid "Medical Examination Date"
 msgstr ""
 
 #. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: field:hr.contract,notes:0
+msgid "Notes"
+msgstr "노트"
+
+#. module: hr_contract
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "출생지"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Salary and Advantages"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Search Contract"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+msgid "Search Contract Type"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,date_start:0
+msgid "Start Date"
+msgstr "시작 날짜"
+
+#. module: hr_contract
 #: field:hr.contract,trial_date_end:0
 msgid "Trial End Date"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract.type:0
-msgid "Search Contract Type"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Trial Period Duration"
 msgstr ""
 
-#~ msgid "Wage Types"
-#~ msgstr "임금 타입"
+#. module: hr_contract
+#: field:hr.contract,trial_date_start:0
+msgid "Trial Start Date"
+msgstr ""
 
-#~ msgid "Factor for hour cost"
-#~ msgstr "시간 비용을 위한 펙터"
+#. module: hr_contract
+#: field:base.action.rule,trg_date_resource_field_id:0
+msgid "Use employee work schedule"
+msgstr ""
 
-#~ msgid "Number of children"
-#~ msgstr "자녀 수"
+#. module: hr_contract
+#: help:base.action.rule,trg_date_resource_field_id:0
+msgid "Use the user's working schedule."
+msgstr ""
 
-#~ msgid "Generalities"
-#~ msgstr "일반성"
+#. module: hr_contract
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr ""
 
-#~ msgid "Gross"
-#~ msgstr "총"
+#. module: hr_contract
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
+msgstr ""
 
-#~ msgid "Hourly cost computation"
-#~ msgstr "시간 당 원가 계산"
+#. module: hr_contract
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "임금"
 
-#~ msgid "Net"
-#~ msgstr "순"
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Work Permit"
+msgstr ""
 
-#~ msgid "Human Resources Contracts"
-#~ msgstr "인적 자원 계약"
+#. module: hr_contract
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
+msgstr ""
 
-#~ msgid "Type"
-#~ msgstr "타입"
-
-#~ msgid "Wage Type"
-#~ msgstr "임금 타입"
-
-#~ msgid "Medical examination date"
-#~ msgstr "건강 검진 날짜"
-
-#~ msgid "Hours in the period"
-#~ msgstr "기간 내 시간 수"
-
-#~ msgid "Function"
-#~ msgstr "기능"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "특별 사항"
-
-#~ msgid "Marital Status"
-#~ msgstr "결혼 여부"
-
-#~ msgid "Period Name"
-#~ msgstr "기간 이름"
-
-#~ msgid "Employee Marital Status"
-#~ msgstr "직원 결혼 상태"
-
-#~ msgid "Salary"
-#~ msgstr "급여"
-
-#~ msgid "Working hours per day"
-#~ msgstr "일일 근로시가"
-
-#~ msgid "Wage Period"
-#~ msgstr "임금 기간"
-
-#~ msgid "Wage Type Name"
-#~ msgstr "임금 타입 명칭"
-
-#~ msgid "Status Description"
-#~ msgstr "상태 설명"
-
-#~ msgid "Contract Wage Type"
-#~ msgstr "계약된 임금 타입"
-
-#~ msgid "Wage period"
-#~ msgstr "임금 기간"
-
-#~ msgid ""
-#~ "This field is used by the timesheet system to compute the price of an hour "
-#~ "of work wased on the contract of the employee"
-#~ msgstr "이 필드는 타임시트 시스템이 직원과의 계약을 근거로 시간당 임금을 계산하는데 이용됩니다."
-
-#~ msgid "Manager"
-#~ msgstr "매니저"
-
-#~ msgid "Contract Name"
-#~ msgstr "계약 이름"
-
-#~ msgid "Contract Duration"
-#~ msgstr "계약 기간"
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr ""

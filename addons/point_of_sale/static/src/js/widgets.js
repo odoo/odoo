@@ -294,7 +294,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     var ss = self.pos.pos_widget.screen_selector;
                     if(ss.get_current_screen() === 'clientlist'){
                         ss.back();
-                    }else{
+                    }else if (ss.get_current_screen() !== 'receipt'){
                         ss.set_current_screen('clientlist');
                     }
                 }else{
@@ -519,9 +519,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }
 
             var list_container = el_node.querySelector('.category-list');
-            for(var i = 0, len = this.subcategories.length; i < len; i++){
-                list_container.appendChild(this.render_category(this.subcategories[i],hasimages));
-            };
+            if (list_container) { 
+                if (!hasimages) {
+                    list_container.classList.add('simple');
+                } else {
+                    list_container.classList.remove('simple');
+                }
+                for(var i = 0, len = this.subcategories.length; i < len; i++){
+                    list_container.appendChild(this.render_category(this.subcategories[i],hasimages));
+                };
+            }
 
             var buttons = el_node.querySelectorAll('.js-category-switch');
             for(var i = 0; i < buttons.length; i++){
@@ -1010,12 +1017,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 instance.webclient.set_content_full_screen(true);
 
-                if (!self.pos.session) {
-                    self.screen_selector.show_popup('error', 'Sorry, we could not create a user session');
-                }else if(!self.pos.config){
-                    self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
-                }
-            
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').addClass('oe_hidden');});
 
                 self.pos.push_order();
@@ -1106,18 +1107,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_barcode_popup = new module.ErrorBarcodePopupWidget(this, {});
             this.error_barcode_popup.appendTo(this.$el);
 
-            this.error_session_popup = new module.ErrorSessionPopupWidget(this, {});
-            this.error_session_popup.appendTo(this.$el);
-
-            this.choose_receipt_popup = new module.ChooseReceiptPopupWidget(this, {});
-            this.choose_receipt_popup.appendTo(this.$el);
-
-            this.error_no_client_popup = new module.ErrorNoClientPopupWidget(this, {});
-            this.error_no_client_popup.appendTo(this.$el);
-
-            this.error_invoice_transfer_popup = new module.ErrorInvoiceTransferPopupWidget(this, {});
-            this.error_invoice_transfer_popup.appendTo(this.$el);
-
             this.error_traceback_popup = new module.ErrorTracebackPopupWidget(this,{});
             this.error_traceback_popup.appendTo(this.$el);
 
@@ -1191,10 +1180,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 popup_set:{
                     'error': this.error_popup,
                     'error-barcode': this.error_barcode_popup,
-                    'error-session': this.error_session_popup,
-                    'choose-receipt': this.choose_receipt_popup,
-                    'error-no-client': this.error_no_client_popup,
-                    'error-invoice-transfer': this.error_invoice_transfer_popup,
                     'error-traceback': this.error_traceback_popup,
                     'confirm': this.confirm_popup,
                     'unsent-orders': this.unsent_orders_popup,
@@ -1246,8 +1231,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
 
             function close(){
-                return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(function(res) {
-                    window.location = '/web#action=' + res[0]['res_id'];
+                self.pos.push_order().then(function(){
+                    return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(function(res) {
+                        window.location = '/web#action=' + res[0]['res_id'];
+                    });
                 });
             }
 
@@ -1256,10 +1243,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             if(draft_order){
                 if (confirm(_t("Pending orders will be lost.\nAre you sure you want to leave this session?"))) {
-                    return close();
+                    close();
                 }
             }else{
-                return close();
+                close();
             }
         },
         destroy: function() {

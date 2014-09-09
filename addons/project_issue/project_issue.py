@@ -44,7 +44,7 @@ class project_issue_version(osv.Model):
 class project_issue(osv.Model):
     _name = "project.issue"
     _description = "Project Issue"
-    _order = "priority, create_date desc"
+    _order = "priority desc, create_date desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _mail_post_access = 'read'
@@ -281,7 +281,7 @@ class project_issue(osv.Model):
         'active': 1,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
-        'priority': '1',
+        'priority': '0',
         'kanban_state': 'normal',
         'date_last_stage_update': fields.datetime.now,
         'user_id': lambda obj, cr, uid, context: uid,

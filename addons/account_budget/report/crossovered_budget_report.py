@@ -86,7 +86,7 @@ class budget_report(report_sxw.rml_parse):
                 }
                 result.append(res)
 
-                line_ids = c_b_lines_obj.search(self.cr, self.uid, [('id', 'in', budget_ids), ('analytic_account_id','=',an_ids[i][0])])
+                line_ids = c_b_lines_obj.search(self.cr, self.uid, [('id', 'in', budget_ids), ('analytic_account_id','=',an_ids[i][0]), ('date_to', '>=', d_from), ('date_from', '<=', d_to)])
                 line_id = c_b_lines_obj.browse(self.cr, self.uid, line_ids)
                 tot_theo = tot_pln = tot_prac = tot_perc = 0.00
 

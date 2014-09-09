@@ -1,86 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# * project_timesheet
-# Drazen Bosak <drazen.bosak@gmail.com>, 2010.
+# Croatian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2011-12-12 11:28+0000\n"
-"Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
-"Language-Team: Vinteh\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"Language: hr\n"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Tasks by User"
-msgstr "Zadaci po korisniku"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group by year of date"
-msgstr "Grupiraj po godini"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "June"
-msgstr "Lipanj"
-
-#. module: project_timesheet
-#: field:project.task.work,hr_analytic_timesheet_id:0
-msgid "Related Timeline Id"
-msgstr "ID povezanog vremenskog tijeka"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
-#, python-format
-msgid ""
-"You cannot delete a partner which is assigned to project, but you can "
-"uncheck the active box."
-msgstr ""
-"Nedozvoljeno brisanje partnera koji je dodijeljen projektu. Moguće je "
-"micanje aktivnog statusa."
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task_work
-msgid "Project Task Work"
-msgstr "Project Task Work"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid ""
-"You cannot select a Analytic Account which is in Close or Cancelled state."
-msgstr ""
-"Nedozvoljen odabir analitičkog računa sa statusom zatvoren ili otkazan."
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group By..."
-msgstr "Grupiraj po..."
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "October"
-msgstr "Listopad"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:68
-#: view:project.project:0
-#, python-format
-msgid "Timesheets"
-msgstr "Kontrolne Kartice"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Billable"
-msgstr "Naplativo"
+"X-Launchpad-Export-Date: 2014-08-15 07:42+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
@@ -104,128 +39,14 @@ msgstr ""
 "            "
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Analytic Account/Project"
-msgstr "Analitički račun/Projekt"
-
-#. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Analytic account/project"
-msgstr "Analitički konto/projekt"
-
-#. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
-msgid "Customer Projects"
-msgstr "Projekti klijenata"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:89
+#: code:addons/project_timesheet/project_timesheet.py:56
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
-"Fill in the HR Settings tab of the employee form."
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
+"'%s'.</p>"
 msgstr ""
-"Definirajte proizvod i kategoriju proizvoda na računima vezanim uz "
-"zaposlenika.\n"
-"Ispunite obrazac o zaposleniku na HR postavkama."
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Analitičke stavke"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "August"
-msgstr "Kolovoz"
-
-#. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_taskinvoice0
-msgid "Task invoice"
-msgstr "Račun zadatka"
-
-#. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_taskwork0
-msgid "Task Work"
-msgstr "Rad zadatka"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "May"
-msgstr "Svibanj"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:93
-#, python-format
-msgid ""
-"Please define journal on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-"Definirajte dnevnik vezan uz zaposlenika\n"
-"Ispunite kontrolnu karticu(raspored) na formi zaposlenika"
-
-#. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
-msgid "Sign in / Sign out by project"
-msgstr "Prijava / Odjava po Projektu"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Billable Project"
-msgstr "Naplativi projekt"
-
-#. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
-msgid "Contracts to Renew"
-msgstr "Ugovori za obnovu"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Hours"
-msgstr "Sati"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group by month of date"
-msgstr "Grupiraj po mjesecima"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task
-msgid "Task"
-msgstr "Task"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,user_id:0
-msgid "User"
-msgstr "Korisnik"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,name:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "July"
-msgstr "Srpanj"
-
-#. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_timesheettask0
-msgid "Complete Your Timesheet."
-msgstr "Dovršite evidenciju rada."
-
-#. module: project_timesheet
-#: field:report.timesheet.task.user,task_hrs:0
-msgid "Task Hours"
-msgstr "Sati zadatka"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "February"
-msgstr "Veljača"
+"<p class=\"oe_view_nocontent_create\">Ispunite evidenciju rada za projekt : "
+"'%s'.</p>"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
@@ -247,19 +68,128 @@ msgstr ""
 "            "
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
-msgstr "Zadatak ev. rada"
+#: code:addons/project_timesheet/project_timesheet.py:59
+#, python-format
+msgid ""
+"<p>Timesheets on this project may be invoiced to %s, according to the terms "
+"defined in the contract.</p>"
+msgstr ""
+"<p>Evidenciju rada na projektu naplatitit %s, prema ugovorom definiranim "
+"uvjetima.</p>"
 
 #. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_taskencoding0
-msgid "Task encoding"
-msgstr "Task encoding"
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_form_inherit_account_id
+msgid "Analytic Account/Project"
+msgstr "Analitički račun/Projekt"
 
 #. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_filltimesheet0
-msgid "Task summary is comes into the timesheet line"
-msgstr "Task summary is comes into the timesheet line"
+#: model:ir.model,name:project_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analitičke stavke"
+
+#. module: project_timesheet
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_search_account_inherit
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_tree_inherit_account_id
+msgid "Analytic account/project"
+msgstr "Analitički konto/projekt"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "April"
+msgstr "Travanj"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "August"
+msgstr "Kolovoz"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:82
+#: code:addons/project_timesheet/project_timesheet.py:86
+#: code:addons/project_timesheet/project_timesheet.py:90
+#: code:addons/project_timesheet/project_timesheet.py:97
+#, python-format
+msgid "Bad Configuration!"
+msgstr ""
+
+#. module: project_timesheet
+#: view:project.project:project_timesheet.project_invoice_search
+msgid "Billable"
+msgstr "Naplativo"
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
+msgid "Contracts to Renew"
+msgstr "Ugovori za obnovu"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
+msgid "Customer Projects"
+msgstr "Projekti klijenata"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,name:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "December"
+msgstr "Prosinac"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "February"
+msgstr "Veljača"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group By"
+msgstr ""
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group by month of date"
+msgstr "Grupiraj po mjesecima"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group by year of date"
+msgstr "Grupiraj po godini"
+
+#. module: project_timesheet
+#: view:project.project:project_timesheet.view_project_kanban_inherited
+msgid "Hours"
+msgstr "Sati"
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,id:0
+msgid "ID"
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:264
+#, python-format
+msgid "Invalid Action!"
+msgstr "Neispravna akcija!"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:291
+#, python-format
+msgid "Invalid Analytic Account!"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
+#: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
+msgid "Invoice Tasks"
+msgstr "Zadaci po računu"
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_project_billing
+msgid "Invoicing"
+msgstr "Fakturiranje"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -267,9 +197,30 @@ msgid "January"
 msgstr "Siječanj"
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_triggerinvoice0
-msgid "Trigger Invoice"
-msgstr "Fakturiraj"
+#: selection:report.timesheet.task.user,month:0
+msgid "July"
+msgstr "Srpanj"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "June"
+msgstr "Lipanj"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Ožujak"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "May"
+msgstr "Svibanj"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,month:0
+msgid "Month"
+msgstr "Mjesec"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -278,36 +229,8 @@ msgstr "Studeni"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "Ožujak"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_project
-msgid "Project"
-msgstr "Projekt"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "April"
-msgstr "Travanj"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
-msgid "report.timesheet.task.user"
-msgstr "report.timesheet.task.user"
-
-#. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
-msgid "Encode how much time u spent on your task"
-msgstr "Encode how much time u spent on your task"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:85
-#, python-format
-msgid "Please define employee for user \"%s\". You must create one."
-msgstr ""
-"Korisničko ime \"%s\", nema dodijeljenog zaposlenika. Potrebno stvoriti "
-"novoga."
+msgid "October"
+msgstr "Listopad"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_res_partner
@@ -315,37 +238,37 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
+#: code:addons/project_timesheet/project_timesheet.py:83
 #, python-format
-msgid "Invalid Analytic Account !"
-msgstr "Nevažeći analitički račun"
+msgid "Please define employee for user \"%s\". You must create one."
+msgstr ""
+"Korisničko ime \"%s\", nema dodijeljenog zaposlenika. Potrebno stvoriti "
+"novoga."
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Ev. rada/sati zadatka po mjesecima"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:84
-#: code:addons/project_timesheet/project_timesheet.py:88
-#: code:addons/project_timesheet/project_timesheet.py:92
-#: code:addons/project_timesheet/project_timesheet.py:99
+#: code:addons/project_timesheet/project_timesheet.py:91
 #, python-format
-msgid "Bad Configuration !"
-msgstr "Nevažeća konfiguracija !"
+msgid ""
+"Please define journal on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+"Definirajte dnevnik vezan uz zaposlenika\n"
+"Ispunite kontrolnu karticu(raspored) na formi zaposlenika"
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_project_billing
-msgid "Invoicing"
-msgstr "Fakturiranje"
+#: code:addons/project_timesheet/project_timesheet.py:87
+#, python-format
+msgid ""
+"Please define product and product category property account on the related "
+"employee.\n"
+"Fill in the HR Settings tab of the employee form."
+msgstr ""
+"Definirajte proizvod i kategoriju proizvoda na računima vezanim uz "
+"zaposlenika.\n"
+"Ispunite obrazac o zaposleniku na HR postavkama."
 
 #. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_triggerinvoice0
-msgid "Trigger invoices from sales order lines"
-msgstr "Izradi račune iz stavaka prodajnog naloga"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:100
+#: code:addons/project_timesheet/project_timesheet.py:98
 #, python-format
 msgid ""
 "Please define product and product category property account on the related "
@@ -356,32 +279,19 @@ msgstr ""
 "Ispunite karticu evidencije rada na  obrascu zaposlenika"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:60
-#, python-format
-msgid ""
-"<p>Timesheets on this project may be invoiced to %s, according to the terms "
-"defined in the contract.</p>"
-msgstr ""
-"<p>Evidenciju rada na projektu naplatitit %s, prema ugovorom definiranim "
-"uvjetima.</p>"
+#: model:ir.model,name:project_timesheet.model_project_project
+msgid "Project"
+msgstr "Projekt"
 
 #. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_taskwork0
-msgid "Work on task"
-msgstr "Work on task"
+#: model:ir.model,name:project_timesheet.model_project_task_work
+msgid "Project Task Work"
+msgstr "Project Task Work"
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
-#: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
-msgid "Invoice Tasks"
-msgstr "Zadaci po računu"
-
-#. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
-#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
-#: view:report.timesheet.task.user:0
-msgid "Task Hours Per Month"
-msgstr "Sati zadatka po mjesecima"
+#: field:project.task.work,hr_analytic_timesheet_id:0
+msgid "Related Timeline Id"
+msgstr "ID povezanog vremenskog tijeka"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -389,36 +299,31 @@ msgid "September"
 msgstr "Rujan"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "December"
-msgstr "Prosinac"
-
-#. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskinvoice0
-msgid "After task is completed, Create its invoice."
-msgstr "Nakon izvršenja zadatka kreiraj račun."
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
-#, python-format
-msgid "Invalid Action!"
-msgstr "Neispravna akcija!"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,month:0
-msgid "Month"
-msgstr "Mjesec"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:57
-#, python-format
-msgid ""
-"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
-"'%s'.</p>"
+#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
+msgid "Sign in / Sign out by Project"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">Ispunite evidenciju rada za projekt : "
-"'%s'.</p>"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_task
+msgid "Task"
+msgstr "Task"
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr "Sati zadatka"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
+#: view:report.timesheet.task.user:project_timesheet.view_task_hour_per_month_graph
+msgid "Task Hours Per Month"
+msgstr "Sati zadatka po mjesecima"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Tasks by User"
+msgstr "Zadaci po korisniku"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
@@ -426,51 +331,38 @@ msgid "Timesheet Hours"
 msgstr "Sati evidencije rada"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
+#: code:addons/project_timesheet/project_timesheet.py:67
+#: view:project.project:project_timesheet.project_invoice_form
+#, python-format
+msgid "Timesheets"
+msgstr "Kontrolne Kartice"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,user_id:0
+msgid "User"
+msgstr "Korisnik"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 #: field:report.timesheet.task.user,year:0
 msgid "Year"
 msgstr "Godina"
 
 #. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
-msgid "Fill Timesheet"
-msgstr "Popuni ev. rada"
+#: code:addons/project_timesheet/project_timesheet.py:264
+#, python-format
+msgid ""
+"You cannot delete a partner which is assigned to project, but you can "
+"uncheck the active box."
+msgstr ""
+"Nedozvoljeno brisanje partnera koji je dodijeljen projektu. Moguće je "
+"micanje aktivnog statusa."
 
-#~ msgid "Project Timesheet"
-#~ msgstr "Vremenski plan projekta"
-
-#~ msgid "Error ! Task end-date must be greater then task start-date"
-#~ msgstr "Pogreška! Datum završetka zadatka mora biti veći od datuma početka."
-
-#~ msgid "Trigger invoices from sale order lines"
-#~ msgstr "Automatsko kreiranje računa iz stavki prodajnog naloga"
-
-#~ msgid "Error! project start-date must be lower then project end-date."
-#~ msgstr "Error! project start-date must be lower then project end-date."
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Greška! Rekurzivni zadaci."
-
-#~ msgid "Invoice Tasks Work"
-#~ msgstr "Fakturiraj radove"
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr "Pogreška! Ne možete dodijeliti eskalacije na isti projekt!"
-
-#~ msgid "Customer"
-#~ msgstr "Kupac"
-
-#~ msgid "Bill Tasks Works"
-#~ msgstr "Fakturiranje zadataka"
-
-#~ msgid "Invoicing Data"
-#~ msgstr "Podaci računa"
-
-#~ msgid " Month-1 "
-#~ msgstr " Mjesec-1 "
-
-#~ msgid "My Timesheet"
-#~ msgstr "Moje evidencija rada"
-
-#~ msgid "Invoice Task Work"
-#~ msgstr "Fakturiraj rad na zadatku"
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:291
+#, python-format
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgstr ""
+"Nedozvoljen odabir analitičkog računa sa statusom zatvoren ili otkazan."

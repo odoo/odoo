@@ -107,15 +107,15 @@
                             placeholder="Company"
                             domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
                             attrs="{'invisible': [('is_company','=', True)]}"/>
-                        <group>
-                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
-                            <field name="function" placeholder="e.g. Sales Director"/>
-                            <field name="user_ids" invisible="1"/>
-                            <field name="email" widget="email" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
-                            <field name="phone"/>
-                            <field name="mobile"/>
-                        </group>
                     </div>
+                    <group>
+                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                        <field name="function" placeholder="e.g. Sales Director"/>
+                        <field name="user_ids" invisible="1"/>
+                        <field name="email" widget="email" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
+                        <field name="phone"/>
+                        <field name="mobile"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -182,7 +182,7 @@
                             <field name="fax"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
-                            <field name="title" domain="[('domain', '=', 'contact')]" options='{"no_open": True}'/>
+                            <field name="title" options='{"no_open": True}'/>
                         </group>
                     </group>
 

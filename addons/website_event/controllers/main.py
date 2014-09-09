@@ -137,7 +137,13 @@ class website_event(http.Controller):
         event_count = event_obj.search(
             request.cr, request.uid, dom_without("none"), count=True,
             context=request.context)
-        pager = request.website.pager(url="/event", total=event_count, page=page, step=step, scope=5)
+        pager = request.website.pager(
+            url="/event",
+            url_args={'date': searches.get('date'), 'type': searches.get('type'), 'country': searches.get('country')},
+            total=event_count,
+            page=page,
+            step=step,
+            scope=5)
 
         order = 'website_published desc, date_begin'
         if searches.get('date','all') == 'old':

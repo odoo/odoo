@@ -366,16 +366,79 @@
 <t t-name="UserMenu.about">
 
     <div class="oe_about">
-      <a class="oe_activate_debug_mode oe_right" href="?debug" style="background-color: white; padding:2px 6px; border-radius: 10px;">Activate the developer mode</a>
-      <img class="oe_logo" src="/web/static/src/img/logo2.png"/>
-      <h3>Version <t t-esc="version_info.server_version"/></h3>
+      <a class="oe_activate_debug_mode oe_right label label-primary" href="?debug" >Activate the developer mode</a>
 
-      <div class="oe_bottom">
-        <p>Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.<br />
-            Odoo is a trademark of the <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">OpenERP SA Company</a>.</p>
-        <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/agpl.html" style="text-decoration: underline;">GNU Affero General Public License</a></p>
-        <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
-      </div>
+
+
+        <div class="container">
+            <div class="">
+                <div class="col-sm-6 col-md-6 user-details">
+                    <div class="user-image">
+                        <img src="/web/static/src/img/logo2.png" alt="Odoo (Formerly OpenERP)" title="Odoo (Formerly OpenERP)" class="img-circle"/>
+                    </div>
+                    <div class="user-info-block">
+                        <div class="user-heading">
+                            <br/><span class="help-block">(Formerly OpenERP)</span>
+                            <h3>Version <t t-esc="version_info.server_version"/></h3>
+                        </div>
+
+                        <ul class="navigation">
+                            <li class="active">
+                                <a data-toggle="tab" href="#settings">
+                                    <span class="glyphicon glyphicon-cog"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#email">
+                                    <span class="glyphicon glyphicon-envelope"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#events">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </a>
+                            </li>
+                             <li>
+                                <a data-toggle="tab" href="#social">
+                                    <span class="glyphicon glyphicon-share"></span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="user-body">
+                            <div class="tab-content">
+                                <div id="settings" class="tab-pane active">
+                                    <h4>Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.</h4>
+                                    <p>Odoo is a trademark of the <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">OpenERP SA Company</a>.</p>
+                                    <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/agpl.html" style="text-decoration: underline;">GNU Affero General Public License</a></p>
+                                    <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
+                                </div>
+                                <div id="email" class="tab-pane">
+                                    <h4>OpenERP S.A.</h4>
+                                    <p>
+                                        Chaussée de Namur 40<br/>
+                                        1367 Grand-Rosière <br/>
+                                        Belgium
+                                    </p>
+                                    <!-- TODO - ALIAS contactus -->
+                                    <a class='btn btn-link' href='https://www.odoo.com/web/about/contactus'>Our website</a>
+                                </div>
+                                <div id="events" class="tab-pane">
+                                    <h4>Discover Events of Odoo around the world...</h4>
+                                    <a class='btn btn-link' href='https://www.odoo.com/web/about/event'> Our next Events</a>
+                                </div>
+                                <div id="social" class="tab-pane">
+                                    <h4>Follow Us...</h4>
+                                    <a href="https://www.odoo.com/web/about/facebook"><i class="fa fa-facebook-square fa-3x social-fb"></i></a>
+                                    <a href="https://www.odoo.com/web/about/twitter"><i class="fa fa-twitter-square fa-3x social-tw"></i></a>
+                                    <a href="https://www.odoo.com/web/about/googleplus"><i class="fa fa-google-plus-square fa-3x social-gp"></i></a>
+                                    <a href="https://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin-square fa-3x social-lk"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </t>
@@ -1227,16 +1290,18 @@
 </t>
 <t t-name="FieldBinaryImage">
     <span class="oe_form_field oe_form_field_image" t-att-style="widget.node.attrs.style">
-        <div class="oe_form_field_image_controls oe_edit_only">
-            <i class="fa fa-pencil fa-1g pull-left col-md-offset-1 oe_form_binary_file_edit" title="Edit"/>
-            <i class="fa fa-trash-o fa-1g col-md-offset-5 oe_form_binary_file_clear" title="Clear"/>
-            <div class="oe_form_binary_progress" style="display: none">
-                <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
-                <b>Uploading ...</b>
+        <t t-if="!widget.get('effective_readonly')">
+            <div class="oe_form_field_image_controls oe_edit_only">
+              <i class="fa fa-pencil fa-1g pull-left col-md-offset-1 oe_form_binary_file_edit" title="Edit"/>
+              <i class="fa fa-trash-o fa-1g col-md-offset-5 oe_form_binary_file_clear" title="Clear"/>
+                <div class="oe_form_binary_progress" style="display: none">
+                    <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
+                    <b>Uploading ...</b>
+                </div>
             </div>
-        </div>
-        <t t-call="HiddenInputFile">
+          <t t-call="HiddenInputFile">
             <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+          </t>
         </t>
     </span>
 </t>

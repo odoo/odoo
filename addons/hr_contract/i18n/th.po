@@ -1,88 +1,26 @@
 # Thai translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-06-15 17:09+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Thai <th@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:06+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:11+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "ค่าแรง"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Information"
-msgstr "ข้อมูล"
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_start:0
-msgid "Trial Start Date"
-msgstr "วันที่เริ่มต้นการทดลอง"
-
-#. module: hr_contract
-#: field:hr.employee,vehicle:0
-msgid "Company Vehicle"
-msgstr "ยานพาหนะของ บริษัท"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Group By..."
-msgstr "จัดกลุ่มตาม..."
-
-#. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr "แผนก"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,employee_id:0
-#: model:ir.model,name:hr_contract.model_hr_employee
-msgid "Employee"
-msgstr "พนักงาน"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
-msgstr "ค้นหา สัญญา"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-#: field:hr.employee,contract_ids:0
-#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
-msgid "Contracts"
-msgstr "สัญญา"
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of Children"
-msgstr "จำนวนบุตร"
-
-#. module: hr_contract
-#: help:hr.employee,contract_id:0
-msgid "Latest contract of the employee"
-msgstr "สัญญาล่าสุดของพนักงาน"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Job"
-msgstr "งาน"
+#: model:ir.model,name:hr_contract.model_base_action_rule
+msgid "Action Rules"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,advantages:0
@@ -90,9 +28,45 @@ msgid "Advantages"
 msgstr "ข้อดี"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Work Permit"
-msgstr "ใบอนุญาตทำงาน"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Advantages..."
+msgstr "ข้อดี..."
+
+#. module: hr_contract
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr "เงินเดือนของพนักงาน"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle:0
+msgid "Company Vehicle"
+msgstr "ยานพาหนะของ บริษัท"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: field:hr.employee,contract_id:0
+#: model:ir.model,name:hr_contract.model_hr_contract
+#: model:ir.ui.menu,name:hr_contract.next_id_56
+msgid "Contract"
+msgstr "สัญญา"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: field:hr.contract,name:0
+msgid "Contract Reference"
+msgstr "อ้างอิงตามสัญญา"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,type_id:0
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_form
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_tree
+#: field:hr.contract.type,name:0
+#: model:ir.model,name:hr_contract.model_hr_contract_type
+msgid "Contract Type"
+msgstr "ประเภทสัญญา"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
@@ -101,9 +75,45 @@ msgid "Contract Types"
 msgstr "ประเภทสัญญา"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Exam"
-msgstr "ตรวจสอบสุขภาพ"
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: view:hr.contract:hr_contract.hr_contract_view_tree
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: field:hr.employee,contract_ids:0
+#: field:hr.employee,contracts_count:0
+#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
+msgid "Contracts"
+msgstr "สัญญา"
+
+#. module: hr_contract
+#: field:hr.contract,create_uid:0
+#: field:hr.contract.type,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,create_date:0
+#: field:hr.contract.type,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "แผนก"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Duration"
+msgstr "ระยะเวลา"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,employee_id:0
+#: model:ir.model,name:hr_contract.model_hr_employee
+msgid "Employee"
+msgstr "พนักงาน"
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -111,85 +121,14 @@ msgid "End Date"
 msgstr "วันสิ้นสุด"
 
 #. module: hr_contract
-#: help:hr.contract,wage:0
-msgid "Basic Salary of the employee"
-msgstr "เงินเดือนของพนักงาน"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,name:0
-msgid "Contract Reference"
-msgstr "อ้างอิงตามสัญญา"
-
-#. module: hr_contract
-#: help:hr.employee,vehicle_distance:0
-msgid "In kilometers"
-msgstr "ในกิโลเมตร"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,notes:0
-msgid "Notes"
-msgstr "บันทึกย่อ"
-
-#. module: hr_contract
-#: field:hr.contract,permit_no:0
-msgid "Work Permit No"
-msgstr "เลขที่ใบอนุญาตทำงาน"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-#: field:hr.employee,contract_id:0
-#: model:ir.model,name:hr_contract.model_hr_contract
-#: model:ir.ui.menu,name:hr_contract.next_id_56
-msgid "Contract"
-msgstr "สัญญา"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,type_id:0
-#: view:hr.contract.type:0
-#: field:hr.contract.type,name:0
-#: model:ir.model,name:hr_contract.model_hr_contract_type
-msgid "Contract Type"
-msgstr "ประเภทสัญญา"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr "ตารางการทำงาน"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Salary and Advantages"
-msgstr "เงินเดือนและข้อดี"
-
-#. module: hr_contract
-#: field:hr.contract,job_id:0
-msgid "Job Title"
-msgstr "ตำแหน่งงาน"
-
-#. module: hr_contract
 #: constraint:hr.contract:0
 msgid "Error! Contract start-date must be less than contract end-date."
 msgstr "ผิดพลาด! สัญญาวันที่เริ่มต้นต้องน้อยกว่าสัญญาวันที่สิ้นสุด"
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Is a Manager"
-msgstr "เป็นผู้จัดการ"
-
-#. module: hr_contract
-#: field:hr.contract,date_start:0
-msgid "Start Date"
-msgstr "วันที่เริ่ม"
-
-#. module: hr_contract
-#: field:hr.contract,visa_no:0
-msgid "Visa No"
-msgstr "หมายเลข วีซ่า"
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Group By"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
@@ -197,24 +136,57 @@ msgid "Home-Work Dist."
 msgstr "บ้าน-ที่ทำงาน Dist."
 
 #. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "สถานที่เกิด"
+#: field:hr.contract,id:0
+#: field:hr.contract.type,id:0
+msgid "ID"
+msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Trial Period Duration"
-msgstr "ช่วงเวลาระยะเวลาทดลอง"
+#: help:hr.employee,vehicle_distance:0
+msgid "In kilometers"
+msgstr "ในกิโลเมตร"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Duration"
-msgstr "ระยะเวลา"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Information"
+msgstr "ข้อมูล"
 
 #. module: hr_contract
-#: field:hr.contract,visa_expire:0
-msgid "Visa Expire Date"
-msgstr "วันหมดอายุ วีซ่า"
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "เป็นผู้จัดการ"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Job"
+msgstr "งาน"
+
+#. module: hr_contract
+#: field:hr.contract,job_id:0
+msgid "Job Title"
+msgstr "ตำแหน่งงาน"
+
+#. module: hr_contract
+#: field:hr.contract,write_uid:0
+#: field:hr.contract.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,write_date:0
+#: field:hr.contract.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_contract
+#: help:hr.employee,contract_id:0
+msgid "Latest contract of the employee"
+msgstr "สัญญาล่าสุดของพนักงาน"
+
+#. module: hr_contract
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+msgid "Medical Exam"
+msgstr "ตรวจสอบสุขภาพ"
 
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
@@ -222,11 +194,93 @@ msgid "Medical Examination Date"
 msgstr "วันที่ตรวจร่างกาย"
 
 #. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: field:hr.contract,notes:0
+msgid "Notes"
+msgstr "บันทึกย่อ"
+
+#. module: hr_contract
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "จำนวนบุตร"
+
+#. module: hr_contract
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "สถานที่เกิด"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Salary and Advantages"
+msgstr "เงินเดือนและข้อดี"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Search Contract"
+msgstr "ค้นหา สัญญา"
+
+#. module: hr_contract
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+msgid "Search Contract Type"
+msgstr "ค้นหา ประเภทสัญญา"
+
+#. module: hr_contract
+#: field:hr.contract,date_start:0
+msgid "Start Date"
+msgstr "วันที่เริ่ม"
+
+#. module: hr_contract
 #: field:hr.contract,trial_date_end:0
 msgid "Trial End Date"
 msgstr "วันที่สิ้นสุดการทดลอง"
 
 #. module: hr_contract
-#: view:hr.contract.type:0
-msgid "Search Contract Type"
-msgstr "ค้นหา ประเภทสัญญา"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Trial Period Duration"
+msgstr "ช่วงเวลาระยะเวลาทดลอง"
+
+#. module: hr_contract
+#: field:hr.contract,trial_date_start:0
+msgid "Trial Start Date"
+msgstr "วันที่เริ่มต้นการทดลอง"
+
+#. module: hr_contract
+#: field:base.action.rule,trg_date_resource_field_id:0
+msgid "Use employee work schedule"
+msgstr ""
+
+#. module: hr_contract
+#: help:base.action.rule,trg_date_resource_field_id:0
+msgid "Use the user's working schedule."
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr "วันหมดอายุ วีซ่า"
+
+#. module: hr_contract
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
+msgstr "หมายเลข วีซ่า"
+
+#. module: hr_contract
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "ค่าแรง"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Work Permit"
+msgstr "ใบอนุญาตทำงาน"
+
+#. module: hr_contract
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
+msgstr "เลขที่ใบอนุญาตทำงาน"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "ตารางการทำงาน"

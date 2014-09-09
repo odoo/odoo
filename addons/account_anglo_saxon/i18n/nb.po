@@ -1,26 +1,33 @@
 # Norwegian Bokmal translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-08-27 15:41+0000\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:22+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:48+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_category
-msgid "Product Category"
-msgstr "Produktkategori"
+#: help:account.invoice.line,move_id:0
+msgid ""
+"If the invoice was generated from a stock.picking, reference to the related "
+"move line."
+msgstr ""
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice
+msgid "Invoice"
+msgstr "Faktura"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
@@ -28,14 +35,14 @@ msgid "Invoice Line"
 msgstr "Fakturalinje"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_purchase_order
-msgid "Purchase Order"
-msgstr "Innkjøpsordre"
+#: field:account.invoice.line,move_id:0
+msgid "Move line"
+msgstr ""
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_template
-msgid "Product Template"
-msgstr "Produktmal"
+#: model:ir.model,name:account_anglo_saxon.model_stock_picking
+msgid "Picking List"
+msgstr "Plukkliste"
 
 #. module: account_anglo_saxon
 #: field:product.category,property_account_creditor_price_difference_categ:0
@@ -44,14 +51,19 @@ msgid "Price Difference Account"
 msgstr "Pris forskjell konto"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_account_invoice
-msgid "Invoice"
-msgstr "Faktura"
+#: model:ir.model,name:account_anglo_saxon.model_product_category
+msgid "Product Category"
+msgstr "Produktkategori"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_stock_picking
-msgid "Picking List"
-msgstr "Plukkliste"
+#: model:ir.model,name:account_anglo_saxon.model_product_template
+msgid "Product Template"
+msgstr "Produktmal"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_purchase_order
+msgid "Purchase Order"
+msgstr "Innkjøpsordre"
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -62,26 +74,3 @@ msgid ""
 msgstr ""
 "Denne kontoen vil bli brukt til verdi prisforskjellen mellom kjøpesum og "
 "kostpris."
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Feil: Standard målenheter og kjøp målenheter må være i samme kategori."
-
-#~ msgid " Accounting Property"
-#~ msgstr " Regnskapsmessig Eiendom"
-
-#~ msgid "Error ! You cannot create recursive categories."
-#~ msgstr "Feil! Du kan ikke lage uendelig struktur med uendelige kategorier."
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Ugyldig BBA Strukturert Kommunikasjon!"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Ordrereferanse må være unik pr. firma!"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Referanse må være unik pr firma!"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Fakturanummer må være unik pr. firma!"
