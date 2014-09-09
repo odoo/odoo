@@ -733,22 +733,4 @@ class account_bank_statement_line(osv.osv):
         'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
     }
 
-class account_statement_operation_template(osv.osv):
-    _name = "account.statement.operation.template"
-    _description = "Preset for the lines that can be created in a bank statement reconciliation"
-    _columns = {
-        'name': fields.char('Button Label', required=True),
-        'account_id': fields.many2one('account.account', 'Account', ondelete='cascade', domain=[('type','!=','view')]),
-        'label': fields.char('Label'),
-        'amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')],
-                                   'Amount type', required=True),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account'), help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').", required=True),
-        'tax_id': fields.many2one('account.tax', 'Tax', ondelete='cascade'),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='cascade'),
-    }
-    _defaults = {
-        'amount_type': 'percentage_of_balance',
-        'amount': 100.0
-    }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

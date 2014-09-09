@@ -696,11 +696,11 @@
 
         <menuitem id="menu_bank_manual_reconciliation" name="Manual Reconciliation" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_manual_reconcile"/>
 
-        <record id="view_account_statement_operation_template_form" model="ir.ui.view">
-            <field name="name">account.statement.operation.template.form</field>
-            <field name="model">account.statement.operation.template</field>
+        <record id="view_account_operation_template_form" model="ir.ui.view">
+            <field name="name">account.operation.template.form</field>
+            <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
-                <form string="Statement Operation Templates">
+                <form string="Operation Templates">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -713,6 +713,7 @@
                                 <field name="account_id" domain="[('type', 'not in', ['view', 'closed', 'consolidation'])]"/>
                                 <field name="amount_type"/>
                                 <field name="tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
+                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                             </group>
                             <group>
                                 <field name="label"/>
@@ -721,16 +722,16 @@
                                     <field name="amount" class="oe_inline" />
                                     <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','not in',('percentage_of_total', 'percentage_of_balance'))]}" />
                                 </div>
-                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                <field name="journal_id"/>
                             </group>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
-        <record id="view_account_statement_operation_template_tree" model="ir.ui.view">
-            <field name="name">account.statement.operation.template.tree</field>
-            <field name="model">account.statement.operation.template</field>
+        <record id="view_account_operation_template_tree" model="ir.ui.view">
+            <field name="name">account.operation.template.tree</field>
+            <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
                 <tree string="Bank Reconciliation Move Presets">
                     <field name="name"/>
@@ -739,9 +740,9 @@
                 </tree>
             </field>
         </record>
-        <record id="view_account_statement_operation_template_search" model="ir.ui.view">
-            <field name="name">account.statement.operation.template.search</field>
-            <field name="model">account.statement.operation.template</field>
+        <record id="view_account_operation_template_search" model="ir.ui.view">
+            <field name="name">account.operation.template.search</field>
+            <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
                 <search string="Bank Reconciliation Move preset">
                         <filter string="With tax" domain="[('tax_id','!=',False)]"/>
@@ -749,22 +750,22 @@
                 </search>
             </field>
         </record>
-        <record id="action_account_statement_operation_template" model="ir.actions.act_window">
-            <field name="name">Statement Operation Templates</field>
-            <field name="res_model">account.statement.operation.template</field>
+        <record id="action_account_operation_template" model="ir.actions.act_window">
+            <field name="name">Operation Templates</field>
+            <field name="res_model">account.operation.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_account_statement_operation_template_search"/>
+            <field name="search_view_id" ref="view_account_operation_template_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a statement operation template.
+                Click to create an operation template.
               </p><p>
                 Those can be used to quickly create a move line when reconciling
-                your bank statements.
+                a bank statement or an account.
               </p>
             </field>
         </record>
-        <menuitem action="action_account_statement_operation_template" id="menu_action_account_statement_operation_template" parent="menu_configuration_misc" name="Statement Operation Templates" sequence="22"/>
+        <menuitem action="action_account_operation_template" id="menu_action_account_operation_template" parent="menu_configuration_misc" name="Operation Templates" sequence="22"/>
 
         <!-- Account Types -->
         <record id="view_account_type_search" model="ir.ui.view">

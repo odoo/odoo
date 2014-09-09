@@ -42,6 +42,7 @@ openerp.account = function (instance) {
 
             // Description of the fields to initialize in the "create new line" form
             // NB : for presets to work correctly, a field id must be the same string as a preset field
+            this.presets = {};
             this.create_form_fields = {
                 account_id: {
                     id: "account_id",
@@ -60,11 +61,11 @@ openerp.account = function (instance) {
                 },
                 label: {
                     id: "label",
-                    index: 1,
+                    index: 5,
                     corresponding_property: "label",
                     label: _t("Label"),
                     required: true,
-                    tabindex: 11,
+                    tabindex: 15,
                     constructor: instance.web.form.FieldChar,
                     field_properties: {
                         string: _t("Label"),
@@ -73,11 +74,11 @@ openerp.account = function (instance) {
                 },
                 tax_id: {
                     id: "tax_id",
-                    index: 2,
+                    index: 10,
                     corresponding_property: "tax_id",
                     label: _t("Tax"),
                     required: false,
-                    tabindex: 12,
+                    tabindex: 20,
                     constructor: instance.web.form.FieldMany2One,
                     field_properties: {
                         relation: "account.tax",
@@ -88,11 +89,11 @@ openerp.account = function (instance) {
                 },
                 amount: {
                     id: "amount",
-                    index: 3,
+                    index: 15,
                     corresponding_property: "amount",
                     label: _t("Amount"),
                     required: true,
-                    tabindex: 13,
+                    tabindex: 25,
                     constructor: instance.web.form.FieldFloat,
                     field_properties: {
                         string: _t("Amount"),
@@ -101,11 +102,11 @@ openerp.account = function (instance) {
                 },
                 analytic_account_id: {
                     id: "analytic_account_id",
-                    index: 4,
+                    index: 20,
                     corresponding_property: "analytic_account_id",
                     label: _t("Analytic Acc."),
                     required: false,
-                    tabindex: 14,
+                    tabindex: 30,
                     group:"analytic.group_analytic_accounting",
                     constructor: instance.web.form.FieldMany2One,
                     field_properties: {
@@ -135,6 +136,16 @@ openerp.account = function (instance) {
                     .query(['id', 'amount'])
                     .all().then(function(data) {
                         _.each(data, function(o) { self.map_tax_id_amount[o.id] = o.amount });
+                    })
+                );
+
+                // Get operation templates
+                deferred_promises.push(new instance.web.Model("account.operation.template")
+                    .query(['id','name','account_id','journal_id','label','amount_type','amount','tax_id','analytic_account_id'])
+                    .all().then(function (data) {
+                        _(data).each(function(preset){
+                            self.presets[preset.id] = preset;
+                        });
                     })
                 );
 
@@ -197,6 +208,7 @@ openerp.account = function (instance) {
             "click .pager_control_right:not(.disabled)": "pagerControlRightHandler",
             "keyup .filter": "filterHandler",
             "click .add_line": "addLineBeingEdited",
+            "click .preset": "presetClickHandler",
             "click .line_info_button": function(e){e.stopPropagation()},
             // Prevent non natively focusable elements from gaining focus on click
             "mousedown *[tabindex='0']": function(e){e.preventDefault()},
@@ -902,7 +914,6 @@ openerp.account = function (instance) {
             this.last_displayed_reconciliation_index = undefined; // Flow control
             this.reconciled_lines = 0; // idem
             this.already_reconciled_lines = 0; // Number of lines of the statement which were already reconciled
-            this.presets = {};
             this.model_bank_statement = new instance.web.Model("account.bank.statement");
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             this.reconciliation_menu_id = false; // Used to update the needaction badge
@@ -945,16 +956,6 @@ openerp.account = function (instance) {
                         })
                     );
                 }
-
-                // Get operation templates
-                deferred_promises.push(new instance.web.Model("account.statement.operation.template")
-                    .query(['id','name','account_id','label','amount_type','amount','tax_id','analytic_account_id'])
-                    .all().then(function (data) {
-                        _(data).each(function(preset){
-                            self.presets[preset.id] = preset;
-                        });
-                    })
-                );
 
                 // Get the id of the menuitem
                 deferred_promises.push(new instance.web.Model("ir.model.data")
@@ -1228,7 +1229,6 @@ openerp.account = function (instance) {
             "click .button_ok": "persistAndDestroy",
             "click .initial_line": "initialLineClickHandler",
             "click .line_open_balance": "lineOpenBalanceClickHandler",
-            "click .preset": "presetClickHandler",
             "click .do_partial_reconcile_button": "doPartialReconcileButtonClickHandler",
             "click .undo_partial_reconcile_button": "undoPartialReconcileButtonClickHandler",
         }, instance.web.account.abstractReconciliationLine.prototype.events),
@@ -1751,6 +1751,23 @@ openerp.account = function (instance) {
             this.num_total_items_other_accounts;
             this.num_done_items_partner_accounts = 0;
             this.num_done_items_other_accounts = 0;
+            this.create_form_fields = _.defaults({
+                journal_id: {
+                    id: "journal_id",
+                    index: 2,
+                    corresponding_property: "journal_id", // a account.move field name
+                    label: _t("Journal"),
+                    required: true,
+                    tabindex: 11,
+                    constructor: instance.web.form.FieldMany2One,
+                    field_properties: {
+                        relation: "account.journal",
+                        string: _t("Journal"),
+                        type: "many2one",
+                        domain: [['type','not in',['view', 'closed', 'consolidation']]],
+                    },
+                }
+            }, this.create_form_fields);
         },
     
         start: function() {
@@ -1942,13 +1959,18 @@ openerp.account = function (instance) {
             this.model_aml = this.getParent().model_aml;
             this.data = context.data;
             this.currency_id = context.data.currency_id;
+            this.presets = this.getParent().presets;
         },
 
         render: function() {
             var self = this;
+            var presets_array = [];
+            for (var id in self.presets)
+                if (self.presets.hasOwnProperty(id))
+                    presets_array.push(self.presets[id]);
             self.$el.prepend(QWeb.render("manual_reconciliation_line", {
                 data: self.data,
-                presets: {},
+                presets: presets_array,
             }));
             self.$(".match").slideUp(0);
             self.$(".create").slideUp(0);
@@ -1957,6 +1979,13 @@ openerp.account = function (instance) {
             self.updateAccountingViewMatchedLines();
             self.set("mode", "match");
         },
+
+        /** Utils */
+
+        islineCreatedBeingEditedValid: function() {
+            return this._super() && this.get("line_created_being_edited")[0].journal_id;
+        },
+
 
         /* Properties handlers */
 
@@ -2078,14 +2107,21 @@ openerp.account = function (instance) {
                 });
         },
 
+        prepareCreatedMoveLineForPersisting: function(line) {
+            var dict = this._super(line);
+            dict['journal_id'] = line.journal_id;
+            return dict;
+        },
+
         processReconciliation: function() {
             var self = this;
             var mv_line_ids = _.collect(self.get("mv_lines_selected"), function(o){ return o.id });
             var new_mv_line_dicts = _.collect(self.getCreatedLines(), function(o){ return self.prepareCreatedMoveLineForPersisting(o) });
+            // TODO : animation
             return self.model_aml.call("process_reconciliation", [mv_line_ids, new_mv_line_dicts]).then(function() {
                 self.set("mv_lines_selected", []);
                 self.set("created_lines", []);
-                self.set("line_created_being_edited", [{'id': 0}], {silent: true});
+                self.initializeCreateForm();
             });
         },
 
