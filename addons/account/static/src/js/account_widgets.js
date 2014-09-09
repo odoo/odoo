@@ -1740,6 +1740,8 @@ openerp.account = function (instance) {
             this.template_prefix = "manual_";
             this.model_aml = new instance.web.Model("account.move.line");
             this.title = "Journal Items to Reconcile";
+            this.max_reconciliations_displayed = 2;
+            this.max_move_lines_displayed = 12;
             // TODO : use search view and keep only this.accounts_to_reconcile = [];
             this.show_partner_accounts = true;
             this.show_other_accounts = true;
@@ -2031,15 +2033,13 @@ openerp.account = function (instance) {
             var balance = self.get("balance");
 
             self.$(".button_reconcile").removeClass("oe_highlight");
+            self.$(".button_reconcile").text(_t("Reconcile"));
             self.persist_action = "reconcile";
             if (self.get("mv_lines_selected").length < 2) {
-                self.$(".button_reconcile").text(_t("Leave Open"));
+                self.$(".button_reconcile").text(_t("Nothing to do"));
                 self.persist_action = "leave_open";
             } else if (Math.abs(balance).toFixed(3) === "0.000") {
                 self.$(".button_reconcile").addClass("oe_highlight");
-                self.$(".button_reconcile").text(_t("Full Reconcile"));
-            } else {
-                self.$(".button_reconcile").text(_t("Partial Reconcile"));
             }
 
             self.$(".tbody_open_balance").empty();
@@ -2049,7 +2049,7 @@ openerp.account = function (instance) {
                 var $line = $(QWeb.render("manual_reconciliation_line_open_balance", {
                     debit: debit,
                     credit: credit,
-                    label: "Choose counterpart"
+                    label: "Create writeoff"
                 }));
                 self.$(".tbody_open_balance").append($line);
             }

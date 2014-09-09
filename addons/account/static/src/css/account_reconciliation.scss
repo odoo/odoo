@@ -483,6 +483,11 @@ $aestetic_animation_speed: 300ms;
 
 .openerp .oe_manual_reconciliation {
     .oe_manual_reconciliation_line {
+        .button_reconcile {
+            float: right;
+            margin-right: $actionColWidth;
+        }
+
         .accounting_view {
             thead {
                 background: none;
@@ -531,18 +536,5 @@ $aestetic_animation_speed: 300ms;
         td.cell_due_date {
             padding-left: $mainTableBordersPadding !important;
         }
-
-        /* Bouton entre les 2 tables */
-        .reconcile_button_container {
-            width: 30%;
-            float: right;
-            text-align: center;
-            margin: 5px $actionColWidth 5px 0;
-        }
-
-        > table > tbody > tr:nth-child(1) > td table {
-            margin-bottom: 0 !important;
-        }
-        /* / Bouton entre les 2 tables */
     }
 }

@@ -237,8 +237,8 @@
     </t>
 
     <t t-name="manual_reconciliation_line" t-extend="reconciliation_line">
-        <t t-jquery=".accounting_view" t-operation="after">
-            <div class="reconcile_button_container"><button class="button_reconcile">Reconcile</button></div>
+        <t t-jquery=".accounting_view" t-operation="before">
+            <button class="button_reconcile">Reconcile</button>
         </t>
         <t t-jquery=".accounting_view caption" t-operation="replace">
             <thead><tr>
