@@ -48,7 +48,8 @@ class meeting_invitation(http.Controller):
         if attendee:
             attendee_data['current_attendee'] = attendee[0]
 
-        values = dict(init="s.calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)))
+        values = dict(init="s.calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)),
+        menu_data=request.registry['ir.ui.menu'].load_menus(request.cr,  openerp.SUPERUSER_ID, context=request.context))
         return request.render('web.webclient_bootstrap', values)
 
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
