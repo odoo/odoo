@@ -84,6 +84,7 @@ class ir_http(orm.AbstractModel):
                 self._auth_method_public()
             request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
+            request.context['website_id'] = request.website.id
             if first_pass:
                 request.lang = request.website.default_lang_code
             request.context['lang'] = request.lang

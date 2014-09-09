@@ -133,7 +133,7 @@ response = request.render("website.template_partner_comment", values)
             <field name="type">ir.actions.server</field>
         </record>
 
-        <record id="second_website" model="website">
+        <record id="website2" model="website">
             <field name="name">0.0.0.0</field>
             <field name="social_twitter">https://twitter.com/odooapps</field>
             <field name="social_facebook">https://www.facebook.com/Odoo</field>
@@ -143,11 +143,11 @@ response = request.render("website.template_partner_comment", values)
             <field name="default_lang_id" ref="base.lang_en"/>
         </record>
 
-        <record id="homepage_0_0_0_0" model="ir.ui.view">
+        <record id="website2_homepage" model="ir.ui.view">
             <field name="name">Homepage</field>
             <field name="type">qweb</field>
             <field name="key">website.homepage</field>
-            <field name="website_id" ref="second_website"/>
+            <field name="website_id" ref="website2"/>
             <field name="priority">29</field>
             <field name="arch">
                 <![CDATA[
@@ -188,25 +188,25 @@ response = request.render("website.template_partner_comment", values)
             </field>
         </record>
 
-        <record id="main_menu_b" model="website.menu">
+        <record id="website2_main_menu" model="website.menu">
             <field name="name">Top Menu</field>
-            <field name="website_id" ref="second_website"/>
+            <field name="website_id" ref="website2"/>
         </record>
 
-        <record id="menu_homepage_b" model="website.menu">
+        <record id="website2_menu_homepage" model="website.menu">
             <field name="name">Home</field>
             <field name="url">/page/homepage</field>
-            <field name="parent_id" ref="website.main_menu_b"/>
+            <field name="parent_id" ref="website.website2_main_menu"/>
             <field name="sequence" type="int">10</field>
-            <field name="website_id" ref="second_website"/>
+            <field name="website_id" ref="website2"/>
         </record>
 
-        <record id="menu_contactus_b" model="website.menu">
+        <record id="website2_menu_contactus" model="website.menu">
             <field name="name">Contact us</field>
             <field name="url">/page/website.contactus</field>
-            <field name="parent_id" ref="website.main_menu_b"/>
+            <field name="parent_id" ref="website.website2_main_menu"/>
             <field name="sequence" type="int">60</field>
-            <field name="website_id" ref="second_website"/>
+            <field name="website_id" ref="website2"/>
         </record>
 
     </data>

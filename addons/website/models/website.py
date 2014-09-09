@@ -195,13 +195,14 @@ class website(osv.osv):
             # new page
             _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
             website_id = context.get('website_id')
-            page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': 'website.%s' % page_name}, context=context)
+            key = 'website.%s' % page_name
+            page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': key}, context=context)
             page = view.browse(cr, uid, page_id, context=context)
             page.write({
                 'arch': page.arch.replace(template, page_xmlid),
                 'name': page_name,
                 'page': ispage,
-                'key': template_module+'.'+page_name})
+            })
             imd.create(cr, uid, {
                 'name': page_name,
                 'module': template_module,
@@ -233,7 +234,6 @@ class website(osv.osv):
         domain_name=request.httprequest.host.split(":")[0].lower()
         ids=self.search(cr, uid, [('name', '=', domain_name)], context=context)
         website = self.browse(cr, uid, ids and ids[0] or 1, context=context)
-        request.context['website_id'] = website.id
         return website
 
     def is_publisher(self, cr, uid, ids, context=None):
