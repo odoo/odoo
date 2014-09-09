@@ -2568,13 +2568,19 @@ class BaseModel(object):
         # same ordering, and can be merged in one pass.
         result = []
         known_values = {}
+
+        if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
+            count_attr = '_'
+        else:
+            count_attr = groupby
+        count_attr += '_count'
+
         def append_left(left_side):
             grouped_value = left_side[groupby] and left_side[groupby][0]
             if not grouped_value in known_values:
                 result.append(left_side)
                 known_values[grouped_value] = left_side
             else:
-                count_attr = groupby + '_count'
                 known_values[grouped_value].update({count_attr: left_side[count_attr]})
         def append_right(right_side):
             grouped_value = right_side[0]
