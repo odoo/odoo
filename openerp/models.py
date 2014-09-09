@@ -3155,6 +3155,9 @@ class BaseModel(object):
         elif self.env.field_todo(field):
             # field must be recomputed, do not prefetch records to recompute
             records -= self.env.field_todo(field)
+        elif not self._context.get('prefetch_fields', True):
+            # do not prefetch other fields
+            pass
         elif self._columns[field.name]._prefetch:
             # here we can optimize: prefetch all classic and many2one fields
             fnames = set(fname
