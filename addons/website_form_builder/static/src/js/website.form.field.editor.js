@@ -31,6 +31,11 @@
     	
     	optionEditor : {
     		table: null,
+    		//Enable the widget with parameters : 
+    		// table : editable table dom pointer
+    		// target: form field that need to be edit by the option editor
+    		// get : function needed to exctract data from the form field
+    		
     		enable: function(table,target,get) {
     			this.table = table;
     			this.loadData(target,get);
@@ -38,6 +43,7 @@
     			this.onAddField();
     			
     		},
+    		//enable events on the option editor to add or remove line
     		onAddField: function() {
     			var self = this;
     			self.table.find('.last .option-label')	.on('keydown', self.tabEvent());
@@ -45,6 +51,7 @@
     			self.table.find('.last .option-value')	.on('keydown', self.addField(false));
     			self.table.find('.form-editor-add')		.on('click',self.addField(true));
     		},
+    		//disable events
     		offAddField: function() {
     			var self = this;
     			self.table.find('.last .option-value')	.off('keydown');
@@ -52,6 +59,7 @@
     			self.table.find('.form-editor-add')		.off('click');
     			self.table.find('td')					.off('td');
     		},
+    		//check if the line is empty before delete it
     		deleteIfEmpty : function (e) {
     			var parent = $(this).parent();
     			var prev,label,value;
@@ -75,6 +83,7 @@
 	    				parent.remove();
 	    			}
     		},
+    		//select the text when user press tab
     		tabEvent: function () {
     			return function(e) {
 	    			if(e.keyCode === 9) {
@@ -85,7 +94,7 @@
 	    			}
 	    		};
     		},
-    		
+    		//get a template of a line of the table for other internal functions 
     		fieldModel : function() {
     			var self = this;
     			var last_line = self.table.find('.last');
@@ -93,7 +102,7 @@
 		    	last_line.unwrap();
 		    	return tb_line;
     		},
-    		
+    		//manage events to add a line on the table
     		addField: function(button) {
     			var self = this;
     			return function(e) {
@@ -116,6 +125,10 @@
 		    		}
 	    		};
     		},
+    		//add options from the wizard to the form field 
+    		//target : container for options
+    		//type : the type of the form field to link templates
+    		//params: various parameters to edit custom fields on the template
     		addOptions: function (target,type,params) {
     			var self = this;
     			return function() {
@@ -140,7 +153,7 @@
 	    			target.append(fullOptions);
     			};
     		},
-    		
+    		//load 
     		loadData: function (target, get) {
     			var lastElem;
     			var self = this;
@@ -344,10 +357,10 @@
     			
     			var append_check	= (append_t.length > 0);
     			var prepend_check	= (prepend_t.length > 0);
-    			// Remove or add Append or Prepend text to the input
     			
- 				self.$target.find('.form-control').prop('placeholder',wizard.find('.form-field-placeholder').val());
- 				
+    			self.$target.find('.form-control').prop('placeholder',wizard.find('.form-field-placeholder').val());
+    			
+    			// Remove or add Append or Prepend text to the input
     			if(!append_exist && append_check) {
     				self.$target.find('.wrap-unwrap').append('<span class="input-group-addon append">'+append_t+'</span>');
     				append_exist = true;
